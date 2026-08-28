@@ -7838,12 +7838,111 @@ runtime by the Stage-0 draw** and is not authored into the gold, which is why th
 *"Gold: None"* holds and why the fix belongs in the scorer. It is **not** evidence that F-132 is
 absent.
 
+## C-102 implemented — the exact documented delta on Priorities 4 and 5
+
+Measured **offline over the 62 committed `quarantine_report.json` artifacts**. No leg re-run, no
+cohort, no live call. `evidence/c102_f132_coverage_ab.py` / `.log`.
+
+| | Pre-change | Post-change |
+|---|---|---|
+| coverage answers per leg | one, unreconciled | **two — raw preserved verbatim, accepted beside it** |
+| legs with a coverage block | 62 | 62 |
+| requested-core terms drawn | 860 | 860 |
+| gold-forbidden terms withheld | **0 — none was excluded** | **92** |
+| legs carrying ≥ 1 such term | not measurable | **47** |
+| legs clearing the unchanged 0.500 minimum | 6 below | **6 below — ZERO cleared** |
+
+**Priority 4 does NOT move off `0/8`, and Priority 5 does not move either.** Measured on
+`runs_verify/2026-08-24_1428`: both read `0/8 = 0%` and `0/2 = 0%` before and after. Their numerators
+are semantic confirmation and the frozen strict release record, not the requested-core ratio, so no
+recomputed ratio can move them — and Priority 5 deliberately does **not** promote a leg the runtime
+froze as `review_required` even where its coverage block would now clear, because this module scores
+runs and does not reclassify them (merge rule 8). What became readable is the coverage measurement
+itself, per leg, raw beside accepted.
+
+**`PMC12782028/strict` does NOT clear.** `requested_core_coverage_below_minimum:0.222<0.500` becomes
+`6/23 = 0.261`, still below the unchanged 0.500. The four withheld terms — `LIPA`, `LBR`, `SREBF1`,
+`SREBF2` — are the exact four Priority-1 survivors on that paper, and all four remain punishable
+under Priority 1 and named in the diagnostics.
+
+**Direction, reported as it fell:** of the 47 affected legs, **32 rise, 7 fall, 8 are unchanged.**
+A leg falls when the pipeline **matched** a forbidden term: the exclusion is symmetric, so a
+forbidden match is withheld from the numerator too. Counting it as a coverage success would score
+obeying the gold below breaking it, which is the inversion D-072 exists to remove.
+
+**Two corrections to the recovered ORCH-702 population, both measured not argued.**
+
+1. Its probe replayed unchanged on `bcf9a23` gives **54 legs · 304 unmatched terms · 66
+   gold-forbidden**, against the **52 · 281 · 62** in its own committed log at `e9aa5c8`. The
+   artifact population grew by two legs; the probe is sound. `evidence/c102_orch702_replay.log`.
+2. ORCH-702 counted forbidden terms only among the **unmatched**, so a forbidden term the pipeline
+   **matched** — and was given coverage credit for — was invisible to it. There are **26** of those,
+   which is why this card measures 92 where the probe measures 66. They surface a **seventh** paper,
+   **`PMC13231680`** (3 legs), outside the bundle's six.
+
+**Seam.** `src/t2pw/bench/acceptance.py` and `src/t2pw/bench/render.py` only. **No production
+pipeline file and no gold file is touched**; `strict_quarantine.py` is untouched, as § 3 of the
+charter requires. Zero forbidden identifiers removed, softened or reworded; the threshold value does
+not move.
+
+**G9** is a behavioural proof, not symbol absence: `evidence/c102_g9_denominator_proof.py` asks the
+public `score_run(...).to_dict()` which requested-core denominators it states for that leg and gets
+`[]` at base against `[23, 27]` at the tip. **All seven mutations in
+`evidence/c102_mutation_attack.py` are detected**, including one that leaks the coverage exemption
+into Priority 1, one that restores the contradictory denominator outright, and **M7**, which reverts
+the numerator half — see the correction round below.
+
+**Gates.** Gold-readers **2 failed / 453 passed / 8 skipped at base AND at tip** — the two F-142
+reds, unchanged, no third. SMOKE **473 passed**. Focused **14 passed**. Every job
+`FINAL SURVIVING COUNT : 0`, `cleanup : success`.
+
+### C-102 correction round 1 — REV-102, and the deviation that shipped untested
+
+**The escalated line had no assertion behind it.** D-072 says forbidden terms leave the
+**denominator**; this card removes them from the **numerator** too. That deviation was escalated
+rather than taken silently — and it still shipped with nothing testing it. Reverting the one line
+(mutation **M7**) left all eleven tests green. **This is F-144 on my own card**: a claim nobody had
+attacked. **M7 is now in the attack set and tests 12 and 13 bite it.**
+
+**The deviation is right, and the corpus says so more sharply than either side argued.** Measured
+independently at `evidence/c102_numerator_verify.log`, a denominator-only exclusion reports a
+"coverage ratio" **above 1.0 on nine committed legs — eight of them exactly `1.2000`** (`6/5`), and
+one at `1.125` (`9/8`). It is not a rate. **23 of the 62 legs carry a matched forbidden term**
+— confirmed here after REV-102's own first count of 19 was corrected by the corpus. Under the
+literal reading, matching a forbidden identifier is worth exactly as much as matching a legitimate
+anchor, so obeying the gold scores **below** breaking it. Removing the term from both sides makes a
+forbidden match exactly **neutral**, which is the property test 12 pins.
+
+**PRODUCT_CONTRACT § 7 currently reads "numerator and denominator alike" while LOCKED D-072 reads
+"denominator".** D-072 outranks it. **That reconciliation is the product owner's, not mine**, and is
+being recorded separately; this card's diff is not an improvised product decision.
+
+**Re-gated on the corrected tree.** Focused **14 passed** · gold-readers **2 failed / 453 passed /
+8 skipped combined** and **453 / 2 / 8 split one file per process across all 22** — identical
+totals, **zero per-file shift**, both reds isolated to `test_strict_failure_replay.py` · SMOKE
+**473 passed** · base `bcf9a23` re-measured: the same **2 / 453 / 8**, no third failure at either
+end. All seven mutations RED, tree clean after each. Every job through `c045_pinned_pytest.py`,
+which printed the resolved `T2PW` path to this worktree's own `src` on each; `FINAL SURVIVING COUNT : 0` and
+`cleanup : success` throughout.
+
+**Two runs kept because they failed.** The split gate's first run had no `--basetemp` parent, so
+every test errored in setup and files reported `0 passed` with exit 1 — an infrastructure failure
+wearing the costume of a wiped test file, and the driver now aborts on exactly that shape rather
+than folding it into a total. The mutation attack's first run would not parse, because a shell
+heredoc collapsed an escape in the M7 substitution. Neither is a test result and neither is deleted.
+
+**Also corrected in this round.** The serialization note (the report-level key is unconditional —
+a run with zero coverage blocks still grows) · the G9 row, which described an `ImportError` as if it
+were the proof · the aggregate/per-leg key-name collision, now `coverage_reconciliation_corpus` ·
+a shallow copy in `ModeResult.to_dict` sharing `excluded_terms` by identity · the ~24% report growth,
+now ~12.4% · and `render.py`'s 27 lines, which had no test and now have test 14.
+
 ## Cards
 
 | Card | Branch / worktree | State |
 |---|---|---|
 | **C-101** — 16/5 metric split · row-aware sentinel seam · raw/accepted Priority 1 | `card/C-101-o1-metric-split` · `C:/t/c101` | **DISPATCHED** 2026-08-28 on base `d7cf4a4`. Charter amended (AMENDMENT 1) for D-073/D-074 |
-| **C-102** — coverage denominator vs `forbidden_identifiers` (Ruling A) | *(not dispatched)* · `C:/t/c102` at dispatch | **CHARTERED.** Blocked on C-101 merging — both edit `bench/`. Develop against the merged C-101 tip |
+| **C-102** — coverage denominator vs `forbidden_identifiers` (Ruling A) | `card/C-102-coverage-denominator` · `C:/t/c102` | **IMPLEMENTED** on base `bcf9a23` (the C-101 integration tip). Awaiting independent review. Delta below |
 | **C-103** — re-point the F-142 replay expectation | *(not dispatched)* · `C:/t/c103` at dispatch | **CHARTERED.** Sequenced after C-102. Not a T-107 blocker |
 
 **C-101 and C-102 are explicitly NOT parallel work.** Serial ownership of `src/t2pw/bench/` is a hard

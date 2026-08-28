@@ -1,0 +1,36 @@
+T2PW: C:\t\c102\src\t2pw\__init__.py
+........................................................................ [ 15%]
+........................................................................ [ 30%]
+........................................................................ [ 45%]
+........................................................................ [ 60%]
+........................................................................ [ 76%]
+........................................................................ [ 91%]
+.........................................                                [100%]
+473 passed in 33.32s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c102\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ cc5f102dde9dfd17596a55df12b18202e9992cbf  [git, worktree dirty=False]
+label                   : c102-smoke-final
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c045_pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-102/03-tip-smoke.pin.json -q --no-header -rf --basetemp=C:/t/bt/c102sf tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py
+cwd                     : C:\t\c102
+root PID / process group: 494460 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 34.55 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 9  492692:python.exe, 497160:python.exe, 498040:python.exe, 494912:python.exe, 496960:python.exe, 488308:python.exe, 497884:python.exe, 495720:python.exe, 496648:python.exe
+descendants terminated  : 9  488308, 492692, 494912, 495720, 496648, 496960, 497160, 497884, 498040
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c102\docs\pwml_recovery_sprint\evidence\g11\C-102\13-smoke-final.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-102  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

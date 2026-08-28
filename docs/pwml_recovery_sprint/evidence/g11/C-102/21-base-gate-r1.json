@@ -1,0 +1,186 @@
+{
+  "label": "c102-base-gate-r1",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/c102_base_gate.py",
+    "C:/t/c102",
+    "bcf9a23"
+  ],
+  "cwd": "C:\\t\\c102",
+  "started_at": "2026-08-28T20:17:43+00:00",
+  "finished_at": "2026-08-28T20:18:17+00:00",
+  "duration_seconds": 33.82982679999259,
+  "timeout_seconds": 1800.0,
+  "root_pid": 513680,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 511136,
+      "name": "python.exe",
+      "ppid": 513680
+    },
+    {
+      "pid": 516964,
+      "name": "git.exe",
+      "ppid": 511136
+    },
+    {
+      "pid": 515468,
+      "name": "python.exe",
+      "ppid": 511136
+    },
+    {
+      "pid": 515472,
+      "name": "python.exe",
+      "ppid": 515468
+    },
+    {
+      "pid": 516440,
+      "name": "git.exe",
+      "ppid": 515472
+    },
+    {
+      "pid": 516500,
+      "name": "git.exe",
+      "ppid": 515472
+    },
+    {
+      "pid": 516752,
+      "name": "git.exe",
+      "ppid": 515472
+    },
+    {
+      "pid": 516860,
+      "name": "git.exe",
+      "ppid": 515472
+    },
+    {
+      "pid": 517092,
+      "name": "git.exe",
+      "ppid": 515472
+    },
+    {
+      "pid": 514324,
+      "name": "git.exe",
+      "ppid": 515472
+    },
+    {
+      "pid": 515240,
+      "name": "python.exe",
+      "ppid": 515472
+    },
+    {
+      "pid": 516344,
+      "name": "python.exe",
+      "ppid": 515240
+    },
+    {
+      "pid": 514796,
+      "name": "python.exe",
+      "ppid": 511136
+    },
+    {
+      "pid": 510204,
+      "name": "python.exe",
+      "ppid": 514796
+    },
+    {
+      "pid": 511624,
+      "name": "python.exe",
+      "ppid": 511136
+    },
+    {
+      "pid": 516708,
+      "name": "python.exe",
+      "ppid": 516980
+    },
+    {
+      "pid": 516980,
+      "name": "python.exe",
+      "ppid": 511136
+    },
+    {
+      "pid": 517068,
+      "name": "git.exe",
+      "ppid": 511136
+    }
+  ],
+  "descendants_terminated": [
+    510204,
+    511136,
+    511624,
+    514324,
+    514796,
+    515240,
+    515468,
+    515472,
+    516344,
+    516440,
+    516500,
+    516708,
+    516752,
+    516860,
+    516964,
+    516980,
+    517068,
+    517092
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 71220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 354560,
+      "name": "python.exe"
+    },
+    {
+      "pid": 516668,
+      "name": "python.exe"
+    },
+    {
+      "pid": 516696,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c102\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-102\\21-base-gate-r1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c102\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c102",
+    "repo_head": "d0a3204afc190fa533bc3373a66f3de6f24e9e7e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-102",
+    "token": "C-102:516696:8d638282c250e084",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

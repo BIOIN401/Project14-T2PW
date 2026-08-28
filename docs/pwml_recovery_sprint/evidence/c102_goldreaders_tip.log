@@ -1,0 +1,83 @@
+........................................................................ [ 15%]
+........................................................................ [ 31%]
+........................................................................ [ 46%]
+........................................................................ [ 62%]
+.......F........F.......ss...s..sss.ss.................................. [ 77%]
+........................................................................ [ 93%]
+...............................                                          [100%]
+================================== FAILURES ===================================
+_ test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive] _
+
+case_id = 'only_unrelated_reactions_survive'
+
+    @pytest.mark.parametrize("case_id", _case_ids())
+    def test_every_stored_strict_failure_replays_to_its_recorded_verdict(case_id: str) -> None:
+        case = _case(case_id)
+        expect = case["expect"]
+        payload = case["payload"]
+    
+        ok_before, _reasons_before = _strict_verdict(payload)
+        assert ok_before is expect["strict_before"], (
+            f"{case_id}: the stored payload's pre-quarantine strict verdict changed; "
+            "the fixture records what the gates said when it was written."
+        )
+    
+        result = quarantine_and_close(deepcopy(payload), strict_db=True)
+    
+>       assert result.ok is expect["recovers"]
+E       AssertionError: assert True is False
+E        +  where True = StrictQuarantineResult(payload={'metadata': {'pw_id': 'PW000000', 'pathway_name': 'Glutathione biosynthesis', 'name': ...ied': False, 'reasons': ['core_process_count_below_minimum:0<1', 'requested_core_coverage_below_minimum:0.000<0.500']}).ok
+
+tests\test_strict_failure_replay.py:116: AssertionError
+_ test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive] _
+
+case_id = 'only_unrelated_reactions_survive'
+
+    @pytest.mark.parametrize("case_id", _case_ids())
+    def test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed(case_id: str) -> None:
+        case = _case(case_id)
+        expect = case["expect"]
+        result = quarantine_and_close(deepcopy(case["payload"]), strict_db=True)
+    
+        # "smaller" is short for "a smaller VALID strict graph". A refused case
+        # shrank plenty -- that is what refusal looks like from the inside -- but it
+        # produced no graph at all, so recording it as smaller would read as a win.
+        shrank = (
+            _process_count(result.payload) < _process_count(case["payload"])
+            or _entity_count(result.payload) < _entity_count(case["payload"])
+        )
+>       assert (result.ok and shrank) is expect["smaller"]
+E       AssertionError: assert ((True and True)) is False
+E        +  where True = StrictQuarantineResult(payload={'metadata': {'pw_id': 'PW000000', 'pathway_name': 'Glutathione biosynthesis', 'name': ...ied': False, 'reasons': ['core_process_count_below_minimum:0<1', 'requested_core_coverage_below_minimum:0.000<0.500']}).ok
+
+tests\test_strict_failure_replay.py:140: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]
+2 failed, 453 passed, 8 skipped in 30.64s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c102\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9250b61286a9fe43a41685e97a406b7c344f7f3b  [git, worktree dirty=False]
+label                   : c102-goldreaders-tip
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest tests/test_protein_export_policy.py tests/test_c056b_semantic_denominators.py tests/test_batch_pwml_artifact_naming.py tests/test_c074_strict_core_floor.py tests/test_c076_alias_holo_apo_identity.py tests/test_c077_stage0_conflict_disposition.py tests/test_c081_cofactor_role_identity.py tests/test_c085_priority2_honesty.py tests/test_c088_extracted_not_serialized_disposition.py tests/test_cofactor_policy.py tests/test_rag_multi_relation_spans.py tests/test_release_status_classification.py tests/test_semantic_production_no_gold.py tests/test_strict_failure_replay.py tests/test_batch_driver_quarantine_artifacts.py tests/test_c056c_semantic_evaluability.py tests/test_c071_actor_evidence_gate.py tests/test_c080_production_gate_kind_aware.py tests/test_c089_participant_schema.py tests/test_c090_wrapper_identity_actor_evidence.py tests/test_c097_semantic_name_keys.py tests/test_semantic_release_gating.py -q --no-header -rf --basetemp=C:/t/bt/c102g
+cwd                     : C:\t\c102
+root PID / process group: 494920 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 31.47 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 6  494932:python.exe, 495584:git.exe, 490452:git.exe, 494688:git.exe, 494892:git.exe, 495260:python.exe
+descendants terminated  : 6  490452, 494688, 494892, 494932, 495260, 495584
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c102\docs\pwml_recovery_sprint\evidence\g11\C-102\07-goldreaders-tip.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

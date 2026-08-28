@@ -1,0 +1,77 @@
+=== BASELINE (unmutated tip) === exit=0
+    11 passed in 2.12s
+
+=== M1: the exclusion never happens -- the contradictory denominator is restored
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_10_f132_population_regression_over_the_six_papers
+    test_11_restoring_the_contradictory_denominator_collapses_raw_and_accepted
+    test_1_forbidden_terms_are_present_in_the_raw_anchor_set
+    test_2_the_same_terms_are_excluded_from_the_accepted_denominator
+    test_3_priority1_still_scores_a_forbidden_identifier_that_is_exported
+    test_4_withheld_terms_remain_in_the_diagnostics
+    test_6_a_similar_but_unlisted_name_is_still_required
+    test_7_the_exclusion_is_case_local
+    test_8_an_empty_accepted_denominator_is_undefined_and_not_a_success
+    test_9_raw_and_accepted_are_reported_separately_and_differ
+    10 failed, 1 passed in 1.50s
+
+=== M2: the parenthetical-gloss head retry is dropped
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_10_f132_population_regression_over_the_six_papers
+    1 failed, 10 passed in 2.17s
+
+=== M3: guard rail 1 is weakened from exact matching to containment
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_10_f132_population_regression_over_the_six_papers
+    test_6_a_similar_but_unlisted_name_is_still_required
+    2 failed, 9 passed in 2.29s
+
+=== M4: an empty accepted denominator is reported as a coverage success
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_8_an_empty_accepted_denominator_is_undefined_and_not_a_success
+    1 failed, 10 passed in 2.16s
+
+=== M5: guard rail 3 is silenced -- withheld terms vanish from the record
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_2_the_same_terms_are_excluded_from_the_accepted_denominator
+    test_4_withheld_terms_remain_in_the_diagnostics
+    test_6_a_similar_but_unlisted_name_is_still_required
+    test_8_an_empty_accepted_denominator_is_undefined_and_not_a_success
+    4 failed, 7 passed in 1.58s
+
+=== M6: the coverage exemption leaks into Priority 1 and stops scoring a forbidden export
+    file=src/t2pw/bench/semantic.py  exit=1  RED (detected)
+    test_3_priority1_still_scores_a_forbidden_identifier_that_is_exported
+    1 failed, 10 passed in 2.18s
+
+=== tree after restore: ''  (must be empty)
+=== SUITE AFTER RESTORE === exit=0
+    11 passed in 2.05s
+
+ATTACK PASSED: all 6 mutations detected, tree clean, suite green
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c102\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9250b61286a9fe43a41685e97a406b7c344f7f3b  [git, worktree dirty=False]
+label                   : c102-mutation-attack-2
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py C:/t/c102
+cwd                     : C:\t\c102
+root PID / process group: 492740 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 21.49 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 25  492324:python.exe, 492340:python.exe, 494548:python.exe, 492164:python.exe, 493784:python.exe, 494588:git.exe, 477796:python.exe, 493820:python.exe, 492676:git.exe, 479388:git.exe, 492240:python.exe, 492788:python.exe, 493032:git.exe, 493712:python.exe, 493204:python.exe, 491584:python.exe, 492684:python.exe, 494096:git.exe, 492548:git.exe, 490948:python.exe, 492184:python.exe, 494116:git.exe, 489788:python.exe, 493968:python.exe, 491844:git.exe
+descendants terminated  : 25  477796, 479388, 489788, 490948, 491584, 491844, 492164, 492184, 492240, 492324, 492340, 492548, 492676, 492684, 492788, 493032, 493204, 493712, 493784, 493820, 493968, 494096, 494116, 494548, 494588
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c102\docs\pwml_recovery_sprint\evidence\g11\C-102\06-mutation-attack-2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

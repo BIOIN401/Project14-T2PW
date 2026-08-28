@@ -25,6 +25,7 @@ result. A clean identity score sourced from a pre-mapping payload is reported as
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
@@ -156,6 +157,173 @@ def _load_manifest(run_dir: Path) -> List[Dict[str, Any]]:
 
 
 # ---------------------------------------------------------------------------
+# D-072 (Ruling A) -- the contract-accepted coverage denominator.
+# ---------------------------------------------------------------------------
+# F-132: Stage 0 draws the requested-core term list and knows nothing about the
+# gold's `forbidden_identifiers`, so on 32 committed legs across 6 papers it drew
+# terms the SAME case forbids exporting. Priority 1 then penalised exporting them
+# and Priority 4/5 penalised omitting them -- 62 of 281 unmatched terms, 22%.
+#
+# The reconciliation lives HERE and not at `strict_quarantine.py:997`, where the
+# ratio is computed, because the forbidden list is GOLD and that seam is
+# PRODUCTION: threading gold into the pipeline would embed gold-set-only policy
+# into it, which PRODUCT_CONTRACT 12 forbids. Production keeps reporting the raw
+# draw unchanged; acceptance computes the corrected reading beside it.
+#
+# THE THREE GUARD RAILS THIS CODE IS BOUND BY (D-072), each with a test:
+#   1. Only terms on THIS case's own `forbidden_identifiers` are exempt -- never
+#      a term that is merely hard, absent or unmatched. "Not required as a
+#      coverage match" must never become "safe to omit anything."
+#   2. No bare identifier and no fabricated PWML is introduced. Nothing here
+#      writes a payload; it only re-reads a committed measurement.
+#   3. An extracted-but-withheld entity stays VISIBLE. Every excluded term is
+#      re-reported by name, with the forbidden entry that excused it, so removing
+#      it from the denominator never removes it from the record.
+
+#: A permitted denominator existed and the accepted rate was measured over it.
+COVERAGE_MEASURED = "measured"
+#: EVERY requested-core term on this leg is forbidden by this case, so the
+#: permitted denominator is empty and the accepted rate is UNDEFINED -- not 1.0,
+#: not 0.0, and never a coverage success. There is nothing left that the case
+#: permits the pipeline to cover, which is a fact about the draw, not an
+#: achievement by the pipeline.
+COVERAGE_UNDEFINED_ALL_FORBIDDEN = "undefined_every_term_forbidden"
+#: The leg declared no requested core, so there was never a ratio to correct.
+COVERAGE_NO_DECLARED_CORE = "no_declared_core"
+
+
+def forbidden_coverage_match(case: GoldCase, term: Any) -> Optional[Any]:
+    """The forbidden identifier ``term`` names on THIS case, or ``None``.
+
+    Exact, case-scoped and alias-aware, because it is
+    :meth:`GoldCase.forbidden_match` doing the work -- containment is refused in
+    both directions there, so ``coenzyme A ligase`` is never condemned by
+    ``coenzyme A`` (guard rail 1).
+
+    The one addition is the retry on the head before a parenthetical gloss.
+    Stage-0 anchors carry them -- the committed draws hold
+    ``MenD (2-succinyl-...-synthase)`` and ``RyhB (small RNA)`` -- and the
+    recovered F-132 probe already had to do this to see 62 of the 62. It is a
+    gloss-stripping rule, not a fuzzy one: the head must still match EXACTLY.
+    """
+
+    hit = case.forbidden_match(term)
+    if hit is not None:
+        return hit
+    text = str(term)
+    head = text.split("(")[0].strip()
+    if not head or head == text.strip():
+        return None
+    return case.forbidden_match(head)
+
+
+def contract_accepted_coverage(
+    case: GoldCase, coverage: Optional[Mapping[str, Any]]
+) -> Optional[Dict[str, Any]]:
+    """Raw and contract-accepted requested-core coverage for one leg, side by side.
+
+    ``None`` when the leg stored no coverage block at all -- an unmeasured leg is
+    never given a manufactured rate.
+
+    THE TWO RESULTS CANNOT AGREE BY CONSTRUCTION. ``raw_*`` is copied verbatim
+    from the frozen artifact and is never recomputed here, so a historical report
+    stays comparable against it; ``accepted_*`` is computed from the term lists
+    over a different predicate. Their agreement on a leg with no forbidden draw is
+    a MEASUREMENT (``excluded_terms`` is empty and says so), not an identity.
+
+    The threshold is read from the leg's own record and applied unchanged.
+    D-072 moves what goes into the denominator; PRODUCT_CONTRACT 7's "the
+    threshold value itself does not move" is respected exactly.
+    """
+
+    if not isinstance(coverage, Mapping):
+        return None
+
+    terms = [t for t in (coverage.get("requested_core_terms") or [])]
+    matched = [t for t in (coverage.get("matched_terms") or [])]
+    declared = bool(coverage.get("requested_core_declared"))
+    thresholds = coverage.get("thresholds")
+    minimum = None
+    if isinstance(thresholds, Mapping) and thresholds.get("min_core_coverage") is not None:
+        try:
+            minimum = float(thresholds["min_core_coverage"])
+        except (TypeError, ValueError):
+            minimum = None
+    raw_ratio = coverage.get("coverage_ratio")
+    raw_ratio = float(raw_ratio) if isinstance(raw_ratio, (int, float)) else None
+
+    # Guard rail 3. Recorded BEFORE anything is dropped, and re-reported in full.
+    excluded: List[Dict[str, Any]] = []
+    matched_norms = {canonical_text(t).casefold() for t in matched}
+    for term in terms:
+        hit = forbidden_coverage_match(case, term)
+        if hit is None:
+            continue
+        excluded.append(
+            {
+                "term": str(term),
+                "forbidden_name": hit.name,
+                "forbidden_kind": hit.kind,
+                "forbidden_reason": hit.reason,
+                # A forbidden term the pipeline DID match is withheld from the
+                # numerator as well as the denominator -- see below -- so this
+                # flag is the reader's evidence that no forbidden match was ever
+                # counted as a coverage success.
+                "matched_in_raw": canonical_text(term).casefold() in matched_norms,
+            }
+        )
+
+    excluded_terms = {e["term"] for e in excluded}
+    accepted_denominator = [str(t) for t in terms if str(t) not in excluded_terms]
+    # Withheld from the NUMERATOR too, deliberately and symmetrically. Excluding a
+    # matched forbidden term from the denominator alone would let obeying the gold
+    # score worse than breaking it -- the exact inversion D-072 exists to remove.
+    accepted_matched = [str(t) for t in matched if str(t) not in excluded_terms]
+
+    if not declared or not terms:
+        state = COVERAGE_NO_DECLARED_CORE
+        accepted_ratio: Optional[float] = None
+    elif not accepted_denominator:
+        state = COVERAGE_UNDEFINED_ALL_FORBIDDEN
+        accepted_ratio = None
+    else:
+        state = COVERAGE_MEASURED
+        accepted_ratio = len(accepted_matched) / len(accepted_denominator)
+
+    def _below(ratio: Optional[float]) -> Optional[bool]:
+        if ratio is None or minimum is None:
+            return None
+        return ratio < minimum
+
+    raw_below = _below(raw_ratio) if declared else None
+    accepted_below = _below(accepted_ratio)
+    return {
+        "schema_version": 1,
+        "raw_ratio": raw_ratio,
+        "raw_matched": len(matched),
+        "raw_denominator": len(terms),
+        "raw_below_minimum": raw_below,
+        "accepted_ratio": None if accepted_ratio is None else round(accepted_ratio, 6),
+        "accepted_matched": len(accepted_matched),
+        "accepted_denominator": len(accepted_denominator),
+        "accepted_below_minimum": accepted_below,
+        "accepted_state": state,
+        "min_core_coverage": minimum,
+        "excluded_terms": excluded,
+        "excluded_count": len(excluded),
+        # The single question this card was chartered to answer per leg: was a
+        # coverage block levied for terms the case itself forbids exporting, and
+        # does it survive being asked again without them?
+        "cleared_by_reconciliation": raw_below is True and accepted_below is False,
+        "reconciliation_note": (
+            "raw is the frozen pipeline measurement and is unchanged; accepted removes only "
+            "this case's own forbidden_identifiers from BOTH the numerator and the "
+            "denominator, at the unchanged threshold."
+        ),
+    }
+
+
+# ---------------------------------------------------------------------------
 # Per-leg result.
 # ---------------------------------------------------------------------------
 @dataclass
@@ -186,6 +354,11 @@ class ModeResult:
     release_status: Optional[Dict[str, Any]] = None
     #: The PWML filename the leg wrote, as the row reported it.
     pwml_artifact: str = ""
+    #: D-072. Raw and contract-accepted requested-core coverage, side by side, or
+    #: ``None`` when the leg stored no coverage block. Built by :func:`score_run`
+    #: from the leg's frozen ``quarantine_report.json`` and the case's own
+    #: forbidden list; nothing here re-derives the raw ratio.
+    coverage_reconciliation: Optional[Dict[str, Any]] = None
     #: C-088 / D-065. This CASE's own connected-core floor -- the gold set's
     #: ``min_connected_reactions``, the number gold says the paper actually
     #: supports. Set by :func:`score_run` from the case being scored; ``None`` on a
@@ -369,6 +542,13 @@ class ModeResult:
             data["release_status"] = dict(self.release_status)
         if self.pwml_artifact:
             data["pwml_artifact"] = self.pwml_artifact
+        # D-072. Conditional like the keys above: a leg with no coverage block
+        # serializes byte-identically to before.
+        if self.coverage_reconciliation:
+            # DEEP, not `dict(...)`. A shallow copy shares `excluded_terms` by
+            # identity with the live field, so a caller mutating the serialized
+            # report would reach back into the scored leg (REV-102 F7).
+            data["coverage_reconciliation"] = deepcopy(dict(self.coverage_reconciliation))
         # C-088 / D-065. Conditional for the same reason as the two keys above: a leg
         # that established no disposition serializes byte-identically to before.
         #
@@ -501,6 +681,76 @@ class AcceptanceReport:
     #: ACCEPTED count. D-073 wants the composition of BOTH results, so the rows
     #: are carried rather than recomputed from a total that discarded them.
     priority1_rows: List[Dict[str, Any]] = field(default_factory=list)
+
+    @property
+    def coverage_reconciliation_corpus(self) -> Dict[str, Any]:
+        """D-072. Every leg's raw and contract-accepted coverage, and the totals.
+
+        NAMED FOR THE CORPUS, not `coverage_reconciliation`, which is the PER-LEG
+        record on :class:`ModeResult`. The two carry disjoint key sets -- this one
+        has `legs` and corpus counts, that one has `raw_ratio` and
+        `excluded_terms` -- and sharing a name made a reader who found one assume
+        the shape of the other (REV-102 F6).
+
+        A DIAGNOSTIC RECORD, not a rate. It answers "which coverage penalties were
+        levied for terms the case itself forbids exporting, and do they survive
+        being asked again without them?" -- and it answers it per leg, because a
+        corpus total would hide a leg that cleared behind five that did not.
+
+        Guard rail 3 is discharged here: ``excluded_terms`` travels on every row,
+        so a term removed from a denominator is still named in the report.
+        """
+
+        legs: List[Dict[str, Any]] = []
+        for paper in self.papers:
+            for mode, leg in sorted(paper.legs.items()):
+                if not leg.coverage_reconciliation:
+                    continue
+                legs.append(
+                    {"paper_id": paper.paper_id, "mode": mode, **leg.coverage_reconciliation}
+                )
+        affected = [row for row in legs if row["excluded_count"]]
+        return {
+            "legs": legs,
+            "legs_with_coverage": len(legs),
+            "legs_with_forbidden_terms": len(affected),
+            "papers_with_forbidden_terms": sorted({row["paper_id"] for row in affected}),
+            "forbidden_terms_excluded": sum(row["excluded_count"] for row in affected),
+            "legs_cleared_by_reconciliation": sorted(
+                f"{row['paper_id']}:{row['mode']}" for row in legs if row["cleared_by_reconciliation"]
+            ),
+            "legs_still_below_minimum": sorted(
+                f"{row['paper_id']}:{row['mode']}"
+                for row in legs
+                if row["accepted_below_minimum"] is True
+            ),
+            "legs_with_undefined_accepted_rate": sorted(
+                f"{row['paper_id']}:{row['mode']}"
+                for row in legs
+                if row["accepted_state"] == COVERAGE_UNDEFINED_ALL_FORBIDDEN
+            ),
+        }
+
+    @property
+    def coverage_reconciliation_summary(self) -> Dict[str, Any]:
+        """The corpus record WITHOUT its per-leg array, for the priority entries.
+
+        F5. The full record is ~12 KB and priorities 4 and 5 both carry it, so
+        serializing it whole put three byte-identical copies in every report and
+        grew one pinned report by ~24%, about two thirds of it duplication. A
+        reader diffing two acceptance reports then watches the same blob move
+        three times, which hides real changes rather than surfacing them.
+
+        The counts stay on the entry, so a priority read ALONE still says how
+        large the reconciliation was and which legs cleared, are still below the
+        minimum, or have no defined rate. Only the row-by-row detail moves, and
+        `legs_at` says where it went -- it is one key away, in the same document.
+        """
+
+        corpus = self.coverage_reconciliation_corpus
+        summary = {key: value for key, value in corpus.items() if key != "legs"}
+        summary["legs_at"] = "coverage_reconciliation_corpus.legs"
+        return summary
 
     # -- coverage -------------------------------------------------------
     def completion(self) -> Dict[str, Any]:
@@ -648,6 +898,7 @@ class AcceptanceReport:
         totals = self.errors.totals
         semantic = self.denominators.get(DENOM_SEMANTIC)
         strict = self.denominators.get(DENOM_STRICT)
+        coverage = self.coverage_reconciliation_summary
 
         false_ids = totals.get(ERR_FALSE_REAL_IDENTIFIERS, 0)
         # RAW is the error total, unchanged. ACCEPTED is computed from the ROWS
@@ -745,18 +996,32 @@ class AcceptanceReport:
             {
                 "rank": 4,
                 "name": "meaningful requested-pathway coverage",
+                # UNCHANGED. `ok` and `observed` remain the RAW semantic-confirmed
+                # rate, so historical reports stay comparable and this card moves
+                # no bar. What D-072 adds is the corrected reading beside it.
                 "ok": bool(semantic and semantic.rate is not None and semantic.rate > 0),
                 "evaluated": True,
                 "observed": semantic.render() if semantic else "n/a",
                 "papers": sorted(semantic.numerator_names) if semantic else [],
+                # -- D-072, Ruling A ------------------------------------------
+                "requested_core_coverage": coverage,
             },
             {
                 "rank": 5,
                 "name": "maximize strict PWML pass rate among eligible/exportable papers",
+                # UNCHANGED, and DELIBERATELY so. A leg the runtime froze as
+                # `review_required` for a coverage block stays out of the strict
+                # numerator even when that block clears under D-072: this module
+                # scores runs, it does not reclassify them, and promoting a frozen
+                # record on a rescored ratio is exactly the post-freeze repair
+                # merge rule 8 forbids. The reconciliation says whether the block
+                # would survive; it never re-issues the release decision.
                 "ok": bool(strict and strict.rate is not None and strict.rate > 0),
                 "evaluated": True,
                 "observed": strict.render() if strict else "n/a",
                 "papers": sorted(strict.numerator_names) if strict else [],
+                # -- D-072, Ruling A ------------------------------------------
+                "requested_core_coverage": coverage,
             },
         ]
 
@@ -783,6 +1048,11 @@ class AcceptanceReport:
             },
             "papers": [p.to_dict() for p in self.papers],
             "notes": self.notes,
+            # D-072. Reported SEPARATELY from every rate above, because it is not
+            # one: conflating it into a coverage number is what the ruling forbids.
+            # This is the ONLY copy of the per-leg array; priorities 4 and 5 carry
+            # the counts and point here for the rows (F5).
+            "coverage_reconciliation_corpus": self.coverage_reconciliation_corpus,
         }
         # C-088 / D-065. Conditional, like every optional key in this module: a run
         # that placed no leg serializes byte-identically to before.
@@ -910,6 +1180,11 @@ def score_run(
                 admission, _, _ = _first_existing(leg_dir, _ADMISSION_FILES)
                 quarantine, _, _ = _first_existing(leg_dir, _QUARANTINE_FILES)
 
+            # D-072. The gold case is in scope here and only here, which is why
+            # the reconciliation is built in this loop rather than pushed down.
+            leg.coverage_reconciliation = contract_accepted_coverage(
+                case, quarantine.get("coverage") if isinstance(quarantine, dict) else None
+            )
             leg.semantic = validate_semantic_coverage(
                 case,
                 payload if isinstance(payload, dict) else None,
@@ -1383,6 +1658,11 @@ def _build_notes(report: AcceptanceReport) -> None:
 
 
 __all__ = [
+    "COVERAGE_MEASURED",
+    "COVERAGE_NO_DECLARED_CORE",
+    "COVERAGE_UNDEFINED_ALL_FORBIDDEN",
+    "contract_accepted_coverage",
+    "forbidden_coverage_match",
     "MODES",
     "MODE_RESEARCH",
     "MODE_STRICT",

@@ -1,0 +1,90 @@
+=== BASELINE (unmutated tip) === exit=0
+    14 passed in 3.20s
+
+=== M1: the exclusion never happens -- the contradictory denominator is restored
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_10_f132_population_regression_over_the_six_papers
+    test_11_restoring_the_contradictory_denominator_collapses_raw_and_accepted
+    test_12_a_matched_forbidden_term_is_withheld_from_the_numerator_too
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    test_14_the_reconciliation_is_rendered_under_priorities_4_and_5_only
+    test_1_forbidden_terms_are_present_in_the_raw_anchor_set
+    test_2_the_same_terms_are_excluded_from_the_accepted_denominator
+    test_3_priority1_still_scores_a_forbidden_identifier_that_is_exported
+    test_4_withheld_terms_remain_in_the_diagnostics
+    test_6_a_similar_but_unlisted_name_is_still_required
+    test_7_the_exclusion_is_case_local
+    test_8_an_empty_accepted_denominator_is_undefined_and_not_a_success
+    test_9_raw_and_accepted_are_reported_separately_and_differ
+    13 failed, 1 passed in 2.07s
+
+=== M2: the parenthetical-gloss head retry is dropped
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_10_f132_population_regression_over_the_six_papers
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    2 failed, 12 passed in 3.27s
+
+=== M3: guard rail 1 is weakened from exact matching to containment
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_10_f132_population_regression_over_the_six_papers
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    test_6_a_similar_but_unlisted_name_is_still_required
+    3 failed, 11 passed in 3.52s
+
+=== M4: an empty accepted denominator is reported as a coverage success
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_8_an_empty_accepted_denominator_is_undefined_and_not_a_success
+    1 failed, 13 passed in 3.30s
+
+=== M5: guard rail 3 is silenced -- withheld terms vanish from the record
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_12_a_matched_forbidden_term_is_withheld_from_the_numerator_too
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    test_2_the_same_terms_are_excluded_from_the_accepted_denominator
+    test_4_withheld_terms_remain_in_the_diagnostics
+    test_6_a_similar_but_unlisted_name_is_still_required
+    test_8_an_empty_accepted_denominator_is_undefined_and_not_a_success
+    6 failed, 8 passed in 2.73s
+
+=== M7: the NUMERATOR half is reverted to D-072's literal denominator-only text
+    file=src/t2pw/bench/acceptance.py  exit=1  RED (detected)
+    test_12_a_matched_forbidden_term_is_withheld_from_the_numerator_too
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    2 failed, 12 passed in 3.23s
+
+=== M6: the coverage exemption leaks into Priority 1 and stops scoring a forbidden export
+    file=src/t2pw/bench/semantic.py  exit=1  RED (detected)
+    test_3_priority1_still_scores_a_forbidden_identifier_that_is_exported
+    1 failed, 13 passed in 3.32s
+
+=== tree after restore: ''  (must be empty)
+=== SUITE AFTER RESTORE === exit=0
+    14 passed in 3.18s
+
+ATTACK PASSED: all 7 mutations detected, tree clean, suite green
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c102\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d0a3204afc190fa533bc3373a66f3de6f24e9e7e  [git, worktree dirty=False]
+label                   : c102-mutation-attack-r1b
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py C:/t/c102
+cwd                     : C:\t\c102
+root PID / process group: 507976 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 34.15 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 26  510132:python.exe, 511340:python.exe, 512448:python.exe, 514204:python.exe, 514224:python.exe, 514500:git.exe, 514616:python.exe, 514636:python.exe, 512768:git.exe, 514176:python.exe, 514192:python.exe, 509248:python.exe, 513788:python.exe, 514084:python.exe, 514116:python.exe, 514352:git.exe, 514188:git.exe, 514208:python.exe, 514576:python.exe, 510508:git.exe, 514092:python.exe, 515028:python.exe, 513568:git.exe, 509756:python.exe, 513048:python.exe, 514964:git.exe
+descendants terminated  : 26  509248, 509756, 510132, 510508, 511340, 512448, 512768, 513048, 513568, 513788, 514084, 514092, 514116, 514176, 514188, 514192, 514204, 514208, 514224, 514352, 514500, 514576, 514616, 514636, 514964, 515028
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c102\docs\pwml_recovery_sprint\evidence\g11\C-102\18-mutation-attack-r1b.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

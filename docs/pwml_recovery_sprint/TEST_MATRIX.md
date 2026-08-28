@@ -595,3 +595,73 @@ A base sweep reporting 22 rather than 21 is this, and only this.
 
 **Pinned line count after this entry: 578** (was 541). D-061 requires the new value be
 recorded here so the tripwire keeps working at its new value rather than being abandoned.
+
+
+---
+
+## C-102 / D-072 — the authorized Priority-4/5 baseline move, with its A/B
+
+**Nothing in this move is a threshold change.** `min_core_coverage` stays `0.5` everywhere. What
+moves is the **denominator** the acceptance instrument reports beside the raw one.
+
+**The A/B ran offline, against committed `quarantine_report.json` artifacts.** Re-running the corpus
+was forbidden this wave and no leg, cohort or paper leg was run.
+`evidence/c102_f132_coverage_ab.py` measures the population;
+`evidence/c102_g9_denominator_proof.py` is the base-vs-tip behavioural proof;
+`evidence/c102_base_gate.py` measures the gates on `bcf9a23` by restoring the two changed modules to
+their base blobs and setting the new test aside, then verifying `git diff` against base is empty for
+`src` and `tests` while the base leg runs. That is used **instead of `c045b_base_tree.py`**, whose
+pathspec excludes `runs_verify` — an exported base tree would have failed for want of data rather
+than for want of code, and that is not a base result.
+
+| Gate | base `bcf9a23` | tip | verdict |
+|---|---|---|---|
+| gold-readers (22 files) | **2 failed, 453 passed, 8 skipped** (exit 1) | **2 failed, 453 passed, 8 skipped** (exit 1) | identical; both reds are F-142 `[only_unrelated_reactions_survive]`, chartered as C-103. **No third failure.** |
+| SMOKE (20 files) | — | **473 passed** | merge rule 10 |
+| focused `test_c102_coverage_denominator.py` | **does not collect — `ImportError`** | **14 passed** | **not the G9 proof.** A missing import is *symbol absence*, which G9 explicitly refuses. The behavioural proof is `evidence/c102_g9_denominator_proof.py`, in the row below |
+| `c102_g9_denominator_proof.py` — which denominators does the report state for `PMC12782028/strict`? | **`[]`**, and no withheld term named | **`[23, 27]`**, all four named | **this is G9.** A statement about values in the report, not about a symbol |
+
+**Corpus delta**, 62 legs with a coverage block, 860 requested-core terms drawn: **92 gold-forbidden
+terms withheld across 47 legs**; **32 legs rise, 7 fall, 8 unchanged**; **zero legs clear** the
+unchanged 0.500 minimum, and the six that were below it stay below it. `PMC12782028/strict` moves
+`0.222 -> 0.261` and does **not** clear. **Priority 4 stays `0/8` and Priority 5 stays `0/2`** on
+`runs_verify/2026-08-24_1428` — measured, not predicted, and reported as it fell.
+
+**A leg that falls is the instrument working.** The exclusion is symmetric: a forbidden term the
+pipeline matched is withheld from the numerator as well as the denominator, so it no longer earns
+coverage credit. 26 of the 92 withheld terms are of that kind, and they are invisible to the
+ORCH-702 probe, which counted forbidden terms only among the unmatched.
+
+**Serialization note for anyone diffing reports — corrected, the first version was wrong.**
+Only the **per-leg** key is conditional: `ModeResult.to_dict` omits `coverage_reconciliation` when
+the leg stored no coverage block. The **report-level** key is not. `AcceptanceReport.to_dict` always
+writes `coverage_reconciliation_corpus`, and priorities 4 and 5 always carry
+`requested_core_coverage`, so **no report serializes byte-identically to before** — including one
+with no coverage block anywhere. Measured (`evidence/c102_report_size.py` / `.log`):
+`runs_verify/2026-08-04_1207` has **zero** such legs and still grows **48,773 → 49,681 bytes**.
+Priorities 1-3 carry no `requested_core_coverage` key; only 4 and 5 do.
+
+**Two names, because they are two different records (REV-102 F6).**
+`coverage_reconciliation_corpus` at the top level is the aggregate and owns the per-leg `legs`
+array; `coverage_reconciliation` inside a leg is that leg's own row. Their key sets are disjoint and
+they briefly shared a name, which invited a reader who found one to assume the shape of the other.
+
+**Size, and the choice behind it (REV-102 F5).** The corpus record is ~12 KB on a full run and
+priorities 4 and 5 both referenced it, so it was serialized three times. The priority entries now
+carry the **counts only** — how many legs, how many terms, which legs cleared, which are still below
+the minimum, which have no defined rate — plus `legs_at`, naming the one key that holds the rows.
+A priority read alone still states the size and outcome of the reconciliation; only the row-by-row
+detail moved, one key away in the same document.
+
+Every figure below is measured by one probe across all three shapes
+(`evidence/c102_report_size.py`, whose `--as-if-uncompacted` swaps the summary property back to the
+pre-F5 shape without editing a file), so the deltas are self-consistent:
+
+| run | base `bcf9a23` | tip, pre-F5 | tip, shipped |
+|---|---|---|---|
+| `2026-08-24_1428` (10 legs with a coverage block) | 199,706 | 248,425 · **+24.4%** | **224,607 · +12.5%** |
+| `2026-08-04_1207` (**zero** such legs) | 48,773 | 49,605 | **49,681 · +908 B** |
+
+F5 removes **23,818 bytes, 49% of the growth**, on the full run: the two priority copies fall from
+12,288 bytes each to 379. **It makes the small report 76 bytes larger**, because the summary adds
+`legs_at` where the whole record had an empty `legs` array — stated rather than rounded away.

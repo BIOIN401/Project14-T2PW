@@ -1,0 +1,56 @@
+base                : bcf9a23d293c90195cedd96725807599fb670000
+tip                 : 9250b61286a9fe43a41685e97a406b7c344f7f3b
+src/tests changed   : ['src/t2pw/bench/acceptance.py', 'src/t2pw/bench/render.py', 'tests/test_c102_coverage_denominator.py']
+residual diff vs base while the base leg runs: ''  (must be empty)
+
+--- GOLD-READERS at base --- exit=1
+    FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]
+    FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]
+    2 failed, 453 passed, 8 skipped in 29.15s
+
+--- G9 behavioural proof at base --- exit=1
+    run dir      : C:\t\c102\runs_verify\2026-08-24_1428
+    leg          : PMC12782028/strict   found=True
+    frozen reason: ['requested_core_coverage_below_minimum:0.222<0.500']
+    requested-core denominators the instrument reports for this leg: []
+    terms it names as withheld-but-recorded                        : []
+    priority 4 : ok=False  observed='0/8 = 0%'  reconciliation=ABSENT
+    priority 5 : ok=False  observed='0/2 = 0%'  reconciliation=ABSENT
+    
+    PRE-CHANGE BEHAVIOUR -- the denominator is contradictory and unreconciled:
+      - the RAW denominator of 27 drawn terms is not preserved in the report
+      - the instrument reports NO requested-core denominator that excludes this case's own forbidden identifiers: every coverage figure it states is computed over a term list that includes LIPA, LBR, SREBF1, SREBF2
+      - withheld terms are not named in the record (guard rail 3): ['LIPA', 'LBR', 'SREBF1', 'SREBF2']
+
+--- A/B probe at base --- exit=3
+
+tree after restore  : ''  (must be empty)
+gold-readers at base: exit=1   (1 is CORRECT -- the two F-142 reds)
+G9 proof at base    : exit=1     (MUST be nonzero: the behaviour is absent at base)
+A/B probe at base   : exit=3     (3 = post-change half unavailable, the pre-change leg)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c102\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9250b61286a9fe43a41685e97a406b7c344f7f3b  [git, worktree dirty=False]
+label                   : c102-base-gate
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c102_base_gate.py C:/t/c102 bcf9a23
+cwd                     : C:\t\c102
+root PID / process group: 494544 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 32.18 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 13  495468:python.exe, 495188:git.exe, 494148:python.exe, 493772:python.exe, 491592:git.exe, 494740:git.exe, 494412:git.exe, 495296:git.exe, 494640:git.exe, 494728:python.exe, 494796:python.exe, 494040:git.exe, 492204:git.exe
+descendants terminated  : 13  491592, 492204, 493772, 494040, 494148, 494412, 494640, 494728, 494740, 494796, 495188, 495296, 495468
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c102\docs\pwml_recovery_sprint\evidence\g11\C-102\08-base-gate.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
