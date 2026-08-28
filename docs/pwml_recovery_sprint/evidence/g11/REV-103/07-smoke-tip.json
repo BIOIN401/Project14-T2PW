@@ -1,0 +1,155 @@
+{
+  "label": "rev103-smoke",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--no-header",
+    "-rf",
+    "--basetemp=C:/t/bt/r103sm",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\t\\rev103tip",
+  "started_at": "2026-08-28T21:09:07+00:00",
+  "finished_at": "2026-08-28T21:09:43+00:00",
+  "duration_seconds": 36.273660899998504,
+  "timeout_seconds": 1800.0,
+  "root_pid": 541436,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 523588,
+      "name": "python.exe",
+      "ppid": 541436
+    },
+    {
+      "pid": 540676,
+      "name": "python.exe",
+      "ppid": 541156
+    },
+    {
+      "pid": 541156,
+      "name": "python.exe",
+      "ppid": 523588
+    },
+    {
+      "pid": 541560,
+      "name": "python.exe",
+      "ppid": 523588
+    },
+    {
+      "pid": 542772,
+      "name": "python.exe",
+      "ppid": 541560
+    },
+    {
+      "pid": 541160,
+      "name": "python.exe",
+      "ppid": 523588
+    },
+    {
+      "pid": 541856,
+      "name": "python.exe",
+      "ppid": 541160
+    },
+    {
+      "pid": 541364,
+      "name": "python.exe",
+      "ppid": 543084
+    },
+    {
+      "pid": 543084,
+      "name": "python.exe",
+      "ppid": 523588
+    }
+  ],
+  "descendants_terminated": [
+    523588,
+    540676,
+    541156,
+    541160,
+    541364,
+    541560,
+    541856,
+    542772,
+    543084
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 525356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 526156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 543600,
+      "name": "python.exe"
+    },
+    {
+      "pid": 543668,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev103tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-103\\07-smoke-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev103tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev103tip",
+    "repo_head": "89afc111ab56124459a773d6b8518a24996cf955",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-103",
+    "token": "REV-103:543668:7ee70e35cb25cd00",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
