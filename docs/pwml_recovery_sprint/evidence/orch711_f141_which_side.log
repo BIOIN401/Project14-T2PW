@@ -1,0 +1,91 @@
+==============================================================================
+G1. The 24 pinned withheld rows -- which side was silent?
+==============================================================================
+  PMC12096016/research       EntC                     held=P0AEJ2   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12096016/research       EntB                     held=P0ADI4   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12096016/research       EntA                     held=P15047   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12096016/research       EntE                     held=P10378   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12096016/research       EntF                     held=P11454   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12096016/research       EntD                     held=P19925   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12096016/research       Fur                      held=P0A9A9   requested=Escherichia coli   cand=False cand_species=False
+       -> candidate_does_not_describe_shipped
+  PMC12096016/research       TolC                     held=P02930   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12096016/research       Isochorismatase (EntB)   held=P0ADI4   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12180156/research       SFXN4                    held=Q6P4A7   requested=Homo sapiens       cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12180156/research       ALAS2                    held=P22557   requested=Homo sapiens       cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12180156/research       ferrochelatase           held=Q53FU1   requested=Homo sapiens       cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12180156/research       SFXN1                    held=Q9H9B4   requested=Homo sapiens       cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12180156/research       serine hydroxymethyltran held=A8MYA6   requested=Homo sapiens       cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12452463/research       EntC                     held=P0AEJ2   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12452463/research       EntB                     held=P0ADI4   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12452463/research       EntE                     held=P10378   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12452463/research       EntD                     held=P19925   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12452463/research       EntF                     held=P11454   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12452463/research       Fur                      held=P0A9A9   requested=Escherichia coli   cand=False cand_species=False
+       -> candidate_does_not_describe_shipped
+  PMC12452463/research       FepA                     held=P05825   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12452463/research       enterobactin synthase    held=P10378   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC12856317/research       ALAS2                    held=P22557   requested=Homo sapiens       cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+  PMC13231680/strict         LpxC                     held=P0A725   requested=Escherichia coli   cand=False cand_species=False
+       -> no_candidate_record_at_all__withholding_correct
+
+population: 24
+   no_candidate_record_at_all__withholding_correct      22
+   candidate_does_not_describe_shipped                  2
+
+==============================================================================
+G2. Corpus-wide (24 roots)
+==============================================================================
+population: 82
+   no_candidate_record_at_all__withholding_correct      23
+   other_measured_mechanism                             23
+   candidate_carries_no_species__withholding_correct    20
+   candidate_does_not_describe_shipped                  13
+   conflicting_species_evidence                         3
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f7dc223235e535f5f6aca5a7de7d58c269e8db00  [git, worktree dirty=True]
+label                   : f141-which-side
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/29355bf3-10de-4998-935b-e7f453bcc71c/scratchpad/probe_f141_which_side.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 155080 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.30 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  149736:python.exe
+descendants terminated  : 1  149736
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-711\05-f141-which-side.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================

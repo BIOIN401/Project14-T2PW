@@ -6900,3 +6900,103 @@ twice for safely withholding an identifier the contract forbids it to ship.
 
 **`card/C-094-f134` is NOT relabelled and NOT merged.** C-099 is a new card with a new charter; C-094
 remains on disk as diagnostic evidence of the clobber and of the three sites that carry it.
+
+---
+
+# F-141 CLASSIFIED — all 24 pinned rows are correct withholding · ORCH-711 · tip `f7dc223`
+
+D-070 § O-1c required the pinned 24 be classified before any fix. It is done, and the answer is
+**no production correction is authorised**. Evidence: `evidence/g11/ORCH-711/01`–`06`, and the probe
+sources and logs now committed beside them.
+
+## First, a correction to the record: which run is "the pinned run"
+
+**It is `runs/2026-08-02_2130`, not `runs_verify/2026-08-24_1428`.** The first classification pass of
+this session scanned the latter — the T-106 10-paper/20-leg run — found **5** withheld rows where the
+ruling says 24, and was about to report the ruling's denominator as unreproducible. It was wrong.
+`orch710_probeD_stripped_identity.py:26` pins `PINNED = "runs/2026-08-02_2130"`, a different tree
+entirely, and against that tree the count is **exactly 24**, corpus-wide **exactly 82**.
+
+**The measurement was always right; the assumption about which artifacts it named was not.** Recorded
+because the next reader will make the same assumption: `runs/` and `runs_verify/` are both live, both
+carry `papers/*/*/final_mapped.json`, and nothing in the O-1 packet says which one it meant.
+
+### The reproducibility gap that made this possible, now closed
+
+`bounded_run.py`'s JSON report carries **no child stdout** by design, so the six ORCH-710 artifacts
+certify that the jobs ran bounded and clean while preserving **nothing about what they measured**.
+The probe sources lived in a session scratchpad under `AppData/Local/Temp`, outside the repository.
+They survived only by luck.
+
+All five ORCH-710 probes and their logs are now committed in `evidence/` beside the reports —
+`orch710_probeA_pinned21.{py,log}` through `orch710_probeE_gold_tolerance.{py,log}`, plus
+`orch710_pinned21.json`, the pointer file the 16/5 partition was computed against. **A certificate
+that a job was clean is not a record of what the job found.** This is F-140's class, one level up.
+
+## The classification — measured, per row
+
+| Class | pinned | corpus |
+|---|---:|---:|
+| no candidate record at all, so the rung could not compare — **withholding correct** | **22** | 23 |
+| candidate does not describe the shipped identifier (**both Fur rows**) — **withholding correct** | **2** | 13 |
+| candidate carries no species — **withholding correct** | 0 | 20 |
+| conflicting species evidence | 0 | 3 |
+| other measured mechanism | 0 | 23 |
+| **source-supported species available but discarded** | **0** | **0** |
+| **entity species silent (a propagation loss)** | **0** | **0** |
+| **both sides present and the rung still unknown** | **0** | **0** |
+| **total** | **24** | **82** |
+
+Every one of the 24 ships **nothing** (`shipped=(none)`), carries `identity_status=unresolved`, and
+records `reason=identity_evidence_missing`. **None forged an identity.** Five papers:
+PMC12096016, PMC12180156, PMC12452463, PMC12856317, PMC13231680. **0 of 24 are inside the pinned 21**,
+confirming D-070 § O-1c on the same artifacts that produced it.
+
+## The inference that does NOT hold, and why it nearly became a card
+
+An intermediate pass of this classification labelled **22 rows**
+`species_evidence_lost_across_stage_boundary` — on the ground that each row carries
+`species_ref.source = explicit_entity_species`, `status = matched`, *Escherichia coli* or *Homo
+sapiens*, `taxonomy_id` 562/9606, **confidence 1.0**, while the ladder's `species` rung reads
+`unknown`. That looks exactly like resolved evidence being dropped at a seam, and § 10 authorises a
+production fix for precisely that subclass. **It is wrong**, and the superseded probe and its log are
+committed as `orch711_f141_species_seam.SUPERSEDED.{py,log}` rather than deleted, per D-025.
+
+`_candidate_species_verdict` (`map_ids.py:4828`) returns `unknown` when **either** side is silent:
+
+```python
+if not requested: return "unknown"      # the ENTITY side
+...
+if not declared:  return "unknown"      # the CANDIDATE side
+```
+
+The entity carrying a species therefore proves nothing on its own. The decisive measurement is
+`identity_verdict.organism`, which is what the ladder actually received: on **all 24 rows it is
+non-empty** — `Escherichia coli` on 19, `Homo sapiens` on 5. `requested` was never silent, so
+`unknown` **can only have come from the candidate side**. The entity's species reached the ladder
+intact; there was no candidate record carrying a species to compare it against.
+
+**This holds regardless of whether the judged candidate is persisted in the artifact.** The proof is
+the rung's own value combined with a non-empty `requested`, not the absence of a stored candidate —
+which matters, because `candidate_evidence: ok` is recorded on 22 of these rows while
+`mapping_meta.candidates` is empty and `judged_candidate` is `{}`. That the artifact cannot show
+*what* was judged is **F-140's defect, not a new one**, and it is why the classification was
+deliberately built on a field the artifact does preserve.
+
+## Disposition
+
+**No card. No production change.** § 10's authorised subclass requires all four of: source-supported
+species evidence exists · the candidate identity matches the entity · the evidence is lost across a
+deterministic seam · restoring it infers neither species nor identity. On the pinned 24 the **second
+and third fail on every row** — there is no candidate evidence to have lost. Shipping P0AEJ2 for
+EntC because the entity says *E. coli* and the accession "is" *E. coli* EntC would be **inferring an
+identity the pipeline never verified**, which is the exact behaviour `PRODUCT_CONTRACT` § 8 and
+D-070 forbid. The fail-closed ladder is working.
+
+**F-141 stays OPEN as a measurement obligation, not a defect.** What remains genuinely unexplained is
+the corpus-wide **23 `other_measured_mechanism`** rows, whose species rung is neither `ok`,
+`unknown`, `mismatch` nor absent. They are outside the pinned set, they are not blocking, and they
+are the only part of the 82 that could still hide something. A future card may classify them; none is
+chartered now, because nothing measured says one is needed.
+
+**F-141 is not, and must never be reported as, `placeholder_backed_proteins`.**

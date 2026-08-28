@@ -1,0 +1,143 @@
+==============================================================================
+C1. GENUINE LOSSES — strict shipped a placeholder where research resolved a real accession
+==============================================================================
+  PMC12096016: strict placeholders=3  research resolved 0 name(s) strict lacks
+  PMC12180156: strict placeholders=3  research resolved 0 name(s) strict lacks
+  PMC12444477: strict placeholders=9  research resolved 0 name(s) strict lacks
+  PMC12782028: research leg absent -- cannot apply criterion
+  PMC12856317: strict placeholders=2  research resolved 0 name(s) strict lacks
+
+  *** GENUINE-LOSS ENTITIES (research resolved, strict did not): 0 ***
+  papers involved: []
+
+==============================================================================
+C2. Are those losses INSIDE or OUTSIDE the pinned 21?
+==============================================================================
+
+==============================================================================
+C3. P22557 / EC 1.3.1.28
+==============================================================================
+  PMC12856317: 'P22557' in source text x2
+      research  present_in_payload=True
+      strict    present_in_payload=False
+  PMC12096016: 'EC 1.3.1.28' in source text x1
+      research  present_in_payload=True
+      strict    present_in_payload=True
+
+==============================================================================
+C4. EntD / EntE / EntF — loss or superset inheritance?
+==============================================================================
+  runs/2026-08-02_2130     PMC12096016/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs/2026-08-02_2130     PMC12096016/strict    present={'EntD': True, 'EntE': False, 'EntF': False}
+  runs/2026-08-02_2130     PMC12452463/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-04_1207 PMC12452463/strict    present={'EntD': False, 'EntE': True, 'EntF': False}
+        EntE                               complex_id=None comps=['Unknown']
+  runs_verify/2026-08-04_1234 PMC12096016/strict    present={'EntD': False, 'EntE': True, 'EntF': True}
+        EntF                               complex_id=None comps=['Unknown']
+  runs_verify/2026-08-04_1306 PMC12096016/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-04_1306 PMC12452463/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-04_1358 PMC12096016/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-04_1754 PMC12096016/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-04_1754 PMC12096016/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase complex      complex_id=None comps=['EntD', 'EntE', 'EntF']
+        enterobactin synthase              complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-04_1754 PMC12452463/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-04_1754 PMC12452463/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase              complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-18_1328 PMC12096016/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-18_1328 PMC12096016/strict    present={'EntD': False, 'EntE': True, 'EntF': True}
+        enterobactin synthase              complex_id=3623 comps=['EntB', "4'-phosphopantetheinyl transferase entD", 'EntF', 'EntE']
+  runs_verify/2026-08-18_1328 PMC12452463/strict    present={'EntD': False, 'EntE': True, 'EntF': True}
+        enterobactin synthase complex      complex_id=None comps=['EntE']
+        enterobactin synthase              complex_id=3623 comps=['EntB', "4'-phosphopantetheinyl transferase entD", 'EntF', 'EntE']
+  runs_verify/2026-08-21_2057 PMC12096016/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-21_2057 PMC12096016/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase              complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-21_2057 PMC12452463/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase complex      complex_id=None comps=['EntD', 'EntE', 'EntF']
+  runs_verify/2026-08-21_2057 PMC12452463/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase complex      complex_id=None comps=['EntD', 'EntE', 'EntF']
+        enterobactin synthase              complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-21_2239 PMC12096016/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-21_2239 PMC12096016/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase              complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-21_2239 PMC12452463/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-21_2239 PMC12452463/strict    present={'EntD': True, 'EntE': False, 'EntF': True}
+  runs_verify/2026-08-22_1821 PMC12452463/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-22_2017 PMC12452463/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-22_2017 PMC12452463/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase complex      complex_id=None comps=['EntD', 'EntE', 'EntF']
+        enterobactin synthase              complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-22_2147 PMC12096016/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-22_2147 PMC12096016/strict    present={'EntD': False, 'EntE': True, 'EntF': True}
+        enterobactin synthase              complex_id=3623 comps=['EntB', "4'-phosphopantetheinyl transferase entD", 'EntF', 'EntE']
+  runs_verify/2026-08-22_2147 PMC12452463/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase complex      complex_id=None comps=['EntD', 'EntE', 'EntF']
+  runs_verify/2026-08-22_2147 PMC12452463/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase complex      complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-24_1203 PMC12096016/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-24_1203 PMC12096016/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase              complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-24_1203 PMC12452463/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase complex      complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-24_1203 PMC12452463/strict    present={'EntD': True, 'EntE': False, 'EntF': True}
+  runs_verify/2026-08-24_1428 PMC12096016/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-24_1428 PMC12096016/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase              complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-24_1428 PMC12452463/research  present={'EntD': True, 'EntE': True, 'EntF': True}
+  runs_verify/2026-08-24_1428 PMC12452463/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        enterobactin synthase              complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+  runs_verify/2026-08-27_1341 PMC12096016/strict    present={'EntD': True, 'EntE': True, 'EntF': True}
+        EntE complex                       complex_id=None comps=['EntE']
+        EntF complex                       complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+        EntD complex                       complex_id=3623 comps=['EntB', 'EntD', 'EntF', 'EntE']
+
+==============================================================================
+C5. GOLD unknown_backed flag vs rationale, every case
+==============================================================================
+  PMC12444477    acceptable=True   rationale=YES
+       The paper legitimately discusses proteins that will not cleanly resolve: LapA (formerly YciS), LapB (formerly YciM), Ght (N. meningitidis), LabP (C. sakazakii), LpxG, YhcB, and the generic 'lipoprotein'. Penalising those would penalise faithful extraction. The tolerance does NOT extend to the nine core Raetz enzymes, which are unambiguous.
+  PMC13231680    acceptable=False  rationale=YES
+       Both proteins the paper names (NDM-1, LpxC) are well characterised with unambiguous identities. Any unknown-backed protein emitted from this paper is fabricated outright.
+  PMC12657337    acceptable=False  rationale=YES
+       All three catalysts in the connected chain are named with canonical symbols (HepPPS, MenA, UbiE). No unnamed or hypothetical protein is needed, so one would indicate hallucination.
+  PMC12421875    acceptable=False  rationale=YES
+       All nine catalysts are named canonical Men proteins and the paper introduces no novel uncharacterised enzyme. The paper gives no locus tags, UniProt IDs or EC numbers, so a correct extraction resolves by name plus organism rather than inventing accessions.
+  PMC12312563    acceptable=False  rationale=YES
+       The one catalyst is a fully named, structurally characterised protein with a stated gene (menD), strain (10403s) and two PDB depositions. Any unnamed protein would be pure hallucination.
+  PMC12856317    acceptable=False  rationale=YES
+       Every catalytic protein is a named human gene with an explicit UniProt accession printed in the text (ALAS2 P22557, ALAS1 P13196). No activity is attributed to an unidentified protein.
+  PMC12180156    acceptable=False  rationale=YES
+       Every protein discussed is an explicitly named human gene symbol and no activity is attributed to an unidentified protein. Since the correct heme extraction is empty of reactions, an unknown-backed node would fabricate both the identity and the chemistry.
+  PMC12096016    acceptable=False  rationale=YES
+       Every protein described catalytically is a named, canonical E. coli gene product, and the paper supplies EC numbers for four of them. Any unknown-backed protein is fabricated.
+  PMC12452463    acceptable=False  rationale=YES
+       Every catalytic and transport entity is a named canonical gene product, and there is no primary data that could support a novel one. An extractor must also not invent a backing entity to bridge the missing EntA step.
+  PMC12782028    acceptable=False  rationale=YES
+       All four expected enzymes are well-characterised human proteins with standard HGNC symbols and an unambiguous organism, so every one resolves deterministically. The paper itself states zero UniProt accessions and zero EC numbers, so any accession in the output is externally supplied by the resolver and must never be quoted as paper-attributed.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7bd8a86ca81e985555fb8d3656e665a4ea797437  [git, worktree dirty=True]
+label                   : losses-entdef-gold
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/aff2360f-2068-4b32-ba52-073fc2dcd26a/scratchpad/probeC.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 110332 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.30 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  112520:python.exe
+descendants terminated  : 1  112520
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-710\03-losses-entdef-gold.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

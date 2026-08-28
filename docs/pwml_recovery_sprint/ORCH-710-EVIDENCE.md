@@ -48,3 +48,29 @@ replaced it. Both are certified; both are compliant; only one is authoritative.
 `check_many` calls anything that is not a valid report an `unexpected_artifact`. A `README.md`
 dropped into `evidence/g11/ORCH-710/` would therefore turn the merge gate red. That is why
 this index is a sprint document and not a file beside the artifacts it describes.
+
+---
+
+## The probes themselves are committed too (added with ORCH-711)
+
+The table above certifies that six jobs ran bounded and left nothing behind. It does **not** record
+what they measured, because `bounded_run.py`'s report carries no child stdout. The probe sources
+lived in a session scratchpad outside the repository and survived by luck.
+
+They are now in `evidence/`, beside the reports rather than inside the task folder:
+
+| Probe | Source | Log |
+|---|---|---|
+| A | `orch710_probeA_pinned21.py` | `orch710_probeA_pinned21.log` |
+| B | `orch710_probeB_losses_gold.py` | `orch710_probeB_losses_gold.log` |
+| C | `orch710_probeC_losses_entdef_gold.py` | `orch710_probeC_losses_entdef_gold.log` |
+| D | `orch710_probeD_stripped_identity.py` | `orch710_probeD_stripped_identity.log` |
+| E | `orch710_probeE_gold_tolerance.py` | `orch710_probeE_gold_tolerance.log` |
+
+`orch710_pinned21.json` is the pointer file the 16/5 partition was computed against.
+
+**Probe D pins `PINNED = "runs/2026-08-02_2130"`.** That is the run the 24/82 figures name — **not**
+`runs_verify/2026-08-24_1428`, the T-106 10-paper run, against which the same criterion yields 5.
+Nothing in the O-1 packet said which tree it meant, and a session acting on the wrong one nearly
+reported a certified measurement as unreproducible. See `LEDGER.md` section
+"F-141 CLASSIFIED".

@@ -1,0 +1,65 @@
+==============================================================================
+B1. THE SIX SPECIES-BEARING WRAPPERS vs THE PINNED 21
+==============================================================================
+wrappers with resolved species evidence underneath : 6
+  IN PINNED 21 | runs/2026-08-02_2130     PMC12096016/strict                 enterobactin synthase complex 
+       source=explicit_entity_species  species_name=Escherichia coli; taxonomy_id=562; species_ref.name=Escherichia coli
+  IN PINNED 21 | runs/2026-08-02_2130     PMC12856317/strict                 ALAS2 homodimer               
+       source=explicit_entity_species  species_name=Homo sapiens; taxonomy_id=9606; species_ref.name=Homo sapiens; meta.species_id=1
+  outside 21   | runs_verify/2026-08-04_1207 PMC12452463/strict                 enterobactin synthase complex 
+       source=explicit_entity_species  species_name=Escherichia coli; taxonomy_id=562; species_ref.name=Escherichia coli
+  outside 21   | runs_verify/2026-08-04_1754 PMC12856317/strict                 ALAS2                         
+       source=explicit_entity_species  species_name=Homo sapiens; taxonomy_id=9606; species_ref.name=Homo sapiens; meta.species_id=1
+  outside 21   | runs_verify/2026-08-22_1821 PMC12452463/strict                 enterobactin synthase complex 
+       source=single_pathway_species  species_name=Escherichia coli; taxonomy_id=562; species_ref.name=Escherichia coli
+  outside 21   | runs_verify/2026-08-27_1341 PMC12096016/strict                 enterobactin synthase complex 
+       source=single_pathway_species  species_name=Escherichia coli; taxonomy_id=562; species_ref.name=Escherichia coli
+
+  *** of the six, IN the pinned 21 : 2 ; outside : 4 ***
+
+==============================================================================
+B2. GENUINE-LOSS CANDIDATES among the pinned 21
+==============================================================================
+pinned-21 rows whose name matches a gold enzyme AND whose paper carries UniProt accessions: 0
+
+==============================================================================
+B3. P22557 and EC 1.3.1.28
+==============================================================================
+  PMC12856317: 'P22557' occurs 2 time(s) in 01_source_text.txt
+      .... Multiple sequence alignment The amino acid sequences of human ( Homo sapiens ; P13196 , P22557 ), bovine ( Bos taurus ; A6QLI6 , Q3ZC31 ) rat ( Rattus norvegi...
+      shipped in payload? [('research', True), ('strict', False)]
+  PMC12096016: 'EC 1.3.1.28' occurs 1 time(s) in 01_source_text.txt
+Traceback (most recent call last):
+  File "C:\Users\Angad\AppData\Local\Temp\claude\c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW\aff2360f-2068-4b32-ba52-073fc2dcd26a\scratchpad\probeB_losses_gold.py", line 99, in <module>
+    i = txt.find(tok); print(f"      ...{txt[max(0,i-90):i+70].replace(chr(10),' ')}...")
+                       ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2010' in position 53: character maps to <undefined>
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7bd8a86ca81e985555fb8d3656e665a4ea797437  [git, worktree dirty=True]
+label                   : losses-and-gold
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/aff2360f-2068-4b32-ba52-073fc2dcd26a/scratchpad/probeB_losses_gold.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 106100 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.29 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  111556:python.exe
+descendants terminated  : 1  111556
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-710\02-losses-and-gold.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

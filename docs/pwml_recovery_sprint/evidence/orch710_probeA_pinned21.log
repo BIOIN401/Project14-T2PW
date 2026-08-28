@@ -1,0 +1,101 @@
+PINNED RUN : runs/2026-08-02_2130
+legs with final_mapped.json : 11
+
+=== IDENTITY CENSUS over both buckets, all pinned legs ===
+  total        80
+  verified     1
+  placeholder  21
+  unresolved   58
+  other        0
+
+*** placeholder_backed_proteins (pinned run TOTAL) = 21 ***
+
+=== PER LEG ===
+  PMC12096016/strict                         3
+  PMC12180156/strict                         3
+  PMC12444477/strict                         9
+  PMC12782028/strict                         4
+  PMC12856317/strict                         2
+
+=== PROPOSED PARTITION ===
+  P_SENTINEL   (placeholder AND is_pathbank_unknown_protein) = 5
+  P_FUNCTIONAL (placeholder AND NOT sentinel)                = 16
+  sum = 21   metric = 21   exhaustive=True
+  mutually exclusive = True  (overlap size 0)
+
+=== ROW-LEVEL MEMBERSHIP ===
+--- SENTINEL (5) ---
+  PMC12096016/strict                     /entities/proteins/6               Unknown                            gen=False reason=None                             uniprot=Unknown    sp=Arabidopsis thaliana   claims_real=-
+  PMC12180156/strict                     /entities/proteins/6               Unknown                            gen=False reason=None                             uniprot=Unknown    sp=Arabidopsis thaliana   claims_real=-
+  PMC12444477/strict                     /entities/proteins/4               Unknown                            gen=False reason=None                             uniprot=Unknown    sp=Arabidopsis thaliana   claims_real=-
+  PMC12782028/strict                     /entities/proteins/0               Unknown                            gen=False reason=None                             uniprot=Unknown    sp=Arabidopsis thaliana   claims_real=-
+  PMC12856317/strict                     /entities/proteins/0               Unknown                            gen=False reason=None                             uniprot=Unknown    sp=Arabidopsis thaliana   claims_real=-
+--- FUNCTIONAL (16) ---
+  PMC12096016/strict                     /entities/protein_complexes/0      enterobactin synthase complex      gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12096016/strict                     /entities/protein_complexes/1      EntA                               gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12180156/strict                     /entities/protein_complexes/0      serine hydroxymethyltransferase    gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12180156/strict                     /entities/protein_complexes/1      ALAS2                              gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12444477/strict                     /entities/protein_complexes/1      LpxA                               gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12444477/strict                     /entities/protein_complexes/2      LpxD                               gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12444477/strict                     /entities/protein_complexes/3      LpxH                               gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12444477/strict                     /entities/protein_complexes/4      LpxB                               gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12444477/strict                     /entities/protein_complexes/5      LpxK                               gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12444477/strict                     /entities/protein_complexes/6      WaaA                               gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12444477/strict                     /entities/protein_complexes/7      LpxL                               gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12444477/strict                     /entities/protein_complexes/8      LpxM                               gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12782028/strict                     /entities/protein_complexes/0      LSS                                gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12782028/strict                     /entities/protein_complexes/1      CYP51A1                            gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12782028/strict                     /entities/protein_complexes/2      DHCR24                             gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+  PMC12856317/strict                     /entities/protein_complexes/0      ALAS2 homodimer                    gen=True  reason=single_protein_pathwhiz_wrapper  uniprot=None       sp=Arabidopsis thaliana   claims_real=-
+
+=== CROSSWALK to the current-corpus 31-wrapper census ===
+Current census population = generated Unknown-backed protein_complex rows over runs*/ (11 legs).
+Pinned population = identity_status==placeholder rows over the pinned run only.
+These are DIFFERENT DEFINITIONS. Overlap computed by (leg, name) where both apply:
+  current-census wrapper rows (run, leg, name) : 31
+  of those, in the pinned run                  : 16
+  intersection with pinned placeholder rows    : 16
+      PMC12096016/strict                     EntA
+      PMC12096016/strict                     enterobactin synthase complex
+      PMC12180156/strict                     ALAS2
+      PMC12180156/strict                     serine hydroxymethyltransferase
+      PMC12444477/strict                     LpxA
+      PMC12444477/strict                     LpxB
+      PMC12444477/strict                     LpxD
+      PMC12444477/strict                     LpxH
+      PMC12444477/strict                     LpxK
+      PMC12444477/strict                     LpxL
+      PMC12444477/strict                     LpxM
+      PMC12444477/strict                     WaaA
+      PMC12782028/strict                     CYP51A1
+      PMC12782028/strict                     DHCR24
+      PMC12782028/strict                     LSS
+      PMC12856317/strict                     ALAS2 homodimer
+
+detail written: C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/aff2360f-2068-4b32-ba52-073fc2dcd26a/scratchpad/pinned21.json
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7bd8a86ca81e985555fb8d3656e665a4ea797437  [git, worktree dirty=True]
+label                   : pinned21-reconstruct
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/aff2360f-2068-4b32-ba52-073fc2dcd26a/scratchpad/probeA_pinned21.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 101280 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.40 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  111480:python.exe
+descendants terminated  : 1  111480
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-710\01-pinned21-reconstruct.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

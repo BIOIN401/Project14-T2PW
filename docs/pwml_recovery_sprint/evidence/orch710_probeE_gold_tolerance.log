@@ -1,0 +1,82 @@
+==============================================================================
+E1. THE FLAG AND THE RATIONALE, verbatim
+==============================================================================
+  unknown_backed_proteins_acceptable = True
+  unknown_backed_rationale:
+      The paper legitimately discusses proteins that will not cleanly resolve: LapA (formerly YciS), LapB (formerly YciM), Ght (N. meningitidis), LabP (C. sakazakii), LpxG, YhcB, and the generic 'lipoprotein'. Penalising those would penalise faithful extraction. The tolerance does NOT extend to the nine core Raetz enzymes, which are unambiguous.
+
+==============================================================================
+E2. WHAT THE RATIONALE SCOPES IN vs OUT
+==============================================================================
+  rationale SCOPES IN  (tolerance applies) : ['LapA', 'YciS', 'LapB', 'YciM', 'Ght', 'LabP', 'LpxG', 'YhcB', 'lipoprotein']
+  rationale SCOPES OUT (must NOT apply)    : the nine core Raetz enzymes
+  gold expected_enzymes (8):
+      LpxA
+      LpxC
+      LpxD
+      LpxB
+      LpxK
+      WaaA
+      LpxL
+      LpxM
+
+==============================================================================
+E3. THE ROWS THE FLAG ACTUALLY EXCUSES on this case
+==============================================================================
+  pinned placeholder rows on PMC12444477/strict: 9
+      Unknown                            sentinel=True  IN_expected_enzymes=False matches_rationale_tolerated=False
+      LpxA                               sentinel=False IN_expected_enzymes=True  matches_rationale_tolerated=False
+      LpxD                               sentinel=False IN_expected_enzymes=True  matches_rationale_tolerated=False
+      LpxH                               sentinel=False IN_expected_enzymes=False matches_rationale_tolerated=False
+      LpxB                               sentinel=False IN_expected_enzymes=True  matches_rationale_tolerated=False
+      LpxK                               sentinel=False IN_expected_enzymes=True  matches_rationale_tolerated=False
+      WaaA                               sentinel=False IN_expected_enzymes=True  matches_rationale_tolerated=False
+      LpxL                               sentinel=False IN_expected_enzymes=True  matches_rationale_tolerated=False
+      LpxM                               sentinel=False IN_expected_enzymes=True  matches_rationale_tolerated=False
+
+  *** rows excused by the flag that the rationale scopes OUT (core enzymes): 7 ***
+      ['LpxA', 'LpxD', 'LpxB', 'LpxK', 'WaaA', 'LpxL', 'LpxM']
+
+  VERDICT: CONTRADICTION CONFIRMED.  The single boolean excuses rows the
+           rationale says in words it must not excuse.  There is no per-entity
+           scoping in the schema, so the rationale cannot be honoured as written.
+
+==============================================================================
+E4. HOW EACH FIELD IS CONSUMED
+==============================================================================
+  unknown_backed_proteins_acceptable:
+      goldset.py:397  dataclass field, default False
+      goldset.py:721  parsed:  bool(raw.get('unknown_backed_proteins_acceptable', False))
+      goldset.py:468  round-tripped in to_dict()
+      semantic.py:1417  elif not case.unknown_backed_proteins_acceptable:  -> emits
+                        'unknown_backed_protein_not_acceptable' finding per row
+      semantic.py:1453  selects the summary wording only
+      render.py:211     printed as unknown_ok=<flag>
+  unknown_backed_rationale:
+      NOT REFERENCED ANYWHERE IN src/ EXCEPT parsing/round-trip  <-- see E5
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7bd8a86ca81e985555fb8d3656e665a4ea797437  [git, worktree dirty=True]
+label                   : gold-tolerance-contradiction
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/aff2360f-2068-4b32-ba52-073fc2dcd26a/scratchpad/probeE.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 113996 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.17 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  109688:python.exe
+descendants terminated  : 1  109688
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-710\05-gold-tolerance-contradiction.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
