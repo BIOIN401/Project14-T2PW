@@ -935,9 +935,9 @@ termination reason says why the **leg** stopped, and they are recorded in differ
 
 | # | Question | Blocks | Why it cannot be answered from the repository |
 |---|---|---|---|
-| O-1 | `placeholder_backed_proteins` (21 in the pinned run): gold-set error class, or legitimate biology preservation? | any branch that touches protein export policy | It is a genuine disagreement between two intentional designs, not a defect. TRAP-3 forbids agents from resolving it. |
+| *(none)* | — | — | — |
 
-**Closed:** O-2 → D-011 · O-3 → D-014.
+**Closed:** O-2 → D-011 · O-3 → D-014 · **O-1 → D-070** (2026-08-27; the question was rejected as posed — the 21 is 16 wrappers + 5 sentinels, and F-141 carries the 24/82 population that was hiding inside it).
 
 ---
 
@@ -3979,3 +3979,134 @@ does, a correction is chartered covering:
 * corpus-wide collateral reporting.
 
 **C-081 is not reopened unless that measurement reveals a conflict.**
+
+---
+
+## D-070 — O-1 is RULED: the pinned 21 is two populations, 16 + 5, and neither is a gold error · 2026-08-27 · LOCKED
+
+**This closes O-1**, open since the F-132 decision bundle and the sole blocker on
+`card/C-094-f134`, `card/C-098a-cap` and `card/C-098b-gate`. The product owner **rejects the
+question as posed.** *"Gold-set error class, or legitimate biology preservation?"* is a false
+binary: `placeholder_backed_proteins` counts **two measurably different populations** and the
+answer differs between them.
+
+Evidence: `evidence/g11/ORCH-710/01`–`06`, certified at `5d3c119`, 6 artifacts, 0 non-compliant,
+every job `FINAL SURVIVING COUNT : 0` / `cleanup : success`. Index and the job-02 incident:
+`ORCH-710-EVIDENCE.md`.
+
+### The partition — exhaustive, mutually exclusive, measured
+
+| Population | n | Where | Recognised by |
+|---|---:|---|---|
+| PathBank `Unknown` sentinel rows | **5** | `entities.proteins` | `is_pathbank_unknown_protein(row)` |
+| generated functional wrappers | **16** | `entities.protein_complexes` | `generated: true` + `single_protein_pathwhiz_wrapper` |
+| **overlap** | **0** | — | — |
+| **total** | **21** | | |
+
+One per affected pinned leg for the five. **None of the 21 sets
+`placeholder_claims_real_identity`** — so none of them is a forged identity, and no ruling, report
+or summary may describe them as one.
+
+### O-1a — the five sentinels are PathBank's record, and its species is part of it
+
+PathBank record **9659** is the `Unknown` protein, and *Arabidopsis thaliana* is that record's own
+species. On a row whose entire content is *"this is PathBank record 9659"*, the Arabidopsis is a
+true fact **about the record**, not a false mapping of an entity. Under the current PathBank
+representation it is **not** a defect.
+
+Therefore: treat the five as **sentinel rows**; do **not** classify them as functional generated
+wrappers; do **not** strip or rewrite their record identity merely to remove Arabidopsis; do
+**not** count them as forged biological identities; and keep their diagnostic classification
+distinct from the sixteen.
+
+### O-1b — the sixteen wrappers keep TRAP-3, and are scored separately
+
+They are legitimate generated-wrapper biology. **TRAP-3 protection stands.** The disagreement is
+not resolved by deleting a wrapper or by preventing its serialization; the class is **not** a gold
+error; and placeholder status still may not forge a real database identity. They are scored
+**separately from the five**.
+
+### O-1c — the "four genuine losses" claim is REFUTED, and its rows were never in the 21
+
+The alleged four genuine losses do not exist. What does exist is a **different population on a
+different seam**: candidate identities retained in the identity verdict but **not shipped** —
+**24** rows in the pinned run, **82** corpus-wide, and **zero** of the pinned 24 lie inside the
+placeholder-backed 21.
+
+Those rows may not stay hidden inside the O-1 metric. They are registered separately as **F-141**
+and are **not** to be called `placeholder_backed_proteins`.
+
+They are also **not** automatically production defects. Of the pinned 24: **22** fail because
+species remains unknown, and **2** (Fur) fail because no candidate describes the shipped
+identifier. Withholding a species-specific protein identifier **is correct** when species evidence
+is absent. The metric must therefore separate a correct safety withholding from a recoverable
+evidence-propagation loss, classifying each row as exactly one of:
+
+1. source-supported species was available but discarded;
+2. species genuinely unresolved, so withholding was correct;
+3. conflicting species evidence;
+4. candidate failed to describe the shipped identifier;
+5. identity or species evidence lost across a stage boundary;
+6. other measured mechanism.
+
+**A real accession in `identity_verdict.identity` is not a licence to ship it.**
+
+### What this authorises, and what it still forbids
+
+**Authorised.** A **narrow** card that preserves already-resolved, source-supported species when an
+Unknown-backed functional wrapper is constructed or normalised — D-071's sibling, chartered as
+**C-099**. Census: 31 Unknown-backed wrappers across 11 legs, **6** with resolved species beneath
+the clobber, **25** without; **2** of the 6 are in the pinned 16, both `explicit_entity_species`.
+For the other 14 pinned wrappers *"do not clobber"* is a **no-op**.
+
+**Still forbidden.** `card/C-094-f134` **does not merge unchanged**: it is subtractive at all three
+sites, removing species from wrappers that have none resolved, which inverts the O-1 statement
+`test_protein_export_policy.py::test_strict_gates_accept_a_correctly_formed_unknown_backed_complex`
+pins. **C-098c stays refused** — an export-time fallback that replaces a false Arabidopsis at
+mapping time with a false default species at export time is merge rule 8 and the same defect one
+stage later. **No path may end at `writer.py`'s `default_species_id`** to turn an unresolved species
+into a confident one.
+
+---
+
+## D-071 — PMC12444477's Unknown tolerance becomes per-entity; the Boolean is scoped, not flipped · 2026-08-27 · LOCKED
+
+`unknown_backed_proteins_acceptable` is a **case-wide Boolean**, and `pinned_v1.json:286` sets it
+`true` for **PMC12444477** alone. Its `unknown_backed_rationale` names the entities the tolerance is
+*for* — and names, in the same sentence, the class it must **not** cover. The scorer
+(`bench/semantic.py:1417`) reads only the Boolean. **The rationale is parsed, round-tripped and
+never enforced.**
+
+Measured (`evidence/g11/ORCH-710/05`): the unscoped `true` excuses **seven core enzyme rows** the
+rationale explicitly excludes — **LpxA, LpxD, LpxB, LpxK, WaaA, LpxL, LpxM**.
+
+**The ruling: add per-entity tolerance scope. Do NOT flip the Boolean to `false`.** Flipping it
+would penalise faithful extraction of the seven entities the rationale legitimately tolerates —
+**LapA** (formerly YciS), **LapB** (formerly YciM), **Ght**, **LabP**, **LpxG**, **YhcB**, and the
+generic **`lipoprotein`** — which is the opposite error, not a fix.
+
+Required: an explicit, auditable per-entity representation, **consumed by the scorer**; stable
+canonical keys or aliases, **not broad name matching**; LapA/YciS and LapB/YciM validated as
+aliases without fuzziness; other gold cases keep the Boolean's valid case-wide meaning unless
+evidence shows it unsafe; `forbidden_identifiers` **not** silently changed; and no expected enzyme
+added or removed without separate source evidence. Chartered as **C-100**, with the base/tip gold
+A/B of § 8 — a green SMOKE alone does not discharge it.
+
+### The prose/schema mismatch, resolved explicitly rather than by picking a number
+
+The rationale says *"the **nine** core Raetz enzymes"*. `expected_enzymes` lists **eight**: LpxA,
+LpxC, LpxD, LpxB, LpxK, WaaA, LpxL, LpxM. Both are right about different things, and the gold is
+**not** wrong.
+
+The Raetz pathway has **nine enzymatic steps**. The ninth — removal of UMP — is
+**organism-dependent**, and the paper says so: *"subsequent removal of UMP by LpxH, LpxI, or LpxG
+depending on the organism."* No single enzyme is expected for that step in *this* paper, so the
+gold correctly files **LpxH** (aliases LpxI, **LpxG**) under `acceptable_enzymes` rather than
+`expected_enzymes`. Hence eight expected, nine steps.
+
+**The rationale prose is corrected to agree with the schema** — it names the **eight expected**
+core enzymes as outside the tolerance, and states that the ninth step's enzyme is
+organism-dependent and deliberately `acceptable`. **`expected_enzymes` and `acceptable_enzymes` are
+unchanged.** Note the consequence that makes the scoping necessary: **LpxG is simultaneously an
+alias of the acceptable LpxH and a rationale-tolerated entity** — which a per-entity list can
+express and a Boolean cannot.

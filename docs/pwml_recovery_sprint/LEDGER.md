@@ -6824,3 +6824,79 @@ which is why the count moved from 24 tests to 31. **Nothing to do with C-097.**
 `C:/t/c097base` — the reviewer's temporary base worktree — remains on disk; `git worktree remove` was
 denied by the permission system in its session. Carries no accepted work; safe to remove.
 
+
+---
+
+# O-1 RULED — the corrected record · 2026-08-27 · tip `5d3c119`
+
+**D-070 and D-071 are LOCKED.** O-1 is closed and no longer blocks anything. This section is the
+controlling record for the facts around it; where an earlier report in this ledger disagrees, **this
+supersedes it.** Historical reports are left unedited on purpose — corrections are additive here,
+never a rewrite of what an earlier session actually claimed.
+
+## Confirmed by measurement
+
+* The pinned 21 partitions **exactly 16 / 5** — 16 generated functional wrappers in
+  `entities.protein_complexes`, 5 PathBank `Unknown` sentinel rows in `entities.proteins`.
+* The partition is **exhaustive and mutually exclusive**; overlap **0**.
+* The 24 pinned stripped/withheld candidate identities are **entirely outside** the 21.
+* The corpus-wide count of that population is **82**.
+* **P22557** is withheld in **two** measured cases, through the species check.
+* **EntD, EntE and EntF** suffer identity loss in **research** legs.
+* EntD/EntE/EntF **separately** suffered superset-complex inheritance in later **strict** legs.
+  **These are different defects on different legs** and were previously conflated.
+* **PMC12444477**'s Boolean tolerance contradicts its own stated per-entity rationale.
+* The false-Arabidopsis wrapper clobber is **orthogonal to placeholder status**.
+* Of the six currently measured species-bearing wrappers, **two** are in the pinned 21, and **both**
+  carry `source: explicit_entity_species`.
+
+## Refuted — struck from all prospective rulings and summaries
+
+* **"There are four genuine-loss cases."** There are not. The population is 24 pinned / 82
+  corpus-wide, it sits on a different seam, and it is F-141.
+* **"EC 1.3.1.28 is dropped."** **It is not.** EC 1.3.1.28 is **present in both the research and the
+  strict payloads of PMC12096016**. The dropped-EC claim is struck. No card may be justified by it
+  and no summary may repeat it.
+* **"EntD/EntE/EntF loss and superset inheritance are one conflated event."** Two events, two legs,
+  two defects.
+
+### F-141 · MED · a candidate identity survives the identity verdict and is not shipped, and nothing counts it
+
+**Registered 2026-08-27 from `evidence/g11/ORCH-710/04`. This is NOT
+`placeholder_backed_proteins` and must never be reported under that name** — D-070 § O-1c.
+
+A candidate identity exists in mapping metadata or in `identity_verdict.identity`, and the shipped
+row does not carry it. **24 rows in the pinned run, 82 corpus-wide, 0 of them inside the placeholder-
+backed 21.** The pinned 24 is the primary reproducible set.
+
+**It is not a defect count.** The measured breakdown is already known to contain at least two
+mechanisms with opposite dispositions:
+
+| Sub-population | n (pinned) | Disposition |
+|---|---:|---|
+| species remains unknown | **22** | withholding is **contractually correct** — do not ship |
+| no candidate describes the shipped identifier (**Fur**, ×2) | **2** | withholding correct; the candidate is not this entity |
+| **P22557**, withheld through the species check | 2 occurrences within the above | correct unless species evidence was available and discarded |
+
+Every row must be classified as **exactly one** of: source-supported species available but
+discarded · species genuinely unresolved so withholding was correct · conflicting species evidence ·
+candidate failed to describe the shipped identifier · identity or species evidence lost across a
+stage boundary · other measured mechanism.
+
+**Classify before fixing.** A production correction is authorised **only** for a subclass where
+source-supported species evidence exists, the candidate identity matches the entity, the evidence is
+lost across a deterministic seam, and restoring it **infers neither species nor identity**. Where the
+classification shows multiple seams, they get **narrow disjoint cards** — not one broad repair.
+**Do not ship identifiers for genuinely species-unknown rows**, and do not penalise the pipeline
+twice for safely withholding an identifier the contract forbids it to ship.
+
+## Cards chartered off this ruling
+
+| Card | Branch | What | Gate |
+|---|---|---|---|
+| **C-099** | `card/C-099-species-preservation` | preserve already-resolved, source-supported species when an Unknown-backed functional wrapper is built | focused + SMOKE + the O-1 baseline test unmoved |
+| **C-100** | `card/C-100-tolerance-scope` | per-entity tolerance scope for `unknown_backed_proteins_acceptable`; gold schema + parser + scorer | full base/tip gold A/B, 14 SMOKE-missed gold readers |
+| **C-101** | `card/C-101-o1-metric-split` | the 16/5 split in the acceptance instrument; F-141 registered as its own metric | focused + SMOKE, offline re-score |
+
+**`card/C-094-f134` is NOT relabelled and NOT merged.** C-099 is a new card with a new charter; C-094
+remains on disk as diagnostic evidence of the clobber and of the three sites that carry it.
