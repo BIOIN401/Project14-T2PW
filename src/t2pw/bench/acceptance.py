@@ -25,6 +25,7 @@ result. A clean identity score sourced from a pre-mapping payload is reported as
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
@@ -544,7 +545,10 @@ class ModeResult:
         # D-072. Conditional like the keys above: a leg with no coverage block
         # serializes byte-identically to before.
         if self.coverage_reconciliation:
-            data["coverage_reconciliation"] = dict(self.coverage_reconciliation)
+            # DEEP, not `dict(...)`. A shallow copy shares `excluded_terms` by
+            # identity with the live field, so a caller mutating the serialized
+            # report would reach back into the scored leg (REV-102 F7).
+            data["coverage_reconciliation"] = deepcopy(dict(self.coverage_reconciliation))
         # C-088 / D-065. Conditional for the same reason as the two keys above: a leg
         # that established no disposition serializes byte-identically to before.
         #
@@ -679,8 +683,14 @@ class AcceptanceReport:
     priority1_rows: List[Dict[str, Any]] = field(default_factory=list)
 
     @property
-    def coverage_reconciliation(self) -> Dict[str, Any]:
+    def coverage_reconciliation_corpus(self) -> Dict[str, Any]:
         """D-072. Every leg's raw and contract-accepted coverage, and the totals.
+
+        NAMED FOR THE CORPUS, not `coverage_reconciliation`, which is the PER-LEG
+        record on :class:`ModeResult`. The two carry disjoint key sets -- this one
+        has `legs` and corpus counts, that one has `raw_ratio` and
+        `excluded_terms` -- and sharing a name made a reader who found one assume
+        the shape of the other (REV-102 F6).
 
         A DIAGNOSTIC RECORD, not a rate. It answers "which coverage penalties were
         levied for terms the case itself forbids exporting, and do they survive
@@ -720,6 +730,27 @@ class AcceptanceReport:
                 if row["accepted_state"] == COVERAGE_UNDEFINED_ALL_FORBIDDEN
             ),
         }
+
+    @property
+    def coverage_reconciliation_summary(self) -> Dict[str, Any]:
+        """The corpus record WITHOUT its per-leg array, for the priority entries.
+
+        F5. The full record is ~12 KB and priorities 4 and 5 both carry it, so
+        serializing it whole put three byte-identical copies in every report and
+        grew one pinned report by ~24%, about two thirds of it duplication. A
+        reader diffing two acceptance reports then watches the same blob move
+        three times, which hides real changes rather than surfacing them.
+
+        The counts stay on the entry, so a priority read ALONE still says how
+        large the reconciliation was and which legs cleared, are still below the
+        minimum, or have no defined rate. Only the row-by-row detail moves, and
+        `legs_at` says where it went -- it is one key away, in the same document.
+        """
+
+        corpus = self.coverage_reconciliation_corpus
+        summary = {key: value for key, value in corpus.items() if key != "legs"}
+        summary["legs_at"] = "coverage_reconciliation_corpus.legs"
+        return summary
 
     # -- coverage -------------------------------------------------------
     def completion(self) -> Dict[str, Any]:
@@ -867,7 +898,7 @@ class AcceptanceReport:
         totals = self.errors.totals
         semantic = self.denominators.get(DENOM_SEMANTIC)
         strict = self.denominators.get(DENOM_STRICT)
-        coverage = self.coverage_reconciliation
+        coverage = self.coverage_reconciliation_summary
 
         false_ids = totals.get(ERR_FALSE_REAL_IDENTIFIERS, 0)
         # RAW is the error total, unchanged. ACCEPTED is computed from the ROWS
@@ -1019,7 +1050,9 @@ class AcceptanceReport:
             "notes": self.notes,
             # D-072. Reported SEPARATELY from every rate above, because it is not
             # one: conflating it into a coverage number is what the ruling forbids.
-            "coverage_reconciliation": self.coverage_reconciliation,
+            # This is the ONLY copy of the per-leg array; priorities 4 and 5 carry
+            # the counts and point here for the rows (F5).
+            "coverage_reconciliation_corpus": self.coverage_reconciliation_corpus,
         }
         # C-088 / D-065. Conditional, like every optional key in this module: a run
         # that placed no leg serializes byte-identically to before.

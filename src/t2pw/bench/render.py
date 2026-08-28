@@ -114,7 +114,9 @@ def _priorities(report: AcceptanceReport) -> List[str]:
                 f"{recon['forbidden_terms_excluded']} gold-forbidden term(s) withheld from "
                 f"{recon['legs_with_forbidden_terms']} of {recon['legs_with_coverage']} scored leg(s)"
             )
-            for row in recon["legs"]:
+            # The rows live once, on the report (F5). The entry carries the
+            # counts; this is the one reader that needs the detail.
+            for row in report.coverage_reconciliation_corpus["legs"]:
                 if not row["excluded_count"]:
                     continue
                 raw = "n/a" if row["raw_ratio"] is None else f"{row['raw_ratio']:.3f}"

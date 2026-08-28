@@ -7887,13 +7887,41 @@ not move.
 
 **G9** is a behavioural proof, not symbol absence: `evidence/c102_g9_denominator_proof.py` asks the
 public `score_run(...).to_dict()` which requested-core denominators it states for that leg and gets
-`[]` at base against `[23, 27]` at the tip. **All six mutations in
-`evidence/c102_mutation_attack.py` were detected**, including one that leaks the coverage exemption
-into Priority 1 and one that restores the contradictory denominator outright.
+`[]` at base against `[23, 27]` at the tip. **All seven mutations in
+`evidence/c102_mutation_attack.py` are detected**, including one that leaks the coverage exemption
+into Priority 1, one that restores the contradictory denominator outright, and **M7**, which reverts
+the numerator half — see the correction round below.
 
 **Gates.** Gold-readers **2 failed / 453 passed / 8 skipped at base AND at tip** — the two F-142
-reds, unchanged, no third. SMOKE **473 passed**. Focused **11 passed**. Every job
+reds, unchanged, no third. SMOKE **473 passed**. Focused **14 passed**. Every job
 `FINAL SURVIVING COUNT : 0`, `cleanup : success`.
+
+### C-102 correction round 1 — REV-102, and the deviation that shipped untested
+
+**The escalated line had no assertion behind it.** D-072 says forbidden terms leave the
+**denominator**; this card removes them from the **numerator** too. That deviation was escalated
+rather than taken silently — and it still shipped with nothing testing it. Reverting the one line
+(mutation **M7**) left all eleven tests green. **This is F-144 on my own card**: a claim nobody had
+attacked. **M7 is now in the attack set and tests 12 and 13 bite it.**
+
+**The deviation is right, and the corpus says so more sharply than either side argued.** Measured
+independently at `evidence/c102_numerator_verify.log`, a denominator-only exclusion reports a
+"coverage ratio" **above 1.0 on nine committed legs — eight of them exactly `1.2000`** (`6/5`), and
+one at `1.125` (`9/8`). It is not a rate. **23 of the 62 legs carry a matched forbidden term**
+— confirmed here after REV-102's own first count of 19 was corrected by the corpus. Under the
+literal reading, matching a forbidden identifier is worth exactly as much as matching a legitimate
+anchor, so obeying the gold scores **below** breaking it. Removing the term from both sides makes a
+forbidden match exactly **neutral**, which is the property test 12 pins.
+
+**PRODUCT_CONTRACT § 7 currently reads "numerator and denominator alike" while LOCKED D-072 reads
+"denominator".** D-072 outranks it. **That reconciliation is the product owner's, not mine**, and is
+being recorded separately; this card's diff is not an improvised product decision.
+
+**Also corrected in this round.** The serialization note (the report-level key is unconditional —
+a run with zero coverage blocks still grows) · the G9 row, which described an `ImportError` as if it
+were the proof · the aggregate/per-leg key-name collision, now `coverage_reconciliation_corpus` ·
+a shallow copy in `ModeResult.to_dict` sharing `excluded_terms` by identity · the ~24% report growth,
+now ~12.4% · and `render.py`'s 27 lines, which had no test and now have test 14.
 
 ## Cards
 

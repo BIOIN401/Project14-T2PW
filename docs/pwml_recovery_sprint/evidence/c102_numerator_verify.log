@@ -1,0 +1,63 @@
+legs scored                              : 62
+legs carrying >=1 MATCHED forbidden term : 23
+denominator-only ratios ABOVE 1.0        : 9
+    2026-08-21_2239/PMC12856317:research                 1.2   (6/5)
+    2026-08-21_2239/PMC12856317:strict                   1.2   (6/5)
+    2026-08-22_2017/PMC12856317:strict                   1.2   (6/5)
+    2026-08-22_2147/PMC12856317:strict                   1.2   (6/5)
+    2026-08-22_2147/PMC13231680:research                 1.2   (6/5)
+    2026-08-22_2147/PMC13231680:strict                   1.2   (6/5)
+    2026-08-24_1203/PMC12856317:research                 1.2   (6/5)
+    2026-08-24_1203/PMC12856317:strict                   1.125   (9/8)
+    2026-08-25_1216/PMC12856317:strict                   1.2   (6/5)
+
+legs where denominator-only differs from both-sides: 23
+    PMC12096016:strict           den_only=0.9333   both_sides=0.8  matched_forbidden=2
+    PMC12312563:strict           den_only=1.0      both_sides=0.857143  matched_forbidden=1
+    PMC12096016:research         den_only=0.9286   both_sides=0.857143  matched_forbidden=1
+    PMC12096016:strict           den_only=0.9375   both_sides=0.875  matched_forbidden=1
+    PMC12856317:research         den_only=1.2      both_sides=1.0  matched_forbidden=1
+    PMC12856317:strict           den_only=1.2      both_sides=1.0  matched_forbidden=1
+    PMC12856317:strict           den_only=1.2      both_sides=1.0  matched_forbidden=1
+    PMC12096016:strict           den_only=0.9231   both_sides=0.846154  matched_forbidden=1
+    PMC12856317:strict           den_only=1.2      both_sides=1.0  matched_forbidden=1
+    PMC13231680:research         den_only=1.2      both_sides=1.0  matched_forbidden=1
+    PMC13231680:strict           den_only=1.2      both_sides=1.0  matched_forbidden=1
+    PMC12096016:research         den_only=0.9333   both_sides=0.866667  matched_forbidden=1
+    PMC12096016:strict           den_only=0.9375   both_sides=0.875  matched_forbidden=1
+    PMC12856317:research         den_only=1.2      both_sides=1.0  matched_forbidden=1
+    PMC12856317:strict           den_only=1.125    both_sides=1.0  matched_forbidden=1
+    PMC13231680:strict           den_only=1.0      both_sides=0.75  matched_forbidden=1
+    PMC12096016:research         den_only=1.0      both_sides=0.846154  matched_forbidden=2
+    PMC12444477:strict           den_only=0.7391   both_sides=0.695652  matched_forbidden=1
+    PMC12856317:research         den_only=0.875    both_sides=0.75  matched_forbidden=1
+    PMC12856317:strict           den_only=1.0      both_sides=0.875  matched_forbidden=1
+    PMC12444477:strict           den_only=0.6111   both_sides=0.555556  matched_forbidden=1
+    PMC12856317:strict           den_only=1.2      both_sides=1.0  matched_forbidden=1
+    PMC12096016:strict           den_only=0.875    both_sides=0.75  matched_forbidden=2
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c102\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 60968517c66722fa67c63c2dee01222a7a447dd3  [git, worktree dirty=False]
+label                   : c102-numerator-verify
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/verify.py
+cwd                     : C:\t\c102
+root PID / process group: 510308 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.42 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  509548:python.exe
+descendants terminated  : 1  509548
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c102\docs\pwml_recovery_sprint\evidence\g11\C-102\15-numerator-verify.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

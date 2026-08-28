@@ -7,6 +7,14 @@ when that something is broken is not evidence, so each mutation below breaks
 exactly one thing a C-102 test claims to detect and the suite is re-run against
 it.
 
+M7 is the mutation this file was missing for a round. The numerator half of the
+exclusion is a DEVIATION from D-072's literal text -- the ruling says
+"denominator", this code removes forbidden terms from both sides -- and it was
+escalated rather than taken silently. It still shipped with nothing asserting it:
+reverting that one line left all eleven tests green. A deviation is exactly the
+line most in need of a mutation, because no existing test was written with it in
+mind. Tests 12 and 13 are what M7 now bites.
+
 Every mutation is applied by exact text substitution to a COMMITTED file and
 reverted with ``git checkout --`` afterwards, and the tree is verified clean at
 the end. A mutation whose substitution does not apply aborts the run: a mutation
@@ -72,6 +80,15 @@ MUTATIONS = [
         ACCEPTANCE,
         '        "excluded_terms": excluded,\n',
         '        "excluded_terms": [],  # MUTATION M5\n',
+    ),
+    (
+        "M7",
+        "the NUMERATOR half is reverted to D-072's literal denominator-only text",
+        ACCEPTANCE,
+        "    accepted_matched = [str(t) for t in matched if str(t) not in excluded_terms]
+",
+        "    accepted_matched = [str(t) for t in matched]  # MUTATION M7
+",
     ),
     (
         "M6",

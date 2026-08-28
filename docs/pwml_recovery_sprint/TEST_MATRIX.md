@@ -618,7 +618,8 @@ than for want of code, and that is not a base result.
 |---|---|---|---|
 | gold-readers (22 files) | **2 failed, 453 passed, 8 skipped** (exit 1) | **2 failed, 453 passed, 8 skipped** (exit 1) | identical; both reds are F-142 `[only_unrelated_reactions_survive]`, chartered as C-103. **No third failure.** |
 | SMOKE (20 files) | — | **473 passed** | merge rule 10 |
-| focused `test_c102_coverage_denominator.py` | fails — the behaviour is absent | **11 passed** | G9 |
+| focused `test_c102_coverage_denominator.py` | **does not collect — `ImportError`** | **14 passed** | **not the G9 proof.** A missing import is *symbol absence*, which G9 explicitly refuses. The behavioural proof is `evidence/c102_g9_denominator_proof.py`, in the row below |
+| `c102_g9_denominator_proof.py` — which denominators does the report state for `PMC12782028/strict`? | **`[]`**, and no withheld term named | **`[23, 27]`**, all four named | **this is G9.** A statement about values in the report, not about a symbol |
 
 **Corpus delta**, 62 legs with a coverage block, 860 requested-core terms drawn: **92 gold-forbidden
 terms withheld across 47 legs**; **32 legs rise, 7 fall, 8 unchanged**; **zero legs clear** the
@@ -631,6 +632,25 @@ pipeline matched is withheld from the numerator as well as the denominator, so i
 coverage credit. 26 of the 92 withheld terms are of that kind, and they are invisible to the
 ORCH-702 probe, which counted forbidden terms only among the unmatched.
 
-**Serialization note for anyone diffing reports.** `coverage_reconciliation` is conditional on both
-the leg and the report, so a run that stored no `quarantine_report.json` serializes byte-identically
-to before. Priorities 1-3 carry no `requested_core_coverage` key; only 4 and 5 do.
+**Serialization note for anyone diffing reports — corrected, the first version was wrong.**
+Only the **per-leg** key is conditional: `ModeResult.to_dict` omits `coverage_reconciliation` when
+the leg stored no coverage block. The **report-level** key is not. `AcceptanceReport.to_dict` always
+writes `coverage_reconciliation_corpus`, and priorities 4 and 5 always carry
+`requested_core_coverage`, so **no report serializes byte-identically to before** — including one
+with no coverage block anywhere. Measured (`evidence/c102_report_size.py` / `.log`):
+`runs_verify/2026-08-04_1207` has **zero** such legs and still grows **48,791 → 49,681 bytes**.
+Priorities 1-3 carry no `requested_core_coverage` key; only 4 and 5 do.
+
+**Two names, because they are two different records (REV-102 F6).**
+`coverage_reconciliation_corpus` at the top level is the aggregate and owns the per-leg `legs`
+array; `coverage_reconciliation` inside a leg is that leg's own row. Their key sets are disjoint and
+they briefly shared a name, which invited a reader who found one to assume the shape of the other.
+
+**Size, and the choice behind it (REV-102 F5).** The corpus record is ~12 KB on a full run and
+priorities 4 and 5 both referenced it, so it was serialized three times: `runs_verify/2026-08-24_1428`
+grew **199,838 → 248,528 bytes, +24%**, about two thirds of it duplication. The priority entries now
+carry the **counts only** — how many legs, how many terms, which legs cleared, which are still below
+the minimum, which have no defined rate — plus `legs_at`, naming the one key that holds the rows.
+A priority read alone still states the size and outcome of the reconciliation; only the row-by-row
+detail moved, one key away in the same document. Measured after the change: **224,607 bytes, +12.4%**,
+and the two priority copies fall from 12,288 bytes each to 379.

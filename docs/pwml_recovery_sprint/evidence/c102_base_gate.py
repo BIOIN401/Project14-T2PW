@@ -100,6 +100,13 @@ try:
         "A/B probe at base",
         [PY, "docs/pwml_recovery_sprint/evidence/c102_f132_coverage_ab.py", str(ROOT)],
     )
+    # REV-102 F3/F5. The base report sizes, so the growth this card causes is a
+    # measured difference rather than a quoted one -- including on a run with NO
+    # leg carrying a coverage block, which is the case the first round got wrong.
+    run(
+        "G9-REPORT-SIZE at base",
+        [PY, "docs/pwml_recovery_sprint/evidence/c102_report_size.py", str(ROOT)],
+    )
 finally:
     git("checkout", "HEAD", "--", *REVERT)
     Path(ROOT / (NEW_TEST + ".setaside")).rename(ROOT / NEW_TEST)

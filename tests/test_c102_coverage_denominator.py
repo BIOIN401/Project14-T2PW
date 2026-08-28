@@ -44,6 +44,7 @@ from t2pw.bench.acceptance import (
     score_run,
 )
 from t2pw.bench.goldset import load_gold_set, pinned_gold_set_path
+from t2pw.bench.render import render_text
 from t2pw.bench.semantic import (
     CHECK_ID_CONFLICT,
     ERR_FALSE_REAL_IDENTIFIERS,
@@ -295,13 +296,17 @@ def test_9_raw_and_accepted_are_reported_separately_and_differ(recon):
     # Priorities 4 and 5 read the reconciliation; priorities 1-3 do not.
     priorities = {entry["rank"]: entry for entry in data["acceptance_priorities"]}
     for rank in (4, 5):
-        assert priorities[rank]["requested_core_coverage"]["legs_with_forbidden_terms"] > 0
+        entry = priorities[rank]["requested_core_coverage"]
+        assert entry["legs_with_forbidden_terms"] > 0
+        # F5: the counts travel on the entry, the 12 KB row array does not.
+        assert "legs" not in entry
+        assert entry["legs_at"] == "coverage_reconciliation_corpus.legs"
     for rank in (1, 2, 3):
         assert "requested_core_coverage" not in priorities[rank]
     # Priority 1 is UNCHANGED by this card, raw and accepted alike.
     assert priorities[1]["raw"] == priorities[1]["observed"]
 
-    corpus = data["coverage_reconciliation"]
+    corpus = data["coverage_reconciliation_corpus"]
     assert corpus["legs_still_below_minimum"] == ["PMC12782028:strict"]
     assert corpus["legs_cleared_by_reconciliation"] == []
 
@@ -380,3 +385,111 @@ def test_11_restoring_the_contradictory_denominator_collapses_raw_and_accepted(
     assert recon["accepted_denominator"] != recon["raw_denominator"]
     assert recon["accepted_ratio"] != recon["raw_ratio"]
     assert recon["excluded_count"] == 4
+
+
+# ---------------------------------------------------------------------------
+# 12-13. REV-102 F1 -- the NUMERATOR half, which shipped untested.
+#
+# D-072's text says "excluded from the accepted positive-coverage DENOMINATOR".
+# This card removes forbidden terms from the numerator as well, and that
+# deviation was escalated rather than taken silently. It survived the first
+# round with no assertion behind it: reverting the numerator half (mutation M7)
+# left all eleven tests green. These two are what make it bite.
+# ---------------------------------------------------------------------------
+def test_12_a_matched_forbidden_term_is_withheld_from_the_numerator_too(gold):
+    """Denominator-only removal INVERTS the ruling on a MATCHED forbidden term.
+
+    The term leaves the denominator but stays in the numerator, so a pipeline is
+    paid a coverage bonus for exactly the export Priority 1 penalises, and
+    obeying the gold scores BELOW breaking it. Measured on the real corpus the
+    same reading reports ratios above 1.0 on nine committed legs, eight of them
+    at 1.2000 -- not a coverage rate at all
+    (``evidence/c102_numerator_verify.log``).
+    """
+
+    case = gold["PMC12782028"]
+    terms = ["SREBF1", "HMGCR", "CYP51A1"]
+    out = contract_accepted_coverage(case, _block(terms, matched=["SREBF1"]))
+
+    # The finding first: the forbidden term really was MATCHED on this block.
+    assert out["excluded_count"] == 1
+    assert out["excluded_terms"][0]["matched_in_raw"] is True
+    assert out["raw_matched"] == 1 and out["raw_denominator"] == 3
+
+    # Denominator-only would report 1/2 = 0.5 here. Both-sides reports 0/2 = 0.0.
+    assert out["accepted_matched"] == 0
+    assert out["accepted_denominator"] == 2
+    assert out["accepted_ratio"] == pytest.approx(0.0)
+
+    # And the property that removes the inversion: matching a forbidden term is
+    # exactly NEUTRAL. Obeying the gold and breaking it score the same.
+    obeyed = contract_accepted_coverage(case, _block(terms, matched=["HMGCR"]))
+    broke = contract_accepted_coverage(case, _block(terms, matched=["HMGCR", "SREBF1"]))
+    assert obeyed["accepted_ratio"] == pytest.approx(0.5)
+    assert broke["accepted_ratio"] == pytest.approx(0.5)
+    assert obeyed["accepted_ratio"] == broke["accepted_ratio"]
+
+
+def test_13_the_accepted_rate_is_a_rate_on_every_committed_leg(gold):
+    """A numerator can never exceed its denominator, on any committed leg."""
+
+    listed = subprocess.run(
+        ["git", "ls-files", "*quarantine_report.json"],
+        cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+    )
+    paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
+
+    checked = with_matched_forbidden = 0
+    for rel in paths:
+        leg_dir = (REPO / rel).parent
+        case = gold.get(leg_dir.parent.name)
+        if case is None:
+            continue
+        coverage = json.load(io.open(REPO / rel, encoding="utf-8")).get("coverage") or {}
+        out = contract_accepted_coverage(case, coverage)
+        if out is None:
+            continue
+        checked += 1
+        assert out["accepted_matched"] <= out["accepted_denominator"], rel
+        if out["accepted_ratio"] is not None:
+            assert 0.0 <= out["accepted_ratio"] <= 1.0, f"{rel}: {out['accepted_ratio']}"
+        if any(e["matched_in_raw"] for e in out["excluded_terms"]):
+            with_matched_forbidden += 1
+            # Withheld from the numerator, so the accepted count MUST drop.
+            assert out["accepted_matched"] < out["raw_matched"], rel
+
+    assert checked == 62
+    # Non-vacuity, and the reason this test is not an empty loop: the corpus
+    # really does contain matched forbidden terms. Twenty-three legs, measured
+    # here and re-measured independently in c102_numerator_verify.log.
+    assert with_matched_forbidden == 23, with_matched_forbidden
+
+
+# ---------------------------------------------------------------------------
+# 14. REV-102 F4 -- the rendered surface a human reads to make the T-107 call.
+# ---------------------------------------------------------------------------
+def test_14_the_reconciliation_is_rendered_under_priorities_4_and_5_only():
+    """The text report is the surface the call is actually made from."""
+
+    text = render_text(score_run(PINNED_RUN))
+    assert "ACCEPTANCE PRIORITIES" in text, "the report did not render at all"
+
+    marker = "D-072 requested-core reconciliation"
+    assert text.count(marker) == 2, f"expected one block under each of 4 and 5, got {text.count(marker)}"
+
+    # The affected leg, both halves, and the terms named -- guard rail 3 on the
+    # surface, not only in the JSON.
+    assert "PMC12782028:strict" in text
+    assert "raw 6/27=0.222" in text
+    assert "accepted 6/23=0.261" in text
+    for term in FORBIDDEN_ON_12782028:
+        assert f"{term} [" in text, term
+    assert "withheld (still forbidden to export, still recorded)" in text
+
+    # A leg with no forbidden draw prints nothing, so the surface reads exactly
+    # as it did before wherever the reconciliation has nothing to say.
+    corpus = score_run(PINNED_RUN).coverage_reconciliation_corpus
+    quiet = [row for row in corpus["legs"] if not row["excluded_count"]]
+    assert quiet, "no unaffected leg in this run -- the assertion below is vacuous"
+    for row in quiet:
+        assert f"- {row['paper_id']}:{row['mode']}  raw " not in text
