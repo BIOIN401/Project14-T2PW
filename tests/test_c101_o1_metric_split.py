@@ -690,6 +690,12 @@ def test_a7_8_accepted_count_is_computed_separately_and_can_differ():
     They are computed by different code paths over different predicates: raw from
     the error total, accepted from the rows' contract adjustments. This case makes
     them legitimately differ and asserts the difference.
+
+    NOTE (REV-101 round 2): this exercises the REPORTING layer, which is where
+    the two counts are combined. The SCORER cannot currently emit a non-empty
+    `contract_tolerance` at all -- see
+    :func:`test_a5_no_row_shape_can_be_contract_adjusted_under_the_current_gold`.
+    So the report layer keeps them separable; today's equality is structural.
     """
 
     rows = [
@@ -751,6 +757,10 @@ def test_a5_bare_means_bare_a_sentinel_with_any_accession_is_not_adjusted(lipid_
 
     The earlier guard matched UniProt-SHAPED strings only, so a sentinel carrying
     a kegg / chebi / drugbank / hmdb id would have been contract-adjusted.
+    REV-101 round 2: this test used to assert the predicate matched and that
+    `_external_ids` survived, then INFER the conjunction -- it never called the
+    production path, so it did not prove its own name and did not catch that the
+    guard had made the seam unreachable. It now runs end-to-end.
     """
 
     from t2pw.bench.semantic import _external_ids
@@ -759,6 +769,16 @@ def test_a5_bare_means_bare_a_sentinel_with_any_accession_is_not_adjusted(lipid_
     assert _external_ids(bare) == {}, "the genuine sentinel must still read as bare"
     assert lipid_a.sentinel_tolerance_match("Unknown", bare) is not None
 
+    def tolerances(row):
+        """Every contract_tolerance the PRODUCTION scorer emits for `row`."""
+
+        report = validate_semantic_coverage(lipid_a, payload(proteins=[row]), mode="strict")
+        return [
+            f.get("contract_tolerance", "")
+            for f in report.checks[CHECK_ID_CONFLICT].findings
+            if f["kind"] in ("false_real_identifier", "placeholder_claims_real_identity")
+        ]
+
     for namespace, value in (("kegg", "K00912"), ("chebi", "CHEBI:16856"), ("hmdb", "HMDB0000122")):
         row = sentinel_row()
         row["mapped_ids"][namespace] = value
@@ -766,6 +786,48 @@ def test_a5_bare_means_bare_a_sentinel_with_any_accession_is_not_adjusted(lipid_
         # The row still satisfies the sentinel predicate -- it is the BARENESS
         # guard, not the predicate, that must refuse it.
         assert lipid_a.sentinel_tolerance_match("Unknown", row) is not None, namespace
+        assert all(t == "" for t in tolerances(row)), f"{namespace} was contract-adjusted"
+
+
+def test_a5_no_row_shape_can_be_contract_adjusted_under_the_current_gold(lipid_a):
+    """REV-101 round 2. The seam is UNREACHABLE, and that is pinned deliberately.
+
+    `_contract_adjustment`'s only call site sits inside `if ids:`, and its
+    bareness guard refuses any row with `ids`. D-074 licenses only the bare
+    sentinel, which therefore can never BE a Priority-1 row. So accepted == raw
+    today by CONSTRUCTION, not by measurement.
+
+    Pinned rather than left implicit so that whoever widens the licence later
+    must come here and change this assertion on purpose.
+    """
+
+    forged = sentinel_row()
+    forged["mapped_ids"] = {"uniprot": "P0A6T1", "pathbank_protein_id": 9659}
+    forged["uniprot_id"] = "P0A6T1"
+    shapes = [
+        sentinel_row(),                                   # bare: no finding at all
+        forged,                                           # forged accession
+        sentinel_row(name="LpxA product"),                # a forbidden name
+        {"name": "Unknown", "identity_status": "placeholder",
+         "mapping_meta": {"identity_status": "placeholder", "fallback_used": True}},
+        wrapper_row("LpxH"),
+    ]
+    for namespace, value in (("kegg", "K00912"), ("chebi", "CHEBI:16856")):
+        row = sentinel_row()
+        row["mapped_ids"][namespace] = value
+        shapes.append(row)
+
+    seen = 0
+    for row in shapes:
+        report = validate_semantic_coverage(lipid_a, payload(proteins=[row]), mode="strict")
+        for f in report.checks[CHECK_ID_CONFLICT].findings:
+            if f["kind"] in ("false_real_identifier", "placeholder_claims_real_identity"):
+                seen += 1
+                assert f.get("contract_tolerance", "") == "", (
+                    f"{f['name']} was contract-adjusted; the seam is meant to be "
+                    "unreachable under D-074 as ruled"
+                )
+    assert seen, "no shape produced a Priority-1 finding -- the probe proves nothing"
 
 
 def test_a7_12b_non_vacuity_status_collapse_turns_the_band_tests_red():

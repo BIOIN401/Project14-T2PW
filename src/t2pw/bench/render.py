@@ -90,7 +90,8 @@ def _priorities(report: AcceptanceReport) -> List[str]:
             )
             out.append(
                 f"          contract-adjusted out of accepted: {len(adjusted)}"
-                + ("" if adjusted else "  (none -- measured, not assumed)")
+                + ("" if adjusted else "  (none, and none is POSSIBLE: D-074 licenses"
+                   " only the bare sentinel, which can never be a Priority-1 row)")
             )
             for row in entry.get("raw_rows") or []:
                 out.append(

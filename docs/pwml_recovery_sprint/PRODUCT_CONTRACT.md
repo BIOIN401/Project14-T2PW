@@ -410,6 +410,15 @@ a defect is fixed. `PASS_WITHIN_VARIANCE` stays visibly distinct from `PASS` and
 collapse into any summary, badge or Boolean — which is why the absolute `ok` is left
 computing zero-tolerance on the raw count. Do not rerun to chase a favourable draw.
 
+**Under D-074 as ruled, no Priority-1 row can be contract-adjusted, so `accepted` is
+identically `raw` today.** The licence covers only the *bare* sentinel, and a bare row
+carries no accession, while a Priority-1 finding requires one — so the two sets cannot
+intersect. That is the ruling's shape and not a defect: the seam is wired, tested and
+pinned so a future licence has somewhere to land, and loosening the bareness guard to make
+it fire would be broader than the ruling and is refused. **A zero here means "no licence
+can reach this", not "none was measured"** — the same distinction `placeholder_other_rows`
+and `withheld_identity_other` exist to preserve.
+
 **A tolerance is a licence and has to be spelled out.** PMC12444477's `Unknown` tolerance
 is **row-predicated**, declared in `unknown_backed_tolerated_sentinel` and kept out of the
 name-keyed list on purpose: a name-keyed `Unknown` would excuse any row on that paper

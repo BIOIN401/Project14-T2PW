@@ -1038,13 +1038,21 @@ def _check_id_conflicts(
         never touched, because D-073 requires it preserved and unchanged in
         meaning. Three conditions, all required, the last two being the safety
         property: (1) the gold declares a ROW-PREDICATED licence covering the row;
-        (2) the row is BARE -- it carries no external accession in any namespace, since
-        a tolerance may excuse an identity a row does NOT claim, never one it does; (3) the finding is not
-        ``placeholder_claims_real_identity``, which keeps precedence over every
-        tolerance and which no contract adjustment may reach past.
+        (2) the row is BARE -- it carries no external accession in any namespace,
+        since a tolerance may excuse an identity a row does NOT claim, never one
+        it does; (3) the finding is not ``placeholder_claims_real_identity``,
+        which keeps precedence over every tolerance and which no contract
+        adjustment may reach past.
 
-        MEASURED: on the pinned corpus this returns ``""`` for every row, so
-        accepted == raw there. That is a measurement, not a construction.
+        **UNREACHABLE TODAY, AND THAT IS THE RULING'S SHAPE, NOT A BUG.** The one
+        call site sits inside ``if ids:``, and condition 2 refuses a row that has
+        any ``ids``, so this returns ``""`` for EVERY input. D-074 licenses only
+        the *bare* sentinel, and a bare sentinel can never BE a Priority-1 row,
+        because that branch requires an accession. So ``accepted == raw`` today by
+        CONSTRUCTION, not by measurement -- an earlier draft of this docstring
+        claimed the opposite and was wrong. The seam is kept, wired and tested so
+        a future licence has somewhere to land; loosening condition 2 to make it
+        fire would be broader than the ruling and is refused.
         """
 
         if case.sentinel_tolerance_match(name, row) is None:
