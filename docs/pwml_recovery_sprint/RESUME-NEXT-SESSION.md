@@ -50,9 +50,24 @@ and must never be reported as, `placeholder_backed_proteins`.
 
 | Card | Branch | State |
 |---|---|---|
-| **C-099** — preserve resolved species on Unknown-backed wrappers | `card/C-099-species-preservation` | implemented; **in independent review** |
-| **C-100** — per-entity tolerance scope for PMC12444477 | `card/C-100-tolerance-scope` | **in flight** |
-| **C-101** — the 16/5 metric split | *(not dispatched)* | chartered; **depends on C-100 merging** — both edit `_check_placeholder_identity` |
+| **C-099** — preserve resolved species on Unknown-backed wrappers | `card/C-099-species-preservation` | **MERGED** `9e4a28a`. Gate 570 passed |
+| **C-100** — per-entity tolerance scope for PMC12444477 | `card/C-100-tolerance-scope` | **MERGED** `8e5d549`. A/B zero movers on 42 files; gate 898 passed |
+| **C-101** — the 16/5 metric split | *(not dispatched)* | chartered, and its dependency is now **satisfied** — C-100 is in. **This is the next card to dispatch.** |
+
+**Two reds that are NOT ours and must not be absorbed as noise.**
+`test_strict_failure_replay.py::{test_every_stored_strict_failure_replays_to_its_recorded_verdict,
+test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed}[only_unrelated_reactions_survive]`
+fail on `f7dc223` **before either card existed**, and were confirmed unmoved three separate times. A
+Glutathione payload: no gold case, no `unknown_backed` surface. The fixture records `recovers: false`
+while `quarantine_and_close` returns `ok=True`. **Unowned — worth a card.**
+
+**Registered with C-100, both needing the product owner rather than an agent.** Scoping makes the bare
+PathBank `Unknown` sentinel a finding on PMC12444477, and D-070 § O-1a rules that sentinel is
+PathBank's own legitimate representation — so the pipeline largely cannot clear the finding by doing
+anything correct. Recorded as **F-132-class instrument tension**, not a defect; excusing it is an
+eighth gold entry and needs **D-071 amended**. And the `lipoprotein` tolerance entry is **inert** —
+the token appears in no protein row in any payload; it is kept with an empty quote because fabricating
+a span for a token the paper does not contain is the one thing that field forbids.
 
 Charters are `docs/pwml_recovery_sprint/prompts/C-099.md`, `C-100.md`, `C-101.md`.
 
