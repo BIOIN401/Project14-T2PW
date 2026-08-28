@@ -4279,3 +4279,103 @@ failure.**
 * **Using `NOT EVALUATED` on a leg whose prerequisites are satisfied is a failure**, not a
   convenience. Per `PRODUCT_CONTRACT` § 8, `not_evaluated` is never `false`, and the two must stay
   distinguishable in the emitted report.
+
+---
+
+## D-076 — C-101 ceiling 1 raised 420 → 560; the overage is the orchestrator's, and two charter errors are corrected · 2026-08-28 · LOCKED
+
+**Ceiling 1 `420 → 560`. Ratified.** C-101 measures **541** hand-authored production + docs
+(`src` 499 + `PRODUCT_CONTRACT.md` 42). Ceiling 2 unchanged at 45; the card measures **24**.
+
+### Why this is ratified rather than split
+
+**The overage is mine.** The original C-101 charter budgeted **250** for one deliverable — the 16/5
+metric split. `AMENDMENT 1` then added **two more** deliverables of comparable size, the row-aware
+sentinel seam (D-074) and the raw/accepted Priority-1 split with its variance statuses (D-073), and
+I re-derived the ceiling as **420** by estimate rather than by counting the added deliverables. Three
+deliverables at the first one's own rate is roughly 560. **This is the sixth ceiling under-set on
+this sprint, and ceiling-1 overages have been the orchestrator's error every time** (REV-051a).
+
+**The card behaved exactly as required.** It made a real trimming pass first — `src` **563 → 499**,
+all of it comment and docstring prose, **no function and no test cut** — then **stopped and reported
+rather than self-authorizing**, which is what S4 demands and what a ceiling is for.
+
+**The diff is disciplined, which is the property the ceiling exists to protect.** Verified before
+ratifying: the change is confined to `src/t2pw/bench/{acceptance,goldset,render,semantic}.py`, the
+single authorized gold entry, `PRODUCT_CONTRACT.md`, a new test file and evidence. **Nothing** in
+`map_ids.py`, `writer.py`, `strict_quarantine.py`, any strict gate or `streamlit_app.py`. **Nine
+deletions across the entire diff.** A ceiling breach accompanied by scope creep is a reject; a
+ceiling breach with a clean boundary and a documented trim is a mis-set ceiling.
+
+**The split was offered and is declined.** The author proposed a clean three-way split
+(C-101a 16/5 ≈ 230 · C-101b sentinel seam ≈ 175 · C-101c raw/accepted ≈ 130), each independently
+validatable. It is a sound proposal and it is refused **on cost, not on merit**: the work is already
+written, gated and coherent, so splitting buys three dispatches, three independent reviews, three
+merges and three gate runs for a diff whose boundary is already clean — and it would push C-102,
+C-103 and the T-107 readiness assessment out by at least a session. **Budget exists to prevent
+uncontrolled scope, not to force re-work of controlled scope.**
+
+**Ratification is not approval.** The merge remains contingent on REV-101 exactly as before. If the
+review finds scope creep, that is a rejection on its own merits and this decision does not shield it.
+
+### Two charter errors, corrected here rather than quietly
+
+**1. `AMENDMENT 1` § A4's premise was wrong.** It instructed the card to identify the authoritative
+row *"used by C-100's accepted A/B"*. **C-100's accepted A/B contains no payload row at all** — it is
+a **test-node** A/B, 20 SMOKE files plus 22 gold-readers files, which is exactly where the phrase
+*"zero movers on 42 files"* comes from. The card was sent looking for an object under a description
+that did not fit it.
+
+It found the right row regardless, by the better route, and that route is now the documented one:
+**`evidence/orch710_pinned21.json`** (21 placeholders, exactly 5 sentinels, exactly one on
+PMC12444477) **plus** the LEDGER's *"which run is 'the pinned run'"* correction (`runs/2026-08-02_2130`,
+not `runs_verify/2026-08-24_1428`). Both routes select
+`runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json` → `/entities/proteins/4`.
+**Independently re-derived by the orchestrator from the artifact rather than accepted from the
+report.**
+
+The safety argument matters more than the row id: **the choice cannot bias the outcome**, because the
+tolerance is row-predicated and all three archived PMC12444477 sentinel rows carry identical values
+on every clause of the predicate. Had the choice been able to move a result, the ambiguity would have
+been material and the card was required to stop.
+
+**2. `AMENDMENT 1`'s header names base `b30193f`; the dispatched worktree carries `d7cf4a4`.** The
+amendment was written at `b30193f` and then committed, which advanced the tip to `d7cf4a4` before the
+worktree was moved to it so the card would carry its own charter. **`d7cf4a4` is the base of record**
+for C-101 and for REV-101's A/B. The header line is stale and is superseded by this decision.
+
+### One thing recovered because a card was told to
+
+C-100's `03-base-probe` / `04-tip-probe` **stdout survived only in a dead session's scratchpad** —
+the second time this wave the sole record of what a bounded job found lived outside the repository.
+It is now committed at `evidence/c100_03-base-probe.RECOVERED.log`,
+`c100_04-tip-probe.RECOVERED.log` and `c100_probe_stdout.RECOVERED.md`. **The probe source
+(`probe_c100.py`) was already gone** and is unrecoverable; that is recorded so nobody hunts for it.
+
+---
+
+## D-077 — OPEN QUESTION, not yet ruled: what an authorized Priority-1 tolerance actually is · 2026-08-28 · REGISTERED
+
+**Raised by C-101 against D-073, correctly, and registered rather than answered.**
+
+D-073 defines the accepted count as *"the contract-adjusted result after authorized, case-scoped
+tolerances"*. C-101 reports that **no such tolerance can currently remove a Priority-1 row at all**,
+and gives a mechanism: `false_real` counts only forged identities; a bare PathBank sentinel carries
+`uniprot: "Unknown"`, which `_external_ids` drops; therefore **a sentinel can never *be* a Priority-1
+row**, and D-074's tolerance — the only case-scoped tolerance this wave authorizes — cannot subtract
+from Priority 1 even in principle.
+
+Measured consequence on `runs/2026-08-02_2130`: **raw 10, accepted 10, `accepted_status = FAIL`**.
+
+**This does not break Ruling B.** The variance band applies to whatever the accepted count is, so
+`PASS_WITHIN_VARIANCE` remains reachable at T-107 whether or not any tolerance fires. And
+`accepted == raw` here is a **measurement**, not a construction — the card was required to prove the
+seam can produce a difference, and to do so **without weakening the accession guard to manufacture
+one on real data.** It reports that it deliberately did not, on the ground that widening the guard
+would excuse a forgery. That is the correct refusal.
+
+**What is open:** whether D-073's phrase "authorized, case-scoped tolerances" is currently vacuous for
+Priority 1, and if so whether that is intended (Priority 1 is meant to be untouchable by tolerance,
+and the accepted count exists only to carry the variance band) or an under-specification to be filled
+later. **Routed to REV-101 as P15 for a recommendation; the ruling is the product owner's.**
+**No code depends on the answer** — the seam is built, guarded and exercised either way.
