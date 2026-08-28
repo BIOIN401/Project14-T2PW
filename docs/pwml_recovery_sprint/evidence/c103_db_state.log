@@ -1,0 +1,44 @@
+worktree            : C:\t\c103
+.env present        : False
+.venv present       : False
+PATHBANK_DB_HOST      : '<unset>'
+PATHBANK_DB_USER      : '<unset>'
+PATHBANK_DB_PASSWORD  : '<unset>'
+PATHBANK_DB_SCHEMA    : '<unset>'
+PATHBANK_ID_SOURCE    : '<unset>'
+T2PW_OFFLINE_CURATOR: 1
+pymysql importable  : True
+offline name index  : True
+measured t2pw       : C:\t\c103\src\t2pw\__init__.py
+resolution_db_configured: False
+resolution_db_config keys: []
+VERDICT: no .env and no .venv in this worktree and no PATHBANK_DB_* in the
+environment, so no live PathBank DB was reachable and resolution_db_configured
+is False. Every measurement in this card is offline: the replay fixture is a
+committed payload and quarantine_and_close does no network or DB work.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=False]
+label                   : c103-db-state-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c103_db_state.py
+cwd                     : C:/t/c103
+root PID / process group: 530712 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.29 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  530724:python.exe
+descendants terminated  : 1  530724
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c103/docs/pwml_recovery_sprint/evidence/g11/C-103/01-db-state-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

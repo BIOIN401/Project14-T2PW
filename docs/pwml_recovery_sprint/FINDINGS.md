@@ -5856,6 +5856,54 @@ hide a real state change, after `test_protein_export_policy.py` twice. A red tha
 carried as accepted noise, and "fails at base" was allowed to stand in for a diagnosis across at
 least four cards. **F-049 / F-054 remain open and this is another datum for them.**
 
+> **⚠ CLOSED by C-103** (`card/C-103-f142-replay-expectation`, from base `ad62338`).
+> **Test and fixture only: zero production lines, `git diff --numstat ad62338 HEAD -- src` is empty.**
+>
+> **What was done.** The expectation was re-pointed at the seam that now carries the verdict.
+> `recovers` keeps its meaning — `quarantine_and_close(...).ok`, "may this graph be frozen" — for all
+> nine cases, and four keys were added to every case so the fixture can say what the run *is* beside
+> whether it froze: `release_status`, `strict_acceptance_eligible`, `review_reasons`, `refusal_reasons`.
+> `only_unrelated_reactions_survive` now records `recovers: true`, `smaller: true`,
+> `release_status: "review_required"`, `strict_acceptance_eligible: false`, both `minimum_core:*`
+> review reasons and an empty `refusal_reasons`. **The trap was not walked into:** the
+> `coverage_reason` assertion was moved off the `recovers` branch and keyed on the fixture *declaring*
+> a shortfall, so it still runs for this case, and a new unparametrized test asserts the empty-graph
+> and off-topic-survivor verdicts head-on so neither can be branch-skipped.
+>
+> **G9 (correction of pre-existing observable behaviour).** Same file, same selection:
+> **2 failed / 37 passed / 8 skipped at `ad62338`** → **0 failed / 40 passed / 8 skipped at the tip.**
+> Gold-readers (22 files) **2 failed / 453 passed, exit 1** → **0 failed / 456 passed, exit 0**;
+> **that is the new gold-readers baseline** and later charters must be updated. SMOKE **473 → 473**,
+> unmoved: this file is in no chunk, which is the F-054 trap the finding names above.
+>
+> **Non-vacuity, by mutation (F-144).** Five attacks — B1 and B2 are two attempts at the same
+> property — each restored, with the tree re-verified clean and green afterwards:
+>
+> | # | mutation | result |
+> |---|---|---|
+> | A | `strict_acceptance_eligible=status == RELEASE_READY` → `True` | **5 failed** |
+> | B1 | `classify_release_status`: the `not verdict.minimum_core_satisfied` branch → `RELEASE_READY` | **40 passed, 0 failed — see below** |
+> | B2 | `review_required` → `release_ready` at the point of record | **3 failed** |
+> | C | this case's `coverage_reason` → a string that cannot match | **1 failed**, exactly this case |
+> | D | `CoverageVerdict.has_surviving_core` → `True` | **3 failed**, exactly `every_reaction_unresolvable` |
+>
+> **B1 is a correction to this finding, not a hole in the test.** The account above attributes
+> `only_unrelated_reactions_survive`'s `review_required` to C-041a's branch alone. That is true of the
+> **channel** — `review_reasons` rather than `refusal_reasons` is controlled by C-041a's split and by
+> nothing else — but **not of the status**. Collapsing that branch to `RELEASE_READY` leaves the
+> measured status at `review_required`, because the **F-094 incomplete-core cap** (C-072,
+> `status == RELEASE_READY and verdict.declared and missing`) independently demotes it on the three
+> unmatched anchors. **This payload is held out of `release_ready` by two independent rules**, which is
+> a stronger position than the finding claimed and worth knowing before either rule is touched.
+> B1's report is kept beside B2's rather than replaced.
+>
+> Evidence: `evidence/g11/C-103/01`–`14`, pins in `evidence/g11/pin/C-103/`, probes and logs at
+> `evidence/c103_db_state.*`, `evidence/c103_replay_seam_probe.*`, `evidence/c103_mutations.log`.
+> Worktree had **no `.env`, no `.venv`, no `PATHBANK_DB_*`**; `resolution_db_configured()` is `False`,
+> so every number here is offline. `evidence/g11/C-103/10` recorded an **invalidated** run — a
+> `git checkout` restoring mutation C reverted the fixture edit with it — and is kept beside its
+> re-measurement at `11`.
+
 ---
 
 ## F-144 — a non-vacuity guard can be real and still guard the wrong emptiness

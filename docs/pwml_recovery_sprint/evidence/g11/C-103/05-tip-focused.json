@@ -1,0 +1,80 @@
+{
+  "label": "c103-tip-focused",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c103",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-103/03-tip-focused.pin.json",
+    "-q",
+    "--no-header",
+    "-rf",
+    "--basetemp=C:/t/bt/c103tf",
+    "tests/test_strict_failure_replay.py"
+  ],
+  "cwd": "C:/t/c103",
+  "started_at": "2026-08-28T20:50:04+00:00",
+  "finished_at": "2026-08-28T20:50:06+00:00",
+  "duration_seconds": 1.8257796000107192,
+  "timeout_seconds": 900.0,
+  "root_pid": 528844,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 532840,
+      "name": "python.exe",
+      "ppid": 528844
+    }
+  ],
+  "descendants_terminated": [
+    532840
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 519044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 519780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 525356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 526156,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c103\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-103\\05-tip-focused.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c103\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c103",
+    "repo_head": "ad623382db40d2d9cad8fa81097a43122d804ff5",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
