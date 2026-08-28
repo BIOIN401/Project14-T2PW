@@ -1,6 +1,6 @@
 # PWML RECOVERY SPRINT — HANDOFF PROMPT
 
-Written 2026-08-27 at integration tip `df79a28`. Paste the whole of this file as the next session's
+Written 2026-08-27 at integration tip `e25247b`. Paste the whole of this file as the next session's
 opening prompt. **It replaces the previous handoff, which was written at `ed82240`.**
 
 ---
@@ -9,7 +9,7 @@ You are the Lead Orchestrator and Integration Authority for:
 
 `C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW`
 
-Integration branch: `sprint/pwml-recovery` · Expected starting tip: **`df79a28`**
+Integration branch: `sprint/pwml-recovery` · Expected starting tip: **`e25247b`**
 
 Work autonomously. Do not ask the product owner about routine implementation, testing, review or
 merge decisions. Conserve usage aggressively. **Do not merge to `main`.**
@@ -23,12 +23,12 @@ Read `CLAUDE.md` first, then `PRODUCT_CONTRACT.md`, `MASTER_PLAN.md`, `LEDGER.md
 
 | Check | Expected |
 |---|---|
-| local tip = origin = `git ls-remote` | `df79a28` |
+| local tip = origin = `git ls-remote` | `e25247b` |
 | merge in progress / staged | none / none |
 | heavy lock `C:/t/heavylock` | absent |
 | sprint-owned Python | zero |
 | allowed IDE processes | two `ms-python.isort` `lsp_server.py` — **never cleanup targets** |
-| whole-tree G11 | **4214 artifacts, 0 non-compliant** |
+| whole-tree G11 | **4235 artifacts, 0 non-compliant** |
 | product-owner `streamlit_app.py` | uncommitted, **35 ins / 2 del**, `sha256:47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632` |
 | caches + `topics_*.txt` | uncommitted, as found |
 
@@ -48,6 +48,10 @@ correction round when a working-tree read was mistaken for a committed state.
 * **C-095** (`13b5696`) — F-133, the remaining open path of **F-116**. A generated one-protein wrapper
   no longer inherits a superset complex id. Affected set re-run on the **combined** tree: **196
   passed** (182 + 14).
+* **C-097** (`b35b6a2`) — F-131. `bench.semantic._names` stops reading the legacy `ref`/`id` tail.
+  One executable line. REV-097 verified the zero-corpus-impact claim on a **larger** population than
+  the card measured — 39,542 dicts at every depth, **0 legacy keys under `/processes`** — and proved
+  the zero live with a two-process A/B that moves **6 → 100 orphans** under injection.
 
 **Held, all correct, all blocked on one ruling — see § 3:**
 
@@ -56,10 +60,10 @@ correction round when a working-tree read was mistaken for a committed state.
 | `card/C-094-f134` | `53eaf24` | REV-094 **APPROVE WITH CORRECTIONS**; blocked on O-1 |
 | `card/C-098a-cap` | `8cfa33e` | inert cap arm; held with C-098b |
 | `card/C-098b-gate` | `b589821` | gate arm; **not merged**, see § 3 |
-| `card/C-097-f131` | `23cf079` | F-131; **under review at handoff time — check REV-097 before acting** |
 
 Worktrees on disk, none to be pruned: `C:/t/c094`, `c094base`, `c095`, `c096`, `c097`, `c098`,
 `c098a`, `c098b`, `rev095base`, `rev095m`, `rev096base`, plus the older `c092`/`c093`.
+(`c097base` was removed after REV-097 — it carried no accepted work.)
 
 **Settled — do not re-derive:** the F-132 corpus figures (62 of 281 unmatched terms, 32 legs, 6
 papers); Priority 1 is **six**, not eight; the affected-paper cohort ran once at
@@ -115,16 +119,16 @@ charter it.**
 | **F-137** | MED | `NO_DB_RESOLVER` is absorbed by `_REVIEW_REQUIRED_REASONS` and demotes release status under a false `db_unavailable`. Outside C-096's boundary |
 | **F-138** | LOW | `map_ids.py:6169` (C-086's function) carries the same false "the two seams cannot disagree" sentence C-095 removed. Comment-only |
 | **F-139** | LOW | C-095's carve-out comment justifies only the legacy marker, not `generated: True` with no reason. Malformed-input only |
+| **F-140** | LOW | A pin verdict records the tree and selection but **no hash of the source under test**, so a run cannot be attributed to a file state after the fact. Latent everywhere |
 
 ---
 
 ## 5. WHAT I WOULD DO NEXT
 
 1. **Put O-1 in front of the product owner and stop.** Everything in § 2's held table waits on it.
-2. Land **C-097** if REV-097 approves — it is one line and independent of O-1.
-3. **F-137** and the `writer.py` `default_species_id` seam are both chartered-able **without** a
-   ruling. They are the only genuine engineering left.
-4. **Do not run T-107.** Do not run another cohort. Neither changes gate condition 1.
+2. **F-137**, **F-140** and the `writer.py` `default_species_id` seam are chartered-able **without**
+   a ruling. They are the only genuine engineering left.
+3. **Do not run T-107.** Do not run another cohort. Neither changes gate condition 1.
 
 ---
 
