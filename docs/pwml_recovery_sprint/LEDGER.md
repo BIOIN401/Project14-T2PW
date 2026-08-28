@@ -7081,3 +7081,76 @@ C-099 addresses it — the clobber where a resolved species exists. The 25 wrapp
 species keep the sentinel's *Arabidopsis*, which D-070 § O-1b rules is **not** a forged identity and
 **not** to be resolved by deleting wrappers or blocking their serialization. Whether that
 representation should change at all is a PathBank-representation question, not an agent's.
+
+---
+
+# T-107 READINESS — **NO-GO**, and this wave could never have changed that
+
+Assessed 2026-08-27 at integration tip `8f342f4`, after D-070 and D-071.
+
+## The priority table
+
+| Priority | Current result | Reachable? | Remaining blocker | Expected T-107 result |
+|---|---|---|---|---|
+| **1** — zero false real identifiers | **FAIL, 6** | **NO** | F-127: no participant-provenance carrier and no entity evidence span, so the discriminating fact is never recorded. F-128: complying with D-069 would *restore* identity to 12 rows the gold's bucket-blind `forbidden_identifiers` then counts as false. **Neither is ruled.** | **FAIL at 6 or higher** |
+| **2** — no unsupported retained reactions | `NOT EVALUATED` on 11/20 legs | **NO** | D-067 precondition 3 needs independent biological review. Unrelated to this wave. | `NOT EVALUATED` on most legs |
+| **3** — referential integrity | **PASS** | yes | none | **PASS** |
+| **4** — requested-core coverage | **FAIL, 0/8** | **NO** | F-132: 62 of 281 unmatched terms corpus-wide are gold-**forbidden**, so the metric penalises the pipeline for obeying the gold. Unruled. | unreadable — measures the instrument, not the pipeline |
+| **5** — strict PWML export | **FAIL, 0/4** | **NO** | F-132 again. `PMC12782028/strict` is `blocked` partly for not matching `LIPA`/`LBR`/`SREBF1`/`SREBF2`, which the same gold forbids exporting. It is **`blocked`, not `correctly_blocked`** | unreadable, same cause |
+
+## Gate conditions
+
+| # | Condition | State at `8f342f4` |
+|---|---|---|
+| 1 | O-1 recorded and implemented consistently | **PARTIAL** — recorded (D-070). Implementation is C-101, which waits on C-100 |
+| 2 | ORCH-710 evidence committed and certified | **MET** — `5d3c119`, 6 artifacts, 0 non-compliant, probes and logs committed too |
+| 3 | 16/5 metric split enforced | **NOT MET** — C-101 chartered, not dispatched |
+| 4 | species-clobber card merged | **IN FLIGHT** — C-099 |
+| 5 | PMC12444477 scoped per-entity tolerance | **IN FLIGHT** — C-100 |
+| 6 | gold A/B green but for predicted approved movers | **PENDING** — C-100 owns it |
+| 7 | held C-098 work reconciled | **MET** — both invalidated, nothing salvaged |
+| 8 | 24/82 no longer conflated with O-1 | **PARTIAL** — registered and classified as F-141; the metric itself is C-101 |
+| 9 | **no absolute acceptance priority guaranteed to fail** | **NOT MET — and unreachable by any engineering in this sprint** |
+| 10 | all deterministic gates green | **MET so far** — SMOKE 473 at `6effe58`; `test_protein_export_policy.py` 63 passed |
+| 11 | integration pushed and remotely verified | **MET** — local = origin = `ls-remote` at every step |
+| 12 | LM Studio and model healthy | **NOT CHECKED** — deliberately. Only relevant if 9 clears |
+| 13 | heavy lock free | **MET** |
+| 14 | zero sprint-owned Python | **MET** between jobs |
+
+## Condition 9 is the whole story, and it is not ours to clear
+
+`DECISION-BUNDLE-F132-PRIORITY1.md` § 9 already settled this, and the ruling that arrived does not
+touch it:
+
+> *"condition 1 … is the one that **no engineering in this sprint can clear**. **A does not clear
+> it; only B does**, because B *is* the explicit acceptance."*
+
+The bundle asks **two** things. The product owner has ruled the **addendum** — O-1 / F-135, now
+D-070 — and PMC12444477, now D-071. **Asks A and B are still open:**
+
+* **A** — reconcile the anchor set against `forbidden_identifiers`, so Priorities 1 and 4/5 stop
+  scoring the same rows in opposite directions;
+* **B** — accept, or decline, a **Priority-1 floor of 6** for T-107 purposes.
+
+**Only B clears gate condition 1**, because B *is* the acceptance. Nothing in D-070 or D-071 states
+a floor, and neither rules F-132 or the F-128 / D-069 conflict. D-071 rules a *different* instrument
+defect — `unknown_backed_proteins_acceptable`'s missing scope — and reconciling the anchor and
+forbidden sets is not in it.
+
+**So T-107 stays NO-GO, and that is the correct outcome rather than a delay.** Running it now would
+spend roughly seven hours to re-measure two priorities that grade the instrument instead of the
+pipeline, against an absolute target already known to fail.
+
+**Merging C-099, C-100 and C-101 will not change this**, and none of them was chartered to. C-092 and
+C-093 were both worth merging and neither moved Priority 1; this wave is the same. C-099 corrects a
+false *species*, not a false *identifier*, so it cannot move Priority 1's count in either direction.
+
+## The one question that goes back to the product owner
+
+This is § 17's permitted escalation — *an absolute acceptance target remains impossible after
+implementing this ruling* — and not a routine question.
+
+> **F-132 asks A and B are unanswered. Until B is answered, T-107 cannot be scheduled.** Please rule
+> on A, and accept or decline the Priority-1 floor of 6.
+
+Everything else in this wave proceeds without it.
