@@ -1,13 +1,14 @@
 # RESUME — next session handoff
 
-**Written by the Lead Orchestrator, 2026-08-21, PACK 11.**
+**Rewritten by the Lead Orchestrator, 2026-08-27, the O-1 ruling wave.** Everything below this
+heading supersedes the PACK 11 record that used to be here; that content is in git history and in
+`LEDGER.md`, which remains the single source of truth for task state.
 
-> **⚠ Why this file is in the repo and not in a scratchpad.** Prior sessions wrote their
-> handoff and their product-owner-edit backups to a *session-local* scratchpad directory.
-> This session was told backups existed at `scratchpad/product-owner-edit/` and **could not
-> find them** — that path does not exist in the repo, and the previous session's temp
-> directory is not addressable from here. A handoff that the next session cannot find is not
-> a handoff. **Keep this file in the repo and update it in place.**
+> **⚠ Why this file is in the repo and not in a scratchpad.** A prior session wrote its handoff to a
+> *session-local* scratchpad and the next session could not find it. **Keep this file in the repo and
+> update it in place.** This wave proved the point twice over: the ORCH-710 probe scripts lived in a
+> temp directory and were one cleanup away from being lost, taking the only record of what the O-1
+> numbers measured with them.
 
 ---
 
@@ -16,322 +17,101 @@
 | | |
 |---|---|
 | Branch | `sprint/pwml-recovery` |
-| Session start tip | `e616846de75e2098e3fb76592665955b3cfe3bbc` |
-| **Current tip** | `839f529bbd6bb26d6975c5df04e44b143cccaade` — pushed, `local = origin = ls-remote` verified after every push |
-| Cards merged this session | **C-070** (`09f7156`), **C-069** (`8a93da0`), **C-071** (`e4d92fc`) — **the card queue is CLEAR** |
-| Decisions recorded | **D-056 … D-061** |
+| Session start tip | `7bd8a86` |
+| **Do not pin a tip SHA here** | the invariant is **local = `origin/` = `git ls-remote`**, verified after every push. Read it, do not recall it |
 | Merges to `main` | **none, and none permitted** |
+| Product-owner `streamlit_app.py` | uncommitted, **35 ins / 2 del**, `sha256:47e4fafa789d359d…` — verified intact |
+| Caches, `topics_*.txt` | uncommitted, untouched. `topics_wave_cohort.txt` belongs to a peer session |
 
-### ⚠ Machine crashed mid-session, 2026-08-21 — verified clean on restart
+## 2. What this wave settled
 
-The crash happened after the C-071 merge and its post-merge gates, during the T-101 pre-flight.
-**Nothing was left dirty.** Verified on restart, all four independently:
+**O-1 is CLOSED** — `DECISIONS.md` **D-070**. The question was rejected as posed. The pinned 21 is
+**16 generated functional wrappers + 5 PathBank `Unknown` sentinel rows**, overlap 0, and **none of
+the 21 sets `placeholder_claims_real_identity`** — so none is a forged identity and no report may
+call them one. TRAP-3 stands on the sixteen. The sentinels' *Arabidopsis* is a true fact about
+PathBank record 9659 and is not a false mapping.
 
-* `local = origin = ls-remote` at `839f529`; no merge in progress; empty index.
-* **`C:\t\heavylock` FREE** — no stale lock. `bounded_run.py` releases from `finally`, and the
-  Job Object's `KILL_ON_JOB_CLOSE` did its job even through a hard crash.
-* **Zero orphaned Python processes** — only the two protected `ms-python.isort` IDE servers
-  (new PIDs; the IDE restarted with the machine).
-* **No unpromoted G11 staging reservation anywhere in the tree.**
-* Protected user state and the product-owner edit both intact, `35 insertions / 2 deletions`,
-  `sha256:e50a248b…` unchanged.
+**D-071** rules PMC12444477: **scope the tolerance per entity, do not flip the Boolean.** Flipping
+would newly penalise the seven entities the rationale legitimately excuses. The nine-versus-eight
+prose mismatch is *resolved*, not picked: the Raetz pathway has nine steps, the ninth enzyme is
+organism-dependent (`LpxH`/`LpxI`/`LpxG`), so the gold is right to list eight expected and file LpxH
+under acceptable. **Neither list moves.**
 
-**That is worth recording as evidence, not just reassurance:** the wrapper's lifecycle
-guarantees held across an actual unplanned power loss, which is a stronger test than any
-mutation arm.
+**F-141** registers and classifies the 24 pinned / 82 corpus-wide withheld-identity population that
+was hiding inside the O-1 metric. **All 24 are correct withholding and no card follows.** It is not,
+and must never be reported as, `placeholder_backed_proteins`.
 
-## 2. Baselines re-measured at tip — use these, do not re-derive
+**C-098a and C-098b are both invalidated** and nothing is salvaged. **C-098c stays refused.**
+**C-094 is not merged and not relabelled**; C-099 supersedes it for production purposes.
 
-All through `bounded_run.py` with the wrapper-owned heavy mutex. Every job:
-`FINAL SURVIVING COUNT: 0`, `cleanup: success`.
+**T-107 is NO-GO** and no card in this wave could have changed that. See § 5.
 
-**Primary checkout (carries `.env`):**
+## 3. Cards
 
-| gate | result | evidence |
+| Card | Branch | State |
 |---|---|---|
-| SMOKE | exit 0, 53.43 s | `g11/INTEG-069/01` |
-| Chunk E | **174 passed** | `g11/INTEG-069/02` |
-| Chunk D full | **core 159/160**, **node15 failed**, `jobs=28`, `additions=0` | `g11/INTEG-069/03` + `g11/INTEG-070/*` |
+| **C-099** — preserve resolved species on Unknown-backed wrappers | `card/C-099-species-preservation` | implemented; **in independent review** |
+| **C-100** — per-entity tolerance scope for PMC12444477 | `card/C-100-tolerance-scope` | **in flight** |
+| **C-101** — the 16/5 metric split | *(not dispatched)* | chartered; **depends on C-100 merging** — both edit `_check_placeholder_identity` |
 
-**Chunk D's two failures are the documented `.env`-conditional baseline** (one core red) **plus
-the pre-charged `qb` node15** (fires whenever PathBank is reachable). Neither is new.
+Charters are `docs/pwml_recovery_sprint/prompts/C-099.md`, `C-100.md`, `C-101.md`.
 
-**Worktrees carry no `.env`**, so the same gate runs fully green there — measured on C-070:
-`executed=187/187, omissions=0, additions=0, failed=none`. **Both baselines are now confirmed
-by direct measurement, and the conditionality is the only difference between them.**
+Worktrees created this wave: `C:/t/c099`, `C:/t/c100`, `C:/t/c099base`, `C:/t/c100base`, plus
+`C:/t/c099g9` (a hash-verified `f7dc223` export made by C-099's author because `pinned_pytest`
+refuses a selection outside its expected tree). **Prune none of them**, nor the older ones a peer
+session listed: `C:/t/c094`, `c094base`, `c095`, `c096`, `c097`, `c098`, `c098a`, `c098b`,
+`rev095base`, `rev095m`, `rev096base`, `c092`, `c093`.
 
-## 3. Cards in flight — exact tips
+## 4. Baselines pinned this wave — use these to attribute movement
 
-| card | branch | worktree | exact tip | state |
-|---|---|---|---|---|
-| **C-070** (F-066) | `agent/c070-isolated-collection` | `C:/t/c070` | `5bc600e` | ✅ **MERGED `09f7156`** — bare `APPROVE` from REV-070, zero correction rounds |
-| **C-069** (F-073 + F-086) | `agent/c069-child-imports` | `C:/t/c069` | `b08cdce` | ✅ **MERGED `8a93da0`** — bare `APPROVE` from REV-069 after one correction round; one round left unspent |
-| **C-071** (F-079) | `agent/c071-actor-span-gate` | `C:/t/c071` | `38cbbf8` | delivered; **REV-071 dispatched on exact tip**. Both heavy gates run by orchestrator and **green**. **Merge is HELD on Decision 5** |
-
-### C-071 — delivered, gates green, merge held
-
-Orchestrator-run gates on the branch, both through `bounded_run.py` with the wrapper-owned
-mutex, both zero survivors: **SMOKE 473**, **Chunk D `executed=187/187, omissions=0,
-additions=0, failed=none`**. The Chunk D run specifically covers
-`tests/test_streamlit_quarantine_boundary.py`'s 23 AppTest nodes, which the author flagged as
-unmeasured and correctly described its own reasoning about as *"an argument, not a
-measurement."*
-
-**Two budget overages ratified, not charged** — both traceable to my charter, not the card:
-ceiling 1 **700 → 850** (product diff alone is 606; the 213-line overage is the G9 instrument
-the charter mandated) and doc+comment **140 → 220** (the prose cites measurements: 221 actor
-rows across 21 legs, the 3-vs-4 token floor argued from `Fur`).
-
-**One G11 report was deleted and disclosed** — see F-090. **Accepted because it was disclosed**;
-a silent deletion would have been a reject.
-
-**Still to do on this card before merge:** fold in the F-091 prose fix as an
-orchestrator-initiated scope addition, then a short re-review. Then Decision 5.
-
-### C-070 — ACCEPTED and MERGED
-
-Bare unsuffixed `APPROVE`, **zero correction rounds**. Orchestrator-run heavy gates, all on
-the pin: SMOKE **473**, Chunk A **134**, Chunk E **174**, Chunk D **187/187 `failed=none`**.
-Post-merge at integration: SMOKE + the new file = **475 passed, 1 skipped** (473 unchanged +
-2 routine arms; the 94 s sweep correctly skips behind `T2PW_ISOLATED_COLLECT_ALL=1`).
-
-**REV-070 verified the one genuinely risky claim by measurement rather than argument** — that
-`pythonpath = src` at `sys.path[0]` could weaken the G11 tree pin. It cannot, and the finding
-inverts: with the ini **off**, plain `pytest` silently imported `t2pw` from whatever
-`PYTHONPATH` named; with it **on**, rootdir's own `src` wins. The change enforces the very
-property `tree_pin.py` exists to enforce.
-
-**F-066 is closed, and closing it refuted two of its own claims** — the "re-pin everything"
-characterization (for this remedy only) and the 21-file exposure list (wrong in both
-directions; its count is right by coincidence). Both left standing in the record, annotated.
-
-### C-069 — correction round 1, and what it is
-
-REV-069 found that **two of the three new `CHILD_IMPORTS` reason strings assert a failure mode
-that measurably cannot happen** — `PreflightProblem.why` text read by an operator at 2am, and
-a static-read assertion of runtime behaviour, which § S5 forbids in terms. Verified against
-source before the round was spent:
-
-* `streamlit_app.py:52` imports `strict_quarantine` at module scope → the child dies executing
-  the app script, so *"still writes all four reports"* is false.
-* `extraction_ladder.py:61` → `pipeline.py:32` makes `deadline` a module-scope dependency of
-  the extraction pipeline → **every** leg dies at import, not *"exactly the night's slowest
-  legs"*.
-* The third string, `release_status`, was ruled **accurate** and must not change.
-
-**One round remains after this one.** Everything else in the card reproduced exactly,
-including its self-correction against its own interest, and its evidence instruments were
-ruled **in-boundary**.
-
-## 4. What must happen next, in order
-
-1. **REV-069 and REV-070 verdicts.** Merge only on a bare, unsuffixed `APPROVE`. Verify any
-   evidence-backed rejection against the correct base before spending a correction round.
-2. **Merge serially with `--no-ff`.** Neither card touches `src/t2pw/app/streamlit_app.py`, so
-   **no stash is required** — verify the file list first and skip the stash dance.
-3. **Post-merge:** SMOKE, then G11 `check`, then push and verify local = origin = `ls-remote`.
-4. **On merging C-069, strike ONE test from the standing pre-charge list** — see § 6.
-5. **C-071's review and merge.** Its merge is expected to be **HELD** pending Decision 2 in
-   the bundle below (the `SEMANTIC_GATING_CHECKS` 4 → 5 ratification). Implement-and-hold is
-   deliberate: a one-line answer then unblocks the merge rather than starting the work.
-
-## 5. The product-owner checkpoint — FOUR decisions, prepared and bundled
-
-Full text with exact recommended wording:
-`<session-scratchpad>/sprint-records/DECISION-BUNDLE.md`. Summarised here so it survives.
-
-| # | decision | recommendation | what it unblocks |
-|---|---|---|---|
-| **1** | *"After the index fix"* (`PRODUCT_CONTRACT.md:341`) refers to C-010, merged as **`72ee20f`** | **Ratify** | T-104's acceptance row becomes quotable; F-062 closes with no card |
-| **2** | `round_cap_reached` as an eighth termination reason, precedence rank 8, **outside** `OPERATIONAL_TERMINATION_REASONS` | **Approve as drafted** | closes C-064's loose end |
-| **3** | T-101 + T-103 live-run authorization, ~3.8 h, ~$0 | **Authorize**, plus one free `GET /api/v1/key` | both milestones start immediately |
-| **4** | **NEW.** Does `PRODUCT_CONTRACT.md` §3's *"whether it was paper-explicit"* require the claim to be **verified** or merely **recorded**? | **Recorded** — close F-078 Half B with the residual documented | F-078 |
-| **5** | **NEW.** Ratify `SEMANTIC_GATING_CHECKS` **4 → 5**, the one named addition C-071 makes | **Ratify on delivery**, once C-071's diff and evidence are in hand | **C-071's merge, which is HELD on this** |
-
-> **⚠ Correction to an earlier draft of this file.** It said C-071's merge was held on
-> Decision 2. **It is not** — Decision 2 is `round_cap_reached`, a RAG-loop termination reason
-> with nothing to do with semantic gating. C-071's hold is its own ratification and is now
-> **Decision 5**. Two unrelated ratifications were conflated; recorded rather than silently
-> renumbered, because a handoff that quietly changes what a decision meant is worse than one
-> that admits it got it wrong.
-
-**⚠ Decision 1 carries a corrected SHA.** F-080 and the takeover brief both say C-010 merged
-at `9e06360`. **It did not** — that is C-010's *base*, and C-012's merge. C-010 merged at
-**`72ee20f`**. Registered as **F-085**. `DECISIONS.md` is append-only, so ratifying the old
-wording would have made a false fact permanent.
-
-## 6. Standing pre-charged failures — THE WHOLE REGISTER IS NOW MEASURED
-
-**Every entry was re-measured at integration `e616846` in the primary checkout this
-session.** Three confirmed, one corrected. Do not re-derive these; do re-measure any you are
-about to depend on.
-
-| entry | register said | **measured at integration** | status |
-|---|---|---|---|
-| `test_strict_failure_replay.py` | 2 | **2 failed, 37 passed, 8 skipped** — both the `only_unrelated_reactions_survive` parameterisation | ✔ **confirmed** |
-| `test_batch_preflight.py` | 2 | **1 failed, 35 passed** at base → **37 passed, 0 failed** after the C-069 merge | ✘ **CORRECTED, then STRUCK ENTIRELY** |
-| `.env`-conditional family | 7 | **7 failed, 50 passed**, and the file breakdown matches exactly: 4 in `test_prefreeze_third_export_seam.py`, 1 in `test_prefreeze_species_resolution.py`, 1 in `test_pwml_writer.py` (F-065), 1 in `test_canonicalization_preflight_and_species.py` | ✔ **confirmed** |
-| `qb` node15 | fails when PathBank reachable | **failed** in the full Chunk D gate | ✔ **confirmed** |
-
-### ⚠ The `test_batch_preflight.py` correction
-
-The register's **2** is a **worktree number, not an integration number.**
-`tests/test_batch_preflight.py:480` asserts `venv is not None` — *"this project ships a
-`.venv`; the test assumes it"*. `git worktree add` does not copy `.venv` (it is untracked), so
-that assertion fires in every agent worktree, and four further tests gated on
-`if runner.venv_python() is None:` (`:584`) **skip** there and **pass** here.
-
-| | worktree | primary checkout |
+| Selection | Result | Where |
 |---|---|---|
-| failed | 2 | **1** |
-| passed | 30 | **35** |
-| skipped | 4 | 0 |
+| SMOKE | **473 passed**, 47.3 s | `evidence/g11/ORCH-711/07` |
+| `test_protein_export_policy.py` (in **neither** SMOKE nor Chunk D) | **63 passed** | `evidence/g11/ORCH-711/08` |
+| whole-tree G11 | **4246 artifacts, 0 non-compliant** | `evidence/g11/ORCH-711/06` |
 
-**So on the C-069 merge this entry does not go 2 → 1. It goes 2 → 0, and the 2 was never
-right for integration.** Post-merge expectation, stated before the merge so it is a
-prediction and not a rationalisation: **37 passed, 0 failed.**
+## 5. T-107 — NO-GO, and the one question that goes to the product owner
 
-> **My first stated prediction was 36, and it was wrong.** I subtracted the failure without
-> adding the test the card introduces. REV-069 measured the real figure by junctioning the
-> primary's `.venv` into a base worktree carrying the tip's two files: **`37 passed in 7.16s`**,
-> against the primary's own `1 failed, 35 passed`. So the delta is `1 failed / 35 passed` →
-> `0 failed / 37 passed` — one red closed **and** one new classifier test added. Recorded
-> because a prediction is only worth stating if it is also corrected when measured.
+Gate condition 9 (*no absolute acceptance priority guaranteed to fail*) is **not met and is not
+reachable by any engineering in this sprint**. `DECISION-BUNDLE-F132-PRIORITY1.md` § 9 already said
+so: *"A does not clear it; only B does, because B is the acceptance."*
 
-**Why it matters beyond one line.** This is the same class of error as F-068 and PACK 11
-RULING 1 — a number measured correctly, in the wrong environment, then carried forward as if
-environment-free. `FINDINGS.md:2076` already warns about the inverse: filing a genuine
-unconditional red under the `.env` family is *"how a real signal gets permanently silenced."*
-This is that warning running the other way — **a worktree artifact filed as a real red
-inflates the register and is how a genuine new red later gets waved through as expected.**
+The bundle asks **two** things. The product owner ruled its **addendum** — O-1, now D-070 — and
+PMC12444477, now D-071. **Asks A and B remain open:**
 
-**Standing guard: a pre-charged failure should record which environment it was measured in.**
-`.env`-dependent reds are tracked carefully; `.venv`-dependent ones were not tracked at all.
+* **A** — reconcile the anchor set against `forbidden_identifiers`, so Priorities 1 and 4/5 stop
+  scoring the same rows in opposite directions (**F-132**);
+* **B** — accept or decline a **Priority-1 floor of 6** for T-107 purposes.
 
-**The C-069 baseline delta to cite is the CORRECTED one** — the author's first report was
-wrong in its own favour and it corrected itself:
+**Only B clears the gate.** Until it is answered T-107 cannot be scheduled, and that is the correct
+outcome rather than a delay. Merging does not move it: C-092 and C-093 did not, and C-099 corrects a
+false *species*, not a false *identifier*, so it cannot move Priority 1 in either direction.
 
-```
-                          first claim      ACTUAL
-CHILD_IMPORTS entries       5 -> 7          5 -> 8
-missed, occurrences         6 -> 0          7 -> 0
-missed, distinct modules    2 -> 0          3 -> 0
-```
+## 6. Traps this wave paid for — in addition to the handoff's standing list
 
-The base guard *reported* 6/2; what was *actually blind* was 7/3. The difference is exactly the
-module it could not see (F-086).
+* **The pinned run is safe as a POPULATION and unsafe as a BEHAVIOUR.** `runs/2026-08-02_2130`
+  predates D-003; `verification_status` and `unverified_identity_claim` are absent from every row.
+  Counts taken from it stand; behavioural claims need re-measuring against a current run.
+* **`runs/` and `runs_verify/` are both live.** "The pinned run" meant `runs/2026-08-02_2130`. The
+  same criterion against `runs_verify/2026-08-24_1428` yields **5**, not 24. Nothing in the packet
+  said which. **Always name the tree.**
+* **A zero-hit grep on a document's vocabulary proves nothing.** `PRODUCT_CONTRACT` says
+  `unverified_claim`; the code says `unverified_identity_claim`. Ask what the *code* calls it.
+* **A two-sided obligation needs the side that must NOT fire tested.** § 8's carrier is correctly
+  absent on `rejected` rows; a presence-only probe would have missed a carrier firing there.
+* **`bounded_run.py`'s report carries no child stdout.** Commit the probe *and* its log, or the
+  certificate proves a job was clean while preserving nothing about what it found.
+* **`iter_reports` selects every non-dot file in a task folder** — a `README.md` inside
+  `evidence/g11/<TASK>/` comes back `unexpected_artifact` and reddens the gate. Index files go in
+  `docs/pwml_recovery_sprint/`.
+* **Agent worktrees have no `.env` and no `.venv`.** The DB is hidden, so a green base leg can be
+  green for the wrong reason. Make every agent *probe* and *state* which state its tree is in.
 
-## 7. Findings registered this session
+## 7. Peer sessions share this working tree
 
-| id | severity | disposition |
-|---|---|---|
-| **F-084** | LOW | **NOT a defect — disproved offline.** Registered *and closed* so it is not re-investigated. Carries an unreachable latent sub-finding whose safeguard is a property of `openai`'s internals, so an upgrade could expose it. |
-| **F-085** | MEDIUM | The C-010 SHA error. Caught before ratification. |
-| **F-086** | MEDIUM | Preflight detector discards submodule names. **Closed by C-069** (merged `8a93da0`). |
-| **F-087** | LOW | `runner.py:1341`'s cited measurement went stale. No card; should ride along with the next card owning that file. |
-| **F-088** | MEDIUM | `tree_pin.py` cited *"`pytest.ini` sets no `pythonpath`"*; C-070 falsified it. **Registered and fixed at the merge, docstring only** — it became false as a direct result of a merge the orchestrator performed. Guard function re-verified after the change. |
-| **F-089** | LOW | `test_c030_canonical_identity_fallback.py:88` shells out to `git ls-files` at import time, so it cannot collect in a `.git`-less exported tree. **UNOWNED.** Anyone running `T2PW_ISOLATED_COLLECT_ALL=1` on an export gets one spurious failure. |
-| **F-090** | MEDIUM | **`bounded_run.py`'s descendant enumeration vs RULE 5's 64 KiB record cap.** A compliant job (3820 `git cat-file` children) produced a 149,703-byte non-compliant record. **Forces a gap into the very sequence D-025 uses to detect evidence tampering.** UNOWNED. Fix in the report writer, not the cap. |
-| **F-091** | LOW **but it ships** | `release_status.py:72-75`'s serialized `SEMANTIC_NO_GATING_CHECK_EVALUABLE` says the gating set *"is closed at four"* and reaches artifacts. **Becomes false the moment C-071 merges.** Measured: nothing pins the literal (the one test asserts by symbol), so the remedy is four prose edits — but it is production source and **must be reviewed, not applied by the orchestrator.** Routed as a scope addition to C-071. |
-
-## 8. Findings dispositioned WITHOUT a card — do not re-open casually
-
-* **F-062** — **no code card required.** The routing seam is byte-identical at tip, so F-062
-  read the mechanism correctly; but its remedy was refused on evidence by F-081, the correct
-  repair merged as C-067, and the four remaining structural reasons are each ruled
-  `keep_refusing`, so the unconditional append is now **correct**. The confirming measurement
-  is **T-104** and cannot be done offline — the quarantine input payload is not persisted and
-  neither committed file matches `admitted_payload_hash`.
-  **Carry F-081's own MEDIUM caveat into T-104 triage:** *"If the flagged row's synonym set is
-  disjoint from `keep_norms`, the theorem is wrong and there is a third divergence not yet
-  found."*
-* **F-077** — reassessed against current source; classification **holds**. `schema_version` is
-  still 6, all three prunes and `_revalidate_surviving_processes` still exist, both scopes
-  still pinned, §3 still binds *"the final pathway"*. **Accepted deliberate residual. No card.**
-* **F-053** — **remains UNDISCHARGED and stays in force.** No question is being put about it.
-  F-079 is fresh evidence it should stay.
-
-## 9. Control-plane corrections made / still owed
-
-**Made:** F-078 and F-079's *"not measured against current source"* scope notes are superseded
-in place (not deleted); `LEDGER.md:231`'s false C-056c row is corrected in the PACK 11 record.
-
-**Still owed** (reported by C-070, not yet applied):
-* **F-066's file list is stale by membership.** It names four files that now collect alone
-  fine and misses four that fail. **23 files never mention `sys.path` but only 21 actually
-  fail** — 5 of the 23 pass anyway, and 3 files that *do* mention `sys.path` still fail.
-  **No static predicate separates the two sets**, which is why C-070's test is a real sweep.
-* **`FINDINGS.md:1742-1745`'s *"SMOKE and all four chunks would have to be re-pinned"* is
-  refuted for the `pythonpath = src` remedy** — measured, nothing moved. C-070 makes no claim
-  about the other two remedies.
-* **`TEST_MATRIX.md` § Chunks needs an isolated-collection entry — OWED AND GENUINELY BLOCKED,
-  not skipped.** C-070 supplied the exact prose:
-
-  > **Isolated collection (F-066 / C-070).** `tests/test_isolated_collection.py` runs two
-  > sub-second arms in any selection that includes it. Its complete sweep — every
-  > `tests/test_*.py` collected alone in a fresh interpreter, ~95 s for 156 files — is opt-in
-  > via `T2PW_ISOLATED_COLLECT_ALL=1` and belongs at **release-gate / pre-merge-window cadence,
-  > not per merge**. Set `T2PW_ISOLATED_COLLECT_REPORT=<path>` for a machine-readable per-file
-  > census; the rendered pytest assertion truncates and under-reports.
-
-  **Why it was not applied.** The standing constraint is *"`TEST_MATRIX.md` has citations
-  pinned through line 477. Patch it in place and preserve its 541-line count **unless a
-  separately authorized migration changes that requirement**."* Verified today: the file is
-  **exactly 541 lines** and the constraint holds. Adding this entry adds lines.
-
-  Adding it **after** line 477 would preserve every pinned citation — that half is safe. It is
-  the **line count** that cannot move without authorization. There are 14 blank lines after
-  477 that could technically absorb the prose, but consuming them to dodge a tripwire is
-  precisely the kind of quiet accommodation the tripwire exists to prevent.
-
-  **This is a one-line authorization, not a design question:** either permit 541 → ~549, or
-  say the entry belongs somewhere other than `TEST_MATRIX.md`. Until then the capability is
-  documented here and in `LEDGER.md`, so it is discoverable — just not where a test-matrix
-  reader would look first.
-
-## 10. Process state
-
-* **Heavy mutex:** free. `bounded_run.py` owns it via `--heavy-lock <holder>`; hand-written
-  `mkdir C:\t\heavylock` and unconditional deletion are forbidden.
-* **Sprint-owned Python processes:** zero. The only survivors on this machine are the **two
-  protected `ms-python.isort` LSP servers** belonging to the product owner's IDE. Never kill
-  Python by executable name.
-* **G11:** clean at every checkpoint. Whole-tree `check` at session start: **3,096 artifacts,
-  0 non-compliant, exit 0.**
-* **Product-owner edit:** intact at **35 insertions / 2 deletions**,
-  `sha256:e50a248bb7189c222896f74bc38cdbd1c6dbbc6dc3a2594b3e5e63ea261416e0`. Fresh backups
-  (patch + working copy + HEAD baseline, all verified byte-identical) are in this session's
-  scratchpad under `sprint-records/../product-owner-edit/`. **Neither in-flight card touches
-  that file.**
-
-## 11. ⚠ Credential hygiene — action recommended
-
-While verifying that `OPENROUTER_API_KEY` was present and well-formed for the T-101/T-103
-authorization, a malformed `sed` fallback **printed two `.env` credential values into this
-session's transcript** — the OpenRouter key and the NCBI key. They were **not** written to any
-file, commit, report or message, and `.env` is untracked and gitignored twice
-(`.gitignore:1,3`), so nothing left the machine.
-
-**Recommend rotating both keys** as hygiene, since they now sit in a session transcript.
-
-For future checks: `python-dotenv` strips whitespace around `=`, so
-`OPENROUTER_API_KEY = <value>` parses correctly. **Verify presence with
-`dotenv_values()` and print only the length** — never a raw grep whose fallback can echo the
-line.
-
-## 12. Milestones
-
-| | state |
-|---|---|
-| **T-102** | complete. Its only legitimate status is `MEASURED — organism/SBML axis structurally unreachable (F-009)`. **Never record it as PASS.** |
-| **T-101 / T-103** | **ready except for authorization.** `topics_t101.txt` and `topics_t103.txt` are created and committed. Nothing has been run and no money spent. |
-| **T-104 / T-105** | blocked on Decision 1. **Two separate ~7 h release candidates with a triage pass between them — never collapse them into one run.** |
-
-**Correction to the T-103 command in `T101_T103_AUTHORIZATION.md:169-179`, measured:**
-`bounded_run.py` has **no `--env` flag**, and the child inherits the wrapper's environment. Use
-the **shell-prefix** form `T2PW_SPECIES_LLM=0 T2PW_OFFLINE_CURATOR=1 <py> bounded_run.py ...`,
-not `env VAR=x` after the `--`. Verified by execution: the child saw `SPECIES_LLM='0'` and
-`OFFLINE_CURATOR='1'`, exit 0, zero survivors.
-
-**Do not claim sprint completion when the card queue empties.** The sprint completes only
-after the milestone chain is measured, triaged, corrected and rerun per `MASTER_PLAN.md`.
+Two other Claude sessions were live during this wave and both were contacted and confirmed clean —
+not pushing, no Python, not holding the lock. One was the previous Lead Orchestrator (author of the
+ORCH-710 evidence), standing down; the other acted as independent adversarial reviewer.
+**Session identities are not stable** — a peer was renamed mid-conversation. **Run `ListAgents` and
+contact every peer before treating the branch, the lock or the worktrees as exclusively yours.** A
+peer caught a branch moving under a session that believed it was untouched earlier in this sprint.
