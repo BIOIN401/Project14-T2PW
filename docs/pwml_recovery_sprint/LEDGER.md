@@ -6715,3 +6715,112 @@ incident: the verdicts **kept their basenames** under `g11/pin/C-095/`, so `NN-<
 `NN-<label>.pin.json` is recoverable by name. **No evidence is lost — only the recorded absolute path
 is stale.**
 
+
+---
+
+# C-097 MERGED — `b35b6a2`. REV-097: **APPROVE**, and the review is stronger than the card.
+
+Every number reproduced independently. **Taken on trust: only REV-089's historical 92-leg figure**,
+which the reviewer's own 94-leg measurement supersedes.
+
+## Gates
+
+| Gate | Result |
+|---|---|
+| focused, tip | **16 passed** |
+| G9, real git worktree at `ea688e0` | **4 failed, 12 passed** — behavioural |
+| affected (charter's three + the author's seven) | **225 passed** |
+| SMOKE, post-merge on the integration branch | **473 passed**, 40.59 s, survivors 0 (`MERGE-097/01`) |
+
+## The census was verified on a strictly larger population than the card measured
+
+The reviewer did not reuse the author's probe. Walking **every dict at every depth** across 94 legs:
+
+```
+Pass A   39,542 dicts        1,773 carry a truthy ref/id
+Pass A'  of those 1,773, under /processes at any depth:   0
+Pass B   500 tracked JSONs carrying "processes", 71,004 dicts:  0 under /processes
+Pass C   every bucket, every slot key under /processes, 1,753 rows:  0 legacy, 0 moving
+```
+
+All 1,773 legacy-key dicts live in `/entities/*/enrichment/…` and
+`/entities/*/mapping_meta/candidates/*`, which `_names` never reaches — the reviewer read **all 13
+call sites** and confirmed each takes a slot off a process row, and that `_declared_names` reads
+entity rows directly without calling `_names`. **Pass C covers 1,753 rows across every bucket
+including `interactions`, against the author's 1,449 restricted to `PARTICIPANT_SLOTS`.** Both zero.
+The *by construction* claim holds and is stronger than it was made.
+
+## The zero is a measurement, proved without in-process emulation
+
+The author's control rebound the constant in-process. The reviewer replaced it with a **four-cell,
+two-process A/B** — one process importing `bench.semantic` from the base tree, one from the tip —
+scoring all 94 legs through the real `_orphaned_references` and `_connected_core`:
+
+| cell | digest | orphans |
+|---|---|---|
+| tip, corpus as committed | `4c014b7d…` | 6 |
+| base, corpus as committed | `4c014b7d…` | 6 |
+| tip, one synthetic `{"id": …}` injected per leg | `4c014b7d…` | 6 |
+| **base, same injection** | **`ab88e8e6…`** | **100** |
+
+Byte-identical unmodified; **all 94 legs differ under injection, 6 → 100 orphans.** Had one
+legacy-key participant existed anywhere in the corpus, this would have caught it.
+
+**And it matters for the live gate, not only the benchmark:** `semantic_production.py:638,642` calls
+those exact two functions.
+
+## The no-new-key-list guard was verified by building the impostor
+
+A hard-coded, *correct*, eight-key private tuple in `_names` **satisfies all 15 behavioural
+assertions** and is caught **only** by `test_names_is_a_derived_view_of_the_shared_schema_constant`
+(`1 failed, 15 passed`). That is what a non-vacuous guard looks like.
+
+## G6 direction, stated rather than glossed
+
+The narrowing moves two gates **in opposite directions**: priority 5's `_connected_core` gets
+**stricter**; priority 3's `_orphaned_references` gets **more permissive in principle**. But the names
+removed are a CURIE and a JSON pointer, which the entity-name registry can never match — they were
+false positives. Both directions measured **exactly 0** across 94/94 legs. No gate weakened.
+
+## The disclosed restore incident — settled by re-running, not by argument
+
+The author disclosed that its restore trap (`git checkout -- <file>`) reverted the fix mid-session
+because base == HEAD. **The reviewer could not settle from the artifacts** whether the author's runs
+`03` and `04` — both timestamped after the revert — were measured on the base or the re-applied file,
+because **pin verdicts record `cwd`, `sys.path`, `t2pw_file` and `selection_paths` but no file content
+hash.** It said so plainly and **declined to rely on them**, re-running both itself instead
+(225 / 473). It also proved the committed census *could not* have been produced against a reverted
+file: the census emulates base by rebinding, which is a no-op on the base file, so
+`discriminates` would read **false**; the committed artifact reads `true`.
+
+### F-140 · LOW · a pin verdict cannot prove which source it measured
+
+`pinned_pytest`'s verdict records the resolved tree and selection but **no hash of the source under
+test**, so a run cannot be attributed to a specific file state after the fact. Latent everywhere; it
+became visible here only because an author disclosed an incident that made the question worth asking.
+**The fix is a source-hash field in the verdict — a separate card, not a C-097 correction.**
+
+## Correction to the ledger, caught by the reviewer
+
+**`LEDGER.md:5162` § "`test_c074_strict_core_floor.py` is RED ON THE INTEGRATION BRANCH, right now"
+is STALE and is hereby closed.** The reviewer ran it alone at base `ea688e0`: **31 passed**. Green at
+base *and* tip. **C-092 (`c2cdb82`) closed it**, and rewrote its pins from equalities to properties —
+which is why the count moved from 24 tests to 31. **Nothing to do with C-097.**
+
+## Findings, all LOW, none blocking
+
+* **Observation, not a defect** — a *future* payload carrying a human-readable name under an `id` key
+  would escape priority-3 orphan detection. Zero occurrences in 94/94 legs and in all 500
+  `processes`-carrying tracked JSONs; `id` is a declared field on no participant model;
+  `identity_admission` still reads it. **This is F-131's own LOW residual**, and the direction
+  `participant_schema.py:98-100` explicitly rules correct.
+* **Process** — the author's `03-c097-affected` selection omitted two charter-named files. Both are
+  inside SMOKE and passed there, and the reviewer ran them explicitly in its 225. Effectively covered.
+* **Process** — no report markdown committed with the branch; the report was returned as text.
+  Cosmetic, no gate affected.
+
+## Housekeeping
+
+`C:/t/c097base` — the reviewer's temporary base worktree — remains on disk; `git worktree remove` was
+denied by the permission system in its session. Carries no accepted work; safe to remove.
+
