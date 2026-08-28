@@ -240,6 +240,20 @@ def _component(pathbank_id: int, name: str, uniprot: str) -> Dict[str, Any]:
     }
 
 
+def _bare_component(name: str) -> Dict[str, Any]:
+    """A declared component carrying a NAME and nothing else.
+
+    This is the shape that makes the two seams disagree: with no accession the
+    only key reconciliation can match on is the payload's alias list, and it then
+    RENAMES the component. A component that carries a uniprot or a
+    ``pathbank_protein_id`` is covered by those tokens whatever it is called, so
+    it cannot reproduce the defect -- an earlier version of these two tests used
+    one and passed at ``194d6cd``, proving nothing.
+    """
+
+    return {"name": name, "stoichiometry": 1}
+
+
 def _wrapper_row(name: str, components: List[Dict[str, Any]]) -> Dict[str, Any]:
     """A generated single-protein wrapper exactly as the artifact records one."""
 
@@ -799,3 +813,157 @@ def test_the_row_level_guard_covers_the_third_assignment_branch(tmp_path: Path) 
     assert _meta(row).get("pathbank_protein_complex_id") is None
     refused = _meta(row).get("refused_superset_complex") or {}
     assert refused.get("pathbank_protein_complex_id") == 3623, refused
+
+
+# --------------------------------------------------------------------------- #
+# 9 + 10. REV-C095 F1/F2 — a result that confers no identity is not refused
+# --------------------------------------------------------------------------- #
+def _ente_under_a_synonym() -> Dict[str, Any]:
+    """The payload row for EntE, canonically named and knowing ``EntE`` as an alias.
+
+    Measured shape, not invented: PathBank protein 6301 is
+    ``2,3-dihydroxybenzoate-AMP ligase`` and ``EntE`` is its gene-symbol synonym.
+    ``_reconcile_components_against_local_proteins`` matches the alias and renames
+    the component to this canonical name.
+    """
+
+    return {
+        "name": "2,3-dihydroxybenzoate-AMP ligase",
+        "synonyms": "EntE",
+        "species": "Escherichia coli",
+        "organism": "Escherichia coli",
+        "pathbank_protein_id": 6301,
+        "mapped_ids": {"uniprot": "P10378", "pathbank_protein_id": "6301"},
+    }
+
+
+def run_offline_without_db(payload: Dict[str, Any], cache_path: Path) -> Dict[str, Any]:
+    """``map_payload`` with NO resolver at all — ``from_env`` returns ``None``.
+
+    This is the state of every worktree in this sprint that has no ``.env``, so
+    it is also the state most of the suite runs in. ``_map_complex_with_strategy``
+    then returns ``db_unavailable`` carrying the ROW'S OWN components.
+    """
+
+    env = {"T2PW_SPECIES_LLM": "0", "T2PW_SPECIES_NCBI": "0", "T2PW_OFFLINE_CURATOR": "1"}
+    with patch.dict(os.environ, env), patch.object(
+        map_ids.PathBankDbResolver, "from_env", classmethod(lambda cls, overrides=None: None)
+    ), patch.object(
+        map_ids, "_ai_protein_synonym_lookup", return_value=[]
+    ), patch.object(
+        map_ids.HttpClient, "get", side_effect=_NoNetwork("network call during an offline run")
+    ):
+        return map_ids.map_payload(
+            payload,
+            cache_path=cache_path,
+            id_source="db",
+            use_cache=False,
+            allow_complex_wrapper_creation=False,
+        )
+
+
+def test_db_unavailable_does_not_refuse_a_wrapper_against_itself(tmp_path: Path) -> None:
+    """REV-C095 F1, proof A. With no resolver, ``db_unavailable`` echoes the row's
+    OWN components back as the result's. Nothing is offered and nothing may be
+    refused: the row must come out of the loop exactly as ``0128fa6`` leaves it.
+
+    The payload protein is named by a SYNONYM of the declared component, so
+    reconciliation renames the echoed component and the unfixed scope builder
+    could no longer recognise the wrapper's own protein — which is how the
+    refusal record came to name the wrapper's own catalyst as an injected
+    stranger.
+
+    Catches: evaluating the guard on a result that confers no identity, and a
+    membership scope that does not survive reconciliation's renaming.
+    """
+
+    payload = _payload([_wrapper_row("EntE complex", [_bare_component("EntE")])])
+    payload["entities"]["proteins"] = [_ente_under_a_synonym()]
+    row = _row(run_offline_without_db(payload, tmp_path / "cache.json"), "EntE complex")
+
+    assert not _meta(row).get("refused_superset_complex"), (
+        "a result that confers no identity was refused, and the record names the "
+        f"wrapper's own protein as an injected catalyst: {_meta(row).get('refused_superset_complex')}"
+    )
+    assert _rule(row) == "", _rule(row)
+    assert _meta(row).get("resolution") == {
+        "status": "unresolved",
+        "issue": "db_unavailable",
+    }, f"the db_unavailable resolution must be byte-identical to base: {_meta(row).get('resolution')}"
+    assert row.get("pathbank_protein_complex_id") is None
+
+
+def test_an_ambiguous_lookup_is_never_recorded_as_a_refused_complex(tmp_path: Path) -> None:
+    """REV-C095 F1, proof B — on this file's own § 4 preservation case.
+
+    ``EntE complex`` abstains at ``complex_name_species`` with ten candidates the
+    resolver explicitly declined to choose between. Writing a refusal record for
+    it named ``candidates[0]`` — ``ferric enterobactin outer membrane transport
+    complex`` — as a complex the row had refused, asserting a match that never
+    happened. An abstention is not a refusal and must leave no trace.
+
+    Catches: the ``candidates[0]`` name fallback being reached from a
+    non-``matched`` result, and any future guard that fires before an identity is
+    on offer.
+    """
+
+    payload = _payload([_wrapper_row("EntE complex", [_bare_component("EntE")])])
+    payload["entities"]["proteins"] = [
+        dict(protein) for protein in ALL_PROTEINS if protein["name"] != "EntE"
+    ] + [_ente_under_a_synonym()]
+    row = _row(run_offline(payload, tmp_path / "cache.json"), "EntE complex")
+
+    assert not _meta(row).get("refused_superset_complex"), (
+        "an ambiguous abstention was recorded as a refused complex match: "
+        f"{_meta(row).get('refused_superset_complex')}"
+    )
+    assert _order_step(row) == "complex_name_species", _meta(row)
+    assert (_meta(row).get("resolution") or {}).get("status") == "ambiguous"
+    assert _rule(row) == ""
+    assert row.get("pathbank_protein_complex_id") is None
+    assert len(row.get("components") or []) == 1
+
+
+def test_a_source_named_complex_wrapper_is_not_refused(tmp_path: Path) -> None:
+    """REV-C095 F2. ``process_normalizer.py:4999-5005`` emits a second wrapper
+    kind, ``generation_reason: complex_named_source_entity_wrapper``, created
+    BECAUSE THE SOURCE TEXT NAMED A COMPLEX -- a biological claim about an
+    assembly, which is the declared row section 5 says must still be enriched.
+
+    It is emitted with ``components: []``, the same shape that routes to the third
+    assignment branch, so a guard keyed on ``generated`` alone would leave a
+    source-named complex with neither components nor an id. Here the row is named
+    exactly as PathBank complex 3623, matches by ``complex_name_species``, and
+    must come out fully enriched.
+
+    Catches: keying the guard on ``is_generated_complex_wrapper`` alone rather
+    than on the charter's ``single_protein_pathwhiz_wrapper``.
+    """
+
+    row = _row(
+        run_offline(
+            _payload(
+                [
+                    {
+                        "name": "enterobactin synthase",
+                        "class": "protein_complex",
+                        "generated": True,
+                        "generation_reason": "complex_named_source_entity_wrapper",
+                        "confidence": 0.8,
+                        "provenance": "inferred",
+                        "species": "Escherichia coli",
+                        "components": [],
+                    }
+                ]
+            ),
+            tmp_path / "cache.json",
+        ),
+        "enterobactin synthase",
+    )
+
+    assert not _meta(row).get("refused_superset_complex"), (
+        "a source-named complex wrapper was refused: "
+        f"{_meta(row).get('refused_superset_complex')}"
+    )
+    assert row.get("pathbank_protein_complex_id") == 3623, row.get("pathbank_protein_complex_id")
+    assert sorted(_names(row)) == sorted(SUPERSET_COMPONENTS), _names(row)
