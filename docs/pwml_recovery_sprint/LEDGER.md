@@ -7454,6 +7454,23 @@ one test: **an entity deliberately left OUT of the scope, on a case whose Boolea
 asserting it stays strict.** A scope exercised only with entities that are *in* it never reaches the
 absent branch at all — the same shape that has now cost this sprint four rounds.
 
+### The limit of the positive-control standard, found the day after it was written
+
+**A control proves the instrument can report non-zero. It does not prove the instrument is asking the
+right question.**
+
+The orchestrator's `lipoprotein` probe reported `Lpp` = **0** across 37 archived files **with a
+passing control** — `LpxC` = 1726 in the same texts, so the corpus was live and the matching worked.
+By the standard written the previous day that zero was trustworthy. **It was wrong.** The pattern was
+case-sensitive `Lpp` and the token in the paper is lowercase `lpp`. The control was sound and
+irrelevant: it proved the probe could find *a* token, not that it could find *this* one.
+
+So the standard needs its second half. A control answers *"could this instrument report a different
+answer?"* It cannot answer *"is this instrument looking for the right thing?"* — and a probe can pass
+the first while failing the second completely. Where a null result is load-bearing, the control should
+exercise **the same predicate** on a case known to match it, not merely a different predicate on the
+same corpus.
+
 **This and the positive-control standard are one move**: refusing to accept a claim in a form that
 cannot fail. Together they are the whole of what this wave learned about evidence — an instrument
 must be able to report the other answer, and a requirement must be able to fail.
