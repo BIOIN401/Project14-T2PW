@@ -1,0 +1,144 @@
+MEASURED_TREE t2pw = C:\t\c103\src\t2pw\__init__.py
+==========================================================================
+reaction_inflation_unresolvable_participant
+  fixture recovers / smaller  : True / True
+  MEASURED ok                 : True
+  MEASURED shrank             : True  -> (ok and shrank) = True
+  MEASURED strict-after-ok    : True 
+  MEASURED release.status     : release_ready
+  MEASURED strict_acc_elig    : True
+  MEASURED completeness       : 1.0
+  MEASURED review_reasons     : []
+  MEASURED refusal_reasons    : []
+  MEASURED coverage.reasons   : []
+  MEASURED reactions surviving: 2
+==========================================================================
+colon_split_metabolite_as_protein_complex
+  fixture recovers / smaller  : True / True
+  MEASURED ok                 : True
+  MEASURED shrank             : True  -> (ok and shrank) = True
+  MEASURED strict-after-ok    : True 
+  MEASURED release.status     : release_ready
+  MEASURED strict_acc_elig    : True
+  MEASURED completeness       : 1.0
+  MEASURED review_reasons     : []
+  MEASURED refusal_reasons    : []
+  MEASURED coverage.reasons   : []
+  MEASURED reactions surviving: 2
+==========================================================================
+enzyme_without_external_identity
+  fixture recovers / smaller  : True / True
+  MEASURED ok                 : True
+  MEASURED shrank             : True  -> (ok and shrank) = True
+  MEASURED strict-after-ok    : True 
+  MEASURED release.status     : release_ready
+  MEASURED strict_acc_elig    : True
+  MEASURED completeness       : 1.0
+  MEASURED review_reasons     : []
+  MEASURED refusal_reasons    : []
+  MEASURED coverage.reasons   : []
+  MEASURED reactions surviving: 2
+==========================================================================
+unknown_backed_functional_complex
+  fixture recovers / smaller  : True / False
+  MEASURED ok                 : True
+  MEASURED shrank             : False  -> (ok and shrank) = False
+  MEASURED strict-after-ok    : True 
+  MEASURED release.status     : release_ready
+  MEASURED strict_acc_elig    : True
+  MEASURED completeness       : 1.0
+  MEASURED review_reasons     : []
+  MEASURED refusal_reasons    : []
+  MEASURED coverage.reasons   : []
+  MEASURED reactions surviving: 3
+==========================================================================
+every_reaction_unresolvable
+  fixture recovers / smaller  : False / False
+  MEASURED ok                 : False
+  MEASURED shrank             : True  -> (ok and shrank) = False
+  MEASURED strict-after-ok    : False ['no_biological_states']
+  MEASURED release.status     : diagnostic_only
+  MEASURED strict_acc_elig    : False
+  MEASURED completeness       : 0.0
+  MEASURED review_reasons     : []
+  MEASURED refusal_reasons    : ["minimum_core:no_surviving_process", "minimum_core:core_process_count_below_minimum:0<1", "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"]
+  MEASURED coverage.reasons   : ["no_surviving_process", "core_process_count_below_minimum:0<1", "requested_core_coverage_below_minimum:0.000<0.500"]
+  MEASURED reactions surviving: 0
+==========================================================================
+only_unrelated_reactions_survive
+  fixture recovers / smaller  : False / False
+  MEASURED ok                 : True
+  MEASURED shrank             : True  -> (ok and shrank) = True
+  MEASURED strict-after-ok    : True 
+  MEASURED release.status     : review_required
+  MEASURED strict_acc_elig    : False
+  MEASURED completeness       : 0.0
+  MEASURED review_reasons     : ["minimum_core:core_process_count_below_minimum:0<1", "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"]
+  MEASURED refusal_reasons    : []
+  MEASURED coverage.reasons   : ["core_process_count_below_minimum:0<1", "requested_core_coverage_below_minimum:0.000<0.500"]
+  MEASURED reactions surviving: 1
+==========================================================================
+degree_zero_mapped_protein
+  fixture recovers / smaller  : True / True
+  MEASURED ok                 : True
+  MEASURED shrank             : True  -> (ok and shrank) = True
+  MEASURED strict-after-ok    : True 
+  MEASURED release.status     : release_ready
+  MEASURED strict_acc_elig    : True
+  MEASURED completeness       : 1.0
+  MEASURED review_reasons     : []
+  MEASURED refusal_reasons    : []
+  MEASURED coverage.reasons   : []
+  MEASURED reactions surviving: 2
+==========================================================================
+reaction_coupled_transport_is_not_exportable
+  fixture recovers / smaller  : True / True
+  MEASURED ok                 : True
+  MEASURED shrank             : True  -> (ok and shrank) = True
+  MEASURED strict-after-ok    : True 
+  MEASURED release.status     : release_ready
+  MEASURED strict_acc_elig    : True
+  MEASURED completeness       : 1.0
+  MEASURED review_reasons     : []
+  MEASURED refusal_reasons    : []
+  MEASURED coverage.reasons   : []
+  MEASURED reactions surviving: 2
+==========================================================================
+primary_transport_and_interaction_shapes_survive
+  fixture recovers / smaller  : True / False
+  MEASURED ok                 : True
+  MEASURED shrank             : False  -> (ok and shrank) = False
+  MEASURED strict-after-ok    : True 
+  MEASURED release.status     : release_ready
+  MEASURED strict_acc_elig    : True
+  MEASURED completeness       : 1.0
+  MEASURED review_reasons     : []
+  MEASURED refusal_reasons    : []
+  MEASURED coverage.reasons   : []
+  MEASURED reactions surviving: 2
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=False]
+label                   : c103-seam-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c103_replay_seam_probe.py C:/t/c103
+cwd                     : C:/t/c103
+root PID / process group: 531688 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.39 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  531720:python.exe
+descendants terminated  : 1  531720
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\04-seam-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

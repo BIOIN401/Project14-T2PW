@@ -1,0 +1,421 @@
+C-103 -- every pytest run, in order, through bounded_run.py + pinned_pytest.py.
+Interpreter: .venv/Scripts/python.exe (F-143). PYTHONPATH=C:/t/c103/src.
+T2PW_OFFLINE_CURATOR=1. --basetemp under C:/t/bt (parent pre-created).
+Canonical cleanup reports: evidence/g11/C-103/. Tree pins: evidence/g11/pin/C-103/.
+Failed and invalidated measurements are KEPT beside their corrections, never replaced.
+
+==============================================================================
+GATE  base focused   -- whole test_strict_failure_replay.py at ad62338
+  expect the two F-142 reds
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+================================== FAILURES ===================================
+=========================== short test summary info ===========================
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]
+2 failed, 37 passed, 8 skipped in 1.74s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=False]
+label                   : c103-base-focused
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/01-base-focused.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103bf tests/test_strict_failure_replay.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 2.55 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  521372:python.exe
+descendants terminated  : 1  521372
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\02-base-focused.json
+json report written     : True
+================================================
+
+==============================================================================
+GATE  base gold-readers (22 files) at ad62338
+  exits 1 CORRECTLY at base; this card is what fixes it
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+================================== FAILURES ===================================
+=========================== short test summary info ===========================
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]
+2 failed, 453 passed, 8 skipped in 32.06s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=False]
+label                   : c103-base-goldreaders
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/02-base-goldreaders.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103bg tests/test_protein_export_policy.py tests/test_c056b_semantic_denominators.py tests/test_batch_pwml_artifact_naming.py tests/test_c074_strict_core_floor.py tests/test_c076_alias_holo_apo_identity.py tests/test_c077_stage0_conflict_disposition.py tests/test_c081_cofactor_role_identity.py tests/test_c085_priority2_honesty.py tests/test_c088_extracted_not_serialized_disposition.py tests/test_cofactor_policy.py tests/test_rag_multi_relation_spans.py tests/test_release_status_classification.py tests/test_semantic_production_no_gold.py tests/test_strict_failure_replay.py tests/test_batch_driver_quarantine_artifacts.py tests/test_c056c_semantic_evaluability.py tests/test_c071_actor_evidence_gate.py tests/test_c080_production_gate_kind_aware.py tests/test_c089_participant_schema.py tests/test_c090_wrapper_identity_actor_evidence.py tests/test_c097_semantic_name_keys.py tests/test_semantic_release_gating.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 33.09 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 9  530964:python.exe, 531112:git.exe, 509344:git.exe, 527820:git.exe, 530684:git.exe, 521804:git.exe, 525100:git.exe, 524568:python.exe, 531260:python.exe
+descendants terminated  : 9  509344, 521804, 524568, 525100, 527820, 530684, 530964, 531112, 531260
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\03-base-goldreaders.json
+json report written     : True
+================================================
+
+==============================================================================
+GATE  tip focused -- after the fixture and test correction
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+40 passed, 8 skipped in 1.09s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : c103-tip-focused
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/03-tip-focused.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103tf tests/test_strict_failure_replay.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.83 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  532840:python.exe
+descendants terminated  : 1  532840
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\05-tip-focused.json
+json report written     : True
+================================================
+
+==============================================================================
+MUTATION A  release_status.py: strict_acceptance_eligible = True
+  charter section 6 test 7 -- MUST go red
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+================================== FAILURES ===================================
+=========================== short test summary info ===========================
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[every_reaction_unresolvable]
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[every_reaction_unresolvable]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]
+FAILED tests/test_strict_failure_replay.py::test_an_emptied_graph_and_an_off_topic_survivor_reach_different_verdicts
+5 failed, 35 passed, 8 skipped in 1.17s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : c103-mutation-a
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/04-mutation-a.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103ma tests/test_strict_failure_replay.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.95 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  534756:python.exe
+descendants terminated  : 1  534756
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\06-mutation-a-eligibility.json
+json report written     : True
+================================================
+
+==============================================================================
+MUTATION B1  classify_release_status: minimum_core branch -> RELEASE_READY
+  STAYED GREEN. Not a hole in the test: the F-094 incomplete-core cap
+  (C-072) independently demotes this payload on three unmatched anchors, so
+  this branch is not the sole rule holding it out of release_ready. Kept,
+  not replaced.
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+40 passed, 8 skipped in 1.01s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : c103-mutation-b
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/05-mutation-b.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103mb tests/test_strict_failure_replay.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.84 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  523592:python.exe
+descendants terminated  : 1  523592
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\07-mutation-b-review-collapse.json
+json report written     : True
+================================================
+
+==============================================================================
+MUTATION B2  review_required -> release_ready at the point of record
+  charter section 6 test 8 -- MUST go red
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+================================== FAILURES ===================================
+=========================== short test summary info ===========================
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]
+FAILED tests/test_strict_failure_replay.py::test_an_emptied_graph_and_an_off_topic_survivor_reach_different_verdicts
+3 failed, 37 passed, 8 skipped in 1.16s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : c103-mutation-b2
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/06-mutation-b2.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103mb2 tests/test_strict_failure_replay.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.95 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  532944:python.exe
+descendants terminated  : 1  532944
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\08-mutation-b2-review-collapse.json
+json report written     : True
+================================================
+
+==============================================================================
+MUTATION C  only_unrelated_reactions_survive coverage_reason -> unmatchable
+  proves the coverage_reason assertion is REACHED for this case, i.e. the
+  trap in the charter (assertion silently dropped) is not present
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+================================== FAILURES ===================================
+=========================== short test summary info ===========================
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]
+1 failed, 39 passed, 8 skipped in 1.15s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : c103-mutation-c
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/07-mutation-c.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103mc tests/test_strict_failure_replay.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.97 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  535740:python.exe
+descendants terminated  : 1  535740
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\09-mutation-c-coverage-reachability.json
+json report written     : True
+================================================
+
+==============================================================================
+MUTATION D  has_surviving_core -> True  [INVALIDATED RUN, KEPT]
+  OPERATOR ERROR: the mutation-C restore used `git checkout -- cases.json`,
+  which reverted the whole uncommitted fixture edit with it, so this ran
+  mutated production against the UNCORRECTED fixture. 20 failed, mostly
+  KeyError. Not evidence of anything. Re-measured immediately below.
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+================================== FAILURES ===================================
+=========================== short test summary info ===========================
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[reaction_inflation_unresolvable_participant]
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[colon_split_metabolite_as_protein_complex]
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[enzyme_without_external_identity]
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[unknown_backed_functional_complex]
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[every_reaction_unresolvable]
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[degree_zero_mapped_protein]
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[reaction_coupled_transport_is_not_exportable]
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[primary_transport_and_interaction_shapes_survive]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[reaction_inflation_unresolvable_participant]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[colon_split_metabolite_as_protein_complex]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[enzyme_without_external_identity]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[unknown_backed_functional_complex]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[every_reaction_unresolvable]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[degree_zero_mapped_protein]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[reaction_coupled_transport_is_not_exportable]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[primary_transport_and_interaction_shapes_survive]
+FAILED tests/test_strict_failure_replay.py::test_an_emptied_graph_and_an_off_topic_survivor_reach_different_verdicts
+FAILED tests/test_strict_failure_replay.py::test_the_fixture_covers_both_verdicts
+20 failed, 20 passed, 8 skipped in 1.26s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : c103-mutation-d
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/08-mutation-d.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103md tests/test_strict_failure_replay.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 2.10 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  535584:python.exe
+descendants terminated  : 1  535584
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\10-mutation-d-empty-vs-shortfall.json
+json report written     : True
+================================================
+
+==============================================================================
+MUTATION D  has_surviving_core -> True  [VALID RE-MEASUREMENT]
+  merges the empty graph with the shortfall; proves
+  every_reaction_unresolvable's hard-refusal assertion is reachable and the
+  two cases are distinguished
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+================================== FAILURES ===================================
+=========================== short test summary info ===========================
+FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[every_reaction_unresolvable]
+FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[every_reaction_unresolvable]
+FAILED tests/test_strict_failure_replay.py::test_an_emptied_graph_and_an_off_topic_survivor_reach_different_verdicts
+3 failed, 37 passed, 8 skipped in 1.17s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : c103-mutation-d-valid
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/09-mutation-d-valid.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103md2 tests/test_strict_failure_replay.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.95 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  535796:python.exe
+descendants terminated  : 1  535796
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\11-mutation-d-empty-vs-shortfall-valid.json
+json report written     : True
+================================================
+
+==============================================================================
+GATE  focused, after every mutation restored and the tree verified clean
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+40 passed, 8 skipped in 0.98s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : c103-focused-restored
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/10-focused-restored.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103rf tests/test_strict_failure_replay.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.71 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  533652:python.exe
+descendants terminated  : 1  533652
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\12-focused-restored.json
+json report written     : True
+================================================
+
+==============================================================================
+GATE  tip gold-readers (22 files) -- THE NEW BASELINE
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+456 passed, 8 skipped in 29.53s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : c103-tip-goldreaders
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/11-tip-goldreaders.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103tg tests/test_protein_export_policy.py tests/test_c056b_semantic_denominators.py tests/test_batch_pwml_artifact_naming.py tests/test_c074_strict_core_floor.py tests/test_c076_alias_holo_apo_identity.py tests/test_c077_stage0_conflict_disposition.py tests/test_c081_cofactor_role_identity.py tests/test_c085_priority2_honesty.py tests/test_c088_extracted_not_serialized_disposition.py tests/test_cofactor_policy.py tests/test_rag_multi_relation_spans.py tests/test_release_status_classification.py tests/test_semantic_production_no_gold.py tests/test_strict_failure_replay.py tests/test_batch_driver_quarantine_artifacts.py tests/test_c056c_semantic_evaluability.py tests/test_c071_actor_evidence_gate.py tests/test_c080_production_gate_kind_aware.py tests/test_c089_participant_schema.py tests/test_c090_wrapper_identity_actor_evidence.py tests/test_c097_semantic_name_keys.py tests/test_semantic_release_gating.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 30.46 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 6  536844:python.exe, 537280:git.exe, 537308:git.exe, 536632:git.exe, 536660:git.exe, 534356:git.exe
+descendants terminated  : 6  534356, 536632, 536660, 536844, 537280, 537308
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\13-tip-goldreaders.json
+json report written     : True
+================================================
+
+==============================================================================
+GATE  tip SMOKE (20 files, --heavy-lock C-103)
+==============================================================================
+T2PW: C:\t\c103\src\t2pw\__init__.py
+473 passed in 34.90s
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c103\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : c103-tip-smoke
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c103 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-103/12-tip-smoke.pin.json -q --no-header -rf --basetemp=C:/t/bt/c103sm tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py
+cwd                     : C:/t/c103
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 36.25 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 9  537588:python.exe, 532836:python.exe, 533696:python.exe, 535964:python.exe, 536156:python.exe, 536336:python.exe, 527084:python.exe, 534492:python.exe, 536052:python.exe
+descendants terminated  : 9  527084, 532836, 533696, 534492, 535964, 536052, 536156, 536336, 537588
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c103\docs\pwml_recovery_sprint\evidence\g11\C-103\14-tip-smoke.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-103  acquired=True  released=True
+================================================

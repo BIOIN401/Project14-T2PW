@@ -208,6 +208,10 @@
         "strict_before": false,
         "recovers": true,
         "smaller": true,
+        "release_status": "release_ready",
+        "strict_acceptance_eligible": true,
+        "review_reasons": [],
+        "refusal_reasons": [],
         "quarantined": {
           "glutathione peroxidation": "quarantined_unmapped_entity"
         },
@@ -432,6 +436,10 @@
         "strict_before_note": "The current gate stack passes this: it forbids a proteins/protein_complexes overlap and nothing else, so a compound and a complex sharing a name goes unremarked and the IR resolves the reference to whichever was registered first.",
         "recovers": true,
         "smaller": true,
+        "release_status": "release_ready",
+        "strict_acceptance_eligible": true,
+        "review_reasons": [],
+        "refusal_reasons": [],
         "quarantined": {
           "OPC-8:0-CoA beta-oxidation": "quarantined_broken_reference"
         },
@@ -668,6 +676,10 @@
         "strict_before": false,
         "recovers": true,
         "smaller": true,
+        "release_status": "release_ready",
+        "strict_acceptance_eligible": true,
+        "review_reasons": [],
+        "refusal_reasons": [],
         "quarantined": {
           "OPDA reduction": "quarantined_unmapped_entity"
         },
@@ -916,6 +928,10 @@
         "strict_before": true,
         "recovers": true,
         "smaller": false,
+        "release_status": "release_ready",
+        "strict_acceptance_eligible": true,
+        "review_reasons": [],
+        "refusal_reasons": [],
         "quarantined": {},
         "surviving_reactions": 3
       }
@@ -1096,6 +1112,14 @@
         "strict_before": false,
         "recovers": false,
         "smaller": false,
+        "release_status": "diagnostic_only",
+        "strict_acceptance_eligible": false,
+        "review_reasons": [],
+        "refusal_reasons": [
+          "minimum_core:no_surviving_process",
+          "minimum_core:core_process_count_below_minimum:0<1",
+          "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"
+        ],
         "coverage_reason": "no_surviving_process",
         "surviving_reactions": 0
       }
@@ -1299,8 +1323,16 @@
       },
       "expect": {
         "strict_before": false,
-        "recovers": false,
-        "smaller": false,
+        "recovers": true,
+        "smaller": true,
+        "release_status": "review_required",
+        "strict_acceptance_eligible": false,
+        "review_reasons": [
+          "minimum_core:core_process_count_below_minimum:0<1",
+          "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"
+        ],
+        "refusal_reasons": [],
+        "release_status_note": "Since C-041a (4177fe5, under D-002) a minimum_core shortfall with a defensible surviving core is CLASSIFIED, not refused: ok is True and the graph is a smaller valid strict graph, while release.status is review_required and strict_acceptance_eligible is False. The off-topic survivor therefore still cannot read as a win -- the verdict moved from refusal_reasons to review_reasons, it did not disappear. F-142.",
         "coverage_reason": "core_process_count_below_minimum",
         "surviving_reactions": 1
       }
@@ -1490,6 +1522,10 @@
         "strict_before": false,
         "recovers": true,
         "smaller": true,
+        "release_status": "release_ready",
+        "strict_acceptance_eligible": true,
+        "review_reasons": [],
+        "refusal_reasons": [],
         "quarantined": {},
         "surviving_reactions": 2,
         "removed_entities": [
@@ -1696,6 +1732,10 @@
         "strict_before_note": "Neither the Stage 3 gate nor the required-field contract inspects reaction_coupled_transports; the failure is in the IR, further down.",
         "recovers": true,
         "smaller": true,
+        "release_status": "release_ready",
+        "strict_acceptance_eligible": true,
+        "review_reasons": [],
+        "refusal_reasons": [],
         "quarantined": {
           "efflux coupling": "quarantined_broken_reference"
         },
@@ -1900,6 +1940,10 @@
         "strict_before": true,
         "recovers": true,
         "smaller": false,
+        "release_status": "release_ready",
+        "strict_acceptance_eligible": true,
+        "review_reasons": [],
+        "refusal_reasons": [],
         "quarantined": {},
         "surviving_reactions": 2
       }

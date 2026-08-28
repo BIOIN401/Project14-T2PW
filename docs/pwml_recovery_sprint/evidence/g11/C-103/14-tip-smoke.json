@@ -1,0 +1,158 @@
+{
+  "label": "c103-tip-smoke",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c103",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-103/12-tip-smoke.pin.json",
+    "-q",
+    "--no-header",
+    "-rf",
+    "--basetemp=C:/t/bt/c103sm",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:/t/c103",
+  "started_at": "2026-08-28T20:55:25+00:00",
+  "finished_at": "2026-08-28T20:56:01+00:00",
+  "duration_seconds": 36.25472709999303,
+  "timeout_seconds": 1800.0,
+  "root_pid": 537444,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 537588,
+      "name": "python.exe",
+      "ppid": 537444
+    },
+    {
+      "pid": 532836,
+      "name": "python.exe",
+      "ppid": 537588
+    },
+    {
+      "pid": 533696,
+      "name": "python.exe",
+      "ppid": 532836
+    },
+    {
+      "pid": 535964,
+      "name": "python.exe",
+      "ppid": 536156
+    },
+    {
+      "pid": 536156,
+      "name": "python.exe",
+      "ppid": 537588
+    },
+    {
+      "pid": 536336,
+      "name": "python.exe",
+      "ppid": 537588
+    },
+    {
+      "pid": 527084,
+      "name": "python.exe",
+      "ppid": 536336
+    },
+    {
+      "pid": 534492,
+      "name": "python.exe",
+      "ppid": 536052
+    },
+    {
+      "pid": 536052,
+      "name": "python.exe",
+      "ppid": 537588
+    }
+  ],
+  "descendants_terminated": [
+    527084,
+    532836,
+    533696,
+    534492,
+    535964,
+    536052,
+    536156,
+    536336,
+    537588
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 525356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 526156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 532348,
+      "name": "python.exe"
+    },
+    {
+      "pid": 536752,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c103\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-103\\14-tip-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c103\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c103",
+    "repo_head": "ad623382db40d2d9cad8fa81097a43122d804ff5",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-103",
+    "token": "C-103:536752:6f7e4a61be2e0fab",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
