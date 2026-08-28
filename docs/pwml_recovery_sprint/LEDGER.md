@@ -8088,3 +8088,136 @@ committing the amendment advanced the tip before the worktree was moved onto it.
 **F-132 remains open** — that is C-102. **D-077 is answered** but the seam it describes stays
 unreachable by design until a future licence exists. **F-142's two reds are untouched** and remain the
 expected gold-readers baseline until C-103 lands.
+
+---
+
+## C-102 MERGED — `8e4334f`, gate pinned at `ad62338` · 2026-08-28
+
+**Branch** `card/C-102-coverage-denominator`, tip `e213742`, base `bcf9a23`, worktree `C:/t/c102`
+(**do not prune**; nor `C:/t/rev102base`, `rev102tip`, `rev102r1`). Merged `--no-ff`.
+**REV-102: APPROVE.** One correction round.
+
+### What landed
+
+`contract_accepted_coverage(case, coverage)` reads a leg's **frozen** coverage block and the case's
+own `forbidden_identifiers`. Raw is **copied verbatim**, never recomputed — 0/62 drift measured.
+Accepted is computed beside it, removing exact case-scoped forbidden terms, alias-aware with the
+gloss-head retry. Priorities 4 and 5 carry the reconciliation; their `ok`/`observed` are unchanged.
+**No production pipeline file, no gold file, no threshold change** — `min_core_coverage` still `0.5`,
+read from each leg's own record rather than hardcoded.
+
+**The seam was settled before dispatch and held:** the exclusion lives in `bench/`, never in
+`strict_quarantine.py`, because the forbidden list is gold and the ratio is production, and threading
+gold into the pipeline would embed gold-set-only policy into it (`PRODUCT_CONTRACT` § 12). REV-102
+confirmed **no production module imports `bench.acceptance`**.
+
+### The deviation that turned out to be the ruling
+
+D-072 says *denominator*; the card excludes from **numerator and denominator alike**, and **stopped
+to flag it rather than deciding silently**. The literal text is what is wrong, and it is measurable:
+removing a **matched** forbidden term from the denominator alone leaves it in the numerator, so
+**nine committed legs report a ratio above 1** — eight at `6/5`, one at `9/8` — which is not a rate.
+Synthetically, a pipeline that exported **all three** forbidden identifiers on `PMC12782028` and
+matched no legitimate anchor scores **1.0000**, and matching a forbidden identifier is worth exactly
+as much as matching a legitimate one. **F-132 with its sign flipped, at full amplitude.**
+
+No counter-perversity: across all 64 match-subsets on a real gold case, un-matching a legitimate
+anchor never raises the accepted ratio, toggling a forbidden match is **exactly neutral**, and the
+ratio stays bounded by 1. Recorded as **D-080**, an *interpretation* flagged for product-owner
+ratification, **corrected to nine by D-080 Amendment 1**.
+
+### The correction round — F-144 again, on the card's most consequential line
+
+The card shipped that deviation **defended by zero assertions**: REV-102 reverted the numerator half
+and **all 11 tests stayed green**. Tests 12 and 13 now bite, M7 is in the attack set, and **all seven
+mutations go red** with the tree clean after each. Also fixed: two factually wrong `TEST_MATRIX`
+statements, an untested `render.py` block, a key-name collision (`coverage_reconciliation_corpus`),
+and a shallow-copy aliasing hazard. F5 compaction removed **23,818 bytes — 49% of the growth** — and
+the card reported, **without rounding it away**, that the fix makes the zero-coverage report 76 bytes
+*larger*.
+
+### Results, both of which contradict expectations
+
+* **D-081 — Ruling A moves neither Priority 4 nor Priority 5.** The bundle predicted Priority 4 would
+  move off `0/8`. Reproduced across **all 21 run directories at base and tip**: not one moves,
+  `legs_cleared_by_reconciliation` empty on every one. What Ruling A bought is real but smaller —
+  the coverage measurement is **readable per leg** for the first time.
+* **F-145 — the F-132 population was an undercount: 92 terms / 47 legs / 7 papers**, not 62/32/6. The
+  probe only ever iterated `unmatched_terms`, so **26 matched forbidden terms were structurally
+  invisible** and the seventh paper (`PMC13231680`) never appeared. **And I committed that probe's
+  recovered log without re-running it** against the tree I was committing it into.
+
+### Gates
+
+SMOKE **473** at tip and **post-merge on the combined tree**. Gold-readers **2 failed / 453 passed /
+8 skipped** at base and tip, run **split one-process-per-file as well as combined — identical per
+file, per outcome**. Focused **14 passed** at tip. G9 behavioural, reproduced by REV-102 in a **real
+`bcf9a23` worktree** rather than restore-in-place: denominators `[]` at base → `[23, 27]` at tip.
+
+### Budget
+
+Ceiling 1 ratified **300 → 400** (**D-079**); measured **391**, cumulative **499** across both
+rounds. Round allowance **120 → 140** and ceiling 2 **40 → 55** (**D-082**). **Seventh under-set
+ceiling of this sprint and the seventh that was mine.** The card's own question exposed a real
+instrument defect — the F-050 command and the ceiling sentence contradicted each other, reporting
+**1171** against a ceiling meaning 391 — now fixed sprint-wide.
+
+### Conduct
+
+Kept **four** failed or invalidated measurements beside their corrections, including a split-gate run
+whose missing `--basetemp` parent made every test error in setup and reported **382 instead of 453** —
+*an infrastructure failure wearing the costume of a wiped test file*. It **declined to touch
+`DECISIONS.md`** and escalated the `PRODUCT_CONTRACT` § 7 tension instead of resolving it itself.
+REV-102 recorded predictions before reading any diff hunk and **was wrong on three of them in
+writing**.
+
+---
+
+## C-103 — dispatched and complete, under review · 2026-08-28
+
+**Branch** `card/C-103-f142-replay-expectation`, tip `89afc11`, base `ad62338`, worktree `C:/t/c103`.
+**Zero production lines** — `git diff --numstat ad62338 89afc11 -- src` is empty.
+
+**New gold-readers baseline: `0 failed / 456 passed / 8 skipped / exit 0`** (from 2/453/8/exit 1).
+**Every charter carrying the "this selection exits 1 at base, and that is correct" warning is now
+stale** and must be updated. G9: same file, same selection, **2 failed → 0 failed**.
+
+**It corrects F-142**, subject to REV-103 confirming. F-142 attributes this payload's
+`review_required` to C-041a's branch alone; mutation **B1** shows that is true of the **channel** but
+not the **status**, because the **F-094 incomplete-core cap (C-072)** independently demotes the leg
+on its three unmatched anchors. **Two independent rules, where the finding said one.** B1's report is
+kept beside B2's rather than replaced — which is why it was findable at all.
+
+**A new restore trap, worth naming:** `git checkout -- cases.json` in a restore path reverted the
+card's own **uncommitted fixture edit** along with the mutation, so mutated production ran against an
+uncorrected fixture and produced 20 mostly-`KeyError` failures that looked like a result. **A restore
+that reverts more than it mutated is a measurement failure, not a test result** — the same family as
+the missing `--basetemp` parent and the wrong interpreter. Invalid run kept at `10`, re-measured at
+`11`.
+
+---
+
+## T-107 — NO-GO, and the blocker changed character · 2026-08-28
+
+Full assessment: **`docs/pwml_recovery_sprint/T107-READINESS.md`**, measured at the merged tip.
+
+**Twelve of thirteen gate conditions hold.** The failure is condition 8 — the pinned model —
+and it is a configuration and authorization question, **not** engineering.
+
+`.env` pins all nine OpenRouter slots to `deepseek/deepseek-v4-flash`, which a read-only models check
+prices at **$0.0868/M prompt, $0.1736/M completion — paid**. The T-101/T-103 authorization's ≈$0
+basis rested on every slot being **`openrouter/free`**; `.env` no longer matches, and `.env` is
+untracked so the change is unattributable through git. **LM Studio cannot substitute** — it serves
+`glm-4.6v-flash`, which is neither the pinned model nor the configured `LOCAL_MODEL`, and using it
+would be a **fallback model** (forbidden this wave) that destroys comparability with T-104/T-105/T-106.
+
+**At the merged tip:** Priority 1 raw **8** / accepted **8** → `FAIL` (7 would be
+`PASS_WITHIN_VARIANCE`; T-104 and T-105 both scored 7) · Priority 2 **`CONDITIONALLY SATISFIED`**,
+9 of 20 legs eligible, all 11 `NOT EVALUATED` carrying the same D-067 precondition-3 reason ·
+Priority 3 `PASS` · Priorities 4/5 unmoved at `0/8` and `0/2`. **`LpxH` confirmed still counted:
+`PMC12444477/strict` = 8 findings including `LpxH`, `Unknown` gone — 9 → 8, never 9 → 7.**
+
+**What changed:** the wave opened with condition 9 recorded as *"not met and not reachable by any
+engineering in this sprint"*. **B and D are now answered**, both instrument cards are merged with
+independent approval, and the remaining blocker is **one product decision** rather than a sprint's
+worth of work.
