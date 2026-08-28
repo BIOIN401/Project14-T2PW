@@ -1,0 +1,71 @@
+MEASURED_TREE t2pw = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+========================================================================
+PER-CASE ok VS FIXTURE recovers
+========================================================================
+OK  reaction_inflation_unresolvable_participant: ok=True expect_recovers=True surviving_reactions=2 expect=2
+OK  colon_split_metabolite_as_protein_complex: ok=True expect_recovers=True surviving_reactions=2 expect=2
+OK  enzyme_without_external_identity: ok=True expect_recovers=True surviving_reactions=2 expect=2
+OK  unknown_backed_functional_complex: ok=True expect_recovers=True surviving_reactions=3 expect=3
+OK  every_reaction_unresolvable: ok=False expect_recovers=False surviving_reactions=0 expect=0
+RED only_unrelated_reactions_survive: ok=True expect_recovers=False surviving_reactions=1 expect=1
+OK  degree_zero_mapped_protein: ok=True expect_recovers=True surviving_reactions=2 expect=2
+OK  reaction_coupled_transport_is_not_exportable: ok=True expect_recovers=True surviving_reactions=2 expect=2
+OK  primary_transport_and_interaction_shapes_survive: ok=True expect_recovers=True surviving_reactions=2 expect=2
+
+========================================================================
+DEEP DIVE on the mismatching case(s)
+========================================================================
+
+--- only_unrelated_reactions_survive ---
+collect_requested_core_terms(payload) = ['L-glutamate', 'glutathione', 'glutamate-cysteine ligase']
+declared = True
+DEFAULT_MIN_CORE_PROCESSES = 1  DEFAULT_MIN_CORE_COVERAGE = 0.5
+result.ok = True
+  coverage.requested_core_terms = ["L-glutamate", "glutathione", "glutamate-cysteine ligase"]
+  coverage.requested_core_declared = true
+  coverage.requested_core_source = "payload"
+  coverage.matched_terms = []
+  coverage.unmatched_terms = ["L-glutamate", "glutathione", "glutamate-cysteine ligase"]
+  coverage.coverage_ratio = 0.0
+  coverage.core_accepted_processes = 0
+  coverage.auxiliary_accepted_processes = 1
+  coverage.surviving_processes = 1
+  coverage.quarantined_processes = 2
+  coverage.minimum_core_satisfied = false
+  coverage.reasons = ["core_process_count_below_minimum:0<1", "requested_core_coverage_below_minimum:0.000<0.500"]
+  coverage.thresholds = {"min_core_processes": 1, "min_core_coverage": 0.5}
+  ADMISSIONS:
+    {"name": "gamma-glutamylcysteine synthesis", "kind": null, "state": "quarantined_unmapped_entity", "reason": "undeclared_entity_in_inputs", "core_terms": ["gammaglutamylcysteine", "gammaglutamylcysteine synthesis", "glutamatecysteine ligase complex", "undeclared substrate"]}
+    {"name": "glutathione synthesis", "kind": null, "state": "quarantined_unmapped_entity", "reason": "undeclared_entity_in_inputs", "core_terms": ["glutathione", "glutathione synthesis", "glutathione synthetase complex", "undeclared substrate"]}
+    {"name": "citrate isomerisation", "kind": null, "state": "auxiliary_accepted", "reason": "admitted", "core_terms": ["citrate", "citrate isomerisation", "isocitrate"]}
+  surviving reaction names = ['citrate isomerisation']
+  RE-EVALUATED with pathway_context=payload['metadata']:
+    declared = True  reasons = ["core_process_count_below_minimum:0<1", "requested_core_coverage_below_minimum:0.000<0.500"]  core_accepted = 0
+
+MISMATCHES: ["only_unrelated_reactions_survive"]
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b7f1beac18d619158c3e7a37b387fd14f7a5903f  [git, worktree dirty=True]
+label                   : glut-classify
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/glut_probe.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 412824 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.30 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  418072:python.exe
+descendants terminated  : 1  418072
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-713/01-glut-classify.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

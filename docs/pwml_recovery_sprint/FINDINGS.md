@@ -5725,3 +5725,133 @@ name, the ambiguity is recorded as a review flag, and the run completes with a `
 classification. Ownership would be `pwml/prefreeze_resolution.py` around `:762`/`:1112` plus whatever
 raises it into `post_pipeline`. **Card after the T-106 triage**; it is one leg of twenty and does not
 change any acceptance priority.
+
+---
+
+## F-142 — the Glutathione strict-failure red is a STALE EXPECTATION, not a production defect
+
+**Classified 2026-08-28** by the Lead Orchestrator, read-only, offline, at integration tip
+`b7f1bea`. Evidence: `evidence/g11/ORCH-713/01-glut-classify.json`,
+`02-glut-release-seam.json`, `03-glut-release-fields.json`, and the committed probes
+`evidence/orch713_glut_probe.py` / `_probe3.py` with their logs.
+
+**This closes the diagnosis half of the red registered under F-049 § 2** (*"fails at base …
+Unowned. Do not let a later card discover this and mis-attribute it to its own diff"*) and named in
+D-047 § 3's accepted pre-existing-red set. That record established *that* it failed and that no card
+caused it. **It never established why.** This does.
+
+### The two failing tests, and the single root cause
+
+```
+tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]
+tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]
+```
+
+Both fail on one fact: the fixture records `expect.recovers: false`, and
+`quarantine_and_close(...).ok` is now `True`. The first asserts `result.ok is expect["recovers"]`;
+the second asserts `(result.ok and shrank) is expect["smaller"]`, and `shrank` is true because two
+of three reactions are quarantined. **One cause, two symptoms.** The other seven cases in the
+fixture and the other three tests over this case all pass.
+
+### The earliest failing seam — and it is not a defect
+
+**The coverage gate fires correctly and completely.** Measured:
+
+```
+coverage.core_accepted_processes      = 0
+coverage.auxiliary_accepted_processes = 1
+coverage.minimum_core_satisfied       = false
+coverage.reasons = ["core_process_count_below_minimum:0<1",
+                    "requested_core_coverage_below_minimum:0.000<0.500"]
+```
+
+`evaluate_core_coverage` is right about everything. The two Glutathione reactions are quarantined
+`quarantined_unmapped_entity` / `undeclared_entity_in_inputs`; the off-topic `citrate isomerisation`
+survives as `auxiliary_accepted`; zero core processes survive; all three requested-core anchors are
+unmatched.
+
+**What changed is where that verdict goes.** `C-041a` (`4177fe5`, under **D-002**) deliberately
+split the six refusal reasons at this one seam. The five that say the graph is *wrong or
+unserializable* still refuse. The sixth — `minimum_core:*` — moves to a new `review_reasons` list
+when the graph has a defensible core:
+
+```python
+verdict = coverage_verdict(coverage)
+defensible_core = bool(verdict is not None and verdict.has_surviving_core)
+review_reasons  = coverage_reasons if defensible_core else []
+refusal_reasons = ([] if defensible_core else list(coverage_reasons)) + structural_reasons
+```
+
+`ok` is `not refusal_reasons`. **`ok` no longer answers the question the fixture asks it.**
+
+### The protection did not vanish — it moved, and it is richer
+
+At the release seam, measured on this exact payload:
+
+```
+release.status                    = "review_required"
+release.strict_acceptance_eligible = false
+release.completeness               = 0.0
+release.missing_anchors            = ["L-glutamate","glutathione","glutamate-cysteine ligase"]
+release.expansion_blocked_reason   = "3 requested-core anchor(s) matched no admitted process: …;
+                                      candidate processes withheld by strict admission
+                                      (quarantined_unmapped_entity:2); admitting them would
+                                      require unsupported biology"
+review_reasons  = ["minimum_core:core_process_count_below_minimum:0<1",
+                   "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"]
+refusal_reasons = []
+```
+
+Nothing exports this as an accepted pathway. `strict_acceptance_eligible` is **false**, and the
+M-8 invariant `strict_acceptance_eligible == (status == release_ready)` holds.
+
+**The sibling control still hard-refuses.** `every_reaction_unresolvable` — same paper, empty graph
+— gives `ok=False`, `status="diagnostic_only"`, `refusal_reasons` carrying
+`minimum_core:no_surviving_process`. The empty-vs-shortfall distinction C-041a drew is live and
+working, which is what makes this a *relabelling* rather than a *hole*.
+
+### Why the current behaviour is authoritative and the expectation is not
+
+1. **`CLAUDE.md` permanent merge rule 7** requires it: *"It preserves incomplete-but-correct
+   pathways as `review_required` rather than dropping them."*
+2. **`has_surviving_core`'s docstring anticipates this exact payload, verbatim:** *"A fragment that
+   is merely shallow, or merely **not the pathway that was requested**, is still a fragment; it
+   becomes `review_required`, never `diagnostic_only`."*
+3. **D-002 / C-041a is a locked, reviewed, deliberate ruling** with a recorded G9 behavioural proof.
+
+The fixture predates it and was never updated. It measures a pre-D-002 seam.
+
+### Classification
+
+| Question | Answer |
+|---|---|
+| Production code defect? | **No.** The gate computes the correct verdict and the correct consumer receives it |
+| Stale expectation? | **Yes.** `expect.recovers` asks a question `ok` stopped answering at `4177fe5` |
+| Fixture drift? | No. The payload is fine and still exercises the intended shape |
+| Acceptance-policy ambiguity? | No. Merge rule 7, D-002 and the `has_surviving_core` docstring all agree |
+| Can it affect T-107? | **No.** Offline replay fixture; scores no acceptance priority; in no chunk |
+| Attributable to C-099/C-100? | **No.** Confirmed failing at `f7dc223`, before both |
+
+### Smallest safe card — C-103, and the trap inside it
+
+An **acceptance-instrument correction**, not a production change: re-point the
+`only_unrelated_reactions_survive` expectation at the seam that now carries the verdict —
+`review_reasons`, `release.status`, `strict_acceptance_eligible` — instead of `ok`.
+
+**⚠ The obvious fix is wrong.** Flipping `expect.recovers` to `true` makes
+`test_every_stored_strict_failure_replays_to_its_recorded_verdict` take its `if expect["recovers"]:`
+branch, assert full strict validity, and **silently drop the `coverage_reason` assertion** — turning
+the one test written to stop an off-topic survivor reading as a win into a rubber stamp. The case
+exists, in its own docstring, to prevent exactly that. **The corrected test must still go red if
+`strict_acceptance_eligible` ever becomes `true` for this payload**, and the card must prove that
+non-vacuously by mutation.
+
+**Sequenced after C-101 and C-102.** It is not a T-107 blocker and must not be folded into either.
+
+### The structural reason nobody diagnosed this for weeks
+
+`tests/test_strict_failure_replay.py` **is in no chunk** — not SMOKE, not Chunk D, not Chunk E
+(`LEDGER.md` names it among the F-054 traps). It is the **third** gate-invisible file this sprint to
+hide a real state change, after `test_protein_export_policy.py` twice. A red that no gate runs gets
+carried as accepted noise, and "fails at base" was allowed to stand in for a diagnosis across at
+least four cards. **F-049 / F-054 remain open and this is another datum for them.**

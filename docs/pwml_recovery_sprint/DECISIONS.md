@@ -4110,3 +4110,172 @@ organism-dependent and deliberately `acceptable`. **`expected_enzymes` and `acce
 unchanged.** Note the consequence that makes the scoping necessary: **LpxG is simultaneously an
 alias of the acceptable LpxH and a rationale-tolerated entity** — which a per-entity list can
 express and a Boolean cannot.
+
+---
+
+## D-072 — Ruling A: coverage anchors are reconciled against `forbidden_identifiers` · 2026-08-28 · LOCKED
+
+**Product owner ruling. Closes ask A of `DECISION-BUNDLE-F132-PRIORITY1.md` (F-132).**
+
+A term explicitly listed in a case's `forbidden_identifiers` **must not simultaneously be required
+as a positive coverage anchor for that same case.** Priorities 1 and 4/5 have been scoring the same
+rows in opposite directions: Priority 1 penalises the export of a forbidden identifier while
+Priorities 4/5 penalise its absence from coverage. The pipeline cannot satisfy both, and no amount
+of correct behaviour clears them together.
+
+### What the instrument must do
+
+* **Preserve the original/raw anchor measurement** for diagnostics. It is not deleted, and it
+  remains the number a reader can compare historical reports against.
+* **Compute a separate contract-accepted coverage result** beside it.
+* **Exclude only exact, case-scoped forbidden identifiers** from the accepted positive-coverage
+  denominator. Case-scoped means case-local: an exclusion on one paper has no effect on another.
+* **Continue scoring their erroneous export under Priority 1.** Removing a term from the coverage
+  denominator does not make exporting it acceptable. Priority 1 must remain capable of detecting a
+  forbidden export after this change, and a test must prove it.
+* **Do not delete the forbidden identifiers**, and **do not erase extracted-but-withheld entities
+  from diagnostics.** A coverage success obtained by dropping a diagnostic row is a reject.
+* **Do not introduce bare identifiers or fabricated PWML** to improve coverage.
+* **Do not globally weaken coverage** for terms that are not explicitly forbidden. A term that
+  merely resembles a forbidden one stays required.
+* **Report raw and contract-accepted results separately.** They may not be conflated into one
+  number, and they may not be made to agree by construction.
+
+### What this ruling is not
+
+**This is an acceptance-instrument reconciliation. It is not a claim that the underlying pipeline
+defect is fixed.** The instrument stops asking a contradictory question; the pipeline behaviour it
+measures is unchanged by this card and must not be described as corrected by it.
+
+### Sequencing — binding
+
+Implemented as a **separately chartered card after C-101**, because C-101 and this ruling both
+modify `src/t2pw/bench/semantic.py`. They are implemented, reviewed and merged **serially** even
+though they touch different functions, and the Ruling-A card is developed against the **merged
+C-101 integration tip**, never the pre-C-101 tree. **The two writers are not dispatched in
+parallel.**
+
+---
+
+## D-073 — Ruling B: the Priority-1 target keeps six, and gains a one-finding variance band · 2026-08-28 · LOCKED
+
+**Product owner ruling. Closes ask B of `DECISION-BUNDLE-F132-PRIORITY1.md`.** This is the ask that
+gated T-107; the brittle "six passes, seven fails" point threshold is **withdrawn**.
+
+### The accepted rule
+
+| Accepted count | Status |
+|---|---|
+| `0`–`6` | **`PASS`** |
+| `7` | **`PASS_WITHIN_VARIANCE`** |
+| `8`+ | **`FAIL`** |
+
+The **accepted count** is the contract-adjusted result after authorized, case-scoped tolerances.
+The **raw count must also be preserved and reported.**
+
+### Why a band, and what it does not license
+
+**Six remains the target.** Seven is a **one-finding stochastic tolerance band**, and naming it
+`PASS_WITHIN_VARIANCE` rather than widening the threshold to "≤ 7" is deliberate: the status says
+*why* seven passes, and it survives being read alone in a report. It is **not** evidence that the
+pipeline defect is fixed.
+
+The band exists because the count is genuinely draw-variable at temperature 0. `TEST_MATRIX.md`
+records that T-105's Priority 1 = 7 was composed of **almost entirely different rows** than
+T-104's 7 — `succinyl-CoA`, `SREBF1/2`, `LIPA` and `LBR` vanished by draw variance and were
+replaced by `protoporphyrin IX`, `NADH`, `NAD+` and `holo-EntB`. A point threshold on a quantity
+that moves by composition fails on variance alone.
+
+* `PASS_WITHIN_VARIANCE` **clears T-107 gate condition 1.**
+* It **must remain visibly distinct from `PASS`** everywhere it is rendered.
+* The report must give the **complete row composition and biological classifications for both the
+  raw and the accepted result.**
+* **Do not rerun T-107 to move from seven to six.** Do not chase a favourable draw. One official
+  draw is scored and preserved.
+* **A new systematic defect remains a defect even when the total stays inside the band.** The band
+  absorbs variance, not regressions: a changed composition is inspected on its merits.
+* **Eight or more is an actual acceptance failure** and is reported as one.
+
+---
+
+## D-074 — Ruling C: PMC12444477 tolerates the exact PathBank `Unknown` sentinel, and nothing else · 2026-08-28 · LOCKED
+
+**Product owner ruling. Amends D-071. Depends on D-070 § O-1a**, which established that the bare
+PathBank `Unknown` sentinel is PathBank's own legitimate representation and not a forged identity.
+
+PMC12444477 may tolerate the confirmed bare PathBank `Unknown` sentinel. It may **not** tolerate
+arbitrary rows or identifiers named `Unknown`.
+
+### A name-only matcher is insufficient, and the seam must widen
+
+The scorer calls `case.tolerates_unknown_backed(name)` at `src/t2pw/bench/semantic.py:1418`
+passing **only the name string**. The matcher therefore cannot consult
+`is_pathbank_unknown_protein(row)`, and adding `Unknown` as an eighth gold entry would excuse **any
+row named `Unknown`** on that paper — precisely what this ruling forbids.
+
+**C-101 owns the required row-aware scorer seam.** Widening the matcher input from the name alone
+to the name **plus the complete candidate row** is explicitly in C-101's scope.
+
+### The exception applies only when ALL of these hold
+
+1. the case is **PMC12444477**;
+2. the candidate name is **exactly `Unknown`**;
+3. the **complete row** satisfies the existing authoritative `is_pathbank_unknown_protein(row)`
+   predicate;
+4. the row carries the **confirmed PathBank sentinel identity**, including the expected PathBank
+   protein identity and sentinel provenance fields;
+5. the candidate is the **bare sentinel** — not an arbitrary unresolved identifier, and not a
+   normal protein that merely happens to be named `Unknown`.
+
+**Do not implement this by adding `Unknown` to a name-only allowlist.**
+
+### The authoritative A/B row must be identified before editing
+
+Before editing, C-101's evidence record must identify the **exact authoritative pre-change
+PMC12444477 row and archived leg** used by C-100's accepted A/B, recording: exact artifact path ·
+run identity · paper · mode · entity bucket · complete row identity · why it satisfies the sentinel
+predicate.
+
+That **single C-100-certified row is the authoritative A/B target.** Other archived sentinel rows
+may serve as preservation or adversarial controls, but they are **not interchangeable A/B targets.**
+
+**If the accepted C-100 evidence does not uniquely identify the authoritative row, C-101 stops
+before editing and returns the evidence ambiguity.** It does not choose one silently, and it does
+not launch a live run to resolve archival bookkeeping.
+
+### `LpxH` is not covered and does not move
+
+**`LpxH` remains a Priority-1 finding.** It is the resolvable *E. coli* enzyme associated with the
+organism-dependent ninth step of the Raetz pathway, and D-071 deliberately files it under
+`acceptable_enzymes` rather than removing it. **Do not broaden this ruling to remove it.** The
+consequence is that PMC12444477 goes **9 → 8** findings, not 9 → 7. Widening the list would be the
+merge-rule-6 direction and is a reject.
+
+---
+
+## D-075 — Ruling D: a truthful Priority-2 `NOT EVALUATED` is not an automatic T-107 failure · 2026-08-28 · LOCKED
+
+**Product owner ruling.** Recorded explicitly so the next session does not have to decide it
+implicitly.
+
+`DECISION-BUNDLE-F132-PRIORITY1.md` (F-132) records that Priority 2 is `NOT EVALUATED` on **11 of
+20 legs** because **D-067 precondition 3** requires independent biological review that has not been
+performed. That prerequisite is not reachable by engineering in this sprint.
+
+**A truthful `NOT EVALUATED` caused solely by that unmet prerequisite is not an automatic T-107
+failure.**
+
+### For T-107
+
+* **Score Priority 2 on every eligible leg.**
+* **Retain `NOT EVALUATED` on the 11 ineligible legs.**
+* **Do not manufacture or infer the missing biological review.**
+* Priority 2 is **`CONDITIONALLY SATISFIED`** only if **every eligible leg passes** *and* **every
+  ineligible leg carries the exact documented D-067 reason.**
+* **`CONDITIONALLY SATISFIED` may clear the T-107 readiness gate.**
+* The final report **must state the evaluated denominator** and **may not claim full 20-leg
+  biological validation.**
+* **An eligible leg that fails remains a failure.**
+* **Using `NOT EVALUATED` on a leg whose prerequisites are satisfied is a failure**, not a
+  convenience. Per `PRODUCT_CONTRACT` § 8, `not_evaluated` is never `false`, and the two must stay
+  distinguishable in the emitted report.

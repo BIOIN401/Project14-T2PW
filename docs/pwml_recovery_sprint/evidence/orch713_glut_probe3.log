@@ -1,0 +1,202 @@
+MEASURED_TREE t2pw = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+
+======================================================================
+only_unrelated_reactions_survive | ok = True | fixture recovers = False
+======================================================================
+  quarantine_report keys: ["accepted", "admissions", "admitted_payload_hash", "closure", "counts", "coverage", "decision_id", "decision_input_hash", "decision_inputs", "export_mode", "locked_reactions", "ok", "policy_version", "quarantined", "refusal_reasons", "release", "resulting_payload_hash", "review_reasons", "schema_version", "stage", "strict_db", "strict_invariants"]
+  review_reasons = ["minimum_core:core_process_count_below_minimum:0<1", "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"]
+  refusal_reasons = []
+  release = {
+  "status": "review_required",
+  "pipeline_executed": true,
+  "strict_gates_passed": true,
+  "semantic_evaluation": "passed",
+  "semantic_not_evaluated_reason": "",
+  "semantic_failed_checks": [],
+  "semantic_check_evaluability": [
+    {
+      "check": "requested_pathway_anchors_present",
+      "applicable": false,
+      "inapplicable_reason": "this run supplied no requested-pathway name to look for"
+    },
+    {
+      "check": "organism_compatible",
+      "applicable": false,
+      "inapplicable_reason": "this run supplied no requested-organism context to compare against"
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "applicable": true,
+      "inapplicable_reason": ""
+    },
+    {
+      "check": "no_rejected_rag_reaction_reintroduced",
+      "applicable": false,
+      "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+    },
+    {
+      "check": "actor_named_in_its_own_cited_span",
+      "applicable": false,
+      "inapplicable_reason": "no actor sub-entry on any retained reaction carries both a name with an identifying token and a cited evidence span, so no actor could be compared against its own span"
+    }
+  ],
+  "strict_acceptance_eligible": false,
+  "completeness": 0.0,
+  "missing_anchors": [
+    "L-glutamate",
+    "glutathione",
+    "glutamate-cysteine ligase"
+  ],
+  "retrieval_attempts": 0,
+  "expansion_blocked_reason": "3 requested-core anchor(s) matched no admitted process: L-glutamate, glutathione, glutamate-cysteine ligase; candidate processes withheld by strict admission (quarantined_unmapped_entity:2); admitting them would require unsupported biology",
+  "coverage_evaluated": true,
+  "reasons": [
+    "core_process_count_below_minimum:0<1",
+    "requested_core_coverage_below_minimum:0.000<0.500"
+  ],
+  "applied": true,
+  "review_reasons": [
+    "minimum_core:core_process_count_below_minimum:0<1",
+    "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"
+  ],
+  "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+}
+
+======================================================================
+every_reaction_unresolvable | ok = False | fixture recovers = False
+======================================================================
+  quarantine_report keys: ["accepted", "admissions", "admitted_payload_hash", "closure", "counts", "coverage", "decision_id", "decision_input_hash", "decision_inputs", "export_mode", "locked_reactions", "ok", "policy_version", "quarantined", "refusal_reasons", "release", "resulting_payload_hash", "review_reasons", "schema_version", "stage", "strict_db", "strict_invariants"]
+  review_reasons = []
+  refusal_reasons = ["minimum_core:no_surviving_process", "minimum_core:core_process_count_below_minimum:0<1", "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"]
+  release = {
+  "status": "diagnostic_only",
+  "pipeline_executed": true,
+  "strict_gates_passed": true,
+  "semantic_evaluation": "passed",
+  "semantic_not_evaluated_reason": "",
+  "semantic_failed_checks": [],
+  "semantic_check_evaluability": [
+    {
+      "check": "requested_pathway_anchors_present",
+      "applicable": false,
+      "inapplicable_reason": "this run supplied no requested-pathway name to look for"
+    },
+    {
+      "check": "organism_compatible",
+      "applicable": false,
+      "inapplicable_reason": "this run supplied no requested-organism context to compare against"
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "applicable": true,
+      "inapplicable_reason": ""
+    },
+    {
+      "check": "no_rejected_rag_reaction_reintroduced",
+      "applicable": false,
+      "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+    },
+    {
+      "check": "actor_named_in_its_own_cited_span",
+      "applicable": false,
+      "inapplicable_reason": "no actor sub-entry on any retained reaction carries both a name with an identifying token and a cited evidence span, so no actor could be compared against its own span"
+    }
+  ],
+  "strict_acceptance_eligible": false,
+  "completeness": 0.0,
+  "missing_anchors": [
+    "L-glutamate",
+    "glutathione",
+    "glutamate-cysteine ligase"
+  ],
+  "retrieval_attempts": 0,
+  "expansion_blocked_reason": "3 requested-core anchor(s) matched no admitted process: L-glutamate, glutathione, glutamate-cysteine ligase; candidate processes withheld by strict admission (quarantined_unmapped_entity:2); admitting them would require unsupported biology",
+  "coverage_evaluated": true,
+  "reasons": [
+    "no_defensible_connected_core",
+    "no_surviving_process",
+    "core_process_count_below_minimum:0<1",
+    "requested_core_coverage_below_minimum:0.000<0.500"
+  ],
+  "applied": true,
+  "review_reasons": [],
+  "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+}
+
+======================================================================
+reaction_inflation_unresolvable_participant | ok = True | fixture recovers = True
+======================================================================
+  quarantine_report keys: ["accepted", "admissions", "admitted_payload_hash", "closure", "counts", "coverage", "decision_id", "decision_input_hash", "decision_inputs", "export_mode", "locked_reactions", "ok", "policy_version", "quarantined", "refusal_reasons", "release", "resulting_payload_hash", "review_reasons", "schema_version", "stage", "strict_db", "strict_invariants"]
+  review_reasons = []
+  refusal_reasons = []
+  release = {
+  "status": "release_ready",
+  "pipeline_executed": true,
+  "strict_gates_passed": true,
+  "semantic_evaluation": "passed",
+  "semantic_not_evaluated_reason": "",
+  "semantic_failed_checks": [],
+  "semantic_check_evaluability": [
+    {
+      "check": "requested_pathway_anchors_present",
+      "applicable": false,
+      "inapplicable_reason": "this run supplied no requested-pathway name to look for"
+    },
+    {
+      "check": "organism_compatible",
+      "applicable": false,
+      "inapplicable_reason": "this run supplied no requested-organism context to compare against"
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "applicable": true,
+      "inapplicable_reason": ""
+    },
+    {
+      "check": "no_rejected_rag_reaction_reintroduced",
+      "applicable": false,
+      "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+    },
+    {
+      "check": "actor_named_in_its_own_cited_span",
+      "applicable": false,
+      "inapplicable_reason": "no actor sub-entry on any retained reaction carries both a name with an identifying token and a cited evidence span, so no actor could be compared against its own span"
+    }
+  ],
+  "strict_acceptance_eligible": true,
+  "completeness": 1.0,
+  "missing_anchors": [],
+  "retrieval_attempts": 0,
+  "expansion_blocked_reason": "candidate processes withheld by strict admission (quarantined_unmapped_entity:1); admitting them would require unsupported biology",
+  "coverage_evaluated": true,
+  "reasons": [],
+  "applied": true,
+  "review_reasons": [],
+  "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b7f1beac18d619158c3e7a37b387fd14f7a5903f  [git, worktree dirty=True]
+label                   : glut-release-fields
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/glut_probe3.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 419732 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.19 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  418412:python.exe
+descendants terminated  : 1  418412
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-713/03-glut-release-fields.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
