@@ -9,7 +9,11 @@ You are the Lead Orchestrator and Integration Authority for:
 
 `C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW`
 
-Integration branch: `sprint/pwml-recovery` · Expected starting tip: **`e25247b`**
+Integration branch: `sprint/pwml-recovery` · Last card merge: **`b35b6a2`** (C-097)
+
+**The tip moves with this file's own commit, so no SHA is pinned for it.** The invariant that
+matters is that local, `origin/` and `git ls-remote` are all **equal** — check that, not a number
+I could only have guessed at while writing the line.
 
 Work autonomously. Do not ask the product owner about routine implementation, testing, review or
 merge decisions. Conserve usage aggressively. **Do not merge to `main`.**
@@ -23,7 +27,7 @@ Read `CLAUDE.md` first, then `PRODUCT_CONTRACT.md`, `MASTER_PLAN.md`, `LEDGER.md
 
 | Check | Expected |
 |---|---|
-| local tip = origin = `git ls-remote` | `e25247b` |
+| local tip = origin = `git ls-remote` | **all three equal** (see above) |
 | merge in progress / staged | none / none |
 | heavy lock `C:/t/heavylock` | absent |
 | sprint-owned Python | zero |
