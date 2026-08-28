@@ -4569,3 +4569,77 @@ and verify the tree clean. A non-vacuity claim that has not been attacked is pre
 round exists to correct.
 
 **If a fourth round proves necessary, C-101 is carried to the next session rather than merged.**
+
+---
+
+## D-079 — C-102 ceiling 1 raised 300 → 400, and the F-050 budget command is corrected a second time · 2026-08-28 · LOCKED
+
+### The ratification
+
+**Ceiling 1 `300 → 400`. Ratified.** C-102 measures **391** hand-authored production + docs
+(`src` 274 · docs 117). Ceiling 2 unchanged at 40; the card measures **28**.
+
+**Seventh under-set ceiling of this sprint, and the seventh that is the orchestrator's error.** The
+pattern is now beyond doubt: I size ceilings by estimate against a deliverable list I wrote, and the
+estimate is consistently low. C-102's charter mandated the reconciliation, three guard rails stated
+*in code*, eleven tests, an offline A/B over the whole F-132 population, a behavioural G9 proof, the
+`PRODUCT_CONTRACT` § 7 denominator rule, and documentation in `LEDGER.md` and `TEST_MATRIX.md` —
+the last of which it made a **merge precondition** by requiring an *"exact documented delta"*. 117
+doc lines discharge that. Production at 274 sits in `_build_denominators`' module, which runs at
+roughly one comment line per code line; **matching the surrounding density is correct** and shipping
+an unexplained scoring seam would not be.
+
+**The card stopped and asked.** It did not self-authorize, and it explicitly did not cut a test or a
+docstring to fit — which is the behaviour D-076 Amendment 1 exists to protect. **Boundary is clean**
+and was verified before ratifying: `bench/acceptance.py`, `bench/render.py`, one new test file, three
+docs. No `strict_quarantine.py`, no gold file, no `map_ids.py`, no `writer.py`, no `streamlit_app.py`.
+**A ceiling breach with a clean boundary and no cut tests is a mis-set ceiling, not scope creep.**
+
+### The instrument defect — F-050's command is still wrong, in a second way
+
+C-102 found it and it is real: **the corrected F-050 command and the ceiling sentence it serves
+disagree, and they cannot both be right.**
+
+```
+# F-050's corrected command
+git diff --numstat <base> HEAD -- src tests 'docs/pwml_recovery_sprint/evidence/*.py' | awk ...
+```
+
+```
+# the charter template's ceiling sentence
+"≤ N hand-authored added+deleted lines across production + docs, PLUS THE TEST FILE."
+```
+
+The command **includes `tests`**; the sentence **excludes the test file**. It also folds in
+`evidence/*.py` probes, which charters likewise budget separately. On C-102 the literal command
+reports **1171** against a ceiling meaning **391** — a factor of three, in the same direction and for
+the same reason F-050 was raised in the first place. **F-050 fixed the generated-JSON leak and left
+this one.**
+
+A card trusting the literal number would appear catastrophically over budget and might cut real work
+to "fix" it — **the exact failure D-025 forbids, which is what F-050 said when it corrected the
+command the first time.**
+
+**Ruling — ceiling 1 is production plus docs, and nothing else:**
+
+```
+git diff --numstat <base> HEAD -- src 'docs/**/*.md' \
+  | awk -F'\t' '{s+=$1+$2} END {print s+0}'
+```
+
+* **the card's own test file** is reported separately and is **not** budgeted — writing more tests
+  must never cost a card its headroom;
+* **hand-written evidence probes** under `evidence/*.py` are reported separately;
+* **generated artifacts** remain ceiling 2.
+
+This is the command charters quote from now on. **Charters already dispatched carry an older form;
+when ratifying an overage, re-measure with this one before concluding anything.** Both C-101's 541
+and C-102's 391 were measured on this basis and stand.
+
+### The standing rule this makes explicit
+
+**Three of the last three cards have breached ceiling 1, and in all three the breach was mine.**
+Ceilings are to be derived by **counting the deliverables the charter mandates**, at the measured
+density of the module being edited — not estimated. A charter that mandates an A/B, a G9 proof,
+mutation attacks, three documentation surfaces and eleven tests is not a 250-line card, and saying so
+at dispatch is cheaper than ratifying afterwards.
