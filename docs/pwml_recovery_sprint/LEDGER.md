@@ -6452,3 +6452,95 @@ holding.
   chunk, so nothing this sprint runs would ever have caught its move. It is the same blind spot that
   hid the c056b regression behind a green SMOKE, in a new file.
 
+
+---
+
+# REV-095 — independent review of C-095. Verdict: **APPROVE WITH CORRECTIONS. The corrections are blocking.**
+
+The core F-133 fix is correct and in-boundary, and its preservation obligations are genuinely
+measured. The reviewer **re-measured every headline number itself** and only two claims did not
+survive. Both are recorded below as F1.
+
+**Verified independently, none of it taken on trust:** the diff is purely additive, 187 insertions
+and **zero deletions**; `_superset_complex_promotion_refusal` is **byte-identical** to C-086's, so it
+is reused rather than restated; the three no-touch functions
+(`_apply_pathbank_unknown_enzyme_fallback`, `_apply_pathbank_unknown_complex_fallback`,
+`_rewrite_reaction_protein_enzymes_to_complexes`) are byte-identical base to tip; the control set
+holds by value on the artifact; G9 is `6 failed / 5 passed` at base → `11 passed` at tip with
+behavioural assertion text; the five base passes are genuine preservation controls; the branch-only
+mutant is faithful; SMOKE **473**; the affected set **182**.
+
+**It improved on the author's method in one place.** Rather than accept the in-tree revert, it built
+its own base comparator as a **real git worktree** at `0128fa6` — because `test_c075…` shells out to
+`git ls-files` and a `git archive` export has no `.git`. Identical `4 failed / 570 passed` with the
+identical four node ids at both ends. **Zero blast radius from C-095**, established on a comparator
+that could actually run the corpus tests.
+
+## F1 · HIGH · the guard fires on results that confer no identity, and writes a false refusal
+
+Two reproductions, both the reviewer's own.
+
+**A — no database.** `_map_complex_with_strategy:5892` sets the result's components to the row's
+*own* components on `db_unavailable`; `:9398-9401` reconciles and **renames** them; the guard then
+refuses the row against itself:
+
+```
+base:  chosen_rule ''  resolution {"status":"unresolved","issue":"db_unavailable"}  refused_superset null
+tip :  resolution {"status":"novel","issue":"generated_wrapper_superset_complex_identity_refused"}
+       refused_superset {"protein":"EntF","protein_complex":"",
+                         "uncovered_components":["enterobactin synthase component F"]}
+```
+
+The "uncovered injected catalyst" **is the wrapper's own protein**, and the record names no complex.
+
+**B — with the resolver, on the card's own § 4 preservation case.** `EntE complex`, whose payload
+protein is canonically `2,3-dihydroxybenzoate-AMP ligase` with `EntE` as a synonym:
+
+```
+tip: refused_superset {"protein":"EntE",
+                       "protein_complex":"ferric enterobactin outer membrane transport complex",
+                       "uncovered_components":["2,3-dihydroxybenzoate-AMP ligase"]}
+```
+
+The record asserts the row refused a **named PathBank complex it never matched** — `candidates[0]` of
+a **ten-way ambiguous** lookup, the one the resolver explicitly declined to choose. The
+`candidates[0].name` fallback at `:6432-6438` is right for a `matched` result and wrong by
+construction for an `ambiguous` one. **That is exactly the dishonest audit trail
+`_wrapper_identity_refused_result`'s own docstring says it exists to avoid.**
+
+**Root cause, and it falsifies a docstring in the diff.** `map_ids.py:6371` claims *"the two seams
+cannot disagree about who is who."* They can. `_reconcile_components_against_local_proteins` matches
+by uniprot, `pathbank_protein_id`, canonical name **and alias/synonym** and then renames;
+`_declared_membership_identity_scope:6387` folds payload rows in **by canonical name only**.
+
+**Nothing is dropped and no id is wrongly conferred** — merge rule 7 holds, no biological gate is
+weakened. The damage is a false, biologically-worded provenance claim on rows the guard has no
+business touching, plus silent metric drift from `protein_complexes_ambiguous` into `novel` +
+`skipped`.
+
+## F2 · MEDIUM · the guard key is broader than the charter binds
+
+C-095 § 5 binds the key to `generation_reason == "single_protein_pathwhiz_wrapper"`. The code keys on
+`is_generated_complex_wrapper`, true for **any** `generated is True`. `process_normalizer.py:4999-5005`
+emits a second kind — `complex_named_source_entity_wrapper`, created *because the source text named a
+complex* — which is closer to the declared row § 5 says must **not** be refused. Not established as a
+live regression; the divergence from the charter was not disclosed.
+
+## F3 · LOW · seven of ten G11 reports point at pin-verdict paths that do not exist
+
+All 10 verdicts are valid (`refused: false`, `violations: []`, `foreign_src_entries: []`), but they
+sit at `evidence/c095_*.pin.json` rather than `evidence/g11/pin/C-095/`, and reports `01`–`10` record
+`--pin-verdict` paths inside `g11/C-095/` that no longer resolve because the files moved afterwards.
+**The audit trail's own pointer is dangling.**
+
+## Disposition
+
+**C-095 is HELD pending correction round 1 of 2.** Dispatched: gate the guard on a result that
+actually confers an identity; make the two seams agree on identity keys; regression-test both
+proofs; narrow the key to the charter's or justify the breadth; relocate the pin verdicts and make
+their recorded paths resolve; correct the two false claims in the report.
+
+**F1 is the fourth time this wave a guard has been demonstrated against a case that could not
+exercise it, or has fired on one it should not have.** The pattern is now well enough evidenced to
+state plainly: *a refusal record is a claim, and a claim needs the same proof as the behaviour it
+describes.*
