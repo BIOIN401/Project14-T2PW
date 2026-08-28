@@ -7080,6 +7080,29 @@ as it was then.** The 24/82 population figures are unaffected — the withholdin
 fields that existed — but any *behavioural* claim drawn from that run needs re-measuring against a
 current one before it is acted on.
 
+### Two lessons worth more than the finding they came from
+
+**The pinned run is safe as a POPULATION and unsafe as a BEHAVIOUR.** `runs/2026-08-02_2130`
+predates D-003, so `verification_status` and `unverified_identity_claim` do not exist on those rows
+at all. Counting *what is in it* is sound — the withholding criterion reads only fields that existed
+then, so 24 and 82 stand. Concluding *what the pipeline does* from it is not, because the code that
+produced it is a month stale. Any behavioural claim drawn from that tree gets re-measured against a
+current run before it is believed. The O-1 packet drew a population from it and stopped there, which
+was the right instinct whether or not it was deliberate.
+
+**A zero-hit grep on a document's vocabulary is not evidence that a mechanism is missing.**
+`PRODUCT_CONTRACT.md:244` calls it `unverified_claim`; the code calls it `unverified_identity_claim`.
+`grep -rn unverified_claim src/` returns nothing and means nothing. Ask what the **code** calls the
+concept before reporting it absent — and prefer a behavioural probe over a name search, which is what
+settled this one. The same session made the mirror-image error in the same wave: citing a denominator
+that lived only in prose. Both are the same mistake about what counts as evidence.
+
+**And the probe that settles a two-sided obligation must test the side that must NOT fire.** Checking
+the carrier is *present* on `not_evaluated` would have passed while a carrier wrongly firing on
+`rejected` — the actively dangerous behaviour, since § 8 makes `rejected` the only case where
+identifiers may be stripped — went unnoticed. It is absent on all three. That is what makes this a
+result rather than a presence check.
+
 **Disposition unchanged: no card.** The challenges strengthen the conclusion rather than weakening
 it — the promotion half is correct, the preservation half is implemented and fires exactly where the
 contract says, and the mechanism behind all 24 is uniform and measured.
