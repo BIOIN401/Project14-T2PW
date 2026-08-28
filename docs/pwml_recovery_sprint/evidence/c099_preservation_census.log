@@ -1,0 +1,110 @@
+pattern                          : runs*/**/papers/*/*/final_mapped.json
+roots scanned                    : 24
+files scanned                    : 94
+generated single-protein wrappers: 71
+with a RESOLVED species ref      : 6
+by species_ref.source:
+   explicit_entity_species        4   [SOURCE-SUPPORTED]
+   single_pathway_species         2   [inference]
+by _wrapper_species_fields decision:
+   resolved_species_preserved     4
+   no_note_attached               2
+PRESERVED (measured)             : 4
+CONTRADICTION surfaced           : 0
+moved back to today's behaviour by REV-099 Finding 1: 2
+species id unrecoverable (dropped, not guessed)     : 0
+
+PER-ROW -- the consistency check is reachable ONLY through species_name
+and taxonomy_id. 'present' = the guard was satisfied and the check ran.
+'agrees' means anything ONLY where 'present' is yes.
+
+#   wrapper                          source                   sp_name present agrees  tax present  agrees  live  verdict                     
+---------------------------------------------------------------------------------------------------------------------------------------------
+1   enterobactin synthase complex    explicit_entity_species  yes             yes     yes          yes     yes   resolved_species_preserved  
+2   ALAS2 homodimer                  explicit_entity_species  yes             yes     yes          yes     yes   resolved_species_preserved  
+3   enterobactin synthase complex    explicit_entity_species  yes             yes     yes          yes     yes   resolved_species_preserved  
+4   ALAS2                            explicit_entity_species  yes             yes     yes          yes     yes   resolved_species_preserved  
+5   enterobactin synthase complex    single_pathway_species   yes             yes     yes          yes     yes   no_note_attached            
+6   enterobactin synthase complex    single_pathway_species   yes             yes     yes          yes     yes   no_note_attached            
+
+  [1] enterobactin synthase complex :: resolved=Escherichia coli :: explicit_entity_species
+      leg              : PMC12096016/strict/final_mapped.json
+      species_name     : Escherichia coli
+      taxonomy_id      : row=562 ref=562
+      preserved        : True
+  [2] ALAS2 homodimer :: resolved=Homo sapiens :: explicit_entity_species
+      leg              : PMC12856317/strict/final_mapped.json
+      species_name     : Homo sapiens
+      taxonomy_id      : row=9606 ref=9606
+      preserved        : True
+  [3] enterobactin synthase complex :: resolved=Escherichia coli :: explicit_entity_species
+      leg              : PMC12452463/strict/final_mapped.json
+      species_name     : Escherichia coli
+      taxonomy_id      : row=562 ref=562
+      preserved        : True
+  [4] ALAS2 :: resolved=Homo sapiens :: explicit_entity_species
+      leg              : PMC12856317/strict/final_mapped.json
+      species_name     : Homo sapiens
+      taxonomy_id      : row=9606 ref=9606
+      preserved        : True
+  [5] enterobactin synthase complex :: resolved=Escherichia coli :: single_pathway_species
+      leg              : PMC12452463/strict/final_mapped.json
+      species_name     : Escherichia coli
+      taxonomy_id      : row=562 ref=562
+      preserved        : False
+  [6] enterobactin synthase complex :: resolved=Escherichia coli :: single_pathway_species
+      leg              : PMC12096016/strict/final_mapped.json
+      species_name     : Escherichia coli
+      taxonomy_id      : row=562 ref=562
+      preserved        : False
+
+rows where the contradiction check was LIVE : 6 of 6
+   of those, ran and AGREED                 : 6
+   These are genuine 'could have fired, did not' rows:
+      = enterobactin synthase complex :: species_name=Escherichia coli taxonomy_id=562 vs ref Escherichia coli/562
+      = ALAS2 homodimer :: species_name=Homo sapiens taxonomy_id=9606 vs ref Homo sapiens/9606
+      = enterobactin synthase complex :: species_name=Escherichia coli taxonomy_id=562 vs ref Escherichia coli/562
+      = ALAS2 :: species_name=Homo sapiens taxonomy_id=9606 vs ref Homo sapiens/9606
+      = enterobactin synthase complex :: species_name=Escherichia coli taxonomy_id=562 vs ref Escherichia coli/562
+      = enterobactin synthase complex :: species_name=Escherichia coli taxonomy_id=562 vs ref Escherichia coli/562
+
+POSITIVE CONTROL -- is the contradiction path reachable at all?
+   real corpus row, species_name perturbed to 'Xanthomonas campestris'
+   contradiction raised             : True
+   PASSED. The branch fires when a row genuinely disagrees.
+
+PINNED EXAMPLES -- the ones D-070 section O-1 names. Carrying
+explicit_entity_species clears the SOURCE gate only; the CONTRADICTION
+gate is separate and is reachable here for the first time.
+   enterobactin synthase complex (Escherichia coli): PRESERVED
+   ALAS2 homodimer (Homo sapiens): PRESERVED
+
+TWO DIFFERENT 4s -- do not reconcile them, they measure different things:
+  * the 4/2 CENSUS SPLIT -- refs counted by species_ref.source, read
+    straight off committed data, cited in the C-099 charter amendment
+    and in ORCH-711. Round two did NOT touch it and it was never
+    wrong. If the preserved count below ever moves, the charter's 4/2
+    still does not need editing and MUST NOT be edited.
+  * the PRESERVED-ROW COUNT -- a different quantity: how many rows the
+    shipped decision function actually preserves. That is what round
+    two re-measured. The two coincide here by arithmetic accident.
+
+LIMITATIONS -- read before citing any number above:
+  * RECONSTRUCTION, not a live run. The decision function is applied
+    to rows rebuilt from committed post-clobber artifacts by putting
+    back only the four fields the clobber wrote.
+  * RESIDUAL BOUND. The disagree branch is reachable here through
+    species_name and taxonomy_id ONLY. species/organism are
+    re-stamped from the ref and agree by construction;
+    species_id/pathbank_species_id are set equal to the ref id or
+    dropped, so their guard cannot fire. A contradiction living only
+    in those fields would be invisible to this probe.
+  * REV-099 Finding 2: the previous version built a fresh dict from
+    the ref, so NO field could disagree and its 'PRESERVED 4' was an
+    upper bound. This version is a measurement only to the extent the
+    per-row 'live' column above says the check actually ran.
+  * Where a ref carries no species id the pre-clobber id is
+    unrecoverable; those rows have their id fields dropped rather
+    than guessed, which is one of two possible reconstructions.
+  * Contradictions a live run would create after the mapping stage
+    cannot appear here; only mapping-stage artifacts are read.
