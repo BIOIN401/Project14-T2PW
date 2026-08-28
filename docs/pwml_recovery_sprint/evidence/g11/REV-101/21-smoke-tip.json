@@ -1,0 +1,145 @@
+{
+  "label": "rev101-smoke-tip",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rev101tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/rev101tip",
+    "-q",
+    "-rf",
+    "--basetemp=C:/t/bt/smtip",
+    "-p",
+    "no:cacheprovider",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:/t/rev101tip",
+  "started_at": "2026-08-28T18:17:05+00:00",
+  "finished_at": "2026-08-28T18:17:41+00:00",
+  "duration_seconds": 35.51732479999191,
+  "timeout_seconds": 540.0,
+  "root_pid": 453028,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 454060,
+      "name": "python.exe",
+      "ppid": 453028
+    },
+    {
+      "pid": 394732,
+      "name": "python.exe",
+      "ppid": 452352
+    },
+    {
+      "pid": 452352,
+      "name": "python.exe",
+      "ppid": 454060
+    },
+    {
+      "pid": 452684,
+      "name": "python.exe",
+      "ppid": 455220
+    },
+    {
+      "pid": 455220,
+      "name": "python.exe",
+      "ppid": 454060
+    },
+    {
+      "pid": 450928,
+      "name": "python.exe",
+      "ppid": 455040
+    },
+    {
+      "pid": 455040,
+      "name": "python.exe",
+      "ppid": 454060
+    }
+  ],
+  "descendants_terminated": [
+    394732,
+    450928,
+    452352,
+    452684,
+    454060,
+    455040,
+    455220
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 436332,
+      "name": "python.exe"
+    },
+    {
+      "pid": 442404,
+      "name": "python.exe"
+    },
+    {
+      "pid": 453048,
+      "name": "python.exe"
+    },
+    {
+      "pid": 453856,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-101\\21-smoke-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "3405e514fc286b529cd829c7921fc3ca96fe9fd5",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-101",
+    "token": "REV-101:453048:53ec0072aa341ca9",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

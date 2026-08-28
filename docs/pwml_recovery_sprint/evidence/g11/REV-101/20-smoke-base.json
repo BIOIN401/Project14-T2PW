@@ -1,0 +1,157 @@
+{
+  "label": "rev101-smoke-base",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rev101base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/rev101base",
+    "-q",
+    "-rf",
+    "--basetemp=C:/t/bt/smbase",
+    "-p",
+    "no:cacheprovider",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:/t/rev101base",
+  "started_at": "2026-08-28T18:16:28+00:00",
+  "finished_at": "2026-08-28T18:17:04+00:00",
+  "duration_seconds": 35.61088560000644,
+  "timeout_seconds": 540.0,
+  "root_pid": 455480,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 454052,
+      "name": "python.exe",
+      "ppid": 455480
+    },
+    {
+      "pid": 454108,
+      "name": "python.exe",
+      "ppid": 454800
+    },
+    {
+      "pid": 454800,
+      "name": "python.exe",
+      "ppid": 454052
+    },
+    {
+      "pid": 454672,
+      "name": "python.exe",
+      "ppid": 454052
+    },
+    {
+      "pid": 455280,
+      "name": "python.exe",
+      "ppid": 454672
+    },
+    {
+      "pid": 452708,
+      "name": "python.exe",
+      "ppid": 454052
+    },
+    {
+      "pid": 455224,
+      "name": "python.exe",
+      "ppid": 452708
+    },
+    {
+      "pid": 455084,
+      "name": "python.exe",
+      "ppid": 455252
+    },
+    {
+      "pid": 455252,
+      "name": "python.exe",
+      "ppid": 454052
+    }
+  ],
+  "descendants_terminated": [
+    452708,
+    454052,
+    454108,
+    454672,
+    454800,
+    455084,
+    455224,
+    455252,
+    455280
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 436332,
+      "name": "python.exe"
+    },
+    {
+      "pid": 442404,
+      "name": "python.exe"
+    },
+    {
+      "pid": 450528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 455036,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-101\\20-smoke-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "3405e514fc286b529cd829c7921fc3ca96fe9fd5",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-101",
+    "token": "REV-101:450528:7450efc0d3487ecb",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

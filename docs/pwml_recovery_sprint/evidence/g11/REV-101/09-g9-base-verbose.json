@@ -1,0 +1,72 @@
+{
+  "label": "rev101-g9-base-v",
+  "command": [
+    "python",
+    "C:/t/rev101base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/rev101base",
+    "-v",
+    "-rs",
+    "--basetemp=C:/t/bt/r2",
+    "-p",
+    "no:cacheprovider",
+    "C:/t/rev101base/tests/test_c101_o1_metric_split.py::test_9_placeholder_backed_proteins_unchanged_on_pinned_payload",
+    "C:/t/rev101base/tests/test_c101_o1_metric_split.py::test_9b_the_split_of_the_pinned_leg_is_one_sentinel_and_eight_wrappers"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-28T18:06:50+00:00",
+  "finished_at": "2026-08-28T18:06:53+00:00",
+  "duration_seconds": 2.017221399990376,
+  "timeout_seconds": 900.0,
+  "root_pid": 448356,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [],
+  "descendants_terminated": [],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 436332,
+      "name": "python.exe"
+    },
+    {
+      "pid": 442404,
+      "name": "python.exe"
+    },
+    {
+      "pid": 447176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 448504,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-101\\09-g9-base-verbose.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "3405e514fc286b529cd829c7921fc3ca96fe9fd5",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
