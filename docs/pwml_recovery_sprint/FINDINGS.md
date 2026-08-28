@@ -5855,3 +5855,85 @@ non-vacuously by mutation.
 hide a real state change, after `test_protein_export_policy.py` twice. A red that no gate runs gets
 carried as accepted noise, and "fails at base" was allowed to stand in for a diagnosis across at
 least four cards. **F-049 / F-054 remain open and this is another datum for them.**
+
+---
+
+## F-144 — a non-vacuity guard can be real and still guard the wrong emptiness
+
+**Registered 2026-08-28** by REV-101 during C-101 correction rounds 2 and 3. **The fourth and most
+refined instance of this family on this sprint, and the first one caught by mutation rather than by
+reading.**
+
+### The instance
+
+C-101 needed to pin a structural fact: under D-074 as ruled, `_contract_adjustment` can never fire,
+so `accepted ≡ raw` for Priority 1. Two tests were written to guarantee that the fact stays pinned.
+Both were vacuous.
+
+* `test_a5_bare_means_bare…` called the production entry point, so it *looked* right. But it asserted
+  `all(t == "" for t in tolerances(row))` where `tolerances(row)` was `[]`. **`all([])` is vacuously
+  true.**
+* `test_a5_no_row_shape_can_be_contract_adjusted_under_the_current_gold` carried an explicit
+  non-vacuity guard, `assert seen`. `seen` was **1**, not 7 — and that single finding came from the
+  `placeholder_claims_real_identity` branch, whose `contract_tolerance` is a **hard-coded `""`
+  literal** and which **never calls `_contract_adjustment` at all.**
+
+The mechanism behind both: `_contract_adjustment`'s only call site sits in the
+`false_real_identifier` branch, which is entered only for a row whose name the gold **forbids** *and*
+which carries an external id. `Unknown` is not in PMC12444477's `forbidden_identifiers`, so no
+sentinel row ever arrived. **The tests scored rows that structurally could not reach the code they
+were named for.**
+
+### What made it visible — and nothing else would have
+
+**Mutation, performed by someone other than the author.**
+
+| Mutation | before the fix | after |
+|---|---|---|
+| guard reverted to the broader `_REAL_ACCESSION` form (**proven reachable** for five namespaces) | 38 passed | **2 failed** |
+| **bareness guard deleted entirely** | 38 passed | **2 failed** |
+
+The test's own docstring claimed *"whoever widens the licence later must come here and change this
+assertion on purpose."* The reviewer widened it maximally and **nobody had to come here.**
+
+### The class
+
+**Asserting that *a* finding was produced is not evidence that *the path under test* produced it.**
+A non-vacuity guard can be present, sincere, non-trivial, and still be satisfied by a different code
+path than the one it exists to protect.
+
+Where a null or negative result is load-bearing, the assertion must:
+
+1. **run the production path**, not a reconstruction of it;
+2. require a finding **of the specific kind that path emits**, asserted *before* anything is asserted
+   about its content;
+3. **survive a mutation of the thing it claims to detect.**
+
+### The remedy, in the reviewer's words
+
+> **A non-vacuity guard is not evidence until a party who did not write it has failed to defeat it.**
+
+That is the part worth keeping. Round 2's tests were **sincere and wrong**; the only thing separating
+them from round 3's was an adversarial mutation by someone other than their author. The author could
+not have found this by trying harder — the test looked correct, passed, was not trivial, and had a
+guard.
+
+### Its ancestors on this sprint, now four
+
+1. a guard demonstrated against a case that **could not exercise it** (REV-095);
+2. a probe that **passed its own positive control and was still wrong** — case-sensitive `\bLpp\b`
+   against a lowercase token, found a day after the control standard was written;
+3. a test **named for a function it never called** (C-101 round 1);
+4. **this** — a test that called the right entry point, over rows that could not reach the branch,
+   with a guard satisfied by a different branch.
+
+**The standard has graduated.** It began as *"a committed probe reporting a zero carries a positive
+control, or its number is a ceiling."* It became *"a control proves the instrument can report
+non-zero; it does not prove it is asking the right question."* It is now: **the control must exercise
+the same predicate, on the same path, and survive an adversarial mutation by a non-author.**
+
+### Practice adopted
+
+Every card in this wave from C-102 onward is dispatched with requirement 1–3 above stated
+explicitly, and is required to **paste its mutation proofs** — break it, confirm red, restore, verify
+the tree clean — before reporting. See D-078.

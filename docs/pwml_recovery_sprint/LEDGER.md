@@ -7901,3 +7901,91 @@ wave: **$0.00** against a **$5** ceiling.
 
 **T-107 remains NO-GO**, and the reason has changed for the better: it is now blocked on **two
 mergeable cards** rather than on an unanswerable product question.
+
+---
+
+## C-101 MERGED — `ee7cb6b`, gate pinned at `bcf9a23` · 2026-08-28
+
+**Branch** `card/C-101-o1-metric-split`, tip `0ff60b4`, base `d7cf4a4`, worktree `C:/t/c101`
+(**do not prune**; `C:/t/c101base` likewise). Merged `--no-ff`. **REV-101: APPROVE.**
+
+### What landed
+
+| | |
+|---|---|
+| **16/5 split** | `placeholder_backed_proteins` keeps its value and meaning; four mutually exclusive, exhaustive categories beside it, with `other` **reported** rather than dropped. Reproduces D-070 exactly on the pinned run: **21 = 5 + 16 + 0**, F-141 **24 / 0 / 0** |
+| **Row-aware sentinel seam** | `tolerates_unknown_backed(name, row)`. Licence in its own field `unknown_backed_tolerated_sentinel`, **outside** the name-keyed list, refused at load if declared name-only, returns `False` for `row=None`. Legacy one-arg call returns `False` |
+| **Raw + accepted Priority 1** | both counts reported; `0–6 PASS · 7 PASS_WITHIN_VARIANCE · 8+ FAIL`. Nothing anywhere maps `PASS_WITHIN_VARIANCE` onto `PASS` |
+| **`LpxH`** | untouched. PMC12444477 goes **9 → 8**, never 9 → 7. `Unknown` is the **only** finding-list delta across all 11 legs |
+
+### Gates
+
+**SMOKE 473 = 473** (base, tip, and **post-merge on the combined tree**, `MERGE-101/01`). Gold-readers
+**2 failed / 453 passed / 8 skipped** at base and tip, run **split one-process-per-file as well as
+combined**, **zero per-file shifts across all 22**. Focused **38 passed**. G9 pasted: the regression
+half runs and asserts at base; `test_9b` `KeyError`s there. Every job `FINAL SURVIVING COUNT : 0` /
+`cleanup : success`.
+
+### Three correction rounds, each of which found something real
+
+**Round 1 — an asymmetry the card applied to itself.** It correctly reported `placeholder_other_rows`
+rather than folding a remainder into a clean bucket, then folded **F-141's** remainder into *correct
+withholding*. Now routed per F-141's own table: unrecognised rungs and `mismatch`/`conflict` →
+`withheld_identity_other`; **absent** rungs stay `CORRECT` (the two Fur rows, which the table does
+call correct). Verified by execution — both Fur rows carry `checks.species = None`, and the only two
+rung values in the pinned corpus are `unknown` and `None`, so **no pinned row can reach the new bucket
+at all.**
+
+**Round 2 — a defect the orchestrator introduced.** My round-1 instruction to tighten the
+bare-sentinel guard to match D-074 was right, and the guard stays — but `_contract_adjustment`'s only
+call site is inside `if ids:` and the tightened guard is `if ids: return ""`. The seam became
+unreachable for every input, so `accepted == raw` **by construction**, which the card's own charter
+forbids. **The reporting had become untrue**, asserting a measurement over a structurally impossible
+quantity — the same failure the same commit had fixed one function away. Answered as **D-077**.
+
+**Round 3 — F-144, and the reason it was worth a third round.** Both tests written in round 2 to
+guarantee that honesty were **vacuous**, proven by mutation: reverting the guard left all three
+passing, and **deleting the bareness guard entirely left the focused file at 38 passed.** Fixed
+test-only — the **git tree object for `src/t2pw` is identical** at `e14ab87` and `0ff60b4`. Both
+mutations now fail exactly the two intended tests, for the stated reasons, **re-run independently by
+the reviewer.**
+
+### Budget
+
+Ceiling 1 ratified **420 → 560** (**D-076**) because the orchestrator under-set it when AMENDMENT 1
+tripled the scope — the sixth under-set ceiling of this sprint. Card measured **541**, having trimmed
+`src` **563 → 499** in prose first, and **stopped rather than self-authorizing**. Review-mandated
+corrections budgeted separately (**D-076 Amendment 1**): round 1 **59/60**, round 2 **34/25** (9 over,
+**taken rather than reflowed**, on standing instruction), round 3 **0/40**. Cumulative base→tip
+**600**, of which **93** is review-mandated.
+
+### Conduct worth keeping — recorded because it is the behaviour to want
+
+* **Four failed measurements committed beside their corrections**, never replacing them: `01`/`04`/`07`
+  (round 0), the WSL/bash misfire at `22`, the `28` collection error, the wrong `>= 5` guess at `36`.
+  REV-101 on the practice: *a repository that keeps only successful measurements has an evidence trail
+  that is a survivorship-biased narrative.*
+* **The card refused twice to loosen a guard to manufacture a number** — declining to weaken the
+  accession guard in round 0, and again in round 3 rather than making the seam reachable.
+* **It declined to write to `DECISIONS.md`** although the charter listed it as in scope, because
+  `CLAUDE.md` marks it append-only and product-owner-only. REV-101 said it would have **rejected** the
+  alternative: a subagent writing there would be improvising product authority.
+* **It reproduced its own vacuity as a committed measurement** (`c101_probe_vacuity.py`/`.log`) before
+  fixing it, rather than quietly correcting.
+* **REV-101 disclosed two failures of its own** — three legs run under the wrong interpreter (**F-143**),
+  and an allocator label rejection that silently swallowed a report path — and re-ran rather than
+  keeping only the good runs.
+* **REV-101 recorded predictions before running and was wrong on three in writing** (P6, P7, P13).
+
+### Two charter errors of mine, corrected in D-076
+
+`AMENDMENT 1` § A4 sent the card after *"the row used by C-100's accepted A/B"* — **that A/B is a
+test-node A/B** (20 SMOKE + 22 gold-readers = the "42 files") and contains **no payload row.** And the
+amendment's header named base `b30193f` while the dispatched worktree carried `d7cf4a4`, because
+committing the amendment advanced the tip before the worktree was moved onto it.
+
+### Not closed by this card
+
+**F-132 remains open** — that is C-102. **D-077 is answered** but the seam it describes stays
+unreachable by design until a future licence exists. **F-142's two reds are untouched** and remain the
+expected gold-readers baseline until C-103 lands.
