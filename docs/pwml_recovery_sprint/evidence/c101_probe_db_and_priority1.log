@@ -1,0 +1,79 @@
+======================================================================
+PART A -- DB STATE PROBE (stated, not assumed)
+======================================================================
+tree                : C:/t/c101
+.env present        : False
+.venv present       : False
+PathBank/T2PW env   : {'T2PW_OFFLINE_CURATOR': '1'}
+pathbank_db import  : NOT IMPORTABLE (ImportError: cannot import name 'pathbank_db' from 't2pw.mapping' (C:\t\c101\src\t2pw\mapping\__init__.py))
+db files in tree    : NONE
+
+VERDICT: this tree has NO .env and NO .venv and NO database file. The PathBank
+DB is HIDDEN from it. Every number below is a STATIC RE-SCORE of committed
+archived artifacts, which needs no DB -- so a green leg here is green for the
+right reason. Anything that WOULD need the DB is absent from this card.
+
+======================================================================
+PART B -- RAW vs ACCEPTED PRIORITY 1 ON A REAL PAYLOAD
+======================================================================
+run                 : runs/2026-08-02_2130 (THE pinned run)
+raw Priority 1      : 10
+accepted Priority 1 : 10
+status (from accepted): FAIL  target = 6
+absolute ok (unchanged, from RAW): False
+contract-adjusted rows: 0
+
+RAW ROW COMPOSITION (D-073 requires it for both results):
+   PMC12096016  strict    /entities/compounds/5        nadh                   false_real_identifier
+   PMC12096016  strict    /entities/compounds/12       nad+                   false_real_identifier
+   PMC12180156  research  /entities/compounds/4        5,10-methylene-THF     false_real_identifier
+   PMC12180156  research  /entities/compounds/5        formate                false_real_identifier
+   PMC12180156  research  /entities/compounds/6        THF                    false_real_identifier
+   PMC12180156  strict    /entities/compounds/2        5,10-methylene-THF     false_real_identifier
+   PMC12180156  strict    /entities/compounds/3        formate                false_real_identifier
+   PMC12180156  strict    /entities/compounds/8        succinyl-CoA           false_real_identifier
+   PMC12856317  research  /entities/compounds/4        pyridoxal 5'-phosphate false_real_identifier
+   PMC12856317  strict    /entities/compounds/1        hemin                  false_real_identifier
+
+ACCEPTED ROW COMPOSITION: 10 row(s)
+
+status table, exercised:
+   accepted=0  -> PASS
+   accepted=5  -> PASS
+   accepted=6  -> PASS
+   accepted=7  -> PASS_WITHIN_VARIANCE
+   accepted=8  -> FAIL
+   accepted=9  -> FAIL
+
+MEASURED: no authorized case-scoped tolerance covers any Priority-1 row on this
+corpus, so accepted == raw here. That is a MEASUREMENT, not an identity: the two
+are computed by different code paths (raw from the error total, accepted from the
+rows' contract adjustments) and are proven able to differ in
+test_a7_8_accepted_count_is_computed_separately_and_can_differ.
+PROBE OK
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c101\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d7cf4a4d38b49d66f5f5d8394a9be74d457d8c0e  [git, worktree dirty=True]
+label                   : db-and-priority1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/probe_c101_p1.py C:/t/c101
+cwd                     : C:\t\c101
+root PID / process group: 435252 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 1.45 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  436884:python.exe
+descendants terminated  : 1  436884
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c101\docs\pwml_recovery_sprint\evidence\g11\C-101\13-db-and-priority1.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

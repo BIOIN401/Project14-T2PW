@@ -1,0 +1,62 @@
+TREE: C:/t/c101
+GOLD CASES: 10
+SENTINEL TOLERANCE ON PMC12444477: {'name': 'Unknown', 'pathbank_protein_id': 9659, 'uniprot': 'Unknown', 'quote': '', 'role': "D-074. The bare PathBank Unknown-protein sentinel, record 9659, and NOTHING ELSE. DELIBERATELY UNQUOTED: this licence is not about anything the paper says, so no span can support it and inventing one would fabricate evidence. It is about PathBank's own representation -- D-070 O-1a rules record 9659 a true statement about a DATABASE RECORD rather than a false mapping of an entity, so a row whose entire content is 'this is PathBank record 9659' has forged nothing. This entry is kept OUT of unknown_backed_tolerated_entities on purpose: that list is name-keyed, and a name-keyed 'Unknown' would excuse any row on this paper carrying that string. This field is matched against the WHOLE ROW -- the authoritative is_pathbank_unknown_protein predicate, plus the pathbank_protein_id and uniprot declared right here -- so an arbitrary unresolved identifier named Unknown, a sentinel-shaped row with the wrong record id, and a real protein named Unknown are all still findings. LpxH is NOT covered and remains a Priority-1 finding: it is the resolvable E. coli enzyme for the organism-dependent ninth Raetz step, so an Unknown-backed LpxH is a genuine loss. This paper therefore goes 9 findings to 8, never to 7."}
+NAME-KEYED SCOPE (unchanged): ['LapA', 'LapB', 'Ght', 'LabP', 'LpxG', 'YhcB', 'lipoprotein']
+OTHER CASES DECLARING A SENTINEL: []
+
+PMC12096016 /research  pb= 0  sentinel=0 wrappers= 0 other=0  invariant=OK   F141 correct= 9 recoverable=0 evaluated=True
+PMC12096016 /strict    pb= 3  sentinel=1 wrappers= 2 other=0  invariant=OK   F141 correct= 0 recoverable=0 evaluated=True
+PMC12180156 /research  pb= 0  sentinel=0 wrappers= 0 other=0  invariant=OK   F141 correct= 5 recoverable=0 evaluated=True
+PMC12180156 /strict    pb= 3  sentinel=1 wrappers= 2 other=0  invariant=OK   F141 correct= 0 recoverable=0 evaluated=True
+PMC12444477 /strict    pb= 9  sentinel=1 wrappers= 8 other=0  invariant=OK   F141 correct= 0 recoverable=0 evaluated=True
+PMC12452463 /research  pb= 0  sentinel=0 wrappers= 0 other=0  invariant=OK   F141 correct= 8 recoverable=0 evaluated=True
+PMC12782028 /strict    pb= 4  sentinel=1 wrappers= 3 other=0  invariant=OK   F141 correct= 0 recoverable=0 evaluated=True
+PMC12856317 /research  pb= 0  sentinel=0 wrappers= 0 other=0  invariant=OK   F141 correct= 1 recoverable=0 evaluated=True
+PMC12856317 /strict    pb= 2  sentinel=1 wrappers= 1 other=0  invariant=OK   F141 correct= 0 recoverable=0 evaluated=True
+PMC13231680 /strict    pb= 0  sentinel=0 wrappers= 0 other=0  invariant=OK   F141 correct= 1 recoverable=0 evaluated=True
+
+PINNED TOTALS: placeholder_backed=21  sentinel=5  wrappers=16  other=0
+INVARIANT placeholder_backed == sentinel + wrappers + other : True | broken legs: []
+F-141 pinned: correct=24 recoverable=0 other=0
+PATHBANK_UNKNOWN_SENTINEL (separate pass) total: 5
+
+PMC12444477/strict tolerance findings, row by row:
+    /entities/protein_complexes/1 LpxA           unknown_backed_protein_not_acceptable
+    /entities/protein_complexes/2 LpxD           unknown_backed_protein_not_acceptable
+    /entities/protein_complexes/3 LpxH           unknown_backed_protein_not_acceptable
+    /entities/protein_complexes/4 LpxB           unknown_backed_protein_not_acceptable
+    /entities/protein_complexes/5 LpxK           unknown_backed_protein_not_acceptable
+    /entities/protein_complexes/6 WaaA           unknown_backed_protein_not_acceptable
+    /entities/protein_complexes/7 LpxL           unknown_backed_protein_not_acceptable
+    /entities/protein_complexes/8 LpxM           unknown_backed_protein_not_acceptable
+    TOTAL FINDINGS: 8
+    LpxH still a finding: True
+    Unknown still a finding: False
+    summary: 8 placeholder identity problem(s); 0 verified / 9 Unknown-backed placeholder / 5 unresolved, of 14 protein row(s)
+PROBE OK
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c101\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e14ab874d330b6de33d17bd35443e592eca0d922  [git, worktree dirty=True]
+label                   : r3-invariants
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/probe_c101_split.py C:/t/c101
+cwd                     : C:\t\c101
+root PID / process group: 481056 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 1.49 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  480748:python.exe
+descendants terminated  : 1  480748
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c101\docs\pwml_recovery_sprint\evidence\g11\C-101\44-r3-invariants.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

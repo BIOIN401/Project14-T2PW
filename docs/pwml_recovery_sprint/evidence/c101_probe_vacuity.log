@@ -1,0 +1,51 @@
+========================================================================
+A. THE CURRENT TESTS, under the REAL gold case
+========================================================================
+'Unknown' in PMC12444477 forbidden_identifiers: False
+  sentinel+kegg   -> 0 P1 finding(s) []   all(t=='') is VACUOUS
+  sentinel+chebi  -> 0 P1 finding(s) []   all(t=='') is VACUOUS
+  sentinel+hmdb   -> 0 P1 finding(s) []   all(t=='') is VACUOUS
+  `seen` across the shapes: 1 {'placeholder_claims_real_identity': 1}
+  false_real_identifier count (the ONLY kind that calls the seam): 0
+
+========================================================================
+B. THE CONSTRUCTION THAT ACTUALLY REACHES THE SEAM
+========================================================================
+synthetic case: 'Unknown' forbidden -> True
+sentinel licence still declared      -> True
+  bare sentinel          -> 0 P1 finding(s) []
+  sentinel+kegg      -> 1 finding(s) ['false_real_identifier']  contract_tolerance=['']
+  sentinel+chebi     -> 1 finding(s) ['false_real_identifier']  contract_tolerance=['']
+  sentinel+hmdb      -> 1 finding(s) ['false_real_identifier']  contract_tolerance=['']
+  sentinel+drugbank  -> 2 finding(s) ['false_real_identifier', 'placeholder_claims_real_identity']  contract_tolerance=['', '']
+  sentinel+pubchem   -> 1 finding(s) ['false_real_identifier']  contract_tolerance=['']
+
+READ: at this tip every contract_tolerance must be ''. Under round 0's
+_REAL_ACCESSION guard these same rows returned 'pathbank_unknown_sentinel'.
+PROBE OK
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c101\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e14ab874d330b6de33d17bd35443e592eca0d922  [git, worktree dirty=False]
+label                   : r3-vacuity-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/probe_c101_vacuity.py C:/t/c101
+cwd                     : C:\t\c101
+root PID / process group: 376844 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 1.35 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  474028:python.exe
+descendants terminated  : 1  474028
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c101\docs\pwml_recovery_sprint\evidence\g11\C-101\35-r3-vacuity-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

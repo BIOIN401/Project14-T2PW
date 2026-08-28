@@ -1,0 +1,75 @@
+{
+  "label": "r2-certify",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py",
+    "check",
+    "--task",
+    "C-101"
+  ],
+  "cwd": "C:\\t\\c101",
+  "started_at": "2026-08-28T18:50:51+00:00",
+  "finished_at": "2026-08-28T18:50:51+00:00",
+  "duration_seconds": 0.4088800000026822,
+  "timeout_seconds": 300.0,
+  "root_pid": 473132,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 473484,
+      "name": "python.exe",
+      "ppid": 473132
+    }
+  ],
+  "descendants_terminated": [
+    473484
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 71220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 354560,
+      "name": "python.exe"
+    },
+    {
+      "pid": 473236,
+      "name": "python.exe"
+    },
+    {
+      "pid": 473248,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c101\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-101\\34-r2-certify.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c101\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c101",
+    "repo_head": "4d04e47df1ed9dab9f5e24b94ca102528643d6f8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

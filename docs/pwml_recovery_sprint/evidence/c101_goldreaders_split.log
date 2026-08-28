@@ -1,0 +1,54 @@
+PER-FILE, each in a FRESH process (22 files)
+  tests/test_protein_export_policy.py                      exit=0  63 passed in 0.35s
+  tests/test_c056b_semantic_denominators.py                exit=0  10 passed in 0.87s
+  tests/test_batch_pwml_artifact_naming.py                 exit=0  13 passed in 3.61s
+  tests/test_c074_strict_core_floor.py                     exit=0  31 passed in 2.36s
+  tests/test_c076_alias_holo_apo_identity.py               exit=0  28 passed in 0.92s
+  tests/test_c077_stage0_conflict_disposition.py           exit=0  14 passed in 4.28s
+  tests/test_c081_cofactor_role_identity.py                exit=0  25 passed in 0.35s
+  tests/test_c085_priority2_honesty.py                     exit=0  11 passed in 0.94s
+  tests/test_c088_extracted_not_serialized_disposition.py  exit=0  20 passed in 2.70s
+  tests/test_cofactor_policy.py                            exit=0  36 passed in 0.07s
+  tests/test_rag_multi_relation_spans.py                   exit=0  19 passed in 12.23s
+  tests/test_release_status_classification.py              exit=0  12 passed in 0.09s
+  tests/test_semantic_production_no_gold.py                exit=0  8 passed in 0.98s
+  tests/test_strict_failure_replay.py                      exit=1  2 failed, 37 passed, 8 skipped in 1.15s
+  tests/test_batch_driver_quarantine_artifacts.py          exit=0  8 passed in 4.08s
+  tests/test_c056c_semantic_evaluability.py                exit=0  11 passed in 1.75s
+  tests/test_c071_actor_evidence_gate.py                   exit=0  8 passed in 0.88s
+  tests/test_c080_production_gate_kind_aware.py            exit=0  19 passed in 1.05s
+  tests/test_c089_participant_schema.py                    exit=0  31 passed in 0.58s
+  tests/test_c090_wrapper_identity_actor_evidence.py       exit=0  8 passed in 0.89s
+  tests/test_c097_semantic_name_keys.py                    exit=0  16 passed in 0.06s
+  tests/test_semantic_release_gating.py                    exit=0  25 passed in 0.95s
+
+SPLIT TOTALS: 453 passed, 2 failed, 8 skipped
+COMBINED was: 453 passed, 2 failed, 8 skipped
+PER-FILE SHIFT: NONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c101\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e14ab874d330b6de33d17bd35443e592eca0d922  [git, worktree dirty=True]
+label                   : r3-goldreaders-split
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/split_gold.py C:/t/c101 C:/t/goldreaders.txt C:/t/bt
+cwd                     : C:\t\c101
+root PID / process group: 474792 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 2400 s
+duration                : 53.64 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 51  478048:python.exe, 480036:python.exe, 480972:python.exe, 478104:python.exe, 481020:python.exe, 481196:python.exe, 479292:python.exe, 479332:python.exe, 480528:python.exe, 480724:git.exe, 480728:git.exe, 461764:git.exe, 467616:git.exe, 471900:git.exe, 474500:git.exe, 480388:python.exe, 480532:python.exe, 480772:python.exe, 481012:python.exe, 476480:python.exe, 477600:python.exe, 469052:python.exe, 474052:python.exe, 449748:python.exe, 478124:python.exe, 465016:python.exe, 467824:python.exe, 468788:python.exe, 469664:python.exe, 471544:python.exe, 476880:python.exe, 463424:python.exe, 473316:python.exe, 474800:python.exe, 480392:python.exe, 475848:python.exe, 478844:python.exe, 479792:python.exe, 480040:python.exe, 476412:python.exe, 459160:python.exe, 477504:python.exe, 480964:python.exe, 423868:python.exe, 480200:python.exe, 477312:python.exe, 479532:python.exe, 468932:python.exe, 480924:python.exe, 475180:python.exe, 481264:python.exe
+descendants terminated  : 51  423868, 449748, 459160, 461764, 463424, 465016, 467616, 467824, 468788, 468932, 469052, 469664, 471544, 471900, 473316, 474052, 474500, 474800, 475180, 475848, 476412, 476480, 476880, 477312, 477504, 477600, 478048, 478104, 478124, 478844, 479292, 479332, 479532, 479792, 480036, 480040, 480200, 480388, 480392, 480528, 480532, 480724, 480728, 480772, 480924, 480964, 480972, 481012, 481020, 481196, 481264
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c101\docs\pwml_recovery_sprint\evidence\g11\C-101\43-r3-goldreaders-split.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-101  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

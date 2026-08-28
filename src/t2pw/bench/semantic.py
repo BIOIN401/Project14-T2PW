@@ -60,6 +60,8 @@ the admission gate can never disagree about what counts as a link.
 
 from __future__ import annotations
 
+import json
+import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, FrozenSet, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
 
@@ -1029,6 +1031,42 @@ def _check_id_conflicts(
     from t2pw.mapping.identity_admission import entity_kind_class
     from t2pw.pipeline.entity_identity import placeholder_claims_real_identity
 
+    def _contract_adjustment(name: str, row: Mapping[str, Any], ids: Mapping[str, str]) -> str:
+        """The authorized, case-scoped tolerance covering this Priority-1 row (D-073).
+
+        Decides the **accepted** count only; ``false_real`` -- the RAW count -- is
+        never touched, because D-073 requires it preserved and unchanged in
+        meaning. Three conditions, all required, the last two being the safety
+        property: (1) the gold declares a ROW-PREDICATED licence covering the row;
+        (2) the row is BARE -- it carries no external accession in any namespace,
+        since a tolerance may excuse an identity a row does NOT claim, never one
+        it does; (3) the finding is not ``placeholder_claims_real_identity``,
+        which keeps precedence over every tolerance and which no contract
+        adjustment may reach past.
+
+        **UNREACHABLE TODAY, AND THAT IS THE RULING'S SHAPE, NOT A BUG.** The one
+        call site sits inside ``if ids:``, and condition 2 refuses a row that has
+        any ``ids``, so this returns ``""`` for EVERY input. D-074 licenses only
+        the *bare* sentinel, and a bare sentinel can never BE a Priority-1 row,
+        because that branch requires an accession. So ``accepted == raw`` today by
+        CONSTRUCTION, not by measurement -- an earlier draft of this docstring
+        claimed the opposite and was wrong. The seam is kept, wired and tested so
+        a future licence has somewhere to land; loosening condition 2 to make it
+        fire would be broader than the ruling and is refused.
+        """
+
+        if case.sentinel_tolerance_match(name, row) is None:
+            return ""
+        # D-074 condition 5 says BARE, so the guard says bare. `_external_ids`
+        # already drops the sentinel's own `uniprot: Unknown`, so a genuine bare
+        # sentinel reaches here with `ids == {}`; ANY surviving external
+        # accession -- protein-namespace or not -- means the row is not bare and
+        # is refused. The earlier form matched only UniProt-SHAPED strings and
+        # would have adjusted a sentinel carrying kegg/chebi/drugbank/hmdb.
+        if ids:
+            return ""
+        return "pathbank_unknown_sentinel"
+
     #: Gold ``kind`` for a modification state of one polypeptide (holo/apo,
     #: phosphopantetheinylated, metal-loaded). Function-local: this is the only
     #: reader, and C-076's boundary owns nothing else in this module.
@@ -1101,6 +1139,7 @@ def _check_id_conflicts(
                                 "kind": "false_real_identifier",
                                 "forbidden_kind": forbidden.kind,
                                 "identifiers": ids,
+                                "contract_tolerance": _contract_adjustment(name, row, ids),
                                 "reason": forbidden.reason
                                 or f"'{name}' is not a real distinct identity ({forbidden.kind}) but carries {ids}",
                             }
@@ -1127,6 +1166,9 @@ def _check_id_conflicts(
                         "kind": "placeholder_claims_real_identity",
                         "rule": claim,
                         "identifiers": ids,
+                        # Condition 3: never adjustable. The gate that sees a
+                        # forged accession keeps precedence over every tolerance.
+                        "contract_tolerance": "",
                         "reason": f"placeholder row is posing as a real mapping ({claim})",
                     }
                 )
@@ -1364,6 +1406,100 @@ def _check_connected_core(case: GoldCase, graph: Mapping[str, Any]) -> CheckResu
 # ---------------------------------------------------------------------------
 # Check 7 -- placeholder identities distinguished from real ones.
 # ---------------------------------------------------------------------------
+#: The F-141 seam, kept deliberately apart from the placeholder-backed 21.
+#: D-070 O-1c: 0 of the pinned 24 lie inside the 21, and this population must
+#: NEVER be reported under ``placeholder_backed_proteins``.
+WITHHELD_CORRECT = "withheld_identity_correct"
+WITHHELD_RECOVERABLE = "withheld_identity_recoverable"
+#: D-070 O-1c category 6, "other measured mechanism" -- the committed
+#: classifier's terminal bucket (``orch711_f141_which_side.py:91``). Reported for
+#: the same reason ``placeholder_other_rows`` is: a rung this reader does not
+#: recognise is UNCLASSIFIED, and folding it into ``correct`` would report a
+#: mechanism nobody has measured as confirmed-correct withholding. 0 rows today,
+#: which is exactly when to keep the remainder visible.
+WITHHELD_OTHER = "withheld_identity_other"
+
+#: The UniProt accession grammar. CANONICAL SITE: ``rag/admission.py:2579``
+#: (``_UNIPROT_RE``). Restated rather than imported because ``bench.semantic``
+#: must stay importable where the RAG extras are absent and
+#: ``test_semantic_production_no_gold.py:159`` pins this module's ``t2pw`` import
+#: surface to five modules. Whether the two should be unified is a boundary
+#: question this card does not own -- if you change one, change both.
+_REAL_ACCESSION = re.compile(r"^[OPQ][0-9][A-Z0-9]{3}[0-9]$|^[A-NR-Z][0-9](?:[A-Z][A-Z0-9]{2}[0-9]){1,2}$")
+_HELD_ACCESSION = re.compile(r"uniprot:([A-Z0-9]{6,10})")
+
+
+def _withheld_identity_class(row: Mapping[str, Any]) -> str:
+    """F-141's disposition for one row, or ``""`` if it is not in that population.
+
+    Mirrors the committed classifier ``evidence/orch711_f141_which_side.py``
+    field-for-field: that probe is what F-141's ruling was measured with, and a
+    second, subtly different reading would give a number nobody could reconcile
+    with the ruling.
+
+    A row is in the population when a candidate identity survived into
+    ``mapping_meta.identity_verdict`` and the shipped row does not carry it. The
+    split is **which side of the species comparison was silent** -- the one fact
+    separating a recoverable propagation loss from correct fail-closed
+    withholding. F-141's intermediate pass read the entity side alone and got it
+    wrong; hence ``organism``, what the ladder actually received.
+    """
+
+    meta = row.get("mapping_meta")
+    meta = meta if isinstance(meta, dict) else {}
+    verdict = meta.get("identity_verdict")
+    verdict = verdict if isinstance(verdict, dict) else {}
+    if not verdict:
+        return ""
+    held = [a for a in _HELD_ACCESSION.findall(json.dumps(verdict, default=str)) if _REAL_ACCESSION.match(a)]
+    if not held:
+        return ""
+    mapped = row.get("mapped_ids")
+    mapped = mapped if isinstance(mapped, dict) else {}
+    shipped = canonical_text(mapped.get("uniprot") or row.get("uniprot_id") or row.get("uniprot"))
+    if any(accession == shipped for accession in held):
+        return ""
+
+    checks = verdict.get("checks")
+    checks = checks if isinstance(checks, dict) else {}
+    rung = canonical_text(checks.get("species"))
+    requested = canonical_text(verdict.get("organism"))
+    judged = [c for c in (verdict.get("judged_candidates") or []) if isinstance(c, dict)]
+    if isinstance(verdict.get("judged_candidate"), dict) and verdict["judged_candidate"]:
+        judged.append(verdict["judged_candidate"])
+    pool = [c for c in (meta.get("candidates") or []) if isinstance(c, dict)]
+    any_candidate = bool(judged or pool)
+    candidate_species = any(
+        canonical_text(c.get("organism") or c.get("species"))
+        or canonical_text(c.get("taxonomy_id") or c.get("taxon_id"))
+        for c in (*judged, *pool)
+    )
+
+    if not rung:
+        # No rung at all: the candidate did not describe the shipped identifier
+        # -- F-141's two Fur rows, which its table calls withholding CORRECT.
+        return WITHHELD_CORRECT
+    if rung != "unknown":
+        # Everything else this reader does not recognise as `unknown`. F-141's
+        # table lists `conflicting species evidence` and `other measured
+        # mechanism` as their OWN rows and does NOT call either one correct
+        # withholding, so neither may be counted as such here. Both are 0 on the
+        # pinned run, so this moves no measured number -- it stops the next
+        # unrecognised rung being reported as a clean result.
+        return WITHHELD_OTHER
+    if not requested:
+        # The ENTITY side was silent: species evidence lost before the ladder.
+        return WITHHELD_RECOVERABLE
+    if not any_candidate or not candidate_species:
+        # `requested` was never silent, so `unknown` can only have come from the
+        # candidate side. Withholding is CORRECT, and D-070 forbids penalising
+        # the row a second time elsewhere.
+        return WITHHELD_CORRECT
+    # Both sides present, rung still unknown: support was sufficient and the
+    # identity was still not shipped.
+    return WITHHELD_RECOVERABLE
+
+
 def _check_placeholder_identity(
     case: GoldCase,
     entities: Mapping[str, List[Dict[str, Any]]],
@@ -1373,6 +1509,7 @@ def _check_placeholder_identity(
         IDENTITY_UNRESOLVED,
         IDENTITY_VERIFIED,
         identity_status,
+        is_generated_complex_wrapper,
         is_pathbank_unknown_protein,
         placeholder_claims_real_identity,
     )
@@ -1385,6 +1522,23 @@ def _check_placeholder_identity(
         "proteins_total": 0,
         "proteins_with_organism": 0,
         "compounds_total": len(entities.get("compounds", [])),
+        # -- D-070's 16/5 split, computed on the SAME pass as placeholder_backed.
+        # `pathbank_unknown_sentinel` was computed on a separate pass with no
+        # relationship enforced, so a row could be counted in both and nothing
+        # noticed. These three partition it: sentinel + wrappers + other.
+        # `other` is REPORTED, never assumed: it is 0 on the pinned run as a
+        # MEASURED fact, and an instrument that asserted the invariant by dropping
+        # the remainder would hide the first row that does not fit.
+        "placeholder_sentinel_rows": 0,
+        "placeholder_generated_wrappers": 0,
+        "placeholder_other_rows": 0,
+        # -- F-141's seam, disjoint from the 21 by measurement (D-070 O-1c) and by
+        # construction: counted over every row and never feeding placeholder_backed.
+        WITHHELD_CORRECT: 0,
+        WITHHELD_RECOVERABLE: 0,
+        WITHHELD_OTHER: 0,
+        # PRODUCT_CONTRACT 8: a measured 0 is never "not asked".
+        "withheld_identity_evaluated": True,
     }
     findings: List[Dict[str, Any]] = []
     placeholder_backed = 0
@@ -1397,11 +1551,27 @@ def _check_placeholder_identity(
                 census["proteins_with_organism"] += 1
             status = identity_status(row) or IDENTITY_UNRESOLVED
             census[status] = census.get(status, 0) + 1
-            if is_pathbank_unknown_protein(row):
+            sentinel = is_pathbank_unknown_protein(row)
+            if sentinel:
                 census["pathbank_unknown_sentinel"] += 1
+            withheld = _withheld_identity_class(row)
+            if withheld:
+                census[withheld] += 1
             if status != IDENTITY_PLACEHOLDER:
                 continue
             placeholder_backed += 1
+            # EXACTLY ONE category, decided here and nowhere else. The order IS
+            # the mutual exclusion: a row that is both a sentinel and carries a
+            # wrapper marker is a SENTINEL, because `is_pathbank_unknown_protein`
+            # is the narrower statement -- it names one database record. D-070
+            # O-1a/O-1b give the two opposite dispositions, so "counted in both"
+            # is the defect this card removes, not a rounding error.
+            if sentinel:
+                census["placeholder_sentinel_rows"] += 1
+            elif is_generated_complex_wrapper(row):
+                census["placeholder_generated_wrappers"] += 1
+            else:
+                census["placeholder_other_rows"] += 1
             name = canonical_text(row.get("name"))
             pointer = f"/entities/{bucket}/{index}"
             claim = placeholder_claims_real_identity(row)
@@ -1415,7 +1585,13 @@ def _check_placeholder_identity(
                         "reason": f"placeholder is indistinguishable from a real mapping ({claim})",
                     }
                 )
-            elif not case.tolerates_unknown_backed(name):
+            # D-074: the WHOLE ROW, not the name alone. Passing only `name` was
+            # the defect -- the matcher could not consult
+            # `is_pathbank_unknown_protein(row)`, so tolerating the bare sentinel
+            # would have needed an eighth NAME-keyed entry excusing any row on
+            # this paper called `Unknown`. The row was never missing, only
+            # unpassed. `placeholder_claims_real_identity` above keeps precedence.
+            elif not case.tolerates_unknown_backed(name, row):
                 # Two different refusals, and the report has to say which. A case
                 # with no tolerance at all is not making the same statement as a
                 # case that tolerates a NAMED set and finds this row outside it --
@@ -1477,7 +1653,17 @@ def _check_placeholder_identity(
         # accepted?"; keying on the Boolean would silently drop the acceptance
         # disclosure for precisely those cases, which is under-reporting rather
         # than mis-reporting and is the quieter of the two failures.
-        scoped = " (each one named by the case)" if case.unknown_backed_tolerated_entities else ""
+        # Two different licences, and the summary must not describe one as the
+        # other: the scope NAMES entities, the D-074 sentinel licence matches a
+        # ROW. "each one named by the case" would be false of a sentinel row.
+        if case.unknown_backed_tolerated_entities and case.unknown_backed_tolerated_sentinel:
+            scoped = " (each one named by the case, or the confirmed PathBank sentinel row)"
+        elif case.unknown_backed_tolerated_entities:
+            scoped = " (each one named by the case)"
+        elif case.unknown_backed_tolerated_sentinel:
+            scoped = " (the confirmed PathBank sentinel row, matched on the whole row)"
+        else:
+            scoped = ""
         summary = (
             f"{breakdown}; placeholders are correctly marked and this case accepts "
             f"{tolerated} of them{scoped}"
