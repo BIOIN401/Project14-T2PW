@@ -6643,3 +6643,75 @@ Reports **04–13** record `--pin-verdict` paths at the pre-move location and no
 pointers, and `TEST_MATRIX` § 0 is explicit that a successful expensive job is not re-run to repair
 paperwork — the incident is recorded instead. This entry is that record.
 
+
+---
+
+# C-095 MERGED — `13b5696`. Gates discharged on the combined tree.
+
+**REV-095 delta verdict: APPROVE.** Both round-1 findings fixed; the reviewer reproduced every number
+itself **in genuine git worktrees rather than in-tree reverts**, plus five independent probes outside
+the author's test file, and states plainly that nothing in the delta was taken on trust.
+
+## Gates, measured on the integration branch after the merge
+
+| Gate | Result |
+|---|---|
+| SMOKE (A+B+C, 20 files) | **473 passed**, 47.32 s, exit 0, survivors 0, cleanup success (`MERGE-095/01`) |
+| C-095 affected set + the new file, **combined tree** | **196 passed** = 182 + 14, zero failures (`MERGE-095/02`) |
+
+The 196 is the promise in `C-095.md`'s merge-order note kept: the card's numbers were taken against
+`0128fa6`, and I undertook to re-run the affected suite on the combined tree. C-096 is merged in that
+tree and touches `pwml/compound_resolution.py` / `prefreeze_resolution.py`, disjoint from
+`map_ids.py`; **no interaction, measured rather than assumed.**
+
+## What the reviewer verified from source rather than accepting
+
+The load-bearing claim was that gating the guard on a result which actually confers an identity
+reopens nothing. It tabulated **every** return that can produce `result` in this loop — eleven of
+them — and established that none is simultaneously non-`mapped`, id-less, and carrying components
+other than the row's own; and that branch 3 requires `complex_row["components"]` empty, which forces
+`input_components` empty, so **branch 3 does not execute at all**.
+
+It also checked that **neither clause of the gate is redundant**, which nobody had asked for:
+`_complex_result_from_row` can return `status == "mapped"` with `cid == 0` — caught by the status
+test — and a `use_cache=True` hit can return a stored result carrying an id under any status — caught
+by the id test.
+
+## F-138 · LOW · a C-086 docstring overstates the agreement between the two identity seams
+
+`map_ids.py:6169`, inside C-086's `_enzyme_actor_identity_tokens`, carries the identical sentence
+C-095 removed from `:6371` — that the two seams "cannot disagree about who is who". It is imprecise
+for the same reason: `_reconcile_components_against_local_proteins` also matches aliases.
+
+**C-095's author found this and did not edit another card's function.** The reviewer confirmed
+`_enzyme_actor_identity_tokens` is untouched — no hunk falls in `6163-6172` — and called the
+restraint correct. **Not chargeable to C-086, whose behaviour is unaffected.** Comment-only.
+
+## F-139 · LOW · the carve-out comment justifies half of what the key admits
+
+C-095's key requires `generation_reason == "single_protein_pathwhiz_wrapper"` **when a reason is
+present**; a reason-less row stays in scope. The comment justifies that by the legacy
+`novel_enzyme_single_component_complex` marker, and the reviewer confirmed that half: the marker is
+emitted at exactly four sites (`:2671/2682`, `:6316/6337`, `:6593/6607`, `:6707/6722`) and **all four
+are the single-protein wrapper**.
+
+The comment does not name the *other* reason-less shape — `generated: True` with **no**
+`generation_reason` — which also stays in scope and still produces the F2 harm at the merged tip.
+**Reachability is nil:** no in-tree producer emits it, and such a row is already a runtime-schema
+violation (`payload_models.py:713-735`, `generated_wrapper_reason_invalid`). Malformed input only,
+and refusing a row whose kind cannot be determined is the conservative direction.
+
+**Merged with this open**, as the reviewer graded it — requested, not required. The fix is one
+sentence at `map_ids.py:6511-6515`.
+
+## Correction to my own F3 ruling — the count was ten, not seven
+
+Reports **04–13** record `--pin-verdict` paths that no longer resolve, not `04–10`: `11`–`13` also
+dangle, because they pointed at the `evidence/c095_*` names the correction delta moved. My framing of
+the range was right; the round-1 count of seven was low and the reviewer corrected it.
+
+**Still not re-run**, and the reviewer agrees. One mitigating fact worth recording beside the
+incident: the verdicts **kept their basenames** under `g11/pin/C-095/`, so `NN-<label>.json` →
+`NN-<label>.pin.json` is recoverable by name. **No evidence is lost — only the recorded absolute path
+is stale.**
+
