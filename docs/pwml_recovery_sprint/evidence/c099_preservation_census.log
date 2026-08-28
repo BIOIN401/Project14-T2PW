@@ -1,0 +1,21 @@
+pattern                          : runs*/**/papers/*/*/final_mapped.json
+roots scanned                    : 24
+files scanned                    : 94
+generated single-protein wrappers: 71
+with a RESOLVED species ref      : 6
+by species_ref.source:
+   explicit_entity_species        4   [SOURCE-SUPPORTED]
+   single_pathway_species         2   [inference]
+by _wrapper_species_fields decision:
+   resolved_species_preserved     4
+   no_note_attached               2
+PRESERVED at this tip            : 4
+   + enterobactin synthase complex :: Escherichia coli :: explicit_entity_species
+   + ALAS2 homodimer :: Homo sapiens :: explicit_entity_species
+   + enterobactin synthase complex :: Escherichia coli :: explicit_entity_species
+   + ALAS2 :: Homo sapiens :: explicit_entity_species
+moved back to today's behaviour by REV-099 Finding 1: 2
+   - enterobactin synthase complex :: Escherichia coli :: single_pathway_species
+   - enterobactin synthase complex :: Escherichia coli :: single_pathway_species
+notes attached (of 6 rows with a ref): 4
+shipped source set               : ['biological_state_species', 'explicit_entity_species']

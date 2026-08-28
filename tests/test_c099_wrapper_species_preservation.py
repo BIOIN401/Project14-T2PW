@@ -16,6 +16,18 @@ Ruling: D-070 § O-1. The sixteen generated wrappers keep TRAP-3 protection
 (O-1b), the five PathBank sentinel protein rows are untouched (O-1a), and only
 an *already resolved, source-supported* species is protected from the clobber.
 
+"Source-supported" is entity-scoped and deliberately narrow: the species the
+entity itself stated, or the one its biological state carries. Both inference
+sources stay out -- ``gap_resolver_llm`` because it is an LLM's guess, and
+``single_pathway_species`` because it applies the pathway's one declared species
+to a row that never stated its own (REV-099 Finding 1, 2026-08-27; charter
+``C-099.md`` § 4 amended at ``e45bfdb``).
+
+Two behaviours here read as surprising and are both intentional. A wrapper whose
+own visible fields contradict its resolution record still ships the sentinel
+species, because this refuses to arbitrate. And a refusal with nothing to
+surface attaches no note at all, so those rows stay byte-identical.
+
 Every payload here is built by hand and stamped with the production
 ``_stamp_entity_species``. Nothing in this module reads the PathBank database or
 any network resource, so its verdicts do not depend on whether a ``.env`` is
@@ -85,6 +97,10 @@ ECOLI_REF = _ref(
 HUMAN_REF = _ref(
     "Homo sapiens", source="explicit_entity_species", species_id=1, taxonomy_id="9606"
 )
+# Payload-scoped inference, NOT entity evidence: ``_single_pathway_species_hint``
+# applies the pathway's one declared species to a row that never stated its own.
+# Ruled out of the source-supported set on 2026-08-27 (REV-099 Finding 1; charter
+# C-099.md § 4 amended at e45bfdb), so it must behave exactly as today.
 YEAST_PATHWAY_REF = _ref(
     "Saccharomyces cerevisiae",
     source="single_pathway_species",
@@ -94,8 +110,7 @@ YEAST_PATHWAY_REF = _ref(
 MOUSE_STATE_REF = _ref(
     "Mus musculus", source="biological_state_species", species_id=2, taxonomy_id="10090"
 )
-# Inference, not source evidence: preserving it would launder a guess into a
-# confident answer, so it must behave exactly as today.
+# An LLM's guess. Preserving it would launder a guess into a confident answer.
 LLM_REF = _ref(
     "Bacillus subtilis", source="gap_resolver_llm", species_id=13, taxonomy_id="1423"
 )
@@ -223,6 +238,14 @@ def _note(row: Dict[str, Any]) -> Dict[str, Any]:
     return dict(row.get("mapping_meta", {}).get("species_preservation") or {})
 
 
+def _assert_no_note(row: Dict[str, Any]) -> None:
+    """A note is attached only when it says something -- a species preserved, or
+    a contradiction to surface. An empty verdict is not a diagnostic, and it
+    would be visible in gold- and IR-facing serialized output."""
+
+    assert "species_preservation" not in row.get("mapping_meta", {})
+
+
 def _assert_species_preserved(row: Dict[str, Any], ref: Dict[str, Any]) -> None:
     """The whole preservation contract, asserted together.
 
@@ -300,8 +323,8 @@ def test_species_name_taxonomy_and_reference_survive_together(builder: Any) -> N
 
 @pytest.mark.parametrize(
     "ref",
-    [ECOLI_REF, YEAST_PATHWAY_REF, MOUSE_STATE_REF],
-    ids=["explicit_entity_species", "single_pathway_species", "biological_state_species"],
+    [ECOLI_REF, MOUSE_STATE_REF],
+    ids=["explicit_entity_species", "biological_state_species"],
 )
 @pytest.mark.parametrize(
     "builder", [_enzyme_payload, _transport_payload], ids=["enzyme_site", "transporter_site"]
@@ -333,23 +356,35 @@ def test_wrapper_without_resolved_species_keeps_current_behaviour(
 
     _apply_pathbank_unknown_enzyme_fallback(payload)
 
-    _assert_sentinel_species_applied(_wrapper(payload, "HepPPS"))
+    row = _wrapper(payload, "HepPPS")
+    _assert_sentinel_species_applied(row)
+    _assert_no_note(row)
 
 
 @pytest.mark.parametrize(
+    "ref, rejected_species",
+    [(LLM_REF, "Bacillus subtilis"), (YEAST_PATHWAY_REF, "Saccharomyces cerevisiae")],
+    ids=["gap_resolver_llm", "single_pathway_species"],
+)
+@pytest.mark.parametrize(
     "builder", [_enzyme_payload, _transport_payload], ids=["enzyme_site", "transporter_site"]
 )
-def test_llm_inferred_species_is_not_source_supported_and_is_clobbered(builder: Any) -> None:
-    """``gap_resolver_llm`` is inference. Preserving it would launder a guess."""
+def test_inferred_species_is_not_source_supported_and_is_clobbered(
+    builder: Any, ref: Dict[str, Any], rejected_species: str
+) -> None:
+    """Both excluded sources are inference: an LLM's guess, and the pathway's one
+    declared species applied to a row that never stated its own."""
 
-    payload = builder([("HepPPS", LLM_REF)])
+    payload = builder([("HepPPS", ref)])
 
     _apply_pathbank_unknown_enzyme_fallback(payload)
 
     row = _wrapper(payload, "HepPPS")
     _assert_sentinel_species_applied(row)
-    assert row["species"] != "Bacillus subtilis"
-    assert _note(row)["reason"] == "species_source_is_inference_not_evidence"
+    assert row["species"] != rejected_species
+    # A refusal with nothing to surface says nothing: no note is attached, so the
+    # row is byte-identical to what it was before this card.
+    _assert_no_note(row)
 
 
 # ── 5 & 6. no fallback to the requested organism or the export default ──────
@@ -497,7 +532,17 @@ def test_row_contradicting_its_own_resolution_is_surfaced_not_arbitrated() -> No
     assert disagreement["fields"]["species_id"] == SENTINEL_SPECIES_ID
     # Both sides stay on the record: the internal E. coli evidence is not erased.
     assert note["resolved_species"] == "Escherichia coli"
-    assert _wrapper(payload, "Enterobactin synthase")["species_ref"]["name"] == "Escherichia coli"
+    row = _wrapper(payload, "Enterobactin synthase")
+    assert row["species_ref"]["name"] == "Escherichia coli"
+
+    # THE DOCUMENTED EXCEPTION to this card's headline. The row's resolution IS
+    # source-supported (explicit_entity_species), and it still ships Arabidopsis,
+    # because refusing to arbitrate means the placeholder applies as today. This
+    # is the one shape where "a wrapper with source-supported species keeps it"
+    # is false, and it is false on purpose. See _wrapper_species_fields.
+    assert note["resolution_source"] == "explicit_entity_species"
+    assert note["decision"] == "placeholder_species_applied"
+    _assert_sentinel_species_applied(row)
 
 
 # ── 11. the five sentinel protein rows are unchanged ────────────────────────
