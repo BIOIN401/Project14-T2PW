@@ -85,10 +85,8 @@ MUTATIONS = [
         "M7",
         "the NUMERATOR half is reverted to D-072's literal denominator-only text",
         ACCEPTANCE,
-        "    accepted_matched = [str(t) for t in matched if str(t) not in excluded_terms]
-",
-        "    accepted_matched = [str(t) for t in matched]  # MUTATION M7
-",
+        "    accepted_matched = [str(t) for t in matched if str(t) not in excluded_terms]\n",
+        "    accepted_matched = [str(t) for t in matched]  # MUTATION M7\n",
     ),
     (
         "M6",
