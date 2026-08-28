@@ -4433,3 +4433,68 @@ results, and it joins them: **an infrastructure failure, never a regression.**
 `load_dotenv(..., override=True)` re-applies `.env`; an agent worktree may have **no** `.env` at all;
 and now the interpreter itself may not be the one the tree was built for. **State the interpreter,
 the tree and the DB state of every measurement**, or the numbers are unattributable.
+
+---
+
+## D-077 ANSWERED — under D-074 as ruled, no Priority-1 row can ever be contract-adjusted · 2026-08-28 · LOCKED
+
+**D-077 asked** whether D-073's *"authorized, case-scoped tolerances"* is currently vacuous for
+Priority 1. **It is, and the reason is structural rather than incidental.** Established by REV-101,
+statically and empirically, during C-101 correction round 1.
+
+### The proof
+
+`_contract_adjustment` has exactly **one** call site, `semantic.py:1134`, and it sits inside
+`if ids:` at `semantic.py:1119` — the `false_real_identifier` branch only runs on a row that carries
+external ids. **D-074 condition 5 licenses only the *bare* sentinel**, and bare means
+`_external_ids(row) == {}`.
+
+The two conditions are mutually exclusive. A row bare enough to be licensed can never reach the
+branch that would need the licence.
+
+This is not an artefact of any particular guard. Round 0's guard rejected only **UniProt-shaped**
+accessions and was therefore *reachable* — a sentinel carrying `kegg`/`chebi`/`hmdb`/`drugbank`/
+`pubchem` was contract-adjusted, five reachable shapes measured. **But that reachability came from
+the guard being broader than the ruling**, not from the ruling permitting it. Tightening the guard to
+match D-074 (correction round 1, item 3, on the orchestrator's instruction) removed the last five
+shapes and made the seam unreachable for every possible input. **The tightening was correct; it
+merely revealed what D-074 already implied.**
+
+### What follows
+
+* **`accepted ≡ raw` for Priority 1, today, for every input.** The accepted count therefore exists
+  **solely to carry D-073's variance band**. That is a real function — `PASS_WITHIN_VARIANCE` remains
+  reachable at T-107 whether or not any tolerance ever fires — but it is the *only* function it
+  currently has.
+* **The seam is not dead code.** It is a working, guarded mechanism with no licence to apply. A
+  future ruling could give it one.
+* **But any such ruling would be a much larger product decision than D-074 was.** To make a
+  Priority-1 tolerance actually subtract, the product owner would have to license a **non-bare** row —
+  that is, excuse a row that *does* carry an external accession. D-074's own condition 2 states the
+  opposite principle: *a tolerance may excuse an identity a row does NOT claim, never one it does.*
+  **Widening in that direction is the merge-rule-6 direction and must not be done to move a number.**
+* **No code depends on the answer**, and none should be changed because of it. C-101 keeps the seam,
+  the guard and the tests.
+
+### The reporting obligation this creates
+
+**A zero must say which kind of zero it is.** `0 because unreachable` and `0 because measured` are
+different facts, and reporting the first as the second is the exact failure C-101's own
+`placeholder_other_rows` and `withheld_identity_other` buckets exist to prevent. C-101 correction
+round 2 corrects two statements that asserted a measurement over a structurally impossible quantity —
+`_contract_adjustment`'s docstring and `render.py`'s `(none -- measured, not assumed)` — and pins the
+fact with an end-to-end test that no row shape yields a non-empty tolerance under the current gold.
+
+**The instrument's own standard, applied to itself.** That is the disposition, and it is the reason
+this was worth a correction round rather than a follow-on ticket.
+
+### One method note, because it generalises
+
+The test that should have caught this — `test_a5_bare_means_bare_a_sentinel_with_any_accession_is_not_adjusted` —
+**never called the function it is named for.** It asserted that the predicate matches and that
+`_external_ids` survives, then *inferred* the conjunction. It passed, it was not vacuous, and it did
+not test its own name.
+
+This is the third instance this sprint of the same class, and the sharpest: **a control that proves
+the instrument can report non-zero does not prove it is asking the right question.** Where a null
+result is load-bearing, the assertion must run **the production path**, not a reconstruction of it.
