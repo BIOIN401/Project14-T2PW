@@ -7406,6 +7406,12 @@ shape, and they were found by five different readers looking at five different a
 | census "4 preserved" | live behaviour | the reconstruction agreed with itself by construction; the `disagree` branch could not fire |
 | "reachable and did not fire" | a check that ran and agreed | an **absent** field produces no disagreement for the same reason a blind probe does |
 
+**In every one of those rows the aggregate was TRUE.** The 97 was a real 97, the constructed 4 was a
+real 4, the zero-hit grep really returned zero, the 22 rows really did read `unknown`. Not one was an
+error in the number; each was an error about **what the number was evidence for**. That is why
+re-running never caught any of them and re-reading the claim always did — and it is the practical
+reason a merge gate built only on "do the tests pass" cannot find this class at all.
+
 The last two are the same defect one level apart, found ten minutes apart, and the second was caught
 **only** because the first had just been named. That is the argument for keeping an adversarial
 reviewer on a card after it has already been approved once.
