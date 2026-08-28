@@ -5937,3 +5937,42 @@ the same predicate, on the same path, and survive an adversarial mutation by a n
 Every card in this wave from C-102 onward is dispatched with requirement 1–3 above stated
 explicitly, and is required to **paste its mutation proofs** — break it, confirm red, restore, verify
 the tree clean — before reporting. See D-078.
+
+---
+
+## F-145 — `DECISION-BUNDLE-F132-PRIORITY1.md` § 2's population is an undercount on both axes
+
+**Measured by C-102, independently replayed by REV-102.** The bundle records **62** gold-forbidden
+terms across **32** legs and **6** papers. The corrected figures, on `bcf9a23`:
+
+| | bundle § 2 | measured |
+|---|---:|---:|
+| gold-forbidden terms drawn as requested core | 62 | **92** |
+| legs affected | 32 | **47** |
+| papers affected | 6 | **7** |
+
+**Two independent causes, both established rather than assumed.**
+
+**1. The probe only ever counted UNMATCHED terms.** `orch702_f132_forbidden_anchors.py` iterates
+`coverage["unmatched_terms"]`, so **26 forbidden terms that the pipeline actually matched were
+structurally invisible to it.** `66 unmatched + 26 matched = 92`. The seventh paper, **`PMC13231680`**
+(3 legs), is forbidden-matched on every one of its legs and therefore never appeared. The probe is
+sound for the question it asked; the question was narrower than the record claimed.
+
+**2. The committed log was stale at the moment it was committed — and that is my error.** The probe
+replayed unchanged on `bcf9a23` gives **54 legs / 304 terms / 66 forbidden** against the log's
+**52 / 281 / 62**. The artifact set grew by two legs (`runs_verify/2026-08-27_1341` for PMC12096016
+and PMC12782028). But REV-102 established the sharper fact: the probe and its log were committed by
+me at **`f71d686`**, at which point the tree **already carried 62 `quarantine_report.json`
+artifacts**. **I recovered a log from a dead session's scratchpad and committed it without re-running
+the probe against the tree I was committing it into.**
+
+**The lesson, and it is the mirror image of the one that made the recovery worth doing.** Recovering
+the probe was right — a G11 report certifies a job was clean and preserves nothing about what it
+found. But **a recovered artifact records the tree it was run against, not the tree it lands in.**
+Re-run a recovered probe before committing it, or label it with the SHA it was measured at. I did
+neither.
+
+**Consequence for the record:** the bundle's § 2 figures stand as *what was measured at the time by a
+probe scanning unmatched terms only*. They are **not** the population. Any future work on F-132
+should quote 92 / 47 / 7 and cite C-102's A/B.

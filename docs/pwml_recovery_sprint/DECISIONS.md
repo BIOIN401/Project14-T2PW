@@ -4643,3 +4643,114 @@ Ceilings are to be derived by **counting the deliverables the charter mandates**
 density of the module being edited — not estimated. A charter that mandates an A/B, a G9 proof,
 mutation attacks, three documentation surfaces and eleven tests is not a 250-line card, and saying so
 at dispatch is cheaper than ratifying afterwards.
+
+---
+
+## D-080 — D-072's "denominator" means numerator AND denominator · 2026-08-28 · INTERPRETATION, pending product-owner ratification
+
+**This is an interpretation of a locked ruling, recorded by the Lead Orchestrator, not a new ruling.**
+It is flagged for the product owner to ratify or overturn. It is recorded here because REV-102 was
+right that without it the C-102 diff reads as an improvised product decision to the next reader, and
+it is not one.
+
+### The tension
+
+**D-072 says:** *"exclude only exact case-scoped forbidden identifiers from the accepted
+positive-coverage **denominator**."*
+
+**C-102 excludes them from the numerator as well**, and `PRODUCT_CONTRACT.md` § 7 now says
+*"withheld from the accepted numerator and the accepted denominator alike."* **D-072 outranks
+`PRODUCT_CONTRACT`.** Two authorities disagree in writing, and this resolves it.
+
+### Why the literal reading cannot be what was meant — measured, not argued
+
+Coverage is `matched / total`. Removing a **matched** forbidden term from the denominator alone
+leaves it in the numerator. REV-102 measured the consequence over the real committed corpus:
+
+| paper | mode | raw | denominator-only | both-sides |
+|---|---|---:|---:|---:|
+| PMC12856317 | strict | 1.0000 | **1.2000** | 1.0000 |
+| PMC12856317 | research | 0.8571 | **1.2000** | 1.0000 |
+| PMC13231680 | strict | 1.0000 | **1.2000** | 1.0000 |
+| PMC12312563 | strict | 0.7000 | **1.0000** | 0.8571 |
+
+**Eight real legs report a "coverage ratio" of 1.2000 under the literal reading.** A ratio above 1 is
+not a rate; the instrument stops being a measurement at all.
+
+Worse, synthetically on `PMC12782028`, whose four forbidden drawn terms are the same rows Priority 1
+punishes:
+
+```
+matched = [LBR, LIPA, SREBF1]   raw 0.5000   denominator-only 1.0000   both-sides 0.0
+matched = [HMGCR]               raw 0.1667   denominator-only 0.3333   both-sides 0.3333
+```
+
+**A pipeline that exported all three forbidden identifiers and matched no legitimate anchor scores
+perfect coverage**, and matching a forbidden identifier is worth *exactly as much* as matching a
+legitimate one. **That is F-132 with its sign flipped, at full amplitude** — the ruling's own stated
+purpose defeated by its own literal text.
+
+### Both-sides removal introduces no counter-perversity
+
+Exhaustively checked by REV-102 over all 64 match-subsets of 3 forbidden + 3 legitimate anchors on a
+real gold case: **0 violations.**
+
+* un-matching a legitimate anchor **never** raises the accepted ratio;
+* toggling a forbidden match is **exactly neutral** — the incentive to export a forbidden term is
+  precisely **zero**, which is what D-072 requires;
+* `accepted_matched <= accepted_denominator` always, so the ratio stays bounded by 1.
+
+### The interpretation
+
+**"Excluded from the accepted positive-coverage denominator" means the term is removed from the
+accepted measurement entirely — numerator and denominator alike — so that exporting it and
+withholding it score identically, and Priority 1 remains the only instrument that judges it.**
+
+The ruling's intent — *"Priorities 1 and 4/5 stop scoring the same rows in opposite directions"* — is
+served **only** by both-sides removal. Denominator-only removal does not merely fail to fix the
+contradiction; it inverts it and rewards the violation.
+
+### What this does not license
+
+* **No other clause of D-072 is reinterpreted.** Exclusion stays *exact* and *case-scoped*; forbidden
+  identifiers are still scored under Priority 1; nothing is deleted from diagnostics; the threshold
+  does not move.
+* **This does not make the coverage number better.** Zero legs clear the minimum under either
+  reading. See D-081.
+* **If the product owner intended the literal reading, this is overturnable** and C-102's exclusion
+  becomes a one-line change plus its tests. The measurement above is the case for not doing so.
+
+---
+
+## D-081 — Ruling A does not move Priority 4 or Priority 5. The bundle predicted it would · 2026-08-28 · MEASURED
+
+`DECISION-BUNDLE-F132-PRIORITY1.md` § 6 predicted that under Option A *"Priority 4 becomes
+meaningful … expect it to move off 0/8; by how much is not predicted here."*
+
+**It does not move.** Measured by C-102 and independently reproduced by REV-102 across **all 21 run
+directories, at base and at tip**:
+
+| | base | tip |
+|---|---|---|
+| Priority 4 | `0/8 = 0%` | `0/8 = 0%` |
+| Priority 5 | `0/2 = 0%` | `0/2 = 0%` |
+| legs cleared by the reconciliation | — | **`[]` on every run** |
+
+`PMC12782028/strict` moves `0.2222 → 0.2609` and still fails `0.500`. **Every leg below the minimum
+on raw is still below on accepted.**
+
+**Why the bundle was wrong.** Priorities 4 and 5 take their numerators from **semantic confirmation**
+and the **frozen strict release record** — not from the requested-core coverage ratio. Reconciling the
+denominator changes what the coverage figure *means* without changing either numerator.
+
+**What Ruling A actually bought, and it is real:** the coverage measurement is now **readable per
+leg** — raw beside accepted, with every withheld term named alongside the gold entry that excused it,
+across 92 terms on 47 legs. Before, every coverage figure on those legs was computed over a term list
+that included identifiers the same gold forbids exporting. **The instrument stopped contradicting
+itself.** It did not, and could not, move a priority whose numerator it does not feed.
+
+**This goes in the T-107 readiness table as a stated result, not a footnote.** The product owner was
+led to expect a different outcome, and the honest record is that the prediction was falsified by
+measurement.
+
+---
