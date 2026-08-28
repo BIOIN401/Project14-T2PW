@@ -4498,3 +4498,74 @@ not test its own name.
 This is the third instance this sprint of the same class, and the sharpest: **a control that proves
 the instrument can report non-zero does not prove it is asking the right question.** Where a null
 result is load-bearing, the assertion must run **the production path**, not a reconstruction of it.
+
+---
+
+## D-078 — a third C-101 correction round, authorized explicitly rather than automatically · 2026-08-28 · LOCKED
+
+**The standing allowance is two automatic correction rounds per card.** Both are spent. This
+authorizes a third as an **integration-authority decision with reasons**, which is a different thing
+from an automatic round and is recorded so it does not become precedent by accident.
+
+### Why a third round rather than merge-and-follow-on
+
+REV-101's final sign-off returned **HOLD**, and was explicit that this is not a reject: nothing is
+out of boundary, no invariant is violated, **no biological gate is weakened**, no product decision was
+improvised, every change is conservative, and **the shipped instrument is now truthful about its
+zero** — the stated bar. It offered merge-now-with-a-follow-on as defensible.
+
+I declined it for two reasons.
+
+**1. The card's own thesis forbids it.** C-101 exists to make an instrument stop reporting a
+structural fact as a measured one — that is what `placeholder_other_rows`, `withheld_identity_other`
+and the corrected `_contract_adjustment` docstring are all for. **Shipping a test that reports an
+unexercised path as a pinned one is the same error in the test layer.** A card cannot land that
+argument in production and violate it in its own guards.
+
+**2. The practical stake is real, not aesthetic.** As it stands the bareness guard — the guard
+D-077's entire answer rests on, and the one that keeps a tolerance from excusing a row that *does*
+claim an identity — **can be deleted with every gate staying green.** That is an unprotected
+safety-adjacent guard, not a documentation nit.
+
+### The finding — a non-vacuity guard that guards the wrong emptiness
+
+Both tests added in round 2 to *guarantee* the honesty are vacuous, and REV-101 established it by
+**mutation**, not by reading:
+
+* `test_a5_bare_means_bare…` reaches `validate_semantic_coverage` but asserts
+  `all(t == "" for t in tolerances(row))` where `tolerances(row)` is `[]` — `all([])` is vacuously
+  true. The row is named `Unknown`, which is **not** in PMC12444477's `forbidden_identifiers`, so
+  `_check_id_conflicts` never enters the `false_real_identifier` branch and the scorer emits nothing.
+* `test_a5_no_row_shape_can_be_contract_adjusted_under_the_current_gold` has `seen == 1`, not 7, and
+  that one finding comes from the `placeholder_claims_real_identity` branch, whose
+  `contract_tolerance` is a **hard-coded `""` literal** (`semantic.py:1171`) and which never calls
+  `_contract_adjustment`. Across all seven shapes the seam's only call site is **never reached**.
+
+**The mutation result is the whole finding:** reverting the guard to round 0's `_REAL_ACCESSION`
+form — proven reachable for five namespaces — leaves all three tests **passing**; deleting the
+bareness guard entirely leaves the focused file at **38 passed**. The test's own docstring claims
+*"whoever widens the licence later must come here and change this assertion on purpose."* The
+reviewer widened it maximally and nobody had to.
+
+**Registered as F-144.** The class: *a non-vacuity guard can be real and still guard the wrong
+emptiness.* Asserting that **a** finding was produced is not evidence that **the path under test**
+produced it. Where a null result is load-bearing, the assertion must (a) run the production path and
+(b) require a finding **of the specific kind** that path emits — and (c) be attacked by mutation
+before it is believed.
+
+This is the fourth instance this sprint of the same family, and the most refined. Its ancestors:
+a guard demonstrated against a case that could not exercise it; a probe that passed its positive
+control while asking the wrong question (case-sensitive `\bLpp\b` against a lowercase token); and a
+test named for a behaviour it never called. **The lesson has now graduated from "write a control" to
+"the control must exercise the same predicate, on the same path, and survive a mutation."**
+
+### Terms of the round
+
+Test-only fix; **no production change is asked for and none is authorized.** Budget **+40**
+hand-authored lines, more on request rather than by compression; ceiling 1 stays at **541** because a
+review finding is not the author's scope (D-076 Amendment 1). **The author must prove the fix by
+mutation before reporting** — revert the guard, confirm red; delete the guard, confirm red; restore
+and verify the tree clean. A non-vacuity claim that has not been attacked is precisely what this
+round exists to correct.
+
+**If a fourth round proves necessary, C-101 is carried to the next session rather than merged.**
