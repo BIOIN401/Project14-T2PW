@@ -7387,3 +7387,30 @@ as disclosed-unmeasured rather than left for a reader to infer coverage.
 ran base and tip in the identical resolver-`None` state. Green there means **"no regression with the
 resolver hidden"**. The orchestrator's own verification ran from the integration tree, which does have
 `.env`, so the two together cover both states.
+
+---
+
+## The lesson of this wave, and it is one sentence rather than five
+
+**Do not let an aggregate stand in for the thing being claimed.** Every finding in this wave is that
+shape, and they were found by five different readers looking at five different artifacts:
+
+| The aggregate | What it stood in for | How it broke |
+|---|---|---|
+| `placeholder_backed_proteins` = 21 | two populations with opposite answers | D-070: it is 16 + 5, and the question was unanswerable while they were one number |
+| "the pinned run" | a named artifact tree | `runs/` and `runs_verify/` are both live; the same criterion gives 24 and 5 |
+| a certified G11 report | what the job measured | the report carries no stdout; it proves a job was clean and preserves nothing it found |
+| `grep unverified_claim src/` = 0 hits | whether a mechanism exists | the contract's prose token is not the code's identifier |
+| `species: unknown` on 22 rows | which side of the comparison was silent | `_candidate_species_verdict` returns `unknown` for either side; the entity's species proved nothing |
+| combined `97 passed` | two files, separately | a shift between them nets to zero; the reviewer ran them split |
+| census "4 preserved" | live behaviour | the reconstruction agreed with itself by construction; the `disagree` branch could not fire |
+| "reachable and did not fire" | a check that ran and agreed | an **absent** field produces no disagreement for the same reason a blind probe does |
+
+The last two are the same defect one level apart, found ten minutes apart, and the second was caught
+**only** because the first had just been named. That is the argument for keeping an adversarial
+reviewer on a card after it has already been approved once.
+
+**Nobody in this wave got it right first time, including the orchestrator.** The corrections that
+mattered were each made by someone other than the author of the claim, and in three cases the author
+had already disclosed the weakness themselves and been measured anyway. That is the process working,
+not failing.
