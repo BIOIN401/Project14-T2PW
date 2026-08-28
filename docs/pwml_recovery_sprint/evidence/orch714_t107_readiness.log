@@ -1,0 +1,88 @@
+MEASURED_TREE t2pw = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+RUN = runs_verify\2026-08-24_1428
+
+==============================================================================
+PRIORITIES AT THE MERGED TIP
+==============================================================================
+
+rank 1: zero known false real identifiers
+    ok                         = false
+    evaluated                  = true
+    observed                   = 8
+    raw                        = 8
+    accepted                   = 8
+    accepted_status            = "FAIL"
+    papers                     = ["PMC12096016", "PMC12782028", "PMC12856317"]
+
+rank 2: zero unsupported retained reactions
+    ok                         = null
+    evaluated                  = false
+    observed                   = "NOT EVALUATED -- 0 counted, but the unsupported-reaction verdict was never reached on 11 of 20 scored leg(s), covering 6 paper(s). This zero is the absence of a measurement, not the absence of unsupported reactions."
+    counted                    = 0
+    papers                     = []
+    not_evaluated_papers       = ["PMC12096016", "PMC12421875", "PMC12444477", "PMC12452463", "PMC12657337", "PMC12782028"]
+    not_evaluated_legs         = ["PMC12096016:research", "PMC12096016:strict", "PMC12421875:research", "PMC12421875:strict", "PMC12444477:research", "PMC12444477:strict", "PMC12452463:research", "PMC12452463:strict", "PMC12657337:research", "PMC12657337:strict", "PMC12782028:strict"]
+    not_evaluated_reasons      = {"PMC12444477:strict": "the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 5 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indistinguishable from the signature list alone. The attribution rate and recall in the summary ARE measured. Only an exhaustive supported_reactions list, or a max_retained_reactions ce
+
+rank 3: zero referential-integrity violations
+    ok                         = true
+    evaluated                  = true
+    observed                   = 0
+    papers                     = []
+
+rank 4: meaningful requested-pathway coverage
+    ok                         = false
+    evaluated                  = true
+    observed                   = "0/8 = 0%"
+    papers                     = []
+    requested_core_coverage    = {"legs_with_coverage": 10, "legs_with_forbidden_terms": 7, "papers_with_forbidden_terms": ["PMC12096016", "PMC12444477", "PMC12452463", "PMC12782028", "PMC12856317"], "forbidden_terms_excluded": 19, "legs_cleared_by_reconciliation": [], "legs_still_below_minimum": ["PMC12782028:strict"], "legs_with_undefined_accepted_rate": [], "legs_at": "coverage_reconciliation_corpus.legs"}
+
+rank 5: maximize strict PWML pass rate among eligible/exportable papers
+    ok                         = false
+    evaluated                  = true
+    observed                   = "0/2 = 0%"
+    papers                     = []
+    requested_core_coverage    = {"legs_with_coverage": 10, "legs_with_forbidden_terms": 7, "papers_with_forbidden_terms": ["PMC12096016", "PMC12444477", "PMC12452463", "PMC12782028", "PMC12856317"], "forbidden_terms_excluded": 19, "legs_cleared_by_reconciliation": [], "legs_still_below_minimum": ["PMC12782028:strict"], "legs_with_undefined_accepted_rate": [], "legs_at": "coverage_reconciliation_corpus.legs"}
+
+==============================================================================
+COMPLETION / DENOMINATORS
+==============================================================================
+completion = {"planned_gold_cases": 10, "papers_attempted": 10, "strict_legs_attempted": 10, "research_legs_attempted": 10, "legs_attempted": 20, "legs_planned": 20, "payloads_available": 20, "semantically_scorable_legs": 20, "fully_completed_cases": 10, "papers_with_no_attempted_leg": [], "papers_with_only_one_mode_attempted": [], "complete": true, "rendered": "10/10 papers, 20/20 legs"}
+denominators = {"gold_relevance_prevalence": {"key": "gold_relevance_prevalence", "question": "What fraction of the pinned gold set is mechanistically relevant to its requested pathway? This is a property of the GOLD SET, not a measurement of the screener.", "population": "every paper in the pinned gold set", "numerator": 8, "denominator": 10, "rate": 0.8, "rendered": "8/10 = 80%", "numerator_papers": ["PMC12096016", "PMC12312563", "PMC12421875", "PMC12444477", "PMC12452463", "PMC12657337", "PMC12782028", "PMC12856317"], "denominator_papers": ["PMC12096016", "PMC12180156", "PMC12312563", "PMC12421875", "PMC12444477", "PMC12452463", "PMC12657337", "PMC12782028", "PMC12856317", "PMC13231680"], "excluded": [{"paper_id": "PMC13231680", "reason": "mechanistic_relevance=context_only (negative control)"}, {"paper_id": "PMC12180156", "reason": "mechanistic_relevance=context_only"}]}, "extraction_success": {"key": "extraction_success", "question": "Of the relevant papers whose legs were attempted, how many produced a payload with at least one reaction?", "population": "relevant gold cases with at least one attempted leg", "numerator": 8, "denominator": 8, "rate": 1.0, "rendered": "8/8 = 100%", "numerator_
+legs_attempted = 20
+legs_scored = 20
+coverage_reconciliation_corpus = {"legs": [{"paper_id": "PMC12444477", "mode": "strict", "schema_version": 1, "raw_ratio": 0.653846, "raw_matched": 17, "raw_denominator": 26, "raw_below_minimum": false, "accepted_ratio": 0.695652, "accepted_matched": 16, "accepted_denominator": 23, "accepted_below_minimum": false, "accepted_state": "measured", "min_core_coverage": 0.5, "excluded_terms": [{"term": "acyl carrier protein (ACP)", "forbidden_name": "acyl carrier protein", "forbidden_kind": "cofactor_as_protein", "forbidden_reason": "ACP genuinely is a protein, but in this paper it appears almost only inside metabolite names (acyl-ACP, beta-hydroxyacyl-ACP). Bare ACP as a standalone pathway metabolite, or a metabolite name split to yield it, is wrong.", "matched_in_raw": false}, {"term": "CoA", "forbidden_name": "coenzyme A", "forbidden_kind": "cofactor_as_protein", "forbidden_reason": "A cofactor. Filing it under entities.proteins sends the mapper looking for a UniProt accession for a metabolite; this exact failure blocked the 2026-07-28 strict run.", "matched_in_raw": false}, {"term": "Lpt system", "forbidden_name": "FAS II", "forbidden_kind": "heading_or_prose", "forbidden_reason": "Pathway and machinery names, not e
+
+==============================================================================
+PRIORITY-1 ROW COMPOSITION (raw)
+==============================================================================
+
+==============================================================================
+LpxH CHECK on PMC12444477
+==============================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ad623382db40d2d9cad8fa81097a43122d804ff5  [git, worktree dirty=True]
+label                   : t107-readiness
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/t107_readiness.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW runs_verify/2026-08-24_1428
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 525180 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 1.84 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  524752:python.exe
+descendants terminated  : 1  524752
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-714\01-t107-readiness.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
