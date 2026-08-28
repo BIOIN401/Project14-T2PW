@@ -5784,7 +5784,7 @@ refusal_reasons = ([] if defensible_core else list(coverage_reasons)) + structur
 
 `ok` is `not refusal_reasons`. **`ok` no longer answers the question the fixture asks it.**
 
-### The protection did not vanish — it moved, and it is richer
+### The protection did not vanish — it moved, and it is richer — ⚠ CORRECTED BELOW
 
 At the release seam, measured on this exact payload:
 
@@ -5809,6 +5809,60 @@ M-8 invariant `strict_acceptance_eligible == (status == release_ready)` holds.
 — gives `ok=False`, `status="diagnostic_only"`, `refusal_reasons` carrying
 `minimum_core:no_surviving_process`. The empty-vs-shortfall distinction C-041a drew is live and
 working, which is what makes this a *relabelling* rather than a *hole*.
+
+### ⚠ CORRECTION — C-041a moved the CHANNEL, not the STATUS
+
+**The section immediately above is mine (Lead Orchestrator, original F-142 text), and its second
+half is wrong. It is left standing rather than rewritten, because it was honest when written and
+because the progression is more useful to the next reader than a clean sentence: the finding said
+ONE rule, C-103 measured TWO, and REV-103 measured THREE.**
+
+**What stands.** C-041a genuinely moved the **channel**. `review_reasons` versus `refusal_reasons`
+is C-041a's split and nothing else's, `ok` is `not refusal_reasons`, and that is the whole and
+correct explanation for why `ok` changed and why the two replay tests fail. Nothing in this
+correction touches that.
+
+**What is wrong.** *"The protection did not vanish — it moved"* implies the `review_required`
+**status** is C-041a's doing. It is not. The status is held by **at least three independent,
+individually-sufficient caps in `classify_release_status`, none of which is necessary**:
+
+| # | cap | source | fires here because |
+|---|---|---|---|
+| 1 | C-041a's `not verdict.minimum_core_satisfied` branch | D-002 / `4177fe5` | zero core-accepted processes |
+| 2 | the INCOMPLETE-CORE cap | F-094 / C-072, `release_status.py:1057` | declared core, three unmatched anchors |
+| 3 | the CONNECTED-PATHWAY FLOOR | C-074 arm A / F-101, `release_status.py:1093` | `connected_core_below_minimum:1<2` |
+
+The source comment at `release_status.py:1155` names **a fourth cap of the same shape** (THE
+UNSTATED REQUEST, C-074 arm B / F-100), and a fifth at `:1177`; `classify_release_status` is
+explicitly a stack, and it says so in its own comments.
+
+**The controls that settle it.** C-103 measured the first (`B1`); REV-103 measured the other two:
+
+```
+B1  collapse C-041a's minimum_core_satisfied branch  -> GREEN, 40 passed
+X1  disable the F-094 incomplete-core cap ONLY       -> GREEN, 40 passed
+X2  BOTH disabled at once                            -> GREEN, 40 passed
+    release.status  under X2 : "review_required"      <- still
+    release.reasons under X2 : [..., "connected_core_below_minimum:1<2"]   <- the THIRD cap
+```
+
+`X2` green is the decisive one: **neither named rule is necessary**, and the status was measured
+under X2 rather than reasoned about.
+
+**Why the difference is a safety property and not pedantry.** A reader told *"two independent
+rules"* concludes that touching either one is safe, because the other holds. The truth is that
+touching **both** is also safe, because a third holds. Those are materially different licences to
+change code, and only the second is true here.
+
+**There is no coverage gap, and this is by design.** Each cap is pinned by its own suite —
+`tests/test_c072_incomplete_core_demotion.py` and `tests/test_c074_strict_core_floor.py` — so the
+redundancy is deliberately invisible to the replay fixture, which measures the **composite verdict
+at the seam** and demonstrably fires when that seam moves (C-103 mutations A, B2, C, D). Making the
+replay suite detect the individual loss of each upstream cap would turn a replay-fixture card into
+a unit test for `classify_release_status`, which is not its scope.
+
+*Measured by C-103 (`B1`) and REV-103 (`X1`, `X2`). The original overstatement is the Lead
+Orchestrator's, not C-103's.*
 
 ### Why the current behaviour is authoritative and the expectation is not
 
@@ -5876,8 +5930,10 @@ least four cards. **F-049 / F-054 remain open and this is another datum for them
 > **that is the new gold-readers baseline** and later charters must be updated. SMOKE **473 → 473**,
 > unmoved: this file is in no chunk, which is the F-054 trap the finding names above.
 >
-> **Non-vacuity, by mutation (F-144).** Five attacks — B1 and B2 are two attempts at the same
-> property — each restored, with the tree re-verified clean and green afterwards:
+> **Non-vacuity, by mutation (F-144).** Five attacks, each restored, with the tree re-verified
+> clean and green afterwards. **B1 and B2 are not two attempts at one property:** B1 asks whether a
+> PRODUCTION rule is load-bearing for this payload (it is not, alone), B2 asks whether a TEST
+> assertion detects the verdict it claims to guard (it does):
 >
 > | # | mutation | result |
 > |---|---|---|
@@ -5886,19 +5942,32 @@ least four cards. **F-049 / F-054 remain open and this is another datum for them
 > | B2 | `review_required` → `release_ready` at the point of record | **3 failed** |
 > | C | this case's `coverage_reason` → a string that cannot match | **1 failed**, exactly this case |
 > | D | `CoverageVerdict.has_surviving_core` → `True` | **3 failed**, exactly `every_reaction_unresolvable` |
+> | X1 | *(REV-103)* F-094 incomplete-core cap disabled alone | **0 failed** |
+> | X2 | *(REV-103)* C-041a branch **and** F-094 cap disabled together | **0 failed**, status still `review_required` |
 >
-> **B1 is a correction to this finding, not a hole in the test.** The account above attributes
-> `only_unrelated_reactions_survive`'s `review_required` to C-041a's branch alone. That is true of the
-> **channel** — `review_reasons` rather than `refusal_reasons` is controlled by C-041a's split and by
-> nothing else — but **not of the status**. Collapsing that branch to `RELEASE_READY` leaves the
-> measured status at `review_required`, because the **F-094 incomplete-core cap** (C-072,
-> `status == RELEASE_READY and verdict.declared and missing`) independently demotes it on the three
-> unmatched anchors. **This payload is held out of `release_ready` by two independent rules**, which is
-> a stronger position than the finding claimed and worth knowing before either rule is touched.
-> B1's report is kept beside B2's rather than replaced.
+> **B1 corrects this finding — and C-103's own correction was itself overstated, which REV-103
+> measured.** The account above attributes `only_unrelated_reactions_survive`'s `review_required` to
+> C-041a's branch alone. That is true of the **channel** — `review_reasons` rather than
+> `refusal_reasons` is C-041a's split and nothing else — but **not of the status**. C-103 collapsed
+> that branch (`B1`) and the suite stayed green; it then concluded "two independent rules", naming
+> the F-094 incomplete-core cap (C-072) as the second. REV-103 ran the two controls C-103 did not:
+> `X1` disabled the F-094 cap alone (**green**) and `X2` disabled **both** (**green**, with
+> `release.status` measured as `review_required` and `connected_core_below_minimum:1<2` appearing in
+> `release.reasons`). **Neither named rule is necessary.** The correct statement is **at least three
+> independent, individually-sufficient caps, none of them necessary** — C-041a's
+> `minimum_core_satisfied` branch, the F-094 incomplete-core cap (C-072, `release_status.py:1057`),
+> and the CONNECTED-PATHWAY FLOOR (C-074 arm A / F-101, `release_status.py:1093`) — with a fourth of
+> the same shape named at `:1155`. The safety difference is the point: a reader told "two rules"
+> concludes touching **either** is safe because the other holds; in fact touching **both** is safe,
+> because a third holds. **No coverage gap results:** each cap is pinned by its own suite
+> (`test_c072_incomplete_core_demotion.py`, `test_c074_strict_core_floor.py`), so the redundancy is
+> invisible to this replay fixture **by design** — it measures the composite verdict at the seam, and
+> mutations A, B2, C and D show it fires when that seam moves. See the CORRECTION section in F-142's
+> body above. B1's report is kept beside B2's rather than replaced, which is why any of this was
+> findable.
 >
 > Evidence: `evidence/g11/C-103/01`–`14`, pins in `evidence/g11/pin/C-103/`, probes and logs at
-> `evidence/c103_db_state.*`, `evidence/c103_replay_seam_probe.*`, `evidence/c103_mutations.log`.
+> `evidence/c103_db_state.*`, `evidence/c103_replay_seam_probe.*`, `evidence/c103_gates.log`.
 > Worktree had **no `.env`, no `.venv`, no `PATHBANK_DB_*`**; `resolution_db_configured()` is `False`,
 > so every number here is offline. `evidence/g11/C-103/10` recorded an **invalidated** run — a
 > `git checkout` restoring mutation C reverted the fixture edit with it — and is kept beside its
