@@ -322,3 +322,80 @@ option that puts a fabricated organism in a released file.
   *Arabidopsis* payload stands.
 
 **Nothing here is applied. No card is merged pending this.**
+
+---
+
+## ADDENDUM 2 — the F-135 question is **O-1**, and it is TRAP-3 protected
+
+Added 2026-08-27, after REV-094. **This supersedes Addendum 1's framing of the question, not its
+options.**
+
+Addendum 1 asked what should happen to an entity that "cannot satisfy the export format without a
+fabricated field". **That phrasing already answers the question, and I should not have used it.**
+
+`tests/test_protein_export_policy.py`, section header *"strict gates: accept the right shape, reject
+the poser"*, pins this today and it passes at `14121d5`:
+
+```python
+assert normalization_report["gate"]["ok"] is True
+assert validate_post_normalization(normalized, normalization_report["gate"])["ok"] is True
+assert validate_required_pwml_contract(normalized, strict_db=False)["ok"] is True
+```
+
+**The pinned product position is that a correctly-formed `Unknown`-backed complex passes all three
+gates, including the PWML-ready contract.** Under that design the sentinel's species is not a
+fabrication — it is part of a coherent *"this row is the PathBank `Unknown` record"* marker, and the
+complex is exportable **by design**.
+
+Which is `DECISIONS.md` **O-1**, verbatim:
+
+> `placeholder_backed_proteins` (21 in the pinned run): **gold-set error class, or legitimate biology
+> preservation?** · Blocks: **any branch that touches protein export policy** · *"It is a genuine
+> disagreement between two intentional designs, not a defect. **TRAP-3 forbids agents from resolving
+> it.**"*
+
+### What is actually being asked
+
+**Rule O-1.** Everything else follows mechanically.
+
+* **O-1 = legitimate biology preservation** → C-094 is **wrong** as built. F-134 narrows to the
+  *internal contradiction* only (a row asserting `Arabidopsis` while carrying `species_name:
+  "Escherichia coli"`, `taxonomy_id: "562"` and an *E. coli* `species_ref` at confidence 1.0), and the
+  repair is to make the row **self-consistent**, not to strip its species. C-098a and C-098b are
+  discarded.
+* **O-1 = gold-set error class** → C-094 is **right**, the four baseline moves are authorised, and the
+  follow-on question from Addendum 1 (quarantine the entity, block the leg, or keep the placeholder)
+  becomes live.
+
+### What must not be lost either way
+
+Two facts stand under **both** readings and neither is in dispute:
+
+1. **A released payload carried a false organism.** `runs_verify/2026-08-04_1754/papers/PMC12856317/strict`
+   shipped `pathway.pwml` — a `release_ready` artifact — with *Arabidopsis thaliana* on a **human**
+   ALAS2 wrapper whose correct *Homo sapiens* species was present on the same row.
+2. **`writer.py:1137-1165` ends its species chain at `return default_species_id`.** Any species-less
+   complex reaching the writer is emitted under the **pathway's** organism. That is a laundering seam
+   independent of O-1 and it should be chartered whatever is ruled.
+
+### The four baseline moves awaiting authorization
+
+All measured base-green / tip-red (`ORCH-709/01`, `/02`; `REV-094`):
+
+| File :: test | Note |
+|---|---|
+| `test_pathbank_unknown_fallback.py::test_unknown_fallback_passes_stage3_and_serializes_exact_pathbank_sentinel` | **also silently drops PWML serialization coverage** — it short-circuits before the `build_pwml_ir` and exact-sentinel assertions, and nothing replaces them |
+| `test_protein_export_policy.py::test_strict_gates_accept_a_correctly_formed_unknown_backed_complex` | **this is the O-1 statement itself** |
+| `test_protein_export_policy.py::test_the_sentinel_component_is_not_treated_as_an_unused_protein` | |
+| `test_protein_export_policy.py::test_later_normalization_keeps_the_wrapper_and_drops_the_original` | |
+
+**None has been edited. Nothing is merged. `card/C-094-f134` (`53eaf24`), `card/C-098a-cap`
+(`8cfa33e`) and `card/C-098b-gate` (`b589821`) are all held pending this ruling.**
+
+### One process consequence worth ruling on separately
+
+`tests/test_protein_export_policy.py` is in **neither SMOKE nor Chunk D**. Nothing this sprint runs
+would ever have caught its move; it took a reviewer selecting it by hand. It is a `BASELINE.md`
+group-05 file — the same group as the baseline the C-094 charter singled out as untouchable. **A
+pinned product statement that no gate exercises is a statement that can be inverted silently**, and
+this is the second time a gate-invisible file has hidden a real move this sprint.
