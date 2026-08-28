@@ -1,0 +1,156 @@
+{
+  "label": "smoke-post-merge",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/bt/smk099",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_protein_export_policy.py",
+    "tests/test_c099_wrapper_species_preservation.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-28T04:24:30+00:00",
+  "finished_at": "2026-08-28T04:25:08+00:00",
+  "duration_seconds": 37.578122099999746,
+  "timeout_seconds": 900.0,
+  "root_pid": 227524,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 227404,
+      "name": "python.exe",
+      "ppid": 227524
+    },
+    {
+      "pid": 227432,
+      "name": "python.exe",
+      "ppid": 227404
+    },
+    {
+      "pid": 227512,
+      "name": "python.exe",
+      "ppid": 227432
+    },
+    {
+      "pid": 227464,
+      "name": "python.exe",
+      "ppid": 227404
+    },
+    {
+      "pid": 228280,
+      "name": "python.exe",
+      "ppid": 227464
+    },
+    {
+      "pid": 227468,
+      "name": "python.exe",
+      "ppid": 227404
+    },
+    {
+      "pid": 227596,
+      "name": "python.exe",
+      "ppid": 227468
+    },
+    {
+      "pid": 227680,
+      "name": "python.exe",
+      "ppid": 227404
+    },
+    {
+      "pid": 227792,
+      "name": "python.exe",
+      "ppid": 227680
+    }
+  ],
+  "descendants_terminated": [
+    227404,
+    227432,
+    227464,
+    227468,
+    227512,
+    227596,
+    227680,
+    227792,
+    228280
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 124156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 130040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 228200,
+      "name": "python.exe"
+    },
+    {
+      "pid": 228212,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\MERGE-099\\01-smoke-post-merge.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "9e4a28a918942ee7623a99ce2d57b9c64e436338",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "MERGE-099",
+    "token": "MERGE-099:228212:79a2b2a7ccb2454b",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
