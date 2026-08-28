@@ -7746,3 +7746,158 @@ against deleting a lock you have looked at **once**.
 
 The lock also earned its keep in the other direction the same hour: an orchestrator job that would
 have duplicated the agent's in-flight leg **refused with exit 95** rather than run.
+
+---
+
+# WAVE — ACCEPTANCE-INSTRUMENT RECONCILIATION AND T-107 READINESS · opened 2026-08-28
+
+Lead Orchestrator session `project14-t2pw-af`. Opened at integration tip **`b7f1bea`**.
+
+## Takeover verification — all checks passed at open
+
+| Check | Expected | Found |
+|---|---|---|
+| local = `origin/` = `git ls-remote` | `b7f1bea` | **`b7f1bea`** ✔ |
+| merge in progress / staged | none / none | none / none ✔ |
+| heavy lock `C:/t/heavylock` | absent | absent ✔ |
+| sprint-owned Python | zero | zero ✔ |
+| allowed IDE processes | two `ms-python.isort` | PIDs 407368, 407420 ✔ |
+| product-owner `streamlit_app.py` | 35 ins / 2 del, `sha256:47e4fafa…` | **exact match** ✔ |
+| caches + `topics_*.txt` | uncommitted | uncommitted, untouched ✔ |
+
+**One documented discrepancy, pre-existing and not ours.** The brief expected `main` at `7531692`.
+**Local `main` is `7531692` and untouched; remote `main` is `03f1af5`.** `7531692` is an ancestor of
+`03f1af5`, so `main` advanced **outside this sprint**. The previous orchestrator confirmed it had
+checked only the local ref and corrected its own final report. The invariant that matters was
+verified independently by that session: **the sprint tip is NOT an ancestor of remote `main`** — no
+sprint work has leaked. Neither ref touched.
+
+## Peer coordination — complete, and the tree is exclusively ours
+
+`ListAgents` showed **one** live peer, `project14-t2pw-14` (interactive). Contacted before claiming
+the branch. It **stood down explicitly**: owns nothing, holds no lock, runs no Python, will not touch
+`semantic.py`, and will message before touching the tree if redirected. Its five worktrees
+(`c099`, `c100`, `c099base`, `c100base`, `c099g9`) and the older set are recorded and **none is to be
+pruned**. `project14-t2pw-51`, the independent reviewer for C-099/C-100, **is gone** — its context
+went with it; C-101 needs a fresh reviewer.
+
+Three method standards inherited from that reviewer, recorded here because they were never in the
+ledger as method: **pass/fail items agreed in writing before the diff exists** · **predictions
+recorded before the run** · **never let an aggregate stand for the claim** (run split, not combined —
+a combined total hides a shift between two files) · **check the guard that was REMOVED, not only the
+one added.**
+
+## Rulings recorded — both open asks of the F-132 bundle are now closed
+
+| Ruling | Decision | Substance |
+|---|---|---|
+| **A** | **D-072** | Coverage anchors reconciled against the same case's `forbidden_identifiers`. Raw preserved, accepted computed separately, exclusion exact and case-scoped, Priority 1 still catches erroneous export. **Instrument reconciliation, not a pipeline fix.** |
+| **B** | **D-073** | Priority 1: `0–6 PASS` · `7 PASS_WITHIN_VARIANCE` · `8+ FAIL`, on the contract-adjusted count with raw preserved. Six remains the target. **Clears T-107 gate condition 1.** Do not rerun to chase a six |
+| **C** | **D-074** | PMC12444477 tolerates the exact PathBank `Unknown` sentinel only — five conditions, row-predicated, `is_pathbank_unknown_protein(row)` authoritative. **`LpxH` does not move: 9 → 8, not 9 → 7** |
+| **D** | **D-075** | A truthful Priority-2 `NOT EVALUATED` from the unmet D-067 precondition 3 is not an automatic T-107 failure. `CONDITIONALLY SATISFIED` may clear the gate; the report may not claim full 20-leg validation |
+
+**Consequence for T-107.** The previous wave recorded gate condition 9 as *"not met and not reachable
+by any engineering in this sprint"*, because only ask B could clear it and B was unanswered. **B is
+now answered.** That blocker is lifted; the remaining conditions are engineering and are tracked
+below.
+
+## F-142 — the Glutathione red is diagnosed, not inherited
+
+Four cards carried this pair as accepted noise on the strength of *"fails at base"*. It is now
+classified, with measurement rather than argument: **stale expectation, not a production defect.**
+
+The coverage gate is entirely correct (`core_accepted_processes 0`, `minimum_core_satisfied false`,
+both reasons present). **C-041a (`4177fe5`, under D-002) deliberately moved a `minimum_core:*`
+shortfall from `refusal_reasons` to `review_reasons`**, so `ok` stopped answering the question the
+fixture asks it. The protection did not vanish — this payload gets `review_required`,
+`strict_acceptance_eligible false`, `completeness 0.0`, all three anchors named missing. The
+empty-graph sibling still hard-refuses to `diagnostic_only`, so the distinction is live.
+
+**Merge rule 7 and `has_surviving_core`'s own docstring both require the current behaviour verbatim.**
+Chartered as **C-103**, sequenced last. **Not a T-107 blocker.**
+
+**Structural note — the third instance this sprint.** `test_strict_failure_replay.py` is in **no
+chunk**. A red that no gate runs gets carried rather than diagnosed. Another datum for F-049/F-054.
+
+## Evidence rescued — the F-132 population was one cleanup from being lost
+
+`evidence/g11/ORCH-702/03-f132-forbidden-anchors.json` certified a clean job and **preserved nothing
+about what it found**; the probe ran from a **session-local scratchpad of a session that has since
+ended**. Recovered and committed as `evidence/orch702_f132_forbidden_anchors.py` / `.log`.
+
+Reproduces the bundle exactly — **52 legs with unmatched terms · 281 terms · 62 gold-forbidden · 32
+legs affected · 6 papers**. **It also corrects the bundle's prose:** the population spans **five**
+mechanism kinds, not four — `placeholder_product` 19, `heading_or_prose` 19,
+`regulator_as_metabolite` 16, `cofactor_as_protein` 6, **`modification_state` 2** (omitted there).
+
+Separately measured and committed (`evidence/orch713_gold_selfconsistency.py` / `.log`): **zero
+overlap** between any gold case's declared positive fields and its own `forbidden_identifiers`,
+across all ten cases. **This is a right answer to a narrower question than Ruling A asks** and is
+labelled as such in C-102's charter — it establishes that the contradiction is introduced **at
+runtime by the Stage-0 draw** and is not authored into the gold, which is why the bundle's
+*"Gold: None"* holds and why the fix belongs in the scorer. It is **not** evidence that F-132 is
+absent.
+
+## Cards
+
+| Card | Branch / worktree | State |
+|---|---|---|
+| **C-101** — 16/5 metric split · row-aware sentinel seam · raw/accepted Priority 1 | `card/C-101-o1-metric-split` · `C:/t/c101` | **DISPATCHED** 2026-08-28 on base `d7cf4a4`. Charter amended (AMENDMENT 1) for D-073/D-074 |
+| **C-102** — coverage denominator vs `forbidden_identifiers` (Ruling A) | *(not dispatched)* · `C:/t/c102` at dispatch | **CHARTERED.** Blocked on C-101 merging — both edit `bench/`. Develop against the merged C-101 tip |
+| **C-103** — re-point the F-142 replay expectation | *(not dispatched)* · `C:/t/c103` at dispatch | **CHARTERED.** Sequenced after C-102. Not a T-107 blocker |
+
+**C-101 and C-102 are explicitly NOT parallel work.** Serial ownership of `src/t2pw/bench/` is a hard
+requirement of this wave even though they touch different functions.
+
+### The gold-readers baseline, which every card in this wave must be told
+
+The 22-file gold-readers selection **exits 1 at base, correctly**: it contains
+`test_strict_failure_replay.py` and its two F-142 reds. **Expect exactly two; a third is the card's.**
+**C-103 changes this** — it is required to hand back the corrected baseline (expected `0 failed`,
+exit 0) so later charters are updated.
+
+## Agent liveness register
+
+| Agent | Card | Worktree | Start | Last evidence of progress | State |
+|---|---|---|---|---|---|
+| `a63b0e93…` | C-101 | `C:/t/c101` | 2026-08-28 ~11:14 | worktree created, base `d7cf4a4` confirmed; no commit or dirty file yet | **RUNNING** — status requested at first checkpoint; reading/A4-archaeology phase is expected to precede any edit |
+
+Protocol in force: **~15 min** without observable progress → request status · **~30 min** with no
+response, no process, no changing artifact, no commit and no owned job → treat as stalled, interrupt,
+preserve the worktree, record, redispatch from the last verified commit. **Rapid lock cycling is not
+an abandoned lock** — read holder metadata at least twice across intervals before declaring one
+stranded.
+
+## Run ledger — this wave
+
+| Job | Task | Purpose | Exit | Survivors | Cleanup |
+|---|---|---|---|---|---|
+| `01-glut-classify` | ORCH-713 | per-case replay vs fixture | 0 | **0** | success |
+| `02-glut-release-seam` | ORCH-713 | did the protection move or vanish | 0 | **0** | success |
+| `03-glut-release-fields` | ORCH-713 | `quarantine_report.release` fields | 0 | **0** | success |
+| `04-f132-overlap` | ORCH-713 | gold self-consistency — **failed on a wrong import name** | 1 | **0** | success |
+| `05-f132-overlap-v2` | ORCH-713 | same, corrected | 0 | **0** | success |
+
+`g11_evidence.py check --task ORCH-713`: **5 artifacts, 0 non-compliant.** **The failed run is kept,
+not tidied away** — it was a real bounded job, and deleting evidence to make a record look clean is
+the thing these rules exist to prevent.
+
+**No live model run, no cohort, no paper leg, no benchmark, no T-107.** External model spend this
+wave: **$0.00** against a **$5** ceiling.
+
+## T-107 readiness — live blocker list
+
+| # | Condition | State |
+|---|---|---|
+| 1 | Priority 1 not guaranteed to fail | **CLEARED by D-073** — `PASS_WITHIN_VARIANCE` at 7 |
+| 2 | Priority 2 not guaranteed to fail | **CLEARED by D-075** — `CONDITIONALLY SATISFIED` is admissible |
+| 3 | C-101 merged and independently approved | **OPEN** — dispatched |
+| 4 | Ruling-A card merged and independently approved | **OPEN** — chartered, blocked on C-101 |
+| 5 | Rulings A–D recorded accurately | **DONE** — D-072…D-075 |
+| 6 | Glutathione red classified, not a guaranteed acceptance failure | **DONE** — F-142; cannot affect T-107 |
+| 7 | deterministic gates green; integration pushed and remotely verified | rolling — verified after every push |
+| 8 | heavy lock free · zero sprint-owned Python · no peer owning an overlapping job | **DONE** and re-verified |
+| 9 | LM Studio + pinned model available; run monitorable to completion; spend ≤ $5 | **not yet assessed** — assess only when 3 and 4 close |
+
+**T-107 remains NO-GO**, and the reason has changed for the better: it is now blocked on **two
+mergeable cards** rather than on an unanswerable product question.
