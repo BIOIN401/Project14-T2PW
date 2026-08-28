@@ -1,0 +1,94 @@
+{
+  "label": "rev-sweep-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/c094/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/c094/docs/pwml_recovery_sprint/evidence/g11/pin/REV-094/09-sweep-base.pin.json",
+    "--expect-tree",
+    "C:/t/c094base",
+    "-q",
+    "--basetemp=C:/t/trev094/sw2",
+    "tests/test_map_ids.py",
+    "tests/test_process_normalizer.py",
+    "tests/test_payload_models.py",
+    "tests/test_baseline_regression_2026_07_28.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c090_wrapper_identity_actor_evidence.py",
+    "tests/test_enrich_entities_concurrency.py",
+    "tests/test_locked_noop_quarantine_policy.py",
+    "tests/test_protein_export_policy.py",
+    "tests/test_pwml_ir.py",
+    "tests/test_rag_typed_gap_resolution.py",
+    "tests/test_rag_typed_resolution_integrity.py",
+    "tests/test_research_mode_tiers.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_stage2_mapping_boundary.py"
+  ],
+  "cwd": "C:/t/c094base",
+  "started_at": "2026-08-28T00:15:51+00:00",
+  "finished_at": "2026-08-28T00:15:54+00:00",
+  "duration_seconds": 2.8198950000005425,
+  "timeout_seconds": 1800.0,
+  "root_pid": 72052,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 2,
+  "returned_code": 2,
+  "descendants_observed": [
+    {
+      "pid": 66336,
+      "name": "python.exe",
+      "ppid": 72052
+    }
+  ],
+  "descendants_terminated": [
+    66336
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 44016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 49052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 69724,
+      "name": "python.exe"
+    },
+    {
+      "pid": 73508,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c094\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-094\\09-sweep-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c094\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c094",
+    "repo_head": "53eaf24a6c4a7dd06e7627cabd5dca212d023333",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

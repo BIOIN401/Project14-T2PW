@@ -6337,3 +6337,118 @@ base-existing symbols**, so it executes at base as well as tip. A suite importin
 would have died at base with an `ImportError` — and symbol absence dressed as a base failure is
 exactly what G9 forbids.
 
+
+---
+
+# REV-094 — independent review of C-094. Verdict: **APPROVE WITH CORRECTIONS, do not merge.**
+# And it forces a correction to my own reframing above.
+
+The diff is correct, minimal, in-boundary and genuinely subtractive; the reviewer reproduced every
+number the author reported, verified the base tree's blob identity itself, and confirmed the seam-B
+determination independently. **No change to `src/t2pw/mapping/map_ids.py` is required.**
+
+**But the blast radius was under-measured by three, and the third of them is a pinned product
+position.**
+
+## The three baselines nobody ran — verified twice, by the reviewer and then by me
+
+`tests/test_protein_export_policy.py`, measured by me on the hash-verified trees
+(`ORCH-709/01`, `/02`, both exit-recorded, survivors 0, cleanup success):
+
+```
+base C:/t/c094base @ 14121d5   63 passed
+tip  C:/t/c094     @ 53eaf24    3 failed, 60 passed
+
+FAILED ::test_the_sentinel_component_is_not_treated_as_an_unused_protein
+FAILED ::test_strict_gates_accept_a_correctly_formed_unknown_backed_complex
+FAILED ::test_later_normalization_keeps_the_wrapper_and_drops_the_original
+```
+
+**Why it was missed is structural, not careless.** That file is in **neither SMOKE nor Chunk D**. It
+is a `BASELINE.md` group-05 file — *the same group as the `test_pathbank_unknown_fallback.py` the
+charter singled out as untouchable* — and it is invisible to every gate this sprint runs. The
+author's affected-file sweep never selected it because my charter's affected list never named it.
+**That is my error, not the author's.**
+
+**So C-094's true delta is FOUR moved baselines, not one.** The commit message's *"that one test is
+the only move"* is false outside the charter's six-file list.
+
+## The correction to my own reframing — I resolved O-1 by assertion, and I may not
+
+My reframing above says those 25 wrappers *"were never legitimately exportable"* and that the
+species was *"fabricated"*. **Read `tests/test_protein_export_policy.py`'s pinned assertions before
+accepting that:**
+
+```python
+assert normalization_report["gate"]["ok"] is True
+assert validate_post_normalization(normalized, normalization_report["gate"])["ok"] is True
+assert validate_required_pwml_contract(normalized, strict_db=False)["ok"] is True
+```
+
+under the section header *"strict gates: accept the right shape, reject the poser"*. **The pinned
+product position is that a correctly-formed `Unknown`-backed complex passes all three gates,
+including the PWML-ready contract.** Under that design the sentinel's species is not a fabrication —
+it is part of a coherent *"this row is the PathBank Unknown record"* marker, and the complex is
+exportable **by design**.
+
+That is exactly `DECISIONS.md` **O-1**, quoted verbatim:
+
+> | O-1 | `placeholder_backed_proteins` (21 in the pinned run): gold-set error class, or legitimate
+> biology preservation? | **any branch that touches protein export policy** | It is a genuine
+> disagreement between two intentional designs, not a defect. **TRAP-3 forbids agents from resolving
+> it.** |
+
+**My reframing stated one side of O-1 as established fact. It is not, and I withdraw that half of
+it.** What survives, and needs no O-1 ruling:
+
+* The measured row is **internally contradictory** — `species: "Arabidopsis thaliana"` and
+  `species_id: 4` alongside `species_name: "Escherichia coli"`, `taxonomy_id: "562"` and a
+  `species_ref` that resolved *E. coli* at confidence 1.0. A row asserting two organisms is wrong
+  under either reading of O-1.
+* `PMC12856317/strict` at `runs_verify/2026-08-04_1754` shipped `pathway.pwml` — `release_ready` —
+  with *Arabidopsis* on a **human** ALAS2 wrapper whose correct species was present underneath.
+* Three gates do require species; the writer's chain does end at `return default_species_id`.
+
+**What does NOT survive without a ruling** is the conclusion that removing the species is the right
+repair. C-094 inverts a pinned product statement on the exact surface O-1 blocks — *by consequence,
+not in prose*, which is if anything worse, because nothing in the diff announces it.
+
+## Disposition — C-094 is HELD
+
+**C-094 does not merge.** Not because the code is wrong — the reviewer and I both find it correct —
+but because merging it decides O-1, and O-1 is TRAP-3 protected. Together with C-098a and C-098b,
+the whole F-134/F-135 chain now waits on one product-owner ruling.
+
+**Four baseline moves are NOT authorized.** None has been edited.
+
+## Two further findings from the review, both real
+
+**MEDIUM — the moved baseline silently drops PWML serialization coverage.**
+`test_pathbank_unknown_fallback.py:420` short-circuits at `assert stage3_report["ok"] is True`, so
+everything after it stops running: the `validate_required_pwml_contract` assertion, `build_pwml_ir`
+errors `== []`, and the exact-sentinel PWML assertions (`protein/id == "9659"`, `name == "Unknown"`,
+`species-id == "4"`, `uniprot-id == "Unknown"`,
+`protein-complex-protein/protein-id == "9659"`). **Nothing in `test_c094_placeholder_species.py`
+replaces it** — the new file never imports `build_pwml_ir` or `DeterministicPwmlBuilder`. Whoever
+re-authors that baseline must **restore the coverage, not merely relax line 420.**
+
+**MEDIUM — the writer's terminal fallback, independently confirmed.**
+`writer.py:1137-1165` `protein_species_id()` ends `return default_species_id`
+(`self._ir_pathway_species_id`). A species-less wrapper reaching the writer on a path where the
+missing-species finding is not blocking is emitted under the **pathway's** species — the requested or
+dominant organism, in the PWML itself. Pre-existing, not chargeable to C-094, and already the reason
+C-098c was refused. Recorded here because it is where the card's *"carries nothing"* property stops
+holding.
+
+## Process notes worth keeping
+
+* Both `C:/t/c094` and `C:/t/c094base` lack `.env`, so PathBank was **down symmetrically in both
+  arms**. Base↔tip deltas are valid; any DB-dependent *naming* is an artifact of both. The reviewer
+  said so rather than letting it pass.
+* The author's `10-chunkd-core.json` was a five-file pytest selection, not the Chunk D gate. The
+  reviewer ran the real `chunk_d_gate.py run --only core`: **160 passed**,
+  `executed=160/160 omissions=0 additions=0`. The claim was true; the evidence for it was not.
+* **A gate-invisible baseline group is a standing hazard.** `test_protein_export_policy.py` is in no
+  chunk, so nothing this sprint runs would ever have caught its move. It is the same blind spot that
+  hid the c056b regression behind a green SMOKE, in a new file.
+
