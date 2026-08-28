@@ -6544,3 +6544,102 @@ their recorded paths resolve; correct the two false claims in the report.
 exercise it, or has fired on one it should not have.** The pattern is now well enough evidenced to
 state plainly: *a refusal record is a claim, and a claim needs the same proof as the behaviour it
 describes.*
+
+---
+
+# C-095 correction round 1 — `b9b6901`. REV-095's F2 was a **live** regression, and the author proved it against its own card.
+
+All four F1 corrections applied, F2 narrowed, F3 relocated, F4 left. Under re-review.
+
+## F1 — the guard now fires only where an identity is conferred
+
+New `_result_confers_complex_identity(result)`; the call at `:9412` is gated on `status == "mapped"`
+**or** a non-zero `pathbank_complex_id`/`pathbank_protein_complex_id`. The id test sits beside the
+status test because a result carrying an id confers one whatever it calls its status.
+
+**The coverage claim was verified rather than accepted.** Both branch-3 tests pass unchanged
+(`22-rev-tip3`, 14 passed), and the author established independently why the gate reopens nothing:
+if the row's components are empty — the only way to reach branch 3 — then every non-`mapped` return
+(`:2476`, `:2496`, `:2519`, `:2541`, `5892`) has set `components = input_components`, so the
+result's are empty too and **branch 3 does not execute at all**.
+
+## The root cause is closed, and a sibling instance was flagged rather than silently edited
+
+`_declared_membership_identity_scope` now reconciles the declared components through the **same call**
+the loop applies to the result's, then looks payload rows up by reconciliation's own keys. The false
+docstring at `:6371` is replaced by one that explains why the seams cannot disagree *and* names the
+bug it caused.
+
+**The identical false sentence also appears at `:6169`, inside C-086's `_enzyme_actor_identity_tokens`,
+where it is imprecise for the same reason** — reconciliation matches aliases and that function's
+comment says it cannot. The author **did not edit another card's function**, and flagged it instead.
+Registered here as **F-138 (LOW)**: a docstring in `_enzyme_actor_identity_tokens` overstates the
+agreement between the two identity seams. Not chargeable to C-086, whose behaviour is unaffected.
+
+## F2 was NOT theoretical — the broader key was stripping real complexes
+
+REV-095 could not establish that a `complex_named_source_entity_wrapper` row re-enters `map_payload`
+and correctly declined to call it a live regression. **It is one.** Those rows are emitted with
+`"components": []` — exactly the shape that routes to the third assignment branch — so at `194d6cd` a
+source-named complex was refused and stripped of its id **and all four of its components**:
+
+```
+a source-named complex wrapper was refused:
+  {'protein': '', 'protein_complex': 'enterobactin synthase',
+   'pathbank_protein_complex_id': 3623, 'component_count': 4,
+   'uncovered_components': ['EntB','EntD','EntF','EntE'],
+   'declared_component_count': 0}
+```
+
+That is § 5's *declared* row — a biological claim, created because the source text named a complex —
+being refused by a guard chartered to protect it. The key now requires
+`generation_reason == "single_protein_pathwhiz_wrapper"` when a reason is present; a reason-less row
+stays in scope as the legacy `novel_enzyme_single_component_complex` marker. **That carve-out is the
+open question for re-review.**
+
+The author explicitly declined to argue for the broader key and withdrew its earlier framing: it had
+reported the breadth as a deliberate choice with *"bounded"* preservation cost. **The cost was not
+bounded.**
+
+## A vacuity failure the author recorded rather than replaced
+
+Its first version of the two F1 regression tests used declared components carrying
+`pathbank_protein_id` and `uniprot`. **They passed at `194d6cd`** — vacuous, because an
+accession-bearing component is covered by that token whatever reconciliation renames it to. It caught
+this itself, added `_bare_component()`, and **committed the vacuous run's report
+(`15-rev-nonvacuity-194d6cd`, 13 passed) rather than overwriting it**. The corrected three fail at
+`194d6cd` (`23-rev-nonvacuity3`, **3 failed / 11 passed**) and pass at tip, reproducing both REV-095
+proofs byte-for-byte.
+
+**This is the second time this wave an author has committed its own wrong measurement beside the right
+one** (C-098b was the first). It is the behaviour to want: a quietly corrected probe leaves the record
+un-auditable, and in both cases the error was one an orchestrator had already acted on.
+
+## Two claims withdrawn by the author, both false as measured
+
+1. *"The guard is a strict no-op in DB-less tests."* False — `db_unavailable` echoes the row's own
+   components back, reconciliation renames them, and the guard fired and wrote a false record. It is
+   a no-op **now**, by the F1 gate, not by accident.
+2. *"The two seams cannot disagree about who is who."* False — they disagreed on exactly the alias
+   case.
+
+## Delta against the committed numbers
+
+| Run | `194d6cd` | `b9b6901` | Δ |
+|---|---|---|---|
+| focused file | 11 passed | **14 passed** | +3 correction tests |
+| G9 base `0128fa6`, in-tree A/B | 6 failed / 5 passed | **6 failed / 8 passed** | same six behavioural; the three new tests pass at base, correctly — base has no guard to write a false record |
+| affected set | 182 passed | **182 passed** | 0 |
+| blast radius | 4 failed / 570 passed | **4 failed / 570 passed** | 0, identical four pre-existing node ids |
+| SMOKE | 473 passed | **473 passed** | 0 |
+
+26 G11 reports, `check --task C-095` **0 non-compliant**, every job `FINAL SURVIVING COUNT : 0` /
+`cleanup : success`.
+
+## Ruling on the dangling pin pointers
+
+Reports **04–13** record `--pin-verdict` paths at the pre-move location and no longer resolve.
+**They are not re-run.** They are superseded by 17–26, which cover the same ground with resolving
+pointers, and `TEST_MATRIX` § 0 is explicit that a successful expensive job is not re-run to repair
+paperwork — the incident is recorded instead. This entry is that record.
+
