@@ -4952,3 +4952,67 @@ cannot be read against the baseline it exists to move.
 Every other gate condition already holds at the wave's close. What is left is operational: the run
 must be monitorable through completion, the heavy lock free, zero sprint-owned Python at launch, and
 no peer session owning an overlapping live job. **Verify those at launch, not from this record.**
+
+---
+
+## D-080 RATIFIED — the accepted-coverage definition is formal and locked · 2026-08-28 · LOCKED
+
+**Product-owner ratification, given directly.** D-080 was recorded as an *interpretation pending
+ratification*. **It is now the ruling.** C-102 remains accepted and **no production-code change is
+required** — the shipped implementation already computes exactly this.
+
+### The definition
+
+```
+eligible_anchors    = raw_anchors − case_scoped_forbidden_identifiers
+
+accepted_numerator   = | matched ∩ eligible_anchors |
+accepted_denominator = | eligible_anchors |
+accepted_coverage    = accepted_numerator / accepted_denominator
+```
+
+**Forbidden identifiers are excluded from BOTH the accepted numerator and the accepted denominator.**
+
+**The original numerator, denominator and coverage are preserved as separate raw diagnostic values**
+and are never recomputed.
+
+### Why this is the ruling
+
+* **Accepted coverage stays within `[0, 1]`.** It is a rate again.
+* **Exporting a forbidden identifier earns no coverage credit.** The incentive is exactly zero.
+* **It avoids the denominator-only behaviour that produced ratios above 1** — measured on **nine
+  committed legs**, eight at `6/5` and one at `9/8`.
+* **All raw evidence and every Priority-1 penalty are preserved.** Removing a term from the accepted
+  measurement does not make exporting it acceptable, and does not remove it from the record.
+
+### Verified against the shipped code, not against the report
+
+`src/t2pw/bench/acceptance.py` :: `contract_accepted_coverage`:
+
+| Ruling | Implementation |
+|---|---|
+| `eligible = raw − forbidden` | `accepted_denominator = [t for t in terms if t not in excluded_terms]` |
+| numerator from **matched eligible** only | `accepted_matched = [t for t in matched if t not in excluded_terms]` |
+| `accepted = numerator / denominator` | `accepted_ratio = len(accepted_matched) / len(accepted_denominator)` |
+| raw preserved separately | `raw_ratio` (**copied verbatim from the frozen block, never recomputed**), `raw_matched = len(matched)`, `raw_denominator = len(terms)` |
+| empty eligible set | explicit — `accepted_ratio = None` with its own `accepted_state`, **never reported as a coverage success** |
+
+**Exact match. Nothing to change.**
+
+### What ratification does not alter
+
+* **Priority 1 is untouched.** A forbidden identifier that is exported is still a Priority-1 finding.
+  `LpxH` still counts; PMC12444477 is still **9 → 8**.
+* **The coverage threshold does not move.** `min_core_coverage` is still `0.5`, read from each leg's
+  own record.
+* **No gold changes.** Zero forbidden identifiers removed, softened or reworded.
+* **Ruling A still does not move Priority 4 or 5** (**D-081**) — that was measured across all 21 run
+  directories at base and tip and is unaffected by this ratification.
+* **The seam stays in `bench/`**, never in `strict_quarantine.py` (`PRODUCT_CONTRACT` § 12).
+
+### Record correction
+
+`PRODUCT_CONTRACT.md` § 7 already states the both-sides rule. Before ratification it **conflicted
+with the letter of locked D-072**, and REV-102 correctly escalated that rather than letting the diff
+read as an improvised product decision. **The conflict is now resolved in § 7's favour**, and D-072
+is to be read through this ratification wherever it says "denominator".

@@ -8221,3 +8221,35 @@ Priority 3 `PASS` · Priorities 4/5 unmoved at `0/8` and `0/2`. **`LpxH` confirm
 engineering in this sprint"*. **B and D are now answered**, both instrument cards are merged with
 independent approval, and the remaining blocker is **one product decision** rather than a sprint's
 worth of work.
+
+---
+
+## D-080 RATIFIED — accepted coverage is formally defined · 2026-08-28
+
+The product owner ratified D-080 as the ruling. **C-102 needs no change; the shipped implementation
+already computes exactly the ratified definition**, verified against `contract_accepted_coverage` in
+`src/t2pw/bench/acceptance.py` rather than against the card's report:
+
+```
+eligible_anchors     = raw_anchors − case_scoped_forbidden_identifiers
+accepted_numerator   = | matched ∩ eligible_anchors |
+accepted_denominator = | eligible_anchors |
+accepted_coverage    = accepted_numerator / accepted_denominator
+```
+
+with `raw_ratio` (copied verbatim from the frozen block, never recomputed), `raw_matched` and
+`raw_denominator` preserved beside them, and an empty eligible set handled explicitly as
+`accepted_ratio = None` with its own state rather than as a coverage success.
+
+**The four reasons the product owner gave, and each is measured rather than argued:** accepted
+coverage stays within `[0, 1]` · exporting a forbidden identifier earns **zero** coverage credit ·
+the denominator-only behaviour that produced ratios above 1 on **nine committed legs** is avoided ·
+all raw evidence and every Priority-1 penalty are preserved.
+
+**Unchanged by ratification:** Priority 1 (`LpxH` still counted, PMC12444477 still 9 → 8) · the
+`0.5` threshold · the gold · **D-081** (Ruling A still moves neither Priority 4 nor 5) · the seam
+staying in `bench/`.
+
+**Record correction:** `PRODUCT_CONTRACT.md` § 7 already stated the both-sides rule and conflicted
+with the letter of locked D-072. REV-102 escalated it rather than letting the diff read as an
+improvised product decision. **The conflict now resolves in § 7's favour.**

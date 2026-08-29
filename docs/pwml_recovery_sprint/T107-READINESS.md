@@ -186,3 +186,21 @@ better one, because it preserves comparability with T-104/T-105/T-106.
 a prediction of T-107's own draw. Priority 1 is genuinely uncertain between `PASS_WITHIN_VARIANCE`
 (7) and `FAIL` (8+): T-104 = 7, T-105 = 7, the T-106 artifacts re-scored at the merged tip = 8.
 **Score the first valid draw honestly and do not rerun it.**
+
+---
+
+## 7. D-080 RATIFIED — the accepted-coverage definition is locked
+
+**Product-owner ratification, 2026-08-28.** The interpretation D-080 recorded is now the ruling:
+
+```
+eligible_anchors     = raw_anchors − case_scoped_forbidden_identifiers
+accepted_numerator   = | matched ∩ eligible_anchors |
+accepted_denominator = | eligible_anchors |
+accepted_coverage    = accepted_numerator / accepted_denominator
+```
+
+Raw numerator, denominator and coverage are preserved as **separate raw diagnostic values**.
+**C-102 implements this exactly — verified against the shipped code — and no production change was
+required.** Priorities 4/5 in § 1's table are already computed on this definition, so **the table
+stands unchanged**.

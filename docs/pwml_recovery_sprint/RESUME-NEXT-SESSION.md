@@ -96,9 +96,11 @@ D-074 no Priority-1 row can be contract-adjusted at all (**D-077**).
 
 ## 5. Open items, none blocking
 
-* **D-080 wants product-owner ratification** — the interpretation that D-072's "denominator" means
-  numerator *and* denominator. The code is merged on that reading; the measurement forcing it is nine
-  legs reporting a ratio above 1 under the literal text.
+* **D-080 is RATIFIED** (2026-08-28). The accepted-coverage definition is formal and locked:
+  `eligible = raw_anchors − case_scoped_forbidden`, numerator from matched eligible only, denominator
+  from eligible only, raw numerator/denominator/coverage preserved separately. **C-102 implements it
+  exactly; no production change was required.** D-072 is read through this ratification wherever it
+  says "denominator".
 * **D-083** — two C-103-adjacent follow-ons: F7's deep copy has no test (its revert mutation is
   green), and the split-gate driver should abort on `errors > 0`. Evidence tooling and one low-stakes
   missing test. Route to a housekeeping card.
