@@ -1,202 +1,237 @@
-# PWML RECOVERY SPRINT — HANDOFF PROMPT
+# PWML RECOVERY SPRINT — T-107 EXECUTION AND CLOSE-OUT
 
-Written 2026-08-27 at integration tip `e25247b`. Paste the whole of this file as the next session's
-opening prompt. **It replaces the previous handoff, which was written at `ed82240`.**
-
----
-
-You are the Lead Orchestrator and Integration Authority for:
+You are the **Lead Orchestrator and Integration Authority** for:
 
 `C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW`
 
-Integration branch: `sprint/pwml-recovery` · Last card merge: **`b35b6a2`** (C-097)
+Integration branch: `sprint/pwml-recovery`
 
-**The tip moves with this file's own commit, so no SHA is pinned for it.** The invariant that
-matters is that local, `origin/` and `git ls-remote` are all **equal** — check that, not a number
-I could only have guessed at while writing the line.
+**Do not merge to `main`.** Work autonomously. Do not ask the product owner about routine
+implementation, testing, review or merge decisions.
 
-Work autonomously. Do not ask the product owner about routine implementation, testing, review or
-merge decisions. Conserve usage aggressively. **Do not merge to `main`.**
-
-Read `CLAUDE.md` first, then `PRODUCT_CONTRACT.md`, `MASTER_PLAN.md`, `LEDGER.md`, `DECISIONS.md`,
-`TEST_MATRIX.md`. The permanent merge rules **G1–G11** are binding and are not restated here.
+**Your primary job is to run T-107 once, score it honestly, and close the sprint's acceptance
+question.** T-107 is **GO** — the authorization landed at the end of the previous wave.
 
 ---
 
-## 1. VERIFY TAKEOVER — once, then move on
+## 1. TAKEOVER — verify once, then move
+
+Read `CLAUDE.md` first, then `docs/pwml_recovery_sprint/RESUME-NEXT-SESSION.md`,
+`T107-READINESS.md`, `PRODUCT_CONTRACT.md`, `LEDGER.md`, `DECISIONS.md`, `TEST_MATRIX.md`.
+The permanent merge rules **G1–G11** are binding and are not restated here.
 
 | Check | Expected |
 |---|---|
-| local tip = origin = `git ls-remote` | **all three equal** (see above) |
+| local = `origin/` = `git ls-remote` | **all three equal** — read it, do not recall it |
+| `main` | local `7531692`, remote `03f1af5`. **`main` advanced outside this sprint; touch neither ref.** The sprint tip is not an ancestor of remote `main` |
 | merge in progress / staged | none / none |
 | heavy lock `C:/t/heavylock` | absent |
 | sprint-owned Python | zero |
-| allowed IDE processes | two `ms-python.isort` `lsp_server.py` — **never cleanup targets** |
-| whole-tree G11 | **4235 artifacts, 0 non-compliant** |
+| allowed IDE processes | two `ms-python.isort` `lsp_server.py` — **never cleanup targets**. Their PIDs change when the IDE restarts them; match on command line, not PID |
 | product-owner `streamlit_app.py` | uncommitted, **35 ins / 2 del**, `sha256:47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632` |
 | caches + `topics_*.txt` | uncommitted, as found |
+| whole-tree G11 | **0 non-compliant** (count is self-referential — a check's own report is committed after it runs) |
 
-**Re-read `git rev-parse` on every branch immediately before you act on it, including SHAs written in
-this file.** A tip SHA is not a fact you can hold across messages — that cost this session a wasted
-correction round when a working-tree read was mistaken for a committed state.
+**Before claiming the branch, editing shared files, pushing, or launching a live job:** run
+`ListAgents`, contact every live peer, and agree explicit ownership. Session identities are not
+stable. Do not treat a quiet session as dead.
 
----
-
-## 2. WHAT IS DONE — do not rediscover
-
-**Merged, each with SMOKE 473 and zero survivors:**
-
-* **C-096** (`cee45f1`) — F-129. `db_resolver=None` meant both *"unspecified, open the ambient
-  PathBank"* and, unreachably, *"resolve nothing"*. `NO_DB_RESOLVER` adds the third state; `None` is
-  untouched, because `PRODUCT_CONTRACT` § 8 forbids the exporter opening the connection.
-* **C-095** (`13b5696`) — F-133, the remaining open path of **F-116**. A generated one-protein wrapper
-  no longer inherits a superset complex id. Affected set re-run on the **combined** tree: **196
-  passed** (182 + 14).
-* **C-097** (`b35b6a2`) — F-131. `bench.semantic._names` stops reading the legacy `ref`/`id` tail.
-  One executable line. REV-097 verified the zero-corpus-impact claim on a **larger** population than
-  the card measured — 39,542 dicts at every depth, **0 legacy keys under `/processes`** — and proved
-  the zero live with a two-process A/B that moves **6 → 100 orphans** under injection.
-
-**Held, all correct, all blocked on one ruling — see § 3:**
-
-| Branch | Tip | State |
-|---|---|---|
-| `card/C-094-f134` | `53eaf24` | REV-094 **APPROVE WITH CORRECTIONS**; blocked on O-1 |
-| `card/C-098a-cap` | `8cfa33e` | inert cap arm; held with C-098b |
-| `card/C-098b-gate` | `b589821` | gate arm; **not merged**, see § 3 |
-
-Worktrees on disk, none to be pruned: `C:/t/c094`, `c094base`, `c095`, `c096`, `c097`, `c098`,
-`c098a`, `c098b`, `rev095base`, `rev095m`, `rev096base`, plus the older `c092`/`c093`.
-(`c097base` was removed after REV-097 — it carried no accepted work.)
-
-**Settled — do not re-derive:** the F-132 corpus figures (62 of 281 unmatched terms, 32 legs, 6
-papers); Priority 1 is **six**, not eight; the affected-paper cohort ran once at
-`runs_verify/2026-08-27_1341` and **must not be rerun**; C-086 narrowed F-116 and is not reopened.
+**Prune no worktree.** `C:/t/c101`, `c101base`, `c102`, `c103`, `rev102base`, `rev102tip`,
+`rev102r1`, `rev103base`, `rev103tip`, plus everything earlier waves listed.
 
 ---
 
-## 3. THE ONE THING THAT MATTERS — rule **O-1**, or nothing else moves
+## 2. DONE — do not rediscover
 
-`DECISION-BUNDLE-F132-PRIORITY1.md` now carries **two** independent asks. The second is the blocker
-for everything held above.
+**Three cards merged, each independently reviewed, each review finding something real:**
 
-**O-1** (`DECISIONS.md:938`), verbatim: *`placeholder_backed_proteins`: gold-set error class, or
-legitimate biology preservation? · Blocks: **any branch that touches protein export policy** · "a
-genuine disagreement between two intentional designs, not a defect. **TRAP-3 forbids agents from
-resolving it.**"*
+* **C-101** `ee7cb6b` — 16/5 metric split · row-aware PathBank sentinel seam · raw/accepted
+  Priority 1 with the variance band. Three correction rounds.
+* **C-102** `8e4334f` — coverage denominator reconciled against `forbidden_identifiers`. One round.
+* **C-103** `511344a` — F-142 replay expectation re-pointed at the seam that carries the verdict.
+  **Zero production lines.** One round.
 
-**C-094 inverts a pinned product statement on that exact surface — by consequence, not in prose**,
-which is worse, because nothing in the diff announces it.
-`tests/test_protein_export_policy.py::test_strict_gates_accept_a_correctly_formed_unknown_backed_complex`
-asserts today, and passes at `14121d5`, that an `Unknown`-backed complex passes **all three gates
-including `validate_required_pwml_contract`**. C-094 makes it fail.
+**Rulings:** D-072 (A) · D-073 (B, variance band) · D-074 (C, exact sentinel) · D-075 (D, Priority-2
+`NOT EVALUATED`) · D-076/D-079/D-082 (budget) · D-077 · D-078 · **D-080 (interpretation — see § 6)** ·
+D-081 · D-083 · D-084 · **D-085 (paid models authorized for T-107)**.
 
-**Do not merge C-094, C-098a or C-098b until O-1 is ruled.** Four baseline moves are unauthorized and
-none has been edited.
+**Findings:** F-142 · F-143 · F-144 · F-145.
 
-**A trap I fell into, recorded so you do not.** I first framed this as *"C-094 stops fabricating the
-field that made unexportable entities look exportable."* That states one side of O-1 as fact. Under
-the preservation reading the sentinel's species is **not** a fabrication — it is part of a coherent
-*"this row is the PathBank Unknown record"* marker. What survives without a ruling is narrower: the
-measured row is **internally contradictory** (`species: "Arabidopsis thaliana"` beside
-`species_name: "Escherichia coli"`, `taxonomy_id: "562"` and an *E. coli* `species_ref` at confidence
-1.0), and a **released** payload carried it — `runs_verify/2026-08-04_1754/papers/PMC12856317/strict`
-shipped `pathway.pwml` with *Arabidopsis* on a **human** ALAS2 wrapper.
+**Settled — do not re-derive:** the Glutathione red is a **stale expectation, not a production
+defect** (F-142, now fixed by C-103) · Ruling A **does not move Priority 4 or 5** (D-081, reproduced
+across all 21 run dirs) · under D-074 **no Priority-1 row can ever be contract-adjusted** (D-077) ·
+the F-132 population is **92 terms / 47 legs / 7 papers**, not the bundle's 62/32/6 (F-145).
 
-**Why the chain stopped at three cards.** `validate_required_pwml_contract` calls itself the
-PWML-ready contract and raises `protein_complex_missing_species` as an **error**; and
-`writer.py:1137-1165` ends its species chain at **`return default_species_id`**. A fourth card
-punching through that gate would swap a false *Arabidopsis* at mapping time for a false default at
-**export** time — merge rule 8, and the defect recreated one stage later. **C-098c is refused. Do not
-charter it.**
+### The gate numbers
+
+| Gate | Expected |
+|---|---|
+| **SMOKE** (20 files) | **473 passed** |
+| **gold-readers** (22 files) | **456 passed / 8 skipped / exit 0** |
+
+**⚠ The gold-readers baseline CHANGED.** It exited 1 for most of this sprint, correctly, because
+`test_strict_failure_replay.py` carried the two F-142 reds. **C-103 cleared them.** Any older charter
+saying *"this selection exits 1 at base, and that is correct"* is **stale**.
 
 ---
 
-## 4. OPEN FINDINGS
+## 3. T-107 — GO. This is the job.
 
-| ID | Sev | What |
-|---|---|---|
-| **F-135** | HIGH | The placeholder-species question. **= O-1.** Escalated, packet written |
-| **F-132** | MED | Priorities 1 and 4/5 score the same rows in opposite directions. Packet written |
-| F-127 / F-128 | HIGH | Priority 1's representation gap. C-091 **explicitly not to merge** |
-| **F-136** | MED | A **third** ambient-dependent test — `test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block`. **F-129's class is narrowed, not closed.** Consequence: **Chunk D cannot go green in this environment at base or tip with the DB up** |
-| **F-137** | MED | `NO_DB_RESOLVER` is absorbed by `_REVIEW_REQUIRED_REASONS` and demotes release status under a false `db_unavailable`. Outside C-096's boundary |
-| **F-138** | LOW | `map_ids.py:6169` (C-086's function) carries the same false "the two seams cannot disagree" sentence C-095 removed. Comment-only |
-| **F-139** | LOW | C-095's carve-out comment justifies only the legacy marker, not `generated: True` with no reason. Malformed-input only |
-| **F-140** | LOW | A pin verdict records the tree and selection but **no hash of the source under test**, so a run cannot be attributed to a file state after the fact. Latent everywhere |
+**D-085 (product-owner ruling): paid external models are authorized.** That cleared condition 8, the
+only failing condition. Full pre-run analysis is in `T107-READINESS.md`, preserved unedited with a
+new § 6 recording the resolution.
 
----
+### Binding constraints
 
-## 5. WHAT I WOULD DO NEXT
+* **Run on the pinned configuration exactly as `.env` already holds it** —
+  `deepseek/deepseek-v4-flash` on all nine OpenRouter slots, `LLM_PROVIDER=openrouter`,
+  `LLM_TEMPERATURE=0`.
+* **Do not edit `.env`.** Do not switch provider, do not re-pin, do not set a free variant.
+* **Do not use LM Studio for T-107.** It serves `glm-4.6v-flash`, which is neither the pinned model
+  nor the configured `LOCAL_MODEL`. Using it is a **fallback model** and destroys comparability with
+  T-104/T-105/T-106 — comparability is the entire point of the pinned plan.
+* **Launch ONCE.** Score the **first valid official draw**. Do not rerun for stochastic composition.
+  **Do not rerun a 7 to chase a 6** (D-073).
+* **$5 ceiling still binds** unless the product owner raises it. Measured pricing: `$0.0868`/M
+  prompt, `$0.1736`/M completion; projected **$1–3** at T-105's scale, with real variance and **no
+  spend telemetry to abort on**. **If projected or actual spend would exceed $5, stop and report.**
 
-1. **Put O-1 in front of the product owner and stop.** Everything in § 2's held table waits on it.
-2. **F-137**, **F-140** and the `writer.py` `default_species_id` seam are chartered-able **without**
-   a ruling. They are the only genuine engineering left.
-3. **Do not run T-107.** Do not run another cohort. Neither changes gate condition 1.
+### Before launching, verify at launch (not from this document)
 
----
+heavy lock free · zero sprint-owned Python · no peer session owning an overlapping live job ·
+SMOKE and gold-readers green at the tip you are about to measure · enough session time to monitor
+through completion or formally transfer the wrapper.
 
-## 6. PROCESS — what this wave paid for
+### The run
 
-Everything in the previous handoff's § 6 still holds. **New, and each cost real time:**
+The pinned plan is **10 papers / 20 legs**, the same set T-104/T-105/T-106 used. Prior launches went
+through `scripts/batch_run.py`; **`topics_t104.txt` is the ratified pinned topic set** — the 10
+pinned gold cases with scope lines verbatim from `bench/gold/pinned_v1.json`. **Ratify it before
+launch** with `scripts/bench_acceptance.py --verify-plan`, which must report `OK` with all 10
+`[pinned_override]` and **0 search calls**. If it does not, stop — do not improvise a topic set.
 
-* **Exported `PATHBANK_DB_*` cannot hide the database.** `src/t2pw/llm/client.py:22` calls
-  `load_dotenv(dotenv_path=ENV_PATH, override=True)` and re-applies `.env` over your exported values
-  for anything importing the LLM client. **Only physically renaming `.env` works**, with a
-  `trap … EXIT`. A reviewer voided two of its own jobs discovering this.
-* **An agent worktree may have no `.env` at all** — the opposite hazard. A card's four target tests
-  were green at base in a worktree purely because `from_env()` returned `None`, which would have made
-  the delta meaningless. **State which state your tree is in.**
-* **A `git archive` base export has no `.git`**, so anything shelling out to `git ls-files`
-  degenerates silently — four corpus tests skip. Use a **real git worktree** or an in-tree A/B with
-  the restore verified by `git diff --stat`.
-* **G11 task-id suffixes must be lowercase.** `C-098A` is rejected; `C-098a` passes.
-* **Pin verdicts go in `evidence/g11/pin/<TASK>/`.** Putting them elsewhere left ten reports with
-  dangling `--pin-verdict` pointers. Not re-run — `TEST_MATRIX` § 0 forbids re-running a green job to
-  repair paperwork — but avoid it.
-* **`cmd | tee log | head -N` truncates the log via SIGPIPE.** Redirect, then grep.
-* **`git checkout -- <file>` in a restore trap silently un-does your own fix when base == HEAD.**
-* **A gate-invisible baseline is a statement that can be inverted silently.**
-  `tests/test_protein_export_policy.py` is in **neither SMOKE nor Chunk D**; three of its tests moved
-  and only a reviewer selecting the file by hand caught it. **Second time this wave a gate-invisible
-  file hid a real move.**
+Prior shape, for sizing only (**re-derive, do not copy**):
 
----
+```
+scripts/batch_run.py --topics topics_t104.txt --out runs_verify --modes strict,research \
+    --timeout 1800 --deadline 3 --fresh
+```
 
-## 7. THE REVIEW RECORD — every round found something real
+**Wrapper timeout:** T-105 ran **4.85 h**, T-104 **5.44 h**. Set the bounded wrapper's timeout from
+the measured ~5 h with a **hard ceiling of 6 h**. Run it **tracked in the background** (D-026 — it
+exceeds the interactive cap by construction), record the task id and output path **immediately**,
+poll rather than launching duplicates, and **never leave it unowned**.
 
-Six review rounds, six findings that changed the work. Keep the discipline.
+### Scoring — what the report must say
 
-* **REV-096** built a **mutation matrix** and *corrected both the author and the source comment*: arm
-  order is irrelevant, the **`elif`** is the invariant. It also ran a 45-scenario differential proving
-  `None` byte-identical, and **retracted its own method** on discovering the `load_dotenv` problem.
-* **REV-094** found **three moved baselines nobody had run**, in a gate-invisible file — one of them
-  the O-1 statement itself.
-* **REV-095** found a guard that **fired on results conferring no identity**, recording a refusal of a
-  complex the row never matched — `candidates[0]` of a ten-way *ambiguous* lookup. Its delta review
-  then verified the fix by **tabulating all eleven returns** in the loop from source.
-* **C-098b** measured a **second refusal point** and reported its § 7.1 target unmet rather than
-  claiming success — after **correcting its own earlier measurement**, which I had already acted on.
-* **C-095's author proved REV-095's unproven F2 against its own card**, and caught its own **vacuous
-  fixture**, committing the vacuous run's report rather than replacing it.
+Produce the full table from `T107-READINESS.md` § 1, measured on the new run:
 
-**Two authors committed their own wrong measurement beside the right one. That is the behaviour to
-want** — a quietly corrected probe leaves the record un-auditable, and in both cases the error was one
-I had already built on.
+* **Priority 1** — **raw** count and composition, **accepted** count and composition, status
+  `PASS` (0–6) / `PASS_WITHIN_VARIANCE` (7) / `FAIL` (8+), every applied case-scoped tolerance, and
+  **confirmation that `LpxH` remains counted** on PMC12444477.
+* **Priority 2** — results on eligible legs, the exact `NOT EVALUATED` count, the D-067 precondition-3
+  reason, and whether it is `CONDITIONALLY SATISFIED` (D-075). **It may not be reported as full
+  20-leg biological validation.**
+* **Priorities 4/5** — raw **and** accepted anchor coverage.
 
-**The pattern worth stating plainly:** *a refusal record is a claim, and a claim needs the same proof
-as the behaviour it describes.* Four separate times this wave a guard was demonstrated against a case
-that could not exercise it, or fired on one it should not have.
+**Priority 1 is genuinely uncertain between 7 and 8.** T-104 = 7, T-105 = 7, T-106's artifacts
+re-scored at the merged tip = 8. **7 is `PASS_WITHIN_VARIANCE` and clears the gate; do not rerun it.
+8+ is an honest acceptance failure and is reported as one.** A new systematic defect is still a
+defect even when the total sits inside the band.
 
 ---
 
-## 8. BEFORE YOU STOP
+## 4. AFTER T-107
 
-Confirm and report: no merge in progress; nothing staged; local = origin = `ls-remote`; all accepted
-work pushed; product-owner `streamlit_app.py` intact at 35/2 and the expected hash; caches and
-`topics_*.txt` uncommitted; G11 0 non-compliant; heavy lock absent; zero sprint-owned Python; only the
-two IDE `isort` processes; and every completed job `FINAL SURVIVING COUNT : 0` / `cleanup : success`.
+Classify every failure as `product_contract_violation`, `gold_data_defect`, or
+`policy_disagreement`, citing the gold `relevance_note` / `export_rationale`. **Only the first
+justifies code.** A benchmark failure does not by itself justify a change.
 
-**T-107 is NO-GO.** Three of eight § 8 conditions unmet, and condition 1 cannot be cleared by any
-engineering — only by the ruling in § 3. **No live paper leg, no cohort and no T-107 run happened this
-wave, and none was needed.**
+Charter cards only for `product_contract_violation`s, one narrow card each, dispatched and reviewed
+under the process in § 5.
+
+---
+
+## 5. PROCESS — merge gates, not suggestions
+
+**Every** test, probe, scorer, benchmark, pipeline leg and LLM-backed command runs through
+`docs/pwml_recovery_sprint/evidence/bounded_run.py`. No detached processes, no `nohup`, never
+`pytest -n auto`. One heavy job at a time.
+
+* **Pass the explicit interpreter** `…/.venv/Scripts/python.exe` — **F-143**: `bounded_run.py`
+  resolves a bare `python` from the child's PATH → the system 3.13 with no `streamlit`, producing
+  **35 spurious import errors that read exactly like a regression**. `pinned_pytest`'s exit-98 check
+  verifies the *tree*, not the *interpreter*.
+* `--basetemp=<unique short dir under C:/t/>` on every pytest call, **parent pre-created**. Missing
+  it errors 83 tests; a missing parent errors every test in setup and once reported **382 instead of
+  453**. Neither is a test result.
+* `PYTHONPATH=<tree>/src`, `T2PW_OFFLINE_CURATOR=1` unless a specifically authorized live path
+  requires otherwise, `--heavy-lock <TASK>` on SMOKE and heavy legs.
+* Allocate every report path with `g11_evidence.py next --task <T> --label <l>` and **capture the
+  output into a variable**. Labels must match `^[a-z0-9][a-z0-9._-]*$` — an invalid label is rejected
+  and **the error text silently becomes your `--json` path**.
+* `bounded_run.py`'s report carries **no child stdout**. Redirect to a log and grep it. **Never pipe
+  through `head`** — SIGPIPE truncates the log. **Commit probes and their logs**, not just reports.
+* Every job: `FINAL SURVIVING COUNT : 0` and `cleanup : success`. Survivors are an **infrastructure
+  failure**, not a test result.
+* **Never** `taskkill /IM python.exe` or `pkill python`. Terminate only an exact sprint-owned tree.
+* **Never commit** `data/enrichment_cache.json`, `data/id_mapping_cache.json`, `topics_*.txt`, or
+  `src/t2pw/app/streamlit_app.py`. Stage explicit paths, inspect `git diff --cached`, use
+  `git commit -F <file>`.
+
+### Review discipline — this is what made the last wave work
+
+* **Fix pass/fail items in writing BEFORE the diff exists.** An item chosen after seeing the code is
+  a rationalisation.
+* **Record predictions before running.** Being wrong in writing is productive; being vague is not.
+* **Run selections split, not only combined** — a combined total hides a shift between two files.
+* **Check the guard that was REMOVED**, not only the one added.
+* **F-144, the wave's central lesson: a non-vacuity guard can be real and still guard the wrong
+  emptiness.** Asserting that *a* finding was produced is not evidence that *the path under test*
+  produced it. Every test whose null result is load-bearing must (a) run the production path, (b)
+  assert the specific thing that path emits, and (c) **survive a mutation attack by a non-author**.
+  **A non-vacuity guard is not evidence until someone who did not write it has failed to defeat it.**
+* **D-084 — mutation restores replay SAVED BYTES.** `git checkout --` reverts *more* than it mutated;
+  text-mode restore reverts *less* than byte-exactly. Verify the restore, do not assume it.
+* **Keep failed and invalidated measurements beside their corrections.** Never replace them. A
+  repository holding only successful measurements has a survivorship-biased evidence trail.
+* **Ceilings: seven under-set last wave, all seven the orchestrator's.** Derive from the mandated
+  deliverables at the module's measured comment density. **Review-mandated work never charges
+  ceiling 1 or 2 (D-076 A1, D-082); kept failed runs are never charged.**
+* Up to **two** automatic correction rounds per card; a third is an explicit authority decision with
+  reasons (D-078).
+
+---
+
+## 6. OPEN ITEMS — none blocking T-107
+
+* **D-080 wants product-owner ratification.** It is an *interpretation*: D-072 says exclude forbidden
+  identifiers from the "denominator"; C-102 excludes from numerator **and** denominator. The literal
+  reading makes **nine committed legs report a coverage ratio above 1**, and lets a pipeline that
+  exported all three forbidden identifiers on PMC12782028 score **1.0000**. The code is merged on the
+  both-sides reading. **Surface this; do not re-litigate it.**
+* **D-083** — two follow-ons: C-102's deep-copy fix has no test (its revert mutation is green), and
+  the split-gate driver should abort on `errors > 0`. Evidence tooling plus one low-stakes test.
+* **F-145** — quote the F-132 population as **92 / 47 / 7**, not the bundle's 62/32/6.
+* **Unaudited:** whether `test_c074_strict_core_floor.py` and `test_c072_incomplete_core_demotion.py`
+  pin their caps **non-vacuously**. F-142's no-coverage-gap claim rests on them.
+
+---
+
+## 7. BEFORE YOU STOP
+
+Confirm and report: no merge in progress · nothing staged · local = `origin/` = `ls-remote` · `main`
+untouched · product-owner `streamlit_app.py` intact at 35/2 with the expected hash · caches and
+`topics_*.txt` uncommitted · whole-tree G11 0 non-compliant · heavy lock absent · zero sprint-owned
+Python · only the expected IDE `isort` processes · no pytest, scorer, benchmark, paper run or live
+wrapper remaining · every completed job `FINAL SURVIVING COUNT : 0` and `cleanup : success` · **total
+external spend, stated in dollars** · no dispatched agent silently stalled.
+
+**Track agent liveness separately from job liveness.** A subagent sat at `running` for twelve hours
+this sprint. ~15 min without observable progress → request status. ~30 min with no response, no
+process, no changing artifact and no commit → treat as stalled, interrupt, preserve the worktree,
+record, redispatch from the last verified commit.
+
+**Update `RESUME-NEXT-SESSION.md` in place before you finish.** Two load-bearing probe outputs this
+sprint survived only by luck in dead sessions' temp directories, and one probe source was lost for
+good. **A G11 report certifies a job was clean and preserves nothing about what it found.**
