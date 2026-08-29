@@ -22,7 +22,7 @@ The permanent merge rules **G1–G11** are binding and are not restated here.
 
 | Check | Expected |
 |---|---|
-| local = `origin/` = `git ls-remote` | **all three equal** — read it, do not recall it |
+| local = `origin/` = `git ls-remote` | **all three equal.** The T-107 launch tip was **`66615a3`**; it advances as run artifacts are committed, so **read the invariant, not the number** |
 | `main` | local `7531692`, remote `03f1af5`. **`main` advanced outside this sprint; touch neither ref.** The sprint tip is not an ancestor of remote `main` |
 | merge in progress / staged | none / none |
 | heavy lock `C:/t/heavylock` | absent |
@@ -75,52 +75,66 @@ saying *"this selection exits 1 at base, and that is correct"* is **stale**.
 
 ---
 
-## 3. T-107 — GO. This is the job.
+## 3. T-107 — LAUNCHED. Finish it, score it, do not re-draw it.
 
-**D-085 (product-owner ruling): paid external models are authorized.** That cleared condition 8, the
-only failing condition. Full pre-run analysis is in `T107-READINESS.md`, preserved unedited with a
-new § 6 recording the resolution.
+**D-085 authorized paid models.** T-107 was launched **once**, at `20:39`, into
+**`runs_verify/2026-08-28_1816`**, on `deepseek/deepseek-v4-flash` via OpenRouter.
 
-### Binding constraints
+### If it is still running
 
-* **Run on the pinned configuration exactly as `.env` already holds it** —
-  `deepseek/deepseek-v4-flash` on all nine OpenRouter slots, `LLM_PROVIDER=openrouter`,
-  `LLM_TEMPERATURE=0`.
-* **Do not edit `.env`.** Do not switch provider, do not re-pin, do not set a free variant.
-* **Do not use LM Studio for T-107.** It serves `glm-4.6v-flash`, which is neither the pinned model
-  nor the configured `LOCAL_MODEL`. Using it is a **fallback model** and destroys comparability with
-  T-104/T-105/T-106 — comparability is the entire point of the pinned plan.
-* **Launch ONCE.** Score the **first valid official draw**. Do not rerun for stochastic composition.
-  **Do not rerun a 7 to chase a 6** (D-073).
-* **$5 ceiling still binds** unless the product owner raises it. Measured pricing: `$0.0868`/M
-  prompt, `$0.1736`/M completion; projected **$1–3** at T-105's scale, with real variance and **no
-  spend telemetry to abort on**. **If projected or actual spend would exceed $5, stop and report.**
+Leave it. Poll rather than relaunching. **A single `absent` reading of `C:/t/heavylock` is not
+evidence the run died** — the lock cycles fast enough to fool one observation.
 
-### Before launching, verify at launch (not from this document)
+### If it stopped before all 20 legs
 
-heavy lock free · zero sprint-owned Python · no peer session owning an overlapping live job ·
-SMOKE and gold-readers green at the tip you are about to measure · enough session time to monitor
-through completion or formally transfer the wrapper.
-
-### The run
-
-The pinned plan is **10 papers / 20 legs**, the same set T-104/T-105/T-106 used. Prior launches went
-through `scripts/batch_run.py`; **`topics_t104.txt` is the ratified pinned topic set** — the 10
-pinned gold cases with scope lines verbatim from `bench/gold/pinned_v1.json`. **Ratify it before
-launch** with `scripts/bench_acceptance.py --verify-plan`, which must report `OK` with all 10
-`[pinned_override]` and **0 search calls**. If it does not, stop — do not improvise a topic set.
-
-Prior shape, for sizing only (**re-derive, do not copy**):
+**Continuing is NOT a re-draw.** It is the same run identity resuming the same directory; the
+manifest flushes after every pair, so finished legs are preserved and skipped. Rerun exactly:
 
 ```
-scripts/batch_run.py --topics topics_t104.txt --out runs_verify --modes strict,research \
-    --timeout 1800 --deadline 3 --fresh
+scripts/batch_run.py --topics topics_t104.txt --out runs_verify     --modes strict,research --timeout 1800 --deadline 5.5
 ```
 
-**Wrapper timeout:** T-105 ran **4.85 h**, T-104 **5.44 h**. Set the bounded wrapper's timeout from
-the measured ~5 h with a **hard ceiling of 6 h**. Run it **tracked in the background** (D-026 — it
-exceeds the interactive cap by construction), record the task id and output path **immediately**,
-poll rather than launching duplicates, and **never leave it unowned**.
+**No `--fresh`, no `--stage-only`.** Wrap in `bounded_run.py`, `--heavy-lock T-107`, timeout `21600`.
+
+**Prove continuity before relaunching rather than assuming it** — run
+`evidence/t107_continuity_check.py`, which calls the runner's own `find_resumable()` and asserts it
+returns the verified path. Confirm `pending` and `legs already present` are what you expect.
+**The resume window is 24 h (`RESUME_MAX_AGE_HOURS`)**; past that the runner refuses the directory as
+stale and you must re-stage under the full procedure below.
+
+**A killed run strands the heavy lock** — the kill skips the wrapper's `finally`. That happened once
+already. Before clearing `C:/t/heavylock`, prove it abandoned: holder PID **dead**, holder file
+**byte-identical across samples seconds apart**, and **zero** `batch_run`/`bounded_run` processes.
+**Never clear a lock on one sample.**
+
+### If you must stage a genuinely new run — the accepted procedure
+
+1. **Fresh milestone identity, stage-only** — `--fresh --stage-only`. Returns *before* the run loop,
+   so zero LLM legs are possible regardless of cache speed.
+2. **`--verify-plan` against that exact staged directory.** Require **`verdict: OK`**,
+   **`search calls: 0`**, **all 10 `[pinned_override]`**.
+3. **Prove continuity** with `find_resumable()` — must return the exact verified path, all pairs
+   pending, zero legs present.
+4. **Continue that directory WITHOUT `--fresh`.**
+
+**The runner's own hint is a trap.** `--stage-only` prints *"rerun the same command WITHOUT
+--stage-only"* — and that command **still carries `--fresh`**, creating a new **unverified**
+directory and discarding the staging just certified. There is a genuine sibling hazard the other way
+(`batch_run.py` silently skips **finished** pairs without `--fresh`, giving a partial cohort that
+looks complete), and a peer recommended `--fresh` as a blanket cure — **which here would have been
+the defect.** The discriminator is measured, not guessed: `already recorded : 0`. **Assert the
+property; do not apply the proxy rule.**
+
+### Cost — the ceiling still binds, and the bound is not a prediction
+
+**$5 ceiling.** Prices `$0.0868`/M prompt, `$0.1736`/M completion. **T-105 recorded no token usage
+anywhere**, so the pre-run figure is a **bound from measurable inputs**: 10 papers, 592,813 source
+chars, ~14,820 tokens per full text → **$0.62–$3.70**, with $5 reached only at ~162
+full-text-equivalent passes per leg. Derivation: `evidence/orch715_t107_cost_bound.py` / `.log`.
+
+**No spend telemetry exists to abort on mid-run.** Read **actual** spend from the provider afterwards
+and record it. **If it lands materially outside $0.62–$3.70 that is itself a finding** — the bound was
+built from source-text volume and would have been wrong about how the pipeline consumes it.
 
 ### Scoring — what the report must say
 
@@ -128,18 +142,19 @@ Produce the full table from `T107-READINESS.md` § 1, measured on the new run:
 
 * **Priority 1** — **raw** count and composition, **accepted** count and composition, status
   `PASS` (0–6) / `PASS_WITHIN_VARIANCE` (7) / `FAIL` (8+), every applied case-scoped tolerance, and
-  **confirmation that `LpxH` remains counted** on PMC12444477.
-* **Priority 2** — results on eligible legs, the exact `NOT EVALUATED` count, the D-067 precondition-3
-  reason, and whether it is `CONDITIONALLY SATISFIED` (D-075). **It may not be reported as full
-  20-leg biological validation.**
-* **Priorities 4/5** — raw **and** accepted anchor coverage.
+  **confirmation `LpxH` remains counted** on PMC12444477.
+* **Priority 2** — eligible-leg results, the exact `NOT EVALUATED` count, the D-067 precondition-3
+  reason, and whether it is `CONDITIONALLY SATISFIED` (D-075). **Never reported as full 20-leg
+  biological validation.**
+* **Priorities 4/5** — raw **and** accepted coverage on the **D-080-ratified** definition:
+  `eligible = raw_anchors − case_scoped_forbidden`, numerator from matched eligible only, denominator
+  from eligible only, raw preserved separately.
 
-**Priority 1 is genuinely uncertain between 7 and 8.** T-104 = 7, T-105 = 7, T-106's artifacts
-re-scored at the merged tip = 8. **7 is `PASS_WITHIN_VARIANCE` and clears the gate; do not rerun it.
-8+ is an honest acceptance failure and is reported as one.** A new systematic defect is still a
-defect even when the total sits inside the band.
-
----
+**Priority 1 is genuinely uncertain between 7 and 8.** T-104 = 7, T-105 = 7, T-106 re-scored at the
+merged tip = 8. **7 is `PASS_WITHIN_VARIANCE`, clears the gate, and must NOT be re-drawn** (D-073).
+**8+ is an honest acceptance failure and is reported as one.** A new systematic defect is still a
+defect even inside the band. **A leg is never repeated because its draw is unfavourable; something
+not observed is reported as "not observed", never chased.**
 
 ## 4. AFTER T-107
 
