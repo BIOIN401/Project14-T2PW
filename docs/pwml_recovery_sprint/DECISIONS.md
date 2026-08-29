@@ -4915,3 +4915,40 @@ over- or under-reverting restore. **None of the three is a test result.**
 **Both C-103 and REV-103 caught their own instance, kept the invalidated run beside the corrected
 one, and said so.** That is the behaviour that makes the practice trustworthy — the invalid run is
 what proves the corrected one was checked rather than assumed.
+
+---
+
+## D-085 — paid external models are authorized for T-107 on the pinned model · 2026-08-28 · LOCKED
+
+**Product-owner ruling, given directly: *"the paid models are fine for T-107."*** This clears
+**T-107 gate condition 8**, the only condition that failed in `T107-READINESS.md`.
+
+### What it authorizes
+
+T-107 runs on the **pinned model as configured** — `deepseek/deepseek-v4-flash` across all nine
+OpenRouter slots, `LLM_PROVIDER=openrouter`, `LLM_TEMPERATURE=0`. Paid usage is accepted.
+
+**This is option (A) of the readiness assessment, and it is the better one**, because it preserves
+**comparability with T-104, T-105 and T-106**, all three of which ran `deepseek-v4-flash`.
+Comparability is the entire point of the pinned plan; option (B) would have produced a number that
+cannot be read against the baseline it exists to move.
+
+### What it does NOT change
+
+* **`.env` is not to be edited.** It already holds the pinned configuration. Do not switch provider,
+  do not re-pin a model, do not "helpfully" set anything to a free variant.
+* **LM Studio is not used for T-107.** It serves `glm-4.6v-flash`, which is neither the pinned model
+  nor the configured `LOCAL_MODEL`; using it would be a fallback model and would destroy
+  comparability. LM Studio remains available for anything that is not the pinned benchmark.
+* **The $5 ceiling stands** unless the product owner raises it separately. Measured pricing is
+  `$0.0868`/M prompt and `$0.1736`/M completion; a 20-leg run at T-105's scale projects to roughly
+  **$1–3**, with real variance and **no spend telemetry to abort on**. **If actual or projected spend
+  would exceed $5, stop and report** — the authorization is for paid models, not for unlimited spend.
+* **T-107 is still launched ONCE.** The first valid official draw is scored and preserved. It must not
+  be rerun for stochastic composition, and must not be rerun to turn a 7 into a 6 (**D-073**).
+
+### The remaining conditions, unchanged
+
+Every other gate condition already holds at the wave's close. What is left is operational: the run
+must be monitorable through completion, the heavy lock free, zero sprint-owned Python at launch, and
+no peer session owning an overlapping live job. **Verify those at launch, not from this record.**

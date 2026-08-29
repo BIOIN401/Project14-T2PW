@@ -1,6 +1,6 @@
 # T-107 READINESS — assessed 2026-08-28 at integration tip `ad62338`
 
-**VERDICT: NO-GO.** One condition fails, and it fails for a reason no engineering in this sprint can
+**VERDICT: ~~NO-GO~~ → GO, as of D-085 (2026-08-28).** The product owner authorized paid models on the pinned configuration, clearing condition 8 — the single failing condition. **The analysis below is preserved unedited as the record of why the question was asked**; only this line and § 6 are added. One condition fails, and it fails for a reason no engineering in this sprint can
 clear: **the pinned model is not available on the pinned terms.** Everything else that was blocking
 T-107 at the start of this wave is now cleared.
 
@@ -168,3 +168,21 @@ under.**
 
 That is a much better place to be blocked, and it is one decision away from resolution rather than a
 sprint's worth of engineering.
+
+
+---
+
+## 6. RESOLVED — D-085 clears condition 8
+
+**The product owner ruled: paid models are fine for T-107.** That is option (A) of § 4, and it is the
+better one, because it preserves comparability with T-104/T-105/T-106.
+
+| | |
+|---|---|
+| Condition 8 — pinned model available | ✅ **cleared by D-085.** Run on `deepseek/deepseek-v4-flash` as `.env` already configures it. **Do not edit `.env`. Do not use LM Studio for T-107.** |
+| Condition 13 — spend within **$5** | ⚠ **still binding.** Projected ~$1–3 at T-105's scale, with real variance and no spend telemetry. **Exceed it and stop.** |
+
+**Everything else in § 1's acceptance table stands as measured** and is the pre-run expectation, not
+a prediction of T-107's own draw. Priority 1 is genuinely uncertain between `PASS_WITHIN_VARIANCE`
+(7) and `FAIL` (8+): T-104 = 7, T-105 = 7, the T-106 artifacts re-scored at the merged tip = 8.
+**Score the first valid draw honestly and do not rerun it.**
