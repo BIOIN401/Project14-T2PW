@@ -1,0 +1,3605 @@
+{
+  "accepted": [],
+  "rejected": [
+    {
+      "gap_id": "gap-orphan_metabolite-a5fb336c",
+      "gap_ids": [
+        "gap-orphan_metabolite-a5fb336c"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.781335,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.781335,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a5fb336c",
+      "gap_ids": [
+        "gap-orphan_metabolite-a5fb336c"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.613239,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.613239,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-af93794b",
+      "gap_ids": [
+        "gap-missing_compartment-af93794b"
+      ],
+      "name": "IPP -> C40 and longer prenyl diphosphate chains",
+      "inputs": [
+        "IPP",
+        "allylic diphosphates"
+      ],
+      "outputs": [
+        "C40 and longer prenyl diphosphate chains"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "28766fb6e5dcb71a76068186f2493942",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "discussion",
+        "score": 0.787793,
+        "span": "Long-chain prenyl diphosphate synthases are homodimers that add IPP units to allylic diphosphates generating C40 and longer prenyl diphosphate chains."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.787793,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-af93794b asks for a compartment/location for 'prenyl diphosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-af93794b",
+      "gap_ids": [
+        "gap-missing_compartment-af93794b"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.774158,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.774158,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-af93794b asks for a compartment/location for 'prenyl diphosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-af93794b",
+      "gap_ids": [
+        "gap-missing_compartment-af93794b"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.688647,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.688647,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-af93794b asks for a compartment/location for 'prenyl diphosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-bf99008f",
+      "gap_ids": [
+        "gap-missing_compartment-bf99008f"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.697565,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.697565,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-bf99008f asks for a compartment/location for 'DHNA'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-bf99008f",
+      "gap_ids": [
+        "gap-missing_compartment-bf99008f"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.642179,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.642179,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-bf99008f asks for a compartment/location for 'DHNA'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-bf99008f",
+      "gap_ids": [
+        "gap-missing_compartment-bf99008f"
+      ],
+      "name": "demethylated menaquinone synthesis",
+      "inputs": [
+        "prenyl diphosphate chain",
+        "DHNA"
+      ],
+      "outputs": [
+        "demethylated menaquinone"
+      ],
+      "enzymes": [
+        "DHNA polyprenyltransferase",
+        "menA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "275cc5bc08af32e296a803397f9ccffd",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "figure",
+        "score": 0.550576,
+        "span": "The second gene chosen for overexpression, menA , encodes the DHNA polyprenyltransferase catalyzing the joining of the prenyl diphosphate chain and DHNA resulting in demethylated menaquinone."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.550576,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-bf99008f asks for a compartment/location for 'DHNA'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.815842,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.815842,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.615538,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.615538,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.57758,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.57758,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "demethylmenaquinone (DMK) -> menaquinone",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "273ed26528b7074c96215cb98dee7a45",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "figure",
+        "score": 0.562856,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.562856,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.776455,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.776455,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.589262,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.589262,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.583609,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.583609,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "demethylmenaquinone methylation",
+      "inputs": [
+        "demethylmenaquinone"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "6cb889f741d31cd67b214e810c2defc0",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "results",
+        "score": 0.538601,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.538601,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.855928,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.855928,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.650369,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.650369,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.61523,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.61523,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "demethylmenaquinone methylation",
+      "inputs": [
+        "demethylmenaquinone"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "6cb889f741d31cd67b214e810c2defc0",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "results",
+        "score": 0.562665,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.562665,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.808288,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.808288,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.645649,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.645649,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.611257,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.611257,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "demethylmenaquinone (DMK) -> menaquinone",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "273ed26528b7074c96215cb98dee7a45",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "figure",
+        "score": 0.576745,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.576745,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.860501,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.860501,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.669013,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.669013,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.634715,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.634715,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "demethylmenaquinone methylation",
+      "inputs": [
+        "demethylmenaquinone"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "6cb889f741d31cd67b214e810c2defc0",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "results",
+        "score": 0.583693,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.583693,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.853255,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.853255,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.661803,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.661803,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.658093,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.658093,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "demethylmenaquinone (DMK) -> menaquinone",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "273ed26528b7074c96215cb98dee7a45",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "figure",
+        "score": 0.575753,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.575753,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.864178,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.864178,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.665468,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.665468,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.654584,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.654584,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "demethylmenaquinone (DMK) -> menaquinone",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "273ed26528b7074c96215cb98dee7a45",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "figure",
+        "score": 0.597567,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.597567,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "demethylmenaquinone methylation",
+      "inputs": [
+        "demethylmenaquinone"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "6cb889f741d31cd67b214e810c2defc0",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "results",
+        "score": 0.552959,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.552959,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.854612,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.854612,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "demethylmenaquinone (DMK) -> menaquinone",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "273ed26528b7074c96215cb98dee7a45",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "figure",
+        "score": 0.679177,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.679177,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.669868,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.669868,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.651443,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.651443,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "demethylated menaquinone synthesis",
+      "inputs": [
+        "prenyl diphosphate chain",
+        "DHNA"
+      ],
+      "outputs": [
+        "demethylated menaquinone"
+      ],
+      "enzymes": [
+        "DHNA polyprenyltransferase",
+        "menA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "275cc5bc08af32e296a803397f9ccffd",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "figure",
+        "score": 0.590953,
+        "span": "The second gene chosen for overexpression, menA , encodes the DHNA polyprenyltransferase catalyzing the joining of the prenyl diphosphate chain and DHNA resulting in demethylated menaquinone."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.590953,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "demethylmenaquinone methylation",
+      "inputs": [
+        "demethylmenaquinone"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "6cb889f741d31cd67b214e810c2defc0",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "results",
+        "score": 0.562926,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.562926,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.848206,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.848206,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "demethylmenaquinone (DMK) -> menaquinone",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "273ed26528b7074c96215cb98dee7a45",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "figure",
+        "score": 0.767742,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.767742,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.702425,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.702425,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.649358,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.649358,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.691734,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.691734,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "isochorismate -> 1,4-dihydroxy-2-naphthoate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "f510d5be8cb9797d7e28aa024686ea77",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "figure",
+        "score": 0.496117,
+        "span": "In the first step of the classical MK pathway, MenF converts chorismate into isochorismate, which is further converted by six enzymes encoded by the menDHCEB operon to form 1,4-dihydroxy-2-naphthoate (Fig. 1 b) [ 17 , 26 ]."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.496117,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['chorismate'] -> ['isochorismate'] but the claim states ['isochorismate'] -> ['1,4-dihydroxy-2-naphthoate']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.719246,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.719246,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.541992,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.541992,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.523974,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.523974,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.767147,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.767147,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "IPP -> C40 and longer prenyl diphosphate chains",
+      "inputs": [
+        "IPP",
+        "allylic diphosphates"
+      ],
+      "outputs": [
+        "C40 and longer prenyl diphosphate chains"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "28766fb6e5dcb71a76068186f2493942",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "discussion",
+        "score": 0.675144,
+        "span": "Long-chain prenyl diphosphate synthases are homodimers that add IPP units to allylic diphosphates generating C40 and longer prenyl diphosphate chains."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.675144,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.589908,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.589908,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "demethylmenaquinone methylation",
+      "inputs": [
+        "demethylmenaquinone"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "6cb889f741d31cd67b214e810c2defc0",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "results",
+        "score": 0.533158,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.533158,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f74c9db7",
+      "gap_ids": [
+        "gap-dangling_reaction-f74c9db7"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.774202,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.774202,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f74c9db7",
+      "gap_ids": [
+        "gap-dangling_reaction-f74c9db7"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.612774,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.612774,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f74c9db7",
+      "gap_ids": [
+        "gap-dangling_reaction-f74c9db7"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.586134,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.586134,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f74c9db7",
+      "gap_ids": [
+        "gap-dangling_reaction-f74c9db7"
+      ],
+      "name": "demethylmenaquinone methylation",
+      "inputs": [
+        "demethylmenaquinone"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "6cb889f741d31cd67b214e810c2defc0",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "results",
+        "score": 0.539226,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.539226,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.761475,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.761475,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "demethylmenaquinone methylation",
+      "inputs": [
+        "demethylmenaquinone"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "6cb889f741d31cd67b214e810c2defc0",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "results",
+        "score": 0.653882,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.653882,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.653369,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.653369,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-aad41547",
+      "gap_ids": [
+        "gap-dangling_reaction-aad41547"
+      ],
+      "name": "DHNA polyprenyltransferase reaction",
+      "inputs": [
+        "prenyl diphosphate",
+        "1,4-dihydroxy-2-napthoate (DHNA)"
+      ],
+      "outputs": [
+        "demethylmenaquinone"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC7093718",
+        "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+        "uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "947bd552b9031456f64ffd98e4e3aea5",
+        "source_id": "PMC7093718",
+        "source_uri": "https://doi.org/10.3389/fbioe.2020.00191",
+        "section": "introduction",
+        "score": 0.759045,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [
+        "menaquinone synthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.759045,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-aad41547",
+      "gap_ids": [
+        "gap-dangling_reaction-aad41547"
+      ],
+      "name": "demethylmenaquinone (DMK) -> menaquinone",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "273ed26528b7074c96215cb98dee7a45",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "figure",
+        "score": 0.659046,
+        "span": "The menG gene encodes demethylmenaquinone methyltransferase (MenG), which adds a methyl group to the aromatic ring of demethylmenaquinone (DMK) and is the final step of menaquinone biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.659046,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-aad41547",
+      "gap_ids": [
+        "gap-dangling_reaction-aad41547"
+      ],
+      "name": "DMK -> MK",
+      "inputs": [
+        "DMK"
+      ],
+      "outputs": [
+        "MK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8303990",
+        "title": "Analysis and Reconstitution of the Menaquinone Biosynthesis Pathway in &lt;i&gt;Lactiplantibacillus plantarum&lt;/i&gt; and &lt;i&gt;Lentilactibacillus buchneri&lt;/i&gt;.",
+        "uri": "https://doi.org/10.3390/microorganisms9071476",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8c5495fa240c195611111881d94ae625",
+        "source_id": "PMC8303990",
+        "source_uri": "https://doi.org/10.3390/microorganisms9071476",
+        "section": "discussion",
+        "score": 0.644395,
+        "span": "M enG encodes demethylmenaquinone methyltransferase, the enzyme catalyzing the final step of menaquinone biosynthesis: conversion of DMK to MK by addition of a methyl group to the aromatic ring of DMK [ 28 , 29 ]."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Lactococcus lactis",
+        "Lactobacillus plantarum"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.644395,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-aad41547",
+      "gap_ids": [
+        "gap-dangling_reaction-aad41547"
+      ],
+      "name": "DHNA -> DMK",
+      "inputs": [
+        "DHNA"
+      ],
+      "outputs": [
+        "DMK"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "38258288aa2da86d065aedcb00cacc7c",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "results",
+        "score": 0.614103,
+        "span": "results revealed that only the step reaction by MenA, i.e. the prenylation of DHNA to DMK was a rate-limiting step in the MK-7 pathway."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.614103,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8042841",
+        "title": "New aspects of microbial vitamin K2 production by expanding the product spectrum.",
+        "uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "f510d5be8cb9797d7e28aa024686ea77",
+        "source_id": "PMC8042841",
+        "source_uri": "https://doi.org/10.1186/s12934-021-01574-7",
+        "section": "figure",
+        "score": 0.496117,
+        "span": "In the first step of the classical MK pathway, MenF converts chorismate into isochorismate, which is further converted by six enzymes encoded by the menDHCEB operon to form 1,4-dihydroxy-2-naphthoate (Fig. 1 b) [ 17 , 26 ]."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis in Lactococcus lactis",
+      "requested_organism": "Lactococcus lactis",
+      "requested_pathway_match": "unknown",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [
+        "chorismate",
+        "isochorismate"
+      ],
+      "confidence": 0.496117,
+      "status": "rejected",
+      "reasons": [
+        "gap_already_covered_by_existing_reaction: every substrate and product of this candidate is already one of 'MenF reaction''s, on the same side and in the same direction, so it adds no connectivity gap gap-orphan_metabolite-8c563c22 does not already have"
+      ],
+      "normalized": [],
+      "chain": {}
+    }
+  ],
+  "counts": {
+    "accepted": 0,
+    "rejected": 68,
+    "considered": 68
+  },
+  "reason_counts": {
+    "candidate_type_cannot_fill_gap": 45,
+    "evidence_relation_disagrees_with_claim": 1,
+    "evidence_relation_roles_unassignable": 17,
+    "evidence_states_no_reaction_relation": 31,
+    "gap_already_covered_by_existing_reaction": 1,
+    "no_local_evidence_span": 18
+  },
+  "by_gap": {
+    "gap-dangling_reaction-aad41547": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-dangling_reaction-da59851f": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-dangling_reaction-f74c9db7": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-missing_compartment-af93794b": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-bf99008f": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-8c563c22": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-a175c01b": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-a5fb336c": {
+      "accepted": 0,
+      "rejected": 2
+    },
+    "gap-orphan_metabolite-c1631c3b": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-0dbbfd78": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-13565fd6": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-1a3f8ea2": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-23188b6b": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-44e20ba0": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-a2f7299d": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-d370c889": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-de91fbb1": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-eab0ac8b": {
+      "accepted": 0,
+      "rejected": 6
+    }
+  },
+  "truncated": {
+    "accepted": 0,
+    "rejected": 0
+  },
+  "policy": {
+    "organism_policy": "allow_unknown",
+    "require_pathway_match": false,
+    "max_report_entries": 200,
+    "evidence_snippet_chars": 320,
+    "max_chain_hops": 2,
+    "max_span_chars": 600
+  },
+  "rules": [
+    {
+      "rule": "named_gap",
+      "requires": "the candidate names a gap_id that was actually detected"
+    },
+    {
+      "rule": "valid_entity_types",
+      "requires": "every participant and catalyst is a plausible species / protein token"
+    },
+    {
+      "rule": "local_evidence_span",
+      "requires": "the candidate points at ONE bounded span of its chunk, which is a single statement (one sentence, or one parsed equation line)"
+    },
+    {
+      "rule": "evidence_supports_participants",
+      "requires": "the span's own parsed substrates and products are the claim's, matched on whole-name boundaries"
+    },
+    {
+      "rule": "relation_agrees",
+      "requires": "the span STATES this reaction — its parsed substrates, products and direction agree with the claim; co-occurrence of names is not a relation and a reversed span refutes a forward claim"
+    },
+    {
+      "rule": "no_unsupported_catalyst",
+      "requires": "every catalyst claimed is the catalyst the span attaches to THIS relation, not merely a protein named nearby"
+    },
+    {
+      "rule": "organism_compatible",
+      "requires": "the organism observed in the span (else the paper's observed metadata) matches the requested one, is a related taxon, or is explicitly unknown and the configured policy allows unknown"
+    },
+    {
+      "rule": "requested_pathway",
+      "requires": "the span / observed metadata does not name a DIFFERENT pathway (strict policy additionally requires a positive pathway match)"
+    },
+    {
+      "rule": "gap_type_compatible",
+      "requires": "the candidate is the KIND of evidence the gap asks for: a reaction can fill a connectivity gap, but a missing_compartment gap needs a location assertion and an unmapped_enzyme gap needs identifier evidence"
+    },
+    {
+      "rule": "connects_to_pathway",
+      "requires": "a SUBSTRATE OR PRODUCT of the candidate is an existing pathway metabolite or the gap's expected anchor — catalysts never connect"
+    },
+    {
+      "rule": "fills_its_named_gap",
+      "requires": "a substrate or product of the candidate is the gap's target, directly or within the configured hop limit through metabolites contributed by reactions already admitted for that same gap"
+    },
+    {
+      "rule": "gap_not_already_covered",
+      "requires": "for a connectivity gap: no existing reaction already has every substrate and product of this candidate, same side, same direction"
+    },
+    {
+      "rule": "not_already_admitted_for_another_gap",
+      "requires": "one canonical claim from one span is admitted once; it carries every gap id it was retrieved for"
+    }
+  ],
+  "acceptance_breakdown": {
+    "direct": 0,
+    "chained": 0,
+    "chained_by_hop": {}
+  },
+  "resolutions": [],
+  "recommended_route": [
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "label": "MenF",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "label": "MenD",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "label": "MenH",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "label": "MenC",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "label": "MenE",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "label": "MenB",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "label": "MenI",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "label": "MenA",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "label": "MenG",
+      "recommended_route": "identity_resolver"
+    }
+  ],
+  "identity_outcomes": {
+    "proposals": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "targets": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "unresolved_identity_gaps": 9,
+    "unresolved_for_unknown_fallback": 9,
+    "unknown_fallback_present": 0
+  }
+}

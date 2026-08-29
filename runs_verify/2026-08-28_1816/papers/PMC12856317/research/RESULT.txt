@@ -1,0 +1,59 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 542.7s (9m02s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.unknown_protein_modifier_reference @ /processes/reactions/0/modifiers/1: Unknown protein/modifier reference: Pyridoxal 5'-phosphate
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  citations = 1
+  compounds = 5
+  entities = 9
+  gate_errors = 1
+  gate_errors_not_blocking = 1
+  gate_review_flags = 1
+  normalization_actions = 2
+  proteins = 1
+  reactions = 1
+  review_flags = 2
+  runtime_schema_findings = 2
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 5, 'b': 0, 'c': 1, 'd': 0}
+  transports = 0
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1246 B)
+  - contract_reports.json  (11657 B)
+  - coverage_summary.json  (2683 B)
+  - final_mapped.json  (148256 B)
+  - final_stage3_gate_report.json  (3328 B)
+  - gap_iteration_summary.json  (9647 B)
+  - gate_fail_report.json  (7011 B)
+  - graph_closure_iterations.json  (727 B)
+  - initial_stage3_gate_report.json  (7011 B)
+  - merged_payload.json  (60564 B)
+  - quarantine_report.json  (8764 B)
+  - rag_admission_report.json  (21112 B)
+  - removed_entity_report.json  (241 B)
+  - research_pathway_citations.json  (22997 B)
+  - research_pathway_elements.csv  (1795 B)
+  - research_pathway_report.txt  (8880 B)
+  - review_flags.json  (6440 B)
+  - stage1_payload.json  (7893 B)

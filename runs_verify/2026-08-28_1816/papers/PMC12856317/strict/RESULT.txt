@@ -1,0 +1,55 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 1118.1s (18m38s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : strict run completed; pathway.review_required.pwml is 26576 bytes
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 5
+  entities = 15
+  gate_errors = 0
+  proteins = 2
+  pwml = {'compounds': 5, 'proteins': 2, 'reactions': 1, 'edges': 6}
+  pwml_bytes = 26576
+  reactions = 1
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (2050 B)
+  - contract_reports.json  (6415 B)
+  - coverage_summary.json  (2531 B)
+  - final_mapped.json  (182228 B)
+  - final_stage3_gate_report.json  (2837 B)
+  - gap_iteration_summary.json  (35858 B)
+  - gate_fail_report.json  (11263 B)
+  - graph_closure_iterations.json  (886 B)
+  - initial_stage3_gate_report.json  (11263 B)
+  - merged_payload.json  (65785 B)
+  - pathway.review_required.pwml  (26576 B)
+  - pwml_ir.json  (37960 B)
+  - pwml_ir_report.json  (1186 B)
+  - pwml_ir_validation.json  (232 B)
+  - pwml_qa.json  (462 B)
+  - pwml_required_field_gate_report.json  (2161 B)
+  - pwml_validation_report.json  (19586 B)
+  - quarantine_report.json  (9977 B)
+  - rag_admission_report.json  (54694 B)
+  - removed_entity_report.json  (562 B)
+  - stage1_payload.json  (11519 B)

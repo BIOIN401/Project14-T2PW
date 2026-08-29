@@ -1,0 +1,2833 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via explicit_entity_species",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "1",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "explicit_entity_species"
+              },
+              {
+                "source_id": "9606",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "explicit_entity_species"
+              }
+            ]
+          }
+        ],
+        "pathbank_species_id": 1,
+        "species_id": 1,
+        "taxonomy_id": "9606",
+        "common_name": "Human",
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "taxonomy_backfill": {
+            "source": "ncbi",
+            "taxonomy_id": "9606",
+            "classification": "Eukaryote"
+          },
+          "resolution": {
+            "status": "matched",
+            "order_step": "explicit_entity_species"
+          }
+        },
+        "classification": "Eukaryote",
+        "species_canonicalization": {
+          "status": "deterministic"
+        }
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "5257127",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "56-40-6",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "730",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "78",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "C00037",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:15428",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "DB00145",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "GLY",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0000123",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (ambiguous_exact_name)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          },
+          {
+            "stage": "gap_resolution",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution filled a missing identifier mapping for this compound from a db candidate the paper never supplied",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "5257127",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "56-40-6",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "730",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "78",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "C00037",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "CHEBI:15428",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "DB00145",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "GLY",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "HMDB0000123",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "PathBankDB"
+              }
+            ]
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "glycine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 78,
+              "name": "Glycine",
+              "short_name": "Gly",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000123",
+                "kegg": "C00037",
+                "chebi": "CHEBI:15428",
+                "pubchem": "5257127",
+                "cas": "56-40-6",
+                "biocyc": "GLY",
+                "chemspider": "730",
+                "drugbank": "DB00145",
+                "pathbank_compound_id": "78"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "provider": "PathBankDB",
+          "pathbank_compound_id": 78,
+          "resolved_name": "Glycine"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0000123",
+          "kegg": "C00037",
+          "chebi": "15428",
+          "pubchem": "5257127",
+          "cas": "56-40-6",
+          "biocyc": "GLY",
+          "chemspider": "730",
+          "drugbank": "DB00145",
+          "pathbank_compound_id": "78"
+        },
+        "pathbank_compound_id": 78,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok_with_warnings",
+            "primary_name": "Glycine",
+            "synonyms": [
+              "Glycine",
+              "Aminoacetic acid",
+              "Gly"
+            ],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C2H5NO2",
+            "charge": 0,
+            "mass_monoisotopic": 75.032,
+            "mass_average": 75.07,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Compounds with biological roles [BR:br08001]",
+              "Peptides",
+              "Amino acids",
+              "Common amino acids",
+              "C00037 Glycine (Gly)",
+              "Hormones and transmitters",
+              "Neurotransmitters",
+              "C00037 Glycine",
+              "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00011)]",
+              "B BLOOD AND BLOOD FORMING ORGANS",
+              "B05 BLOOD SUBSTITUTES AND PERFUSION SOLUTIONS",
+              "B05C IRRIGATING SOLUTIONS",
+              "B05CX Other irrigating solutions",
+              "B05CX03 Glycine",
+              "D00011 Glycine (JP19/USP) &lt;US&gt;",
+              "Risk category of Japanese OTC drugs [BR:br08312(D00011)]",
+              "Third-class OTC drugs",
+              "Inorganic and organic chemicals",
+              "Glycine",
+              "D00011 Glycine (JP19/USP)",
+              "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00011)]",
+              "Chemicals",
+              "D00011 Glycine"
+            ],
+            "pathways": [
+              "Primary bile acid biosynthesis",
+              "Purine metabolism",
+              "Glycine, serine and threonine metabolism",
+              "Lysine degradation",
+              "Phosphonate and phosphinate metabolism",
+              "Cyanoamino acid metabolism",
+              "D-Amino acid metabolism",
+              "Glutathione metabolism",
+              "Glyoxylate and dicarboxylate metabolism",
+              "One carbon pool by folate",
+              "Methane metabolism",
+              "Thiamine metabolism",
+              "Lipoic acid metabolism",
+              "Porphyrin metabolism",
+              "Aminoacyl-tRNA biosynthesis",
+              "Biosynthesis of plant secondary metabolites",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Microbial metabolism in diverse environments",
+              "Carbon metabolism",
+              "Biosynthesis of amino acids",
+              "Biosynthesis of cofactors",
+              "Vancomycin resistance",
+              "ABC transporters",
+              "Biofilm formation - Escherichia coli",
+              "Neuroactive ligand-receptor interaction",
+              "Neuroactive ligand signaling",
+              "Synaptic vesicle cycle",
+              "Protein digestion and absorption",
+              "Mineral absorption",
+              "Central carbon metabolism in cancer"
+            ],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0000123",
+              "kegg_id": "C00037",
+              "chebi_id": "CHEBI:15428",
+              "pubchem_id": "5257127",
+              "cas": "56-40-6",
+              "biocyc": "GLY",
+              "chemspider": "730",
+              "drugbank_id": "DB00145",
+              "pathbank_compound_id": "78"
+            },
+            "kegg": {
+              "status": "ok",
+              "source": "KEGG",
+              "id": "C00037",
+              "primary_name": "Glycine",
+              "synonyms": [
+                "Glycine",
+                "Aminoacetic acid",
+                "Gly"
+              ],
+              "formula": "C2H5NO2",
+              "mass_monoisotopic": 75.032,
+              "mass_average": 75.07,
+              "pathways": [
+                "Primary bile acid biosynthesis",
+                "Purine metabolism",
+                "Glycine, serine and threonine metabolism",
+                "Lysine degradation",
+                "Phosphonate and phosphinate metabolism",
+                "Cyanoamino acid metabolism",
+                "D-Amino acid metabolism",
+                "Glutathione metabolism",
+                "Glyoxylate and dicarboxylate metabolism",
+                "One carbon pool by folate",
+                "Methane metabolism",
+                "Thiamine metabolism",
+                "Lipoic acid metabolism",
+                "Porphyrin metabolism",
+                "Aminoacyl-tRNA biosynthesis",
+                "Biosynthesis of plant secondary metabolites",
+                "Metabolic pathways",
+                "Biosynthesis of secondary metabolites",
+                "Microbial metabolism in diverse environments",
+                "Carbon metabolism",
+                "Biosynthesis of amino acids",
+                "Biosynthesis of cofactors",
+                "Vancomycin resistance",
+                "ABC transporters",
+                "Biofilm formation - Escherichia coli",
+                "Neuroactive ligand-receptor interaction",
+                "Neuroactive ligand signaling",
+                "Synaptic vesicle cycle",
+                "Protein digestion and absorption",
+                "Mineral absorption",
+                "Central carbon metabolism in cancer"
+              ],
+              "kegg_class": [
+                "Compounds with biological roles [BR:br08001]",
+                "Peptides",
+                "Amino acids",
+                "Common amino acids",
+                "C00037 Glycine (Gly)",
+                "Hormones and transmitters",
+                "Neurotransmitters",
+                "C00037 Glycine",
+                "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00011)]",
+                "B BLOOD AND BLOOD FORMING ORGANS",
+                "B05 BLOOD SUBSTITUTES AND PERFUSION SOLUTIONS",
+                "B05C IRRIGATING SOLUTIONS",
+                "B05CX Other irrigating solutions",
+                "B05CX03 Glycine",
+                "D00011 Glycine (JP19/USP) &lt;US&gt;",
+                "Risk category of Japanese OTC drugs [BR:br08312(D00011)]",
+                "Third-class OTC drugs",
+                "Inorganic and organic chemicals",
+                "Glycine",
+                "D00011 Glycine (JP19/USP)",
+                "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00011)]",
+                "Chemicals",
+                "D00011 Glycine"
+              ],
+              "cross_references": {
+                "kegg_id": "C00037",
+                "pubchem_id": "3339",
+                "chebi_id": "15428"
+              },
+              "provenance": {
+                "source": "KEGG",
+                "id": "C00037",
+                "source_url": "https://rest.kegg.jp/get/cpd:C00037",
+                "retrieved_at": "2026-06-24T17:34:08Z",
+                "status": "ok"
+              }
+            },
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:15428",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-06-24T17:34:07Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0000123",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0000123",
+                "retrieved_at": "2026-06-24T17:34:07Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:15428",
+                "retrieved_at": "2026-06-24T17:34:07Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0000123",
+                "retrieved_at": "2026-06-24T17:34:07Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              },
+              {
+                "source": "KEGG",
+                "id": "C00037",
+                "retrieved_at": "2026-06-24T17:34:08Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0000123",
+        "kegg_id": "C00037",
+        "chebi_id": "15428",
+        "pubchem_cid": "5257127",
+        "cas": "56-40-6",
+        "biocyc_id": "GLY",
+        "chemspider_id": "730",
+        "short_name": "Gly",
+        "synonyms": [
+          "Glycine",
+          "Aminoacetic acid",
+          "Gly"
+        ],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial state"
+          }
+        ],
+        "db_status": "matched_offline_name_index",
+        "db_id": 78,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "raw_name": "glycine",
+        "db_row": {
+          "id": 78,
+          "name": "Glycine"
+        },
+        "pathwhiz_id": 78
+      },
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via exact_normalized_name exact_normalized_name",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "14875-96-8",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "1799",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "24604415",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "C00032",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "CHEBI:17627",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "DB02577",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "HEME_A",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "HMDB0003178",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "14875-96-8",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "1799",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "24604415",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "C00032",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:17627",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "DB02577",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HEME_A",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0003178",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "heme"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1799,
+              "name": "Heme",
+              "short_name": "Heme",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0003178",
+                "kegg": "C00032",
+                "chebi": "CHEBI:17627",
+                "cas": "14875-96-8",
+                "biocyc": "HEME_A",
+                "chemspider": "24604415",
+                "drugbank": "DB02577",
+                "pathbank_compound_id": "1799"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 1799,
+          "resolved_name": "Heme"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0003178",
+          "kegg": "C00032",
+          "chebi": "17627",
+          "cas": "14875-96-8",
+          "biocyc": "HEME_A",
+          "chemspider": "24604415",
+          "drugbank": "DB02577",
+          "pathbank_compound_id": "1799",
+          "pubchem": "3334"
+        },
+        "pathbank_compound_id": 1799,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok_with_warnings",
+            "primary_name": "Heme",
+            "synonyms": [
+              "Heme",
+              "Haem",
+              "Protoheme",
+              "Heme B",
+              "Protoheme IX"
+            ],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C34H32FeN4O4",
+            "charge": 0,
+            "mass_monoisotopic": 616.1773,
+            "mass_average": 616.49,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Compounds with biological roles [BR:br08001]",
+              "Vitamins and cofactors",
+              "Cofactors",
+              "Coenzymes",
+              "C00032 Heme B"
+            ],
+            "pathways": [
+              "Porphyrin metabolism",
+              "Biosynthesis of plant secondary metabolites",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Biosynthesis of cofactors",
+              "ABC transporters",
+              "Integrated stress response (ISR) signaling pathway",
+              "Ferroptosis",
+              "Mineral absorption"
+            ],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0003178",
+              "kegg_id": "C00032",
+              "chebi_id": "CHEBI:17627",
+              "cas": "14875-96-8",
+              "biocyc": "HEME_A",
+              "chemspider": "24604415",
+              "drugbank_id": "DB02577",
+              "pathbank_compound_id": "1799",
+              "pubchem_id": "3334"
+            },
+            "kegg": {
+              "status": "ok",
+              "source": "KEGG",
+              "id": "C00032",
+              "primary_name": "Heme",
+              "synonyms": [
+                "Heme",
+                "Haem",
+                "Protoheme",
+                "Heme B",
+                "Protoheme IX"
+              ],
+              "formula": "C34H32FeN4O4",
+              "mass_monoisotopic": 616.1773,
+              "mass_average": 616.49,
+              "pathways": [
+                "Porphyrin metabolism",
+                "Biosynthesis of plant secondary metabolites",
+                "Metabolic pathways",
+                "Biosynthesis of secondary metabolites",
+                "Biosynthesis of cofactors",
+                "ABC transporters",
+                "Integrated stress response (ISR) signaling pathway",
+                "Ferroptosis",
+                "Mineral absorption"
+              ],
+              "kegg_class": [
+                "Compounds with biological roles [BR:br08001]",
+                "Vitamins and cofactors",
+                "Cofactors",
+                "Coenzymes",
+                "C00032 Heme B"
+              ],
+              "cross_references": {
+                "kegg_id": "C00032",
+                "pubchem_id": "3334",
+                "chebi_id": "17627"
+              },
+              "provenance": {
+                "source": "KEGG",
+                "id": "C00032",
+                "source_url": "https://rest.kegg.jp/get/cpd:C00032",
+                "retrieved_at": "2026-06-24T17:34:34Z",
+                "status": "ok"
+              }
+            },
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:17627",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-06-24T17:34:33Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0003178",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0003178",
+                "retrieved_at": "2026-06-24T17:34:34Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:17627",
+                "retrieved_at": "2026-06-24T17:34:33Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0003178",
+                "retrieved_at": "2026-06-24T17:34:34Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              },
+              {
+                "source": "KEGG",
+                "id": "C00032",
+                "retrieved_at": "2026-06-24T17:34:34Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0003178",
+        "kegg_id": "C00032",
+        "chebi_id": "17627",
+        "pubchem_cid": "3334",
+        "cas": "14875-96-8",
+        "biocyc_id": "HEME_A",
+        "chemspider_id": "24604415",
+        "short_name": "Heme",
+        "synonyms": [
+          "Heme",
+          "Haem",
+          "Protoheme",
+          "Heme B",
+          "Protoheme IX"
+        ],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial state"
+          }
+        ],
+        "db_status": "legacy_id_unverified",
+        "db_id": 1799,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 1799
+      },
+      {
+        "name": "δ-aminolevulinic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "106-60-5",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "134",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "137",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "5-AMINO-LEVULINATE",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "894",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "C00430",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:17549",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "DB00855",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0001149",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via synonym synonym",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "106-60-5",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "134",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "137",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "5-AMINO-LEVULINATE",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "894",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "C00430",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "CHEBI:17549",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "DB00855",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "HMDB0001149",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "synonym synonym"
+              }
+            ]
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "δ-aminolevulinic acid"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 894,
+              "name": "5-Aminolevulinic acid",
+              "short_name": "5-Amnva",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001149",
+                "kegg": "C00430",
+                "chebi": "CHEBI:17549",
+                "pubchem": "137",
+                "cas": "106-60-5",
+                "biocyc": "5-AMINO-LEVULINATE",
+                "chemspider": "134",
+                "drugbank": "DB00855",
+                "pathbank_compound_id": "894"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 894,
+          "resolved_name": "5-Aminolevulinic acid"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0001149",
+          "kegg": "C00430",
+          "chebi": "17549",
+          "pubchem": "137",
+          "cas": "106-60-5",
+          "biocyc": "5-AMINO-LEVULINATE",
+          "chemspider": "134",
+          "drugbank": "DB00855",
+          "pathbank_compound_id": "894"
+        },
+        "pathbank_compound_id": 894,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok_with_warnings",
+            "primary_name": "5-Aminolevulinate",
+            "synonyms": [
+              "5-Aminolevulinate",
+              "5-Amino-4-oxopentanoate",
+              "5-Amino-4-oxovaleric acid",
+              "5-Amino-4-oxopentanoic acid"
+            ],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C5H9NO3",
+            "charge": 0,
+            "mass_monoisotopic": 131.0582,
+            "mass_average": 131.13,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Lipids [BR:br08002]",
+              "FA Fatty acyls",
+              "FA01 Fatty Acids and Conjugates",
+              "FA0110 Amino fatty acids",
+              "C00430 5-Amino-4-oxopentanoic acid",
+              "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D07567)]",
+              "L ANTINEOPLASTIC AND IMMUNOMODULATING AGENTS",
+              "L01 ANTINEOPLASTIC AGENTS",
+              "L01X OTHER ANTINEOPLASTIC AGENTS",
+              "L01XD Sensitizers used in photodynamic/radiation therapy",
+              "L01XD04 Aminolevulinic acid",
+              "D07567 Aminolevulinic acid"
+            ],
+            "pathways": [
+              "Glycine, serine and threonine metabolism",
+              "Porphyrin metabolism",
+              "Biosynthesis of plant secondary metabolites",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Microbial metabolism in diverse environments",
+              "Biosynthesis of cofactors",
+              "ABC transporters"
+            ],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0001149",
+              "kegg_id": "C00430",
+              "chebi_id": "CHEBI:17549",
+              "pubchem_id": "137",
+              "cas": "106-60-5",
+              "biocyc": "5-AMINO-LEVULINATE",
+              "chemspider": "134",
+              "drugbank_id": "DB00855",
+              "pathbank_compound_id": "894"
+            },
+            "kegg": {
+              "status": "ok",
+              "source": "KEGG",
+              "id": "C00430",
+              "primary_name": "5-Aminolevulinate",
+              "synonyms": [
+                "5-Aminolevulinate",
+                "5-Amino-4-oxopentanoate",
+                "5-Amino-4-oxovaleric acid",
+                "5-Amino-4-oxopentanoic acid"
+              ],
+              "formula": "C5H9NO3",
+              "mass_monoisotopic": 131.0582,
+              "mass_average": 131.13,
+              "pathways": [
+                "Glycine, serine and threonine metabolism",
+                "Porphyrin metabolism",
+                "Biosynthesis of plant secondary metabolites",
+                "Metabolic pathways",
+                "Biosynthesis of secondary metabolites",
+                "Microbial metabolism in diverse environments",
+                "Biosynthesis of cofactors",
+                "ABC transporters"
+              ],
+              "kegg_class": [
+                "Lipids [BR:br08002]",
+                "FA Fatty acyls",
+                "FA01 Fatty Acids and Conjugates",
+                "FA0110 Amino fatty acids",
+                "C00430 5-Amino-4-oxopentanoic acid",
+                "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D07567)]",
+                "L ANTINEOPLASTIC AND IMMUNOMODULATING AGENTS",
+                "L01 ANTINEOPLASTIC AGENTS",
+                "L01X OTHER ANTINEOPLASTIC AGENTS",
+                "L01XD Sensitizers used in photodynamic/radiation therapy",
+                "L01XD04 Aminolevulinic acid",
+                "D07567 Aminolevulinic acid"
+              ],
+              "cross_references": {
+                "kegg_id": "C00430",
+                "pubchem_id": "3719",
+                "chebi_id": "17549"
+              },
+              "provenance": {
+                "source": "KEGG",
+                "id": "C00430",
+                "source_url": "https://rest.kegg.jp/get/cpd:C00430",
+                "retrieved_at": "2026-07-29T11:15:16Z",
+                "status": "ok"
+              }
+            },
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:17549",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-07-29T11:15:20Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0001149",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0001149",
+                "retrieved_at": "2026-07-29T11:15:15Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:17549",
+                "retrieved_at": "2026-07-29T11:15:20Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0001149",
+                "retrieved_at": "2026-07-29T11:15:15Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              },
+              {
+                "source": "KEGG",
+                "id": "C00430",
+                "retrieved_at": "2026-07-29T11:15:16Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0001149",
+        "kegg_id": "C00430",
+        "chebi_id": "17549",
+        "pubchem_cid": "137",
+        "cas": "106-60-5",
+        "biocyc_id": "5-AMINO-LEVULINATE",
+        "chemspider_id": "134",
+        "short_name": "5-Amnva",
+        "synonyms": [
+          "5-Aminolevulinate",
+          "5-Amino-4-oxopentanoate",
+          "5-Amino-4-oxovaleric acid",
+          "5-Amino-4-oxopentanoic acid"
+        ],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial state"
+          }
+        ],
+        "db_status": "legacy_id_unverified",
+        "db_id": 894,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 894
+      },
+      {
+        "name": "iron",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via exact_normalized_name exact_normalized_name",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "22368",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "23925",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "7439-89-6",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "9794",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "C00023",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "CHEBI:18248",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "DB01592",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "HMDB0015531",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "22368",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "23925",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "7439-89-6",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "9794",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "C00023",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:18248",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "DB01592",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0015531",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "iron"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 9794,
+              "name": "Iron",
+              "short_name": "Iron",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0015531",
+                "kegg": "C00023",
+                "chebi": "CHEBI:18248",
+                "pubchem": "23925",
+                "cas": "7439-89-6",
+                "chemspider": "22368",
+                "drugbank": "DB01592",
+                "pathbank_compound_id": "9794"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 9794,
+          "resolved_name": "Iron"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0015531",
+          "kegg": "C00023",
+          "chebi": "18248",
+          "pubchem": "23925",
+          "cas": "7439-89-6",
+          "chemspider": "22368",
+          "drugbank": "DB01592",
+          "pathbank_compound_id": "9794"
+        },
+        "pathbank_compound_id": 9794,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok_with_warnings",
+            "primary_name": "Iron",
+            "synonyms": [
+              "Iron"
+            ],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "Fe",
+            "charge": 0,
+            "mass_monoisotopic": 55.9349,
+            "mass_average": 55.85,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Risk category of Japanese OTC drugs [BR:br08312]",
+              "Second-class OTC drugs",
+              "Crude drugs",
+              "Iron powder",
+              "C00023 Iron"
+            ],
+            "pathways": [
+              "Chemical carcinogenesis - reactive oxygen species"
+            ],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0015531",
+              "kegg_id": "C00023",
+              "chebi_id": "CHEBI:18248",
+              "pubchem_id": "23925",
+              "cas": "7439-89-6",
+              "chemspider": "22368",
+              "drugbank_id": "DB01592",
+              "pathbank_compound_id": "9794"
+            },
+            "kegg": {
+              "status": "ok",
+              "source": "KEGG",
+              "id": "C00023",
+              "primary_name": "Iron",
+              "synonyms": [
+                "Iron"
+              ],
+              "formula": "Fe",
+              "mass_monoisotopic": 55.9349,
+              "mass_average": 55.85,
+              "pathways": [
+                "Chemical carcinogenesis - reactive oxygen species"
+              ],
+              "kegg_class": [
+                "Risk category of Japanese OTC drugs [BR:br08312]",
+                "Second-class OTC drugs",
+                "Crude drugs",
+                "Iron powder",
+                "C00023 Iron"
+              ],
+              "cross_references": {
+                "kegg_id": "C00023",
+                "pubchem_id": "3325",
+                "chebi_id": "18248"
+              },
+              "provenance": {
+                "source": "KEGG",
+                "id": "C00023",
+                "source_url": "https://rest.kegg.jp/get/cpd:C00023",
+                "retrieved_at": "2026-07-29T11:15:15Z",
+                "status": "ok"
+              }
+            },
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:18248",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-07-29T11:15:19Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0015531",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0015531",
+                "retrieved_at": "2026-07-29T11:15:15Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:18248",
+                "retrieved_at": "2026-07-29T11:15:19Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0015531",
+                "retrieved_at": "2026-07-29T11:15:15Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              },
+              {
+                "source": "KEGG",
+                "id": "C00023",
+                "retrieved_at": "2026-07-29T11:15:15Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0015531",
+        "kegg_id": "C00023",
+        "chebi_id": "18248",
+        "pubchem_cid": "23925",
+        "cas": "7439-89-6",
+        "chemspider_id": "22368",
+        "short_name": "Iron",
+        "synonyms": [
+          "Iron"
+        ],
+        "compound_class": "ion",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial state"
+          }
+        ],
+        "db_status": "legacy_id_unverified",
+        "db_id": 9794,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 9794
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_protein_id pathbank_protein_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "1",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "17",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "9606",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "ALAS2",
+                "source_type": "gene_name",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "P22557",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          },
+          {
+            "stage": "gap_resolution",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution filled a missing identifier mapping for this protein from a db candidate the paper never supplied",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "17",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "P22557",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "PathBankDB"
+              }
+            ]
+          }
+        ],
+        "organism": "Homo sapiens",
+        "species": "Homo sapiens",
+        "species_name": "Homo sapiens",
+        "pathbank_species_id": 1,
+        "species_id": 1,
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "ALAS2",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 17,
+              "name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "uniprot": "P22557",
+              "gene_name": "ALAS2",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "ALAS2",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:17, uniprot:P22557",
+            "judged_candidate": {
+              "pathbank_protein_id": 17,
+              "name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "uniprot": "P22557",
+              "gene_name": "ALAS2",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 17,
+                "name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+                "uniprot": "P22557",
+                "gene_name": "ALAS2",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "ALAS2",
+              "kind": "protein",
+              "resolved_name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "identity": "uniprot:P22557",
+              "compared_names": [
+                "5-aminolevulinate synthase, erythroid-specific, mitochondrial"
+              ],
+              "matched_symbol": "ALAS2"
+            }
+          },
+          "pathbank_protein_id": 17,
+          "resolved_name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "P22557",
+          "pathbank_protein_id": "17",
+          "gene_name": "ALAS2"
+        },
+        "pathbank_protein_id": 17,
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "P22557",
+              "recommended_name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "alternative_names": [
+                "5-aminolevulinic acid synthase 2",
+                "Delta-ALA synthase 2",
+                "Delta-aminolevulinate synthase 2"
+              ],
+              "gene_names": [
+                "ALAS2",
+                "ALASE",
+                "ASB"
+              ],
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "function_text": "Catalyzes the pyridoxal 5'-phosphate (PLP)-dependent condensation of succinyl-CoA and glycine to form aminolevulinic acid (ALA), with CoA and CO2 as by-products (PubMed:14643893, PubMed:21252495, PubMed:21309041, PubMed:21653323, PubMed:32499479, PubMed:34492704). Contributes significantly to heme formation during erythropoiesis (PubMed:2050125) Catalyzes the pyridoxal 5'-phosphate (PLP)-dependent condensation of succinyl-CoA and glycine to form aminolevulinic acid (ALA), with CoA and CO2 as by-products (PubMed:14643893). Catalytic activity is 75-85% of isoform 1 activity (PubMed:14643893) Catalyzes the pyridoxal 5'-phosphate (PLP)-dependent condensation of succinyl-CoA and glycine to form aminolevulinic acid (ALA), with CoA and CO2 as by-products (PubMed:14643893). Catalytic activity is 65-75% of isoform 1 activity (PubMed:14643893)",
+              "catalytic_activity": [
+                "succinyl-CoA + glycine + H(+) = 5-aminolevulinate + CO2 + CoA"
+              ],
+              "enzyme_commission": [
+                "2.3.1.37"
+              ],
+              "pathways": [
+                "Porphyrin-containing compound metabolism; protoporphyrin-IX biosynthesis; 5-aminolevulinate from glycine: step 1/1"
+              ],
+              "keywords": [
+                "3D-structure",
+                "Acyltransferase",
+                "Alternative splicing",
+                "Disease variant",
+                "Heme biosynthesis",
+                "Membrane",
+                "Mitochondrion",
+                "Mitochondrion inner membrane",
+                "Proteomics identification",
+                "Pyridoxal phosphate",
+                "Reference proteome",
+                "Transferase",
+                "Transit peptide"
+              ],
+              "subcellular_locations": [
+                "Mitochondrion inner membrane"
+              ],
+              "go_mf_ids": [
+                "GO:0003870",
+                "GO:0030170"
+              ],
+              "go_bp_ids": [
+                "GO:0030218",
+                "GO:0006785",
+                "GO:0006783",
+                "GO:0042541",
+                "GO:0006879",
+                "GO:0032364",
+                "GO:0006782",
+                "GO:0001666"
+              ],
+              "go_cellular_component_ids": [
+                "GO:0005743",
+                "GO:0005759",
+                "GO:0005739"
+              ],
+              "protein_existence": "1: Evidence at protein level",
+              "sequence_length": 587,
+              "transmembrane_regions_count": 0,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [
+                "5QQQ",
+                "5QQR",
+                "5QQS",
+                "5QQT",
+                "5QQU",
+                "5QQV",
+                "5QQW",
+                "5QQX",
+                "5QQY",
+                "5QQZ",
+                "5QR0",
+                "5QR1",
+                "5QR2",
+                "5QR3",
+                "5QR4",
+                "5QR5",
+                "5QR6",
+                "5QR7",
+                "5QR8",
+                "5QR9",
+                "5QRA",
+                "5QRB",
+                "5QRC",
+                "5QRD",
+                "5QRE",
+                "5QT3",
+                "6HRH"
+              ],
+              "reactome_ids": [
+                "R-HSA-189451"
+              ],
+              "string_id": "9606.ENSP00000497236",
+              "provenance": {
+                "source": "UniProt",
+                "query": "P22557",
+                "source_url": "https://rest.uniprot.org/uniprotkb/P22557.json",
+                "retrieved_at": "2026-07-29T11:15:15Z"
+              }
+            }
+          }
+        },
+        "uniprot": "P22557",
+        "gene_name": "ALAS2",
+        "ec_number": "2.3.1.37",
+        "ec_numbers": [
+          "2.3.1.37"
+        ],
+        "synonyms": [
+          "5-aminolevulinic acid synthase 2",
+          "Delta-ALA synthase 2",
+          "Delta-aminolevulinate synthase 2",
+          "ALAS2",
+          "ALASE",
+          "ASB",
+          "5-aminolevulinate synthase, erythroid-specific, mitochondrial"
+        ]
+      },
+      {
+        "name": "ferrochelatase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_protein_id pathbank_protein_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "1",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "4374",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "9606",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "Q53FU1",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (no_candidate_passed_identity_verification)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          },
+          {
+            "stage": "gap_resolution",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution filled a missing identifier mapping for this protein from a db candidate the paper never supplied",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "4374",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "Q53FU1",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "PathBankDB"
+              }
+            ]
+          }
+        ],
+        "organism": "Homo sapiens",
+        "species": "Homo sapiens",
+        "species_name": "Homo sapiens",
+        "pathbank_species_id": 1,
+        "species_id": 1,
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "ferrochelatase",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 4374,
+              "name": "Ferrochelatase",
+              "uniprot": "Q53FU1",
+              "gene_name": "",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "ambiguity": {
+            "candidate_count": 3,
+            "verified_count": 0,
+            "verified_accessions": [],
+            "rejections": [
+              {
+                "accession": "Q53FU1",
+                "reason": "ambiguous_insufficient_margin"
+              },
+              {
+                "accession": "Q5TZY0",
+                "reason": "ambiguous_insufficient_margin"
+              },
+              {
+                "accession": "Q7KZA3",
+                "reason": "ambiguous_insufficient_margin"
+              }
+            ],
+            "reason": "no_candidate_passed_identity_verification"
+          },
+          "rejected_candidates": [
+            {
+              "pathbank_protein_id": 4374,
+              "name": "Ferrochelatase",
+              "uniprot": "Q53FU1",
+              "gene_name": "",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            {
+              "pathbank_protein_id": 4375,
+              "name": "Ferrochelatase",
+              "uniprot": "Q5TZY0",
+              "gene_name": "",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            {
+              "pathbank_protein_id": 4376,
+              "name": "Ferrochelatase",
+              "uniprot": "Q7KZA3",
+              "gene_name": "DKFZp686P18130",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "identity_status": "verified",
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "ferrochelatase",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:4374, uniprot:Q53FU1",
+            "judged_candidate": {
+              "pathbank_protein_id": 4374,
+              "name": "Ferrochelatase",
+              "uniprot": "Q53FU1",
+              "gene_name": "",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 4374,
+                "name": "Ferrochelatase",
+                "uniprot": "Q53FU1",
+                "gene_name": "",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "ferrochelatase",
+              "kind": "protein",
+              "resolved_name": "Ferrochelatase",
+              "identity": "uniprot:Q53FU1",
+              "compared_names": [
+                "Ferrochelatase"
+              ]
+            }
+          },
+          "pathbank_protein_id": 4374,
+          "resolved_name": "Ferrochelatase"
+        },
+        "mapped_ids": {
+          "uniprot": "Q53FU1",
+          "pathbank_protein_id": "4374"
+        },
+        "pathbank_protein_id": 4374,
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "Q53FU1",
+              "recommended_name": "Ferrochelatase",
+              "alternative_names": [],
+              "gene_names": [],
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "function_text": "Catalyzes the ferrous insertion into protoporphyrin IX and participates in the terminal step in the heme biosynthetic pathway",
+              "catalytic_activity": [
+                "heme b + 2 H(+) = protoporphyrin IX + Fe(2+)"
+              ],
+              "enzyme_commission": [
+                "4.98.1.1"
+              ],
+              "pathways": [
+                "Porphyrin-containing compound metabolism; protoheme biosynthesis; protoheme from protoporphyrin-IX: step 1/1"
+              ],
+              "keywords": [
+                "2Fe-2S",
+                "Heme biosynthesis",
+                "Iron",
+                "Iron-sulfur",
+                "Lyase",
+                "Membrane",
+                "Metal-binding",
+                "Mitochondrion",
+                "Mitochondrion inner membrane",
+                "Porphyrin biosynthesis",
+                "Transit peptide"
+              ],
+              "subcellular_locations": [
+                "Mitochondrion inner membrane"
+              ],
+              "go_mf_ids": [
+                "GO:0051537",
+                "GO:0004325",
+                "GO:0005506"
+              ],
+              "go_bp_ids": [
+                "GO:0006785",
+                "GO:0046501"
+              ],
+              "go_cellular_component_ids": [
+                "GO:0005743"
+              ],
+              "protein_existence": "2: Evidence at transcript level",
+              "sequence_length": 420,
+              "transmembrane_regions_count": 0,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [],
+              "reactome_ids": [],
+              "string_id": "",
+              "provenance": {
+                "source": "UniProt",
+                "query": "Q53FU1",
+                "source_url": "https://rest.uniprot.org/uniprotkb/Q53FU1.json",
+                "retrieved_at": "2026-07-29T11:15:15Z"
+              }
+            }
+          }
+        },
+        "uniprot": "Q53FU1",
+        "ec_number": "4.98.1.1",
+        "ec_numbers": [
+          "4.98.1.1"
+        ],
+        "synonyms": [
+          "Ferrochelatase"
+        ]
+      },
+      {
+        "name": "SFXN4",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_protein_id pathbank_protein_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "1",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "3910",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "9606",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "Q6P4A7",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "SFXN4",
+                "source_type": "gene_name",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via synonym_or_fuzzy_species db_top_candidate_relaxed",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "1",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "3910",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "9606",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "Q6P4A7",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              }
+            ]
+          }
+        ],
+        "organism": "Homo sapiens",
+        "species": "Homo sapiens",
+        "species_name": "Homo sapiens",
+        "pathbank_species_id": 1,
+        "species_id": 1,
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "SFXN4",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 3910,
+              "name": "Sideroflexin-4",
+              "uniprot": "Q6P4A7",
+              "gene_name": "SFXN4",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "SFXN4",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:3910, uniprot:Q6P4A7",
+            "judged_candidate": {
+              "pathbank_protein_id": 3910,
+              "name": "Sideroflexin-4",
+              "uniprot": "Q6P4A7",
+              "gene_name": "SFXN4",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 3910,
+                "name": "Sideroflexin-4",
+                "uniprot": "Q6P4A7",
+                "gene_name": "SFXN4",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "SFXN4",
+              "kind": "protein",
+              "resolved_name": "Sideroflexin-4",
+              "identity": "uniprot:Q6P4A7",
+              "compared_names": [
+                "Sideroflexin-4"
+              ],
+              "matched_symbol": "SFXN4"
+            }
+          },
+          "pathbank_protein_id": 3910,
+          "resolved_name": "Sideroflexin-4",
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "Q6P4A7",
+          "pathbank_protein_id": "3910",
+          "gene_name": "SFXN4"
+        },
+        "pathbank_protein_id": 3910,
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "Q6P4A7",
+              "recommended_name": "Sideroflexin-4",
+              "alternative_names": [
+                "Breast cancer resistance marker 1"
+              ],
+              "gene_names": [
+                "SFXN4",
+                "BCRM1"
+              ],
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "function_text": "Mitochondrial amino-acid transporter (By similarity). Does not act as a serine transporter: not able to mediate transport of serine into mitochondria (PubMed:30442778)",
+              "catalytic_activity": [],
+              "enzyme_commission": [],
+              "pathways": [],
+              "keywords": [
+                "Acetylation",
+                "Alternative splicing",
+                "Amino-acid transport",
+                "Membrane",
+                "Mitochondrion",
+                "Mitochondrion inner membrane",
+                "Primary mitochondrial disease",
+                "Proteomics identification",
+                "Reference proteome",
+                "Transmembrane",
+                "Transmembrane helix",
+                "Transport"
+              ],
+              "subcellular_locations": [
+                "Mitochondrion inner membrane"
+              ],
+              "go_mf_ids": [
+                "GO:0015075",
+                "GO:0022857"
+              ],
+              "go_bp_ids": [
+                "GO:0006865",
+                "GO:1990542"
+              ],
+              "go_cellular_component_ids": [
+                "GO:0005743",
+                "GO:0005739"
+              ],
+              "protein_existence": "1: Evidence at protein level",
+              "sequence_length": 337,
+              "transmembrane_regions_count": 5,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [],
+              "reactome_ids": [
+                "R-HSA-6799198"
+              ],
+              "string_id": "9606.ENSP00000347924",
+              "provenance": {
+                "source": "UniProt",
+                "query": "Q6P4A7",
+                "source_url": "https://rest.uniprot.org/uniprotkb/Q6P4A7.json",
+                "retrieved_at": "2026-07-29T11:15:16Z"
+              }
+            }
+          }
+        },
+        "uniprot": "Q6P4A7",
+        "gene_name": "SFXN4",
+        "synonyms": [
+          "Breast cancer resistance marker 1",
+          "SFXN4",
+          "BCRM1",
+          "Sideroflexin-4"
+        ]
+      }
+    ],
+    "protein_complexes": [],
+    "subcellular_locations": [
+      {
+        "name": "cell",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrion",
+      "evidence": "SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis"
+    },
+    {
+      "name": "__auto_state__",
+      "subcellular_location": "cell",
+      "species": "Homo sapiens"
+    },
+    {
+      "name": "AutoState_homo_sapiensmitochondrial_matrix",
+      "subcellular_location": "Mitochondrial Matrix",
+      "compartment_canonical": "mitochondrial_matrix",
+      "species": "Homo sapiens",
+      "provenance_lineage": [
+        {
+          "stage": "gap_resolution",
+          "origin": "inferred",
+          "support": "derived",
+          "paper_explicit": "not_evaluated",
+          "reason": "gap resolution synthesized this biological state to place protein 'ALAS2' at 'Mitochondrial Matrix'; no existing state matched that species and compartment",
+          "review_required": false,
+          "uncertainty": "",
+          "sources": []
+        }
+      ]
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis"
+      },
+      {
+        "compound": "iron",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis"
+      },
+      {
+        "compound": "Glycine",
+        "biological_state": "mitochondrial state",
+        "evidence": "Glycine is the direct precursor for heme"
+      },
+      {
+        "compound": "δ-aminolevulinic acid",
+        "biological_state": "mitochondrial state",
+        "evidence": "δ-aminolevulinic acid synthase (ALAS2) catalyzes the first step of heme biosynthesis in mitochondria"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "SFXN4",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis"
+      },
+      {
+        "protein": "ALAS2",
+        "biological_state": "AutoState_homo_sapiensmitochondrial_matrix",
+        "provenance_lineage": [
+          {
+            "stage": "gap_resolution",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution created this location row to place protein 'ALAS2' at 'Mitochondrial Matrix'; the payload linked it to no compartment at all",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "Mitochondrial Matrix",
+                "source_type": "pathbank_db",
+                "uri": "",
+                "locator": "protein=ALAS2; location_frequency=1"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "protein": "ferrochelatase",
+        "biological_state": "mitochondrial state",
+        "provenance_lineage": [
+          {
+            "stage": "gap_resolution",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution created this location row to place protein 'ferrochelatase' at 'Mitochondrion'; the payload linked it to no compartment at all",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "Mitochondrion",
+                "source_type": "pathbank_db",
+                "uri": "",
+                "locator": "protein=ferrochelatase; location_frequency=1"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ferrochelatase",
+        "name": "SFXN4 modulates ferrochelatase levels",
+        "relationship": "modulates",
+        "biological_state": "mitochondrial state",
+        "evidence": "modulating ferrochelatase levels",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "reactions": [
+      {
+        "inputs": [
+          "iron"
+        ],
+        "outputs": [
+          "heme"
+        ],
+        "name": "glycine to heme (ferrochelatase-catalyzed)",
+        "enzymes": [
+          {
+            "entity": "ferrochelatase",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 0.9,
+            "provenance": "inferred",
+            "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+          },
+          {
+            "entity": "SFXN4",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 0.9,
+            "provenance": "inferred",
+            "evidence": "glycine to heme (ferrochelatase-catalyzed) SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+          }
+        ],
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "ferrochelatase",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
+            "confidence": 0.9,
+            "provenance": "inferred"
+          },
+          {
+            "entity": "SFXN4",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "glycine to heme (ferrochelatase-catalyzed) SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
+            "confidence": 0.9,
+            "provenance": "inferred"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "Glycine"
+        ],
+        "outputs": [
+          "δ-aminolevulinic acid"
+        ],
+        "name": "ALAS2 reaction (glycine to δ-aminolevulinic acid)",
+        "enzymes": [
+          {
+            "entity": "ALAS2",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 0.95,
+            "provenance": "inferred",
+            "evidence": "erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway"
+          }
+        ],
+        "biological_state": "mitochondrial state",
+        "evidence": "erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "SFXN4",
+            "entity_type": "protein",
+            "role": "inhibitor",
+            "evidence": "inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2)",
+            "confidence": 1.0,
+            "provenance": "inferred"
+          },
+          {
+            "entity": "ALAS2",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway",
+            "confidence": 0.95,
+            "provenance": "inferred"
+          }
+        ]
+      }
+    ],
+    "transports": []
+  },
+  "source_text_index": {
+    "schema_version": 1,
+    "length": 67304,
+    "normalized": "pmc hum genomics hum genomics 1893 humgenomics human genomics 1473 9542 1479 7364 bmc pmc12180156 pmc12180156 1 12180156 12180156 40542427 10 1186 s40246 025 00779 w 779 1 review update of the sideroflexin slc56 gene family http orcid org 0000 0001 9533 0093 katsafadou angeliki i agkatsaf uth gr 1 2 nebert daniel w 3 4 krupenko sergey a 5 6 thompson david c 1 http orcid org 0000 0003 2552 3118 vasiliou vasilis vasilis vasiliou yale edu 1 1 https ror org 03v76x132 grid 47100 32 0000000419368710 department of environmental health sciences yale school of public health new haven ct 06511 usa 2 https ror org 04v4g9h31 grid 410558 d 0000 0001 0035 6670 faculty of public and one health university of thessaly karditsa 43100 greece 3 https ror org 01e3m7079 grid 24827 3b 0000 0001 2179 9593 department of environmental public health sciences university of cincinnati college of medicine p o box 670056 cincinnati oh 45267 usa 4 grid 530874 d 0000 0004 6107 779x department of pediatrics molecular developmental biology division of human genetics cincinnati children s research foundation cincinnati oh 45229 usa 5 https ror org 0566a8c54 grid 410711 2 0000 0001 1034 1720 nutrition research institute university of north carolina kannapolis nc 28081 usa 6 https ror org 0130frc33 grid 10698 36 0000 0001 2248 3208 department of nutrition university of north carolina chapel hill nc 27599 usa 20 6 2025 2025 19 478641 69 22 3 2025 3 6 2025 20 06 2025 20 06 2025 21 06 2025 the author s 2025 2025 https creativecommons org licenses by nc nd 4 0 open access this article is licensed under a creative commons attribution noncommercial noderivatives 4 0 international license which permits any non commercial use sharing distribution and reproduction in any medium or format as long as you give appropriate credit to the original author s and the source provide a link to the creative commons licence and indicate if you modified the licensed material you do not have permission under this licence to share adapted material derived from this article or parts of it the images or other third party material in this article are included in the article s creative commons licence unless indicated otherwise in a credit line to the material if material is not included in the article s creative commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use you will need to obtain permission directly from the copyright holder to view a copy of this licence visit http creativecommons org licenses by nc nd 4 0 the human sideroflexin sfxn gene family also classified as solute carrier family 56 slc56 encodes a group of five mitochondrial transmembrane proteins sfxn1 sfxn5 involved in key aspects of mitochondrial metabolism cellular homeostasis and development sfxns are highly conserved across eukaryotic species with evolutionary the origin traced back to the earliest metazoans functionally each of the five family members exhibits distinct functional specialization particularly sfxn1 and sfxn3 facilitate mitochondrial serine transport supporting one carbon metabolism sfxn2 and sfxn4 are implicated in mitochondrial iron regulation heme biosynthesis and iron sulfur cluster assembly sfxn5 predominantly expressed in the brain is proposed to regulate citrate metabolism and immune cell functions mutations or dysregulation of sfxn genes have been linked to certain human diseases including congenital sideroblastic anemia oxidative phosphorylation disorders neurodegenerative conditions and cancers structurally sfxns share conserved transmembrane domains and key motifs critical for substrate transport mitochondrial iron homeostasis and overall mitochondrial function the evolutionary trajectory of the sfxn family from amino acid transport to functionally specialized roles in higher organisms highlights their biological and clinical significance comparative studies across model organisms reveal both conserved and divergent functions emphasizing their importance in health and disease a comprehensive understanding of the sfxn family not only advances fundamental mitochondrial research but also opens avenues for novel therapeutic interventions keywords biomarkers classification gene families nomenclature sfxn sideroflexins slc56 national institutes of health es033815 vasiliou vasilis pmc status qastatus 0 pmc status live yes pmc status embargo no pmc status released yes pmc prop open access yes pmc prop olf no pmc prop manuscript no pmc prop legally suppressed no pmc prop has pdf yes pmc prop has supplement no pmc prop pdf only no pmc prop suppress copyright no pmc prop is real version no pmc prop is scanned article no pmc prop preprint no pmc prop in epmc yes issue copyright statement biomed central ltd part of springer nature 2025 background the sideroflexin sfxn gene family is also known as the solute carrier 56 slc56 gene family slc56 is one of 66 families included in the large slc superfamily which comprises a total of more than 450 members 1 3 this diverse group of membrane transporter proteins is responsible for the movement of a wide range of solutes across cellular membranes substrates for slc transporters include more than two dozen inorganic cations and anions e g h mn 2 fe 3 seo 3 2 oh so 4 2 po 4 3 carboxylate and other organic anions amino acids and oligopeptides glucose and other sugars bile salts acetyl coenzyme a essential metal nutrients biogenic amines vitamins urea neurotransmitters fatty acids lipids nucleosides ammonium choline and thyroid hormone 3 5 the human slc56 sfxn gene family is comprised of five mitochondrial transmembrane solute carrier proteins designated sfxn1 through sfxn5 sfxn genes are conserved across virtually all eukaryotes including the earliest metazoans and yeast reflecting their evolutionary significance 6 9 the sideroflexin name was derived from research on mice with two notable traits sideroblastic anemia and flexed tail 7 this study discovered a sfxn1 gene mutation associated with the flexed tail trait and proposed that loss of sfxn1 activity caused the observed sideroblastic anemia phenotype however this association remains unclear and has been questioned by subsequent studies 10 11 sfxn proteins participates in cellular metabolism mitochondrial homeostasis and development 7 12 they were initially identified in rodents as candidates for mitochondrial citrate transport 6 and have since been implicated in the transport of amino acids and other metabolites as well as in iron homeostasis and energy production 12 14 among these processes sfxn1 functions as a mitochondrial serine transporter which is crucial for one carbon metabolism and associated with nucleotide biosynthesis 13 15 in contrast sfxn4 lacks serine transport capability 13 but instead contributes to mitochondrial iron utilization 16 by supporting the biogenesis of iron sulfur clusters iscs and hemoglobin synthesis sfxn4 contributes to oxidative phosphorylation by acting as an assembly factor for complex i of the mitochondrial respiratory chain 17 this divergence in functional roles of the various sfxns highlights the specialized contributions of sfxn family members to cellular and metabolic processes mutations in or dysregulation of sfxn genes have been associated with severe anemia neurodegenerative diseases and cancer 8 18 19 the evolutionary trajectory of this family is particularly intriguing while several members mediate mitochondrial amino acid transport sfxn4 exhibits a distinct function focused on iron sulfur cluster biogenesis and respiratory chain assembly reflecting an adaptive shift as a factor within mitochondrial physiology 13 16 the present article explores the evolutionary history structural characteristics and biological functions of the sfxn gene family highlighting their participation in health and disease by examining their structural and functional features their importance in mitochondrial biology and human health is emphasized evolution of the sfxn gene family the sideroflexin gene family encodes a group of sfxn proteins that are highly conserved across eukaryotes underscoring their important roles in cellular and mitochondrial function the evolutionary path of this family offers valuable insights into how the genes have adapted to support processes in diverse organisms 4 13 though bacteria lack sfxns they possess analogous proteins that perform similar functions in nutrient transport and metabolism bacterial systems such as amino acid transporters from the major facilitator superfamily mfs and abc transporters coupled with iron acquisition mechanisms e g feob and siderophores fulfill comparable biochemical functions in prokaryotic cells 20 22 homologs of sfxn genes are found across virtually all eukaryotic lineages including plants physcomitrium patens selaginella moellendorffii opisthokonts e g choanoflagellates yeast saccharomyces cerevisiae fruit fly drosophila melanogaster and higher animals table 1 fig 1 4 7 12 13 23 the presence of sfxn like proteins in simple organisms such as fungi 24 suggests the gene family arose early in eukaryotic evolution consistent with the emergence of mitochondria as an autonomous organelle 12 13 although most studies have focused on animals and fungi blastp results show that sideroflexin homologs exist also in plants and protists notably the bryophyte physcomitrium patens and the lycophyte selaginella moellendorffii each contain a single sfxn gene sideroflexin like and sfxn5 respectively table 1 however no annotated sfxn genes have been found in any angiosperm or gymnosperm genome examined to date including well curated model species such as arabidopsis thaliana rice maize and poplar the currently reported plant sideroflexins share only 22 37 amino acid sequence similarity with human sfxns with the highest similarity being to human sfxn5 fig 2 this pattern suggests that sideroflexins may have been present in the earliest eukaryotes but underwent differential retention and expansion in distinct evolutionary lineages 25 in plants for example iron regulation primarily relies on other mechanisms such as phytosiderophores and citrate based mechanisms rather than sideroflexins 26 in fact there is no evidence that plants have mitochondrial serine transporters analogous to sfxn1 in plants however the reaction catalyzed by the mitochondrial serine hydroxymethyltransferase shmt runs in the direction producing serine from glycine 27 thus this reaction apparently provides mitochondrial serine in the absence of the shuttle of serine from cytosol a choanoflagellate e g salpingoeca rosetta in table 1 is among the opisthokonts considered the closest living relatives of animals and the earliest functional eukaryotic unicellular organisms that have a diploid genome within the nucleus and mitochondria in the cytoplasm 28 possesses sfxn1 and sfxn5 this finding indicates that sfxn genes were already established before the emergence of multicellular animals presence of multiple sfxn genes in the roundworm caenorhabditis elegans seven genes and zebrafish danio rerio six genes reflects lineage specific expansions and possible functional diversification 12 18 evolution of the sfxn gene family appears to parallel the growing complexity of mitochondrial functions in multicellular organisms the role of sfxn family members in biological processes such as one carbon metabolism and iron sulfur cluster isc biosynthesis likely emerged to meet the growing metabolic demands of larger more complex organisms 7 12 24 25 comparative studies in model organisms including yeast and zebrafish have been instrumental in identifying shared and specialized functions across species 13 18 29 for example homologous proteins in yeast fruit fly and vertebrates demonstrate conserved functions in mitochondrial transport particularly in serine transport and iron homeostasis underlining their significance in eukaryotic evolution 7 12 13 23 24 apparently a sfxn5 like gene was the first to appear during evolution of the sfxn family figs 1 and 3 in humans most sfxn homologs have a high degree of sequence conservation with sfxn1 and sfxn3 having 77 similarity sfxn1 and sfxn2 share 55 of identical amino acid residues while sfxn1 and sfxn4 share only 23 identical residues 12 13 fig 2 given the potential involvement of sfxn1 and sfxn3 in mitochondrial serine transport 13 a high degree of amino acid sequence similarity is not surprising among mammalian sfxns sfxn4 is the most divergent member biological and clinical significance of sfxns as mentioned above sfxns are crucial mitochondrial membrane proteins involved in metabolite transport mitochondrial function and cellular metabolism they contribute to iron homeostasis one carbon metabolism and central carbon metabolism with implications for involvement in neurodegeneration cancer and sideroblastic anemia biological functions sfxn1 sfxn1 is essential for serine transport from cytosol into the mitochondrial matrix which is a key step to feed mitochondrial one carbon metabolism 13 one carbon metabolism is an interconnected set of mitochondrial and cytosolic reactions that convey single carbon units carried by the tetrahydrofolate thf coenzyme between pathways that build and modify biomolecules 30 31 in mitochondria serine enters the mitochondrial branch of one carbon metabolism where it is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase which also generates 5 10 methylene thf the later is further metabolized to yield formate formate is exported to the cytosol where it fuels the folate cycle linked to thymidylate and purine synthesis as well as methylation reactions which are critical for dna rna and protein regulation fig 4 13 15 30 32 of note oxidation of folate bound one carbon groups can also generate nadph thus contributing to the energy production 33 this dynamic flow of one carbon units integrates amino acid catabolism with nucleotide biosynthesis redox balance and epigenetic control functions that are essential for supporting cell growth and proliferation 13 30 absence of sfxn1 leads to serine deficiency which limits cell proliferation in knockout ko cell models however this defect can be rescued with formate supplementation 14 in addition sfxn1 deficiency disrupts central carbon metabolism by depleting tricarboxylic acid tca cycle intermediates decreasing glutamate dehydrogenase activity and altering nad nadh ratios as reported by acoba and colleagues 14 while radiolabel and reconstituted proteoliposome assays confirmed serine as the preferred substrate kory et al also observed lower affinity transport of alanine cysteine and glycine indicating that sfxn1 is a serine favoured but not serine exclusive carrier 13 nonetheless while originally characterized as a serine transporter sfxn1 has since been implicated in the biogenesis assembly and functional regulation of mitochondrial respiratory complex iii 13 14 34 loss or dysfunction of sfxn1 leads to selective destabilization of complex iii lowering its subunit abundance disrupting dimerization and suppressing enzymatic activity but without substantially affecting the integrity of the other oxidative phosphorylation complexes 13 14 34 sfxn1 also influences mitochondrial iron homeostasis indirectly by boosting glycine production glycine is the direct precursor for heme and through its involvement in one carbon metabolism indirectly supports fe s cluster biogenesis 13 mitochondria assemble fe s clusters through a tightly regulated multistep process iron delivered by frataxin and sulfur extracted from cysteine by cysteine desulfurases nfs1 via a persulfide intermediate for incorporation into nascent fe s clusters are combined on the iron sulfur cluster assembly protein iscu scaffold to form an initial 2fe 2 s cluster 35 ferredoxin provides the necessary electrons and the isa1 isa2 iba57 complex can remodel two small clusters into a 4fe 4 s form essential for respiratory chain tca cycle and dna repair enzymes 36 37 computational analyses also suggest the presence of heme binding motifs in sfxn1 although their functional significance remains to be determined 12 sfxn2 although sfxn2 s contribution to serine transport remains unclear it is hypothesized to contribute to mitochondrial iron homeostasis 12 13 38 studies have shown that sfxn2 ko cells exhibit increased mitochondrial iron content suggesting that sfxn2 may be involved in iron export from mitochondria or in regulating iron utilization within the organelle 38 however to date there is no evidence showing sfxn2 or any other sfxn to function directly as an fe 2 or fe 3 transporter increases in mitochondrial iron in sfxn2 ko cells do not result in proportional increases in heme synthesis instead heme levels are decreased in these cells and this lowering correlates with decreased activity of heme dependent enzymes which rely on heme as a cofactor 38 interestingly isc dependent enzyme activities appear unaffected in these knockout models suggesting a selective impact on heme biosynthesis rather than broad disruptions in isc function consistent with involvement in iron handling chen et al 39 demonstrated that elevated sfxn2 expression in multiple myeloma cells limited mitochondrial autophagy enhanced iron driven oxidative phosphorylation and thereby promoted tumor proliferation further underscoring the importance of sfxn2 in mitochondrial iron utilization and energy metabolism the mechanisms underlying these changes remain unexplored highlighting the need for further research on sfxn2 s contribution to iron and heme homeostasis 38 39 sfxn3 sfxn3 is thought to be involved in serine transport similar to that of sfxn1 13 although its exact molecular function is not fully understood absence of sfxn3 in sfxn3 ko mice affects the levels of certain isc proteins such as the rieske protein leading to increased mitochondrial iron content 40 this finding suggests that sfxn3 impacts mitochondrial iron homeostasis and isc biogenesis recent work by mi et al 41 demonstrated that sfxn3 can form a complex with poly rc binding protein 2 pcbp2 via tom20 thereby providing a pathway for iron entry into mitochondria and reinforcing its involvement in mitochondrial iron metabolism however the exact mechanisms underlying sfxn3 s regulatory function and its overall impact on mitochondrial iron metabolism remain to be fully elucidated 40 41 sfxn4 sfxn4 is important for mitochondrial iron utilization by affecting both heme and isc biosynthesis these processes are essential for mitochondrial oxidative metabolism and dna synthesis 16 18 42 sfxn4 regulates heme biosynthesis by modulating ferrochelatase levels and inhibiting the translation of erythroid δ aminolevulinic acid synthase alas2 a key enzyme in the heme synthesis pathway encoded by the alas2 gene and expressed exclusively in erythroid cells 16 in addition sfxn4 influences isc biosynthesis by regulating the cytosolic aconitase iron responsive element binding protein 1 irp1 switch thereby facilitating the redistribution of iron from the cytosol to the mitochondrial matrix 10 it is noteworthy that a recent study identified sfxn4 as a complex i assembly factor interacting with components of the mitochondrial complex i intermediate assembly mcia complex 17 this interaction suggests that sfxn4 might participate in stabilizing and coordinating complex i integration within the mitochondrial respiratory chain 16 18 34 sfxn5 sfxn5 is primarily expressed in the brain with high levels detected across various regions including the cerebellum cerebral cortex and hippocampus 8 whereas its precise function remains under investigation sfxn5 has been proposed to modulate cytosolic citrate possibly by exporting citrate from the mitochondrion 29 43 in most mammalian cells citrate is produced in the tricarboxylic acid cycle and exported to the cytosol by slc25a1 cic providing acetyl coa for lipid synthesis 44 of note while the export from mitochondria is viewed as the main direction of citrate transport the entry of citrate to mitochondria through the reverse action of slc25a1 cic has been shown 44 apparently this mechanism could direct the surplus of cytosolic citrate back to mitochondria for the energy production through the tca cycle currently however there is no strong evidence for a dedicated mitochondrial citrate importer but the observed reduction in cytosolic citrate in sfxn5 deficient neutrophils suggests a function for sfxn5 in modulating citrate homeostasis potentially through export recycling or exchange mechanisms 29 this hypothesis remains speculative as the substrate specificity transport dynamics and the directionality of sfxn5 are not yet defined importantly decreased cytosolic citrate is believed to impair actin polymerization and pi 4 5 p₂ synthesis processes essential for proper neutrophil function 29 the clarification of whether sfxn5 operates as a unidirectional transporter or as part of a bidirectional exchange system as well as the participation of the transporter in balancing cytosolic and mitochondrial citrate will require further investigation tissue distribution of sfxns the expression of sfxns varies across different tissues reflecting their distinct roles in mitochondrial metabolism according to the human protein atlas hpa sfxn1 is expressed in most tissues but is enriched in liver kidney bone marrow and small intestine all of which have high one carbon metabolism demand 13 45 sfxn2 while ubiquitously expressed shows higher levels in bone marrow derived and other hematopoietic tissues consistent with its involvement in iron homeostasis and heme biosynthesis 39 45 sfxn3 is predominantly expressed in neural tissues with peak levels in cortex hippocampus and retina supporting its proposed function in iron regulation in the central nervous system 40 45 sfxn4 exhibits high expression in tissues with high oxidative metabolism including liver kidney heart and bone marrow this corresponds to sfxn4 s function in isc assembly and heme biosynthesis 16 45 finally sfxn5 is primarily expressed in brain with highest expression in cerebral cortex and cerebellum reinforcing its proposed involvement in neuronal citrate iron metabolism 8 45 clinical importance sfxn1 sfxn1 appears to be involved in both neurodegenerative diseases anemia and cancer impaired iron regulation due to sfxn1 dysfunction is thought to contribute to anemia because diminished iron availability disrupts hemoglobin synthesis thereby decreasing red blood cell production and function 7 18 sfxn1 has been identified as a potential therapeutic target in cancer therapy 12 increased sfxn1 expression has been linked to breast cancer gliomas and lung adenocarcinoma suggesting its involvement in tumor progression 19 46 48 moreover it has been proposed that inhibition of sfxn1 activity may slow tumor growth by disrupting serine transport and nucleotide biosynthesis 49 50 sfxn2 sfxn2 gene mutations leading to lowered expression of the sfxn2 transporter have been associated with multiple myeloma whereas its overexpression has been correlated with poor patient outcomes 39 suppression of sfxn2 expression impedes tumor progression in myeloma xenograft models 39 the mechanism underlying this effect likely involves alterations in mitochondrial functions and metabolic pathways essential for myeloma cell survival and proliferation whatever the case sfxn2 may represent an attractive new target for the treatment of multiple myeloma sfxn2 has also been suggested as a potential target for mitochondrial disorders e g sideroblastic anemia further emphasizing its role in metabolic regulation 12 sfxn3 sfxn3 has been implicated in neurodegenerative diseases particularly parkinson and alzheimer diseases 8 40 51 52 sfxn3 impacts synaptogenesis and synapse maintenance and is involved in α synuclein dependent pathways a key factor in parkinson disease pathology 53 disruptions in sfxn3 function have been linked to mitochondrial dysfunction further associating it with neurodegenerative disease progression 54 similar to sfxn1 and sfxn3 gene variants that lower its iron transport capacity have also been associated with parkinson disease 53 54 sfxn3 has also been identified as a potential tumor marker for oral squamous cell carcinoma scc in that elevated serum anti sfxn3 autoantibodies have been found in scc patients these antibodies show high sensitivity and specificity for early detection of this type of cancer 55 sfxn4 sfxn4 gene mutations are associated with severe mitochondrial disorders including oxidative phosphorylation deficiency syndrome coxpd18 which manifests with symptoms that may include macrocytic anemia lactic acidosis intellectual disabilities and visual impairment 18 42 in addition homozygous inactivating mutations in sfxn4 chromosome 10q24 2 have been linked to severe macrocytic anemia with mitochondrial dysfunction and iron overload 18 42 furthermore systemic metabolic imbalances due to sfxn4 dysregulation are known to exacerbate the severity of anemia 12 beyond these hematologic conditions abnormal sfxn4 activity has also been implicated in cancer patients mutations in the sfxn4 gene have been correlated with familial colorectal cancer 56 sfxn4 upregulation has been observed in hepatocellular carcinoma where it is associated with poor prognosis thus making it a potential prognostic biomarker 57 sfxn5 although sfxn5 s exact function remains unclear the sfxn5 gene which exhibits a brain specific expression pattern 8 resides within the park3 locus on human chromosome 2p13 the physical distance between them is approximately 2 5 million base pairs mb the park3 region is a locus associated with parkinson disease 8 however no studies have demonstrated any direct association of the sfxn5 gene with parkinson disease on the other hand increased sfxn5 expression has been associated with breast cancer gliomas and lung adenocarcinoma suggesting its involvement in these malignant disease 19 46 48 structural features sfxns are integral membrane proteins predominantly localized in the mitochondrial inner membrane and are characterized by several structural features essential for their function in silico analyses predict sfxns to possess four to six transmembrane alpha helices but there is no exact information about their orientation fig 5 12 58 these alpha helices form a framework that facilitates the transport of small molecules e g amino acids and metabolites across the mitochondrial membrane by most sfxns 7 8 24 58 nonetheless sfxn4 has been identified as a complex i assembly factor interacting with components of the mitochondrial complex i intermediate assembly mcia complex therefore the structural features of sfxn4 may facilitate this assembly process ensuring the proper formation and integration of complex i within mitochondria 17 sfxns possess specific conserved motifs fig 2 including the highly conserved sequence of amino acids histidine h proline p aspartate d and threonine t known as the hpdt motif and an asparagine rich sequence which ensure proper transport to the mitochondrial membrane 4 7 8 the topology of the sfxn molecules involved in transport particularly sfxn1 and sfxn3 suggests that the nh 2 terminus influences their molecular orientation and targeting within the mitochondrial inner membrane potentially extending into the intermembrane space 14 25 in such a configuration their transmembrane domains create selective pathways for substrate transport a feature that is critical to mitochondrial function and conserved across species 7 12 23 however further experimental studies are necessary to clarify how the nh 2 terminal structure influences substrate selection across the mitochondrial membrane methods all sideroflexin gene entries were searched at ncbi gene entrez accessed 10 february 2025 sfxn gene entries were selected from fourteen representative species spanning major evolutionary lineages for analysis these included the vertebrates homo sapiens human mus musculus mouse danio rerio zebrafish and xenopus tropicalis tropical clawed frog and the invertebrates drosophila melanogaster fruit fly centruroides sculpturatus bark scorpion caenorhabditis elegans roundworm the cnidarian rhopilema esculentum jellyfish the mollusk magallana gigas pacific oyster the echinoderm lytechinus variegatus green sea urchin and the sponge amphimedon queenslandica single celled and plant representatives included salpingoeca rosetta choanoflagellate selaginella moellendorffii lycophyte plant and saccharomyces cerevisiae strain s288c yeast all these species are summarized in table 1 to be included gene entries were required to meet three criteria a encode a full length protein excluding partial or fragmented sequences b have an annotated unique chromosomal location and c be classified as protein coding excluding known pseudogenes all selected sfxn nucleotide and protein entries were downloaded from ncbi gene entrez accessed 10 february 2025 and cross checked against uniprotkb swiss prot 59 after removing partial or redundant records the longest canonical isoform of each gene was kept for analyses protein sequences were aligned with clustal omega v1 2 4 default settings through the uniprot alignment interface conserved motifs hpdt and asparagine n rich regions were annotated using interpro v96 and visualized manually multiple sequence alignments from the representative species panel and the human mouse subset were used to construct maximum likelihood phylogenetic trees with mega11 60 the jones taylor thornton jtt matrix based substitution model 61 was applied with initial trees generated automatically using neighbor join and bionj algorithms branch lengths are presented as substitutions per site predicted three dimensional structures of human sfxn1 sfxn4 were retrieved from the alphafold protein structure database 62 64 structures were visualized and edited in pymol v2 5 to highlight α helices β strands and loop regions schematic diagrams and figures were generated using biorender com conclusions the sideroflexin slc56 gene family represents a highly conserved group of mitochondrial transmembrane solute carriers that are involved in metabolite transport iron homeostasis and mitochondrial function over the course of evolution these proteins have diversified to support specialized processes involved in cellular and metabolic regulation such as serine transport sfxn1 sfxn3 iron metabolism sfxn2 sfxn3 sfxn4 and likely citrate transport sfxn5 their functional diversity suggests a key role in maintaining mitochondrial functional integrity and metabolic health with direct clinical implications for involvement in neurodegenerative diseases anemia and cancer however many aspects of their transport mechanisms regulatory pathways and structural dynamics remain unresolved necessitating further research a deeper understanding of sfxn molecular functions is expected to offer novel insights into their contributions to mitochondrial disorders and disease pathogenesis table 1 sfxn genes from representative species these data were retrieved from the ncbi gene entrez database for each species as of february 10 2025 organism number of sfxn genes gene names gene ids homo sapiens human 5 sfxn1 sfxn2 sfxn3 sfxn4 sfxn5 94 081 118 980 81 855 119 559 94 097 mus musculus mouse 5 sfxn1 sfxn2 sfxn3 sfxn4 sfxn5 14 057 94 279 94 280 94 281 94 282 danio rerio zebrafish 6 sfxn1 sfxn2 sfxn3 sfxn4 sfxn5a sfxn5b 445 143 334 757 791 182 556 121 562 654 561 995 xenopus tropicalis tropical clawed frog 5 sfxn1 sfxn2 sfxn3 sfxn4 sfxn5 548 998 496 514 100 216 274 100 487 071 448 290 drosophila melanogaster fruit fly 2 sfxn1 3 sfxn2 40 552 40 080 centruroides sculpturatus bark scorpion 2 sfxn1 3 sfxn2 111 628 057 111 639 308 caenorhabditis elegans roundworm 7 sfxn1 1 sfxn1 2 sfxn1 3 sfxn1 4 sfxn1 5 sfxn2 sfxn5 181 807 174 708 180 055 183 547 181 353 181 054 174 303 rhopilema esculentum jellyfish 3 sideroflexin 1 like sideroflexin 2 like sideroflexin 5 like 135 695 859 135 696 064 135 695 829 magallana gigas pacific oyster 3 sfxn1 sfxn2 sfxn5 105 326 336 105 335 554 105 318 942 lytechinus variegatus green sea urchin 3 sideroflexin 1 like sideroflexin 2 like sideroflexin 5 like 121 424 831 121 425 488 121 424 772 amphimedon queenslandica sponge 3 sideroflexin 1 like sideroflexin 2 like sideroflexin 5 like 100 633 500 100 637 156 100 637 152 salpingoeca rosetta choanoflagellate 2 sfxn1 sfxn5 16 074 064 16 071 733 selaginella moellendorffii lycophyte plant 1 sfxn5 9 632 309 saccharomyces cerevisiae s288c yeast 1 fsf1 854 445 fig 1 phylogenetic analysis of the sfxns from representative species the evolutionary history was inferred by using the maximum likelihood method and jones taylor thornton jtt matrix based model 61 the tree with the highest log likelihood 21706 14 is shown initial tree s for the heuristic search were obtained automatically by applying neighbor join and biological neighbor joining bionj algorithms to a matrix of pairwise distances estimated using the jtt model and then selecting the topology with superior log likelihood value the tree is drawn to scale with branch lengths measured in the number of substitutions per site a distance scale of 0 50 indicates 0 5 substitutions per site this analysis involved 48 amino acid sequences there was a total of 429 positions in the final dataset evolutionary analyses were conducted in mega11 60 abbreviations aqu amphimedon queenslandica cel caenorhabditis elegans csc centruroides sculpturatus dme drosophila melanogaster dre danio rerio hsa homo sapiens lva lytechinus variegatus mgi magallana giga mmu mus musculus res rhopilema esculentum sce saccharomyces cerevisiae s288c smo selaginella moellendorffii sro salpingoeca rosetta xtr xenopus tropicalis fig 2 amino acid and peptide sequence and alignment of human and plant sfxns dark purple fully shaded regions denotes amino acids that are identical across all sequences while lighter purple or partially shaded regions indicates semi conserved or conserved substitutions the hpdt motif and the asparagine n rich sequences are also highlighted unmarked residues represent sequence variations dashes represent gaps in the alignment these gaps suggest evolutionary divergence i e where one sequence has additional or missing amino acids the sequence numbering on the right side indicates the position of amino acids in the full length protein sequence sequences were retrieved from the ncbi gene entrez database and aligned using clustal omega v1 2 4 default parameters via the uniprotkb swiss prot alignment tool 59 abbreviations hsa homo sapiens smo selaginella moellendorffii ppa physcomitrium patens the figure was created using biorender https biorender com fig 3 phylogenetic comparison of human and mouse sfxns the evolutionary history was inferred by using the maximum likelihood method and jtt matrix based model 61 the tree with the highest log likelihood 4427 25 is shown initial tree s for the heuristic search were obtained automatically by applying neighbor join and bionj algorithms to a matrix of pairwise distances estimated using the jtt model and then selecting the topology with superior log likelihood value the tree is drawn to scale with branch lengths measured in the number of substitutions per site a distance scale of 0 50 indicates 0 5 substitutions per site this analysis involved 10 amino acid sequences there was a total of 350 positions in the final dataset evolutionary analyses were conducted in mega11 60 abbreviations hsa homo sapiens mmu mus musculus fig 4 proposed roles for sfxns sfxns transport serine or citrate to mitochondria whereas citrate feeds the tca cycle for energy production serine has multiple functions its main pathway is folate dependent conversion to glycine catalyzed by shmt2 this reaction feeds one carbon groups to mitochondrial folate metabolism ocm one carbon metabolism these groups can be i oxidized to co2 to produce energy in the form of nadph ii converted to formate which is exported from mitochondria to feed the cytosolic folate metabolism and iii directed to formylation of met trna which is a required initiation step in mitochondrial protein biosynthesis both serine and serine derived glycine are also required for protein biosynthesis in mitochondria glycine is also required for the rate limiting step in heme biosynthesis surplus glycine can be exported from mitochondria for utilization in cytosolic reactions proposed model also considers the putative function for sfxns in exporting citrate from mitochondria fig 5 mitochondrial localization of the predicted 3 dimensional structures of sideroflexins sfxn1 sfxn3 and sfxn4 are embedded in the inner mitochondrial membrane imm sfxn2 is found in either the imm or the outer mitochondrial membrane omm thus sfxn2 is depicted in both locations a structural model for sfxn5 is available however due to the lack of localization data sfxn5 is not included in the figure the orientation of the sfxns in the membranes remains to be determined therefore they are depicted in both possible configurations colors on the sfxn molecules indicate the distinct secondary structures as follows alpha helices magenta beta sheets yellow and loops white all predicted 3 dimensional structures were obtained from alphafold protein structure database 62 64 the figure is based on tifoun et al 12 and was created using biorender https biorender com publisher s note springer nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations acknowledgements we thank our colleagues for critical reading of our manuscript author contributions vv dwn aik conceived this project aik drafted the manuscript dwn dct contributed to portions of the manuscript aik dwn dct vv reviewed the manuscript and provided edits sαk contributed to the revision of the manuscript especially in the area of one carbon metabolism all authors have read and approved the final manuscript funding this work was supported in part by the national institutes of health grants aa022057 vv and es033815 vv aik was awarded a fulbright scholarship to serve as a visiting scholar at the department of environmental health sciences yale school of public health data availability datasets analyzed during the current study are publicly available and in the ncbi gene entrez database https www ncbi nlm nih gov gene declarations ethics approval and consent to participate not applicable consent for publication not applicable competing interests vv serves as the editor in chief and dwn as a section editor of the human genomics journal aik dct sak declare no competing interests references 1 hushmandi k einollahi b saadat sh lee ehc farani mr okina e amino acid transporters within the solute carrier superfamily underappreciated proteins and novel opportunities for cancer therapy mol metab 2024 84 101952 10 1016 j molmet 2024 101952 38705513 pmc11112377 hushmandi k einollahi b saadat sh lee ehc farani mr okina e et al amino acid transporters within the solute carrier superfamily underappreciated proteins and novel opportunities for cancer therapy mol metab 2024 84 101952 38705513 10 1016 j molmet 2024 101952 pmc11112377 2 ferrada e superti furga g a structure and evolutionary based classification of solute carriers iscience 2022 25 10 105096 10 1016 j isci 2022 105096 36164651 pmc9508557 ferrada e superti furga g a structure and evolutionary based classification of solute carriers iscience 2022 25 10 105096 36164651 10 1016 j isci 2022 105096 pmc9508557 3 he l vasiliou k nebert dw analysis and update of the human solute carrier slc gene superfamily hum genomics 2009 3 2 195 206 10 1186 1479 7364 3 2 195 19164095 pmc2752037 he l vasiliou k nebert dw analysis and update of the human solute carrier slc gene superfamily hum genomics 2009 3 2 195 206 19164095 10 1186 1479 7364 3 2 195 pmc2752037 4 gyimesi g hediger ma sequence features of mitochondrial transporter protein families biomolecules 2020 10 12 1611 10 3390 biom10121611 33260588 pmc7761412 gyimesi g hediger ma sequence features of mitochondrial transporter protein families biomolecules 2020 10 12 1611 33260588 10 3390 biom10121611 pmc7761412 5 gyimesi g hediger ma systematic discovery of novel solute carrier like proteins from proteomes plos one 2022 17 7 e0271062 10 1371 journal pone 0271062 35901096 pmc9333335 gyimesi g hediger ma systematic in silico discovery of novel solute carrier like proteins from proteomes plos one 2022 17 7 e0271062 35901096 10 1371 journal pone 0271062 pmc9333335 6 azzi a glerum m koller r mertens w spycher s the mitochondrial tricarboxylate carrier j bioenerg biomembr 1993 25 5 515 24 10 1007 bf01108408 8132491 azzi a glerum m koller r mertens w spycher s the mitochondrial tricarboxylate carrier j bioenerg biomembr 1993 25 5 515 24 8132491 10 1007 bf01108408 7 fleming md campagna dr haslett jn trenor cc 3rd andrews nc a mutation in a mitochondrial transmembrane protein is responsible for the pleiotropic hematological and skeletal phenotype of flexed tail f f mice genes dev 2001 15 6 652 7 10 1101 gad 873001 pmc312659 11274051 8 lockhart pj holtom b lincoln s hussey j zimprich a gasser t the human sideroflexin 5 sfxn5 gene sequence expression analysis and exclusion as a candidate for park3 gene 2002 285 1 2 229 37 10 1016 s0378 1119 02 00402 x 12039050 lockhart pj holtom b lincoln s hussey j zimprich a gasser t et al the human sideroflexin 5 sfxn5 gene sequence expression analysis and exclusion as a candidate for park3 gene 2002 285 1 2 229 37 12039050 10 1016 s0378 1119 02 00402 x 9 tifoun n bekhouche m de las heras jm guillaume a bouleau s guénal i a high throughput search for sfxn1 physical partners led to the identification of atad3 hsd10 and tim50 biology basel 2022 11 9 1298 36138777 10 3390 biology11091298 pmc9495560 tifoun n bekhouche m de las heras jm guillaume a bouleau s guénal i et al a high throughput search for sfxn1 physical partners led to the identification of atad3 hsd10 and tim50 biology basel 2022 11 9 1298 36138777 10 3390 biology11091298 pmc9495560 10 hegde s lenox le lariviere a porayette p perry jm yon m an intronic sequence mutated in flexed tail mice regulates splicing of smad5 mamm genome 2007 18 12 852 60 10 1007 s00335 007 9074 9 18060457 hegde s lenox le lariviere a porayette p perry jm yon m et al an intronic sequence mutated in flexed tail mice regulates splicing of smad5 mamm genome 2007 18 12 852 60 18060457 10 1007 s00335 007 9074 9 11 lenox le perry jm paulson rf bmp4 and madh5 regulate the erythroid response to acute anemia blood 2005 105 7 2741 8 10 1182 blood 2004 02 0703 15591122 lenox le perry jm paulson rf bmp4 and madh5 regulate the erythroid response to acute anemia blood 2005 105 7 2741 8 15591122 10 1182 blood 2004 02 0703 12 tifoun n de las heras jm guillaume a bouleau s mignotte b le floch n insights into the roles of the sideroflexins slc56 family in iron homeostasis and iron sulfur biogenesis biomedicines 2021 9 2 103 10 3390 biomedicines9020103 33494450 pmc7911444 tifoun n de las heras jm guillaume a bouleau s mignotte b le floch n insights into the roles of the sideroflexins slc56 family in iron homeostasis and iron sulfur biogenesis biomedicines 2021 9 2 103 33494450 10 3390 biomedicines9020103 pmc7911444 13 kory n wyant ga prakash g uit de bos j bottanelli f pacold me sfxn1 is a mitochondrial serine transporter required for one carbon metabolism science 2018 362 6416 eaat9528 10 1126 science aat9528 30442778 pmc6300058 kory n wyant ga prakash g uit de bos j bottanelli f pacold me et al sfxn1 is a mitochondrial serine transporter required for one carbon metabolism science 2018 362 6416 eaat9528 30442778 10 1126 science aat9528 pmc6300058 14 acoba mg alpergin ess renuse s fernández del río l lu yw khalimonchuk o the mitochondrial carrier sfxn1 is critical for complex iii integrity and cellular metabolism cell rep 2021 34 11 108869 10 1016 j celrep 2021 108869 33730581 pmc8048093 acoba mg alpergin ess renuse s fernández del río l lu yw khalimonchuk o et al the mitochondrial carrier sfxn1 is critical for complex iii integrity and cellular metabolism cell rep 2021 34 11 108869 33730581 10 1016 j celrep 2021 108869 pmc8048093 15 ducker gs rabinowitz jd one carbon metabolism in health and disease cell metab 2017 25 1 27 42 10 1016 j cmet 2016 08 009 27641100 pmc5353360 ducker gs rabinowitz jd one carbon metabolism in health and disease cell metab 2017 25 1 27 42 27641100 10 1016 j cmet 2016 08 009 pmc5353360 16 paul bt tesfay l winkler cr torti fm torti sv sideroflexin 4 affects fe s cluster biogenesis iron metabolism mitochondrial respiration and heme biosynthetic enzymes sci rep 2019 9 1 19634 10 1038 s41598 019 55907 z 31873120 pmc6928202 paul bt tesfay l winkler cr torti fm torti sv sideroflexin 4 affects fe s cluster biogenesis iron metabolism mitochondrial respiration and heme biosynthetic enzymes sci rep 2019 9 1 19634 31873120 10 1038 s41598 019 55907 z pmc6928202 17 jackson td crameri jj muellner wong l frazier ae palmer cs formosa le sideroflexin 4 is a complex i assembly factor that interacts with the mcia complex and is required for the assembly of the nd2 module proc natl acad sci u s a 2022 119 13 e2115566119 10 1073 pnas 2115566119 35333655 pmc9060475 jackson td crameri jj muellner wong l frazier ae palmer cs formosa le et al sideroflexin 4 is a complex i assembly factor that interacts with the mcia complex and is required for the assembly of the nd2 module proc natl acad sci u s a 2022 119 13 e2115566119 35333655 10 1073 pnas 2115566119 pmc9060475 18 hildick smith gj cooney jd garone c kremer ls haack tb thon jn macrocytic anemia and mitochondriopathy resulting from a defect in sideroflexin 4 am j hum genet 2013 93 5 906 14 10 1016 j ajhg 2013 09 011 24119684 pmc3824126 hildick smith gj cooney jd garone c kremer ls haack tb thon jn et al macrocytic anemia and mitochondriopathy resulting from a defect in sideroflexin 4 am j hum genet 2013 93 5 906 14 24119684 10 1016 j ajhg 2013 09 011 pmc3824126 19 yuan d liu j sang w li q comprehensive analysis of the role of sfxn family in breast cancer open med wars 2023 18 1 20230685 10 1515 med 2023 0685 37020524 pmc10068752 yuan d liu j sang w li q comprehensive analysis of the role of sfxn family in breast cancer open med wars 2023 18 1 20230685 37020524 10 1515 med 2023 0685 pmc10068752 20 krewulak kd vogel hj structural biology of bacterial iron uptake biochim biophys acta 2008 1778 9 1781 804 10 1016 j bbamem 2007 07 026 17916327 krewulak kd vogel hj structural biology of bacterial iron uptake biochim biophys acta 2008 1778 9 1781 804 17916327 10 1016 j bbamem 2007 07 026 21 frawley er crouch ml bingham ramos lk robbins hf wang w wright gd iron and citrate export by a major facilitator superfamily pump regulates metabolism and stress resistance in salmonella typhimurium proc natl acad sci u s a 2013 110 29 12054 9 10 1073 pnas 1218274110 23821749 pmc3718157 frawley er crouch ml bingham ramos lk robbins hf wang w wright gd et al iron and citrate export by a major facilitator superfamily pump regulates metabolism and stress resistance in salmonella typhimurium proc natl acad sci u s a 2013 110 29 12054 9 23821749 10 1073 pnas 1218274110 pmc3718157 22 carpenter c payne sm regulation of iron transport systems in enterobacteriaceae in response to oxygen and iron availability j inorg biochem 2014 133 110 7 10 1016 j jinorgbio 2014 01 007 24485010 pmc3964178 carpenter c payne sm regulation of iron transport systems in enterobacteriaceae in response to oxygen and iron availability j inorg biochem 2014 133 110 7 24485010 10 1016 j jinorgbio 2014 01 007 pmc3964178 23 li x han d kin ting kam r guo x chen m yang y developmental expression of sideroflexin family genes in xenopus embryos dev dyn 2010 239 10 2742 7 10 1002 dvdy 22401 20737508 li x han d kin ting kam r guo x chen m yang y et al developmental expression of sideroflexin family genes in xenopus embryos dev dyn 2010 239 10 2742 7 20737508 10 1002 dvdy 22401 24 miotto g tessaro s rotta ga bonatto d in silico analyses of fsf1 sequences a new group of fungal proteins orthologous to the metazoan sideroblastic anemia related sideroflexin family fungal genet biol 2007 44 8 740 53 10 1016 j fgb 2006 12 004 17240176 25 attwood mm schiöth hb characterization of five transmembrane proteins with focus on the tweety sideroflexin and yip1 domain families front cell dev biol 2021 9 708754 10 3389 fcell 2021 708754 34350187 pmc8327215 attwood mm schiöth hb characterization of five transmembrane proteins with focus on the tweety sideroflexin and yip1 domain families front cell dev biol 2021 9 708754 34350187 10 3389 fcell 2021 708754 pmc8327215 26 kobayashi t nozoye t nishizawa nk iron transport and its regulation in plants free radic biol med 2019 133 11 20 10 1016 j freeradbiomed 2018 10 439 30385345 kobayashi t nozoye t nishizawa nk iron transport and its regulation in plants free radic biol med 2019 133 11 20 30385345 10 1016 j freeradbiomed 2018 10 439 27 hanson ad roje s one carbon metabolism in higher plants annu rev plant physiol plant mol biol 2001 52 119 37 10 1146 annurev arplant 52 1 119 11337394 hanson ad roje s one carbon metabolism in higher plants annu rev plant physiol plant mol biol 2001 52 119 37 11337394 10 1146 annurev arplant 52 1 119 28 fonseca c mendonça filho jg reolid m duarte lv de oliveira ad souza jt first putative occurrence in the fossil record of choanoflagellates the sister group of metazoa sci rep 2023 13 1 1242 10 1038 s41598 022 26972 8 36690681 pmc9870899 fonseca c mendonça filho jg reolid m duarte lv de oliveira ad souza jt et al first putative occurrence in the fossil record of choanoflagellates the sister group of metazoa sci rep 2023 13 1 1242 36690681 10 1038 s41598 022 26972 8 pmc9870899 29 zhang h meng l liu y jiang j he z qin j sfxn5 regulation of actin polymerization for neutrophil spreading depends on a citrate cholesterol pi 4 5 p2 pathway j immunol 2023 211 3 462 73 10 4049 jimmunol 2200863 37326485 zhang h meng l liu y jiang j he z qin j et al sfxn5 regulation of actin polymerization for neutrophil spreading depends on a citrate cholesterol pi 4 5 p2 pathway j immunol 2023 211 3 462 73 37326485 10 4049 jimmunol 2200863 30 petrova b maynard ag wang p kanarek n regulatory mechanisms of one carbon metabolism enzymes j biol chem 2023 299 12 105457 10 1016 j jbc 2023 105457 37949226 pmc10758965 petrova b maynard ag wang p kanarek n regulatory mechanisms of one carbon metabolism enzymes j biol chem 2023 299 12 105457 37949226 10 1016 j jbc 2023 105457 pmc10758965 31 tibbetts as appling dr compartmentalization of mammalian folate mediated one carbon metabolism annu rev nutr 2010 30 57 81 10 1146 annurev nutr 012809 104810 20645850 tibbetts as appling dr compartmentalization of mammalian folate mediated one carbon metabolism annu rev nutr 2010 30 57 81 20645850 10 1146 annurev nutr 012809 104810 32 bernasocchi t mostoslavsky r subcellular one carbon metabolism in cancer aging and epigenetics front epigenet epigenom 2024 2 10 3389 freae 2024 1451971 pmc11375787 39239102 33 fan j ye j kamphorst jj shlomi t thompson cb rabinowitz jd quantitative flux analysis reveals folate dependent nadph production nature 2014 510 7504 298 302 10 1038 nature13236 24805240 pmc4104482 fan j ye j kamphorst jj shlomi t thompson cb rabinowitz jd quantitative flux analysis reveals folate dependent nadph production nature 2014 510 7504 298 302 24805240 10 1038 nature13236 pmc4104482 34 dietz jv fox jl khalimonchuk o down the iron path mitochondrial iron homeostasis and beyond cells 2021 10 9 10 3390 cells10092198 pmc8468894 34571846 35 maio n rouault ta iron sulfur cluster biogenesis in mammalian cells new insights into the molecular mechanisms of cluster delivery biochimica et biophysica acta bba mol cell res 2015 1853 6 1493 512 10 1016 j bbamcr 2014 09 009 pmc4366362 25245479 maio n rouault ta iron sulfur cluster biogenesis in mammalian cells new insights into the molecular mechanisms of cluster delivery biochimica et biophysica acta bba mol cell res 2015 1853 6 1493 512 10 1016 j bbamcr 2014 09 009 pmc4366362 25245479 36 lill r freibert sa mechanisms of mitochondrial iron sulfur protein biogenesis annu rev biochem 2020 89 471 99 10 1146 annurev biochem 013118 111540 31935115 lill r freibert sa mechanisms of mitochondrial iron sulfur protein biogenesis annu rev biochem 2020 89 471 99 31935115 10 1146 annurev biochem 013118 111540 37 maio n rouault ta outlining the complex pathway of mammalian fe s cluster biogenesis trends biochem sci 2020 45 5 411 26 10 1016 j tibs 2020 02 001 32311335 pmc8349188 maio n rouault ta outlining the complex pathway of mammalian fe s cluster biogenesis trends biochem sci 2020 45 5 411 26 32311335 10 1016 j tibs 2020 02 001 pmc8349188 38 mon ee wei fy ahmad rnr yamamoto t moroishi t tomizawa k regulation of mitochondrial iron homeostasis by sideroflexin 2 j physiol sci 2019 69 2 359 73 10 1007 s12576 018 0652 2 30570704 pmc6373408 mon ee wei fy ahmad rnr yamamoto t moroishi t tomizawa k regulation of mitochondrial iron homeostasis by sideroflexin 2 j physiol sci 2019 69 2 359 73 30570704 10 1007 s12576 018 0652 2 pmc6373408 39 chen y qian j ding p wang w li x tang x elevated sfxn2 limits mitochondrial autophagy and increases iron mediated energy production to promote multiple myeloma cell proliferation cell death dis 2022 13 9 822 10 1038 s41419 022 05272 z 36163342 pmc9513108 chen y qian j ding p wang w li x tang x et al elevated sfxn2 limits mitochondrial autophagy and increases iron mediated energy production to promote multiple myeloma cell proliferation cell death dis 2022 13 9 822 36163342 10 1038 s41419 022 05272 z pmc9513108 40 ledahawsky lm terzenidou me edwards r kline ra graham lc eaton sl the mitochondrial protein sideroflexin 3 sfxn3 influences neurodegeneration pathways in vivo febs j 2022 289 13 3894 914 10 1111 febs 16377 35092170 pmc9542548 ledahawsky lm terzenidou me edwards r kline ra graham lc eaton sl et al the mitochondrial protein sideroflexin 3 sfxn3 influences neurodegeneration pathways in vivo febs j 2022 289 13 3894 914 35092170 10 1111 febs 16377 pmc9542548 41 mi d izumi y hao z yingyi k tasuku h toyokuni s association of poly rc binding protein 2 with sideroflexin 3 through tom20 as an iron entry pathway to mitochondria free radic res 2024 58 4 261 75 10 1080 10715762 2024 2340711 38599240 mi d izumi y hao z yingyi k tasuku h toyokuni s association of poly rc binding protein 2 with sideroflexin 3 through tom20 as an iron entry pathway to mitochondria free radic res 2024 58 4 261 75 38599240 10 1080 10715762 2024 2340711 42 sofou k hedberg oldfors c kollberg g thomsen c wiksell å oldfors a prenatal onset of mitochondrial disease is associated with sideroflexin 4 deficiency mitochondrion 2019 47 76 81 10 1016 j mito 2019 04 012 31059822 sofou k hedberg oldfors c kollberg g thomsen c wiksell å oldfors a et al prenatal onset of mitochondrial disease is associated with sideroflexin 4 deficiency mitochondrion 2019 47 76 81 31059822 10 1016 j mito 2019 04 012 43 miyake s yamashita t taniguchi m tamatani m sato k tohyama m identification and characterization of a novel mitochondrial tricarboxylate carrier biochem biophys res commun 2002 295 2 463 8 10 1016 s0006 291x 02 00694 0 12150972 miyake s yamashita t taniguchi m tamatani m sato k tohyama m identification and characterization of a novel mitochondrial tricarboxylate carrier biochem biophys res commun 2002 295 2 463 8 12150972 10 1016 s0006 291x 02 00694 0 44 mosaoa r kasprzyk pawelec a fernandez hr avantaggiati ml the mitochondrial citrate carrier slc25a1 cic and the fundamental role of citrate in cancer inflammation and beyond biomolecules 2021 11 2 141 10 3390 biom11020141 33499062 pmc7912299 mosaoa r kasprzyk pawelec a fernandez hr avantaggiati ml the mitochondrial citrate carrier slc25a1 cic and the fundamental role of citrate in cancer inflammation and beyond biomolecules 2021 11 2 141 33499062 10 3390 biom11020141 pmc7912299 45 uhlén m fagerberg l hallström bm lindskog c oksvold p mardinoglu a proteomics tissue based map of the human proteome science 2015 347 6220 1260419 10 1126 science 1260419 25613900 uhlén m fagerberg l hallström bm lindskog c oksvold p mardinoglu a et al proteomics tissue based map of the human proteome science 2015 347 6220 1260419 25613900 10 1126 science 1260419 46 miller ld coffman lg chou jw black ma bergh j d agostino r jr an iron regulatory gene signature predicts outcome in breast cancer cancer res 2011 71 21 6728 37 10 1158 0008 5472 can 11 1870 21875943 pmc3206152 miller ld coffman lg chou jw black ma bergh j d agostino r jr et al an iron regulatory gene signature predicts outcome in breast cancer cancer res 2011 71 21 6728 37 21875943 10 1158 0008 5472 can 11 1870 pmc3206152 47 weston c klobusicky j weston j connor j toms sa marko nf aberrations in the iron regulatory gene signature are associated with decreased survival in diffuse infiltrating gliomas plos one 2016 11 11 e0166593 10 1371 journal pone 0166593 27898674 pmc5127508 weston c klobusicky j weston j connor j toms sa marko nf aberrations in the iron regulatory gene signature are associated with decreased survival in diffuse infiltrating gliomas plos one 2016 11 11 e0166593 27898674 10 1371 journal pone 0166593 pmc5127508 48 chen q wang r zhang j zhou l sideroflexin1 as a novel tumor marker independently predicts survival in lung adenocarcinoma transl cancer res 2019 8 4 1170 8 10 21037 tcr 2019 06 34 35116859 pmc8798550 chen q wang r zhang j zhou l sideroflexin1 as a novel tumor marker independently predicts survival in lung adenocarcinoma transl cancer res 2019 8 4 1170 8 35116859 10 21037 tcr 2019 06 34 pmc8798550 49 andriani l ling yx yang sy zhao q ma xy huang my sideroflexin 1 promotes progression and sensitivity to lapatinib in triple negative breast cancer by inhibiting tollip mediated autophagic degradation of cip2a cancer lett 2024 597 217008 10 1016 j canlet 2024 217008 38849012 andriani l ling yx yang sy zhao q ma xy huang my et al sideroflexin 1 promotes progression and sensitivity to lapatinib in triple negative breast cancer by inhibiting tollip mediated autophagic degradation of cip2a cancer lett 2024 597 217008 38849012 10 1016 j canlet 2024 217008 50 li y yang w liu c zhou s liu x zhang t sfxn1 mediated immune cell infiltration and tumorigenesis in lung adenocarcinoma a potential therapeutic target int immunopharmacol 2024 132 111918 10 1016 j intimp 2024 111918 38537539 li y yang w liu c zhou s liu x zhang t et al sfxn1 mediated immune cell infiltration and tumorigenesis in lung adenocarcinoma a potential therapeutic target int immunopharmacol 2024 132 111918 38537539 10 1016 j intimp 2024 111918 51 simunovic f yi m wang y macey l brown lt krichevsky am gene expression profiling of substantia nigra dopamine neurons further insights into parkinson s disease pathology brain 2009 132 pt 7 1795 809 10 1093 brain awn323 19052140 pmc2724914 simunovic f yi m wang y macey l brown lt krichevsky am et al gene expression profiling of substantia nigra dopamine neurons further insights into parkinson s disease pathology brain 2009 132 pt 7 1795 809 19052140 10 1093 brain awn323 pmc2724914 52 minjarez b calderón gonzález kg rustarazo ml herrera aguirre me labra barrios ml rincon limas de identification of proteins that are differentially expressed in brains with alzheimer s disease using itraq labeling and tandem mass spectrometry j proteom 2016 139 103 21 10 1016 j jprot 2016 03 022 27012543 minjarez b calderón gonzález kg rustarazo ml herrera aguirre me labra barrios ml rincon limas de et al identification of proteins that are differentially expressed in brains with alzheimer s disease using itraq labeling and tandem mass spectrometry j proteom 2016 139 103 21 10 1016 j jprot 2016 03 022 27012543 53 amorim is graham lc carter rn morton nm hammachi f kunath t sideroflexin 3 is an α synuclein dependent mitochondrial protein that regulates synaptic morphology j cell sci 2017 130 2 325 31 10 1242 jcs 194241 28049716 pmc5278670 amorim is graham lc carter rn morton nm hammachi f kunath t et al sideroflexin 3 is an α synuclein dependent mitochondrial protein that regulates synaptic morphology j cell sci 2017 130 2 325 31 28049716 10 1242 jcs 194241 pmc5278670 54 rivell a petralia rs wang yx mattson mp yao pj sideroflexin 3 is a mitochondrial protein enriched in neurons neuromolecular med 2019 21 3 314 21 10 1007 s12017 019 08553 7 31177362 pmc6689427 rivell a petralia rs wang yx mattson mp yao pj sideroflexin 3 is a mitochondrial protein enriched in neurons neuromolecular med 2019 21 3 314 21 31177362 10 1007 s12017 019 08553 7 pmc6689427 55 murase r abe y takeuchi t nabeta m imai y kamei y serum autoantibody to sideroflexin 3 as a novel tumor marker for oral squamous cell carcinoma proteom clin appl 2008 2 4 517 27 10 1002 prca 200780123 21136855 murase r abe y takeuchi t nabeta m imai y kamei y et al serum autoantibody to sideroflexin 3 as a novel tumor marker for oral squamous cell carcinoma proteom clin appl 2008 2 4 517 27 10 1002 prca 200780123 21136855 56 gylfe ae katainen r kondelin j tanskanen t cajuso t hänninen u eleven candidate susceptibility genes for common familial colorectal cancer plos genet 2013 9 10 e1003876 10 1371 journal pgen 1003876 24146633 pmc3798264 gylfe ae katainen r kondelin j tanskanen t cajuso t hänninen u et al eleven candidate susceptibility genes for common familial colorectal cancer plos genet 2013 9 10 e1003876 24146633 10 1371 journal pgen 1003876 pmc3798264 57 du z zhang z han x xie h yan w tian d comprehensive analysis of sideroflexin 4 in hepatocellular carcinoma by bioinformatics and experiments int j med sci 2023 20 10 1300 15 10 7150 ijms 86990 37786439 pmc10542026 du z zhang z han x xie h yan w tian d et al comprehensive analysis of sideroflexin 4 in hepatocellular carcinoma by bioinformatics and experiments int j med sci 2023 20 10 1300 15 37786439 10 7150 ijms 86990 pmc10542026 58 yang j anishchenko i park h peng z ovchinnikov s baker d improved protein structure prediction using predicted interresidue orientations proc natl acad sci u s a 2020 117 3 1496 503 10 1073 pnas 1914677117 31896580 pmc6983395 yang j anishchenko i park h peng z ovchinnikov s baker d improved protein structure prediction using predicted interresidue orientations proc natl acad sci u s a 2020 117 3 1496 503 31896580 10 1073 pnas 1914677117 pmc6983395 59 uniprotkb swiss prot available from https www uniprot org align 60 tamura k stecher g kumar s mega11 molecular evolutionary genetics analysis version 11 mol biol evol 2021 38 7 3022 7 10 1093 molbev msab120 33892491 pmc8233496 tamura k stecher g kumar s mega11 molecular evolutionary genetics analysis version 11 mol biol evol 2021 38 7 3022 7 33892491 10 1093 molbev msab120 pmc8233496 61 jones dt taylor wr thornton jm the rapid generation of mutation data matrices from protein sequences bioinformatics 1992 8 3 275 82 10 1093 bioinformatics 8 3 275 1633570 jones dt taylor wr thornton jm the rapid generation of mutation data matrices from protein sequences bioinformatics 1992 8 3 275 82 10 1093 bioinformatics 8 3 275 1633570 62 jumper j evans r pritzel a green t figurnov m ronneberger o highly accurate protein structure prediction with alphafold nature 2021 596 7873 583 9 10 1038 s41586 021 03819 2 34265844 pmc8371605 jumper j evans r pritzel a green t figurnov m ronneberger o et al highly accurate protein structure prediction with alphafold nature 2021 596 7873 583 9 34265844 10 1038 s41586 021 03819 2 pmc8371605 63 varadi m anyango s deshpande m nair s natassia c yordanova g alphafold protein structure database massively expanding the structural coverage of protein sequence space with high accuracy models nucleic acids res 2021 50 d1 d439 44 10 1093 nar gkab1061 pmc8728224 34791371 varadi m anyango s deshpande m nair s natassia c yordanova g et al alphafold protein structure database massively expanding the structural coverage of protein sequence space with high accuracy models nucleic acids res 2021 50 d1 d439 44 10 1093 nar gkab1061 pmc8728224 34791371 64 varadi m bertoni d magana p paramval u pidruchna i radhakrishnan m alphafold protein structure database in 2024 providing structure coverage for over 214 million protein sequences nucleic acids res 2023 52 d1 d368 75 10 1093 nar gkad1011 pmc10767828 37933859 varadi m bertoni d magana p paramval u pidruchna i radhakrishnan m et al alphafold protein structure database in 2024 providing structure coverage for over 214 million protein sequences nucleic acids res 2023 52 d1 d368 75 10 1093 nar gkad1011 pmc10767828 37933859"
+  },
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [],
+    "demoted": [],
+    "counts": {
+      "removed": 0,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": [],
+    "source_index": {
+      "schema_version": 1,
+      "status": "written",
+      "length": 67304
+    }
+  },
+  "protein_export_policy": {
+    "stage": "post_mapping",
+    "summary": {
+      "verified_real_proteins": 3,
+      "unknown_backed_functional_complexes": 0,
+      "ambiguous_real_candidates_rejected": 0,
+      "unused_proteins_quarantined": 0,
+      "false_protein_promotions_blocked": 0,
+      "bare_unresolved_proteins_remaining": 0,
+      "unused_proteins_flagged_for_review": 0
+    },
+    "minimum_score": 0.5,
+    "minimum_margin": 0.1
+  },
+  "prefreeze_db_resolution": {
+    "available": true
+  }
+}

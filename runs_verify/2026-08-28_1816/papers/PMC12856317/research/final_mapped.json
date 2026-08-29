@@ -1,0 +1,2650 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via explicit_entity_species",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "1",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "explicit_entity_species"
+              },
+              {
+                "source_id": "9606",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "explicit_entity_species"
+              }
+            ]
+          }
+        ],
+        "pathbank_species_id": 1,
+        "species_id": 1,
+        "taxonomy_id": "9606",
+        "common_name": "Human",
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "taxonomy_backfill": {
+            "source": "ncbi",
+            "taxonomy_id": "9606",
+            "classification": "Eukaryote"
+          },
+          "resolution": {
+            "status": "matched",
+            "order_step": "explicit_entity_species"
+          }
+        },
+        "classification": "Eukaryote",
+        "species_canonicalization": {
+          "status": "deterministic"
+        }
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondrial matrix",
+        "evidence": "the cellular compartment where heme biosynthesis is initiated and terminated",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      },
+      {
+        "name": "cell",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "5257127",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "56-40-6",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "730",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "78",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "C00037",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:15428",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "DB00145",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "GLY",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0000123",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (ambiguous_exact_name)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          },
+          {
+            "stage": "gap_resolution",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution filled a missing identifier mapping for this compound from a db candidate the paper never supplied",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "5257127",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "56-40-6",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "730",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "78",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "C00037",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "CHEBI:15428",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "DB00145",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "GLY",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "PathBankDB"
+              },
+              {
+                "source_id": "HMDB0000123",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "PathBankDB"
+              }
+            ]
+          },
+          {
+            "stage": "audit_repair",
+            "origin": "audit_modified",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+            "review_required": false,
+            "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+            "sources": []
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "glycine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 78,
+              "name": "Glycine",
+              "short_name": "Gly",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000123",
+                "kegg": "C00037",
+                "chebi": "CHEBI:15428",
+                "pubchem": "5257127",
+                "cas": "56-40-6",
+                "biocyc": "GLY",
+                "chemspider": "730",
+                "drugbank": "DB00145",
+                "pathbank_compound_id": "78"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "provider": "PathBankDB",
+          "pathbank_compound_id": 78,
+          "resolved_name": "Glycine"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0000123",
+          "kegg": "C00037",
+          "chebi": "15428",
+          "pubchem": "5257127",
+          "cas": "56-40-6",
+          "biocyc": "GLY",
+          "chemspider": "730",
+          "drugbank": "DB00145",
+          "pathbank_compound_id": "78"
+        },
+        "biological_state": "mitochondrial_matrix",
+        "pathbank_compound_id": 78,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok_with_warnings",
+            "primary_name": "Glycine",
+            "synonyms": [
+              "Glycine",
+              "Aminoacetic acid",
+              "Gly"
+            ],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C2H5NO2",
+            "charge": 0,
+            "mass_monoisotopic": 75.032,
+            "mass_average": 75.07,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Compounds with biological roles [BR:br08001]",
+              "Peptides",
+              "Amino acids",
+              "Common amino acids",
+              "C00037 Glycine (Gly)",
+              "Hormones and transmitters",
+              "Neurotransmitters",
+              "C00037 Glycine",
+              "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00011)]",
+              "B BLOOD AND BLOOD FORMING ORGANS",
+              "B05 BLOOD SUBSTITUTES AND PERFUSION SOLUTIONS",
+              "B05C IRRIGATING SOLUTIONS",
+              "B05CX Other irrigating solutions",
+              "B05CX03 Glycine",
+              "D00011 Glycine (JP19/USP) &lt;US&gt;",
+              "Risk category of Japanese OTC drugs [BR:br08312(D00011)]",
+              "Third-class OTC drugs",
+              "Inorganic and organic chemicals",
+              "Glycine",
+              "D00011 Glycine (JP19/USP)",
+              "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00011)]",
+              "Chemicals",
+              "D00011 Glycine"
+            ],
+            "pathways": [
+              "Primary bile acid biosynthesis",
+              "Purine metabolism",
+              "Glycine, serine and threonine metabolism",
+              "Lysine degradation",
+              "Phosphonate and phosphinate metabolism",
+              "Cyanoamino acid metabolism",
+              "D-Amino acid metabolism",
+              "Glutathione metabolism",
+              "Glyoxylate and dicarboxylate metabolism",
+              "One carbon pool by folate",
+              "Methane metabolism",
+              "Thiamine metabolism",
+              "Lipoic acid metabolism",
+              "Porphyrin metabolism",
+              "Aminoacyl-tRNA biosynthesis",
+              "Biosynthesis of plant secondary metabolites",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Microbial metabolism in diverse environments",
+              "Carbon metabolism",
+              "Biosynthesis of amino acids",
+              "Biosynthesis of cofactors",
+              "Vancomycin resistance",
+              "ABC transporters",
+              "Biofilm formation - Escherichia coli",
+              "Neuroactive ligand-receptor interaction",
+              "Neuroactive ligand signaling",
+              "Synaptic vesicle cycle",
+              "Protein digestion and absorption",
+              "Mineral absorption",
+              "Central carbon metabolism in cancer"
+            ],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0000123",
+              "kegg_id": "C00037",
+              "chebi_id": "CHEBI:15428",
+              "pubchem_id": "5257127",
+              "cas": "56-40-6",
+              "biocyc": "GLY",
+              "chemspider": "730",
+              "drugbank_id": "DB00145",
+              "pathbank_compound_id": "78"
+            },
+            "kegg": {
+              "status": "ok",
+              "source": "KEGG",
+              "id": "C00037",
+              "primary_name": "Glycine",
+              "synonyms": [
+                "Glycine",
+                "Aminoacetic acid",
+                "Gly"
+              ],
+              "formula": "C2H5NO2",
+              "mass_monoisotopic": 75.032,
+              "mass_average": 75.07,
+              "pathways": [
+                "Primary bile acid biosynthesis",
+                "Purine metabolism",
+                "Glycine, serine and threonine metabolism",
+                "Lysine degradation",
+                "Phosphonate and phosphinate metabolism",
+                "Cyanoamino acid metabolism",
+                "D-Amino acid metabolism",
+                "Glutathione metabolism",
+                "Glyoxylate and dicarboxylate metabolism",
+                "One carbon pool by folate",
+                "Methane metabolism",
+                "Thiamine metabolism",
+                "Lipoic acid metabolism",
+                "Porphyrin metabolism",
+                "Aminoacyl-tRNA biosynthesis",
+                "Biosynthesis of plant secondary metabolites",
+                "Metabolic pathways",
+                "Biosynthesis of secondary metabolites",
+                "Microbial metabolism in diverse environments",
+                "Carbon metabolism",
+                "Biosynthesis of amino acids",
+                "Biosynthesis of cofactors",
+                "Vancomycin resistance",
+                "ABC transporters",
+                "Biofilm formation - Escherichia coli",
+                "Neuroactive ligand-receptor interaction",
+                "Neuroactive ligand signaling",
+                "Synaptic vesicle cycle",
+                "Protein digestion and absorption",
+                "Mineral absorption",
+                "Central carbon metabolism in cancer"
+              ],
+              "kegg_class": [
+                "Compounds with biological roles [BR:br08001]",
+                "Peptides",
+                "Amino acids",
+                "Common amino acids",
+                "C00037 Glycine (Gly)",
+                "Hormones and transmitters",
+                "Neurotransmitters",
+                "C00037 Glycine",
+                "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00011)]",
+                "B BLOOD AND BLOOD FORMING ORGANS",
+                "B05 BLOOD SUBSTITUTES AND PERFUSION SOLUTIONS",
+                "B05C IRRIGATING SOLUTIONS",
+                "B05CX Other irrigating solutions",
+                "B05CX03 Glycine",
+                "D00011 Glycine (JP19/USP) &lt;US&gt;",
+                "Risk category of Japanese OTC drugs [BR:br08312(D00011)]",
+                "Third-class OTC drugs",
+                "Inorganic and organic chemicals",
+                "Glycine",
+                "D00011 Glycine (JP19/USP)",
+                "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00011)]",
+                "Chemicals",
+                "D00011 Glycine"
+              ],
+              "cross_references": {
+                "kegg_id": "C00037",
+                "pubchem_id": "3339",
+                "chebi_id": "15428"
+              },
+              "provenance": {
+                "source": "KEGG",
+                "id": "C00037",
+                "source_url": "https://rest.kegg.jp/get/cpd:C00037",
+                "retrieved_at": "2026-06-24T17:34:08Z",
+                "status": "ok"
+              }
+            },
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:15428",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-06-24T17:34:07Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0000123",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0000123",
+                "retrieved_at": "2026-06-24T17:34:07Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:15428",
+                "retrieved_at": "2026-06-24T17:34:07Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0000123",
+                "retrieved_at": "2026-06-24T17:34:07Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              },
+              {
+                "source": "KEGG",
+                "id": "C00037",
+                "retrieved_at": "2026-06-24T17:34:08Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0000123",
+        "kegg_id": "C00037",
+        "chebi_id": "15428",
+        "pubchem_cid": "5257127",
+        "cas": "56-40-6",
+        "biocyc_id": "GLY",
+        "chemspider_id": "730",
+        "short_name": "Gly",
+        "synonyms": [
+          "Glycine",
+          "Aminoacetic acid",
+          "Gly"
+        ],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ],
+        "db_status": "matched_offline_name_index",
+        "db_id": 78,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "raw_name": "glycine",
+        "db_row": {
+          "id": 78,
+          "name": "Glycine"
+        },
+        "pathwhiz_id": 78
+      },
+      {
+        "name": "succinyl-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via exact_normalized_name exact_normalized_name",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3-METHYLBENZYLSUCCINYL-COA",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "388307",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "439161",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "604-98-8",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "808",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "C00091",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "CHEBI:15380",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "HMDB0001022",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3-METHYLBENZYLSUCCINYL-COA",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "388307",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "439161",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "604-98-8",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "808",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "C00091",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:15380",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0001022",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          },
+          {
+            "stage": "audit_repair",
+            "origin": "audit_modified",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+            "review_required": false,
+            "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+            "sources": []
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "succinyl-CoA"
+          },
+          "route": "compound",
+          "route_reason": "declared_or_shaped_as_compound",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 808,
+              "name": "Succinyl-CoA",
+              "short_name": "Suc-CoA",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001022",
+                "kegg": "C00091",
+                "chebi": "CHEBI:15380",
+                "pubchem": "439161",
+                "cas": "604-98-8",
+                "biocyc": "3-METHYLBENZYLSUCCINYL-COA",
+                "chemspider": "388307",
+                "pathbank_compound_id": "808"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 808,
+          "resolved_name": "Succinyl-CoA"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0001022",
+          "kegg": "C00091",
+          "chebi": "15380",
+          "pubchem": "439161",
+          "cas": "604-98-8",
+          "biocyc": "3-METHYLBENZYLSUCCINYL-COA",
+          "chemspider": "388307",
+          "pathbank_compound_id": "808"
+        },
+        "pathbank_compound_id": 808,
+        "biological_state": "mitochondrial_matrix",
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok_with_warnings",
+            "primary_name": "Succinyl-CoA",
+            "synonyms": [
+              "Succinyl-CoA",
+              "Succinyl coenzyme A"
+            ],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C25H40N7O19P3S",
+            "charge": 0,
+            "mass_monoisotopic": 867.1313,
+            "mass_average": 867.61,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Lipids [BR:br08002]",
+              "FA Fatty acyls",
+              "FA07 Fatty esters",
+              "FA0705 Fatty acyl CoAs",
+              "C00091 Succinyl-CoA"
+            ],
+            "pathways": [
+              "Citrate cycle (TCA cycle)",
+              "Valine, leucine and isoleucine degradation",
+              "Phenylalanine metabolism",
+              "Benzoate degradation",
+              "Toluene degradation",
+              "Naphthalene degradation",
+              "Glyoxylate and dicarboxylate metabolism",
+              "Propanoate metabolism",
+              "Butanoate metabolism",
+              "Other carbon fixation pathways",
+              "Lipoic acid metabolism",
+              "Steroid degradation",
+              "Biosynthesis of plant secondary metabolites",
+              "Biosynthesis of phenylpropanoids",
+              "Biosynthesis of alkaloids derived from shikimate pathway",
+              "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
+              "Biosynthesis of alkaloids derived from histidine and purine",
+              "Biosynthesis of alkaloids derived from terpenoid and polyketide",
+              "Biosynthesis of plant hormones",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Microbial metabolism in diverse environments",
+              "Carbon metabolism",
+              "2-Oxocarboxylic acid metabolism",
+              "Degradation of aromatic compounds",
+              "Cobalamin transport and metabolism"
+            ],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0001022",
+              "kegg_id": "C00091",
+              "chebi_id": "CHEBI:15380",
+              "pubchem_id": "439161",
+              "cas": "604-98-8",
+              "biocyc": "3-METHYLBENZYLSUCCINYL-COA",
+              "chemspider": "388307",
+              "pathbank_compound_id": "808"
+            },
+            "kegg": {
+              "status": "ok",
+              "source": "KEGG",
+              "id": "C00091",
+              "primary_name": "Succinyl-CoA",
+              "synonyms": [
+                "Succinyl-CoA",
+                "Succinyl coenzyme A"
+              ],
+              "formula": "C25H40N7O19P3S",
+              "mass_monoisotopic": 867.1313,
+              "mass_average": 867.61,
+              "pathways": [
+                "Citrate cycle (TCA cycle)",
+                "Valine, leucine and isoleucine degradation",
+                "Phenylalanine metabolism",
+                "Benzoate degradation",
+                "Toluene degradation",
+                "Naphthalene degradation",
+                "Glyoxylate and dicarboxylate metabolism",
+                "Propanoate metabolism",
+                "Butanoate metabolism",
+                "Other carbon fixation pathways",
+                "Lipoic acid metabolism",
+                "Steroid degradation",
+                "Biosynthesis of plant secondary metabolites",
+                "Biosynthesis of phenylpropanoids",
+                "Biosynthesis of alkaloids derived from shikimate pathway",
+                "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
+                "Biosynthesis of alkaloids derived from histidine and purine",
+                "Biosynthesis of alkaloids derived from terpenoid and polyketide",
+                "Biosynthesis of plant hormones",
+                "Metabolic pathways",
+                "Biosynthesis of secondary metabolites",
+                "Microbial metabolism in diverse environments",
+                "Carbon metabolism",
+                "2-Oxocarboxylic acid metabolism",
+                "Degradation of aromatic compounds",
+                "Cobalamin transport and metabolism"
+              ],
+              "kegg_class": [
+                "Lipids [BR:br08002]",
+                "FA Fatty acyls",
+                "FA07 Fatty esters",
+                "FA0705 Fatty acyl CoAs",
+                "C00091 Succinyl-CoA"
+              ],
+              "cross_references": {
+                "kegg_id": "C00091",
+                "pubchem_id": "3391",
+                "chebi_id": "15380"
+              },
+              "provenance": {
+                "source": "KEGG",
+                "id": "C00091",
+                "source_url": "https://rest.kegg.jp/get/cpd:C00091",
+                "retrieved_at": "2026-03-24T06:14:41Z",
+                "status": "ok"
+              }
+            },
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:15380",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-03-24T06:14:40Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0001022",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0001022",
+                "retrieved_at": "2026-03-24T06:14:41Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:15380",
+                "retrieved_at": "2026-03-24T06:14:40Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0001022",
+                "retrieved_at": "2026-03-24T06:14:41Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              },
+              {
+                "source": "KEGG",
+                "id": "C00091",
+                "retrieved_at": "2026-03-24T06:14:41Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0001022",
+        "kegg_id": "C00091",
+        "chebi_id": "15380",
+        "pubchem_cid": "439161",
+        "cas": "604-98-8",
+        "biocyc_id": "3-METHYLBENZYLSUCCINYL-COA",
+        "chemspider_id": "388307",
+        "short_name": "Suc-CoA",
+        "synonyms": [
+          "Succinyl-CoA",
+          "Succinyl coenzyme A"
+        ],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ],
+        "db_status": "legacy_id_unverified",
+        "db_id": 808,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 808
+      },
+      {
+        "name": "aminolevulinic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "106-60-5",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "134",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "137",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "5-AMINO-LEVULINATE",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "894",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "C00430",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:17549",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "DB00855",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0001149",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via synonym synonym",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "106-60-5",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "134",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "137",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "5-AMINO-LEVULINATE",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "894",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "C00430",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "CHEBI:17549",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "DB00855",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "synonym synonym"
+              },
+              {
+                "source_id": "HMDB0001149",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "synonym synonym"
+              }
+            ]
+          },
+          {
+            "stage": "audit_repair",
+            "origin": "audit_modified",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+            "review_required": false,
+            "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+            "sources": []
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "aminolevulinic acid"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 894,
+              "name": "5-Aminolevulinic acid",
+              "short_name": "5-Amnva",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001149",
+                "kegg": "C00430",
+                "chebi": "CHEBI:17549",
+                "pubchem": "137",
+                "cas": "106-60-5",
+                "biocyc": "5-AMINO-LEVULINATE",
+                "chemspider": "134",
+                "drugbank": "DB00855",
+                "pathbank_compound_id": "894"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 894,
+          "resolved_name": "5-Aminolevulinic acid"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0001149",
+          "kegg": "C00430",
+          "chebi": "17549",
+          "pubchem": "137",
+          "cas": "106-60-5",
+          "biocyc": "5-AMINO-LEVULINATE",
+          "chemspider": "134",
+          "drugbank": "DB00855",
+          "pathbank_compound_id": "894"
+        },
+        "pathbank_compound_id": 894,
+        "biological_state": "mitochondrial_matrix",
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok_with_warnings",
+            "primary_name": "5-Aminolevulinate",
+            "synonyms": [
+              "5-Aminolevulinate",
+              "5-Amino-4-oxopentanoate",
+              "5-Amino-4-oxovaleric acid",
+              "5-Amino-4-oxopentanoic acid"
+            ],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C5H9NO3",
+            "charge": 0,
+            "mass_monoisotopic": 131.0582,
+            "mass_average": 131.13,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Lipids [BR:br08002]",
+              "FA Fatty acyls",
+              "FA01 Fatty Acids and Conjugates",
+              "FA0110 Amino fatty acids",
+              "C00430 5-Amino-4-oxopentanoic acid",
+              "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D07567)]",
+              "L ANTINEOPLASTIC AND IMMUNOMODULATING AGENTS",
+              "L01 ANTINEOPLASTIC AGENTS",
+              "L01X OTHER ANTINEOPLASTIC AGENTS",
+              "L01XD Sensitizers used in photodynamic/radiation therapy",
+              "L01XD04 Aminolevulinic acid",
+              "D07567 Aminolevulinic acid"
+            ],
+            "pathways": [
+              "Glycine, serine and threonine metabolism",
+              "Porphyrin metabolism",
+              "Biosynthesis of plant secondary metabolites",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Microbial metabolism in diverse environments",
+              "Biosynthesis of cofactors",
+              "ABC transporters"
+            ],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0001149",
+              "kegg_id": "C00430",
+              "chebi_id": "CHEBI:17549",
+              "pubchem_id": "137",
+              "cas": "106-60-5",
+              "biocyc": "5-AMINO-LEVULINATE",
+              "chemspider": "134",
+              "drugbank_id": "DB00855",
+              "pathbank_compound_id": "894"
+            },
+            "kegg": {
+              "status": "ok",
+              "source": "KEGG",
+              "id": "C00430",
+              "primary_name": "5-Aminolevulinate",
+              "synonyms": [
+                "5-Aminolevulinate",
+                "5-Amino-4-oxopentanoate",
+                "5-Amino-4-oxovaleric acid",
+                "5-Amino-4-oxopentanoic acid"
+              ],
+              "formula": "C5H9NO3",
+              "mass_monoisotopic": 131.0582,
+              "mass_average": 131.13,
+              "pathways": [
+                "Glycine, serine and threonine metabolism",
+                "Porphyrin metabolism",
+                "Biosynthesis of plant secondary metabolites",
+                "Metabolic pathways",
+                "Biosynthesis of secondary metabolites",
+                "Microbial metabolism in diverse environments",
+                "Biosynthesis of cofactors",
+                "ABC transporters"
+              ],
+              "kegg_class": [
+                "Lipids [BR:br08002]",
+                "FA Fatty acyls",
+                "FA01 Fatty Acids and Conjugates",
+                "FA0110 Amino fatty acids",
+                "C00430 5-Amino-4-oxopentanoic acid",
+                "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D07567)]",
+                "L ANTINEOPLASTIC AND IMMUNOMODULATING AGENTS",
+                "L01 ANTINEOPLASTIC AGENTS",
+                "L01X OTHER ANTINEOPLASTIC AGENTS",
+                "L01XD Sensitizers used in photodynamic/radiation therapy",
+                "L01XD04 Aminolevulinic acid",
+                "D07567 Aminolevulinic acid"
+              ],
+              "cross_references": {
+                "kegg_id": "C00430",
+                "pubchem_id": "3719",
+                "chebi_id": "17549"
+              },
+              "provenance": {
+                "source": "KEGG",
+                "id": "C00430",
+                "source_url": "https://rest.kegg.jp/get/cpd:C00430",
+                "retrieved_at": "2026-07-29T11:15:16Z",
+                "status": "ok"
+              }
+            },
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:17549",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-07-29T11:15:20Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0001149",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0001149",
+                "retrieved_at": "2026-07-29T11:15:15Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:17549",
+                "retrieved_at": "2026-07-29T11:15:20Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0001149",
+                "retrieved_at": "2026-07-29T11:15:15Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              },
+              {
+                "source": "KEGG",
+                "id": "C00430",
+                "retrieved_at": "2026-07-29T11:15:16Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0001149",
+        "kegg_id": "C00430",
+        "chebi_id": "17549",
+        "pubchem_cid": "137",
+        "cas": "106-60-5",
+        "biocyc_id": "5-AMINO-LEVULINATE",
+        "chemspider_id": "134",
+        "short_name": "5-Amnva",
+        "synonyms": [
+          "5-Aminolevulinate",
+          "5-Amino-4-oxopentanoate",
+          "5-Amino-4-oxovaleric acid",
+          "5-Amino-4-oxopentanoic acid"
+        ],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ],
+        "db_status": "legacy_id_unverified",
+        "db_id": 894,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 894
+      },
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via exact_normalized_name exact_normalized_name",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "14875-96-8",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "1799",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "24604415",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "C00032",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "CHEBI:17627",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "DB02577",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "HEME_A",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "HMDB0003178",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "14875-96-8",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "1799",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "24604415",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "C00032",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:17627",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "DB02577",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HEME_A",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0003178",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "heme"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1799,
+              "name": "Heme",
+              "short_name": "Heme",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0003178",
+                "kegg": "C00032",
+                "chebi": "CHEBI:17627",
+                "cas": "14875-96-8",
+                "biocyc": "HEME_A",
+                "chemspider": "24604415",
+                "drugbank": "DB02577",
+                "pathbank_compound_id": "1799"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 1799,
+          "resolved_name": "Heme"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0003178",
+          "kegg": "C00032",
+          "chebi": "17627",
+          "cas": "14875-96-8",
+          "biocyc": "HEME_A",
+          "chemspider": "24604415",
+          "drugbank": "DB02577",
+          "pathbank_compound_id": "1799",
+          "pubchem": "3334"
+        },
+        "pathbank_compound_id": 1799,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok_with_warnings",
+            "primary_name": "Heme",
+            "synonyms": [
+              "Heme",
+              "Haem",
+              "Protoheme",
+              "Heme B",
+              "Protoheme IX"
+            ],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C34H32FeN4O4",
+            "charge": 0,
+            "mass_monoisotopic": 616.1773,
+            "mass_average": 616.49,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Compounds with biological roles [BR:br08001]",
+              "Vitamins and cofactors",
+              "Cofactors",
+              "Coenzymes",
+              "C00032 Heme B"
+            ],
+            "pathways": [
+              "Porphyrin metabolism",
+              "Biosynthesis of plant secondary metabolites",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Biosynthesis of cofactors",
+              "ABC transporters",
+              "Integrated stress response (ISR) signaling pathway",
+              "Ferroptosis",
+              "Mineral absorption"
+            ],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0003178",
+              "kegg_id": "C00032",
+              "chebi_id": "CHEBI:17627",
+              "cas": "14875-96-8",
+              "biocyc": "HEME_A",
+              "chemspider": "24604415",
+              "drugbank_id": "DB02577",
+              "pathbank_compound_id": "1799",
+              "pubchem_id": "3334"
+            },
+            "kegg": {
+              "status": "ok",
+              "source": "KEGG",
+              "id": "C00032",
+              "primary_name": "Heme",
+              "synonyms": [
+                "Heme",
+                "Haem",
+                "Protoheme",
+                "Heme B",
+                "Protoheme IX"
+              ],
+              "formula": "C34H32FeN4O4",
+              "mass_monoisotopic": 616.1773,
+              "mass_average": 616.49,
+              "pathways": [
+                "Porphyrin metabolism",
+                "Biosynthesis of plant secondary metabolites",
+                "Metabolic pathways",
+                "Biosynthesis of secondary metabolites",
+                "Biosynthesis of cofactors",
+                "ABC transporters",
+                "Integrated stress response (ISR) signaling pathway",
+                "Ferroptosis",
+                "Mineral absorption"
+              ],
+              "kegg_class": [
+                "Compounds with biological roles [BR:br08001]",
+                "Vitamins and cofactors",
+                "Cofactors",
+                "Coenzymes",
+                "C00032 Heme B"
+              ],
+              "cross_references": {
+                "kegg_id": "C00032",
+                "pubchem_id": "3334",
+                "chebi_id": "17627"
+              },
+              "provenance": {
+                "source": "KEGG",
+                "id": "C00032",
+                "source_url": "https://rest.kegg.jp/get/cpd:C00032",
+                "retrieved_at": "2026-06-24T17:34:34Z",
+                "status": "ok"
+              }
+            },
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:17627",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-06-24T17:34:33Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0003178",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0003178",
+                "retrieved_at": "2026-06-24T17:34:34Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:17627",
+                "retrieved_at": "2026-06-24T17:34:33Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0003178",
+                "retrieved_at": "2026-06-24T17:34:34Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              },
+              {
+                "source": "KEGG",
+                "id": "C00032",
+                "retrieved_at": "2026-06-24T17:34:34Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0003178",
+        "kegg_id": "C00032",
+        "chebi_id": "17627",
+        "pubchem_cid": "3334",
+        "cas": "14875-96-8",
+        "biocyc_id": "HEME_A",
+        "chemspider_id": "24604415",
+        "short_name": "Heme",
+        "synonyms": [
+          "Heme",
+          "Haem",
+          "Protoheme",
+          "Heme B",
+          "Protoheme IX"
+        ],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ],
+        "db_status": "legacy_id_unverified",
+        "db_id": 1799,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 1799
+      },
+      {
+        "name": "Pyridoxal 5'-phosphate",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id, with 9 identifier(s) withheld by identity admission",
+            "review_required": true,
+            "uncertainty": "identity admission withheld biocyc=PYRIDOXAL_PHOSPHATE, cas=54-47-7, chebi=CHEBI:18405, chemspider=1022, drugbank=DB00114, hmdb=HMDB0001491, kegg=C00018, pathbank_compound_id=1148, pubchem=1051 (cofactor_role_used_by_no_reaction); the entity, its name and its graph role are preserved and the identifier is recorded under rejected_mapped_ids rather than deleted",
+            "sources": [
+              {
+                "source_id": "1022",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "1051",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "1148",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "54-47-7",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "C00018",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:18405",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "DB00114",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0001491",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "PYRIDOXAL_PHOSPHATE",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via synonym synonym, with 9 identifier(s) withheld by identity admission",
+            "review_required": true,
+            "uncertainty": "identity admission withheld biocyc=PYRIDOXAL_PHOSPHATE, cas=54-47-7, chebi=CHEBI:18405, chemspider=1022, drugbank=DB00114, hmdb=HMDB0001491, kegg=C00018, pathbank_compound_id=1148, pubchem=1051 (cofactor_role_used_by_no_reaction); the entity, its name and its graph role are preserved and the identifier is recorded under rejected_mapped_ids rather than deleted",
+            "sources": [
+              {
+                "source_id": "1148",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "synonym synonym"
+              }
+            ]
+          },
+          {
+            "stage": "audit_repair",
+            "origin": "audit_modified",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "an accepted audit patch 'replace' operation produced this row's content; it matched no row in this container immediately before the operation",
+            "review_required": false,
+            "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+            "sources": []
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "pyridoxal phosphate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1148,
+              "name": "Pyridoxal 5'-phosphate",
+              "short_name": "Pyr-5'P",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001491",
+                "kegg": "C00018",
+                "chebi": "CHEBI:18405",
+                "pubchem": "1051",
+                "cas": "54-47-7",
+                "biocyc": "PYRIDOXAL_PHOSPHATE",
+                "chemspider": "1022",
+                "drugbank": "DB00114",
+                "pathbank_compound_id": "1148"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 1148,
+          "resolved_name": "Pyridoxal 5'-phosphate",
+          "rejected_mapped_ids": {
+            "hmdb": "HMDB0001491",
+            "kegg": "C00018",
+            "chebi": "CHEBI:18405",
+            "pubchem": "1051",
+            "cas": "54-47-7",
+            "biocyc": "PYRIDOXAL_PHOSPHATE",
+            "chemspider": "1022",
+            "drugbank": "DB00114",
+            "pathbank_compound_id": "1148"
+          },
+          "identity_admission": {
+            "schema_version": 1,
+            "withheld": {
+              "hmdb": "HMDB0001491",
+              "kegg": "C00018",
+              "chebi": "CHEBI:18405",
+              "pubchem": "1051",
+              "cas": "54-47-7",
+              "biocyc": "PYRIDOXAL_PHOSPHATE",
+              "chemspider": "1022",
+              "drugbank": "DB00114",
+              "pathbank_compound_id": "1148"
+            },
+            "rules": [
+              "cofactor_role_used_by_no_reaction"
+            ],
+            "details": [
+              {
+                "rule": "cofactor_role_used_by_no_reaction",
+                "detail": "this row declares the cofactor ROLE, and no reaction or transport in this payload uses it as an input, output, enzyme, modifier, cargo or transporter (1 name(s) looked for). A cofactor a reaction does use keeps its identifiers",
+                "identifiers": {
+                  "hmdb": "HMDB0001491",
+                  "kegg": "C00018",
+                  "chebi": "CHEBI:18405",
+                  "pubchem": "1051",
+                  "cas": "54-47-7",
+                  "biocyc": "PYRIDOXAL_PHOSPHATE",
+                  "chemspider": "1022",
+                  "drugbank": "DB00114",
+                  "pathbank_compound_id": "1148"
+                }
+              }
+            ]
+          }
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0001491",
+          "kegg": "C00018",
+          "chebi": "18405",
+          "pubchem": "1051",
+          "cas": "54-47-7",
+          "biocyc": "PYRIDOXAL_PHOSPHATE",
+          "chemspider": "1022",
+          "drugbank": "DB00114",
+          "pathbank_compound_id": "1148"
+        },
+        "pathbank_compound_id": 1148,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok_with_warnings",
+            "primary_name": "Pyridoxal phosphate",
+            "synonyms": [
+              "Pyridoxal phosphate",
+              "Pyridoxal 5'-phosphate",
+              "Pyridoxal 5-phosphate",
+              "PLP"
+            ],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C8H10NO6P",
+            "charge": 0,
+            "mass_monoisotopic": 247.0246,
+            "mass_average": 247.14,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Compounds with biological roles [BR:br08001]",
+              "Vitamins and cofactors",
+              "Cofactors",
+              "Coenzymes",
+              "C00018 PLP",
+              "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303]",
+              "A ALIMENTARY TRACT AND METABOLISM",
+              "A11 VITAMINS",
+              "A11H OTHER PLAIN VITAMIN PREPARATIONS",
+              "A11HA Other plain vitamin preparations",
+              "A11HA06 Pyridoxal phosphate",
+              "C00018 Pyridoxal phosphate"
+            ],
+            "pathways": [
+              "Thiamine metabolism",
+              "Vitamin B6 metabolism",
+              "Metabolic pathways",
+              "Biosynthesis of cofactors",
+              "Vitamin digestion and absorption"
+            ],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0001491",
+              "kegg_id": "C00018",
+              "chebi_id": "CHEBI:18405",
+              "pubchem_id": "1051",
+              "cas": "54-47-7",
+              "biocyc": "PYRIDOXAL_PHOSPHATE",
+              "chemspider": "1022",
+              "drugbank_id": "DB00114",
+              "pathbank_compound_id": "1148"
+            },
+            "kegg": {
+              "status": "ok",
+              "source": "KEGG",
+              "id": "C00018",
+              "primary_name": "Pyridoxal phosphate",
+              "synonyms": [
+                "Pyridoxal phosphate",
+                "Pyridoxal 5'-phosphate",
+                "Pyridoxal 5-phosphate",
+                "PLP"
+              ],
+              "formula": "C8H10NO6P",
+              "mass_monoisotopic": 247.0246,
+              "mass_average": 247.14,
+              "pathways": [
+                "Thiamine metabolism",
+                "Vitamin B6 metabolism",
+                "Metabolic pathways",
+                "Biosynthesis of cofactors",
+                "Vitamin digestion and absorption"
+              ],
+              "kegg_class": [
+                "Compounds with biological roles [BR:br08001]",
+                "Vitamins and cofactors",
+                "Cofactors",
+                "Coenzymes",
+                "C00018 PLP",
+                "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303]",
+                "A ALIMENTARY TRACT AND METABOLISM",
+                "A11 VITAMINS",
+                "A11H OTHER PLAIN VITAMIN PREPARATIONS",
+                "A11HA Other plain vitamin preparations",
+                "A11HA06 Pyridoxal phosphate",
+                "C00018 Pyridoxal phosphate"
+              ],
+              "cross_references": {
+                "kegg_id": "C00018",
+                "pubchem_id": "3320",
+                "chebi_id": "18405"
+              },
+              "provenance": {
+                "source": "KEGG",
+                "id": "C00018",
+                "source_url": "https://rest.kegg.jp/get/cpd:C00018",
+                "retrieved_at": "2026-05-28T16:08:50Z",
+                "status": "ok"
+              }
+            },
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:18405",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-05-28T16:08:49Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0001491",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0001491",
+                "retrieved_at": "2026-05-28T16:08:49Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:18405",
+                "retrieved_at": "2026-05-28T16:08:49Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0001491",
+                "retrieved_at": "2026-05-28T16:08:49Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              },
+              {
+                "source": "KEGG",
+                "id": "C00018",
+                "retrieved_at": "2026-05-28T16:08:50Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0001491",
+        "kegg_id": "C00018",
+        "chebi_id": "18405",
+        "pubchem_cid": "1051",
+        "cas": "54-47-7",
+        "biocyc_id": "PYRIDOXAL_PHOSPHATE",
+        "chemspider_id": "1022",
+        "short_name": "Pyr-5'P",
+        "synonyms": [
+          "Pyridoxal phosphate",
+          "Pyridoxal 5'-phosphate",
+          "Pyridoxal 5-phosphate",
+          "PLP"
+        ],
+        "compound_class": "cofactor",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ],
+        "db_status": "matched_offline_name_index",
+        "db_id": 1148,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "raw_name": "pyridoxal phosphate",
+        "db_row": {
+          "id": 1148,
+          "name": "Pyridoxal 5'-phosphate"
+        },
+        "aliases": [
+          "pyridoxal phosphate"
+        ],
+        "pathwhiz_id": 1148
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via uniprot direct_id_match:uniprot_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "1",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "uniprot direct_id_match:uniprot_id"
+              },
+              {
+                "source_id": "17",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "uniprot direct_id_match:uniprot_id"
+              },
+              {
+                "source_id": "9606",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "uniprot direct_id_match:uniprot_id"
+              },
+              {
+                "source_id": "P22557",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "uniprot direct_id_match:uniprot_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          },
+          {
+            "stage": "audit_repair",
+            "origin": "audit_modified",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+            "review_required": false,
+            "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+            "sources": []
+          },
+          {
+            "stage": "audit_repair",
+            "origin": "audit_modified",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+            "review_required": false,
+            "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+            "sources": []
+          }
+        ],
+        "organism": "Homo sapiens",
+        "species": "Homo sapiens",
+        "species_name": "Homo sapiens",
+        "pathbank_species_id": 1,
+        "species_id": 1,
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "ALAS2",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 17,
+              "name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "uniprot": "P22557",
+              "gene_name": "ALAS2",
+              "species_id": 1,
+              "matched_on": "uniprot_id",
+              "score": 1.08,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "direct_id_match:uniprot_id",
+          "confidence": 1.08,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "uniprot"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "ALAS2",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.08,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:17, uniprot:P22557",
+            "judged_candidate": {
+              "pathbank_protein_id": 17,
+              "name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "uniprot": "P22557",
+              "gene_name": "ALAS2",
+              "species_id": 1,
+              "matched_on": "uniprot_id",
+              "score": 1.08,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 17,
+                "name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+                "uniprot": "P22557",
+                "gene_name": "ALAS2",
+                "species_id": 1,
+                "matched_on": "uniprot_id",
+                "score": 1.08,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "ALAS2",
+              "kind": "protein",
+              "resolved_name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "identity": "uniprot:P22557",
+              "compared_names": [
+                "5-aminolevulinate synthase, erythroid-specific, mitochondrial"
+              ],
+              "matched_symbol": "ALAS2"
+            }
+          },
+          "pathbank_protein_id": 17,
+          "resolved_name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "P22557",
+          "pathbank_protein_id": "17"
+        },
+        "biological_state": "mitochondrial_matrix",
+        "pathbank_protein_id": 17,
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "P22557",
+              "recommended_name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "alternative_names": [
+                "5-aminolevulinic acid synthase 2",
+                "Delta-ALA synthase 2",
+                "Delta-aminolevulinate synthase 2"
+              ],
+              "gene_names": [
+                "ALAS2",
+                "ALASE",
+                "ASB"
+              ],
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "function_text": "Catalyzes the pyridoxal 5'-phosphate (PLP)-dependent condensation of succinyl-CoA and glycine to form aminolevulinic acid (ALA), with CoA and CO2 as by-products (PubMed:14643893, PubMed:21252495, PubMed:21309041, PubMed:21653323, PubMed:32499479, PubMed:34492704). Contributes significantly to heme formation during erythropoiesis (PubMed:2050125) Catalyzes the pyridoxal 5'-phosphate (PLP)-dependent condensation of succinyl-CoA and glycine to form aminolevulinic acid (ALA), with CoA and CO2 as by-products (PubMed:14643893). Catalytic activity is 75-85% of isoform 1 activity (PubMed:14643893) Catalyzes the pyridoxal 5'-phosphate (PLP)-dependent condensation of succinyl-CoA and glycine to form aminolevulinic acid (ALA), with CoA and CO2 as by-products (PubMed:14643893). Catalytic activity is 65-75% of isoform 1 activity (PubMed:14643893)",
+              "catalytic_activity": [
+                "succinyl-CoA + glycine + H(+) = 5-aminolevulinate + CO2 + CoA"
+              ],
+              "enzyme_commission": [
+                "2.3.1.37"
+              ],
+              "pathways": [
+                "Porphyrin-containing compound metabolism; protoporphyrin-IX biosynthesis; 5-aminolevulinate from glycine: step 1/1"
+              ],
+              "keywords": [
+                "3D-structure",
+                "Acyltransferase",
+                "Alternative splicing",
+                "Disease variant",
+                "Heme biosynthesis",
+                "Membrane",
+                "Mitochondrion",
+                "Mitochondrion inner membrane",
+                "Proteomics identification",
+                "Pyridoxal phosphate",
+                "Reference proteome",
+                "Transferase",
+                "Transit peptide"
+              ],
+              "subcellular_locations": [
+                "Mitochondrion inner membrane"
+              ],
+              "go_mf_ids": [
+                "GO:0003870",
+                "GO:0030170"
+              ],
+              "go_bp_ids": [
+                "GO:0030218",
+                "GO:0006785",
+                "GO:0006783",
+                "GO:0042541",
+                "GO:0006879",
+                "GO:0032364",
+                "GO:0006782",
+                "GO:0001666"
+              ],
+              "go_cellular_component_ids": [
+                "GO:0005743",
+                "GO:0005759",
+                "GO:0005739"
+              ],
+              "protein_existence": "1: Evidence at protein level",
+              "sequence_length": 587,
+              "transmembrane_regions_count": 0,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [
+                "5QQQ",
+                "5QQR",
+                "5QQS",
+                "5QQT",
+                "5QQU",
+                "5QQV",
+                "5QQW",
+                "5QQX",
+                "5QQY",
+                "5QQZ",
+                "5QR0",
+                "5QR1",
+                "5QR2",
+                "5QR3",
+                "5QR4",
+                "5QR5",
+                "5QR6",
+                "5QR7",
+                "5QR8",
+                "5QR9",
+                "5QRA",
+                "5QRB",
+                "5QRC",
+                "5QRD",
+                "5QRE",
+                "5QT3",
+                "6HRH"
+              ],
+              "reactome_ids": [
+                "R-HSA-189451"
+              ],
+              "string_id": "9606.ENSP00000497236",
+              "provenance": {
+                "source": "UniProt",
+                "query": "P22557",
+                "source_url": "https://rest.uniprot.org/uniprotkb/P22557.json",
+                "retrieved_at": "2026-07-29T11:15:15Z"
+              }
+            }
+          }
+        },
+        "uniprot": "P22557",
+        "gene_name": "ALAS2",
+        "ec_number": "2.3.1.37",
+        "ec_numbers": [
+          "2.3.1.37"
+        ],
+        "synonyms": [
+          "5-aminolevulinic acid synthase 2",
+          "Delta-ALA synthase 2",
+          "Delta-aminolevulinate synthase 2",
+          "ALAS2",
+          "ALASE",
+          "ASB",
+          "5-aminolevulinate synthase, erythroid-specific, mitochondrial"
+        ]
+      }
+    ],
+    "protein_complexes": []
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial matrix state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "the cellular compartment where heme biosynthesis is initiated and terminated"
+    },
+    {
+      "name": "__auto_state__",
+      "subcellular_location": "cell",
+      "species": "Homo sapiens"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "Glycine",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "the cellular compartment where heme biosynthesis is initiated and terminated"
+      },
+      {
+        "compound": "succinyl-CoA",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "the cellular compartment where heme biosynthesis is initiated and terminated"
+      },
+      {
+        "compound": "aminolevulinic acid",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "the cellular compartment where heme biosynthesis is initiated and terminated"
+      },
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "the cellular compartment where heme biosynthesis is initiated and terminated"
+      },
+      {
+        "compound": "Pyridoxal 5'-phosphate",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "ALAS2",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "ALAS2 is a mitochondrial matrix enzyme (the cellular compartment where heme biosynthesis is initiated and terminated)",
+        "provenance_lineage": [
+          {
+            "stage": "audit_repair",
+            "origin": "audit_modified",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+            "review_required": false,
+            "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+            "sources": []
+          }
+        ]
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "Glycine",
+          "succinyl-CoA"
+        ],
+        "outputs": [
+          "aminolevulinic acid"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA to aminolevulinic acid",
+        "enzymes": [
+          {
+            "entity": "ALAS2",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "aminolevulinic acid synthase 2 (ALAS2) mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+          }
+        ],
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "audit_repair",
+            "origin": "audit_modified",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+            "review_required": false,
+            "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "ALAS2",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "aminolevulinic acid synthase 2 (ALAS2) mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "Pyridoxal 5'-phosphate",
+            "entity_type": "compound",
+            "role": "cofactor",
+            "evidence": "ALAS2 is a PLP-dependent homodimer enzyme",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "heme",
+        "entity_2": "ALAS2",
+        "name": "Heme inhibits ALAS2",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binds mature human ALAS2 with high affinity, acting as a reversible mixed inhibitor",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "transports": []
+  },
+  "source_text_index": {
+    "schema_version": 1,
+    "length": 54436,
+    "normalized": "567 jbc the journal of biological chemistry j biol chem american society for biochemistry and molecular biology pmc12856317 12856317 12856317 41443426 10 1016 j jbc 2025 111089 a reversible feedback mechanism regulating mitochondrial heme synthesis chitrakar iva 1 roberson alexis b 1 2 ayres galhardo pedro h 1 brown breann l 1 3 1 department of biochemistry vanderbilt university school of medicine nashville tennessee usa 2 department of chemistry fisk university nashville tennessee usa 3 center for structural biology vanderbilt university school of medicine nashville tennessee usa for correspondence breann l brown breann brown vanderbilt edu 22 12 2025 302 2 111089 111089 31 1 2026 2025 the authors this is an open access article under the cc by license http creativecommons org licenses by 4 0 previous version available this article is based on a previously available preprint posted on biorxiv on september 9 2025 a reversible feedback mechanism regulating mitochondrial heme synthesis abstract proper heme biosynthesis is essential for numerous cellular functions across nearly all life forms in humans dysregulated heme metabolism is linked to multiple blood diseases neurodegeneration cardiovascular disease and metabolic disorders erythroid heme production begins with the rate limiting enzyme aminolevulinic acid synthase 2 alas2 in the mitochondrion although prior studies discuss the regulation of alas2 in the cytoplasm its modulation as a mature mitochondrial matrix enzyme remains poorly understood we report that heme binds mature human alas2 with high affinity acting as a reversible mixed inhibitor that reduces enzymatic activity structural modeling supports the hypothesis that two flexible regions of alas2 interact with heme locking the enzyme in an inactive conformation and occluding the active site our work reveals a negative feedback mechanism for heme synthesis offering insights into the spatial regulation of alas2 and the maturation of the essential heme cofactor keywords heme enzyme inhibition erythropoiesis aminolevulinic acid pyridoxal 5 phosphate heme regulatory motif protein structure and function enzymology status released display pdf yes is olf no is manuscript no is preprint no is journal matter no is scanned no is retracted no received 2025 sep 23 revised 2025 dec 9 collection date 2026 feb our knowledge of cellular metabolism continues to expand with our understanding of the role of metabolites as cell signaling effectors reviewed in 1 consequently metabolic processes which form the foundation of organismal biology are studied in a new context to reveal critical insights into chemical and cellular signaling heme metabolism is central to multiple biological processes as it is a vital cofactor supporting oxygen transport transcriptional regulation and drug detoxification among others 2 3 4 heme production must be tightly controlled due to the toxicity associated with heme deficiency or excessive amounts of porphyrin precursors which produce reactive oxygen species and free radicals 5 6 7 8 the enzyme that catalyzes the rate limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase alas 9 10 a plp dependent homodimer enzyme that mediates the condensation of glycine and succinyl coa to produce aminolevulinic acid 11 12 humans contain two alas isoforms alas1 and alas2 13 14 15 alas1 is a ubiquitously expressed housekeeping enzyme 13 14 and alas2 is the erythroid specific isoform that governs the synthesis of 85 to 90 of the total body heme pool 5 16 the high demand for heme to produce hemoglobin implies that erythroid heme synthesis is not tightly regulated however the fact that multiple blood disorders arise from dysfunctional heme biosynthesis indicates otherwise current clinical reports have identified over 95 human alas2 mutations that result in the loss of function disease x linked sideroblastic anemia xlsa 17 18 19 or the gain of function disease x linked protoporphyria xlpp 20 21 compelling new evidence reveals that alas2 is also expressed in nonerythroid cells 22 underscoring our critical need to understand alas2 enzyme regulation for metabolic processes beyond erythropoiesis previous research primarily focused on the nuclear and cytosolic regulation of alas expression and trafficking 23 24 25 26 27 28 29 30 31 32 33 for example heme binds directly to the alas mitochondrial targeting sequence preventing protein translocation into the matrix 23 24 34 35 36 however little is known about the enzymatic modulation of alas within the mitochondrial matrix which is the cellular compartment where heme biosynthesis is initiated and terminated human alas paralogs contain multiple putative heme binding motifs in the mature enzyme which lacks the mitochondrial targeting sequence reviewed in 37 various reports established that the interaction between heme and mitochondrial alas1 results in either lonp1 or clpxp mediated degradation 27 38 39 furthermore alas homologs from various α proteobacteria are reported to be inactivated by heme binding 40 41 42 whether human alas2 is subject to negative regulation by heme in mitochondria remains to be fully explored due to the complex impacts of heme variation on effective erythropoiesis gene transcription and several other cellular signaling pathways it is essential to establish in vitro principles of enzyme regulation that form the foundation of interpreting physiological outcomes here we identify a reversible mechanism by which heme inhibits its synthesis by affecting mature mitochondrial alas2 activity challenging the idea that erythroid heme synthesis is an all or nothing process this mechanism responds to heme stress by quickly inactivating alas2 thereby reducing heme production along with a revised understanding of alas2 tissue expression 22 our study describes a new form of negative feedback in heme biosynthesis that regulates erythropoiesis and possibly the maturation of hemoproteins thus controlling numerous biological functions results the human alas2 sequence contains multiple heme binding motifs one challenge to identifying transient or regulatory heme protein interactions is the diversity of interaction motifs and amino acid ligands although many heme binding proteins use histidine residues as the axial ligand to coordinate the heme iron other examples employ cysteine methionine tyrosine or lysine residues 43 the lower abundance of nonhistidine motifs makes predicting these sites less accurate than other canonical motifs 44 45 46 however certain parameters have been identified to aid in prediction previous studies identified a heme regulatory motif hrm that consists of a core cysteine proline cp di peptide in human alas1 with cysteine functioning as the axial ligand to the heme iron 23 a multiple sequence alignment of vertebrate alas enzymes revealed the presence of five cp motifs conserved in both isoforms across homologs fig 1 a fig s1 the first two n terminal hrms reside in the mitochondrial targeting sequence and heme binding to these sites negatively regulates alas mitochondrial import 23 24 the remaining three motifs are dispersed throughout the n terminal extension and catalytic core of alas fig 1 b figure 1 conserved heme regulatory motifs in alas a consensus sequence logo generated based on the heme regulatory motifs hrms conserved across multiple alas homologs conserved motifs pink box include cp dipeptide and cxxc b domain map of human alas2 highlighting the experimentally confirmed hrms in the mitochondrial targeting sequence mts and predicted hrms in dark and light blue respectively the alas n terminal extension is colored purple and the c terminal extension is colored orange the motifs according to human alas2 residue numbers are hrm1 11 cp 12 hrm2 38 cp 39 hrm3 70 cp 71 hrm4 338 cp 339 hrm5 471 cp 472 and hrm6 555 cxxc 558 c representative itc thermograph top and binding isotherm bottom for the binding between hemin and wt human alas2 alas aminolevulinic acid synthase cp cysteine proline in addition to the cp motif a variation of a separate conserved heme binding motif commonly found in cytochromes was also identified this canonical cxxch sequence where x represents any amino acid is found in the human alas2 c terminal domain as cxxcr interestingly the mouse homolog contains the classical cxxch motif in the same position in contrast many other vertebrate alas enzymes retain the arg residue in the terminal position fig 1 a collectively alas2 contains 2 verified and 4 predicted hrms per protomer designated hrm1 through hrm6 in this article human alas2 binds heme in vitro given the various motifs present in human alas2 we sought to determine whether heme regulates mature alas2 after it is processed in the mitochondrial matrix mature wildtype alas2 wt residues 54 587 which lacks the mitochondrial targeting sequence was expressed and purified to homogeneity titration of wt alas2 into hemin ferric chloride heme resulted in robust binding exhibited by an exothermic binding curve fig 1 c the alas2 heme dissociation constant was determined to be 230 nm table 1 the binding stoichiometry was best fit to 4 1 monomer equivalents corresponding to 2 heme binding sites per alas2 protomer thus heme binds mature alas2 tightly and potentially at multiple sites table 1 isothermal titration calorimetry thermodynamic parameters construct k d nm δh kcal mol δs kcal mol a k δg kcal mol wt 232 170 324 382 440 342 1 25 9 05 δn 589 322 1428 1006 1432 810 3 35 8 50 δc 279 220 360 544 604 499 1 80 8 94 cys mut 610 401 1132 361 561 280 1 18 8 48 a 95 confidence interval in brackets heme binds reversibly to inhibit alas2 activity having established that there is robust heme binding to mature alas2 we sought to determine the functional impact of this interaction the in vitro enzyme activity of alas2 was measured by monitoring the rate of ala product release wt alas2 activity decreased significantly with increasing hemin concentration yielding an ic 50 value of 18 7 0 5 μm fig 2 a table 2 these studies were performed using the catalytically active holoenzyme that is covalently bound to the plp cofactor this covalent adduct is broken and reformed throughout the alas reaction cycle fig s2 47 to address the mechanism of heme inhibition we generated a catalytically inactive form of alas2 by chemically cleaving the covalent bond between the endogenous plp cofactor and a conserved active site lys apoalas2 the apoenzyme is then reactivated with the addition of fresh cofactor in the absence of heme increasing concentrations of plp restored enzymatic activity with an activation constant k a of 0 72 0 08 μm fig 2 b in the presence of 50 μm heme plp partially rescued activity with a 7 1 μm ec 50 fig 2 b it is possible that there is not complete restoration of maximal enzyme activity if a portion of apoalas2 molecules contain damaged cofactor that is unable to be exchanged for exogenous plp regardless these data reveal that heme mediated inhibition is reversible alas2 apoenzyme activity was monitored with increasing amounts of plp in the presence of various heme concentrations up to a 100 fold excess the resulting data revealed significant differences in maximal enzyme velocity v max and an increased plp k a indicating that heme binds as a mixed inhibitor that binds both the free and cofactor bound enzyme fig 2 c table s1 we also measured the activity of purified alas2 holoenzyme in response to variable heme and succinyl coa substrate concentrations fig 2 d increasing amounts of succinyl coa still rescue heme dependent inhibition however heme binds uncompetitively to the alas2 succinyl coa holoenzyme complex rather than the free enzyme leading to decreases in both enzyme velocity 8 fold lower v max and substrate affinity 4 5 fold lower k m fig 2 e table s1 due to the sequential nature of the alas2 reaction we propose that the uncompetitive inhibition results from diminished free enzyme available at this stage of the catalytic cycle taken together these data establish that heme acts as an inhibitor of mature human alas2 binding to allosteric sites to decrease enzyme activity figure 2 heme reversibly inhibits the enzymatic activity of human alas2 a the rate of ala product released by wt alas2 measured as a function of increasing hemin concentration b the rate of ala production by wt apoalas2 with increasing concentrations of the plp cofactor was measured in either the absence black diamonds or the presence of 50 μm hemin blue triangles c lineweaver burk plot depicting the change in enzyme velocity as a function of varied plp cofactor in the presence of increasing concentrations of the hemin inhibitor shades of blue d the rate of ala production by wt holoalas2 with increasing concentrations of succinyl coa was measured in either the absence black diamonds or the presence of 50 μm hemin blue triangles e lineweaver burk plot depicting the change in enzyme velocity as a function of varied succinyl coa in the presence of increasing concentrations of the hemin inhibitor shades of blue all experiments were performed with a minimum of three biological replicates each with three technical replicates data were fit using a nonlinear regression to generate an agonist dose response curve ec 50 or an inhibitor dose response curve ic 50 the resulting kinetic parameters v max and k m were used to generate corresponding lineweaver burk double reciprocal plots statistical error was determined using a one way anova table 2 alas2 ligand dose response values construct ic 50 μm a ec 50 μm b wt 18 7 0 5 7 1 δn 35 8 0 4 4 2 δc 31 3 0 8 9 1 cys mut 24 8 0 5 10 4 a ic 50 values were determined by titrating 0 1 μm 60 μm hemin into holoalas2 54 587 b ec 50 values were determined by measuring the activity of apoalas2 variants in the presence of 50 μm hemin or 25 μm hemin for δn with increasing plp titration heme binding putatively favors a catalytically inactive alas2 conformation the crystal structure of human alas2 lacks the hrm3 region and portions of the c terminal extension due to conformational flexibility and crystallographic disorder 48 to determine how heme interacts with alas2 to inhibit enzyme activity we used alphafold3 af3 to model the mature alas2 homodimer with and without heme 49 fig 3 a and b fig s3 in the absence of heme the alas2 dimer is largely structured in the catalytic domains while the n and c terminal extensions mostly adopt a random coil conformation given the predicted flexibility of these regions the af3 prediction confidence is low with average predicted local distance difference test plddt values of 32 and 75 for the n termini and c termini respectively compared to a plddt of 95 for the conserved catalytic domain there are slight changes when two heme b molecules are modeled with the alas2 dimer with an approximate 0 36 å rmsd between the apo and bound structures the most significant difference between the two models is the positioning of a long disordered loop adjacent to a helix containing hrm3 res 85 126 the highest scoring model of two mature alas2 chains and two heme b molecules identified a potential heme binding site involving the coordination of two hrms in the n terminal and c terminal extensions fig 3 b and c the predicted flexibility of these regions in the absence of heme would allow for the extensive rearrangement required to coordinate heme simultaneously 50 51 although the heme binding site is predicted with lower confidence plddt 30 all models generated by af3 depict heme coordinated between hrm3 and hrm6 fig s3 notably the manner of heme binding locks the c terminal extension in a conformation that occludes the active site fig 3 d this represents a similar inactive conformation identified in the crystal structure indicating this orientation is energetically stable 48 the confidence of the alphafold model is insufficient to indicate which of the three cysteine residues present in hrm3 and hrm6 serves as the axial ligand to coordinate the heme iron center also adding more than two heme molecules to the prediction led to spurious models indicating that the remaining heme binding sites are buried or require a more extensive conformational rearrangement that cannot be accurately modeled figure 3 alphafold3 model of the alas2 heme complex two copies of mature alas2 residues 54 587 were modeled without heme a and with two heme b molecules b the alas protomers are colored gray and light blue the plp cofactor is shown as yellow spheres and the heme molecules are shown as blue spheres the flexible n terminal extension is colored purple and the autoinhibitory c terminal extension is shown in orange c magnified view of one heme binding sites reveals heme coordinated between hrm3 c70 p71 and the c terminal hrm6 residues 555 558 from the same subunit d addition of the succinyl coa substrate green spheres reveals the heme bound model adopts an inactive conformation where the c terminal extension sterically interferes with substrate binding the plp cofactor and succinyl coa substrate were modeled based on superposition with rhodobacter capsulatus alas pdb 2bwo alas aminolevulinic acid synthase hrm heme regulatory motif pdb protein data bank heme potentially binds at multiple sites to inhibit alas2 activity multiple alas2 constructs with various hrm mutations were generated to interrogate the accuracy of the alphafold model and to identify additional heme regulatory sites these included a truncation without hrm3 δn residues 75 587 a truncation without the c terminal cxxc motif δc residues 54 547 and a construct where all cysteines in these two motifs were mutated to alanines cys mut fig 4 a all four constructs were purified as holoenzymes and confirmed to be catalytically active to determine whether alas2 binds hemin when one or more of the hrms are compromised isothermal titration calorimetry itc was performed with each variant fig 4 b table 1 titration of δn δc and cys mut into hemin resulted in an exothermic binding curve similar to wt the wt enzyme exhibited the highest affinity for hemin while disruption of the hrm at either terminus reduced affinity with a lesser effect observed in the absence of hrm6 mutation of hrms at both termini resulted in the lowest affinity for hemin the δn construct lacking hrm3 exhibited an enthalpically driven binding mechanism and decreased disorder leading to less efficient binding this implies that hrm3 plays a prominent role in heme binding compared to the other hrms however other heme binding sites appear to exist as revealed by the residual heme binding to our hrm variant constructs figure 4 heme binds human alas2 at multiple sites a domain map of mature alas2 wt colored as in fig 1 and hrm variants wt residues 54 587 δn residues 75 587 δc residues 54 547 and cys mut c70a c555a c558a b representative itc thermographs top and binding isotherms bottom for the interaction between hemin and alas2 δn purple left δc orange middle and cys mut green right c the rate of ala release was measured as a function of increasing hemin concentrations for wt gray diamonds δn purple triangles δc orange circles and cys mut green squares to monitor inhibition of holoenzyme d the rate of ala release was measured in the presence of either 50 μm hemin wt δc and cys mut or 25 μm hemin δn and increasing concentrations of plp to determine reactivation of apoenzyme all experiments were performed with a minimum of three biological replicates each with three technical replicates data were fitted using nonlinear regression and statistical significance was determined using a one way anova alas aminolevulinic acid synthase hrm heme regulatory motif itc isothermal titration calorimetry compared to wt alas2 the basal activity of the cys mut construct decreased by approximately 45 in contrast the truncated constructs δn and δc showed increases in activity of 5 and 70 respectively fig 4 c the significant increase in basal activity of alas2 δc is expected as the deletion of the c terminal extension is known to underlie the gain of function disorder xlpp 20 despite the changes in maximal enzyme velocity the addition of heme resulted in significant inhibition for all constructs fig 4 c enzymatic activity for all mutant constructs decreased with increasing heme concentrations but displayed higher ic 50 values than wt fig 4 c table 2 among the hrm variants alas2 δn was the least sensitive to heme inhibition exhibiting an ic 50 nearly 2 fold higher than that of wt both δc and cys mut constructs were also inhibited by heme to a lesser extent than wt with ic 50 values approximately 1 6 and 1 3 times higher than wt respectively there were also notable differences in residual enzyme activity under saturating heme concentrations the wt δn and cys mut constructs retained approximately 11 to 13 of basal activity in the presence of 100 fold excess heme in contrast alas2 δc retained 25 of basal activity under the same conditions these results indicate that perturbation of either the n terminal or c terminal hrms significantly reduces heme mediated inhibition but either motif is sufficient to facilitate alas2 heme interaction the reversibility of heme inhibition of the hrm variants was monitored by titrating plp into the apoenzymes preincubated with 50 μm heme or 25 μm heme for δn in the presence of excess plp the apoenzyme activity was restored by 50 for wt and δc and to over 75 for cys mut and δn fig 4 d each alas2 variant exhibited ec 50 values comparable to wt table 2 however the maximal catalytic activity was restored to varying amounts as both constructs with hrm3 perturbations δn and cys mut displayed the lowest recovery additionally measuring activity across multiple heme concentrations supported heme as an allosteric mixed inhibitor fig s4 overall these findings provide insight into the reversible interaction between heme and alas2 emphasizing its role in regulating enzymatic activity through allosteric effects discussion the heme biosynthetic enzyme alas2 serves as a critical node governing the first and rate limiting step of this essential metabolic pathway key differences in alas2 including tissue expression protein interactions and disease manifestation necessitate examining this isoform separately from alas1 the interaction between heme and mitochondrial human alas2 has long been debated but lacked evidence here we provide insights into the interaction between heme and the mature human alas2 isoform our investigation reveals a molecular mechanism of action in which heme acts as a potent metabolic inhibitor effectively decreasing the enzymatic activity of alas2 although labile heme concentrations are difficult to measure directly estimates range from less than 1 μm 52 to greater than 20 μm in humans under nonpathogenic conditions 53 this upper estimate is commensurate with the ic 50 values we report for mitochondrial alas2 heme inhibition connecting our in vitro research to a plausible cellular state critically this unique mode of inhibition is specific to the enzyme as it localizes to the mitochondrial matrix where little is known about how alas2 responds to chemical cues but where it primarily operates remarkably heme binding to alas2 exhibits several distinctive traits including redundancy reversibility and allostery this study supports a model by which multiple motifs act in concert to form a single heme binding site our in vitro reconstitution uncovered a process that would otherwise be difficult to identify in cells due to the pleiotropic effects of heme on transcriptional programs and erythropoiesis the presence of multiple heme binding sites within the enzyme likely serves as a fail safe mechanism ensuring the responsiveness of alas2 to heme even if one of the binding sites is compromised for example truncations of the alas2 c terminal extension lead to the gain of function disease xlp 20 21 54 which would affect the enzyme s ability to respond to heme stress if only one allosteric site were present however the presence of multiple nonequivalent heme binding sites across the alas2 homodimer makes their isolation and identification difficult as compensatory changes may occur with enzyme mutagenesis a redundant mechanism for tuning alas2 activity in response to cellular heme levels confers a fitness advantage and future studies aim to elucidate the unique allosteric properties of different hrms structural modeling and analysis support the hypothesis that heme functions as an allosteric effector by potentially inducing a conformational change in alas2 that prevents substrate binding and consequently enzymatic activity a recent report proposed that heme bound alas2 recruits the clpxp protease via an adaptor protein to trigger degradation 55 similarly heme binding to the alas1 isoform also results in degradation 27 38 39 56 furthermore our study indicates that heme binding may also influence the interactions of alas2 with proteins in the proposed heme synthesis metabolon a complex of heme biosynthetic enzymes and other mitochondrial proteins that enhance metabolic efficiency 57 58 59 this potential modulation of the metabolon would serve as an additional layer of regulation further influencing the overall efficiency and dynamics of heme production intriguingly this heme mediated inhibition discovered in our current work can coexist with a slower irreversible means of heme triggered alas2 degradation providing the cell with a multifaceted mechanism to fine tune heme production in response to various physiological demands fig 5 combined with previous studies of alas homologs in bacteria or other tissues 41 42 60 61 62 63 our work reveals a conserved role in heme mediated inhibition that has evolved to meet organism and tissue specific needs the tight control of heme biosynthesis is paramount as heme plays a central role in a wide range of cellular processes including oxygen transport electron transport and metabolic systems such as iron homeostasis and lipid metabolism 64 65 66 67 68 69 70 given the pivotal role of heme in multiple processes its dysregulation would also impact physiological functions dependent on other cofactors like fad and cobalamin exacerbating disease phenotypes such as anemia neurotoxicity oxidative stress and metabolic dysfunction 66 67 68 therefore by supporting hemoprotein maturation and integrating with key cellular pathways the intricate regulation of heme production is crucial for maintaining cellular homeostasis in response to environmental and metabolic demands figure 5 model of heme mediated negative feedback inhibition of mitochondrial alas2 under basal conditions the alas2 homodimer gray ovals binds plp yellow sphere to subsequently produce heme red spheres in the case of toxic heme accumulation heme binds to alas2 with potentially multiple outcomes we discovered a mechanism where heme binding results in a conformational change that excludes substrate binding purple box in addition heme binding may recruit mitochondrial proteases such as clpxp for enzyme degradation alas aminolevulinic acid synthase experimental procedures protein expression and purification all human alas2 constructs were cloned into a modified pet28b vector with a ulp1 protease cleavable n terminal hexahistidine sumo tag his 6 sumo the plasmids were transformed into escherichia coli bl21 codon plus de3 ril cells agilent technologies and grown in lb medium containing 25 μg ml chloramphenicol and 50 μg ml kanamycin at 37 c and 250 rpm expression was induced at an a 600 of 0 6 to 0 8 with 0 5 mm iptg for 4 h at 22 c and 250 rpm cultures were harvested by centrifugation and the pelleted cells were stored at 80 c cells were resuspended in lysis buffer containing 25 mm hepes ph 8 0 400 mm nacl 100 mm kcl 2 mm mgcl 2 20 mm imidazole 10 glycerol 1 mm dtt and 20 μm plp with edta free protease inhibitor thermo fisher scientific cells were lysed by high pressure homogenization and the lysate was cleared by centrifugation at 4 c for 30 min 30 000 g the clear lysate was incubated with ni 2 nta agarose resin qiagen pre equilibrated in lysis buffer for 1 h at 4 c after washing the resin with lysis buffer the protein was eluted with lysis buffer containing 250 mm imidazole the his sumo tag was cleaved overnight at 4 c using ulp1 while dialyzing into a buffer containing 25 mm hepes ph 7 0 100 mm kcl 10 glycerol 1 mm dtt and 20 μm plp tag free protein was then passed through ni 2 nta resin pre equilibrated with dialysis buffer to remove any remaining tagged protein for holoenzyme preparation the eluted protein was further purified with gel filtration chromatography hiload 16 600 superdex 200 pg equilibrated with 25 mm hepes ph 7 150 mm kcl 10 glycerol and 0 5 mm tris 2 carboxyethyl phosphine apoenzymes were prepared by overnight incubation of holoalas proteins eluted after the second ni 2 nta purification step in stripping buffer 0 1 m potassium phosphate ph 7 5 10 glycerol 1 mm dtt with 5 mm hydroxylamine hcl followed by a final gel filtration polishing step the purified proteins were concentrated using a centrifugal filter amicon flash frozen in liquid nitrogen and stored at 80 c site directed mutagenesis site directed mutagenesis was performed on the mature alas2 residues 54 587 construct to generate truncations and cysteine mutants targeting hrm3 and hrm6 table s2 all constructs were verified with sanger sequencing and were expressed and purified as described above multiple sequence alignment the amino acid sequences of human homo sapiens p13196 p22557 bovine bos taurus a6qli6 q3zc31 rat rattus norvegicus p13195 q63147 mouse mus musculus q8vc19 p08680 chicken gallus gallus p07997 p18080 and zebrafish danio rerio q9yht4 q7t2f0 alas1 and alas2 were retrieved from the uniprot database the multiple sequence alignment was performed using clustal omega 1 2 4 with default parameters to identify conserved regions among the sequences hrm 3 and 6 along with residues flanking the motifs were subsequently used to generate a sequence frequency plot using weblogo 3 7 4 the alignment of all sequences was visualized using espript 3 0 24 isothermal titration calorimetry binding curves of the hemin protein interaction were determined using nano itc instrument ta instruments at 25 c hemin was dissolved in 1 m naoh and autoclaved to prepare a stock solution of 746 μm ε 385nm 58 440 m 1 cm 1 the stock solution was diluted to 1 5 μm in titration buffer containing 25 mm hepes ph 7 150 mm kcl and 0 5 mm tcep protein samples were dialyzed into the titration buffer and diluted to a final concentration of 40 μm fixed volumes of protein were injected at 200 s intervals into the cell containing hemin an a b hetero association model was used to determine the thermodynamic parameters for each variant data were integrated and analyzed using nitpic and sedphat and visualized using gussi 71 72 73 enzyme activity assays a discontinuous colorimetric activity assay adapted from shoolingin jordan et al and bailey et al was used to measure the enzyme activity 48 74 the reaction was initiated by adding 100 nm purified enzyme to 50 mm potassium phosphate ph 7 0 10 mm mgcl 2 1 mm dtt 100 mm glycine and 300 μm succinyl coa 175 μl total the reaction was incubated at 37 c for 15 min and terminated with 100 μl of cold 10 trichloroacetic acid the precipitated protein was removed by centrifugation for 5 min at 13 000 g and 240 μl of the supernatant was mixed with 240 μl of 1 m sodium acetate ph 4 6 to derivatize ala 20 μl of acetylacetone was added to the mixture and boiled at 100 c for 10 min after the sample was cooled for 20 min 100 μl aliquots were transferred into a clear 96 well plate in triplicate an equal volume of ehrlich s reagent p dimethylaminobenzaldehyde dmab was added to each well and the absorbance was monitored at 553 nm using a microplate reader thermo fisher scientific the peak absorbance value was converted to molar ala concentration using ε 553 60 400 m 1 cm 1 inhibition of enzyme activity was determined by titrating hemin 0 1 μm 60 μm into the substrate mixture before initiating the reaction upon enzyme addition hemin was dissolved in 100 dimethyl sulfoxide dmso ε 403 nm 170 000 m 1 cm 1 and serially diluted in 100 dmso to prepare stock solutions for each concentration the final dmso concentration in the reaction mixture was 2 all experiments were performed with a minimum of three biological replicates each with three technical replicates data were fitted using nonlinear regression to generate an inhibitor dose response curve ic 50 or an agonist dose response curve ec 50 and statistical significance was determined using a one way anova with graphpad prism 10 for inhibitor competition experiments the apoenzymes were preincubated with hemin or plp 0 100 μm for 15 min at 25 c in the dark before initiating the reaction next either plp or hemin 0 100 μm was titrated into the reactions to measure enzyme activation after hemin inhibition or enzyme inhibition of the plp treated apoenzyme respectively for succinyl coa hemin competition analyses the wt holoenzyme was mixed with hemin 0 25 50 and 100 μm followed by the addition of increasing succinyl coa concentrations 0 25 50 100 250 and 500 μm all experiments were performed with a minimum of three biological replicates each with three technical replicates data were fit using nonlinear regression to generate an agonist dose response curve ec 50 or an inhibitor dose response curve ic 50 lineweaver burk analysis was performed using the resulting kinetic parameters v max and k m in graphpad prism 10 in silico modeling the mature alas2 heme model was generated using alphafold3 v3 0 0 two copies of mature alas2 residues 54 587 uniprot id p22557 and two copies of heme b ligand were entered as the search query of the five models generated the one with the highest scores was selected to generate the heme bound model structure figures were generated using chimerax data availability all data supporting this study are included within the article and supplementary information additional raw data are available from the corresponding author upon request supporting information the supplemental material contains four figures and one table including the entire alas enzyme multiple sequence alignment alphafold models and corresponding plddt scores lineweaver burk plots for hrm variants and primer sequences used for site directed mutagenesis conflict of interest the authors declare that they have no conflicts of interest with the contents of this article acknowledgments we thank lauren p jackson for the use of the nanoaffinity itc instrument succinyl coa was synthesized by the vanderbilt institute for chemical biology chemical synthesis core biophysical data collection and analysis were conducted at the vanderbilt university center for structural biology labs and instrumentation facility csb lif an institutionally supported core specific figures were created in biorender author contributions i c a b p and p h a g investigation i c and b l b writing review and editing i c and b l b writing original draft i c and b l b visualization i c and b l b validation i c and b l b methodology i c and b l b formal analysis i c and b l b conceptualization b l b funding acquisition funding and additional information this work was supported by the national institute of general medical sciences of the national institutes of health grant dp2gm146255 b l b the content is solely the responsibility of the authors and does not necessarily represent the official views of the national institutes of health reviewed by members of the jbc editorial board edited by joan b broderick supporting information supporting figure and tables references 1 baker s a rutter j metabolites as signalling molecules nat rev mol cell biol 2023 24 355 374 doi 10 1038 s41580 022 00572 w 2 dioum e m rutter j tuckerman j r gonzalez g gilles gonzalez m a mcknight s l npas2 a gas responsive transcription factor science 2002 298 2385 2387 doi 10 1126 science 1078456 3 freeman s l kwon h portolano n parkin g venkatraman girija u basran j et al heme binding to human clock affects interactions with the e box proc natl acad sci u s a 2019 116 19911 19916 doi 10 1073 pnas 1905216116 4 yin l wu n curtin j c qatanani m szwergold n r reid r a et al rev erbalpha a heme sensor that coordinates metabolic and circadian pathways science 2007 318 1786 1789 doi 10 1126 science 1150179 5 dailey h a meissner p n erythroid heme biosynthesis and its disorders cold spring harb perspect med 2013 3 doi 10 1101 cshperspect a011676 6 hamza i dailey h a one ring to rule them all trafficking of heme and heme synthesis intermediates in the metazoans biochim biophys acta 2012 1823 1617 1632 doi 10 1016 j bbamcr 2012 04 009 7 bechara e j h ramos l d stevani c v 5 aminolevulinic acid a matter of life and caveats j photochem photobiol 2021 7 8 chiabrando d vinchi f fiorito v mercurio s tolosano e heme in pathophysiology a matter of scavenging metabolism and trafficking across cell membranes front pharmacol 2014 5 61 doi 10 3389 fphar 2014 00061 9 hunter g a zhang j ferreira g c transient kinetic studies support refinements to the chemical and kinetic mechanisms of aminolevulinate synthase j biol chem 2007 282 23025 23035 doi 10 1074 jbc m609330200 10 fratz e j clayton j hunter g a ducamp s breydo l uversky v n et al human erythroid 5 aminolevulinate synthase mutations associated with x linked protoporphyria disrupt the conformational equilibrium and enhance product release biochemistry 2015 54 5617 5631 doi 10 1021 acs biochem 5b00407 11 gibson k d laver w g neuberger a initial stages in the biosynthesis of porphyrins 2 the formation of delta aminolaevulic acid from glycine and succinyl coenzyme a by particles from chicken erythrocytes biochem j 1958 70 71 81 doi 10 1042 bj0700071 12 kikuchi g kumar a talmage p shemin d the enzymatic synthesis of delta aminolevulinic acid j biol chem 1958 233 1214 1219 13 bishop d f two different genes encode delta aminolevulinate synthase in humans nucleotide sequences of cdnas for the housekeeping and erythroid genes nucleic acids res 1990 18 7187 7188 doi 10 1093 nar 18 23 7187 14 bishop d f henderson a s astrin k h human delta aminolevulinate synthase assignment of the housekeeping gene to 3p21 and the erythroid specific gene to the x chromosome genomics 1990 7 207 214 doi 10 1016 0888 7543 90 90542 3 15 riddle r d yamamoto m engel j d expression of delta aminolevulinate synthase in avian cells separate genes encode erythroid specific and nonspecific isozymes proc natl acad sci u s a 1989 86 792 796 doi 10 1073 pnas 86 3 792 16 besur s hou w schmeltzer p bonkovsky h l clinically important features of porphyrin and heme metabolism and the porphyrias metabolites 2014 4 977 1006 doi 10 3390 metabo4040977 17 stenson p d mort m ball e v chapman m evans k azevedo l et al the human gene mutation database hgmd r optimizing its use in a clinical diagnostic or research setting hum genet 2020 139 1197 1207 doi 10 1007 s00439 020 02199 3 18 jove solavera d ramila m ferrer cortes x olivella m venturi v morado m et al the role of genetic testing in accurate diagnosis of x linked sideroblastic anemia novel alas2 mutations and the impact of x chromosome inactivation sci rep 2025 15 11843 doi 10 1038 s41598 025 95590 x 19 yin h shen q xu c l huang d p chen y x linked sideroblastic anemia induced by a novel alas2 nonsense mutation a case report and literature review ann clin lab sci 2025 55 827 830 20 whatley s d ducamp s gouya l grandchamp b beaumont c badminton m n et al c terminal deletions in the alas2 gene lead to gain of function and cause x linked dominant protoporphyria without anemia or iron overload am j hum genet 2008 83 408 414 doi 10 1016 j ajhg 2008 08 003 21 balwani m erythropoietic protoporphyria and x linked protoporphyria pathophysiology genetics clinical manifestations and management mol genet metab 2019 128 298 303 doi 10 1016 j ymgme 2019 01 020 22 lee s lee s desnick r yasuda m lai e c noncanonical role of alas1 as a heme independent inhibitor of small rna mediated silencing science 2024 386 1427 1434 doi 10 1126 science adp9388 23 lathrop j t timko m p regulation by heme of mitochondrial protein transport through a conserved amino acid motif science 1993 259 522 525 doi 10 1126 science 8424176 24 munakata h sun j y yoshida k nakatani t honda e hayakawa s et al role of the heme regulatory motif in the heme mediated inhibition of mitochondrial import of 5 aminolevulinate synthase j biochem 2004 136 233 238 doi 10 1093 jb mvh112 25 srivastava g borthwick i a maguire d j elferink c j bawden m j mercer j f et al regulation of 5 aminolevulinate synthase mrna in different rat tissues j biol chem 1988 263 5202 5209 26 peoc h k nicolas g schmitt c mirmiran a daher r lefebvre t et al regulation and tissue specific expression of delta aminolevulinic acid synthases in non syndromic sideroblastic anemias and porphyrias mol genet metab 2019 128 190 197 doi 10 1016 j ymgme 2019 01 015 27 nomura k kitagawa y aihara m ohki y furuyama k hirokawa t heme dependent recognition of 5 aminolevulinate synthase by the human mitochondrial molecular chaperone clpx febs lett 2021 595 3019 3029 doi 10 1002 1873 3468 14214 28 tanimura n miller e igarashi k yang d burstyn j n dewey c n et al mechanism governing heme synthesis reveals a gata factor heme circuit that controls differentiation embo rep 2016 17 249 265 doi 10 15252 embr 201541465 29 cox t c bawden m j martin a may b k human erythroid 5 aminolevulinate synthase promoter analysis and identification of an iron responsive element in the mrna embo j 1991 10 1891 1902 doi 10 1002 j 1460 2075 1991 tb07715 x 30 liu j li y tong j gao j guo q zhang l et al long non coding rna dependent mechanism to regulate heme biosynthesis and erythrocyte development nat commun 2018 9 4386 doi 10 1038 s41467 018 06883 x 31 campagna d r de bie c i schmitz abe k sweeney m sendamarai a k schmidt p j et al x linked sideroblastic anemia due to alas2 intron 1 enhancer element gata binding site mutations am j hematol 2014 89 315 319 doi 10 1002 ajh 23616 32 kaneko k furuyama k fujiwara t kobayashi r ishida h harigae h et al identification of a novel erythroid specific enhancer for the alas2 gene and its loss of function mutation which is associated with congenital sideroblastic anemia haematologica 2014 99 252 261 doi 10 3324 haematol 2013 085449 33 surinya k h cox t c may b k identification and characterization of a conserved erythroid specific enhancer located in intron 8 of the human 5 aminolevulinate synthase 2 gene j biol chem 1998 273 16798 16809 doi 10 1074 jbc 273 27 16798 34 yamauchi k hayashi n kikuchi g translocation of delta aminolevulinate synthase from the cytosol to the mitochondria and its regulation by hemin in the rat liver j biol chem 1980 255 1746 1751 35 gonzalez dominguez m freire picos m a cerdan m e haem regulation of the mitochondrial import of the kluyveromyces lactis 5 aminolaevulinate synthase an organelle approach yeast 2001 18 41 48 doi 10 1002 1097 0061 200101 18 1 3 0 co 2 e 36 dailey t a woodruff j h dailey h a examination of mitochondrial protein targeting of haem synthetic enzymes in vivo identification of three functional haem responsive motifs in 5 aminolaevulinate synthase biochem j 2005 386 381 386 doi 10 1042 bj20040570 37 hunter g a ferreira g c an extended c terminus the possible culprit for differential regulation of 5 aminolevulinate synthase isoforms front mol biosci 2022 9 doi 10 3389 fmolb 2022 920668 38 tian q li t hou w zheng j schrum l w bonkovsky h l lon peptidase 1 lonp1 dependent breakdown of mitochondrial 5 aminolevulinic acid synthase protein by heme in human liver cells j biol chem 2011 286 26424 26430 doi 10 1074 jbc m110 215772 39 kubota y nomura k katoh y yamashita r kaneko k furuyama k novel mechanisms for heme dependent degradation of alas1 protein as a component of negative feedback regulation of heme biosynthesis j biol chem 2016 291 20516 20529 doi 10 1074 jbc m116 719161 40 zhang l chen j chen n sun j zheng p ma y cloning of two 5 aminolevulinic acid synthase isozymes hema and hemo from rhodopseudomonas palustris with favorable characteristics for 5 aminolevulinic acid production biotechnol lett 2013 35 763 768 doi 10 1007 s10529 013 1143 4 41 ikushiro h nagami a takai t sawai t shimeno y hori h et al heme dependent inactivation of 5 aminolevulinate synthase from caulobacter crescentus sci rep 2018 8 doi 10 1038 s41598 018 32591 z 42 warnick g r burnham b f regulation of prophyrin biosynthesis purification and characterization of aminolevulinic acid synthase j biol chem 1971 246 6880 6885 43 li t bonkovsky h l guo j t structural analysis of heme proteins implications for design and prediction bmc struct biol 2011 11 13 doi 10 1186 1472 6807 11 13 44 humayun f domingo fernández d paul george a a hopp m t syllwasschy b f detzel m s et al a computational approach for mapping heme biology in the context of hemolytic disorders front bioeng biotechnol 2020 8 74 doi 10 3389 fbioe 2020 00074 45 schubert e florin n duthie f henning brewitz h kühl t imhof d et al spectroscopic studies on peptides and proteins with cysteine containing heme regulatory motifs hrm j inorg biochem 2015 148 49 56 doi 10 1016 j jinorgbio 2015 05 008 46 rathod d c vaidya s m hopp m t kuhl t imhof d shapes and patterns of heme binding motifs in mammalian heme binding proteins biomolecules 2023 13 1031 doi 10 3390 biom13071031 47 hunter g a ferreira g c pre steady state reaction of 5 aminolevulinate synthase evidence for a rate determining product release j biol chem 1999 274 12222 12228 doi 10 1074 jbc 274 18 12222 48 bailey h j bezerra g a marcero j r padhi s foster w r rembeza e et al human aminolevulinate synthase structure reveals a eukaryotic specific autoinhibitory loop regulating substrate binding and product release nat commun 2020 11 2813 doi 10 1038 s41467 020 16586 x 49 abramson j adler j dunger j evans r green t pritzel a et al accurate structure prediction of biomolecular interactions with alphafold 3 nature 2024 630 493 500 doi 10 1038 s41586 024 07487 w 50 na i deforte s stojanovski b m ferreira g c uversky v n molecular dynamics analysis of the structural and dynamic properties of the functionally enhanced hepta variant of mouse 5 aminolevulinate synthase j biomol struct dyn 2018 36 152 165 doi 10 1080 07391102 2016 1269688 51 stojanovski b m hunter g a jahn m jahn d ferreira g c unstable reaction intermediates and hysteresis during the catalytic cycle of 5 aminolevulinate synthase implications from using pseudo and alternate substrates and a promiscuous enzyme variant j biol chem 2014 289 22915 22925 doi 10 1074 jbc m114 574731 52 sassa s why heme needs to be degraded to iron biliverdin ixalpha and carbon monoxide antioxid redox signal 2004 6 819 824 doi 10 1089 ars 2004 6 819 53 aich a freundlich m vekilov p g the free heme concentration in healthy human erythrocytes blood cells mol dis 2015 55 402 409 doi 10 1016 j bcmd 2015 09 003 54 kadirvel s furuyama k harigae h kaneko k tamai y ishida y et al the carboxyl terminal region of erythroid specific 5 aminolevulinate synthase acts as an intrinsic modifier for its catalytic activity and protein stability exp hematol 2012 40 477 486 e1 doi 10 1016 j exphem 2012 01 013 55 cottle t joh l posner c decosta a kardon j r an adaptor for feedback regulation of heme biosynthesis by the mitochondrial protease clpxp biorxiv 2024 doi 10 1101 2024 07 05 602318 preprint 56 yoshino k munakata h kuge o ito a ogishima t haeme regulated degradation of delta aminolevulinate synthase 1 in rat liver mitochondria j biochem 2007 142 453 458 doi 10 1093 jb mvm159 57 medlock a e shiferaw m t marcero j r vashisht a a wohlschlegel j a phillips j d et al identification of the mitochondrial heme metabolism complex plos one 2015 10 doi 10 1371 journal pone 0135896 58 grandchamp b phung n nordmann y the mitochondrial localization of coproporphyrinogen iii oxidase biochem j 1978 176 97 102 doi 10 1042 bj1760097 59 ferreira g c andrew t l karr s w dailey h a organization of the terminal two enzymes of the heme biosynthetic pathway orientation of protoporphyrinogen oxidase and evidence for a membrane complex j biol chem 1988 263 3835 3839 60 tan z zhao j chen j rao d zhou w chen n et al enhancing thermostability and removing hemin inhibition of rhodopseudomonas palustris 5 aminolevulinic acid synthase by computer aided rational design biotechnol lett 2019 41 181 191 doi 10 1007 s10529 018 2627 z 61 he g jiang m cui z sun x chen t wang z construction of 5 aminolevulinic acid synthase variants by cysteine targeted mutation to release heme inhibition j biosci bioeng 2022 134 416 423 doi 10 1016 j jbiosc 2022 07 019 62 scholnick p l hammaker l e marver h s soluble aminolevulinic acid synthetase of rat liver ii studies related to the mechanism of enzyme action and hemin inhibition j biol chem 1972 247 4132 4137 63 karibian d london i m control of heme synthesis by feedback inhibition biochem biophys res commun 1965 18 243 249 doi 10 1016 0006 291x 65 90747 3 64 dohi y ikura t hoshikawa y katoh y ota k nakanome a et al bach1 inhibits oxidative stress induced cellular senescence by impeding p53 function on chromatin nat struct mol biol 2008 15 1246 1254 doi 10 1038 nsmb 1516 65 igarashi k sun j the heme bach1 pathway in the regulation of oxidative stress response and erythroid differentiation antioxid redox signal 2006 8 107 118 doi 10 1089 ars 2006 8 107 66 zenke kawasaki y dohi y katoh y ikura t ikura m asahara t et al heme induces ubiquitination and degradation of the transcription factor bach1 mol cell biol 2007 27 6962 6971 doi 10 1128 mcb 02415 06 67 keel s b doty r t yang z quigley j g chen j knoblaugh s et al a heme export protein is required for red blood cell differentiation and iron homeostasis science 2008 319 825 828 doi 10 1126 science 1151133 68 miller m a coletta m mauro j m putnam l d farnum m f kraut j et al co recombination in cytochrome c peroxidase effect of the local heme environment on co binding explored through site directed mutagenesis biochemistry 1990 29 1777 1791 doi 10 1021 bi00459a017 69 vinchi f ingoglia g chiabrando d mercurio s turco e silengo l et al heme exporter flvcr1a regulates heme synthesis and degradation and controls activity of cytochromes p450 gastroenterology 2014 146 1325 1338 doi 10 1053 j gastro 2014 01 053 70 zhuang j reddi a r wang z khodaverdian b hegg e l gibney b r evaluating the roles of the heme a side chains in cytochrome c oxidase using designed heme proteins biochemistry 2006 45 12530 12538 doi 10 1021 bi060565t 71 keller s vargas c zhao h piszczek g brautigam c a schuck p high precision isothermal titration calorimetry with automated peak shape analysis anal chem 2012 84 5066 5073 doi 10 1021 ac3007522 72 zhao h piszczek g schuck p sedphat a platform for global itc analysis and global multi method analysis of molecular interactions methods 2015 76 137 148 doi 10 1016 j ymeth 2014 11 012 73 brautigam c a calculations and publication quality illustrations for analytical ultracentrifugation data methods enzymol 2015 562 109 133 doi 10 1016 bs mie 2015 05 001 74 shoolingin jordan p m lelean j e lloyd a j continuous coupled assay for 5 aminolevulinate synthase methods enzymol 1997 281 309 316 doi 10 1016 s0076 6879 97 81037 3 associated data supplementary materials supporting figure and tables data availability statement all data supporting this study are included within the article and supplementary information additional raw data are available from the corresponding author upon request"
+  },
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [],
+    "demoted": [],
+    "counts": {
+      "removed": 0,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": [],
+    "source_index": {
+      "schema_version": 1,
+      "status": "written",
+      "length": 54436
+    }
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "protein_export_policy": {
+    "stage": "post_mapping",
+    "summary": {
+      "verified_real_proteins": 1,
+      "unknown_backed_functional_complexes": 0,
+      "ambiguous_real_candidates_rejected": 0,
+      "unused_proteins_quarantined": 0,
+      "false_protein_promotions_blocked": 0,
+      "bare_unresolved_proteins_remaining": 0,
+      "unused_proteins_flagged_for_review": 0
+    },
+    "minimum_score": 0.5,
+    "minimum_margin": 0.1
+  },
+  "prefreeze_db_resolution": {
+    "available": true
+  }
+}

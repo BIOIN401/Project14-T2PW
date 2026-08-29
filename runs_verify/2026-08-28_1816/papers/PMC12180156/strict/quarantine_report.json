@@ -1,0 +1,301 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "pathwhiz",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:bce763c9e5ebf869",
+  "resulting_payload_hash": "sha256:6a2216476a28a052",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "pathwhiz",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "alas2",
+      "ferrochelatase",
+      "glycine",
+      "heme",
+      "iron",
+      "sfxn4"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:83c5269fe6259254",
+  "ok": true,
+  "counts": {
+    "core_accepted": 2,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "ferrochelatase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ferrochelatase complex",
+        "ferrochelatase reaction",
+        "heme",
+        "iron",
+        "protoporphyrin ix"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "SFXN4 inhibits ALAS2 translation",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "sfxn4",
+        "sfxn4 inhibits alas2 translation"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "ferrochelatase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ferrochelatase complex",
+        "ferrochelatase reaction",
+        "heme",
+        "iron",
+        "protoporphyrin ix"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "SFXN4 inhibits ALAS2 translation",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "sfxn4",
+        "sfxn4 inhibits alas2 translation"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.833333,
+    "missing_anchors": [
+      "glycine"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "1 requested-core anchor(s) matched no admitted process: glycine",
+    "coverage_evaluated": true,
+    "reasons": [
+      "requested_core_anchors_unmatched:glycine"
+    ],
+    "applied": true,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": false,
+    "locked_reactions_found": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "heme",
+      "glycine",
+      "iron",
+      "ferrochelatase",
+      "SFXN4",
+      "ALAS2"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "heme biosynthesis",
+      "likely_organism": "Homo sapiens",
+      "key_compounds": [
+        "heme",
+        "glycine",
+        "iron",
+        "ferrochelatase"
+      ],
+      "key_proteins": [
+        "SFXN4",
+        "ALAS2",
+        "ferrochelatase"
+      ],
+      "likely_compartments": [
+        "mitochondrion",
+        "mitochondrial inner membrane",
+        "mitochondrial matrix"
+      ],
+      "main_subprocesses": [
+        "heme biosynthesis",
+        "iron-sulfur cluster assembly",
+        "mitochondrial iron regulation"
+      ],
+      "relevant_sections": [
+        "body",
+        "abstract"
+      ],
+      "pathway_relevance_score": 0.4,
+      "document_type": "multi_example_review",
+      "context_type": "multi_example_review",
+      "scope_status": "targeted",
+      "scope_clarity_score": 0.7,
+      "selected_example": "heme biosynthesis in Homo sapiens",
+      "candidate_examples": [
+        {
+          "name": "heme biosynthesis in Homo sapiens",
+          "organism": "Homo sapiens",
+          "key_compounds": [
+            "heme",
+            "glycine",
+            "iron",
+            "ferrochelatase"
+          ],
+          "key_proteins": [
+            "SFXN4",
+            "ALAS2",
+            "ferrochelatase"
+          ],
+          "main_subprocesses": [
+            "heme biosynthesis",
+            "iron-sulfur cluster assembly",
+            "mitochondrial iron regulation"
+          ],
+          "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels and inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway"
+        }
+      ],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:5c639fc16ae8943d",
+        "response_hash": "sha256:4595b16e70d351c4",
+        "raw_chars": 1244,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 1244,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "heme",
+      "iron",
+      "ferrochelatase",
+      "SFXN4",
+      "ALAS2"
+    ],
+    "unmatched_terms": [
+      "glycine"
+    ],
+    "coverage_ratio": 0.833333,
+    "core_accepted_processes": 2,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 2,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:bce763c9e5ebf869.sha256:83c5269fe6259254"
+}

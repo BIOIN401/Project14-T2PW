@@ -1,0 +1,122 @@
+{
+  "run_id": "sha256:a9397ebb3306c7cc",
+  "boundary_count": 2,
+  "outcomes": [
+    "ok"
+  ],
+  "boundaries": [
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "ok",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "cell_types": 0,
+        "species": 2,
+        "tissues": 0,
+        "subcellular_locations": 0,
+        "compounds": 8,
+        "element_collections": 0,
+        "nucleic_acids": 0,
+        "proteins": 13,
+        "protein_complexes": 0,
+        "total": 23
+      },
+      "raw_process_counts": {
+        "reactions": 5,
+        "reaction_coupled_transports": 0,
+        "transports": 0,
+        "interactions": 0,
+        "total": 5
+      },
+      "request_hash": "sha256:ef04c187cbcc74c1",
+      "response_hash": "sha256:4398e3fcd0ef40df",
+      "raw_chars": 7371,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 7371,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "ok",
+      "model": "",
+      "finish_reason": "",
+      "attempts": 0,
+      "response_status": "",
+      "raw_entity_counts": {
+        "species": 2,
+        "compounds": 8,
+        "proteins": 13,
+        "total": 23
+      },
+      "raw_process_counts": {
+        "reactions": 5,
+        "total": 5
+      },
+      "response_hash": "sha256:179e9c8177917601",
+      "contract_ok": true,
+      "note": "stage_one_boundary_settled"
+    },
+    {
+      "stage": "inference",
+      "boundary": "stage2_inference",
+      "outcome": "valid_json_zero_processes",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "total": 0
+      },
+      "raw_process_counts": {
+        "total": 0
+      },
+      "request_hash": "sha256:c79b10d27039c01c",
+      "response_hash": "sha256:c00bb8f84dc364e1",
+      "raw_chars": 4881,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 4881,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "stage": "inference",
+      "boundary": "stage2_inference",
+      "outcome": "valid_json_zero_processes",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "total": 0
+      },
+      "raw_process_counts": {
+        "total": 0
+      },
+      "request_hash": "sha256:f6cdd4285c6b1702",
+      "response_hash": "sha256:44136fa355b3678a",
+      "raw_chars": 2,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  ]
+}

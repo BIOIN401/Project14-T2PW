@@ -1,0 +1,4687 @@
+{
+  "accepted": [
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b",
+        "gap-orphan_metabolite-72295ae9",
+        "gap-orphan_metabolite-a5fb336c",
+        "gap-dangling_reaction-28fa5c3d"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.906769,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "core",
+      "connected_entities": [
+        "DHNA",
+        "prenyl diphosphate",
+        "demethylmenaquinone (DMK)"
+      ],
+      "confidence": 0.923593,
+      "status": "accepted",
+      "reasons": [
+        "fills_named_gap_directly: via syn::chebi:chebi:16057"
+      ],
+      "normalized": [],
+      "chain": {
+        "hop": 0,
+        "gap_id": "gap-orphan_metabolite-c1631c3b",
+        "shared_metabolite": "syn::chebi:chebi:16057"
+      }
+    }
+  ],
+  "rejected": [
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.906769,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.906769,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.906769,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.906769,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.711186,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.711186,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.711186,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.711186,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-72295ae9",
+      "gap_ids": [
+        "gap-orphan_metabolite-72295ae9"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.923593,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.923593,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-72295ae9",
+      "gap_ids": [
+        "gap-orphan_metabolite-72295ae9"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.923593,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.923593,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-72295ae9",
+      "gap_ids": [
+        "gap-orphan_metabolite-72295ae9"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.722166,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.722166,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-72295ae9",
+      "gap_ids": [
+        "gap-orphan_metabolite-72295ae9"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.722166,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.722166,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.91869,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.91869,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.91869,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.91869,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.723306,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.723306,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.723306,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.723306,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-68f28b01",
+      "gap_ids": [
+        "gap-orphan_metabolite-68f28b01"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.899666,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.899666,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-68f28b01",
+      "gap_ids": [
+        "gap-orphan_metabolite-68f28b01"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.899666,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.899666,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-68f28b01",
+      "gap_ids": [
+        "gap-orphan_metabolite-68f28b01"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.722518,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.722518,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-68f28b01",
+      "gap_ids": [
+        "gap-orphan_metabolite-68f28b01"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.722518,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.722518,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b80ad3d9",
+      "gap_ids": [
+        "gap-orphan_metabolite-b80ad3d9"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.91239,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.91239,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b80ad3d9",
+      "gap_ids": [
+        "gap-orphan_metabolite-b80ad3d9"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.91239,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.91239,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b80ad3d9",
+      "gap_ids": [
+        "gap-orphan_metabolite-b80ad3d9"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.754762,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.754762,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b80ad3d9",
+      "gap_ids": [
+        "gap-orphan_metabolite-b80ad3d9"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.754762,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.754762,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.867687,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.867687,
+      "status": "rejected",
+      "reasons": [
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.867687,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.867687,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.867687,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.867687,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.751223,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.751223,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.751223,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.751223,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.866584,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.866584,
+      "status": "rejected",
+      "reasons": [
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.866584,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.866584,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.866584,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.866584,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.722463,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.722463,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.722463,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.722463,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.898985,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.898985,
+      "status": "rejected",
+      "reasons": [
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.898985,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.898985,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.898985,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.898985,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.720181,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.720181,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.720181,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.720181,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.912045,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.912045,
+      "status": "rejected",
+      "reasons": [
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.912045,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.912045,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.912045,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.912045,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.740923,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.740923,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.740923,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.740923,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.904731,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.904731,
+      "status": "rejected",
+      "reasons": [
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.904731,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.904731,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.904731,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.904731,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.705344,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.705344,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.705344,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.705344,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.89023,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.89023,
+      "status": "rejected",
+      "reasons": [
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.89023,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.89023,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.89023,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.89023,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.710945,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.710945,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.710945,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.710945,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.884933,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.884933,
+      "status": "rejected",
+      "reasons": [
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.884933,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.884933,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.884933,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.884933,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.704705,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.704705,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.704705,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.704705,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.891697,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.891697,
+      "status": "rejected",
+      "reasons": [
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.891697,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.891697,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.891697,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.891697,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.716818,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.716818,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.716818,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.716818,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.921997,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.921997,
+      "status": "rejected",
+      "reasons": [
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.921997,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.921997,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.921997,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.921997,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.746292,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.746292,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.746292,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.746292,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.837732,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.837732,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.837732,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.837732,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.816037,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.816037,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.816037,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.816037,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.840188,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.840188,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.840188,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.840188,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.78099,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.78099,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.78099,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.78099,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a5fb336c",
+      "gap_ids": [
+        "gap-orphan_metabolite-a5fb336c"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.893601,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.893601,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a5fb336c",
+      "gap_ids": [
+        "gap-orphan_metabolite-a5fb336c"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.893601,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.893601,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a5fb336c",
+      "gap_ids": [
+        "gap-orphan_metabolite-a5fb336c"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.703526,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.703526,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a5fb336c",
+      "gap_ids": [
+        "gap-orphan_metabolite-a5fb336c"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.703526,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.703526,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-28fa5c3d",
+      "gap_ids": [
+        "gap-dangling_reaction-28fa5c3d"
+      ],
+      "name": "MenG: DMK -> MK",
+      "inputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [
+        "MenG"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.910842,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.910842,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-28fa5c3d",
+      "gap_ids": [
+        "gap-dangling_reaction-28fa5c3d"
+      ],
+      "name": "MenF: chorismate <-> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.910842,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.910842,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-28fa5c3d",
+      "gap_ids": [
+        "gap-dangling_reaction-28fa5c3d"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.74222,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.74222,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-28fa5c3d",
+      "gap_ids": [
+        "gap-dangling_reaction-28fa5c3d"
+      ],
+      "name": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "inputs": [
+        "isochorismate"
+      ],
+      "outputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.74222,
+        "span": "Subsequently, MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor ( 19 , 20 ), and the SEPHCHC (C) production rate can be expressed as follows: (3) v C = k c a t D [ M e n D ] [ B ] ( 1 + [ D…"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.74222,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['isochorismate (b)'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (sephchc', 'c)'] but the claim states ['isochorismate'] -> ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.840188,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.840188,
+      "status": "rejected",
+      "reasons": [
+        "adjacent_pathway_context_only: shares a metabolite with the pathway but nothing in gap gap-dangling_reaction-da59851f's target — related context, not a gap fill"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-68f28b01",
+      "gap_ids": [
+        "gap-orphan_metabolite-68f28b01"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.899666,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.899666,
+      "status": "rejected",
+      "reasons": [
+        "adjacent_pathway_context_only: shares a metabolite with the pathway but nothing in gap gap-orphan_metabolite-68f28b01's target — related context, not a gap fill"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.837732,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.837732,
+      "status": "rejected",
+      "reasons": [
+        "adjacent_pathway_context_only: shares a metabolite with the pathway but nothing in gap gap-orphan_metabolite-8c563c22's target — related context, not a gap fill"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.91869,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.91869,
+      "status": "rejected",
+      "reasons": [
+        "adjacent_pathway_context_only: shares a metabolite with the pathway but nothing in gap gap-orphan_metabolite-a175c01b's target — related context, not a gap fill"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b80ad3d9",
+      "gap_ids": [
+        "gap-orphan_metabolite-b80ad3d9"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.91239,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.91239,
+      "status": "rejected",
+      "reasons": [
+        "adjacent_pathway_context_only: shares a metabolite with the pathway but nothing in gap gap-orphan_metabolite-b80ad3d9's target — related context, not a gap fill"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-72295ae9",
+      "gap_ids": [
+        "gap-orphan_metabolite-72295ae9"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.923593,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [
+        "DHNA",
+        "prenyl diphosphate",
+        "demethylmenaquinone (DMK)"
+      ],
+      "confidence": 0.923593,
+      "status": "rejected",
+      "reasons": [
+        "duplicate_claim_admitted_for_another_gap: the same claim from the same span is already admitted against gap 'gap-orphan_metabolite-c1631c3b', which now carries this gap id too"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a5fb336c",
+      "gap_ids": [
+        "gap-orphan_metabolite-a5fb336c"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.893601,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [
+        "DHNA",
+        "prenyl diphosphate",
+        "demethylmenaquinone (DMK)"
+      ],
+      "confidence": 0.893601,
+      "status": "rejected",
+      "reasons": [
+        "duplicate_claim_admitted_for_another_gap: the same claim from the same span is already admitted against gap 'gap-orphan_metabolite-c1631c3b', which now carries this gap id too"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-28fa5c3d",
+      "gap_ids": [
+        "gap-dangling_reaction-28fa5c3d"
+      ],
+      "name": "MenA: DHNA + prenyl diphosphate -> DMK",
+      "inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "enzymes": [
+        "MenA"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.910842,
+        "span": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+      },
+      "organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "observed_organisms": [
+        "Lactococcus lactis (subsp. lactis KF147)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (vitamin K2) biosynthesis (DHNA precursor stage in Lactococcus lactis)",
+      "requested_organism": "Lactococcus lactis (subsp. lactis KF147)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [
+        "DHNA",
+        "prenyl diphosphate",
+        "demethylmenaquinone (DMK)"
+      ],
+      "confidence": 0.910842,
+      "status": "rejected",
+      "reasons": [
+        "duplicate_claim_admitted_for_another_gap: the same claim from the same span is already admitted against gap 'gap-orphan_metabolite-c1631c3b', which now carries this gap id too"
+      ],
+      "normalized": [],
+      "chain": {}
+    }
+  ],
+  "counts": {
+    "accepted": 1,
+    "rejected": 89,
+    "considered": 90
+  },
+  "reason_counts": {
+    "adjacent_pathway_context_only": 5,
+    "candidate_type_cannot_fill_gap": 45,
+    "duplicate_claim_admitted_for_another_gap": 3,
+    "evidence_direction_disagrees_with_claim": 18,
+    "evidence_relation_disagrees_with_claim": 36,
+    "evidence_states_no_reaction_relation": 18,
+    "fills_named_gap_directly": 1,
+    "no_local_evidence_span": 18,
+    "unsupported_catalyst_injection": 18
+  },
+  "by_gap": {
+    "gap-dangling_reaction-28fa5c3d": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-dangling_reaction-da59851f": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-68f28b01": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-72295ae9": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-8c563c22": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-a175c01b": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-a5fb336c": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-b80ad3d9": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-c1631c3b": {
+      "accepted": 1,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-0dbbfd78": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-13565fd6": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-1a3f8ea2": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-23188b6b": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-44e20ba0": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-a2f7299d": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-d370c889": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-de91fbb1": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-eab0ac8b": {
+      "accepted": 0,
+      "rejected": 5
+    }
+  },
+  "truncated": {
+    "accepted": 0,
+    "rejected": 0
+  },
+  "policy": {
+    "organism_policy": "allow_unknown",
+    "require_pathway_match": false,
+    "max_report_entries": 200,
+    "evidence_snippet_chars": 320,
+    "max_chain_hops": 2,
+    "max_span_chars": 600
+  },
+  "rules": [
+    {
+      "rule": "named_gap",
+      "requires": "the candidate names a gap_id that was actually detected"
+    },
+    {
+      "rule": "valid_entity_types",
+      "requires": "every participant and catalyst is a plausible species / protein token"
+    },
+    {
+      "rule": "local_evidence_span",
+      "requires": "the candidate points at ONE bounded span of its chunk, which is a single statement (one sentence, or one parsed equation line)"
+    },
+    {
+      "rule": "evidence_supports_participants",
+      "requires": "the span's own parsed substrates and products are the claim's, matched on whole-name boundaries"
+    },
+    {
+      "rule": "relation_agrees",
+      "requires": "the span STATES this reaction — its parsed substrates, products and direction agree with the claim; co-occurrence of names is not a relation and a reversed span refutes a forward claim"
+    },
+    {
+      "rule": "no_unsupported_catalyst",
+      "requires": "every catalyst claimed is the catalyst the span attaches to THIS relation, not merely a protein named nearby"
+    },
+    {
+      "rule": "organism_compatible",
+      "requires": "the organism observed in the span (else the paper's observed metadata) matches the requested one, is a related taxon, or is explicitly unknown and the configured policy allows unknown"
+    },
+    {
+      "rule": "requested_pathway",
+      "requires": "the span / observed metadata does not name a DIFFERENT pathway (strict policy additionally requires a positive pathway match)"
+    },
+    {
+      "rule": "gap_type_compatible",
+      "requires": "the candidate is the KIND of evidence the gap asks for: a reaction can fill a connectivity gap, but a missing_compartment gap needs a location assertion and an unmapped_enzyme gap needs identifier evidence"
+    },
+    {
+      "rule": "connects_to_pathway",
+      "requires": "a SUBSTRATE OR PRODUCT of the candidate is an existing pathway metabolite or the gap's expected anchor — catalysts never connect"
+    },
+    {
+      "rule": "fills_its_named_gap",
+      "requires": "a substrate or product of the candidate is the gap's target, directly or within the configured hop limit through metabolites contributed by reactions already admitted for that same gap"
+    },
+    {
+      "rule": "gap_not_already_covered",
+      "requires": "for a connectivity gap: no existing reaction already has every substrate and product of this candidate, same side, same direction"
+    },
+    {
+      "rule": "not_already_admitted_for_another_gap",
+      "requires": "one canonical claim from one span is admitted once; it carries every gap id it was retrieved for"
+    }
+  ],
+  "acceptance_breakdown": {
+    "direct": 1,
+    "chained": 0,
+    "chained_by_hop": {}
+  },
+  "resolutions": [],
+  "recommended_route": [
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "label": "MenF",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "label": "MenD",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "label": "MenH",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "label": "MenC",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "label": "MenE",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "label": "MenB",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "label": "MenI",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "label": "MenA",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "label": "MenG",
+      "recommended_route": "identity_resolver"
+    }
+  ],
+  "identity_outcomes": {
+    "proposals": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "targets": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "unresolved_identity_gaps": 9,
+    "unresolved_for_unknown_fallback": 9,
+    "unknown_fallback_present": 0
+  }
+}

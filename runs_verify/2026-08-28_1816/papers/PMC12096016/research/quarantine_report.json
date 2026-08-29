@@ -1,0 +1,681 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:90ea2a03c1767a05",
+  "resulting_payload_hash": "sha256:90ea2a03c1767a05",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "23dihydro23dihydroxybenzoate 23didhb",
+      "23dihydroxybenzoic acid 23dhb",
+      "chorismate",
+      "enta",
+      "entb",
+      "entc",
+      "entd",
+      "ente",
+      "enterobactin",
+      "entf",
+      "isochorismate",
+      "lserine",
+      "nadh",
+      "pyruvate"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:cf96368d41049dc9",
+  "ok": true,
+  "counts": {
+    "core_accepted": 12,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC isochorismate synthase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entc",
+        "entc isochorismate synthase reaction",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB isochorismatase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "entb",
+        "entb isochorismatase reaction",
+        "isochorismate",
+        "pyruvate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntA dehydrogenase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "23dihydroxybenzoic acid",
+        "enta",
+        "enta dehydrogenase reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "EntE adenylation reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid",
+        "23dihydroxybenzoylamp",
+        "adenosine triphosphate",
+        "ente",
+        "ente adenylation reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "EntF enterobactin synthase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid",
+        "ente",
+        "enterobactin",
+        "entf",
+        "entf enterobactin synthase reaction",
+        "lserine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "2,3-DHB inhibits EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dhb inhibits entb",
+        "23dihydroxybenzoic acid",
+        "entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntC interacts with EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entc",
+        "entc interacts with entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "EntB interacts with EntA",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enta",
+        "entb",
+        "entb interacts with enta"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 3,
+      "pointer": "/processes/interactions/3",
+      "name": "EntB interacts with EntE",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entb interacts with ente",
+        "ente"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 4,
+      "pointer": "/processes/interactions/4",
+      "name": "EntB interacts with EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entb interacts with entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 5,
+      "pointer": "/processes/interactions/5",
+      "name": "EntD interacts with EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd interacts with entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 6,
+      "pointer": "/processes/interactions/6",
+      "name": "EntD interacts with EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd interacts with entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC isochorismate synthase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entc",
+        "entc isochorismate synthase reaction",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB isochorismatase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "entb",
+        "entb isochorismatase reaction",
+        "isochorismate",
+        "pyruvate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntA dehydrogenase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "23dihydroxybenzoic acid",
+        "enta",
+        "enta dehydrogenase reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "EntE adenylation reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid",
+        "23dihydroxybenzoylamp",
+        "adenosine triphosphate",
+        "ente",
+        "ente adenylation reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "EntF enterobactin synthase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid",
+        "ente",
+        "enterobactin",
+        "entf",
+        "entf enterobactin synthase reaction",
+        "lserine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "2,3-DHB inhibits EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dhb inhibits entb",
+        "23dihydroxybenzoic acid",
+        "entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntC interacts with EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entc",
+        "entc interacts with entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "EntB interacts with EntA",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enta",
+        "entb",
+        "entb interacts with enta"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 3,
+      "pointer": "/processes/interactions/3",
+      "name": "EntB interacts with EntE",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entb interacts with ente",
+        "ente"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 4,
+      "pointer": "/processes/interactions/4",
+      "name": "EntB interacts with EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entb interacts with entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 5,
+      "pointer": "/processes/interactions/5",
+      "name": "EntD interacts with EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd interacts with entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 6,
+      "pointer": "/processes/interactions/6",
+      "name": "EntD interacts with EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd interacts with entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "failed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [
+      "actor_named_in_its_own_cited_span"
+    ],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.928571,
+    "missing_anchors": [
+      "NADH"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "1 requested-core anchor(s) matched no admitted process: NADH",
+    "coverage_evaluated": true,
+    "reasons": [
+      "semantic_evaluation_failed:actor_named_in_its_own_cited_span"
+    ],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [],
+    "locked_reactions_found": 5,
+    "exported_locked_reactions": 5,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "isochorismate",
+      "chorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "enterobactin",
+      "NADH",
+      "pyruvate",
+      "L-serine",
+      "EntB",
+      "EntC",
+      "EntA",
+      "EntE",
+      "EntF",
+      "EntD"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "enterobactin biosynthesis",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "2,3-dihydroxybenzoic acid (2,3-DHB)",
+        "isochorismate",
+        "chorismate",
+        "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+        "enterobactin",
+        "NADH",
+        "pyruvate",
+        "L-serine"
+      ],
+      "key_proteins": [
+        "EntB",
+        "EntC",
+        "EntA",
+        "EntE",
+        "EntF",
+        "EntD"
+      ],
+      "likely_compartments": [
+        "cytoplasm",
+        "extracellular",
+        "outer membrane"
+      ],
+      "main_subprocesses": [
+        "isochorismate synthesis (EntC)",
+        "isochorismatase activity (EntB)",
+        "2,3-DHB formation (EntA)",
+        "adenylation of 2,3-DHB (EntE)",
+        "non-ribosomal peptide assembly and cyclization (EntF)"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "results and discussion",
+        "materials and methods",
+        "conclusions"
+      ],
+      "pathway_relevance_score": 0.9,
+      "document_type": "primary_research",
+      "context_type": "enzyme_mechanism",
+      "scope_status": "clear",
+      "scope_clarity_score": 1.0,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:cd637a10d6ea5563",
+        "response_hash": "sha256:f5cb4fbf4717c450",
+        "raw_chars": 1146,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 1146,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "isochorismate",
+      "chorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "enterobactin",
+      "pyruvate",
+      "L-serine",
+      "EntB",
+      "EntC",
+      "EntA",
+      "EntE",
+      "EntF",
+      "EntD"
+    ],
+    "unmatched_terms": [
+      "NADH"
+    ],
+    "coverage_ratio": 0.928571,
+    "core_accepted_processes": 12,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 12,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:90ea2a03c1767a05.sha256:cf96368d41049dc9",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [],
+    "would_have_quarantined": 0,
+    "would_have_refused": []
+  }
+}

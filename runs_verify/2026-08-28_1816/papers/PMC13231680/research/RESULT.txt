@@ -1,0 +1,59 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC13231680
+title      : (unknown)
+slug       : PMC13231680
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 795.2s (13m15s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_type_error @ /processes/reactions/0/enzymes/0: Expected an object.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_type_error @ /processes/reactions/0/enzymes/0: Expected an object.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_type_error @ /processes/reactions/0/enzymes/0: Expected an object.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_remap_contract_report.runtime_schema_report] runtime_schema_type_error @ /processes/reactions/0/enzymes/0: Expected an object.
+  ! runtime-schema finding (informational, not blocking): [pre_export_runtime_schema_report] runtime_schema_type_error @ /processes/reactions/0/enzymes/0: Expected an object.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  citations = 0
+  compounds = 4
+  entities = 8
+  gate_errors = 0
+  normalization_actions = 2
+  proteins = 2
+  reactions = 1
+  review_flags = 1
+  runtime_schema_findings = 7
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 0
+  tier = {'a': 0, 'b': 0, 'c': 0, 'd': 0}
+  transports = 0
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1733 B)
+  - contract_reports.json  (10438 B)
+  - coverage_summary.json  (2261 B)
+  - final_mapped.json  (116275 B)
+  - final_stage3_gate_report.json  (2721 B)
+  - gap_iteration_summary.json  (22371 B)
+  - graph_closure_iterations.json  (373 B)
+  - merged_payload.json  (68115 B)
+  - quarantine_report.json  (10322 B)
+  - rag_admission_report.json  (3775 B)
+  - removed_entity_report.json  (241 B)
+  - research_pathway_citations.json  (2752 B)
+  - research_pathway_elements.csv  (150 B)
+  - research_pathway_report.txt  (4237 B)
+  - review_flags.json  (1280 B)
+  - stage1_payload.json  (5411 B)

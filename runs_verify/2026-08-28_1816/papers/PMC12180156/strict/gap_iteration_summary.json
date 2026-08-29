@@ -1,0 +1,600 @@
+{
+  "run_id": "",
+  "round_count": 2,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 3,
+        "organisms_added": 0,
+        "locations_added": 1,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 3,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(2013, 'Lost connection to MySQL server during query (timed out)')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:ferrochelatase",
+            "entity_type": "protein",
+            "name": "ferrochelatase",
+            "path": "/entities/proteins/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:protoporphyrin ix",
+            "entity_type": "compound",
+            "name": "protoporphyrin IX",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:b50cdc018ce9ebd6",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:ferrochelatase\", \"resolve_ids\": { \"strategy\": \"db_only\", \"strategy_reasoning\": \"skip\" }, \"resolve_location\": { \"strategy\": \"skip\" }, \"background\": { \"api_look… (+184 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:ferrochelatase",
+            "resolve_ids": {
+              "strategy": "db_only"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 3
+            },
+            "rationale": "Ferrochelatase is a protein. DB-only ID mapping is sufficient; no API needed. Location not required."
+          },
+          {
+            "issue_key": "compound:glycine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "full",
+              "hmdb_lookup": true,
+              "max_results": 5
+            },
+            "rationale": "Glycine is a compound; previously unmapped after DB pass, so API fallback needed. HMDB lookup useful for additional ID context."
+          },
+          {
+            "issue_key": "compound:protoporphyrin ix",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "full",
+              "hmdb_lookup": true,
+              "max_results": 5
+            },
+            "rationale": "Protoporphyrin IX is a compound needing both ID mapping and location. DB then API for IDs; location from database with default fallback if missing."
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:ferrochelatase",
+            "entity_type": "protein",
+            "name": "ferrochelatase",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "ferrochelatase",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 3,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:04fc47b4dd5f0f83",
+                  "preview": "{\"uniprot\": \"B4DSA4\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 163,
+                  "hash": "sha256:4f18135b1b0a0281",
+                  "preview": "[\"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 364,
+                  "hash": "sha256:c2b0220b657c4a1b",
+                  "preview": "[{\"accession\": \"B4DSA4\", \"protein_name\": \"Ferrochelatase\", \"organism\": \"Homo sapiens\", \"reviewed\": false, \"score\": 0.8}, {\"accession\": \"Q5TZY0\", \"protein_name\": \"Ferrochelatase\", \"organism\": \"Homo sap… (+164 chars elided)",
+                  "items": 3
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_only",
+              "attempts": [
+                {
+                  "chars": 978,
+                  "hash": "sha256:70f190b8b5a3b961",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"Q53FU1\", \"pathbank_protein_id\": \"4374\"}, \"pathbank_protein_id\": 4374, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+778 chars elided)",
+                  "keys": 8
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:00053854ffd55f95",
+                  "preview": "{\"uniprot\": \"Q53FU1\", \"pathbank_protein_id\": \"4374\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:04fc47b4dd5f0f83",
+                  "preview": "{\"uniprot\": \"B4DSA4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ef106ac2c4cd6525",
+                  "preview": "{\"uniprot\": \"Q5TZY0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:ba89236fd8f333b4",
+                  "preview": "{\"uniprot\": \"A0A499FJN5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "llm_invalid_index_fallback",
+              "source": "llm_fallback"
+            }
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "glycine",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 385,
+                  "hash": "sha256:f7488a42c2fa43b6",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00719\", \"name\": \"Betaine\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C02777\", \"name\": \"2,5-Dioxo… (+185 chars elided)",
+                  "items": 5
+                }
+              },
+              "hmdb": {
+                "query": "glycine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 2725,
+                  "hash": "sha256:fc0d3e6c51cfc22b",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"chebi\": \"CHEBI:15428\", \"pubchem\": \"5257127\", \"cas\": \"56-40-6\", \"biocyc\": \"GLY\", … (+2525 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 997,
+                  "hash": "sha256:074f781adae62767",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00037\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95},… (+797 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 196,
+                  "hash": "sha256:53cfb976af6e43fd",
+                  "preview": "{\"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"chebi\": \"CHEBI:15428\", \"pubchem\": \"5257127\", \"cas\": \"56-40-6\", \"biocyc\": \"GLY\", \"chemspider\": \"730\", \"drugbank\": \"DB00145\", \"pathbank_compound_id\": \"78\"}",
+                  "keys": 9
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aab0df1023583448",
+                  "preview": "{\"kegg\": \"C00719\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aef682f96e96dee4",
+                  "preview": "{\"kegg\": \"C02777\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:44fc30b2a30e0525",
+                  "preview": "{\"kegg\": \"C05197\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d9a1dcf6f06ca50d",
+                  "preview": "{\"kegg\": \"C02051\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc79729db094e758",
+                  "preview": "{\"kegg\": \"C02972\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:0647663193b63e3c",
+                  "preview": "{\"kegg\": \"C22157\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Highest confidence (1.0) from PathBankDB with comprehensive and correct identifiers (KEGG C00037, HMDB, CHEBI, etc.) matching glycine. No type or organism conflicts.",
+              "source": "llm",
+              "raw": {
+                "chars": 227,
+                "hash": "sha256:51b15d82d165bfb0",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Highest confidence (1.0) from PathBankDB with comprehensive and correct identifiers (KEGG C00037, HMDB, CHEBI, etc.) matching glycine. No type or o… (+21 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:protoporphyrin ix",
+            "entity_type": "compound",
+            "name": "protoporphyrin IX",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "protoporphyrin IX",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:7bda6e65d9119b44",
+                  "preview": "{\"kegg\": \"C02191\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 486,
+                  "hash": "sha256:1821d0b423068f75",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C02191\", \"name\": \"Protoporphyrin\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C03516\", \"name\": \"Magnesium protoporphyrin\", \"score\": 0.75}, {\"database\": \"kegg\", \"id\": \"C04… (+286 chars elided)",
+                  "items": 5
+                }
+              },
+              "hmdb": {
+                "query": "protoporphyrin IX",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 2437,
+                  "hash": "sha256:b431cdb8e5d6c120",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0000241\", \"kegg\": \"C02191\", \"chebi\": \"CHEBI:15430\", \"cas\": \"553-12-8\", \"biocyc\": \"PROTOPORPHYRIN_IX\", \"chemsp… (+2237 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 785,
+                  "hash": "sha256:a313d4b322b564fa",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C02191\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C02191\", \"name\": \"Protoporphyrin\", \"score\":… (+585 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 195,
+                  "hash": "sha256:b3a5bc413da2f935",
+                  "preview": "{\"hmdb\": \"HMDB0000241\", \"kegg\": \"C02191\", \"chebi\": \"CHEBI:15430\", \"cas\": \"553-12-8\", \"biocyc\": \"PROTOPORPHYRIN_IX\", \"chemspider\": \"10469486\", \"drugbank\": \"DB02285\", \"pathbank_compound_id\": \"163\"}",
+                  "keys": 8
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:7bda6e65d9119b44",
+                  "preview": "{\"kegg\": \"C02191\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.75,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:7557145be6415290",
+                  "preview": "{\"kegg\": \"C03516\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.59,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:0b41f59217859c7c",
+                  "preview": "{\"kegg\": \"C04536\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.55,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:5216dbe0df2ee8d3",
+                  "preview": "{\"kegg\": \"C01079\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.47,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:9bc70fc8b0633654",
+                  "preview": "{\"kegg\": \"C11829\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Candidate 0 from PathBankDB provides the most comprehensive and accurate mapping for protoporphyrin IX, including multiple authoritative database IDs (HMDB, KEGG, ChEBI, CAS, etc.) with high confidence. It is the only candidate that exactly… (+99 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 400,
+                "hash": "sha256:73d44de6c9daed5b",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Candidate 0 from PathBankDB provides the most comprehensive and accurate mapping for protoporphyrin IX, including multiple authoritative database I… (+193 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    },
+    {
+      "round": 2,
+      "summary": {},
+      "db": {},
+      "stage3": {},
+      "payload_changed": false,
+      "actionable_issue_count": 0
+    }
+  ]
+}

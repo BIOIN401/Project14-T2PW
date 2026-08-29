@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [
+    {
+      "bucket": "compounds",
+      "name": "Fe2+",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "Fur",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    }
+  ],
+  "removed_locations": [],
+  "removed_biological_states": [
+    {
+      "bucket": "biological_states",
+      "name": "__auto_state__",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    }
+  ],
+  "counts": {
+    "entities": 2,
+    "locations": 0,
+    "biological_states": 1
+  }
+}

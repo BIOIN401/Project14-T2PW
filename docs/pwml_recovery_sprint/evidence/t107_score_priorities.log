@@ -1,0 +1,88 @@
+MEASURED_TREE t2pw = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+RUN = runs_verify\2026-08-28_1816
+
+==============================================================================
+PRIORITIES AT THE MERGED TIP
+==============================================================================
+
+rank 1: zero known false real identifiers
+    ok                         = false
+    evaluated                  = true
+    observed                   = 5
+    raw                        = 5
+    accepted                   = 5
+    accepted_status            = "PASS"
+    papers                     = ["PMC12782028", "PMC12856317"]
+
+rank 2: zero unsupported retained reactions
+    ok                         = false
+    evaluated                  = true
+    observed                   = 1
+    counted                    = 1
+    papers                     = ["PMC13231680"]
+    not_evaluated_papers       = ["PMC12096016", "PMC12312563", "PMC12421875", "PMC12452463", "PMC12657337", "PMC12782028"]
+    not_evaluated_legs         = ["PMC12096016:research", "PMC12312563:research", "PMC12312563:strict", "PMC12421875:research", "PMC12421875:strict", "PMC12452463:research", "PMC12452463:strict", "PMC12657337:research", "PMC12657337:strict", "PMC12782028:research", "PMC12782028:strict"]
+    not_evaluated_reasons      = {"PMC12657337:strict": "the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 2 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indistinguishable from the signature list alone. The attribution rate and recall in the summary ARE measured. Only an exhaustive supported_reactions list, or a max_retained_reactions ce
+
+rank 3: zero referential-integrity violations
+    ok                         = true
+    evaluated                  = true
+    observed                   = 0
+    papers                     = []
+
+rank 4: meaningful requested-pathway coverage
+    ok                         = false
+    evaluated                  = true
+    observed                   = "0/7 = 0%"
+    papers                     = []
+    requested_core_coverage    = {"legs_with_coverage": 10, "legs_with_forbidden_terms": 5, "papers_with_forbidden_terms": ["PMC12096016", "PMC12452463", "PMC12856317", "PMC13231680"], "forbidden_terms_excluded": 5, "legs_cleared_by_reconciliation": [], "legs_still_below_minimum": [], "legs_with_undefined_accepted_rate": [], "legs_at": "coverage_reconciliation_corpus.legs"}
+
+rank 5: maximize strict PWML pass rate among eligible/exportable papers
+    ok                         = false
+    evaluated                  = true
+    observed                   = "0/2 = 0%"
+    papers                     = []
+    requested_core_coverage    = {"legs_with_coverage": 10, "legs_with_forbidden_terms": 5, "papers_with_forbidden_terms": ["PMC12096016", "PMC12452463", "PMC12856317", "PMC13231680"], "forbidden_terms_excluded": 5, "legs_cleared_by_reconciliation": [], "legs_still_below_minimum": [], "legs_with_undefined_accepted_rate": [], "legs_at": "coverage_reconciliation_corpus.legs"}
+
+==============================================================================
+COMPLETION / DENOMINATORS
+==============================================================================
+completion = {"planned_gold_cases": 10, "papers_attempted": 10, "strict_legs_attempted": 10, "research_legs_attempted": 10, "legs_attempted": 20, "legs_planned": 20, "payloads_available": 17, "semantically_scorable_legs": 17, "fully_completed_cases": 10, "papers_with_no_attempted_leg": [], "papers_with_only_one_mode_attempted": [], "complete": true, "rendered": "10/10 papers, 20/20 legs"}
+denominators = {"gold_relevance_prevalence": {"key": "gold_relevance_prevalence", "question": "What fraction of the pinned gold set is mechanistically relevant to its requested pathway? This is a property of the GOLD SET, not a measurement of the screener.", "population": "every paper in the pinned gold set", "numerator": 8, "denominator": 10, "rate": 0.8, "rendered": "8/10 = 80%", "numerator_papers": ["PMC12096016", "PMC12312563", "PMC12421875", "PMC12444477", "PMC12452463", "PMC12657337", "PMC12782028", "PMC12856317"], "denominator_papers": ["PMC12096016", "PMC12180156", "PMC12312563", "PMC12421875", "PMC12444477", "PMC12452463", "PMC12657337", "PMC12782028", "PMC12856317", "PMC13231680"], "excluded": [{"paper_id": "PMC13231680", "reason": "mechanistic_relevance=context_only (negative control)"}, {"paper_id": "PMC12180156", "reason": "mechanistic_relevance=context_only"}]}, "extraction_success": {"key": "extraction_success", "question": "Of the relevant papers whose legs were attempted, how many produced a payload with at least one reaction?", "population": "relevant gold cases with at least one attempted leg", "numerator": 7, "denominator": 8, "rate": 0.875, "rendered": "7/8 = 88%", "numerator
+legs_attempted = 20
+legs_scored = 17
+coverage_reconciliation_corpus = {"legs": [{"paper_id": "PMC13231680", "mode": "research", "schema_version": 1, "raw_ratio": 0.833333, "raw_matched": 5, "raw_denominator": 6, "raw_below_minimum": false, "accepted_ratio": 0.8, "accepted_matched": 4, "accepted_denominator": 5, "accepted_below_minimum": false, "accepted_state": "measured", "min_core_coverage": 0.5, "excluded_terms": [{"term": "Zn2+", "forbidden_name": "Zn 2+", "forbidden_kind": "cofactor_as_protein", "forbidden_reason": "A metal cofactor of NDM-1 and LpxC; neither a protein nor a lipid A metabolite.", "matched_in_raw": true}], "excluded_count": 1, "cleared_by_reconciliation": false, "reconciliation_note": "raw is the frozen pipeline measurement and is unchanged; accepted removes only this case's own forbidden_identifiers from BOTH the numerator and the denominator, at the unchanged threshold."}, {"paper_id": "PMC12856317", "mode": "research", "schema_version": 1, "raw_ratio": 0.5, "raw_matched": 5, "raw_denominator": 10, "raw_below_minimum": false, "accepted_ratio": 0.555556, "accepted_matched": 5, "accepted_denominator": 9, "accepted_below_minimum": false, "accepted_state": "measured", "min_core_coverage": 0.5, "excluded_terms": [{"term": "hemin", "
+
+==============================================================================
+PRIORITY-1 ROW COMPOSITION (raw)
+==============================================================================
+
+==============================================================================
+LpxH CHECK on PMC12444477
+==============================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e5ee6201335318c08af14ddb0fed6cb8911f7c47  [git, worktree dirty=True]
+label                   : score-priorities
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch714_t107_readiness.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW runs_verify/2026-08-28_1816
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 126500 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.53 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  129124:python.exe
+descendants terminated  : 1  129124
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\T-107\42-score-priorities.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

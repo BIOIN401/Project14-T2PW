@@ -1,0 +1,38 @@
+MEASURED_TREE = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+
+##############################################################################
+RUN: runs_verify/2026-08-28_1816
+##############################################################################
+
+-- Priority-1 (false_real_identifiers) per leg --
+   PMC12856317    research  false_real=1  names=["Pyridoxal 5'-phosphate"]
+   PMC12782028    research  false_real=4  names=["LBR", "LIPA", "SREBF1", "SREBF2"]
+   RAW TOTAL false_real_identifiers = 5
+
+-- PMC12444477 placeholder findings (LpxH must remain, Unknown must be gone) --
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e5ee6201335318c08af14ddb0fed6cb8911f7c47  [git, worktree dirty=True]
+label                   : p1-composition
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch714_t107_p1_composition.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW runs_verify/2026-08-28_1816
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 126692 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.41 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  129020:python.exe
+descendants terminated  : 1  129020
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\T-107\43-p1-composition.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

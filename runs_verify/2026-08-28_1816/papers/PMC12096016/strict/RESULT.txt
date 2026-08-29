@@ -1,0 +1,73 @@
+RESULT: FAIL
+========================================
+paper      : PMC12096016
+title      : (unknown)
+slug       : PMC12096016
+mode       : strict
+status     : timeout
+stage      : unknown
+wall time  : 1800.2s (30m00s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : timeout
+message      : the child process was still running after 1800s and was killed, so this paper+mode produced nothing (budget_exhausted)
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+The parent kills a stuck child rather than letting it eat the night. Typical causes: an LLM request with no server-side timeout, a wedged PathBank MySQL socket, or a Streamlit rerun that never returns.
+
+This is an OPERATIONAL outcome (budget_exhausted), never a biological one: 1800s of a 1800s leg budget were spent and the leg was cut off, so nothing about this paper was judged.
+
+--- child stderr (tail) ---
+on attempt 1/3; retrying as a transient.
+LLM returned an empty completion for rag_prose_extraction (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 2/3; retrying as a transient.
+LLM returned an empty completion for rag_prose_extraction (model deepseek/deepseek-v4-flash, finish_reason=length) on 3 of 3 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+LLM returned an empty completion for rag_prose_extraction (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/3; retrying as a transient.
+LLM returned an empty completion for rag_prose_extraction (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 2/3; retrying as a transient.
+LLM returned an empty completion for rag_prose_extraction (model deepseek/deepseek-v4-flash, finish_reason=length) on 3 of 3 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+LLM returned an empty completion for rag_prose_extraction (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/3; retrying as a transient.
+LLM returned an empty completion for rag_prose_extraction (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/3; retrying as a transient.
+LLM returned an empty completion for rag_prose_extraction (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/3; retrying as a transient.
+2026-08-29 00:35:05.258 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-29 00:35:05.259 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-29 00:35:05.259 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-29 00:35:05.506 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-29 00:35:05.507 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-29 00:35:05.508 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+LLM returned an empty completion for audit loop (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/3; retrying as a transient.
+LLM returned an empty completion for gap resolver (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/3; retrying as a transient.
+LLM returned an empty completion for gap resolver (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 2/3; retrying as a transient.
+LLM returned an empty completion for gap resolver (model deepseek/deepseek-v4-flash, finish_reason=length) on 3 of 3 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+LLM returned an empty completion for gap resolver (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/3; retrying as a transient.
+LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash, finish_reason=length, tools_sent=True) on attempt 1/3; retrying as a transient.
+LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash, finish_reason=length, tools_sent=True) on attempt 2/3; retrying as a transient.
+
+FILES WRITTEN
+----------------------------------------
+  (none)
