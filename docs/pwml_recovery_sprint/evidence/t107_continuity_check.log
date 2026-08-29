@@ -1,0 +1,39 @@
+expected staged dir : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-28_1816
+RESUME_MAX_AGE_HOURS: 24.0
+newest 3 run dirs   : ['2026-08-28_1816', '2026-08-27_1341', '2026-08-25_1216']
+  resolver says: resuming 2026-08-28_1816: the newest run, last touched 0.0h ago, with 20 pair(s) still pending
+
+resolver returned   : runs_verify\2026-08-28_1816
+SAME AS VERIFIED DIR: True
+
+plan pairs          : 20
+pending pairs       : 20
+legs already present: 0
+
+CONTINUITY SAFE     : True
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ae66b52c377f3a01abba3d2bf086ad972994e19a  [git, worktree dirty=True]
+label                   : continuity-check
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/t107_continuity.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW runs_verify/2026-08-28_1816
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 595880 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.45 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  594840:python.exe
+descendants terminated  : 1  594840
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\T-107\38-continuity-check.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

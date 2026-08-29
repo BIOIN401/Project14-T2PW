@@ -8253,3 +8253,94 @@ staying in `bench/`.
 **Record correction:** `PRODUCT_CONTRACT.md` § 7 already stated the both-sides rule and conflicted
 with the letter of locked D-072. REV-102 escalated it rather than letting the diff read as an
 improvised product decision. **The conflict now resolves in § 7's favour.**
+
+---
+
+## T-107 LAUNCHED — `runs_verify/2026-08-28_1816` · 2026-08-28 18:17
+
+**Authorized by D-085.** Launched **once**, under the release procedure the product owner specified,
+at integration tip `ae66b52` (local = `origin/` = `ls-remote`).
+
+### The procedure, and why each step exists
+
+| Step | Result |
+|---|---|
+| **1. Fresh milestone identity, stage-only** | `runs_verify/2026-08-28_1816` created in 3.3 s. `--stage-only` returns **before the run loop**, so no manifest row and no leg directory can exist regardless of cache speed. Zero LLM legs by construction |
+| **2. `--verify-plan` against that exact staged directory** | **`verdict: OK`** · `cases checked: 10   search calls: 0` · **all 10 `[pinned_override]`** |
+| **3. Continuity proof** | `find_resumable()` called directly — returned **the exact verified path**, `20` plan pairs, **`20` pending**, **`0` legs present** |
+| **4. Continue that directory WITHOUT `--fresh`** | Runner confirmed: *"CONTINUING the incomplete run 2026-08-28_1816 (no --fresh given) · already recorded : 0 paper+mode run(s) -- these are skipped · still to do : 20"* |
+
+**The runner's own hint is a trap and step 4 exists to defeat it.** `--stage-only` prints
+*"then run it: rerun the same command WITHOUT --stage-only"* — and that command **still carries
+`--fresh`**, which would create a new, **unverified** directory and silently discard the staging just
+certified. A peer session independently flagged the sibling hazard (`batch_run.py` skips finished
+pairs without `--fresh`, yielding a partial cohort that looks complete) and recommended `--fresh` as
+the fix; **here that would have been the defect, not the cure.** The measured discriminator is
+`already recorded : 0` — the skip hazard needs *finished* pairs, and a stage-only directory has none.
+
+### Cost
+
+**T-105 recorded no token usage anywhere in its artifacts**, so no estimate can be built from actual
+usage. Stated as a **bound from measurable inputs**, not a prediction:
+
+* 10 papers, **592,813** source characters, mean **59,281**/paper ≈ **14,820** tokens per full text
+* prices `$0.0868`/M prompt, `$0.1736`/M completion (read-only `GET /api/v1/models`)
+
+| full-text-equivalent passes per leg | total |
+|---:|---:|
+| 20 | **$0.62** |
+| 40 | **$1.23** |
+| 80 | **$2.47** |
+| 120 | **$3.70** |
+| **162** | **$5.00 — the ceiling** |
+
+**$5 is reached only at ~162 full-text passes per leg (~48M prompt tokens across the run)** — about
+18 per model role. Plausible range **$0.62–$3.70**. **Launched inside the ceiling.** No spend
+telemetry exists to abort on mid-run; final spend is to be read from the provider and recorded.
+
+### Run parameters
+
+`topics_t104.txt` (the ratified pinned set) · `--modes strict,research` · per-leg `--timeout 1800` ·
+internal `--deadline 5.5h` · wrapper hard ceiling **21600 s (6 h)** · `--heavy-lock T-107` ·
+`deepseek/deepseek-v4-flash` on all nine slots, `LLM_TEMPERATURE=0`, `.env` **unmodified**.
+
+Measured predecessors: T-104 **5.44 h**, T-105 **4.85 h**. The internal deadline stops *starting* new
+pairs rather than killing a running one, so a deadline stop is a clean partial that the same command
+can continue — **continuing an interrupted run is the same run identity and is not a re-draw.**
+
+### Standing constraints
+
+**Once only.** The first valid official draw is scored and preserved. **A Priority-1 result of 7 is
+`PASS_WITHIN_VARIANCE` and will not be re-drawn** (D-073). A leg is never repeated because its draw
+is unfavourable; something not observed is reported as *"not observed"*, never chased.
+
+Peer `project14-t2pw-14` re-confirmed — verified rather than recalled — that it holds no lock, runs
+no Python, will not push, and has nothing touching `runs_verify/`, the caches or `.env`.
+
+### The wave's lesson, in its sharpest form — and it recurred during the launch
+
+A peer session flagged the `batch_run.py` skip hazard and prescribed `--fresh`. The hazard is real;
+the prescription would have **destroyed the verified staging directory**. Its own diagnosis
+afterwards is the best statement of this wave's lesson anyone produced:
+
+> **I let a heuristic stand in for the thing being claimed.** The hazard is that `batch_run.py`
+> silently skips *finished* pairs — but the property actually being protected is *"know how many
+> pairs are already recorded before you continue."* `--fresh` guards a **proxy**; asserting
+> `find_resumable()` returns the verified path with 20 pairs, 20 pending, 0 legs present guards the
+> **property**. The ledger line I cited was written for T-106, where the risk was resuming *into* a
+> directory with finished pairs; the staged-identity workflow inverts it, and I did not check which
+> situation applied before prescribing.
+
+**That is F-144 in a process rule instead of a test.** The same shape as: a guard satisfied by a
+different code path · a probe passing its own positive control while asking the wrong question · a
+test named for a function it never called · and a scan for the string `1.2000` standing in for the
+predicate `> 1`.
+
+**And the three-caps result is the same shape a fourth time, in a finding.** F-142 said **one** rule
+held the leg out of `release_ready`; C-103 measured **two**; REV-102/REV-103 measured **at least
+three**, each independently sufficient and **none necessary**. **Every one of those counts was true.
+Each was wrong about what it was evidence for.** *"How many things are holding this"* reads as
+settled and is not.
+
+**The standing rule, stated once:** where a claim is load-bearing, assert **the property**, on the
+**production path**, and have someone who did not write the assertion **try to defeat it**.

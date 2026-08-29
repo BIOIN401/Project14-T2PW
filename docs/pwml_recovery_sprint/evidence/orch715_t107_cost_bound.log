@@ -1,0 +1,43 @@
+papers with cached source text : 10
+total source characters        : 592,813
+mean per paper                 : 59,281
+~tokens per paper full text    : 14,820  (at 4.0 chars/token)
+
+UPPER-BOUND SCENARIOS -- prompt volume expressed as full-text-equivalent passes per leg
+ passes/leg  prompt Mtok  compl Mtok  prompt $  compl $   TOTAL $
+         20         5.93        0.59      0.51     0.10      0.62
+         40        11.86        1.19      1.03     0.21      1.23
+         60        17.78        1.78      1.54     0.31      1.85
+         80        23.71        2.37      2.06     0.41      2.47
+        120        35.57        3.56      3.09     0.62      3.70
+        200        59.28        5.93      5.15     1.03      6.17
+
+Break-even against the $5 ceiling:
+  $5 is reached at ~162 full-text-equivalent passes per leg
+  i.e. ~2.4M prompt tokens per leg, ~48M across the run
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ae66b52c377f3a01abba3d2bf086ad972994e19a  [git, worktree dirty=True]
+label                   : t107-cost-bound-v2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/t107_cost.py runs_verify/2026-08-22_2147
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 593344 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.32 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 0
+descendants terminated  : 0
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-715\02-t107-cost-bound-v2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
