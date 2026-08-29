@@ -125,16 +125,21 @@ looks complete), and a peer recommended `--fresh` as a blanket cure — **which 
 the defect.** The discriminator is measured, not guessed: `already recorded : 0`. **Assert the
 property; do not apply the proxy rule.**
 
-### Cost — the ceiling still binds, and the bound is not a prediction
+### Cost — the ceiling is LIFTED (D-086); still measure it
 
-**$5 ceiling.** Prices `$0.0868`/M prompt, `$0.1736`/M completion. **T-105 recorded no token usage
+**The $5 ceiling no longer binds** — product-owner ruling D-086. **No cost-based abort.** Run-once,
+never-chase-a-draw and the pinned configuration all still bind; budget was never why.
+
+Prices `$0.0868`/M prompt, `$0.1736`/M completion. **T-105 recorded no token usage
 anywhere**, so the pre-run figure is a **bound from measurable inputs**: 10 papers, 592,813 source
 chars, ~14,820 tokens per full text → **$0.62–$3.70**, with $5 reached only at ~162
 full-text-equivalent passes per leg. Derivation: `evidence/orch715_t107_cost_bound.py` / `.log`.
 
-**No spend telemetry exists to abort on mid-run.** Read **actual** spend from the provider afterwards
-and record it. **If it lands materially outside $0.62–$3.70 that is itself a finding** — the bound was
-built from source-text volume and would have been wrong about how the pipeline consumes it.
+**Cheap does not mean unmeasured.** Read **actual** spend from the provider afterwards and record it.
+**If it lands materially outside $0.62–$3.70 that is a finding about the instrument** — the bound was
+built from source-text volume and would have mis-modelled how the pipeline consumes it. Separately:
+**the pipeline records no token usage at all**, so no run in this sprint can be costed after the
+fact. That observability hole is registered in D-086 and is worth closing.
 
 ### Scoring — what the report must say
 

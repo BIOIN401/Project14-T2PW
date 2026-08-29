@@ -5016,3 +5016,43 @@ and are never recomputed.
 with the letter of locked D-072**, and REV-102 correctly escalated that rather than letting the diff
 read as an improvised product decision. **The conflict is now resolved in § 7's favour**, and D-072
 is to be read through this ratification wherever it says "denominator".
+
+---
+
+## D-086 — the external-spend ceiling is lifted for T-107 · 2026-08-28 · LOCKED
+
+**Product-owner ruling, given directly: *"doesn't matter how much it costs."*** The **$5 ceiling
+from the wave brief no longer binds T-107.**
+
+### What this changes
+
+* **No cost-based abort.** The instruction to stop if projected or actual spend would exceed $5 is
+  withdrawn. T-107 runs to completion on cost grounds alone.
+* **Resumption is unconstrained by spend.** If the run stops short of 20 legs, continuing it is now
+  purely an operational decision. Legs already paid for are preserved and skipped either way.
+
+### What this does NOT change — every one of these still binds
+
+* **Run ONCE.** The first valid official draw is scored and preserved. Budget was never the reason
+  for that rule; **comparability and honesty are.** A cheap re-draw is still a re-draw.
+* **Never repeat a leg because its draw is unfavourable.** Something not observed is reported as
+  *"not observed"*, never chased. **A Priority-1 result of 7 is `PASS_WITHIN_VARIANCE` and must not
+  be re-run to reach 6** (D-073).
+* **The pinned model and configuration.** `deepseek/deepseek-v4-flash`, `.env` unmodified, no LM
+  Studio, no fallback model — because **comparability with T-104/T-105/T-106 is the point of the
+  pinned plan**, and money was never what made that true.
+* **One heavy job at a time**, the bounded wrapper, G11 evidence, and every process-lifecycle rule.
+
+### Actual spend is still recorded, and still a finding if the bound was wrong
+
+Cheap does not mean unmeasured. **Read actual spend from the provider afterwards and record it.**
+
+The pre-run figure of **$0.62–$3.70** was a *bound from measurable inputs* — 592,813 source
+characters across 10 papers — because **T-105 recorded no token usage anywhere in its artifacts**.
+**If actual spend lands materially outside that range, that is a finding about the instrument, not a
+budget event:** it would mean the bound mis-modelled how the pipeline consumes its input, which
+matters for every future estimate regardless of who is paying.
+
+**The gap that produced this uncertainty is worth closing separately:** the pipeline records no token
+usage, so no run in this sprint can be costed after the fact. That is a real observability hole and
+is registered here rather than lost now that it no longer blocks anything.
