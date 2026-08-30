@@ -8344,3 +8344,132 @@ settled and is not.
 
 **The standing rule, stated once:** where a claim is load-bearing, assert **the property**, on the
 **production path**, and have someone who did not write the assertion **try to defeat it**.
+
+---
+
+# WAVE ORCH-716 — T-107 triage and close-out · 2026-08-29
+
+**T-107 was NOT rerun and no leg of it was repeated.** The official run
+`runs_verify/2026-08-28_1816` stands exactly as scored: **NOT ACCEPTED, on Priority 2 alone.**
+
+Full classification: **`docs/pwml_recovery_sprint/T107-TRIAGE.md`**.
+
+## Takeover verification, all confirmed
+
+| Check | Result |
+|---|---|
+| local = `origin/` = `git ls-remote` | ✔ all three `36f773c` at takeover |
+| `main` local `7531692` / remote `03f1af5` | ✔ untouched, neither ref written |
+| merge in progress / staged | ✔ none / none |
+| heavy lock `C:/t/heavylock` | ✔ absent at takeover; acquired and released by every job after |
+| sprint-owned Python | ✔ zero |
+| IDE processes | ✔ exactly two `ms-python.isort`, matched on command line, never targeted |
+| `streamlit_app.py` | ✔ uncommitted, 35 ins / 2 del, `sha256:47e4fafa789d359d…` — re-verified after every commit |
+| **SMOKE** | ✔ **473 passed** |
+| **gold-readers** (22 files) | ✔ **456 passed / 8 skipped / exit 0** |
+
+Peer `project14-t2pw-41` contacted before the branch, the lock or any job was claimed. It stood
+down explicitly: read-only reconnaissance in the same repo, holds no lock, no worktree, no
+uncommitted work, no intent to push. The dirty tree it observed predates both of us.
+
+## The result of the triage, in one line each
+
+| Item | Classification |
+|---|---|
+| `PMC13231680/strict` empty pathway | **CORRECT — not a defect.** Gold: *"the correct pipeline outcome is an empty pathway plus a rejection reason."* **T-105's PASS was the false positive**, already registered as **F-100** |
+| Priority 2's single row | **`product_contract_violation`** — **F-146**, F-100's open remainder on the research leg |
+| `PMC12452463/strict` + `PMC12180156/strict` contract failures | **one shared seam**, **`product_contract_violation`** — **F-147**. **Registered, deliberately NOT chartered** |
+| Three timeouts | **`product_contract_violation`** — **F-148**. **F-092 defect 3 CLOSED** by the same measurement |
+| Harness scoring a correct negative-control outcome as `FAIL` | **`policy_disagreement`** — decision packet, product owner |
+| Non-vacuity audit | **no defect** — **F-149**, both files pin non-vacuously |
+
+**No gold edit is proposed.** The gold was right on every case examined in this wave.
+
+### The C-099 hypothesis is falsified for two of the three legs it was raised about
+
+`PMC12452463/strict` and `PMC13231680/strict` **already failed in the T-106 artifacts
+(`runs_verify/2026-08-24_1428`)**, three days before C-099 merged (`9e4a28a`, 2026-08-27) and four
+before C-100 (`8e5d549`, 2026-08-28). `PMC12452463` **improved** at T-107, 7 contract errors to 3.
+Only `PMC12180156/strict` genuinely turns at T-107, and F-147 shows its mechanism is not species
+preservation either.
+
+### The refusal that matters most
+
+**F-147 is a genuine contract violation and no card was chartered for it.** It fails exactly two
+legs; fixing it alone would make both pass and export gold-forbidden content — `enterobactin
+synthase complex`, `RyhB`, an efflux step the paper never describes, and a `ferrochelatase reaction`
+built on `protoporphyrin IX`, which the gold certifies occurs **zero times** in its paper. **The
+earliest unsafe seam is Stage-1 extraction, not the driver.** Merge rule 6.
+
+## Cards
+
+| Card | State |
+|---|---|
+| **C-104** — D-083's two carried follow-ons (prove C-102's deep copy; abort the split gate on `errors > 0`) | **CHARTERED and DISPATCHED.** Worktree `C:/t/c104`, branch `card/C-104-d083-followons`, base `36f773c`. **Changes no production line** |
+
+## Run ledger — this wave
+
+| Job | Task | Purpose | Exit | Survivors | Cleanup |
+|---|---|---|---|---|---|
+| `01-smoke` | ORCH-716 | takeover gate (unpinned, no lock — superseded by `11`) | 0 | **0** | success |
+| `02-goldreaders` | ORCH-716 | takeover gate, pinned, lock held | 0 | **0** | success |
+| `03-nv-baseline` | ORCH-716 | non-vacuity baseline, 42 passed | 0 | **0** | success |
+| `04-nv-m1-constant` | ORCH-716 | mutation M1, 14 failed | 1 | **0** | success |
+| `05-nv-m2-arma-neutered` | ORCH-716 | **mutation M2, the finding**, 13 failed | 1 | **0** | success |
+| `06-nv-m3-c072-neutered` | ORCH-716 | mutation M3, 5 failed | 1 | **0** | success |
+| `07-nv-restore-verify` | ORCH-716 | byte-exact restore verified, 42 passed | 0 | **0** | success |
+| `08-openrouter-usage` | ORCH-716 | D-086, superseded by `09` (unredacted) | 0 | **0** | success |
+| `09-openrouter-usage-redacted` | ORCH-716 | D-086 measured usage, key label and account id redacted | 0 | **0** | success |
+| `10-stale-verdict-probe` | ORCH-716 | **F-147's decisive measurement** | 0 | **0** | success |
+| `11-smoke-pinned` | ORCH-716 | SMOKE re-run pinned, lock held, `violations: []` | 0 | **0** | success |
+| *(uncertifiable)* | ORCH-716 | first M2 attempt, invalid label -> empty `--json`, **no artifact** | 1 | **0** | success |
+
+`g11_evidence.py check --task ORCH-716`: **11 artifacts, 0 non-compliant.** The uncertifiable run is
+recorded above and **not counted**; it is kept rather than tidied away.
+
+**Two process deviations of my own, corrected and recorded rather than quietly fixed:**
+
+1. **`01-smoke` ran plain `pytest` with no `--pin-verdict` and no `--heavy-lock`.** TEST_MATRIX § 0
+   requires both on a gate. Re-run correctly as `11-smoke-pinned` (473 passed, `violations: []`,
+   lock acquired and released). The original is kept.
+2. **The first M2 run used an uppercase label**, was rejected by `g11_evidence.py next`, and the
+   empty capture became `--json ""`. **A job with no G11 artifact is not a passed test**, so it was
+   re-run under `05`. This is the charter's named label trap in a variant that produces an *empty*
+   path rather than error text.
+
+## D-086 — usage MEASURED, and what it can and cannot say
+
+Read live from the OpenRouter account (`evidence/orch716_openrouter_usage.py`, report `09`):
+
+| Field | Value |
+|---|---|
+| `usage_weekly` | **1.769355221** |
+| `usage_monthly` | 6.483844303 |
+| `usage_daily` | 0 |
+| `limit` / `limit_remaining` | 75 / 68.516155697, `limit_reset: monthly` |
+| `is_free_tier` | **false** — corroborates T107-READINESS condition 8 |
+| account `total_credits` / `total_usage` | 933.65 / 894.35836073 |
+
+**These are cumulative ACCOUNT totals. The pipeline sends no run identifier, so the provider cannot
+attribute any part of them to T-107 — this is D-086's gap confirmed from the other side, not closed.**
+T-107 is the only substantial live model run inside the weekly window, so **`$1.77` is a measured
+upper bound on its spend, not a measurement of it**, and it sits inside the `$0.62–$3.70` pre-run
+estimate. **Any tighter figure would be an estimate and is not offered.**
+
+The probe redacts the key `label` and `creator_user_id` on the response path, so the committed log
+carries no account identifier. The key itself is never printed, written or sent anywhere but
+`openrouter.ai`.
+
+**Usage did not constrain this wave at any point.** No analysis was shortened, no model call
+declined, and no decision turned on cost.
+
+## Evidence committed
+
+`T107-TRIAGE.md` · `prompts/C-104.md` · `evidence/orch716_nonvacuity_predictions.md` (written
+before the mutations, unedited) · `evidence/orch716_nonvacuity_results.md` ·
+`evidence/orch716_openrouter_usage.py` + `.log` · `evidence/orch716_stale_verdict_probe.py` +
+`.log` · 11 G11 reports · 7 pin verdicts, all `violations: []`.
+
+Also committed: **eight REV-101 G11 reports from the previous wave that were left uncommitted**
+(`40..47-r3-*`). They validate clean and I did not produce them. A G11 report that exists only in a
+working tree is one session away from being lost, which this sprint has already paid for twice.

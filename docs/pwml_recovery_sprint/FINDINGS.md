@@ -6093,3 +6093,226 @@ neither.
 **Consequence for the record:** the bundle's § 2 figures stand as *what was measured at the time by a
 probe scanning unmatched terms only*. They are **not** the population. Any future work on F-132
 should quote 92 / 47 / 7 and cite C-102's A/B.
+
+---
+
+## F-146 — C-074 arm B demotes the strict release status but does not stop research retaining the invented reaction
+
+- **Severity** HIGH · **Class `product_contract_violation`** · **Registered 2026-08-29 from T-107 (ORCH-716)**
+- **F-100's open remainder.** Same paper, same class, the leg arm B does not reach.
+- Evidence: `runs_verify/2026-08-28_1816`, `PMC13231680/research`; `evidence/t107_score_priorities.log`
+
+### The measurement
+
+T-107's Priority 2 has exactly one counted row:
+
+```
+rank 2: zero unsupported retained reactions
+    observed = 1   counted = 1   papers = ["PMC13231680"]
+```
+
+`PMC13231680/strict` retained **zero** reactions, so the counted row is the research leg's only one:
+
+```
+phthalylsulfacetamide decomposition to sulfacetamide     enzyme: NDM-1
+```
+
+**At T-105 the same reaction carried NO enzyme.** T-107 attached NDM-1 to it. NDM-1 is a
+metallo-beta-lactamase; the paper's claim about it is that it hydrolyses **meropenem**. The gold
+records **`supported_reactions: null`** for this case — nothing here is a supported reaction — and
+`export_rationale` says *"The correct pipeline outcome is an empty pathway plus a rejection reason."*
+PRODUCT_CONTRACT § 2 requires *"correct enzyme, modifier, transporter and cargo relationships"*.
+
+### Why C-074 arm B did not catch it
+
+Arm B (`release_status.py:1146-1174`, `request_was_never_stated`) is merged and working: it demotes
+`RELEASE_READY` to `REVIEW_REQUIRED` when a context declares a core while naming no pathway. **It
+acts on the release STATUS.** It does not stop a leg **retaining** the reaction, and **research mode
+is fail-open by design** (`driver.py:2510`, `blocking_gate = gate_failed and not research_mode`), so
+the research leg runs to completion and the retained row is scored.
+
+**Arm B closed the `release_ready` route that F-100 measured. It did not close the retention route.**
+The strict leg is now correct on this paper; the research leg is not.
+
+### This single row is why T-107 is NOT ACCEPTED
+
+Priority 2 is absolute. Six legs were eligible and one failed, so D-075's `CONDITIONALLY SATISFIED`
+is unavailable — *"An eligible leg that fails remains a failure."*
+
+**Do not fix this by suppressing research-mode retention wholesale.** Research mode is fail-open on
+purpose and PRODUCT_CONTRACT § 12 requires research artifacts *"where possible"* even on
+`partial_only` papers. The question is whether an **unsupported enzyme attribution** may be attached
+to a retained reaction on a case whose gold declares no supported reactions at all — and that is a
+narrower question than "should research mode retain anything".
+
+---
+
+## F-147 — the run is failed on a superseded `audit_round` report, and the failure is reported under the gate that passed
+
+- **Severity** HIGH · **Class `product_contract_violation`** · **Registered 2026-08-29 from T-107 (ORCH-716)**
+- **REGISTERED AND DELIBERATELY NOT CHARTERED.** See "Why no card" below — this is the load-bearing
+  part of the finding.
+- Evidence: `evidence/orch716_stale_verdict_probe.py` + `.log`, `evidence/g11/ORCH-716/10-stale-verdict-probe.json`
+
+### The measurement
+
+In **every** leg of T-107, passing and failing alike, `final_stage3_gate_report.json` reports:
+
+```
+ok: true    errors: []    phase: final_pre_export
+```
+
+The pass/fail difference comes **entirely** from `post_normalization_contract_report`, stamped
+**`phase: audit_round`**. `streamlit_app.py:4055-4060` documents that stamp in terms:
+
+> *"This report is still **not a verdict about what shipped** -- the remap below moves the payload
+> again -- which is what the phase stamp says."*
+
+`batch/driver.py::_blocking_reports` scans every `*_contract_report` and fails the run on any
+carrying errors. **It never reads the phase stamp.** `_finalize_gate_failure` then renders the
+message as *"N blocking issue(s) at `final_pre_export_stage3_gates`"* — naming the one report that
+said `ok: true`. **That attribution is factually wrong** and it sent this triage to the wrong seam
+before the artifacts were read.
+
+### Stale, not a key mismatch — and the difference was measured, not assumed
+
+Two readings fit: the audit-round payload no longer exists (**stale**), or the gate reads a field the
+final payload does not populate (**key mismatch**, which would mean the final gate is blind and is
+the worse defect). The probe applies the **real production predicates** —
+`protein_external_identity`, `protein_species_context`, the same ones `process_normalizer.py:4627-4633`
+calls — row by row to the shipped `final_mapped.json`:
+
+| Leg | Run verdict | Shipped payload under the production predicates |
+|---|---|---|
+| `PMC12452463/strict` | **FAIL** | **PASSES**, 0 objections |
+| `PMC12180156/strict` | **FAIL** | **PASSES**, 0 objections |
+| `PMC12856317/strict` (control) | PASS | PASSES, 0 objections |
+| `PMC12782028/strict` (control) | PASS | PASSES, 0 objections |
+
+**Stale confirmed. No key mismatch.** Concretely:
+
+- **`Fur`** was removed before export by `pre_export_strict_quarantine`,
+  `degree_zero_after_quarantine`, `had_external_identity: false` — and **F-141 already ruled both Fur
+  rows correct withholding.** The run was failed on an entity that does not ship and correctly has no
+  identifier. PRODUCT_CONTRACT § 15: *"do not penalise the pipeline twice for obeying the contract."*
+- **`ALAS2`** carries a **verified** `uniprot: P22557` / `pathbank_protein_id: 17` /
+  `verification_status: verified` in the shipped payload. **The identifier was never lost** — it was
+  not yet resolved when the audit snapshot was taken. Note `uniprot_id` is `None` on that row while
+  `uniprot` is set: **a reader checking only `uniprot_id` concludes the identifier is missing.** That
+  is F-144's trap, and the probe prints the populated key for every row so it cannot recur.
+
+PRODUCT_CONTRACT § 1 names both halves of this among the outcomes that may never end a run without a
+PWML: *"a **missing or stale gate report**"* and *"an **irrelevant degree-zero entity**"*.
+
+### Why no card — merge rule 6, and it is not close
+
+F-147 fails exactly two legs. **If the driver stopped honouring superseded `audit_round` reports,
+both would PASS, and both would export content their own gold forbids:**
+
+- `PMC12452463/strict`: `enterobactin synthase complex` (a `forbidden_identifier`, *"A complex name
+  explicitly denoting three proteins"*); `RyhB inhibits EntC`/`EntF` (`forbidden_identifier`, *"A
+  small RNA, not a protein and never an enzyme"*); an `Enterobactin secretion` transport where the
+  gold notes say *"Export of enterobactin from the cytoplasm is never described at all, so no efflux
+  step may be emitted"*; and an `Unknown`-backed protein where `unknown_backed_proteins_acceptable:
+  false`. **PRODUCT_CONTRACT § 13 also rules this paper "Never strict success."**
+- `PMC12180156/strict`: the `ferrochelatase reaction` built on **`protoporphyrin IX`**, the gold's own
+  *"HALLUCINATION TEST: zero occurrences in the entire 67,304-character file"*.
+
+**The earliest unsafe seam is Stage-1 extraction on both papers, not the driver.** Fixing the
+reporting seam first would convert two contract-correct no-export outcomes into two contaminated
+exports — *"weakening a biological gate to increase PWML production"* by another route, and
+*"repairing downstream serialization when the earliest unsafe seam is upstream"*.
+
+**F-147 may be fixed only after that upstream content is stopped, and the fix must land together
+with the gates that would then block these legs on their real problems.** Recording it with the
+probe that proves it is the deliverable; fixing it now is the mistake.
+
+---
+
+## F-148 — a timed-out leg preserves the stop reason and nothing else
+
+- **Severity** MEDIUM · **Class `product_contract_violation`** · **Registered 2026-08-29 from T-107 (ORCH-716)**
+- **Closes F-092 defect 3 by the same measurement.**
+- Evidence: `runs_verify/2026-08-28_1816/manifest.jsonl`, the three `status: timeout` rows
+
+### F-092 defect 3 is CLOSED
+
+F-092 defect 3 — *"the inner deadline path records no terminal reason at all"* — was a
+`product_contract_violation` authorized for code after T-106. At T-105 the inner row carried no
+`termination_reason`, no `operational_failure`, no `budget`. At T-107:
+
+```
+PMC12444477/strict   stage=input   termination_reason=operation_timeout   operational_failure=true
+   budget_unrecorded: "not recorded on the in-process timeout path: this seam is handed the timeout
+   detail only, never the leg budget ... so elapsed and remaining cannot be stated truthfully here
+   and are not guessed."
+```
+
+That is the contract's `operation_timeout` used correctly for the first time in this sprint, with
+the missing budget **declared rather than fabricated**. Defects 1 and 2 stand as previously ruled
+(`policy_disagreement`, no code).
+
+### What remains
+
+All three timed-out rows — `PMC12444477/strict`, `PMC12444477/research`, `PMC12096016/strict` —
+carry `files: []` and `counts: {}`, and the outer message says *"produced nothing"*.
+PRODUCT_CONTRACT § 1 names *"a **timeout without usable checkpoints or recovery information**"* an
+unacceptable terminal blocker, and § 9 requires preservation of **seven** things on timeout or budget
+exhaustion. T-107 preserves **two**: the exact stop reason, and the budget on the two outer rows. It
+preserves **no payload, no retrieved evidence, no attempt/prompt/model/response-hash record, and no
+skipped-next-step record**; `stage` is `unknown` on two of three.
+
+**This is why `LpxH` is unverified on T-107** — both `PMC12444477` legs timed out with no payload to
+inspect. It remains verified at the merged tip on the pinned run `runs/2026-08-02_2130`. **T-107 must
+not be reported as confirming it.**
+
+### A second, smaller gap in the same rows
+
+All three carry `leg_timeout_overridden: true`, `leg_timeout_seconds: 1800.0` against
+`leg_timeout_default_seconds: 3600.0`, with **`leg_timeout_override_reason: ""` and
+`leg_timeout_override_source: ""`**. § 9 requires overrides to be *"explicit and recorded in the run
+manifest"*. The fact and the value are recorded; the justification and provenance are empty strings.
+The override **shortens** rather than extends, so *"no silent extension of difficult benchmark legs"*
+is not violated — but half the requirement is unmet.
+
+---
+
+## F-149 — both cap tests pin non-vacuously; F-142's no-coverage-gap conclusion stands
+
+- **Severity** n/a · **Class: audit result, no defect** · **Registered 2026-08-29 (ORCH-716)**
+- Auditor: the Lead Orchestrator, who wrote **neither** file — which is what F-144 requires.
+- Evidence: `evidence/orch716_nonvacuity_predictions.md` (written first, unedited),
+  `evidence/orch716_nonvacuity_results.md`, `evidence/g11/ORCH-716/03..07`
+
+REV-103 did not audit whether `test_c074_strict_core_floor.py` and
+`test_c072_incomplete_core_demotion.py` pin their caps non-vacuously. **They do.**
+
+| Mutation | Result |
+|---|---|
+| baseline | 42 passed |
+| M1 — `MIN_CONNECTED_CORE_REACTIONS` 2 -> 1 | 14 failed |
+| **M2 — arm A application forced false, constant LEFT AT 2** | **13 failed** |
+| **M3 — C-072 application forced false** | **5 failed** (4 in its own file) |
+| restore | 42 passed |
+
+**M2 is the finding.** It separates *pinning a constant* from *pinning a behaviour*: anything
+asserting only `MIN_CONNECTED_CORE_REACTIONS == 2` still passed, and 13 tests went red anyway —
+including the file's own four `test_nonvacuity_c092_*` guards, which went red rather than staying
+green. Both files exercise the **production demotion path**. `test_c072`'s
+`test_the_committed_t104_leg_replays_to_the_contract_outcome` replays a **committed real artifact**,
+not a fixture.
+
+`release_status.py` was restored from **saved bytes** after every mutation (D-084 — never
+`git checkout --`, never a text-mode write) and re-verified against
+`sha256:db93e6f4fe30632d33725764aba668d31bfa5431f224550626f04888f0bac32d` each time. No production
+line changed.
+
+**One kept failed measurement.** The first M2 attempt used `--label nv-m2-armA-neutered`; the
+uppercase `A` violates `^[a-z0-9][a-z0-9._-]*$`, the allocation was rejected, and the shell captured
+an **empty string** that reached `bounded_run.py` as `--json ""`. The job ran clean and gave the
+identical result but produced **no G11 artifact**, so it is uncertifiable and is not counted. It is
+recorded rather than deleted. **This is the charter's named trap in a new variant: an invalid label
+becoming an empty `--json` path rather than error text.** On a case-insensitive filesystem the
+re-run's pin verdict also landed on the first attempt's filename,
+`pin/ORCH-716/05-nv-m2-armA-neutered.pin.json` — one file, holding the valid run's verdict,
+carrying the failed attempt's spelling.
