@@ -1,13 +1,14 @@
 # RESUME — next session handoff
 
-**Rewritten by the Lead Orchestrator, 2026-08-28, at the close of the acceptance-instrument
-reconciliation wave.** Supersedes the previous record; that content is in git history.
+**Rewritten by the Lead Orchestrator, 2026-08-29, at the close of the T-107 triage wave
+(`ORCH-716`).** Supersedes the 2026-08-28 record, which was written before T-107 ran and is now
+stale in its most important section — it says T-107 is NO-GO pending a model decision. **T-107 has
+run, is scored, and is triaged.** The previous content is in git history.
 **`LEDGER.md` remains the single source of truth for task state.**
 
-> **⚠ Keep this file in the repo and update it in place.** Two load-bearing probe outputs this sprint
-> existed only in dead sessions' temp directories. Both were recovered this wave; **one probe source
-> is gone for good.** A G11 report certifies a job was clean and preserves **nothing** about what it
-> found.
+> **⚠ Keep this file in the repo and update it in place.** A G11 report certifies a job was clean
+> and preserves **nothing** about what it found. Two load-bearing probe outputs this sprint existed
+> only in dead sessions' temp directories and one probe source is gone for good.
 
 ---
 
@@ -17,129 +18,138 @@ reconciliation wave.** Supersedes the previous record; that content is in git hi
 |---|---|
 | Branch | `sprint/pwml-recovery` |
 | **Do not pin a tip SHA here** | the invariant is **local = `origin/` = `git ls-remote`**. Read it, do not recall it |
-| Merges to `main` | **none, and none permitted** |
-| `main` | **local `7531692` untouched; remote `03f1af5`.** `main` advanced **outside this sprint**. Verified: the sprint tip is **not** an ancestor of remote `main` — nothing leaked. **Touch neither ref.** A previous handoff reported "main untouched" having checked only the local ref |
-| Product-owner `streamlit_app.py` | uncommitted, **35 ins / 2 del**, `sha256:47e4fafa789d359d…` — verified intact throughout |
-| Caches, `topics_*.txt` | uncommitted, untouched (7 entries) |
-| Whole-tree G11 | **0 non-compliant.** The count is self-referential — a whole-tree check's own report is committed after it runs, so the recorded number is always one less than the tree containing it. Reconcile, do not panic |
+| Merges to `main` | **none, and none permitted.** `main` local `7531692`, remote `03f1af5` — it advanced **outside** this sprint. **Touch neither ref** |
+| Product-owner `streamlit_app.py` | uncommitted, **35 ins / 2 del**, `sha256:47e4fafa789d359d…` — verified intact after every commit this wave |
+| Caches, `topics_*.txt`, `cache_snapshot/` | uncommitted, untouched |
+| Stray untracked `ValueError` | a shell-redirect accident predating this wave. **Left alone deliberately** — not mine to discard, and the standing rule is not to discard unfamiliar working-tree changes |
+| Whole-tree G11 | **0 non-compliant.** The count is self-referential: a whole-tree check's own report is committed after it runs, so the recorded number is always one less than the tree containing it. Reconcile, do not panic |
 
-## 2. What this wave did
-
-**Three cards merged, each independently reviewed, each with the reviewer finding something real.**
-
-| Card | Merge | What it did |
-|---|---|---|
-| **C-101** | `ee7cb6b` | 16/5 metric split · row-aware PathBank sentinel seam · raw/accepted Priority 1 with the variance band. **3 correction rounds** |
-| **C-102** | `8e4334f` | Coverage denominator reconciled against `forbidden_identifiers` (Ruling A). **1 correction round** |
-| **C-103** | `511344a` | F-142 replay expectation re-pointed at the seam that carries the verdict. **Zero production lines.** 1 correction round |
-
-**Rulings recorded:** D-072 (A) · D-073 (B, the variance band) · D-074 (C, the exact sentinel) ·
-D-075 (D, Priority-2 `NOT EVALUATED`) · **D-080** (interpretation: D-072's "denominator" means both
-sides — **flagged for product-owner ratification**) · D-081 · D-076/D-079/D-082 (budget) · D-077 ·
-D-078 · D-083 · **D-084** (byte-exact mutation restores).
-
-**Findings:** F-142 (Glutathione = stale expectation) · F-143 (bare `python` resolves to the system
-interpreter) · F-144 (a non-vacuity guard can guard the wrong emptiness) · F-145 (the F-132
-population is 92/47/**7**, not 62/32/6).
-
-## 3. The gate numbers every future charter needs
+## 2. The gate numbers every future charter needs
 
 | Gate | Result on the integration tip |
 |---|---|
 | **SMOKE** (20 files) | **473 passed** |
 | **gold-readers** (22 files) | **456 passed / 8 skipped / exit 0** |
 
-**⚠ The gold-readers baseline CHANGED this wave.** It exited 1 correctly all sprint because
-`test_strict_failure_replay.py` carried the two F-142 reds. **C-103 cleared them.** Any charter still
-carrying *"this selection exits 1 at base, and that is correct"* is **stale** — delete that warning.
+Both re-measured this wave through `pinned_pytest` with `--pin-verdict` (`violations: []`) and the
+heavy lock. **The gold-readers baseline changed through C-103** — any charter still saying that
+selection correctly exits 1 is **stale**.
 
-## 4. T-107 — NO-GO, and the blocker is one product decision
+## 3. T-107 — scored, triaged, and NOT to be rerun
 
-Full assessment, measured at the merged tip: **`docs/pwml_recovery_sprint/T107-READINESS.md`**.
+`runs_verify/2026-08-28_1816` · 20/20 legs · 17 scorable · 5.63 h · zero survivors.
+**Overall: NOT ACCEPTED, on Priority 2 alone** (1 unsupported retained reaction, `PMC13231680`).
+Priority 1 = **5**, `PASS` — the first result under 6 in the sprint.
 
-**Twelve of thirteen gate conditions hold.** The failure is **condition 8, the pinned model**, and it
-is configuration and authorization, **not engineering**:
+**Full classification: `T107-TRIAGE.md`.** Read it before touching anything T-107 related.
 
-* `.env` pins all nine OpenRouter slots to **`deepseek/deepseek-v4-flash`**, which a read-only models
-  check prices at **$0.0868/M prompt, $0.1736/M completion — paid**.
-* The T-101/T-103 authorization's **≈$0 basis rested on every slot being `openrouter/free`**. It no
-  longer is. `.env` is untracked, so the change is unattributable through git.
-* **LM Studio cannot substitute** — it serves `glm-4.6v-flash`, which is neither the pinned model nor
-  the configured `LOCAL_MODEL`. Using it would be a **fallback model** (forbidden) and would destroy
-  comparability with T-104/T-105/T-106, all three of which ran `deepseek-v4-flash`.
-* Spend cannot be bounded in advance: ~5 h, 20 legs, nine model roles, no spend telemetry to abort
-  on, hard ceiling.
+### The four things a successor most needs to know
 
-**The decision needed, and only the product owner can make it:**
+1. **Two of the four "degraded" strict legs are not C-099 regressions.** `PMC12452463/strict` and
+   `PMC13231680/strict` **already failed in the T-106 artifacts (`runs_verify/2026-08-24_1428`)**,
+   three days before C-099 merged. Only `PMC12180156/strict` genuinely turns at T-107.
+   **Quote the T-106 artifacts beside T-105; T-105 alone is not a sufficient baseline.**
+2. **`PMC13231680/strict`'s empty pathway is CORRECT and T-105's PASS was the false positive**
+   (already registered as F-100). The gold says in terms: *"the correct pipeline outcome is an
+   empty pathway plus a rejection reason."* **Never write code to recreate T-105's output here.**
+3. **Three of the four "degradations" are movements toward the contract, not away from it.**
+   On both negative controls the T-105 pass was the defect, and `PMC12452463` must **never** be a
+   strict success under PRODUCT_CONTRACT § 13.
+4. **`LpxH` is UNVERIFIED on T-107** — both `PMC12444477` legs timed out with no payload. It **is**
+   verified at the merged tip on the pinned run `runs/2026-08-02_2130`. **Do not report T-107 as
+   confirming it.**
 
-* **(A)** authorize paid spend on the pinned model with an explicit ceiling — **keeps comparability,
-  which is the entire point of the pinned plan**; or
-* **(B)** re-pin to a free model and accept **in writing** that T-107 is not comparable to its three
-  predecessors.
+### Run-once still binds
 
-**(A) is better** if any paid spend is acceptable. **Do not run T-107 until this is ruled** — it may
-be launched only once and must not be rerun for composition.
+No leg of T-107 is repeated, and nothing is redrawn because its draw was unfavourable. Something
+not observed is reported as *"not observed"*.
 
-### The acceptance table at the merged tip
+## 4. New findings this wave
 
-| Priority | Raw | Accepted | Status |
-|---|---:|---:|---|
-| 1 | **8** | **8** | `FAIL` (7 = `PASS_WITHIN_VARIANCE`; T-104 and T-105 both scored 7) |
-| 2 | 0 counted | — | **`CONDITIONALLY SATISFIED`** — 9 of 20 eligible, 11 `NOT EVALUATED` on D-067 precondition 3 |
-| 3 | 0 | — | `PASS` |
-| 4 | `0/8` | `0/8` | `FAIL` (not a hard gate) — **unmoved by Ruling A**, see D-081 |
-| 5 | `0/2` | `0/2` | `FAIL` (not a hard gate) |
+| Id | Class | One line |
+|---|---|---|
+| **F-146** | `product_contract_violation` | Audit repair invented an enzyme to satisfy a *structural* complaint. **This is Priority 2's only failure.** Chartered as **C-105** |
+| **F-147** | `product_contract_violation` | The driver fails a run on a `phase=audit_round` report the app documents as *"not a verdict about what shipped"*, and reports it under the gate that passed. **Registered, deliberately NOT chartered** |
+| **F-148** | `product_contract_violation` | A timed-out leg preserves the stop reason and nothing else. **F-092 defect 3 is CLOSED** by the same measurement |
+| **F-149** | audit result, no defect | Both cap tests pin **non-vacuously**. F-142's no-coverage-gap conclusion stands |
+| **F-150** | `gold_data_defect` | Two gold gaps. **Prepared, NOT applied** — needs product-owner authority |
 
-**`LpxH` confirmed still counted:** `PMC12444477/strict` = 8 findings including `LpxH`, `Unknown`
-gone — **9 → 8, never 9 → 7**. `accepted == raw` is a **measurement**, not a construction: under
-D-074 no Priority-1 row can be contract-adjusted at all (**D-077**).
+### F-147 is the one to be careful with
 
-## 5. Open items, none blocking
+It is a **real** contract violation and it is **deliberately unchartered**. It fails exactly two
+legs, and fixing it alone would make both pass and export content their own gold forbids —
+`enterobactin synthase complex`, `RyhB`, an efflux step the paper never describes, and a
+`ferrochelatase reaction` built on `protoporphyrin IX`, which the gold certifies occurs **zero
+times** in a file whose length it cites to the character (67,304 — verified).
 
-* **D-080 is RATIFIED** (2026-08-28). The accepted-coverage definition is formal and locked:
-  `eligible = raw_anchors − case_scoped_forbidden`, numerator from matched eligible only, denominator
-  from eligible only, raw numerator/denominator/coverage preserved separately. **C-102 implements it
-  exactly; no production change was required.** D-072 is read through this ratification wherever it
-  says "denominator".
-* **D-083** — two C-103-adjacent follow-ons: F7's deep copy has no test (its revert mutation is
-  green), and the split-gate driver should abort on `errors > 0`. Evidence tooling and one low-stakes
-  missing test. Route to a housekeeping card.
-* **F-145** — the decision bundle's § 2 population figures are an undercount and should be quoted as
-  **92 / 47 / 7**.
-* REV-103 did not audit whether `test_c074_strict_core_floor.py` / `test_c072_incomplete_core_demotion.py`
-  pin their caps **non-vacuously**. If F-142's no-coverage-gap claim needs to be load-bearing, that
-  audit is a follow-on.
+**Both legs are currently correct by accident.** The frozen-graph biological check must land
+**before** the reporting fix, or the reporting fix is a regression dressed as a fix. **The earliest
+unsafe seam is Stage-1 extraction, not the driver.**
 
-## 6. Traps this wave paid for — additional to the standing list
+## 5. Cards in flight
 
-* **F-144 — a non-vacuity guard can be real and still guard the wrong emptiness.** Asserting that *a*
-  finding was produced is not evidence that *the path under test* produced it. Remedy, and it is the
-  rule now: **a non-vacuity guard is not evidence until a party who did not write it has failed to
-  defeat it.** Every card from C-102 on was dispatched with a mutation-proof requirement.
-* **F-143 — pass the explicit venv interpreter.** `bounded_run.py` resolves a bare `python` from the
-  child's PATH → the system 3.13, no `streamlit`, **35 spurious import errors that read exactly like
-  a regression**. `pinned_pytest`'s exit-98 check verifies the *tree*, not the *interpreter*.
-* **D-084 — restore saved BYTES.** `git checkout --` reverts **more** than it mutated (it takes a
-  card's uncommitted edits); text-mode restore reverts **less** than byte-exactly (CRLF→LF). Three
-  sessions hit these two opposite failures in one card.
-* **Measurement failures wear the costume of results.** A missing `--basetemp` parent reported **382
-  instead of 453**. The tell is many failures in an *unrelated* shape — `KeyError`, collection errors
-  — not the targeted assertion.
-* **A recovered artifact records the tree it ran against, not the tree it lands in.** I committed the
-  recovered ORCH-702 log without re-running it; it was stale at the moment of commit.
-* **Report byte sizes are worktree-path-dependent** — acceptance reports embed the absolute run-dir
-  path. Quote the tree.
-* **Ceilings: seven under-set, seven mine.** Derive from the mandated deliverables at the measured
-  density of the module. **Review-mandated work never charges ceiling 1 or ceiling 2** (D-076 A1,
-  D-082), and **kept failed runs are never charged** — charging for a mandatory artifact is a tax on
-  honesty.
+| Card | Branch / worktree | State |
+|---|---|---|
+| **C-104** — D-083's two carried follow-ons | `card/C-104-d083-followons` · `C:/t/c104` | **DISPATCHED.** Test + evidence tooling only; **changes no production line** |
+| **C-105** — F-146, audit patches may not invent an actor role | `card/C-105-audit-actor-evidence` · `C:/t/c105` | **DISPATCHED.** The only production card of this wave |
 
-## 7. Peer sessions
+**Neither is merged. Both need an independent reviewer on the actual diff before anything lands** —
+merge rule 5, and the Lead never approves its own work. C-105 carries a **mandatory preservation
+case**: a guard that rejects evidenced actor additions as well as unevidenced ones is a new defect,
+not a fix. Check that the reviewer exercised it.
 
-`project14-t2pw-14` **stood down explicitly** this wave and holds nothing.
-**`project14-t2pw-51`, the C-099/C-100 reviewer, is gone**; its method survives only in
-`prompts/REV-101.md` § 4. **Run `ListAgents` and contact every peer before treating the branch, the
-lock or the worktrees as exclusively yours.**
+## 6. Open, not blocking
 
-**Prune no worktree.** Added this wave: `C:/t/c101`, `c101base`, `c102`, `c103`, `rev102base`,
-`rev102tip`, `rev102r1`, `rev103base`, `rev103tip` — plus everything the previous waves listed.
+* **F-150's gold edit** — exact proposal and a four-step A/B plan are written. **Requires the
+  product owner.** Prediction recorded before the edit: Priority 1 rises 5 → 6, which is **still
+  `PASS`** under D-073. A Priority-1 number that moves because the gold changed must never be
+  reported as a pipeline regression.
+* **The negative-control scoring question** — the harness reports a contract-correct empty pathway
+  as `RESULT: FAIL`. `policy_disagreement`; decision packet, not a card.
+* **PathBank compound ids in `_external_ids`** — escalated. Product owner decides whether
+  `pathbank_compound_id` counts as a real accession for Priority 1.
+* **`placeholder_backed_proteins` / `Unknown`-backed export** — PRODUCT_CONTRACT § 13 standing
+  disagreement. **No agent may fix it.** Escalate only.
+
+## 7. D-086 — usage is now MEASURED, and the gap is confirmed from the other side
+
+Read live from the OpenRouter account (`evidence/orch716_openrouter_usage.py`):
+`usage_weekly` **1.769355221**, `usage_monthly` 6.483844303, `limit` 75, `is_free_tier` **false**.
+
+**These are cumulative ACCOUNT totals. The pipeline sends no run identifier, so the provider cannot
+attribute any part of them to T-107.** T-107 is the only substantial live run in the weekly window,
+so **$1.77 is a measured upper bound on its spend, not a measurement of it** — and it sits inside
+the $0.62–$3.70 pre-run estimate. **Any tighter figure would be an estimate and none is offered.**
+
+**Usage constrained nothing this wave.** No analysis was shortened and no model call was declined.
+
+## 8. Traps this wave paid for — additional to the standing list
+
+* **An invalid G11 label can become an EMPTY `--json` path, not just error text.** `--label
+  nv-m2-armA-neutered` (uppercase `A`) was rejected, the shell captured `""`, and the job ran
+  clean with **no artifact at all**. A job with no G11 report is not a passed test. **Capture the
+  allocated path into a variable and refuse to run if it does not match `*<TASK>*<label>.json`.**
+* **On a case-insensitive filesystem two labels differing only in case are ONE file.** The M2 pin
+  verdict landed on the failed attempt's spelling — one file, the valid run's contents, the wrong
+  name.
+* **A gate report saying `ok: true` is not the report the driver blocks on.** T-107's every leg has
+  `final_stage3_gate_report: ok true, errors []`. The verdict comes from a *different*, superseded
+  report, and the failure message names the clean one. **Read `contract_reports.json` and check the
+  `phase` stamp before believing a failure message's stage attribution.**
+* **F-144 again, and it is why the stale-verdict probe exists.** `ALAS2` carries `uniprot: P22557`
+  and `uniprot_id: None`. A reader checking only `uniprot_id` concludes the identifier is missing
+  and reaches the opposite conclusion from the truth. **Check which key is populated before
+  believing a null.**
+* **Verify a subagent's load-bearing claims yourself.** The adjudication this wave was excellent and
+  every one of its central claims held — but I re-derived each against the artifacts and the live
+  `goldset` API before recording any of them as fact, and that is the standard.
+
+## 9. Peer sessions
+
+`project14-t2pw-41` was contacted before the branch, the lock or any job was claimed, and **stood
+down explicitly**: read-only reconnaissance, no lock, no worktree, no uncommitted work, no intent
+to push. **Run `ListAgents` and contact every peer before treating the branch, the lock or the
+worktrees as exclusively yours.**
+
+**Prune no worktree.** Added this wave: `C:/t/c104`, `C:/t/c105` — plus everything the previous
+waves listed.
