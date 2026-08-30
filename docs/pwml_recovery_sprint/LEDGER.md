@@ -8545,3 +8545,101 @@ runnable and D-084-compliant. **Handed forward, not chartered here.**
 **F-152** registered: C-104's widened guard can abort a green file, because the pre-existing count
 parse at line 52 reads all of stdout. Inert before this card, fatal after. Outside C-104's boundary
 and correctly not fixed in it; no live exposure on the real selection.
+
+---
+
+## ORCH-716 — REV-105: CORRECTION ROUND, and the finding is the one I most feared
+
+**C-105 is NOT merged.** REV-105 returned **CORRECTION ROUND** (round 1 of the two that are
+automatic). 16 G11 reports, 0 non-compliant, every job zero survivors.
+
+**The core is sound and the card is not rejected.** B2, B3, B5, B6, B7, R4, R13 and R16 all hold and
+the reviewer reproduced each independently. The author's structural purity property survived
+adversarial scrutiny: the reviewer verified from the **signature** that
+`_unevidenced_actor_role_rejection(op)` cannot reach the payload, then A/B'd the exact
+inhibitor-promotion case and got identical refusal whether the protein is present or absent. That
+was the right design and it does fix T-107's Priority-2 defect.
+
+### B1 fails, at scale — and it is a citation problem as much as a code problem
+
+`_span_licenses_actor`'s docstring claims *"the same comparison discipline
+`bench.semantic_production._actor_named_in_span` uses"* and that *"no substring, per-token union or
+edit distance is involved"*. **That function is exactly a per-token union** —
+`bool(wanted & seen)`, `semantic_production.py:399-405` — and its own docstring records why:
+
+> *"One SHARED token, not the whole name -- the half that stops it over-firing. … `ALAS2 complex`
+> cites *"ALAS2 mediates …"* … **and a whole-name rule demotes five of the 21 legs over that.**"*
+
+**C-105 implemented the whole-name rule and attributed it to the function that measured it wrong.**
+
+| Measurement | Value |
+|---|---|
+| legitimate evidenced cases refused | **12 of 29** |
+| real corpus rows refused on lexical artefacts | **258 of 692 (37.3%)** |
+| refused **only** by the whole-name rule the repo's own rule would license | **150** |
+| refused because the cue vocabulary is too narrow | 108 |
+
+Refused examples **lifted verbatim from committed payloads**, not hypotheticals:
+`MenD complex` ← *"MenD catalyses the first irreversible step"*;
+`UDP-N-acetylglucosamine acyltransferase` ← *"LpxA … catalyzes the reversible acylation"*;
+and `ALAS2 complex` ← *"ALAS2 mediates …"*, which is the example `_actor_named_in_span`'s **own
+docstring** gives. `"NDM-1-catalyzed hydrolysis"` is invisible because `_registry_normalize`
+**deletes** hyphens, making it `ndm1catalyzed`.
+
+**This is exactly the B9 trap the review criteria were written to catch**, and it is why B1 was
+written as *"the single most important item in this review"*. A guard that refuses more looks like
+the safe direction. This one refuses legitimate evidenced enzyme attachment on **three live
+production passes**, and it would have surfaced later as fewer reactions across many papers with
+nothing to attribute it to.
+
+### Blast radius is wider than the card flagged — four callers, not one
+
+| Caller | Line | Actor-role work |
+|---|---|---|
+| `focused_repair.py` | 215 | all four repair passes, incl. `modifier_enzyme_repair` |
+| `pathway_curator.py` | 348 | prompt: *"propose missing transporters"* |
+| `gap_resolver.py` | 3341 | — |
+| `pipeline.py` | 82 | the audit stage itself |
+
+Two aggravating facts the reviewer measured: `_run_modifier_enzyme_repair` draws its value names
+from the **declared entity registry** — exactly the `MenD complex` spellings — while the model's
+`reason` uses paper symbols, which *is* the 150-row bucket; and `pathway_curator`'s schema documents
+`evidence` as *"One sentence explaining why this patch is proposed"*, **a rationale, not a quoted
+span**. The guard changes that field's required meaning without changing any prompt that fills it.
+Prompts are outside C-105's boundary, so this is **routed as a follow-on, not fixed in the card.**
+
+**Six existing test files exercise `apply_patch_with_policy` and none is in SMOKE or gold-readers**,
+so merge rule 4's "existing affected tests" were never run by the card's own evidence. The reviewer
+ran 13 such files: **145 passed** at tip. No regression, but the gap in the card's evidence is real.
+
+### B9 — the deterministic half passes, the fresh-run half is honestly unmeasured
+
+All 17 committed `PMC12452463` / `PMC12180156` strict artifacts re-scored through
+`evaluate_production_semantics` at base and tip: **identical digest `f90111274f84dff6…`**. No
+committed leg flips, and an exhaustive caller grep shows the guard is unreachable from any scoring
+path. **Whether a fresh end-to-end run of either leg would flip is NOT measured** — it needs live
+LLM spend the reviewer had no authority for. Its reasoning that a flip is implausible (the guard
+only ever rejects, and both legs fail on entity-identity grounds an enzyme refusal does not satisfy)
+is recorded as **a prediction to check before the next T-run, not as a result.**
+
+### Two residual routes recorded so they are not rediscovered as defects
+
+1. `replace /processes/reactions/N/modifiers/M/role = "catalyst"` — in-place promotion of an
+   existing inhibitor. **Deliberately excluded**, and the reviewer agrees the exclusion is
+   defensible for this card. But it confirmed **by execution** that a model refused on the `add`
+   path can take the `role` path instead, because the rejection reason tells it so.
+2. `add /processes/reactions/-` carrying an invented enzyme is **accepted**. The card's comment
+   calls this "major-topology territory"; it is not protected —
+   `enforce_major_topology_threshold` is `True` at exactly one call site
+   (`interactive_curator.py:507`) and defaults `False` at every automated caller.
+
+### Correction round 1 dispatched
+
+C1-C8 sent to the implementer: adopt the repo's shared-token rule, map separators before the
+boundary test, widen the cue vocabulary, **fix the false citation**, drop the rename over-reach,
+correct the major-topology claim, add the four-caller and affected-seam evidence, and replace the
+preservation control — which used the one-character name `P`, **the single shape a whole-name rule
+always handles, which is why it passed while the class it stood for was broken.**
+
+**Review-mandated work never charges a ceiling** (D-076 A1, D-082). A third round would need
+explicit authority.

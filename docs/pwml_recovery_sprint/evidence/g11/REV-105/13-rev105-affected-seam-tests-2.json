@@ -1,0 +1,100 @@
+{
+  "label": "rev105-affected-seam-tests-2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:randomly",
+    "--basetemp=C:/t/btrev105/affected2",
+    "tests/test_apply_audit_patch_lineage.py",
+    "tests/test_apply_audit_patch_lock_policy.py",
+    "tests/test_apply_audit_patch_referential_integrity.py",
+    "tests/test_audit_json_llm_payload.py",
+    "tests/test_curation_patch_transaction.py",
+    "tests/test_interactive_curator.py",
+    "tests/test_focused_repair.py",
+    "tests/test_gap_resolver.py",
+    "tests/test_gap_resolver_agent_tools.py",
+    "tests/test_gap_resolver_biological_state_resolution.py",
+    "tests/test_gap_resolver_lineage.py",
+    "tests/test_gap_resolver_stage3_issues.py",
+    "tests/test_curator_offline_mode.py"
+  ],
+  "cwd": "C:/t/rev105",
+  "started_at": "2026-08-30T04:58:00+00:00",
+  "finished_at": "2026-08-30T04:58:02+00:00",
+  "duration_seconds": 1.6519296000042232,
+  "timeout_seconds": 900.0,
+  "root_pid": 461300,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 456584,
+      "name": "python.exe",
+      "ppid": 461300
+    }
+  ],
+  "descendants_terminated": [
+    456584
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 425268,
+      "name": "python.exe"
+    },
+    {
+      "pid": 436312,
+      "name": "python.exe"
+    },
+    {
+      "pid": 459076,
+      "name": "python.exe"
+    },
+    {
+      "pid": 461252,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-105\\13-rev105-affected-seam-tests-2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "cdc15c9c36f75f18b5c4780675706217f2f4b87a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-105",
+    "token": "REV-105:459076:c88a72c84863652c",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
