@@ -6505,3 +6505,92 @@ different thing entirely.
 go red on the next run — silently, if the file is in no gate.** Before committing a run's
 artifacts, grep the test tree for `==` pins on committed-artifact censuses. Every such pin should be
 `>=` with a stated floor, or derived.
+
+### CORRECTION, same day — my proposed fix was wrong, and REV-104 said why
+
+**The `>= 62` proposal above is withdrawn.** It is left standing rather than edited out, because the
+reason it is wrong is the useful part.
+
+REV-104, asked whether F-151 should fold into C-104 or stand alone, answered *separate card* and
+gave a third reason I had not considered:
+
+> *"`>= 62` is not obviously right, and that is the real reason. Line 325 uses `>= 62` to catch the
+> population **shrinking**. But `test_10` and `test_13` pin **derived** quantities (`legs`,
+> `checked`) **against that census**; relaxing them to `>=` means the suite stops noticing that ten
+> new legs entered the population unremarked."*
+
+That is correct and my reasoning was not. I generalised from line 325's idiom without checking what
+lines 347 and 461 are *for*. Line 325 guards a **floor** — did the corpus shrink. Lines 347 and 461
+assert that a loop **visited every leg it should have**, and the census is how they know how many
+that is. A `>=` there would let a leg join the corpus and go unvisited without anyone noticing,
+which is the opposite of the guard's purpose and is a quiet vacuity of exactly the F-144 shape.
+
+**Revised proposal: re-pin to 72, and record why it grew.** That is what the file's own comment
+("re-pin before reading on") asks for, and it keeps the pin doing its job. The cost is that the pin
+must be moved deliberately every time a run is committed — **which is the correct cost**, because
+moving it is the moment someone confirms the new legs were meant to be there.
+
+**Revised disposition: its own card, and larger than the pin.** REV-104's recommendation, which I
+accept:
+
+> *"One small card, 'make `c102_mutation_attack.py` runnable and D-084-compliant.' It decides and
+> fixes the census pin, replaces `git checkout --` + text write with a saved-bytes binary restore,
+> and then **executes the harness with all seven mutations including R5**."*
+
+That is what actually discharges C-104's A2 intent — the next reviewer inheriting a **runnable**
+mutation rather than a registered one. **Not chartered in this wave**; handed forward with the
+analysis complete.
+
+**Measured, by REV-104, in the same file:** the harness's restore converts the whole file's line
+endings, and then `git checkout --` is the only thing that puts them back —
+
+```
+on disk        : bytes=79745  crlf=1673  bare_lf=0
+harness write  : bytes=78077  crlf=0     bare_lf=1673
+```
+
+**Both rows of D-084's table, in one loop**, in the instrument the sprint uses to certify that its
+guards are non-vacuous.
+
+---
+
+## F-152 — C-104's widened abort guard can fire on a green file, because the count parse reads all of stdout
+
+- **Severity** MEDIUM · **Class `product_contract_violation`** (of the gate's own honesty, not of the
+  biological contract) · **Registered 2026-08-29 (ORCH-716), found by REV-104**
+- **No live exposure today**, and the failure mode is loud rather than silent.
+
+`evidence/c102_goldreaders_split.py:52` parses counts with
+`re.findall(r"(\d+) (passed|failed|skipped|errors|error)", out)` over the **entire** combined
+stdout+stderr, not over pytest's summary line. So a passing file whose output happens to contain the
+text "3 errors" — a warning, a captured log line, a failure message — is recorded as `errors=3`.
+
+**Before C-104 a spurious `errors > 0` was inert**: it only suppressed an abort. **After C-104 it is
+fatal.** REV-104 measured it:
+
+```
+SCENARIO green_with_warning_text
+  BASE exit=0 aborted=False files_reported=22
+  TIP  exit=1 aborted=True  files_reported=1
+       abort : INFRASTRUCTURE FAILURE ... exit=0 errors=3 failed=0 passed=2
+```
+
+The same applies to a genuine red whose failure text contains "*n* errors": that red would be
+reported as an infrastructure failure and the gate would stop early instead of folding it into the
+totals.
+
+**Why C-104 was merged anyway.** The card ordered `errors > 0` to abort *"independent of exit code
+and of `failed`"*, and the loose parse is pre-existing C-102 code at line 52 — **outside C-104's
+declared boundary of "the abort guard, line 65"**. The reviewer correctly declined to overrule the
+card's wording or to grow its boundary mid-review. The real 22-file selection shows `errors=0` on
+every file, so nothing is exposed today.
+
+**Fix:** scope the parse to pytest's summary line. Belongs with the F-151 card — same file family,
+same "make the instruments trustworthy" job.
+
+### One further behaviour change, recorded so it is not rediscovered as a defect
+
+A file with **both** a genuine red **and** a setup error (`exit=1, failed=1, errors=1`) folded into
+the totals at base and now **aborts** the gate (REV-104: `fail_plus_error BASE False / TIP True`).
+This is **correct** under D-083's *"a setup error is never a legitimate outcome of this gate"*, but
+it is a third behaviour change beyond the two the card describes. Recorded, not a defect.

@@ -8498,3 +8498,50 @@ Agent register for this wave:
 | `pwml-bio-auditor` | independent read-only adjudication of items 1-6 | **COMPLETE.** Status requested at the liveness checkpoint; reported in full. Ran no job, took no lock, wrote no file |
 | general-purpose (C-104) | implementer, worktree `C:/t/c104` | dispatched |
 | general-purpose (C-105) | implementer, worktree `C:/t/c105` | dispatched |
+
+---
+
+## ORCH-716 — C-104 MERGED, and the census fix I proposed was wrong
+
+**C-104 merged at `57e604d` with `--no-ff`.** REV-104 **APPROVE**, 15 G11 reports, 0 non-compliant.
+Post-merge **SMOKE 473 passed**, zero survivors, lock acquired and released (merge rule 10).
+
+| Merge gate | Result |
+|---|---|
+| 1 dependency merged | none |
+| 2 diff within boundary | ✔ no `src/` line; `acceptance.py` byte-identical base and tip |
+| 3 focused tests | ✔ **delta zero** — 2 failed / 12 passed at base AND tip |
+| 4 existing affected tests | ✔ the two reds are **F-151**, pre-existing, not this card |
+| 5 independent review of the actual diff | ✔ **APPROVE**, six adversarial mutations by a non-author |
+| 6 no biological gate weakened | ✔ the diff contains no production line |
+| 7 preserves `review_required` | n/a |
+| 8 no exporter repairs biology | n/a |
+| 9 G9 behavioural base failure | ✔ both halves |
+| 10 SMOKE after merge | ✔ **473 passed** |
+| 11 test-process lifecycle | ✔ every job zero survivors, cleanup success |
+
+**The A1 result is the one worth keeping.** REV-104 rewrote the author's identity assertions as
+equality, deleted the consequence block, applied R5 — and test 4 went **GREEN**. The equality form
+is precisely the vacuous guard F-144 names, and the author did not write it.
+
+**Two boundary notes against my own charters, both raised by the agents rather than by me:**
+
+1. **Neither C-104.md nor C-105.md existed in its own worktree.** I cut both worktrees at
+   `36f773c` and then wrote the cards into the primary checkout, committing them later. Both
+   implementers read the card from the primary checkout read-only and **both flagged it**. **Commit
+   the card before cutting the worktree**, or the worktree cannot see its own charter.
+2. **C-104's ownership table named the wrong file for the attack-set entry.** The attack set lives
+   in `evidence/c102_mutation_attack.py`, which the table did not list, while D-083's own text and
+   the card's prose both required the entry. **My table was the error.** The implementer flagged it
+   rather than treating the table as authoritative; the reviewer independently judged it not a
+   breach (15 lines, purely additive).
+
+**F-151's proposed fix was wrong and REV-104 corrected it.** I proposed `>= 62`, generalising from
+line 325's idiom without checking what lines 347 and 461 are *for*. They pin **derived** quantities
+against the census — a `>=` would let a leg join the corpus and go unvisited unnoticed. Revised:
+**re-pin to 72 and record why it grew**, in its own card that also makes the mutation harness
+runnable and D-084-compliant. **Handed forward, not chartered here.**
+
+**F-152** registered: C-104's widened guard can abort a green file, because the pre-existing count
+parse at line 52 reads all of stdout. Inert before this card, fatal after. Outside C-104's boundary
+and correctly not fixed in it; no live exposure on the real selection.
