@@ -1,0 +1,36 @@
+=== BASELINE (unmutated tip) === exit=1
+    test_10_f132_population_regression_over_the_six_papers
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    2 failed, 12 passed in 3.43s
+Traceback (most recent call last):
+  File "C:\t\c104\docs\pwml_recovery_sprint\evidence\c102_mutation_attack.py", line 145, in <module>
+    assert code == 0, "the unmutated suite must be green before any mutation means anything"
+           ^^^^^^^^^
+AssertionError: the unmutated suite must be green before any mutation means anything
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c104\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 36f773c627fda333b2afe7b1e0fd9294c11d3817  [git, worktree dirty=True]
+label                   : c104-attack-set-baseline
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py C:/t/c104
+cwd                     : C:\t\c104
+root PID / process group: 433776 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.30 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 4  433792:python.exe, 434008:python.exe, 434068:python.exe, 419244:git.exe
+descendants terminated  : 4  419244, 433792, 434008, 434068
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c104\docs\pwml_recovery_sprint\evidence\g11\C-104\09-attack-set-baseline.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-104  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

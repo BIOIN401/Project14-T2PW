@@ -1,0 +1,149 @@
+{
+  "label": "c104-goldreaders",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c104",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-104/08-goldreaders.pin.json",
+    "-q",
+    "--no-header",
+    "-rf",
+    "--basetemp=C:/t/btc104/gold",
+    "tests/test_protein_export_policy.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c077_stage0_conflict_disposition.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c085_priority2_honesty.py",
+    "tests/test_c088_extracted_not_serialized_disposition.py",
+    "tests/test_cofactor_policy.py",
+    "tests/test_rag_multi_relation_spans.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c089_participant_schema.py",
+    "tests/test_c090_wrapper_identity_actor_evidence.py",
+    "tests/test_c097_semantic_name_keys.py",
+    "tests/test_semantic_release_gating.py"
+  ],
+  "cwd": "C:\\t\\c104",
+  "started_at": "2026-08-30T04:13:30+00:00",
+  "finished_at": "2026-08-30T04:14:00+00:00",
+  "duration_seconds": 30.39799059998768,
+  "timeout_seconds": 300.0,
+  "root_pid": 426164,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 432632,
+      "name": "python.exe",
+      "ppid": 426164
+    },
+    {
+      "pid": 433112,
+      "name": "git.exe",
+      "ppid": 432632
+    },
+    {
+      "pid": 432388,
+      "name": "git.exe",
+      "ppid": 432632
+    },
+    {
+      "pid": 429504,
+      "name": "git.exe",
+      "ppid": 432632
+    },
+    {
+      "pid": 432820,
+      "name": "git.exe",
+      "ppid": 432632
+    },
+    {
+      "pid": 424156,
+      "name": "python.exe",
+      "ppid": 428596
+    },
+    {
+      "pid": 428596,
+      "name": "python.exe",
+      "ppid": 432632
+    }
+  ],
+  "descendants_terminated": [
+    424156,
+    428596,
+    429504,
+    432388,
+    432632,
+    432820,
+    433112
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 316220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 393836,
+      "name": "python.exe"
+    },
+    {
+      "pid": 429512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 432584,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c104\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-104\\08-goldreaders.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c104\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c104",
+    "repo_head": "36f773c627fda333b2afe7b1e0fd9294c11d3817",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-104",
+    "token": "C-104:432584:85d1bfa0996660fe",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

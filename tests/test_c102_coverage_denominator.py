@@ -19,6 +19,11 @@ Every test here whose point is a null or a negative result
   * was attacked by mutation before it was reported --
     ``docs/pwml_recovery_sprint/evidence/c102_mutation_attack.log``.
 
+D-083 follow-on 1 landed in test 4: the deep copy `to_dict` takes of
+``coverage_reconciliation`` shipped with no proof, and REV-102's mutation R5
+reverting it went green. Test 4 now asserts identity and the consequence, and
+R5 is registered in the attack set beside M1-M7.
+
 Test 11 also encodes the attack inside the suite: it drives the same real
 coverage block through the same function with the exclusion list emptied, which
 is exactly the pre-change instrument, and pins that raw and accepted then
@@ -189,9 +194,54 @@ def test_4_withheld_terms_remain_in_the_diagnostics(gold, recon):
     assert by_term["SREBF2"]["forbidden_name"] == "SREBF1"
 
     # It survives serialization to the report a human actually reads.
-    serialized = json.dumps(score_run(PINNED_RUN).to_dict())
+    report = score_run(PINNED_RUN)
+    serialized = json.dumps(report.to_dict())
     for term in FORBIDDEN_ON_12782028:
         assert f'"term": "{term}"' in serialized
+
+    # -- D-083 follow-on 1 / REV-102 F7 -------------------------------------
+    # `to_dict` deep-copies this block. A SHALLOW `dict(...)` hands the caller
+    # the live `excluded_terms` list by identity, so a reader mutating the
+    # serialized report reaches back into the scored leg. That fix shipped with
+    # nothing asserting it: REV-102's mutation R5, reverting
+    # `deepcopy(dict(...))` to `dict(...)`, left the whole file GREEN.
+    #
+    # The load-bearing property is IDENTITY, not equality -- `==` holds for a
+    # shallow copy too, which is exactly the vacuous guard F-144 is about. The
+    # stakes are low and stated plainly: a shallow copy cannot produce a wrong
+    # number, and nothing in the tree mutates `to_dict()` output today. This
+    # guards a future caller. R5 is now in the attack set
+    # (`evidence/c102_mutation_attack.py`), so the next reviewer inherits the
+    # mutation instead of re-deriving it.
+    live = next(p for p in report.papers if p.paper_id == "PMC12782028").legs["strict"]
+    # The finding first, THEN its content: this leg really does carry the four
+    # withheld terms, so nothing below can pass over an empty list.
+    assert live.coverage_reconciliation["excluded_count"] == len(FORBIDDEN_ON_12782028)
+    emitted = report.to_dict()
+    leg = next(
+        p["legs"]["strict"] for p in emitted["papers"] if p["paper_id"] == "PMC12782028"
+    )["coverage_reconciliation"]
+
+    # The nested list, and each entry inside it, are FRESH objects. Asserting
+    # on the outer dict would prove nothing -- `dict(...)` copies that much.
+    assert leg["excluded_terms"] is not live.coverage_reconciliation["excluded_terms"]
+    assert leg["excluded_terms"][0] is not live.coverage_reconciliation["excluded_terms"][0]
+
+    # ...and the CONSEQUENCE, which is what the deep copy exists to prevent and
+    # is the better test because it does not depend on the mechanism: mutating
+    # the serialized structure -- in place on one entry, and structurally on the
+    # list -- leaves the scored leg untouched.
+    leg["excluded_terms"][0]["term"] = "CLOBBERED"
+    leg["excluded_terms"].clear()
+    assert {e["term"] for e in live.coverage_reconciliation["excluded_terms"]} == set(
+        FORBIDDEN_ON_12782028
+    )
+    # So the next reader of the same report still finds all four, and guard
+    # rail 3 survives a careless caller as well as a careless scorer.
+    again = json.dumps(report.to_dict())
+    for term in FORBIDDEN_ON_12782028:
+        assert f'"term": "{term}"' in again
+    assert "CLOBBERED" not in again
 
 
 # ---------------------------------------------------------------------------
