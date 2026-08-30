@@ -73,6 +73,8 @@ not observed is reported as *"not observed"*.
 | **F-148** | `product_contract_violation` | A timed-out leg preserves the stop reason and nothing else. **F-092 defect 3 is CLOSED** by the same measurement |
 | **F-149** | audit result, no defect | Both cap tests pin **non-vacuously**. F-142's no-coverage-gap conclusion stands |
 | **F-150** | `gold_data_defect` | Two gold gaps. **Prepared, NOT applied** — needs product-owner authority |
+| **F-151** | `product_contract_violation` | Committing T-107 turned two tests red — `assert 72 == 62` — **in a file no gate runs.** The mutation-attack harness is unrunnable as a result |
+| **F-152** | `product_contract_violation` | C-104's widened guard can abort a green file, because the pre-existing count parse reads all of stdout. Inert before, fatal after. No live exposure |
 
 ### F-147 is the one to be careful with
 
@@ -86,17 +88,56 @@ times** in a file whose length it cites to the character (67,304 — verified).
 **before** the reporting fix, or the reporting fix is a regression dressed as a fix. **The earliest
 unsafe seam is Stage-1 extraction, not the driver.**
 
-## 5. Cards in flight
+## 5. Cards — both MERGED
 
-| Card | Branch / worktree | State |
+| Card | Merge | What it did |
 |---|---|---|
-| **C-104** — D-083's two carried follow-ons | `card/C-104-d083-followons` · `C:/t/c104` | **DISPATCHED.** Test + evidence tooling only; **changes no production line** |
-| **C-105** — F-146, audit patches may not invent an actor role | `card/C-105-audit-actor-evidence` · `C:/t/c105` | **DISPATCHED.** The only production card of this wave |
+| **C-104** | `57e604d` | D-083's two carried follow-ons: prove C-102's deep copy (its revert mutation R5 was green), and abort the split gate on `errors > 0`. **Changes no production line.** REV-104 **APPROVE** |
+| **C-105** | `afb0541` | **F-146 — T-107's Priority-2 defect, closed at the seam that caused it.** An audit patch may not add an actor to a process role it has no evidence for. REV-105 **APPROVE after three rounds** |
 
-**Neither is merged. Both need an independent reviewer on the actual diff before anything lands** —
-merge rule 5, and the Lead never approves its own work. C-105 carries a **mandatory preservation
-case**: a guard that rejects evidenced actor additions as well as unevidenced ones is a new defect,
-not a fix. Check that the reviewer exercised it.
+Post-merge on each: **SMOKE 473 passed** · **gold-readers 456 / 8 / exit 0**, zero survivors.
+
+**C-105 took three correction rounds and the second and third were both worth it.**
+
+* **Round 1** caught what the criteria were written for: the guard implemented **whole-name**
+  matching while citing, as its authority, the repo function that implements a **shared-token**
+  match *because the whole-name rule was measured wrong*. It refused **12 of 29** legitimate cases
+  and **258 of 692** corpus rows, across **four** production callers rather than the one the card
+  named. Fixed; the reviewer's byte-identical battery went **12 refusals → 1**.
+* **Round 3 I authorised deliberately.** `mediat` let the defect class back by paraphrase — a span
+  saying the protein was *inhibited* licensed it as the *catalyst*. The corpus vindicated it:
+  **three distinct committed spans** were doing exactly that.
+
+**The lesson worth carrying:** a guard that refuses *more* looks like the safe direction and is not
+self-evidently safe. C-105's first draft refused a third of legitimate evidenced enzyme attachment
+on three live production passes, and it would have surfaced later as fewer reactions across many
+papers with nothing to attribute it to. **The preservation case is what caught it, and the original
+preservation control passed only because it used a one-character protein name — the single shape a
+whole-name rule always handles.**
+
+## 5a. The one card the next session should charter first
+
+**"Make the sprint's instruments trustworthy."** It is small, it is three related repairs in two
+files, and one of them currently blocks a *mandatory* practice.
+
+1. **F-151** — decide the census pin. **Re-pin to 72 and record why it grew**; do **not** relax to
+   `>=` (see the correction inside F-151 for why — REV-104 talked me out of my own proposal).
+   Until this lands, `evidence/c102_mutation_attack.py` **cannot run at all**, because it asserts a
+   green baseline before mutating — and D-078/F-144 make mutation testing mandatory on every card.
+2. **The same harness violates D-084 in both directions**, measured by REV-104: its
+   `read_text`/`write_text(newline="")` converts all **1673 CRLF → LF**, and `git checkout --` is
+   the only thing that puts them back. Replace with a saved-bytes binary restore, then **run the
+   harness with all seven mutations including C-104's R5** — that is what actually discharges
+   C-104's intent of leaving the next reviewer a *runnable* mutation.
+3. **F-152** — scope the count parse to pytest's summary line.
+
+**Then the C-105 follow-on card**, from REV-105's routed findings: inhibition near-synonyms defeat
+the contra-cue (11 of 12 tested; `reduction of` is worst because it is itself a *catalysis* cue),
+passive-with-agent fires when the agent is not the actor, 17 ordinary English `-ase` words
+over-accept including a plural bypass, transport has no enzyme-noun rule, role `cofactor` refuses,
+`mediat` matches inside *"intermediate"*, and 62 of 692 evidence spans exceed 5,000 characters
+(max 176,375). **All permissive-direction and all strictly better than base**, which accepts every
+one of them unconditionally — so this is improvement work, not a regression to chase.
 
 ## 6. Open, not blocking
 
@@ -142,7 +183,16 @@ the $0.62–$3.70 pre-run estimate. **Any tighter figure would be an estimate an
   believing a null.**
 * **Verify a subagent's load-bearing claims yourself.** The adjudication this wave was excellent and
   every one of its central claims held — but I re-derived each against the artifacts and the live
-  `goldset` API before recording any of them as fact, and that is the standard.
+  `goldset` API before recording any of them as fact, and that is the standard. It cuts the other
+  way too: **REV-105 corrected its author's corpus count upward**, finding a third defect-class span
+  the author had missed, and **REV-104 talked me out of my own F-151 fix**. Neither would have
+  happened if either had been reading a report instead of running the measurement.
+* **Commit the card BEFORE cutting the worktree.** I cut `C:/t/c104` and `C:/t/c105` at `36f773c`
+  and only then wrote and committed the cards, so **neither worktree contained its own charter**.
+  Both implementers read it from the primary checkout and both flagged it. Harmless here; it would
+  not be if a reviewer had to work from the worktree alone.
+* **A guard that refuses MORE is not self-evidently the safe direction.** See § 5. This is the
+  single most transferable thing this wave produced.
 
 ## 9. Peer sessions
 
