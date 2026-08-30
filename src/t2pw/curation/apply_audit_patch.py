@@ -4,6 +4,7 @@ import argparse
 import json
 import logging
 import re
+import unicodedata
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
@@ -1331,39 +1332,78 @@ def _batch_rollback_reason(
 # (_threshold_for_op) with nothing anywhere asking whether any evidence named the
 # proposed actor as an actor.
 #
-# WHY THIS PREDICATE READS THE OP AND NOTHING ELSE. It is a pure function of the
-# patch. That is not an economy, it is the safety property. The measured defect is
-# a protein LEGITIMATELY PRESENT on the reaction as an inhibitor being promoted to
-# that reaction's catalyst, so any guard able to consult the payload can be argued
+# THE MATCHING RULE IS bench.semantic_production._actor_named_in_span's, AND IT IS
+# REPRODUCED HERE RATHER THAN IMPORTED. An actor is named when its name and the
+# span share at least one IDENTIFYING TOKEN (>= 3 characters, not all digits),
+# compared on whole-token boundaries after folding. Not the whole name: the
+# payload's canonical names are not the paper's words, and that function's own
+# docstring records what the whole-name rule costs -- "ALAS2 complex" cites "ALAS2
+# mediates ...", "oxidoreductase (entA)" cites "EntA (2,3-dihydro-...)", and a
+# whole-name rule "demotes five of the 21 legs over that". An earlier draft of this
+# guard implemented the whole-name rule while claiming agreement with that
+# function; measured against the corpus it refused 12 of 29 legitimately evidenced
+# cases and 150 corpus rows that the calibrated rule licenses. The duplication is
+# deliberate: t2pw.bench is the evaluation layer and importing it from
+# t2pw.curation would invert the layering this module's import comment (top of
+# file) exists to protect. tests/test_c105_actor_role_evidence.py pins the two
+# implementations against each other so they cannot drift apart silently.
+#
+# WHERE THIS GUARD IS DELIBERATELY STRICTER, AND WHY. _actor_named_in_span is a
+# NAMING test joining a closed gating set, so it under-reports on purpose and
+# returns "not examined" when a name yields no identifying token. This is an
+# ADMISSION test on an unapplied patch, so it must return a verdict every time. Two
+# differences follow, and neither contradicts that function:
+#   * a name with no identifying token (a one- or two-character symbol, which that
+#     function declines to judge) is matched here on the whole name, whole-token,
+#     and refused when absent -- the closed direction;
+#   * naming is necessary but not sufficient: a role cue must also sit within
+#     _ACTOR_CUE_WINDOW characters of the matched token, because the defect above
+#     is a protein the span DOES name, in the wrong role.
+#
+# WHY THIS PREDICATE READS THE OP AND NOTHING ELSE -- AND WHAT THAT IS WORTH.
+# _should_accept is handed `source_payload`, so this restriction is SELF-IMPOSED,
+# not structural: the payload was available and was not taken. The trade is
+# coverage for a property a reviewer can check from the signature instead of
+# having to trust the body. It is worth making because the measured defect is a
+# protein LEGITIMATELY PRESENT on the reaction as an inhibitor being promoted to
+# that reaction's catalyst, so a guard able to consult the payload can be argued
 # into reading that presence as corroboration -- and would then accept the exact
-# patch this guard exists to refuse. A predicate that cannot see the payload cannot
-# make that mistake, and the property is checkable by reading the signature rather
-# than by trusting the body. It also sidesteps the staleness _should_accept already
-# documents below: `source_payload` is the pre-batch payload, so the indices in
-# `path` stop addressing the rows they name after any earlier removal.
+# patch this guard exists to refuse. It also sidesteps the index staleness
+# _should_accept already documents. The cost is stated in the next paragraph.
 #
-# WHY enzyme_cues.ENZYME_EVIDENCE_CUE_RE IS NOT REUSED, though it is this
-# repository's existing catalysis-cue predicate, sits in a leaf module with no
-# intra-package imports, and is already reachable from here. Its stems are
-# (catalyz|catalys|catalytic|ENZYME|ENZYMATIC|mediated|dependent|ACTIVITY|activat|
-# promot|facilitat), calibrated for a name-based attacher reading PAPER PROSE,
-# where "enzyme" and "activity" are weak but honest signals. The text judged here
-# is not paper prose: it is a model-authored patch justification, written in the
-# payload's own schema vocabulary. BOTH strings at the top of this comment -- the
-# rationale that invented the enzyme, and the inhibitor span it was invented from
-# -- carry "enzyme" within that module's 80-character window of the protein name,
-# so reusing that regex here would admit the very patch this guard refuses. The
-# window discipline is borrowed deliberately; the vocabulary deliberately is not.
-#
-# WHAT THIS GUARD DOES NOT CLAIM. A cue near a name is a NECESSARY condition, never
+# WHAT THIS GUARD DOES NOT COVER. A cue near a name is a NECESSARY condition, never
 # a sufficient one: it cannot prove the biology, only refuse a patch that offers no
-# evidence of the role at all. Scoring the frozen graph is a different seam and
-# already has an owner (bench.semantic_production._check_actor_evidence, F-079).
-# Two adjacent shapes are deliberately out of scope for this one predicate and are
-# named here so a reader knows they were considered: a `replace` of an existing
-# actor row's own `role` field (in-place promotion, where the actor name is not in
-# the op value), and an actor arriving inside a whole-reaction add, which is
-# major-topology territory.
+# evidence of the role at all. Scoring the frozen graph is a different seam with an
+# owner (bench.semantic_production._check_actor_evidence, F-079). Three residual
+# routes to the same defect are open, and are named here because a reader is
+# entitled to know them rather than discover them:
+#   1. `replace /processes/reactions/N/modifiers/M/role` promotes an existing
+#      inhibitor row in place. The actor name is not in the op value, so covering
+#      it needs the payload read this predicate declines. A model refused on the
+#      `add` path can simply take this one -- and the rejection reason names the
+#      role, which tells it so.
+#   2. An actor arriving inside a whole-reaction `add /processes/reactions/-`.
+#      This is NOT protected territory: _is_major_topology_path only matters when
+#      `enforce_major_topology_threshold` is True, which is passed at exactly one
+#      call site (interactive_curator.py:507) and defaults False at every
+#      automated caller, so such an add is accepted today.
+#   3. A rename, `replace /processes/reactions/N/modifiers/M/entity`, which swaps
+#      one actor identity for another inside an existing row. Deliberately out of
+#      scope: pathway_curator's first documented job is repairing entity name
+#      mismatches, and guarding a rename here would block it.
+#
+# WHY enzyme_cues.ENZYME_EVIDENCE_CUE_RE IS NOT REUSED AS THE CUE SET, though it is
+# this repository's existing catalysis-cue predicate and sits in a leaf module this
+# one could import. Its stems are (catalyz|catalys|catalytic|ENZYME|ENZYMATIC|
+# mediated|dependent|ACTIVITY|activat|promot|facilitat), calibrated for a name-based
+# attacher reading PAPER PROSE, where "enzyme" and "activity" are weak but honest
+# signals. Some of the text judged here is not paper prose: _normalize_patch_op
+# promotes a model's `reason` into `evidence` when no separate evidence field was
+# supplied, so a patch JUSTIFICATION -- written in the payload's own schema
+# vocabulary -- arrives as a span. Both strings behind the defect above carry
+# "enzyme" within that module's 80-character window of the protein name, so reusing
+# that regex would admit the very patch this guard refuses. The window discipline is
+# borrowed deliberately; the bare schema nouns are not.
 # ---------------------------------------------------------------------------
 
 # Stable, greppable prefix, matching the convention
@@ -1372,16 +1412,14 @@ def _batch_rollback_reason(
 UNEVIDENCED_ACTOR_ROLE_REASON_PREFIX = "unevidenced_actor_role"
 
 # The actor-role containers, on the three process buckets _is_core_semantics_path
-# already treats as core. Matches the container itself, one element of it
-# (an index or the "-" append token), and the actor-name field of one element --
-# the three shapes a patch can use to introduce an actor. It deliberately does NOT
-# match /processes/interactions/, which has no catalyst role, nor a deeper field
-# such as .../enzymes/0/role.
+# already treats as core. Matches the container itself and one element of it (an
+# index or the "-" append token) -- the shapes that INTRODUCE an actor. It
+# deliberately matches no deeper field: see residual route 3 above for the rename,
+# and route 1 for the role flip.
 _ACTOR_ROLE_PATH_RE = re.compile(
     r"^/processes/(?:reactions|transports|reaction_coupled_transports)/\d+"
     r"/(?P<container>enzymes|modifiers|modifiers_or_enzymes|catalysts|transporters|cargo|cargo_complex)"
-    r"(?:/(?:\d+|-))?"
-    r"(?:/(?:entity|protein|protein_name|protein_complex|enzyme|modifier|name))?$"
+    r"(?:/(?:\d+|-))?$"
 )
 
 # Containers whose rows ARE catalysts by construction, so no `role` field can make
@@ -1404,36 +1442,73 @@ _ROLE_FAMILY_BY_ROLE = {
     "transporter": "transport",
 }
 
-# Role-predicating vocabulary, matched against the registry-normalized span (lower
-# case, hyphens and punctuation removed), so every pattern here is written in that
-# spelling: "up-regulated" reaches this regex as "upregulated".
+# Enzyme-family noun suffixes, as an ALLOWLIST of real EC-class stems rather than a
+# bare "-ase" pattern. "increase", "disease", "release" and "database" all end in
+# "ase"; none of these stems does.
+# Ordinary English words ending in "ase". The general rule below is bounded by a
+# CLOSED stoplist rather than by trying to enumerate enzymology: an unlisted
+# English word over-accepts a CUE, which costs little on its own because the actor
+# name must independently match, whereas an unlisted ENZYME under-accepts and
+# refuses a legitimate repair -- the failure REV-105 measured at 12 of 29 cases.
+_NON_ENZYME_ASE_WORDS = (
+    "disease", "diseases", "increase", "increases", "increased", "decrease",
+    "decreases", "decreased", "release", "releases", "released", "database",
+    "databases", "purchase", "phrase", "phrases", "chase", "erase", "cease",
+    "ceases", "ceased", "lease", "please", "case", "cases", "base", "bases",
+    "phase", "phases", "vase", "showcase", "staircase", "briefcase",
+)
+_ENZYME_NOUN_RE_SRC = (
+    # The left boundary is load-bearing: without it the stoplist is bypassed by
+    # starting the match one character in, and "database" matches as "atabase".
+    r"(?:(?<![a-z])(?!(?:" + "|".join(_NON_ENZYME_ASE_WORDS) + r")(?![a-z]))"
+    r"[a-z]{3,}ases?(?![a-z]))"
+)
+
+# Role-predicating vocabulary, matched against the folded span (lower case, every
+# separator run collapsed to a single space), so every pattern here is written in
+# that spelling: "NDM-1-catalyzed" reaches this regex as "ndm 1 catalyzed" and
+# "up-regulated" as "up regulated".
 #
-# The catalysis set is the vocabulary of enzyme-catalysed transformation -- the
-# verb "catalyse" itself, the six EC classes' reaction verbs, and the -ase family
-# suffixes. Process words that name an event without predicating an agent
-# ("decomposes", "forms", "occurs", "is produced") are NOT cues: they describe
-# something happening, not a protein doing it, and a reaction's own name is full of
-# them. Nouns of the schema ("enzyme", "activity", "modifier") are not cues either,
-# for the reason set out in the comment above.
+# The catalysis set is the vocabulary of enzyme-catalysed transformation: the verb
+# "catalyse", the EC classes' reaction verbs, the enzyme-family nouns above, the
+# passive-with-agent forms, and the periphrastic constructions a paper uses instead
+# of a verb ("is the enzyme responsible for", "acts on", "breaks down"). Process
+# words that name an event without predicating an agent ("decomposes", "forms",
+# "occurs") are NOT cues: they describe something happening, not a protein doing
+# it, and a reaction's own name is full of them. The bare schema nouns "enzyme",
+# "enzymatic" and "activity" are not cues either, for the reason in the comment
+# above -- a promoted rationale is written in exactly those words.
 _ROLE_CUE_RES = {
     "catalysis": re.compile(
-        r"catalys|catalyz|catalytic"
-        r"|hydroly|cleav|degrad|metabolis|metaboliz"
+        r"catalys|catalyz|catalytic|biocatalys"
+        r"|hydroly|cleav|degrad|metabolis|metaboliz|mediat"
         r"|oxidis|oxidiz|dehydrogenat|hydroxylat|oxygenat"
-        r"|reductas|reduces|reducing|reduction of"
+        r"|reduces|reducing|reduction of"
         r"|phosphorylat|methylat|acetylat|acylat|glycosylat|sulfonat|adenylat|prenylat"
-        r"|transaminat|aminotransfer|deaminat|decarboxylat|carboxylat|dehydrat"
+        r"|transaminat|deaminat|decarboxylat|carboxylat|dehydrat"
         r"|isomeris|isomeriz|epimeris|epimeriz|racemis|racemiz"
-        r"|ligat|synthesis|synthesiz|synthetas|synthas"
-        r"|hydrolas|transferas|oxidoreductas|isomeras|ligas|lyase|mutase|kinase"
-        r"|peptidas|esteras|protease|polymeras|reductase"
-        r"|converts|converting|converted by|conversion of"
+        r"|ligat|synthesis|synthesiz"
+        r"|converts|converting|conversion of"
+        # periphrastic and agentive-noun constructions
+        r"|breaks down|break down|broken down|breakdown of"
+        r"|acts on|act on|acting on|acts upon"
+        r"|is the enzyme|is the catalyst|enzyme responsible|catalyst responsible"
+        r"|enzyme for|catalyst for|enzyme of this|catalyst of this"
+        r"|(?:removes|adds|attaches|transfers|incorporates)\b[^.]{0,40}"
+        r"\b(?:group|residue|moiety|molecule|atom|phosphate|acyl|methyl|sugar)"
+        r"|(?:removal|addition|transfer|incorporation) of\b[^.]{0,40}"
+        r"\b(?:group|residue|moiety|molecule|atom|phosphate|acyl|methyl|sugar)"
+        # passive with a named agent: "... converted to X by Y"
+        r"|(?:converted|catalyzed|catalysed|hydrolyzed|hydrolysed|cleaved|oxidized"
+        r"|oxidised|phosphorylated|methylated|acetylated|degraded|metabolized"
+        r"|metabolised|synthesized|synthesised|produced|formed)\b[^.]{0,80}\bby\b"
+        r"|" + _ENZYME_NOUN_RE_SRC
     ),
     "activation": re.compile(
-        r"activat|stimulat|upregulat|enhanc|induc|potentiat|agonis|promot"
+        r"activat|stimulat|upregulat|up regulat|enhanc|induc|potentiat|agonis|promot"
     ),
     "inhibition": re.compile(
-        r"inhibit|suppress|repress|downregulat|blocks|blocked|blocking"
+        r"inhibit|suppress|repress|downregulat|down regulat|blocks|blocked|blocking"
         r"|antagonis|inactivat|abolish|attenuat"
     ),
     "transport": re.compile(
@@ -1451,13 +1526,51 @@ _ANY_ROLE_CUE_RE = re.compile(
     "|".join(pattern.pattern for pattern in _ROLE_CUE_RES.values())
 )
 
-# The +/-80 character window enzyme_cues.cue_near_name scans around a name. Borrowed
-# so the two agree on how close a cue has to sit to count as being about the actor.
+# The +/-80 character window enzyme_cues.cue_near_name scans around a name,
+# measured here from the MATCHED TOKEN rather than from the whole name, since the
+# rule above matches on one shared token.
 _ACTOR_CUE_WINDOW = 80
+
+# bench.semantic_production._MIN_IDENTIFYING_TOKEN. A token shorter than this
+# cannot identify a protein on its own ("of", "n", "a" fall out of a canonical name
+# like "UDP-N-acetylglucosamine acyltransferase").
+_MIN_IDENTIFYING_TOKEN = 3
 
 # The evidence-bearing fields of an actor row, spelled as audit_json_llm._evidence_strings
 # spells them, so a row that carries its own quote is read the same way on both sides.
 _ACTOR_ROW_EVIDENCE_KEYS = ("evidence", "evidence_quote", "source_evidence", "source_text")
+
+_MATCH_FOLD_RE = re.compile(r"[^a-z0-9]+")
+
+
+def _match_fold(value: Any) -> str:
+    """bench.goldset.normalize_name's folding, for the token comparison above.
+
+    The one property that matters and that _registry_normalize does NOT have:
+    every run of non-alphanumerics becomes a SINGLE SPACE rather than being
+    deleted. Deleting them welds words together -- "NDM-1-catalyzed hydrolysis"
+    folds to "ndm1catalyzedhydrolysis" under the registry rule, where no token
+    boundary can be found and both the name and the cue become invisible. Here it
+    folds to "ndm 1 catalyzed hydrolysis".
+    """
+
+    text = unicodedata.normalize("NFKC", str(value if value is not None else "")).casefold()
+    return _MATCH_FOLD_RE.sub(" ", text).strip()
+
+
+def _identifying_match_tokens(name: str) -> List[str]:
+    """The tokens of ``name`` that can identify an actor, folded.
+
+    bench.semantic_production._identifying_tokens, reproduced: at least
+    _MIN_IDENTIFYING_TOKEN characters and not a bare number, so "UDP-N-
+    acetylglucosamine acyltransferase" identifies on {udp, acetylglucosamine,
+    acyltransferase} and the stray "n" is dropped.
+    """
+
+    return [
+        token for token in _match_fold(name).split(" ")
+        if len(token) >= _MIN_IDENTIFYING_TOKEN and not token.isdigit()
+    ]
 
 
 def _actor_role_target(path: str) -> str:
@@ -1504,7 +1617,7 @@ def _patch_evidence_spans(op: Dict[str, Any], value: Any) -> List[str]:
 
     The op's own ``evidence`` field plus, when the proposed actor row carries its
     own quote, that row's evidence fields. Nothing is read from the payload: see the
-    comment above for why that restriction is the point rather than a shortcut.
+    comment above for why that restriction is taken and what it costs.
 
     ``_normalize_patch_op`` promotes ``reason`` into ``evidence`` when the model
     supplied no ``evidence`` of its own, so a bare rationale does arrive here as a
@@ -1513,9 +1626,9 @@ def _patch_evidence_spans(op: Dict[str, Any], value: Any) -> List[str]:
     """
 
     spans: List[str] = []
-    for candidate in (op.get("evidence"),):
-        if isinstance(candidate, str) and candidate.strip():
-            spans.append(candidate)
+    candidate = op.get("evidence")
+    if isinstance(candidate, str) and candidate.strip():
+        spans.append(candidate)
     if isinstance(value, dict):
         for key in _ACTOR_ROW_EVIDENCE_KEYS:
             candidate = value.get(key)
@@ -1527,43 +1640,45 @@ def _patch_evidence_spans(op: Dict[str, Any], value: Any) -> List[str]:
 def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
     """Does this span name ``actor`` performing a ``family`` role?
 
-    Whole-token containment after registry normalization -- the same comparison
-    discipline bench.semantic_production._actor_named_in_span uses, so "LpxA" does
-    not match inside "LpxA2" and no substring, per-token union or edit distance is
-    involved -- and then a role cue within :data:`_ACTOR_CUE_WINDOW` characters of
-    that occurrence.
+    Naming follows _actor_named_in_span: one shared identifying token, whole-token
+    boundaries, after :func:`_match_fold`. Where the name yields no identifying
+    token -- the case that function declines to judge -- the whole folded name is
+    required instead, so a one- or two-character symbol is still located rather than
+    waved through. A name that folds away entirely cannot be located at all, and the
+    span does not license it: the patch is refused and the payload is left exactly
+    as the gate last accepted it.
 
-    A name carrying no letter at all -- "2", "+" -- cannot be located in prose, so
-    it is treated as unlocatable and the span does not license it. That is the
-    closed direction: the patch is refused and the payload is left exactly as the
-    gate last accepted it. There is deliberately no minimum LENGTH beyond that. A
-    one-letter protein symbol is a real identifier (complement C, the P protein of
-    the paramyxoviruses), and the boundary assertions below already do the work a
-    length floor would be standing in for: "p" matches the standalone token and
-    never the "p" inside another word.
+    Then the role test: a cue for ``family`` within :data:`_ACTOR_CUE_WINDOW`
+    characters of the matched token. That is what separates this from a naming
+    check -- the defect this guard exists for is a protein its span DOES name, in
+    the wrong role.
     """
 
-    haystack = _registry_normalize(span)
-    needle = _registry_normalize(actor)
-    if not needle or not re.search(r"[a-z]", needle):
-        return False
+    haystack = _match_fold(span)
     if not haystack:
         return False
+    needles = _identifying_match_tokens(actor)
+    if not needles:
+        whole = _match_fold(actor)
+        needles = [whole] if whole else []
+    if not needles:
+        return False
     cue = _ROLE_CUE_RES.get(family, _ANY_ROLE_CUE_RE)
-    for match in re.finditer(rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])", haystack):
-        start = max(0, match.start() - _ACTOR_CUE_WINDOW)
-        end = min(len(haystack), match.end() + _ACTOR_CUE_WINDOW)
-        if cue.search(haystack[start:end]):
-            return True
+    for needle in needles:
+        for match in re.finditer(rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])", haystack):
+            start = max(0, match.start() - _ACTOR_CUE_WINDOW)
+            end = min(len(haystack), match.end() + _ACTOR_CUE_WINDOW)
+            if cue.search(haystack[start:end]):
+                return True
     return False
 
 
 def _unevidenced_actor_role_rejection(op: Dict[str, Any]) -> Optional[str]:
     """Why this patch may not introduce the actor role it proposes, or ``None``.
 
-    Pure in ``op``. Takes no payload argument, by design -- see the block comment
-    above -- so "the entity is already in this reaction" is not merely rejected as
-    evidence, it is unreachable as evidence.
+    Pure in ``op`` -- self-imposed, see the block comment above -- so "the entity is
+    already in this reaction" is not merely rejected as evidence, it is unreachable
+    as evidence.
     """
 
     action = str(op.get("op", "")).lower()

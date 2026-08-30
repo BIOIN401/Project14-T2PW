@@ -15,6 +15,11 @@ does, rather than erroring on a name that does not exist yet.
 
 The fixture is generic on purpose. ``P``, ``A`` and ``B`` carry no paper, no
 protein and no gold value: the rule under test is about the shape of a patch.
+
+Sections 1-5 are the G9 behavioural proof and import no new symbol. Sections 6-8
+were added by REV-105 correction round 1: section 6 is the preservation battery the
+first draft lacked, and sections 7-8 import private symbols deliberately, so they
+ERROR rather than fail at base -- they pin an invariant, they are not the base proof.
 """
 
 from __future__ import annotations
@@ -329,3 +334,191 @@ def test_confidence_rejection_keeps_its_own_reason() -> None:
     op = dict(_enzyme_add(STRUCTURAL_RATIONALE), confidence=0.10)
     _result, report = apply_patch_with_policy(payload, [op], stage="audit")
     assert report["rejected"][0]["reason"].startswith("Confidence "), report
+
+
+# ---------------------------------------------------------------------------
+# 6. REV-105 / B1. The preservation battery the first draft did not have.
+#
+# The original preservation control used the one-character name "P" beside the
+# word "catalyses" -- the single shape a whole-name rule always handles, which is
+# exactly why it passed while the class it stood for was broken. Every case below
+# is a shape that whole-name matching refuses and the repository's calibrated rule
+# licenses. Four are lifted from committed payloads or from
+# bench.semantic_production._actor_named_in_span's own docstring.
+# ---------------------------------------------------------------------------
+
+
+def _enzyme_add_named(name: str, evidence: str) -> Dict[str, Any]:
+    return {
+        "op": "add",
+        "path": "/processes/reactions/0/enzymes/-",
+        "value": name,
+        "confidence": 1.0,
+        "evidence": evidence,
+    }
+
+
+#: (label, registry-spelled actor name, evidence span). Each MUST be accepted.
+LICENSED_CASES = [
+    # A wrapper name whose span uses the bare paper symbol. This is the example
+    # _actor_named_in_span's docstring gives, and the rule it was calibrated on.
+    ("wrapper name, symbol span", "ALAS2 complex",
+     "ALAS2 mediates the condensation of glycine and succinyl-CoA"),
+    ("wrapper name, symbol span 2", "MenD complex",
+     "MenD catalyses the first irreversible step of menaquinone biosynthesis"),
+    # A registry-spelled multi-token name whose span names it beside the symbol.
+    ("multi-token registry name", "UDP-N-acetylglucosamine acyltransferase",
+     "LpxA, the UDP-N-acetylglucosamine acyltransferase, catalyzes the reversible acylation"),
+    ("DB name in parentheses", "oxidoreductase (entA)",
+     "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase) oxidises the substrate"),
+    # A hyphenated adjectival cue. Folding must map the separator to a space, or
+    # "X-catalyzed" welds into one token and both name and cue vanish.
+    ("hyphenated adjectival cue", "NDM-1",
+     "NDM-1-catalyzed hydrolysis of the beta-lactam ring"),
+    # Passive voice with a named agent -- the paper's usual construction.
+    ("passive with agent", "NDM-1",
+     "the beta-lactam ring is converted to the open form by NDM-1"),
+    ("passive with agent 2", "Serine hydroxymethyltransferase, mitochondrial",
+     "the reaction is catalyzed by serine hydroxymethyltransferase"),
+    # Periphrastic constructions that carry no single catalysis verb.
+    ("is the enzyme responsible for", "LpxC",
+     "LpxC is the enzyme responsible for the deacetylation step"),
+    ("breaks down", "PptA", "PptA breaks down the phosphonate backbone"),
+    ("acts on", "EntB", "EntB acts on the aryl carrier domain"),
+    # Both lifted from committed runs_verify payloads, and both were refused by the
+    # first widening: the agent trails the product list by more than the original
+    # 40-character bound, and "isochorismatase" is not an EC stem anyone enumerates.
+    ("passive, agent after the products", "EntB",
+     "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate "
+     "by EntB isochorismatase activity"),
+    ("group transfer named as residues", "KDO transferase",
+     "WaaA adds a number of Kdo residues"),
+]
+
+
+@pytest.mark.parametrize(
+    "label,name,evidence", LICENSED_CASES, ids=[case[0] for case in LICENSED_CASES]
+)
+def test_evidenced_actor_adds_survive_the_guard(label: str, name: str, evidence: str) -> None:
+    payload = _payload()
+    payload["entities"]["proteins"] = [{"name": name}]
+    result, report = apply_patch_with_policy(
+        payload, [_enzyme_add_named(name, evidence)], stage="audit"
+    )
+    assert report["summary"]["accepted_count"] == 1, (label, report["rejected"])
+    assert _reaction(result)["enzymes"] == [name], label
+
+
+#: Shapes that must STILL be refused after the widening. The first two are the
+#: measured defect; the last two are the lexical traps the widening could have
+#: opened.
+REFUSED_CASES = [
+    ("the structural-consistency rationale", "NDM-1", STRUCTURAL_RATIONALE.replace("P ", "NDM-1 ")),
+    ("the inhibitor span it argued from", "NDM-1",
+     "PSA significantly inhibited NDM-1 enzyme activity"),
+    # F-079: EntE is a SUBSTRING of enterobactin. Whole-token boundaries only.
+    ("substring of a compound name", "EntE",
+     "Enterobactin is produced by a TolC-dependent process"),
+    # "disease", "increase", "release" and "database" all end in "ase"; the
+    # enzyme-noun cue is an allowlist of EC stems, not a bare -ase pattern.
+    ("-ase words that are not enzymes", "LpxA",
+     "LpxA was noted while the incidence of disease did not increase after release of the database"),
+]
+
+
+@pytest.mark.parametrize(
+    "label,name,evidence", REFUSED_CASES, ids=[case[0] for case in REFUSED_CASES]
+)
+def test_unlicensed_actor_adds_are_still_refused(label: str, name: str, evidence: str) -> None:
+    payload = _payload()
+    payload["entities"]["proteins"] = [{"name": name}]
+    result, report = apply_patch_with_policy(
+        payload, [_enzyme_add_named(name, evidence)], stage="audit"
+    )
+    assert report["summary"]["accepted_count"] == 0, (label, report)
+    assert report["rejected"][0]["reason"].startswith(REASON_PREFIX), label
+    assert _reaction(result)["enzymes"] == [], label
+
+
+# ---------------------------------------------------------------------------
+# 7. The naming half must not drift from the rule it claims to reproduce.
+# ---------------------------------------------------------------------------
+
+
+def test_naming_rule_reproduces_the_calibrated_bench_rule() -> None:
+    """The guard's naming half equals bench.semantic_production._actor_named_in_span.
+
+    The guard cannot import that module -- t2pw.bench is the evaluation layer and
+    t2pw.curation must not depend on it -- so the rule is duplicated. A test may
+    import both, and this one pins them together: wherever the bench rule returns a
+    verdict, the local token rule must return the same one. Without this the two
+    copies drift and the docstring's claim of agreement rots, which is exactly what
+    went wrong in the first draft of this guard.
+    """
+
+    from t2pw.bench.semantic_production import _actor_named_in_span
+    from t2pw.curation.apply_audit_patch import _identifying_match_tokens, _match_fold
+
+    def names_locally(name: str, span: str) -> bool:
+        wanted = set(_identifying_match_tokens(name))
+        seen = {tok for tok in _match_fold(span).split(" ") if tok}
+        return bool(wanted & seen)
+
+    compared = 0
+    for _label, name, span in LICENSED_CASES + REFUSED_CASES:
+        verdict = _actor_named_in_span(name, [span])
+        if verdict is None:
+            continue
+        compared += 1
+        assert names_locally(name, span) is verdict, (name, span, verdict)
+    assert compared >= 12, f"only {compared} cases carried a bench verdict"
+
+
+def test_guard_is_stricter_than_naming_alone_and_that_is_the_point() -> None:
+    """Naming is necessary, not sufficient -- the difference the defect turns on.
+
+    The bench rule says the defect's spans DO name the protein, and it is right:
+    they do. The guard still refuses them, because neither span names it performing
+    the role being added. Asserting this keeps the two rules' relationship explicit
+    rather than letting a future reader read "reproduces the bench rule" as "equals
+    the bench rule".
+    """
+
+    from t2pw.bench.semantic_production import _actor_named_in_span
+
+    span = "PSA significantly inhibited NDM-1 enzyme activity"
+    assert _actor_named_in_span("NDM-1", [span]) is True
+
+    payload = _payload()
+    payload["entities"]["proteins"] = [{"name": "NDM-1"}]
+    _result, report = apply_patch_with_policy(
+        payload, [_enzyme_add_named("NDM-1", span)], stage="audit"
+    )
+    assert report["summary"]["accepted_count"] == 0, report
+    assert "catalysis" in report["rejected"][0]["reason"]
+
+
+# ---------------------------------------------------------------------------
+# 8. C5 -- a rename is not an actor introduction and is not guarded here.
+# ---------------------------------------------------------------------------
+
+
+def test_renaming_an_existing_actor_row_is_not_guarded() -> None:
+    """`replace .../modifiers/0/entity` swaps an identity inside an existing row.
+
+    Out of scope by decision, not by oversight: pathway_curator's first documented
+    job is repairing entity name mismatches, and guarding a rename here would block
+    it. Recorded as residual route 3 in the module comment.
+    """
+
+    payload = _payload()
+    op = {
+        "op": "replace",
+        "path": "/processes/reactions/0/modifiers/0/entity",
+        "value": "P (corrected spelling)",
+        "confidence": 0.9,
+        "evidence": "the registry spells this protein differently",
+    }
+    _result, report = apply_patch_with_policy(payload, [op], stage="audit")
+    reasons = [str(entry["reason"]) for entry in report["rejected"]]
+    assert not any(reason.startswith(REASON_PREFIX) for reason in reasons), reasons

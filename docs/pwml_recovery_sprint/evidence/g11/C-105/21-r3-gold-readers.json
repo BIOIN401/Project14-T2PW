@@ -1,0 +1,143 @@
+{
+  "label": "c105-r3-gold-readers",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/btc105/r3gold",
+    "tests/test_protein_export_policy.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c077_stage0_conflict_disposition.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c085_priority2_honesty.py",
+    "tests/test_c088_extracted_not_serialized_disposition.py",
+    "tests/test_cofactor_policy.py",
+    "tests/test_rag_multi_relation_spans.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c089_participant_schema.py",
+    "tests/test_c090_wrapper_identity_actor_evidence.py",
+    "tests/test_c097_semantic_name_keys.py",
+    "tests/test_semantic_release_gating.py"
+  ],
+  "cwd": "C:\\t\\c105",
+  "started_at": "2026-08-30T05:23:27+00:00",
+  "finished_at": "2026-08-30T05:23:57+00:00",
+  "duration_seconds": 30.43052729999181,
+  "timeout_seconds": 900.0,
+  "root_pid": 472020,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 470856,
+      "name": "python.exe",
+      "ppid": 472020
+    },
+    {
+      "pid": 468976,
+      "name": "git.exe",
+      "ppid": 470856
+    },
+    {
+      "pid": 467584,
+      "name": "git.exe",
+      "ppid": 470856
+    },
+    {
+      "pid": 466960,
+      "name": "git.exe",
+      "ppid": 470856
+    },
+    {
+      "pid": 471324,
+      "name": "git.exe",
+      "ppid": 470856
+    },
+    {
+      "pid": 472300,
+      "name": "python.exe",
+      "ppid": 470856
+    },
+    {
+      "pid": 472316,
+      "name": "python.exe",
+      "ppid": 472300
+    }
+  ],
+  "descendants_terminated": [
+    466960,
+    467584,
+    468976,
+    470856,
+    471324,
+    472300,
+    472316
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 425268,
+      "name": "python.exe"
+    },
+    {
+      "pid": 436312,
+      "name": "python.exe"
+    },
+    {
+      "pid": 450756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 468720,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c105\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-105\\21-r3-gold-readers.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c105\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c105",
+    "repo_head": "28d84437b3e71db54e4ff38eb07a51c423672b8b",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-105",
+    "token": "C-105:450756:6b510e2e369ef6fd",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
