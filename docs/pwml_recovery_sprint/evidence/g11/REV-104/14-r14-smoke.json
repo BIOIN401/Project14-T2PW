@@ -1,0 +1,157 @@
+{
+  "label": "rev104-r14-smoke",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/rev104tip",
+    "-q",
+    "--no-header",
+    "-rf",
+    "--basetemp=C:/t/btrev104/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:/t/rev104tip",
+  "started_at": "2026-08-30T04:35:58+00:00",
+  "finished_at": "2026-08-30T04:36:34+00:00",
+  "duration_seconds": 36.781690600008005,
+  "timeout_seconds": 420.0,
+  "root_pid": 445468,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 447136,
+      "name": "python.exe",
+      "ppid": 445468
+    },
+    {
+      "pid": 442556,
+      "name": "python.exe",
+      "ppid": 447136
+    },
+    {
+      "pid": 444576,
+      "name": "python.exe",
+      "ppid": 442556
+    },
+    {
+      "pid": 444044,
+      "name": "python.exe",
+      "ppid": 447136
+    },
+    {
+      "pid": 447964,
+      "name": "python.exe",
+      "ppid": 444044
+    },
+    {
+      "pid": 438888,
+      "name": "python.exe",
+      "ppid": 447832
+    },
+    {
+      "pid": 447832,
+      "name": "python.exe",
+      "ppid": 447136
+    },
+    {
+      "pid": 445776,
+      "name": "python.exe",
+      "ppid": 448404
+    },
+    {
+      "pid": 448404,
+      "name": "python.exe",
+      "ppid": 447136
+    }
+  ],
+  "descendants_terminated": [
+    438888,
+    442556,
+    444044,
+    444576,
+    445776,
+    447136,
+    447832,
+    447964,
+    448404
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 425268,
+      "name": "python.exe"
+    },
+    {
+      "pid": 436312,
+      "name": "python.exe"
+    },
+    {
+      "pid": 439344,
+      "name": "python.exe"
+    },
+    {
+      "pid": 447296,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-104\\14-r14-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev104tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev104tip",
+    "repo_head": "9b31e4285e0ea5c768d499bf126d7b50f4e9bb9e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-104",
+    "token": "REV-104:439344:666eeb6f2904b2cf",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
