@@ -8643,3 +8643,85 @@ always handles, which is why it passed while the class it stood for was broken.*
 
 **Review-mandated work never charges a ceiling** (D-076 A1, D-082). A third round would need
 explicit authority.
+
+---
+
+## ORCH-716 — C-105 MERGED. T-107's Priority-2 defect is closed at the seam that caused it.
+
+**Merged `afb0541` with `--no-ff`**, three commits (`28d8443` → `30d46d9` → `29abe85`).
+**REV-105 APPROVE after three rounds**, 47 G11 reports, every number reproduced independently by
+a reviewer that had no edit tools.
+
+Post-merge: **SMOKE 473 passed** · **gold-readers 456 passed / 8 skipped / exit 0**, both zero
+survivors, lock acquired and released.
+
+| Merge gate | Result |
+|---|---|
+| 1 dependency merged | none |
+| 2 diff within boundary | ✔ `apply_audit_patch.py`, its new test, G11 reports — nothing else |
+| 3 focused tests | ✔ **35 passed** at tip |
+| 4 existing affected tests | ✔ affected seam 13 files **145 passed**; Chunk C **109**; both gates exact |
+| 5 independent review of the actual diff | ✔ **APPROVE**, three rounds, adversarial throughout |
+| 6 no biological gate weakened | ✔ **441 added, 0 removed.** It *strengthens* a gate |
+| 7 preserves `review_required` | ✔ B6: a refused row survives verbatim, payload **byte-identical**, `committed: true`, no `diagnostic_only` |
+| 8 no exporter repairs biology after freeze | n/a — this seam is pre-freeze |
+| 9 G9 behavioural base failure | ✔ 16 failed at base → 35 passed at tip, on `assert 1 == 0` over `accepted_count` |
+| 10 SMOKE after merge | ✔ **473 passed** |
+| 11 test-process lifecycle | ✔ every job zero survivors, cleanup success |
+
+**B9, deterministic half:** all 17 committed `PMC12452463` / `PMC12180156` strict artifacts re-score
+to digest `f90111274f84dff6…` at base **and** tip. **No committed leg moves.** The fresh-run half is
+honestly unmeasured — it needs live LLM spend and is recorded as a prediction to check before the
+next T-run, not as a result.
+
+### What the three rounds actually bought
+
+**Round 1 caught the thing the criteria were written for.** The guard implemented **whole-name**
+matching while citing, as its authority, `_actor_named_in_span` — which implements a **shared-token**
+match, and whose own docstring says a whole-name rule *"demotes five of the 21 legs"*. It refused
+**12 of 29** legitimate evidenced cases and **258 of 692** real corpus rows on lexical artefacts,
+across **four** production callers, not the one the card named. Fixed by adopting the calibrated
+rule and pinning the two implementations against each other; the reviewer's **byte-identical**
+battery went **12 refusals → 1**, and the whole-name bucket **150 → 0**.
+
+**Round 3 I authorised deliberately, and the corpus vindicated it.** `mediat` in the catalysis
+family let the defect class back in by paraphrase — a span saying the protein was *inhibited*
+licensed it as the reaction's *catalyst*. Not synthetic: the reviewer's A/B found **three distinct
+committed spans** doing exactly that, one more than the author reported —
+
+* `EntB` ← *"2,3-DHB is a **competitive inhibitor** of apo-EntB isochorismatase activity"*
+* `ALAS2 complex` and bare `ALAS2` ← *"**inhibiting** the translation of erythroid
+  δ-aminolevulinic acid synthase (ALAS2), a key enzyme"*
+
+The fourth newly-refused span is collateral on a 140 KB discussion section where `mediat` matched
+inside *"intermediate"* and `suppress` inside *"suppressor mutations"* — **two false positives
+cancelling**, right outcome for the wrong reason, quantified at **0 of 397** accepted rows relying
+on that stem alone.
+
+### Routed to a follow-on card — not fixed, and deliberately so
+
+All permissive-direction, **all strictly better than base, which accepts every one unconditionally
+on confidence alone**:
+
+1. **Inhibition near-synonyms defeat the contra-cue** — 11 of 12 tested (`blockade`, `impairment`,
+   `disruption`, `reduction`, `loss`, `silencing`, `sequestration`, `depletion`, `ablation`,
+   `interference`, `quenching`). `reduction of` is worst: it is itself a *catalysis* cue.
+2. Passive-with-agent fires when the agent is not the actor.
+3. 17 ordinary English `-ase` words over-accept, including a plural bypass
+   (`purchases`, `showcases`, `staircases` have no stoplist entry).
+4. Transport family has no enzyme-noun rule, so `flippase MsbA` refuses.
+5. Role `cofactor` refuses.
+6. `mediat` matches inside *"intermediate"*; anchor it.
+7. **Pin scope**, recorded in the pin's own docstring: it binds `_identifying_match_tokens` and
+   `_match_fold` but **never calls `_span_licenses_actor`**, so a substring regression in the
+   consumer leaves it green — the F-079 EntE case is what catches that. A future reader is told not
+   to over-trust it.
+
+Also for that card: **62 of 692 spans exceed 5,000 characters, max 176,375.** Oversized
+actor-evidence spans are upstream of C-105 and outside its boundary.
+
+### The reviewer corrected its own measurements twice, and kept both
+
+A `FAILED (\S+)` regex split a parametrized test id and reported a mutation as 3 reds instead of 1;
+and a first Pgp diagnosis matched the wrong row. **Both preserved beside their corrections**, along
+with two staging slots that produced no artifact. That is the practice working.
