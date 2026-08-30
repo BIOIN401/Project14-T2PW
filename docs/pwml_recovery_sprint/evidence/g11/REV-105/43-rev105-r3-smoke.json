@@ -1,0 +1,150 @@
+{
+  "label": "rev105-r3-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--no-header",
+    "-p",
+    "no:randomly",
+    "--basetemp=C:/t/btrev105/r3smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:/t/rev105r3",
+  "started_at": "2026-08-30T06:00:59+00:00",
+  "finished_at": "2026-08-30T06:01:36+00:00",
+  "duration_seconds": 36.87984900000447,
+  "timeout_seconds": 900.0,
+  "root_pid": 489304,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 489336,
+      "name": "python.exe",
+      "ppid": 489304
+    },
+    {
+      "pid": 489140,
+      "name": "python.exe",
+      "ppid": 489336
+    },
+    {
+      "pid": 489436,
+      "name": "python.exe",
+      "ppid": 489336
+    },
+    {
+      "pid": 489300,
+      "name": "python.exe",
+      "ppid": 489436
+    },
+    {
+      "pid": 489856,
+      "name": "python.exe",
+      "ppid": 489336
+    },
+    {
+      "pid": 489876,
+      "name": "python.exe",
+      "ppid": 489856
+    },
+    {
+      "pid": 490024,
+      "name": "python.exe",
+      "ppid": 489336
+    },
+    {
+      "pid": 490044,
+      "name": "python.exe",
+      "ppid": 490024
+    }
+  ],
+  "descendants_terminated": [
+    489140,
+    489300,
+    489336,
+    489436,
+    489856,
+    489876,
+    490024,
+    490044
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 425268,
+      "name": "python.exe"
+    },
+    {
+      "pid": 436312,
+      "name": "python.exe"
+    },
+    {
+      "pid": 488696,
+      "name": "python.exe"
+    },
+    {
+      "pid": 489060,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-105\\43-rev105-r3-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "06d3c40d5f52935335374c35a569b228b9d70be4",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-105",
+    "token": "REV-105:489060:4bb96e4bebffefc3",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
