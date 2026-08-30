@@ -6421,3 +6421,87 @@ machine-checkable.
 `pathbank_compound_id: 163`, so it lands as `forbidden_identity_present_unmapped` rather than as a
 Priority-1 row. **Whether a PathBank compound id is a "real external accession" for Priority 1 is a
 `policy_disagreement`, not a defect.** Product owner decides; no edit is proposed here.
+
+---
+
+## F-151 — committing a benchmark run turned two tests red, in a file no gate runs
+
+- **Severity** MEDIUM · **Class `product_contract_violation`** (of merge rule 4's pinned-baseline
+  discipline, not of the biological contract) · **Registered 2026-08-29 (ORCH-716)**
+- Surfaced by the **C-104 implementer** while establishing its own base measurement, reported
+  rather than worked around. **Re-measured independently by the Lead before registration** —
+  `evidence/g11/ORCH-716/13-c102-base-red.json`.
+
+### The measurement
+
+At the integration tip, `tests/test_c102_coverage_denominator.py`:
+
+```
+FAILED tests/test_c102_coverage_denominator.py::test_10_f132_population_regression_over_the_six_papers
+FAILED tests/test_c102_coverage_denominator.py::test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+E       assert 72 == 62
+2 failed, 12 passed
+```
+
+**Cause, verified:** commit `e77ad3d` ("T-107 official result") committed
+`runs_verify/2026-08-28_1816`, which contains **10** `quarantine_report.json` files. The tracked
+population went **62 → 72**:
+
+```
+git ls-files | grep -c quarantine_report.json   ->  72
+runs_verify/2026-08-28_1816                     ->  10 of them
+```
+
+Two tests pin that census with `==`. **The run commit was correct; the pins were not written to
+survive it.**
+
+### Why nobody saw it
+
+`tests/test_c102_coverage_denominator.py` is in **neither SMOKE nor gold-readers**. It is in no
+chunk. The tip has been red here since `e77ad3d` and every gate this sprint has stayed green.
+
+### The file already contains the right idiom, three lines away
+
+```python
+line 325:  assert len(paths) >= 62, "the committed artifact population shrank; re-pin before reading on"
+line 347:  assert legs == 62
+line 461:  assert checked == 62
+```
+
+**Line 325 is `>=` and its message says the guard exists to catch the population *shrinking*.**
+Lines 347 and 461 assert `==` for the same corpus and the same purpose — they are non-vacuity
+guards making sure the loop actually checked something. **A `>=` preserves that purpose exactly and
+survives a corpus that grows every time a run is committed, which is the corpus's normal
+behaviour.** The inconsistency is inside one file, written by one author, for one census.
+
+### Consequence beyond the two reds
+
+**`evidence/c102_mutation_attack.py` cannot run at all.** It asserts `code == 0` on its unmutated
+baseline before applying any mutation, so it aborts immediately
+(`evidence/g11/C-104/09-attack-set-baseline.json`). **The sprint's mutation-attack driver has been
+unrunnable since `e77ad3d`** — which matters because D-078 and F-144 make mutation testing a
+required practice on every card. C-104's R5 entry is correct and its substitution verified
+statically, but it cannot be exercised through the driver until this is fixed.
+
+### Proposed correction — narrow, test-only, and it matches the file's own idiom
+
+`tests/test_c102_coverage_denominator.py`: change lines 347 and 461 from `== 62` to `>= 62`,
+carrying line 325's existing justification. **Do not re-pin to 72** — that only moves the breakage
+to the next committed run. Do not delete the assertion; it is a real non-vacuity guard.
+
+**This is merge rule 4's own escape hatch used correctly:** a pinned baseline moved deliberately,
+with an exact documented delta (62 → 72, attributable to exactly ten legs from one named run).
+
+### What this does NOT license
+
+It does not license loosening any *biological* pin to `>=`. The census here is an artifact count —
+"did the loop see the whole committed corpus" — not a measurement of pipeline quality. A `>=` on a
+false-identifier count or a retained-reaction count would be the merge-rule-6 direction and is a
+different thing entirely.
+
+### Standing lesson
+
+**A committed benchmark run changes tracked corpus counts, and a test that pins one with `==` will
+go red on the next run — silently, if the file is in no gate.** Before committing a run's
+artifacts, grep the test tree for `==` pins on committed-artifact censuses. Every such pin should be
+`>=` with a stated floor, or derived.
