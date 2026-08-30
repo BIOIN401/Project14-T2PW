@@ -1,0 +1,162 @@
+T2PW: C:\t\c104\src\t2pw\__init__.py
+...F.....F..F.                                                           [100%]
+================================== FAILURES ===================================
+_______________ test_4_withheld_terms_remain_in_the_diagnostics _______________
+
+gold = {'PMC12096016': GoldCase(paper_id='PMC12096016', title='The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoi...ontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure."), ...}
+recon = {'accepted_below_minimum': True, 'accepted_denominator': 23, 'accepted_matched': 6, 'accepted_ratio': 0.26087, ...}
+
+    def test_4_withheld_terms_remain_in_the_diagnostics(gold, recon):
+        """Out of the denominator is never out of the record."""
+    
+        by_term = {e["term"]: e for e in recon["excluded_terms"]}
+        assert set(by_term) == set(FORBIDDEN_ON_12782028)
+        for entry in by_term.values():
+            assert entry["forbidden_name"]
+            assert entry["forbidden_kind"]
+            assert entry["matched_in_raw"] is False
+        # SREBF2 is reached by ALIAS, not by its own gold row: dropping alias support
+        # would silently shrink the exclusion set and this pins it.
+        assert by_term["SREBF2"]["forbidden_name"] == "SREBF1"
+    
+        # It survives serialization to the report a human actually reads.
+        report = score_run(PINNED_RUN)
+        serialized = json.dumps(report.to_dict())
+        for term in FORBIDDEN_ON_12782028:
+            assert f'"term": "{term}"' in serialized
+    
+        # -- D-083 follow-on 1 / REV-102 F7 -------------------------------------
+        # `to_dict` deep-copies this block. A SHALLOW `dict(...)` hands the caller
+        # the live `excluded_terms` list by identity, so a reader mutating the
+        # serialized report reaches back into the scored leg. That fix shipped with
+        # nothing asserting it: REV-102's mutation R5, reverting
+        # `deepcopy(dict(...))` to `dict(...)`, left the whole file GREEN.
+        #
+        # The load-bearing property is IDENTITY, not equality -- `==` holds for a
+        # shallow copy too, which is exactly the vacuous guard F-144 is about. The
+        # stakes are low and stated plainly: a shallow copy cannot produce a wrong
+        # number, and nothing in the tree mutates `to_dict()` output today. This
+        # guards a future caller. R5 is now in the attack set
+        # (`evidence/c102_mutation_attack.py`), so the next reviewer inherits the
+        # mutation instead of re-deriving it.
+        live = next(p for p in report.papers if p.paper_id == "PMC12782028").legs["strict"]
+        # The finding first, THEN its content: this leg really does carry the four
+        # withheld terms, so nothing below can pass over an empty list.
+        assert live.coverage_reconciliation["excluded_count"] == len(FORBIDDEN_ON_12782028)
+        emitted = report.to_dict()
+        leg = next(
+            p["legs"]["strict"] for p in emitted["papers"] if p["paper_id"] == "PMC12782028"
+        )["coverage_reconciliation"]
+    
+        # The nested list, and each entry inside it, are FRESH objects. Asserting
+        # on the outer dict would prove nothing -- `dict(...)` copies that much.
+>       assert leg["excluded_terms"] is not live.coverage_reconciliation["excluded_terms"]
+E       AssertionError: assert [{'forbidden_kind': 'heading_or_prose', 'forbidden_name': 'LBR', 'forbidden_reason': 'Lamin B receptor, a nuclear enve...e list is a membership set from enrichment statistics, not a reaction participant set.', 'matched_in_raw': False, ...}] is not [{'forbidden_kind': 'heading_or_prose', 'forbidden_name': 'LBR', 'forbidden_reason': 'Lamin B receptor, a nuclear enve...e list is a membership set from enrichment statistics, not a reaction participant set.', 'matched_in_raw': False, ...}]
+
+tests\test_c102_coverage_denominator.py:227: AssertionError
+___________ test_10_f132_population_regression_over_the_six_papers ____________
+
+gold = {'PMC12096016': GoldCase(paper_id='PMC12096016', title='The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoi...ontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure."), ...}
+
+    def test_10_f132_population_regression_over_the_six_papers(gold):
+        """Offline, over every committed quarantine_report.json. No leg is re-run."""
+    
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
+        assert len(paths) >= 62, "the committed artifact population shrank; re-pin before reading on"
+    
+        legs = 0
+        affected_papers: dict[str, int] = {}
+        withheld = 0
+        cleared: list[str] = []
+        for rel in paths:
+            leg_dir = (REPO / rel).parent
+            case = gold.get(leg_dir.parent.name)
+            if case is None:
+                continue
+            coverage = json.load(io.open(REPO / rel, encoding="utf-8")).get("coverage") or {}
+            out = contract_accepted_coverage(case, coverage)
+            if out is None:
+                continue
+            legs += 1
+            if out["excluded_count"]:
+                affected_papers[case.paper_id] = affected_papers.get(case.paper_id, 0) + 1
+                withheld += out["excluded_count"]
+            if out["cleared_by_reconciliation"]:
+                cleared.append(f"{case.paper_id}:{leg_dir.name}")
+    
+>       assert legs == 62
+E       assert 72 == 62
+
+tests\test_c102_coverage_denominator.py:397: AssertionError
+_________ test_13_the_accepted_rate_is_a_rate_on_every_committed_leg __________
+
+gold = {'PMC12096016': GoldCase(paper_id='PMC12096016', title='The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoi...ontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure."), ...}
+
+    def test_13_the_accepted_rate_is_a_rate_on_every_committed_leg(gold):
+        """A numerator can never exceed its denominator, on any committed leg."""
+    
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
+    
+        checked = with_matched_forbidden = 0
+        for rel in paths:
+            leg_dir = (REPO / rel).parent
+            case = gold.get(leg_dir.parent.name)
+            if case is None:
+                continue
+            coverage = json.load(io.open(REPO / rel, encoding="utf-8")).get("coverage") or {}
+            out = contract_accepted_coverage(case, coverage)
+            if out is None:
+                continue
+            checked += 1
+            assert out["accepted_matched"] <= out["accepted_denominator"], rel
+            if out["accepted_ratio"] is not None:
+                assert 0.0 <= out["accepted_ratio"] <= 1.0, f"{rel}: {out['accepted_ratio']}"
+            if any(e["matched_in_raw"] for e in out["excluded_terms"]):
+                with_matched_forbidden += 1
+                # Withheld from the numerator, so the accepted count MUST drop.
+                assert out["accepted_matched"] < out["raw_matched"], rel
+    
+>       assert checked == 62
+E       assert 72 == 62
+
+tests\test_c102_coverage_denominator.py:511: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c102_coverage_denominator.py::test_4_withheld_terms_remain_in_the_diagnostics
+FAILED tests/test_c102_coverage_denominator.py::test_10_f132_population_regression_over_the_six_papers
+FAILED tests/test_c102_coverage_denominator.py::test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+3 failed, 11 passed in 3.39s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c104\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 36f773c627fda333b2afe7b1e0fd9294c11d3817  [git, worktree dirty=True]
+label                   : c104-r5-mutation
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c104 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-104/03-r5-mutation.pin.json -q --no-header -rf --basetemp=C:/t/btc104/r5mut tests/test_c102_coverage_denominator.py
+cwd                     : C:\t\c104
+root PID / process group: 426276 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.11 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  427580:python.exe
+descendants terminated  : 1  427580
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c104\docs\pwml_recovery_sprint\evidence\g11\C-104\03-r5-mutation.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-104  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

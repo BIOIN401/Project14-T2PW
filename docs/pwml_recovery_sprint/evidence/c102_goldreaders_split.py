@@ -62,9 +62,31 @@ for index, rel in enumerate(FILES, 1):
     )
     # A nonzero exit with nothing failed and nothing errored is not a test
     # result. Abort rather than fold it into a total.
-    if proc.returncode not in (0, 1) or (proc.returncode == 1 and not counts["failed"] and not errors):
+    #
+    # D-083 follow-on 2: NEITHER IS A SETUP ERROR, at any exit code. The two
+    # conditions above were specified as "nonzero exit with nothing failed AND
+    # NOTHING ERRORED", so on the original F-114 condition -- a missing
+    # `--basetemp` parent, which errors tests in setup -- the second disjunct is
+    # false and nothing fires. That run lost 71 tests, reported them as simply
+    # absent, and still exited 0
+    # (`c102_goldreaders_split_r1.attempt1-missing-basetemp-parent.log`). Error
+    # counting made the loss visible but not fatal.
+    #
+    # So `errors` now aborts ON ITS OWN, independent of the exit code and of
+    # `failed`: a setup error is an INFRASTRUCTURE FAILURE in the same class as
+    # a surviving process, never a legitimate outcome of this gate. The two
+    # original conditions are kept exactly as they were -- a planted bad import
+    # still fires on its exit code, and a genuine red test still folds into the
+    # totals rather than aborting the gate.
+    if errors or proc.returncode not in (0, 1) or (
+        proc.returncode == 1 and not counts["failed"] and not errors
+    ):
         print(out[-3000:])
-        raise SystemExit(f"INFRASTRUCTURE FAILURE on {rel}: exit={proc.returncode} with no failure")
+        raise SystemExit(
+            f"INFRASTRUCTURE FAILURE on {rel}: exit={proc.returncode} errors={errors} "
+            f"failed={counts['failed']} passed={counts['passed']} -- a setup error or an "
+            f"unexpected exit is not a test result"
+        )
 
 print()
 print(f"files run    : {len(FILES)}")

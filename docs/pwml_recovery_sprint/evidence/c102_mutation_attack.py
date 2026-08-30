@@ -15,6 +15,13 @@ reverting that one line left all eleven tests green. A deviation is exactly the
 line most in need of a mutation, because no existing test was written with it in
 mind. Tests 12 and 13 are what M7 now bites.
 
+R5 is REV-102's own mutation, carried in by D-083 follow-on 1 and kept under its
+reviewer number rather than renumbered, so the finding and the mutation that
+proves it share a name. It reverts `to_dict`'s deep copy of
+``coverage_reconciliation`` to a shallow `dict(...)`; it went GREEN when REV-102
+ran it, and test 4's identity and mutation-consequence assertions are what now
+make it RED.
+
 Every mutation is applied by exact text substitution to a COMMITTED file and
 reverted with ``git checkout --`` afterwards, and the tree is verified clean at
 the end. A mutation whose substitution does not apply aborts the run: a mutation
@@ -87,6 +94,14 @@ MUTATIONS = [
         ACCEPTANCE,
         "    accepted_matched = [str(t) for t in matched if str(t) not in excluded_terms]\n",
         "    accepted_matched = [str(t) for t in matched]  # MUTATION M7\n",
+    ),
+    (
+        "R5",
+        "the to_dict copy goes shallow again -- excluded_terms aliases the scored leg",
+        ACCEPTANCE,
+        '            data["coverage_reconciliation"] = deepcopy(dict(self.coverage_reconciliation))\n',
+        '            data["coverage_reconciliation"] = dict(self.coverage_reconciliation)'
+        '  # MUTATION R5\n',
     ),
     (
         "M6",

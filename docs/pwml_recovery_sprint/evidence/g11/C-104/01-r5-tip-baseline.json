@@ -1,0 +1,92 @@
+{
+  "label": "c104-r5-tip-baseline",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c104",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-104/01-r5-tip-baseline.pin.json",
+    "-q",
+    "--no-header",
+    "-rf",
+    "--basetemp=C:/t/btc104/tipbase",
+    "tests/test_c102_coverage_denominator.py"
+  ],
+  "cwd": "C:\\t\\c104",
+  "started_at": "2026-08-30T04:07:20+00:00",
+  "finished_at": "2026-08-30T04:07:26+00:00",
+  "duration_seconds": 5.430128399995738,
+  "timeout_seconds": 300.0,
+  "root_pid": 425772,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 425704,
+      "name": "python.exe",
+      "ppid": 425772
+    }
+  ],
+  "descendants_terminated": [
+    425704
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 316220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 393836,
+      "name": "python.exe"
+    },
+    {
+      "pid": 424976,
+      "name": "python.exe"
+    },
+    {
+      "pid": 425236,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c104\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-104\\01-r5-tip-baseline.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c104\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c104",
+    "repo_head": "36f773c627fda333b2afe7b1e0fd9294c11d3817",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-104",
+    "token": "C-104:424976:8722f9d5ad26eda4",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,166 @@
+worktree      : C:\t\c104
+base sha      : 36f773c
+base driver   : extracted to C:\Users\Angad\AppData\Local\Temp\c104probe_su7g1x9h\base_c102_goldreaders_split.py (3500 bytes)
+tip driver    : C:\t\c104\docs\pwml_recovery_sprint\evidence\c102_goldreaders_split.py
+files per tree: 22
+scratch       : C:\Users\Angad\AppData\Local\Temp\c104probe_su7g1x9h
+
+==============================================================================
+SCENARIO f114_setup_errors -- CASE 1: fires on setup errors -- the gap D-083 follow-on 2 closes
+==============================================================================
+  BASE  exit=0  aborted=False  expected_abort=False  files_reported=22  OK
+        file 1 : 1. tests/test_protein_export_policy.py                            passed=  2 failed=0 skipped=0 errors=3  exit=1
+        totals : split totals : 44 passed, 0 failed, 0 skipped, 3 errors
+        ---- full driver output (the before/after pair) ----
+        |  1. tests/test_protein_export_policy.py                            passed=  2 failed=0 skipped=0 errors=3  exit=1
+        |  2. tests/test_c056b_semantic_denominators.py                      passed=  2 failed=0 skipped=0 errors=0  exit=0
+        |  3. tests/test_batch_pwml_artifact_naming.py                       passed=  2 failed=0 skipped=0 errors=0  exit=0
+        |  4. tests/test_c074_strict_core_floor.py                           passed=  2 failed=0 skipped=0 errors=0  exit=0
+        |  5. tests/test_c076_alias_holo_apo_identity.py                     passed=  2 failed=0 skipped=0 errors=0  exit=0
+        |  6. tests/test_c077_stage0_conflict_disposition.py                 passed=  2 failed=0 skipped=0 errors=0  exit=0
+        |  7. tests/test_c081_cofactor_role_identity.py                      passed=  2 failed=0 skipped=0 errors=0  exit=0
+        |  8. tests/test_c085_priority2_honesty.py                           passed=  2 failed=0 skipped=0 errors=0  exit=0
+        |  9. tests/test_c088_extracted_not_serialized_disposition.py        passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 10. tests/test_cofactor_policy.py                                  passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 11. tests/test_rag_multi_relation_spans.py                         passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 12. tests/test_release_status_classification.py                    passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 13. tests/test_semantic_production_no_gold.py                      passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 14. tests/test_strict_failure_replay.py                            passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 15. tests/test_batch_driver_quarantine_artifacts.py                passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 16. tests/test_c056c_semantic_evaluability.py                      passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 17. tests/test_c071_actor_evidence_gate.py                         passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 18. tests/test_c080_production_gate_kind_aware.py                  passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 19. tests/test_c089_participant_schema.py                          passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 20. tests/test_c090_wrapper_identity_actor_evidence.py             passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 21. tests/test_c097_semantic_name_keys.py                          passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 22. tests/test_semantic_release_gating.py                          passed=  2 failed=0 skipped=0 errors=0  exit=0
+        | 
+        | files run    : 22
+        | split totals : 44 passed, 0 failed, 0 skipped, 3 errors
+        | reds (0):
+  TIP   exit=1  aborted=True  expected_abort=True  files_reported=1  OK
+        file 1 : 1. tests/test_protein_export_policy.py                            passed=  2 failed=0 skipped=0 errors=3  exit=1
+        abort  : INFRASTRUCTURE FAILURE on tests/test_protein_export_policy.py: exit=1 errors=3 failed=0 passed=2 -- a setup error or an unexpected exit is not a test result
+        ---- full driver output (the before/after pair) ----
+        |  1. tests/test_protein_export_policy.py                            passed=  2 failed=0 skipped=0 errors=3  exit=1
+        | ..EEE                                                                    [100%]
+        | =================================== ERRORS ====================================
+        | _______________________ ERROR at setup of test_lost_one _______________________
+        | 
+        |     @pytest.fixture
+        |     def tmp_path():
+        | >       raise FileNotFoundError(
+        |             "[Errno 2] No such file or directory: "
+        |             "'C:\\t\\bt\\does-not-exist\\g01' -- the F-114 condition"
+        |         )
+        | E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\t\bt\does-not-exist\g01' -- the F-114 condition
+        | 
+        | tests\test_protein_export_policy.py:6: FileNotFoundError
+        | _______________________ ERROR at setup of test_lost_two _______________________
+        | 
+        |     @pytest.fixture
+        |     def tmp_path():
+        | >       raise FileNotFoundError(
+        |             "[Errno 2] No such file or directory: "
+        |             "'C:\\t\\bt\\does-not-exist\\g01' -- the F-114 condition"
+        |         )
+        | E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\t\bt\does-not-exist\g01' -- the F-114 condition
+        | 
+        | tests\test_protein_export_policy.py:6: FileNotFoundError
+        | ______________________ ERROR at setup of test_lost_three ______________________
+        | 
+        |     @pytest.fixture
+        |     def tmp_path():
+        | >       raise FileNotFoundError(
+        |             "[Errno 2] No such file or directory: "
+        |             "'C:\\t\\bt\\does-not-exist\\g01' -- the F-114 condition"
+        |         )
+        | E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\t\bt\does-not-exist\g01' -- the F-114 condition
+        | 
+        | tests\test_protein_export_policy.py:6: FileNotFoundError
+        | 2 passed, 3 errors in 0.05s
+        | 
+        | INFRASTRUCTURE FAILURE on tests/test_protein_export_policy.py: exit=1 errors=3 failed=0 passed=2 -- a setup error or an unexpected exit is not a test result
+
+==============================================================================
+SCENARIO bad_import -- CASE 2: still fires on an unexpected exit code (planted bad import)
+==============================================================================
+  BASE  exit=1  aborted=True  expected_abort=True  files_reported=1  OK
+        file 1 : 1. tests/test_protein_export_policy.py                            passed=  0 failed=0 skipped=0 errors=1  exit=2
+        abort  : INFRASTRUCTURE FAILURE on tests/test_protein_export_policy.py: exit=2 with no failure
+  TIP   exit=1  aborted=True  expected_abort=True  files_reported=1  OK
+        file 1 : 1. tests/test_protein_export_policy.py                            passed=  0 failed=0 skipped=0 errors=1  exit=2
+        abort  : INFRASTRUCTURE FAILURE on tests/test_protein_export_policy.py: exit=2 errors=1 failed=0 passed=0 -- a setup error or an unexpected exit is not a test result
+
+==============================================================================
+SCENARIO exit_code_no_errors -- CASE 2b: the exit-code disjunct still fires with errors=0 (not subsumed)
+==============================================================================
+  BASE  exit=1  aborted=True  expected_abort=True  files_reported=1  OK
+        file 1 : 1. tests/test_protein_export_policy.py                            passed=  0 failed=0 skipped=0 errors=0  exit=5
+        abort  : INFRASTRUCTURE FAILURE on tests/test_protein_export_policy.py: exit=5 with no failure
+  TIP   exit=1  aborted=True  expected_abort=True  files_reported=1  OK
+        file 1 : 1. tests/test_protein_export_policy.py                            passed=  0 failed=0 skipped=0 errors=0  exit=5
+        abort  : INFRASTRUCTURE FAILURE on tests/test_protein_export_policy.py: exit=5 errors=0 failed=0 passed=0 -- a setup error or an unexpected exit is not a test result
+
+==============================================================================
+SCENARIO genuine_failure -- CASE 3a: a real red test still folds into the totals
+==============================================================================
+  BASE  exit=0  aborted=False  expected_abort=False  files_reported=22  OK
+        file 1 : 1. tests/test_protein_export_policy.py                            passed=  2 failed=1 skipped=0 errors=0  exit=1
+        totals : split totals : 44 passed, 1 failed, 0 skipped, 0 errors
+  TIP   exit=0  aborted=False  expected_abort=False  files_reported=22  OK
+        file 1 : 1. tests/test_protein_export_policy.py                            passed=  2 failed=1 skipped=0 errors=0  exit=1
+        totals : split totals : 44 passed, 1 failed, 0 skipped, 0 errors
+
+==============================================================================
+SCENARIO all_clean -- CASE 3b: a clean run still completes -- the preservation case
+==============================================================================
+  BASE  exit=0  aborted=False  expected_abort=False  files_reported=22  OK
+        file 1 : 1. tests/test_protein_export_policy.py                            passed=  2 failed=0 skipped=0 errors=0  exit=0
+        totals : split totals : 44 passed, 0 failed, 0 skipped, 0 errors
+  TIP   exit=0  aborted=False  expected_abort=False  files_reported=22  OK
+        file 1 : 1. tests/test_protein_export_policy.py                            passed=  2 failed=0 skipped=0 errors=0  exit=0
+        totals : split totals : 44 passed, 0 failed, 0 skipped, 0 errors
+
+scratch removed: True
+
+scenario               driver exit  aborted  expected  verdict
+f114_setup_errors      BASE      0    False     False  OK
+f114_setup_errors      TIP       1     True      True  OK
+bad_import             BASE      1     True      True  OK
+bad_import             TIP       1     True      True  OK
+exit_code_no_errors    BASE      1     True      True  OK
+exit_code_no_errors    TIP       1     True      True  OK
+genuine_failure        BASE      0    False     False  OK
+genuine_failure        TIP       0    False     False  OK
+all_clean              BASE      0    False     False  OK
+all_clean              TIP       0    False     False  OK
+
+PROBE PASSED: 10 runs, every verdict as specified
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c104\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 36f773c627fda333b2afe7b1e0fd9294c11d3817  [git, worktree dirty=True]
+label                   : c104-split-guard-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c104_split_guard_probe.py C:/t/c104 36f773c
+cwd                     : C:\t\c104
+root PID / process group: 428272 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 420 s
+duration                : 48.25 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 251  428444:python.exe, 428492:python.exe, 428512:python.exe, 428540:python.exe, 428572:python.exe, 428756:python.exe, 428800:python.exe, 428924:python.exe, 428944:python.exe, 428132:python.exe, 428152:python.exe, 428304:python.exe, 428324:python.exe, 428344:python.exe, 428360:python.exe, 428436:python.exe, 428652:python.exe, 428780:python.exe, 421788:python.exe, 426516:python.exe, 428320:python.exe, 428764:python.exe, 428936:python.exe, 428808:python.exe, 429032:python.exe, 427664:python.exe, 428908:python.exe, 427840:python.exe, 428544:python.exe, 424968:python.exe, 428992:python.exe, 428612:python.exe, 428684:python.exe, 428336:python.exe, 428412:python.exe, 428080:python.exe, 428144:python.exe, 428108:python.exe, 428120:python.exe, 428252:python.exe, 428796:python.exe, 428844:python.exe, 428892:python.exe, 428932:python.exe, 429020:python.exe, 426172:python.exe, 428880:python.exe, 425872:python.exe, 427928:python.exe, 428872:python.exe, 428648:python.exe, 425656:python.exe, 428292:python.exe, 428296:python.exe, 423568:python.exe, 428176:python.exe, 428404:python.exe, 428668:python.exe, 428888:python.exe, 428268:python.exe, 428468:python.exe, 428832:python.exe, 428900:python.exe, 428548:python.exe, 428700:python.exe, 426936:python.exe, 428984:python.exe, 428112:python.exe, 428504:python.exe, 428524:python.exe, 428368:python.exe, 427132:python.exe, 427236:python.exe, 428400:python.exe, 428440:python.exe, 396000:python.exe, 428812:python.exe, 428380:python.exe, 428428:python.exe, 428236:python.exe, 428392:python.exe, 428876:python.exe, 428912:python.exe, 423668:python.exe, 428140:python.exe, 427272:python.exe, 428608:python.exe, 428328:python.exe, 428676:python.exe, 427836:python.exe, 428128:python.exe, 428388:python.exe, 428828:python.exe, 425216:python.exe, 428904:python.exe, 429132:python.exe, 429156:python.exe, 429184:python.exe, 429204:python.exe, 429224:python.exe, 429244:python.exe, 429264:python.exe, 429284:python.exe, 429304:python.exe, 429332:python.exe, 429400:python.exe, 429460:python.exe, 429488:python.exe, 429508:python.exe, 429532:python.exe, 429552:python.exe, 429572:python.exe, 429592:python.exe, 429616:python.exe, 429636:python.exe, 429660:python.exe, 429680:python.exe, 429700:python.exe, 429720:python.exe, 429824:python.exe, 429844:python.exe, 429864:python.exe, 429884:python.exe, 429904:python.exe, 429924:python.exe, 429984:python.exe, 430004:python.exe, 428008:python.exe, 429080:python.exe, 424432:python.exe, 429140:python.exe, 429188:python.exe, 429252:python.exe, 429296:python.exe, 429276:python.exe, 429340:python.exe, 429328:python.exe, 429408:python.exe, 429368:python.exe, 429456:python.exe, 429524:python.exe, 429584:python.exe, 428496:python.exe, 429672:python.exe, 429692:python.exe, 429784:python.exe, 429796:python.exe, 429728:python.exe, 429768:python.exe, 429832:python.exe, 429860:python.exe, 429868:python.exe, 429912:python.exe, 429024:python.exe, 429088:python.exe, 428116:python.exe, 428776:python.exe, 429148:python.exe, 429220:python.exe, 423264:python.exe, 427044:python.exe, 429280:python.exe, 429348:python.exe, 429336:python.exe, 429396:python.exe, 429428:python.exe, 429516:python.exe, 429744:python.exe, 429812:python.exe, 424504:python.exe, 429716:python.exe, 429764:python.exe, 425484:python.exe, 429940:python.exe, 429900:python.exe, 427372:python.exe, 429164:python.exe, 424616:python.exe, 425080:python.exe, 428452:python.exe, 429236:python.exe, 418712:python.exe, 429632:python.exe, 429272:python.exe, 429440:python.exe, 424696:python.exe, 429500:python.exe, 426360:python.exe, 427464:python.exe, 429800:python.exe, 429816:python.exe, 424180:python.exe, 427120:python.exe, 417268:python.exe, 429928:python.exe, 425916:python.exe, 429112:python.exe, 422736:python.exe, 423524:python.exe, 428456:python.exe, 429640:python.exe, 429560:python.exe, 429288:python.exe, 428508:python.exe, 429376:python.exe, 429424:python.exe, 429420:python.exe, 429520:python.exe, 429792:python.exe, 429724:python.exe, 429808:python.exe, 426148:python.exe, 429092:python.exe, 422984:python.exe, 425108:python.exe, 429096:python.exe, 429232:python.exe, 429568:python.exe, 429620:python.exe, 428516:python.exe, 429564:python.exe, 427520:python.exe, 429432:python.exe, 425052:python.exe, 428048:python.exe, 425224:python.exe, 429804:python.exe, 422616:python.exe, 429240:python.exe, 427564:python.exe, 429268:python.exe, 429308:python.exe, 429556:python.exe, 427416:python.exe, 427676:python.exe, 426852:python.exe, 429652:python.exe, 427932:python.exe, 429932:python.exe, 424560:python.exe, 427920:python.exe, 428432:python.exe, 429736:python.exe, 425892:python.exe, 429076:python.exe, 425296:python.exe, 429624:python.exe, 424856:python.exe, 425456:python.exe, 429448:python.exe, 429628:python.exe
+descendants terminated  : 251  396000, 417268, 418712, 421788, 422616, 422736, 422984, 423264, 423524, 423568, 423668, 424180, 424432, 424504, 424560, 424616, 424696, 424856, 424968, 425052, 425080, 425108, 425216, 425224, 425296, 425456, 425484, 425656, 425872, 425892, 425916, 426148, 426172, 426360, 426516, 426852, 426936, 427044, 427120, 427132, 427236, 427272, 427372, 427416, 427464, 427520, 427564, 427664, 427676, 427836, 427840, 427920, 427928, 427932, 428008, 428048, 428080, 428108, 428112, 428116, 428120, 428128, 428132, 428140, 428144, 428152, 428176, 428236, 428252, 428268, 428292, 428296, 428304, 428320, 428324, 428328, 428336, 428344, 428360, 428368, 428380, 428388, 428392, 428400, 428404, 428412, 428428, 428432, 428436, 428440, 428444, 428452, 428456, 428468, 428492, 428496, 428504, 428508, 428512, 428516, 428524, 428540, 428544, 428548, 428572, 428608, 428612, 428648, 428652, 428668, 428676, 428684, 428700, 428756, 428764, 428776, 428780, 428796, 428800, 428808, 428812, 428828, 428832, 428844, 428872, 428876, 428880, 428888, 428892, 428900, 428904, 428908, 428912, 428924, 428932, 428936, 428944, 428984, 428992, 429020, 429024, 429032, 429076, 429080, 429088, 429092, 429096, 429112, 429132, 429140, 429148, 429156, 429164, 429184, 429188, 429204, 429220, 429224, 429232, 429236, 429240, 429244, 429252, 429264, 429268, 429272, 429276, 429280, 429284, 429288, 429296, 429304, 429308, 429328, 429332, 429336, 429340, 429348, 429368, 429376, 429396, 429400, 429408, 429420, 429424, 429428, 429432, 429440, 429448, 429456, 429460, 429488, 429500, 429508, 429516, 429520, 429524, 429532, 429552, 429556, 429560, 429564, 429568, 429572, 429584, 429592, 429616, 429620, 429624, 429628, 429632, 429636, 429640, 429652, 429660, 429672, 429680, 429692, 429700, 429716, 429720, 429724, 429728, 429736, 429744, 429764, 429768, 429784, 429792, 429796, 429800, 429804, 429808, 429812, 429816, 429824, 429832, 429844, 429860, 429864, 429868, 429884, 429900, 429904, 429912, 429924, 429928, 429932, 429940, 429984, 430004
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c104\docs\pwml_recovery_sprint\evidence\g11\C-104\05-split-guard-probe.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-104  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
