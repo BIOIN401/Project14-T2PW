@@ -1,0 +1,128 @@
+{
+  "label": "nv-m1-constant",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-716/04-nv-m1-constant.pin.json",
+    "-q",
+    "-rf",
+    "--basetemp=C:/t/o716/nv1",
+    "-p",
+    "no:cacheprovider",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c072_incomplete_core_demotion.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-30T03:48:25+00:00",
+  "finished_at": "2026-08-30T03:48:29+00:00",
+  "duration_seconds": 3.667136500007473,
+  "timeout_seconds": 420.0,
+  "root_pid": 412896,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 405776,
+      "name": "python.exe",
+      "ppid": 412896
+    },
+    {
+      "pid": 410612,
+      "name": "git.exe",
+      "ppid": 405776
+    },
+    {
+      "pid": 411348,
+      "name": "git.exe",
+      "ppid": 405776
+    },
+    {
+      "pid": 413628,
+      "name": "git.exe",
+      "ppid": 405776
+    },
+    {
+      "pid": 413556,
+      "name": "git.exe",
+      "ppid": 405776
+    },
+    {
+      "pid": 411944,
+      "name": "git.exe",
+      "ppid": 405776
+    },
+    {
+      "pid": 413012,
+      "name": "git.exe",
+      "ppid": 405776
+    }
+  ],
+  "descendants_terminated": [
+    405776,
+    410612,
+    411348,
+    411944,
+    413012,
+    413556,
+    413628
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 316220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 393836,
+      "name": "python.exe"
+    },
+    {
+      "pid": 413308,
+      "name": "python.exe"
+    },
+    {
+      "pid": 413460,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-716\\04-nv-m1-constant.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "36f773c627fda333b2afe7b1e0fd9294c11d3817",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-716",
+    "token": "ORCH-716:413460:7d21715820a06818",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

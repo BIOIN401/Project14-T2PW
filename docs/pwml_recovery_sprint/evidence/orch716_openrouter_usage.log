@@ -1,0 +1,84 @@
+==============================================================================
+D-086 OBSERVABILITY PROBE -- actual OpenRouter account usage
+==============================================================================
+.env path        : c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW\.env
+.env present     : True
+key variable     : OPENROUTER_API_KEY
+key present      : True
+key length       : 73
+pinned model     : deepseek/deepseek-v4-flash
+temperature      : 0
+
+------------------------------------------------------------------------------
+GET https://openrouter.ai/api/v1/auth/key
+  status : 200
+  body   :
+{
+    "data": {
+        "byok_usage": 0,
+        "byok_usage_daily": 0,
+        "byok_usage_monthly": 0,
+        "byok_usage_weekly": 0,
+        "creator_user_id": "<redacted>",
+        "expires_at": null,
+        "include_byok_in_limit": false,
+        "is_free_tier": false,
+        "is_management_key": false,
+        "is_provisioning_key": false,
+        "label": "<redacted>",
+        "limit": 75,
+        "limit_remaining": 68.516155697,
+        "limit_reset": "monthly",
+        "rate_limit": {
+            "interval": "10s",
+            "note": "This field is deprecated and safe to ignore.",
+            "requests": -1
+        },
+        "usage": 162.015877443,
+        "usage_daily": 0,
+        "usage_monthly": 6.483844303,
+        "usage_weekly": 1.769355221
+    }
+}
+------------------------------------------------------------------------------
+GET https://openrouter.ai/api/v1/credits
+  status : 200
+  body   :
+{
+    "data": {
+        "total_credits": 933.65,
+        "total_usage": 894.35836073
+    }
+}
+------------------------------------------------------------------------------
+
+INTERPRETATION LIMIT, stated rather than left implicit:
+  These figures are CUMULATIVE ACCOUNT TOTALS. The pipeline sends no run
+  identifier, so the provider cannot attribute any part of them to T-107.
+  Any per-run number derived from them would be an estimate, not a measurement.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 36f773c627fda333b2afe7b1e0fd9294c11d3817  [git, worktree dirty=True]
+label                   : openrouter-usage-redacted
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch716_openrouter_usage.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 415000 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 180 s
+duration                : 0.52 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  413664:python.exe
+descendants terminated  : 1  413664
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-716\09-openrouter-usage-redacted.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

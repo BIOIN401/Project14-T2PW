@@ -1,0 +1,116 @@
+{
+  "label": "nv-restore-verify",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-716/07-nv-restore-verify.pin.json",
+    "-q",
+    "-rf",
+    "--basetemp=C:/t/o716/nv4",
+    "-p",
+    "no:cacheprovider",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c072_incomplete_core_demotion.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-30T03:50:11+00:00",
+  "finished_at": "2026-08-30T03:50:15+00:00",
+  "duration_seconds": 3.3525343000073917,
+  "timeout_seconds": 420.0,
+  "root_pid": 415704,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 415632,
+      "name": "python.exe",
+      "ppid": 415704
+    },
+    {
+      "pid": 414316,
+      "name": "git.exe",
+      "ppid": 415632
+    },
+    {
+      "pid": 414624,
+      "name": "git.exe",
+      "ppid": 415632
+    },
+    {
+      "pid": 414776,
+      "name": "git.exe",
+      "ppid": 415632
+    },
+    {
+      "pid": 413992,
+      "name": "git.exe",
+      "ppid": 415632
+    }
+  ],
+  "descendants_terminated": [
+    413992,
+    414316,
+    414624,
+    414776,
+    415632
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 316220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 393836,
+      "name": "python.exe"
+    },
+    {
+      "pid": 413928,
+      "name": "python.exe"
+    },
+    {
+      "pid": 415392,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-716\\07-nv-restore-verify.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "36f773c627fda333b2afe7b1e0fd9294c11d3817",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-716",
+    "token": "ORCH-716:415392:52c41f4bf2b78c15",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

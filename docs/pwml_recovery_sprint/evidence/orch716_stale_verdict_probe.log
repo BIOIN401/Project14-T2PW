@@ -1,0 +1,99 @@
+========================================================================================
+ORCH-716 -- production identity/species predicates applied to the SHIPPED payload
+========================================================================================
+root : c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+run  : runs_verify/2026-08-28_1816
+
+########################################################################################
+PMC12452463/strict
+  final_stage3_gate_report : ok=True errors=0 phase=final_pre_export
+  FAILING CONTRACT REPORT  : post_normalization_contract_report phase=audit_round stage=post_normalization errors=3
+      - /entities/proteins/5 Protein 'Fur' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/7 Protein 'enterobactin synthase' is missing species/organism.
+      - /entities/protein_complexes/0/components/0 Generated protein complex 'enterobactin synthase complex' component protein 'enterobactin synthase' is missing species/organism.
+  proteins in shipped payload: 7
+    [0] EntC                       identity=P0AEJ2                                   species=Escherichia coli         keys=['uniprot', 'mapped_ids']
+    [1] EntB                       identity=P0ADI4                                   species=Escherichia coli         keys=['uniprot', 'mapped_ids']
+    [2] EntE                       identity=P10378                                   species=Escherichia coli         keys=['uniprot', 'mapped_ids']
+    [3] EntD                       identity=P19925                                   species=Escherichia coli         keys=['uniprot', 'mapped_ids']
+    [4] EntF                       identity=P11454                                   species=Escherichia coli         keys=['uniprot', 'mapped_ids']
+    [5] FepA                       identity=P05825                                   species=Escherichia coli         keys=['uniprot', 'mapped_ids']
+    [6] Unknown                    identity=UNKNOWN                                  species=Arabidopsis thaliana     keys=['uniprot', 'uniprot_id', 'mapped_ids']
+  protein_complexes: ['enterobactin synthase complex', 'Isochorismate synthase', 'isochorismatase', 'EntE complex']
+  => shipped payload PASSES (0 row-level objection(s) on the final payload)
+
+########################################################################################
+PMC12180156/strict
+  final_stage3_gate_report : ok=True errors=0 phase=final_pre_export
+  FAILING CONTRACT REPORT  : post_normalization_contract_report phase=audit_round stage=post_normalization errors=1
+      - /entities/proteins/1 Protein 'ALAS2' is missing a UniProt or DrugBank identifier.
+  proteins in shipped payload: 3
+    [0] SFXN4                      identity=Q6P4A7                                   species=Homo sapiens             keys=['uniprot', 'mapped_ids']
+    [1] ALAS2                      identity=P22557                                   species=Homo sapiens             keys=['uniprot', 'mapped_ids']
+    [2] ferrochelatase             identity=Q53FU1                                   species=Homo sapiens             keys=['uniprot', 'mapped_ids']
+  protein_complexes: ['ferrochelatase complex']
+  => shipped payload PASSES (0 row-level objection(s) on the final payload)
+
+########################################################################################
+PMC12856317/strict
+  final_stage3_gate_report : ok=True errors=0 phase=final_pre_export
+  proteins in shipped payload: 2
+    [0] ALAS2                      identity=P22557                                   species=Homo sapiens             keys=['uniprot', 'mapped_ids']
+    [1] ALAS1                      identity=P13196                                   species=Homo sapiens             keys=['uniprot', 'mapped_ids']
+  protein_complexes: ['ALAS2 homodimer', 'ALAS2 complex', '5-aminolevulinate synthase, nonspecific, mitochondrial']
+  => shipped payload PASSES (0 row-level objection(s) on the final payload)
+
+########################################################################################
+PMC12782028/strict
+  final_stage3_gate_report : ok=True errors=0 phase=final_pre_export
+  proteins in shipped payload: 3
+    [0] LSS                        identity=P48449                                   species=Homo sapiens             keys=['uniprot', 'mapped_ids']
+    [1] CYP51A1                    identity=Q16850                                   species=Homo sapiens             keys=['uniprot', 'mapped_ids']
+    [2] DHCR24                     identity=Q15392                                   species=Homo sapiens             keys=['uniprot', 'mapped_ids']
+  protein_complexes: ['Lanosterol synthase', 'Lanosterol 14-alpha demethylase', 'Delta(24)-sterol reductase']
+  => shipped payload PASSES (0 row-level objection(s) on the final payload)
+
+========================================================================================
+VERDICT
+========================================================================================
+  PMC12452463/strict           shipped payload PASSES
+  PMC12180156/strict           shipped payload PASSES
+  PMC12856317/strict           shipped payload PASSES
+  PMC12782028/strict           shipped payload PASSES
+
+READING THE RESULT:
+  'shipped payload PASSES' on a leg the run FAILED means the failure came from a
+  superseded audit_round report, not from the payload that would have been
+  exported -- the STALE reading, and PRODUCT_CONTRACT section 1 names a stale gate
+  report an unacceptable terminal blocker.
+  'shipped payload STILL fails' would mean the gate is right and
+  final_stage3_gate_report is blind -- the KEY MISMATCH reading, a worse defect.
+
+  NEITHER reading is on its own a licence to make these legs pass. Whether they
+  SHOULD export is a separate question answered by the gold set, not by this probe.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 36f773c627fda333b2afe7b1e0fd9294c11d3817  [git, worktree dirty=True]
+label                   : stale-verdict-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch716_stale_verdict_probe.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW runs_verify/2026-08-28_1816
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 419420 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.27 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  419392:python.exe
+descendants terminated  : 1  419392
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-716\10-stale-verdict-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
