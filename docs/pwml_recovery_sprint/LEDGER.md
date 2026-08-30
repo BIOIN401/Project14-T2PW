@@ -8473,3 +8473,28 @@ before the mutations, unedited) · `evidence/orch716_nonvacuity_results.md` ·
 Also committed: **eight REV-101 G11 reports from the previous wave that were left uncommitted**
 (`40..47-r3-*`). They validate clean and I did not produce them. A G11 report that exists only in a
 working tree is one session away from being lost, which this sprint has already paid for twice.
+
+---
+
+## Wave ORCH-716 addendum — C-105 chartered after the adjudication
+
+**C-105** (`card/C-105-audit-actor-evidence`, worktree `C:/t/c105`, base `36f773c`) is chartered
+and dispatched for **F-146**. It is the only card in this wave that touches production.
+
+It was NOT chartered in the first pass. `T107-TRIAGE.md` § 2 recorded the judgement that the
+remedy was too diffuse. The independent adjudication then supplied the audit stage's **written
+motive** for attaching the enzyme and the **exact policy hole** in `apply_patch_with_policy` that
+admits an `add` to `/processes/reactions/N/enzymes/-` on confidence alone. **Both were verified by
+me against the artifacts before the card was written.** The superseded paragraph is left standing
+beside its correction rather than rewritten.
+
+**F-150** is registered as a `gold_data_defect` with an exact proposed edit and a four-step A/B
+plan, and is **NOT applied** — gold-change authority is the product owner's.
+
+Agent register for this wave:
+
+| Agent | Role | State |
+|---|---|---|
+| `pwml-bio-auditor` | independent read-only adjudication of items 1-6 | **COMPLETE.** Status requested at the liveness checkpoint; reported in full. Ran no job, took no lock, wrote no file |
+| general-purpose (C-104) | implementer, worktree `C:/t/c104` | dispatched |
+| general-purpose (C-105) | implementer, worktree `C:/t/c105` | dispatched |

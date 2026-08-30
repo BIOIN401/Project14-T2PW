@@ -124,12 +124,18 @@ it is on the declared negative control, and it belongs to **F-100's open class**
 paper, the same failure to decline. Priority 2's verdict stands: **`FAIL`, on a measured,
 eligible leg.** D-075's `CONDITIONALLY SATISFIED` is unavailable and is not claimed.
 
-Its remedy is F-100's remedy, which is **not** a new narrow card: it is the standing
-"decline rather than invent on a negative control" work already owned by **C-074 arm B /
-F-103**, whose production seam (`request_was_never_stated`, `release_status.py:1146-1174`) is
-merged and shipped. **What T-107 shows is that arm B demotes the STRICT release status but does
-not stop the RESEARCH leg retaining an unsupported reaction** — research mode is fail-open by
-design. That gap is registered below as **F-146** rather than patched blind in a triage wave.
+C-074 arm B / F-103 — the standing "decline rather than invent on a negative control" work —
+is merged and shipped (`request_was_never_stated`, `release_status.py:1146-1174`). **What T-107
+shows is that arm B demotes the STRICT release status but does not stop the RESEARCH leg
+retaining an unsupported reaction**, because research mode is fail-open by design.
+
+> **Superseded by section 9.2.** When this paragraph was written I judged the remedy too diffuse
+> to charter and registered it as **F-146** only. The independent adjudication then found the
+> audit stage's **written motive** for attaching NDM-1 and the **exact policy hole** that let it
+> through — evidence I did not have here. The remedy is narrow, general and provable after all.
+> **Chartered as C-105 and dispatched.** This paragraph is left standing rather than rewritten,
+> because the judgement it records was reasonable on the evidence available and the correction is
+> the more useful artifact.
 
 ---
 
@@ -138,6 +144,12 @@ design. That gap is registered below as **F-146** rather than patched blind in a
 **The two legs DO share a root cause.** As the charter required, that means one general
 finding, not two name-specific ones. Neither Fur nor ALAS2 nor enterobactin synthase appears in
 it as anything but an instance.
+
+> **Read section 9.1 with this.** "Share a root cause" is true of the **instrument** and false of
+> the **biology**: the two legs share the F-147 reporting seam but have two *different* biological
+> causes — one over-faithful to its paper, one not faithful at all. The charter's "charter one
+> general card if they share a root cause" is therefore answered **no general biological card**.
+> Everything measured in this section stands; only the word "root" was doing too much work.
 
 ### 3.1 The measurement
 
@@ -326,6 +338,14 @@ unmet. Folded into F-148.
   is green, so a shipped fix has no proof), and make the split-gate driver abort on
   `errors > 0`. Test and evidence tooling only; **changes no production line**. Contractually
   clear under D-083, which is what authorizes it.
+* **C-105** — **F-146, and the only card in this wave that touches production.** An audit patch
+  may not add an actor to a process role it has no evidence for. This is Priority 2's single
+  failure and therefore the reason the run is NOT ACCEPTED. Chartered on the evidence in section
+  9.2: the audit stage's written motive, the internally incoherent row it produced, and the
+  policy hole at `apply_patch_with_policy` that admits an `add` to
+  `/processes/reactions/N/enzymes/-` on confidence alone. The card carries a mandatory
+  **preservation** case — an evidenced actor addition must still be accepted — because a guard
+  that rejects both directions is a new defect, not a fix.
 
 ### Registered, NOT chartered — and this is the load-bearing decision
 
@@ -397,3 +417,202 @@ mistake.
   **Three of those four "degradations" are movements toward the contract, not away from it.**
 * **F-145 population**: **92 terms / 47 legs / 7 papers.** The bundle's 62/32/6 is an
   undercount and is not quoted anywhere in this document.
+
+---
+
+# 9. Independent biological adjudication — what it confirmed, and where it corrected me
+
+A read-only `pwml-bio-auditor` adjudicated items 1-6 from the committed artifacts, without a
+lock, a test run or a write. Its verdicts agree with sections 1-6 on every classification. It
+also **corrected one of my framings and found four things I had missed.** Both are recorded here
+rather than folded silently into the text above, so the correction stays visible beside what it
+corrected.
+
+Every claim below I re-verified against the artifacts myself before recording it.
+
+## 9.1 The correction: "one shared seam" was too strong
+
+Section 3 says `PMC12452463/strict` and `PMC12180156/strict` **share a root cause**. That is true
+of the **instrument** and false of the **biology**, and the distinction decides how many cards
+exist.
+
+| | `PMC12452463` | `PMC12180156` |
+|---|---|---|
+| Gold `kind` of the offending token | `heading_or_prose` | `placeholder_product` ("HALLUCINATION TEST") |
+| Where the false content came from | **inside the paper** — `enterobactin synthase complex` occurs verbatim | **outside the paper** — `protoporphyrin IX` occurs **0** times |
+| Origin stage | **Stage-1 `paper_extraction`** — the row is in `stage1_payload.json` | **not Stage 1** — absent from `stage1_payload.json` *and* from `rag_admission_report.json` |
+| Failure direction | **over-faithful**: transcribed a prose composite as one entity | **not faithful at all**: completed canonical chemistry from memory |
+
+**A single biological card would have to be either "stop transcribing prose phrases as entities"
+or "stop completing pathways from memory". Those are opposite failures with different call sites
+and different fixtures**, and one card covering both could be satisfied without fixing either.
+
+**What they genuinely share is F-147, the instrument seam** — and section 3's evidence for that is
+unaffected. The corrected statement: **the two legs share one instrument seam and have two
+distinct biological causes.** The charter's "if 3a and 3b share a root cause, charter one general
+card" is therefore answered **no general biological card**, and F-147 remains registered-not-
+chartered for the reason in section 6.
+
+The adjudication reached section 6's sequencing conclusion independently and states it more
+sharply than I did:
+
+> *"Both legs are currently correct by accident. (2) must land before (1), or (1) is a regression
+> dressed as a fix."*
+
+## 9.2 F-146 is far more actionable than section 2 knew — and it is now chartered
+
+The adjudication found the audit stage's **own written motive**, which I had not read.
+`PMC13231680/research/audit_iteration_summary.json`, `/rounds/0/llm_repair_rationale` — verified:
+
+> *"(2) add NDM-1 as an enzyme to the decomposition reaction **to resolve the structural
+> inconsistency where an inhibitor is listed without a target enzyme**."*
+
+`accepted_patch_count: 2, rejected_patch_count: 0`. And the frozen row, verified:
+
+```json
+"enzymes":   ["NDM-1"],
+"modifiers": [{"entity": "NDM-1", "role": "inhibitor",
+               "evidence": "PSA significantly inhibited NDM-1 enzyme activity"}],
+"evidence":  "PSA is decomposed in the intestine, resulting in an antibacterial effect",
+"provenance_lineage": [{"stage": "audit_repair", "support": "unsupported",
+                        "review_required": false, "sources": []}]
+```
+
+**The graph asserts that one protein both catalyses and inhibits the same reaction**, the
+reaction's own evidence names no actor, and the row carries `support: "unsupported"` with
+`sources: []` while being written `review_required: false`. The paper's thesis is the opposite
+relation — the compound inhibits the protein.
+
+Three biological points the adjudication adds, which I did not have: NDM-1 is a Zn-dependent class
+B metallo-beta-lactamase whose substrate is the beta-lactam ring, and **phthalylsulfacetamide
+contains no beta-lactam ring**; the paper places the decomposition *"in the intestine"*, i.e. host
+gut chemistry, not a bacterial enzyme; and the sentence cited as evidence is background
+pharmacology citing another reference.
+
+**This is PRODUCT_CONTRACT section 1's hard limit hit exactly** — *"must never invent ... enzymes
+... merely to guarantee a PWML file"* — with a written motive, a lineage carrier and a policy hole
+all pointing at the same seam. **Chartered as C-105 and dispatched.** The hole is precise:
+`apply_patch_with_policy` gates `add` ops on confidence alone unless the path is connectivity
+(`_is_connectivity_path` matches only `/inputs` and `/outputs`), major topology, or a removal — so
+an `add` to `/processes/reactions/N/enzymes/-` clears on `confidence >= 0.75` with **no evidence
+requirement**. The module already documents this class of hole at line 814.
+
+## 9.3 A `gold_data_defect` I had not found — prepared, NOT applied
+
+**`PMC12180156/research` ships `δ-aminolevulinic acid` carrying nine identifiers** — `hmdb`
+HMDB0001149, `kegg` C00430, `chebi` 17549, `pubchem` 137, `drugbank` DB00855, plus CAS, BioCyc,
+ChemSpider and a PathBank compound id — on a metabolite with **zero occurrences** in the source
+paper. Five of those nine are in the scorer's own recognized accession set
+(`uniprot / drugbank / hmdb / kegg / chebi / pubchem`). It scored **nothing** on Priority 1.
+
+The reason is a spelling gap, not a scorer bug. This case's `forbidden_identifiers[0]` is
+`5-aminolevulinic acid` with aliases `ALA`, `porphobilinogen`, `protoporphyrin IX`, `succinyl-CoA`,
+`coproporphyrinogen III`, `uroporphyrinogen III` — **the `δ` / `delta` spelling is absent**.
+`forbidden_match("δ-aminolevulinic acid")` returns `None`; `forbidden_match("5-aminolevulinic
+acid")` matches. Priority 1 increments `false_real` only for a **forbidden-matched** row carrying
+external ids, so the run's worst false accession was never counted. **Under section 7 / D-072 as
+ratified — *"by name or declared alias and never by resemblance"* — the scorer is behaving exactly
+as ruled.** This is a gold-list gap.
+
+That the gold author already used the delta spelling elsewhere in the same case
+(`acceptable_enzymes[1].aliases`: *"erythroid delta-aminolevulinic acid synthase"*) makes it an
+oversight rather than a policy.
+
+### Proposed correction and A/B plan — requires gold-change authority, NOT applied here
+
+**Proposed edit**, `src/t2pw/bench/gold/pinned_v1.json`, case `PMC12180156`,
+`forbidden_identifiers[0].aliases`: add `"delta-aminolevulinic acid"` and
+`"δ-aminolevulinic acid"`. Add nothing else and move no threshold.
+
+**A/B plan.** Gold edits break gold-reading tests that SMOKE never runs, so:
+
+1. Capture the 22-file gold-readers selection at the pre-edit SHA — **expected `456 passed /
+   8 skipped / exit 0`**, the C-103 baseline.
+2. Apply the edit; re-run the same selection; the delta must be **explainable term by term**.
+3. Re-score T-107's committed artifacts against pre- and post-edit gold and record **every leg
+   that moves.** The prediction is that **Priority 1 rises from 5 to 6** on the
+   `PMC12180156/research` row. **6 is still `PASS` under D-073 (0-6)**, so this does not change the
+   run's verdict — but it changes a *measurement*, and a Priority-1 number moving because the gold
+   changed must never be reported as a pipeline regression.
+4. Record the raw number beside the corrected one, both labelled with the gold SHA they were
+   measured against.
+
+**Not applied. Gold-change authority is the product owner's.** Registered as **F-150**.
+
+## 9.4 Content violations the gates never named
+
+Both legs pass every final gate while carrying content their own gold forbids. This is the
+frozen-graph coverage gap named in section 6, now with the specific rows.
+
+**`PMC12452463/strict`**, `/processes/reactions/3` — verified:
+
+```
+"Assembly of enterobactin (synthase complex)"
+inputs:  ["2,3-dihydro-2,3-dihydroxybenzoate"]      <- the EntB PRODUCT
+outputs: ["enterobactin"]
+enzymes: [{"entity": "enterobactin synthase complex", "role": "catalyst"}]
+```
+
+One row does four forbidden things at once: its catalyst is a declared `forbidden_identifier`; it
+converts the EntB product straight to enterobactin, **bridging precisely the gap the
+`export_rationale` says nothing performs** (*"with EntA absent, nothing converts
+2,3-dihydro-2,3-dihydroxybenzoate onward"*), so the graph is made to look connected across the
+break the gold calls chemically BROKEN; its catalyst's only component is the `Unknown` placeholder,
+which `unknown_backed_rationale` forbids in its own second sentence (*"An extractor must also not
+invent a backing entity to bridge the missing EntA step"*); and its stoichiometry is 1 where the
+paper says *"the assembly of **three** DHB molecules"*. The EntE product
+`2,3-dihydroxybenzoate-AMP` is left dangling, which is the tell.
+
+**T-107 regressed this row against T-105**, where the same reaction took `DHB-AMP` as input and the
+complex had four real components (`EntB, EntD, EntF, EntE`). A content degradation independent of
+the FAIL.
+
+**`PMC12180156` at T-106** (`runs_verify/2026-08-24_1428`) **PASSED and shipped
+`pathway.review_required.pwml`** whose only reaction was `Glycine -> heme` named *"heme
+biosynthesis (terminal step catalyzed by ferrochelatase)"* with **both ferrochelatase and ALAS2**
+as catalysts — the eight-step human heme pathway collapsed into one reaction catalysed
+simultaneously by its first and its last enzyme. **T-107's FAIL is a biological improvement over
+T-106's PASS**, for a reason the failure message does not state.
+
+The adjudication also verified the gold's own arithmetic against the cached sources:
+`PMC12180156/01_source_text.txt` is **67,304 characters — byte-for-byte the length the gold
+cites** — with `protoporphyrin` 0, `porphobilinogen` 0, `succinyl` 0, `coproporphyrinogen` 0,
+`uroporphyrinogen` 0, `ferrochelatase` 1, `ALAS2` 2. For `PMC13231680`: `NDM-1` 101, `LpxC` 9,
+`lipid A` 1, `UDP` 0, `GlcNAc` 0, `Kdo` 0. **The gold is exactly calibrated to these files.** That
+is a strong independent reason not to treat any of this as a gold defect beyond 9.3's spelling gap.
+
+## 9.5 Two SUMMARY mislabels — folded into F-148
+
+* **`PMC12444477` is flagged `!! RESEARCH-MODE DEFECT !!` / `class=broken (strict failed too --
+  fix the shared cause)`.** The banner's premise — *"research mode is fail-open by design,
+  therefore ANY research failure is a code defect"* — **does not hold for `failure_kind=timeout`.**
+  Fail-open is a property of the format-gate path; a child killed by the parent at wall clock
+  cannot fail open. The artifacts show a shared **budget** cause, not a shared **code** cause, on
+  the paper whose gold says *"The chemistry lives in Figure 1B, which is not in the cached text"* —
+  the hardest extraction in the set, timing out at a halved budget.
+* **`PMC12096016` is listed under `format-blocked` (a PathWhiz FORMAT rule)** while `SUMMARY.txt`
+  four lines below reads `strict : TIMEOUT | stage=unknown | time=1800.2s | files: none recorded`.
+  **A timeout is not a format rule.** Its gold is `expected_export: strict_exportable`,
+  `min_connected_reactions: 4` — one of only two strict-denominator papers, lost to the clock
+  rather than to biology, which is part of why Priority 5 reads `0/2`.
+
+Both are **instrument mislabels**, not production defects, and both are folded into F-148 rather
+than chartered: a timeout that leaves no checkpoint and is then filed under the wrong cause costs
+the run twice.
+
+## 9.6 The honest limit on Priority 2's number
+
+Priority 2 measured **one** unsupported reaction — but it could only ask the question on **6 of 17
+legs**, and **no gold case in `pinned_v1.json` sets `supported_reactions_complete: true`** (all ten
+are `false`). The priority is therefore evaluable only through `max_retained_reactions`, which is
+set on exactly two cases — both negative controls.
+
+`PMC12180156/research` retained **two** reactions, both fabricated heme chemistry, against a
+ceiling of `2` set for two *different* reactions the gold names (*"the SHMT2 serine-to-glycine
+conversion and the SFXN1 serine transport step"*), neither of which was extracted. It scored
+`2 - 2 = 0` at `completeness: 1.0`.
+
+**The number 1 is real. It is not a measure of how much invented chemistry T-107 produced.** Any
+report quoting Priority 2 = 1 must carry that limit with it. A second gold gap — the bare-count
+ceiling with no `supported_reactions` signatures — is registered under F-150 alongside 9.3, with
+the same authority requirement and the same A/B obligation.

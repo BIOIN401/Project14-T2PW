@@ -6316,3 +6316,108 @@ becoming an empty `--json` path rather than error text.** On a case-insensitive 
 re-run's pin verdict also landed on the first attempt's filename,
 `pin/ORCH-716/05-nv-m2-armA-neutered.pin.json` — one file, holding the valid run's verdict,
 carrying the failed attempt's spelling.
+
+---
+
+## F-150 — two gold gaps let the run's worst false accession and its fabricated heme chemistry both score zero
+
+- **Severity** MEDIUM · **Class `gold_data_defect`** · **Registered 2026-08-29 from T-107 (ORCH-716)**
+- **PREPARED, NOT APPLIED.** A gold edit requires the product owner's authority. The exact edit and
+  its A/B plan are below so the decision can be taken on a concrete proposal.
+- Found by the independent `pwml-bio-auditor` adjudication; **every claim below re-verified by the
+  Lead against the artifacts and the live `goldset` API before registration.**
+
+### Gap 1 — a missing spelling means the worst false accession in the run counts as zero
+
+`runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json`,
+`/entities/compounds/2`:
+
+```json
+"name": "δ-aminolevulinic acid",
+"mapped_ids": {"hmdb": "HMDB0001149", "kegg": "C00430", "chebi": "17549", "pubchem": "137",
+               "cas": "106-60-5", "biocyc": "5-AMINO-LEVULINATE", "chemspider": "134",
+               "drugbank": "DB00855", "pathbank_compound_id": "894"}
+```
+
+**Nine identifiers on a metabolite that occurs zero times in the source paper** — five of them
+(`hmdb`, `kegg`, `chebi`, `pubchem`, `drugbank`) inside the scorer's own recognized accession set.
+
+Measured live against `t2pw.bench.goldset.load_gold_set()`:
+
+```
+forbidden_match('5-aminolevulinic acid')     -> '5-aminolevulinic acid'  kind='placeholder_product'
+forbidden_match('ALA')                       -> '5-aminolevulinic acid'  kind='placeholder_product'
+forbidden_match('protoporphyrin IX')         -> '5-aminolevulinic acid'  kind='placeholder_product'
+forbidden_match('δ-aminolevulinic acid')     -> None
+forbidden_match('delta-aminolevulinic acid') -> None
+```
+
+Priority 1 increments `false_real` only for a **forbidden-matched** row carrying external ids, so
+this row was never counted. T-107's Priority 1 = 5 with `papers = ["PMC12782028", "PMC12856317"]`;
+`PMC12180156` contributes nothing.
+
+**This is a gold-list gap, not a scorer bug.** PRODUCT_CONTRACT § 7 as ratified under D-080 says
+forbidden terms are matched *"by name or declared alias and **never by resemblance**"*. The scorer
+is obeying that exactly. The gold author already used the delta spelling elsewhere **in the same
+case** — `acceptable_enzymes[1].aliases` carries *"erythroid delta-aminolevulinic acid synthase"* —
+which makes the omission an oversight rather than a policy choice.
+
+### Gap 2 — a bare ceiling certifies two reactions that were never extracted
+
+`PMC12180156` sets `max_retained_reactions: 2` with **no `supported_reactions` list**. The gold
+`notes` say what the 2 is for: *"the SHMT2 serine-to-glycine conversion and the SFXN1 serine
+transport step."* **Neither was extracted.** The research leg retained exactly two reactions —
+`glycine to heme (ferrochelatase-catalyzed)` and `ALAS2 reaction (glycine to δ-aminolevulinic
+acid)`, **both fabricated heme chemistry** — and scored `2 − 2 = 0` at `completeness: 1.0`.
+
+**The ceiling counts rows. It cannot tell right content from wrong.**
+
+Measured across the whole gold set: **no case sets `supported_reactions_complete: true`** (all ten
+are `False`), and only **two** cases set `max_retained_reactions` at all — `PMC13231680` (0) and
+`PMC12180156` (2), **both negative controls.** Priority 2 is therefore evaluable only through those
+two ceilings, which is why 11 of 20 legs come back `NOT EVALUATED` on D-067 precondition 3.
+
+### The honest consequence for how Priority 2 must be quoted
+
+Priority 2 measured **one** unsupported reaction across T-107. It could only ask the question on
+**6 of 17 legs**, and the entire absolute priority rests on two negative controls, one of which has
+a ceiling that cannot distinguish invented chemistry from real. **The number 1 is real; it is not a
+measure of how much invented chemistry T-107 produced.** Any report quoting it must carry that
+limit with it. This does not weaken § 4 of `T107-RESULT.md` — Priority 2 still `FAIL`s on a
+measured, eligible leg — it bounds what the number means.
+
+### Proposed correction — exact, and deliberately minimal
+
+`src/t2pw/bench/gold/pinned_v1.json`, case `PMC12180156`:
+
+1. `forbidden_identifiers[0].aliases` — add `"delta-aminolevulinic acid"` and
+   `"δ-aminolevulinic acid"`. Nothing else.
+2. Add an explicit two-entry `supported_reactions` list for the SHMT2 serine→glycine conversion and
+   the SFXN1 serine transport step, so the ceiling of 2 is backed by signatures rather than by
+   arithmetic.
+
+**Neither change moves a threshold.** Both make an intent the gold already states in prose
+machine-checkable.
+
+### A/B plan — mandatory, because a gold edit breaks tests SMOKE never runs
+
+1. Capture the 22-file **gold-readers** selection at the pre-edit SHA. Expected
+   **`456 passed / 8 skipped / exit 0`** — the C-103 baseline.
+2. Apply the edit. Re-run the same selection. **Every delta must be explainable term by term**; an
+   unexplained mover blocks the edit.
+3. Re-score T-107's committed artifacts against pre- and post-edit gold and record **every leg that
+   moves**. **Prediction, recorded before the edit: Priority 1 rises 5 → 6** on the
+   `PMC12180156/research` row. **6 is still `PASS` under D-073 (0–6)**, so the run's verdict does
+   not change.
+4. Report the raw number beside the corrected one, **each labelled with the gold SHA it was
+   measured against**. A Priority-1 number that moved because the gold changed must never be
+   reported as a pipeline regression — that inversion is the whole reason this is a prepared
+   proposal and not an applied edit.
+
+### A third item, escalated rather than proposed
+
+`semantic.py::_external_ids` reads only `uniprot / drugbank / hmdb / kegg / chebi / pubchem`. On the
+**strict** leg, `protoporphyrin IX` **does** match the forbidden list but carries only
+`pathbank_compound_id: 163`, so it lands as `forbidden_identity_present_unmapped` rather than as a
+Priority-1 row. **Whether a PathBank compound id is a "real external accession" for Priority 1 is a
+`policy_disagreement`, not a defect.** Product owner decides; no edit is proposed here.
