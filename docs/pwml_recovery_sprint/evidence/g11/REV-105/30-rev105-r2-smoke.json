@@ -1,0 +1,156 @@
+{
+  "label": "rev105-r2-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--no-header",
+    "-p",
+    "no:randomly",
+    "--basetemp=C:/t/btrev105/r2smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:/t/rev105r2",
+  "started_at": "2026-08-30T05:37:49+00:00",
+  "finished_at": "2026-08-30T05:38:26+00:00",
+  "duration_seconds": 36.71633580001071,
+  "timeout_seconds": 900.0,
+  "root_pid": 479240,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 479252,
+      "name": "python.exe",
+      "ppid": 479240
+    },
+    {
+      "pid": 479880,
+      "name": "python.exe",
+      "ppid": 479252
+    },
+    {
+      "pid": 479900,
+      "name": "python.exe",
+      "ppid": 479880
+    },
+    {
+      "pid": 479920,
+      "name": "python.exe",
+      "ppid": 479252
+    },
+    {
+      "pid": 479940,
+      "name": "python.exe",
+      "ppid": 479920
+    },
+    {
+      "pid": 480068,
+      "name": "python.exe",
+      "ppid": 479252
+    },
+    {
+      "pid": 480088,
+      "name": "python.exe",
+      "ppid": 480068
+    },
+    {
+      "pid": 480132,
+      "name": "python.exe",
+      "ppid": 479252
+    },
+    {
+      "pid": 480152,
+      "name": "python.exe",
+      "ppid": 480132
+    }
+  ],
+  "descendants_terminated": [
+    479252,
+    479880,
+    479900,
+    479920,
+    479940,
+    480068,
+    480088,
+    480132,
+    480152
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 425268,
+      "name": "python.exe"
+    },
+    {
+      "pid": 436312,
+      "name": "python.exe"
+    },
+    {
+      "pid": 463388,
+      "name": "python.exe"
+    },
+    {
+      "pid": 478456,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-105\\30-rev105-r2-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "4f9ad2b9628ec5b4950150f2aff97396f28476e1",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-105",
+    "token": "REV-105:478456:5d601ecac7847ceb",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
