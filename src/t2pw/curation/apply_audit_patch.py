@@ -1457,11 +1457,19 @@ _NON_ENZYME_ASE_WORDS = (
     "ceases", "ceased", "lease", "please", "case", "cases", "base", "bases",
     "phase", "phases", "vase", "showcase", "staircase", "briefcase",
 )
+# Enzyme nouns with fewer than three characters before "ase". The generic rule
+# below cannot reach them and dropping them was a REGRESSION against this card's
+# own first commit, where "lyase" was an explicit stem: "P is the lyase for this
+# step" was licensed at 28d8443 and refused after the generic rule replaced the
+# stem list. DNase and RNase are lost the same way and for the same reason.
+_SHORT_ENZYME_NOUNS = ("lyase", "lyases", "dnase", "dnases", "rnase", "rnases")
+
 _ENZYME_NOUN_RE_SRC = (
     # The left boundary is load-bearing: without it the stoplist is bypassed by
     # starting the match one character in, and "database" matches as "atabase".
     r"(?:(?<![a-z])(?!(?:" + "|".join(_NON_ENZYME_ASE_WORDS) + r")(?![a-z]))"
     r"[a-z]{3,}ases?(?![a-z]))"
+    r"|(?:(?<![a-z])(?:" + "|".join(_SHORT_ENZYME_NOUNS) + r")(?![a-z]))"
 )
 
 # Role-predicating vocabulary, matched against the folded span (lower case, every
@@ -1652,6 +1660,18 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
     characters of the matched token. That is what separates this from a naming
     check -- the defect this guard exists for is a protein its span DOES name, in
     the wrong role.
+
+    THE CATALYSIS FAMILY ADDITIONALLY REFUSES A WINDOW THAT ALSO CARRIES AN
+    INHIBITION CUE, and this is not belt-and-braces -- it closes a paraphrase route
+    straight back to the defect. ``mediat`` has to be a catalysis cue: "ALAS2
+    mediates the condensation ..." is _actor_named_in_span's own docstring example
+    and a legitimate repair. But it also makes "PSA-mediated inhibition of NDM-1
+    activity" and "the inhibition of NDM-1 is mediated by PSA" read as catalysis,
+    so a span stating the protein is INHIBITED would license it as the reaction's
+    CATALYST -- the exact promotion this card exists to prevent, one rephrase away,
+    and the audit stage regenerates its rationale every round. Refusing the window
+    rather than the whole span keeps a long span that discusses inhibition in one
+    clause and catalysis in another: scanning continues at the next occurrence.
     """
 
     haystack = _match_fold(span)
@@ -1664,12 +1684,17 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
     if not needles:
         return False
     cue = _ROLE_CUE_RES.get(family, _ANY_ROLE_CUE_RE)
+    contra = _ROLE_CUE_RES["inhibition"] if family == "catalysis" else None
     for needle in needles:
         for match in re.finditer(rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])", haystack):
             start = max(0, match.start() - _ACTOR_CUE_WINDOW)
             end = min(len(haystack), match.end() + _ACTOR_CUE_WINDOW)
-            if cue.search(haystack[start:end]):
-                return True
+            window = haystack[start:end]
+            if not cue.search(window):
+                continue
+            if contra is not None and contra.search(window):
+                continue
+            return True
     return False
 
 

@@ -393,6 +393,13 @@ LICENSED_CASES = [
      "by EntB isochorismatase activity"),
     ("group transfer named as residues", "KDO transferase",
      "WaaA adds a number of Kdo residues"),
+    # REV-105 finding 4. These three have fewer than three characters before
+    # "ase", so the generic enzyme-noun rule cannot reach them. "lyase" was an
+    # explicit stem at this card's first commit and licensing it is a REGRESSION
+    # this round restores, not a new capability.
+    ("short enzyme noun, lyase", "P", "P is the lyase for this step"),
+    ("short enzyme noun, DNase", "EndA", "EndA is the DNase for this step"),
+    ("short enzyme noun, RNase", "Rne", "Rne is the RNase for this step"),
 ]
 
 
@@ -423,6 +430,13 @@ REFUSED_CASES = [
     # enzyme-noun cue is an allowlist of EC stems, not a bare -ase pattern.
     ("-ase words that are not enzymes", "LpxA",
      "LpxA was noted while the incidence of disease did not increase after release of the database"),
+    # REV-105 finding 1. "mediat" must stay a catalysis cue for the ALAS2 case, and
+    # that same cue makes an INHIBITION sentence read as catalysis unless the
+    # contra-cue check refuses the window. Both of these were ACCEPTED before it.
+    ("inhibition paraphrased as mediation", "NDM-1",
+     "PSA-mediated inhibition of NDM-1 activity"),
+    ("inhibition paraphrased, passive", "NDM-1",
+     "the inhibition of NDM-1 is mediated by PSA"),
 ]
 
 
@@ -440,6 +454,43 @@ def test_unlicensed_actor_adds_are_still_refused(label: str, name: str, evidence
     assert _reaction(result)["enzymes"] == [], label
 
 
+def test_inhibition_cue_in_the_same_window_cannot_license_catalysis() -> None:
+    """REV-105 finding 1: the paraphrase route back into the defect, closed.
+
+    All three outcomes are asserted together because the fix is only correct as a
+    set. ``mediat`` cannot simply be deleted -- the third case is
+    _actor_named_in_span's own docstring example and a legitimate repair -- so the
+    catalysis family instead refuses a window that also carries an inhibition cue.
+    The first two spans say the protein is INHIBITED; before this check each of
+    them licensed it as the reaction's CATALYST, which is the exact promotion this
+    card exists to prevent, reachable by one rephrase of a rationale the audit
+    stage regenerates every round.
+    """
+
+    payload_for = lambda name: dict(_payload(), entities={
+        "compounds": [{"name": "A"}, {"name": "B"}],
+        "proteins": [{"name": name}],
+        "protein_complexes": [], "nucleic_acids": [],
+    })
+
+    for span in ("PSA-mediated inhibition of NDM-1 activity",
+                 "the inhibition of NDM-1 is mediated by PSA"):
+        _result, report = apply_patch_with_policy(
+            payload_for("NDM-1"), [_enzyme_add_named("NDM-1", span)], stage="audit"
+        )
+        assert report["summary"]["accepted_count"] == 0, (span, report)
+        assert report["rejected"][0]["reason"].startswith(REASON_PREFIX), span
+
+    licensed = "ALAS2 mediates the condensation of glycine and succinyl-CoA"
+    result, report = apply_patch_with_policy(
+        payload_for("ALAS2 complex"),
+        [_enzyme_add_named("ALAS2 complex", licensed)],
+        stage="audit",
+    )
+    assert report["summary"]["accepted_count"] == 1, report["rejected"]
+    assert _reaction(result)["enzymes"] == ["ALAS2 complex"]
+
+
 # ---------------------------------------------------------------------------
 # 7. The naming half must not drift from the rule it claims to reproduce.
 # ---------------------------------------------------------------------------
@@ -454,6 +505,14 @@ def test_naming_rule_reproduces_the_calibrated_bench_rule() -> None:
     verdict, the local token rule must return the same one. Without this the two
     copies drift and the docstring's claim of agreement rots, which is exactly what
     went wrong in the first draft of this guard.
+
+    WHAT THIS PIN DOES NOT REACH, measured by REV-105: it binds
+    ``_identifying_match_tokens`` and ``_match_fold``, the two helpers, and never
+    calls ``_span_licenses_actor``. A regression introduced in the CONSUMER -- a
+    substring comparison replacing the whole-token one inside the scan loop --
+    would leave this test green. The F-079 refusal case
+    ("EntE" inside "Enterobactin") is what catches that, not this. Do not read a
+    green pin as proof the guard as a whole still matches the bench rule.
     """
 
     from t2pw.bench.semantic_production import _actor_named_in_span
