@@ -1303,6 +1303,301 @@ def _batch_rollback_reason(
     ), new_orphans
 
 
+# ---------------------------------------------------------------------------
+# An audit patch may not invent an actor role it has no evidence for.
+#
+# WHY THIS EXISTS -- one failure, reproducible from artifacts on disk:
+#
+#   runs_verify/2026-08-28_1816/papers/PMC13231680/research/final_mapped.json
+#   /processes/reactions/0 was frozen with the SAME protein listed both as the
+#   reaction's enzyme and, on that same row, as its inhibitor. The reaction's own
+#   evidence string names no actor at all, and the audit round that wrote it says
+#   why in audit_iteration_summary.json /rounds/0/llm_repair_rationale: the enzyme
+#   was added "to resolve the structural inconsistency where an inhibitor is listed
+#   without a target enzyme". The row's own lineage carrier agrees with that
+#   diagnosis -- support "unsupported", sources [] -- and was still written with
+#   review_required false. PRODUCT_CONTRACT section 1 forbids exactly this: the
+#   system must never invent enzymes, and satisfying a schema-shaped complaint is
+#   the clearest available case of inventing one "merely to guarantee a PWML file".
+#   The repair that WAS available -- drop the incoherent modifier, or flag the row
+#   for review -- costs no biology. Promoting the inhibitor to catalyst asserts the
+#   opposite of the paper's thesis.
+#
+# WHY THE HOLE WAS THERE: the same shape the referential-integrity comment above
+# describes, on the actor-role axis. An add to /processes/reactions/N/enzymes/- is
+# not connectivity (_is_connectivity_path matches only /inputs and /outputs), is
+# not major topology (_is_major_topology_path stops at the container or an index),
+# and is not a remove -- so it cleared on confidence >= 0.75 alone
+# (_threshold_for_op) with nothing anywhere asking whether any evidence named the
+# proposed actor as an actor.
+#
+# WHY THIS PREDICATE READS THE OP AND NOTHING ELSE. It is a pure function of the
+# patch. That is not an economy, it is the safety property. The measured defect is
+# a protein LEGITIMATELY PRESENT on the reaction as an inhibitor being promoted to
+# that reaction's catalyst, so any guard able to consult the payload can be argued
+# into reading that presence as corroboration -- and would then accept the exact
+# patch this guard exists to refuse. A predicate that cannot see the payload cannot
+# make that mistake, and the property is checkable by reading the signature rather
+# than by trusting the body. It also sidesteps the staleness _should_accept already
+# documents below: `source_payload` is the pre-batch payload, so the indices in
+# `path` stop addressing the rows they name after any earlier removal.
+#
+# WHY enzyme_cues.ENZYME_EVIDENCE_CUE_RE IS NOT REUSED, though it is this
+# repository's existing catalysis-cue predicate, sits in a leaf module with no
+# intra-package imports, and is already reachable from here. Its stems are
+# (catalyz|catalys|catalytic|ENZYME|ENZYMATIC|mediated|dependent|ACTIVITY|activat|
+# promot|facilitat), calibrated for a name-based attacher reading PAPER PROSE,
+# where "enzyme" and "activity" are weak but honest signals. The text judged here
+# is not paper prose: it is a model-authored patch justification, written in the
+# payload's own schema vocabulary. BOTH strings at the top of this comment -- the
+# rationale that invented the enzyme, and the inhibitor span it was invented from
+# -- carry "enzyme" within that module's 80-character window of the protein name,
+# so reusing that regex here would admit the very patch this guard refuses. The
+# window discipline is borrowed deliberately; the vocabulary deliberately is not.
+#
+# WHAT THIS GUARD DOES NOT CLAIM. A cue near a name is a NECESSARY condition, never
+# a sufficient one: it cannot prove the biology, only refuse a patch that offers no
+# evidence of the role at all. Scoring the frozen graph is a different seam and
+# already has an owner (bench.semantic_production._check_actor_evidence, F-079).
+# Two adjacent shapes are deliberately out of scope for this one predicate and are
+# named here so a reader knows they were considered: a `replace` of an existing
+# actor row's own `role` field (in-place promotion, where the actor name is not in
+# the op value), and an actor arriving inside a whole-reaction add, which is
+# major-topology territory.
+# ---------------------------------------------------------------------------
+
+# Stable, greppable prefix, matching the convention
+# REFERENTIAL_INTEGRITY_REASON_PREFIX established above, so batch tooling can count
+# these the way it already counts the "attempted_to_*" lock reasons.
+UNEVIDENCED_ACTOR_ROLE_REASON_PREFIX = "unevidenced_actor_role"
+
+# The actor-role containers, on the three process buckets _is_core_semantics_path
+# already treats as core. Matches the container itself, one element of it
+# (an index or the "-" append token), and the actor-name field of one element --
+# the three shapes a patch can use to introduce an actor. It deliberately does NOT
+# match /processes/interactions/, which has no catalyst role, nor a deeper field
+# such as .../enzymes/0/role.
+_ACTOR_ROLE_PATH_RE = re.compile(
+    r"^/processes/(?:reactions|transports|reaction_coupled_transports)/\d+"
+    r"/(?P<container>enzymes|modifiers|modifiers_or_enzymes|catalysts|transporters|cargo|cargo_complex)"
+    r"(?:/(?:\d+|-))?"
+    r"(?:/(?:entity|protein|protein_name|protein_complex|enzyme|modifier|name))?$"
+)
+
+# Containers whose rows ARE catalysts by construction, so no `role` field can make
+# them anything else: process_normalizer migrates enzymes[] into modifiers[] with
+# role "catalyst" and then rebuilds enzymes[] from the role=catalyst rows only
+# (process_normalizer.py:3011-3062).
+_CATALYST_ACTOR_CONTAINERS = ("enzymes", "catalysts", "modifiers_or_enzymes")
+_TRANSPORT_ACTOR_CONTAINERS = ("transporters", "cargo", "cargo_complex")
+
+# Keyed exactly as process_normalizer's exported role vocabulary spells it
+# (`enzyme_export_roles`, process_normalizer.py:2751 -- "", catalyst, enzyme,
+# activator, inhibitor). An unroled modifier is judged as a catalyst because that
+# is what the normalizer makes it: it setdefaults role to "catalyst".
+_ROLE_FAMILY_BY_ROLE = {
+    "catalyst": "catalysis",
+    "enzyme": "catalysis",
+    "activator": "activation",
+    "inhibitor": "inhibition",
+    "repressor": "inhibition",
+    "transporter": "transport",
+}
+
+# Role-predicating vocabulary, matched against the registry-normalized span (lower
+# case, hyphens and punctuation removed), so every pattern here is written in that
+# spelling: "up-regulated" reaches this regex as "upregulated".
+#
+# The catalysis set is the vocabulary of enzyme-catalysed transformation -- the
+# verb "catalyse" itself, the six EC classes' reaction verbs, and the -ase family
+# suffixes. Process words that name an event without predicating an agent
+# ("decomposes", "forms", "occurs", "is produced") are NOT cues: they describe
+# something happening, not a protein doing it, and a reaction's own name is full of
+# them. Nouns of the schema ("enzyme", "activity", "modifier") are not cues either,
+# for the reason set out in the comment above.
+_ROLE_CUE_RES = {
+    "catalysis": re.compile(
+        r"catalys|catalyz|catalytic"
+        r"|hydroly|cleav|degrad|metabolis|metaboliz"
+        r"|oxidis|oxidiz|dehydrogenat|hydroxylat|oxygenat"
+        r"|reductas|reduces|reducing|reduction of"
+        r"|phosphorylat|methylat|acetylat|acylat|glycosylat|sulfonat|adenylat|prenylat"
+        r"|transaminat|aminotransfer|deaminat|decarboxylat|carboxylat|dehydrat"
+        r"|isomeris|isomeriz|epimeris|epimeriz|racemis|racemiz"
+        r"|ligat|synthesis|synthesiz|synthetas|synthas"
+        r"|hydrolas|transferas|oxidoreductas|isomeras|ligas|lyase|mutase|kinase"
+        r"|peptidas|esteras|protease|polymeras|reductase"
+        r"|converts|converting|converted by|conversion of"
+    ),
+    "activation": re.compile(
+        r"activat|stimulat|upregulat|enhanc|induc|potentiat|agonis|promot"
+    ),
+    "inhibition": re.compile(
+        r"inhibit|suppress|repress|downregulat|blocks|blocked|blocking"
+        r"|antagonis|inactivat|abolish|attenuat"
+    ),
+    "transport": re.compile(
+        r"transport|translocat|import|export|efflux|influx|uptake|secret"
+        r"|shuttl|permeas|symport|antiport|uniport|extrud|channel|carrier|pump"
+    ),
+}
+
+# Used only for a declared role outside the exported vocabulary above (a "cofactor"
+# modifier, say). The actor must still be NAMED in a span that says something
+# role-predicating about it; this guard simply cannot narrow WHICH role, so it does
+# not pretend to. Strictly more permissive than the four families and never more
+# permissive than the base behaviour, which asked for nothing at all.
+_ANY_ROLE_CUE_RE = re.compile(
+    "|".join(pattern.pattern for pattern in _ROLE_CUE_RES.values())
+)
+
+# The +/-80 character window enzyme_cues.cue_near_name scans around a name. Borrowed
+# so the two agree on how close a cue has to sit to count as being about the actor.
+_ACTOR_CUE_WINDOW = 80
+
+# The evidence-bearing fields of an actor row, spelled as audit_json_llm._evidence_strings
+# spells them, so a row that carries its own quote is read the same way on both sides.
+_ACTOR_ROW_EVIDENCE_KEYS = ("evidence", "evidence_quote", "source_evidence", "source_text")
+
+
+def _actor_role_target(path: str) -> str:
+    """The actor-role container this path addresses, or "" if it addresses none."""
+    match = _ACTOR_ROLE_PATH_RE.match(path)
+    return match.group("container") if match else ""
+
+
+def _proposed_actor_names(value: Any) -> List[str]:
+    """Every actor name the patch value would introduce, in payload spelling.
+
+    Reuses process_normalizer._actor_name_from_row, so a bare string, a
+    ``{"entity": ...}`` row and a ``{"protein_complex": ...}`` row all resolve to a
+    name the same way the registry gate resolves them. A value that names no actor
+    -- ``[]``, ``None``, a number -- returns empty, and the guard then has nothing
+    to license: emptying or clearing a role introduces no actor.
+    """
+
+    names: List[str] = []
+    if isinstance(value, list):
+        for item in value:
+            names.extend(_proposed_actor_names(item))
+        return names
+    if isinstance(value, (str, dict)):
+        name = _registry_actor_name(value)
+        if name:
+            names.append(name)
+    return names
+
+
+def _actor_role_family(container: str, value: Any) -> str:
+    if container in _TRANSPORT_ACTOR_CONTAINERS:
+        return "transport"
+    if container in _CATALYST_ACTOR_CONTAINERS:
+        return "catalysis"
+    role = _registry_normalize(str(value.get("role", ""))) if isinstance(value, dict) else ""
+    if not role:
+        return "catalysis"
+    return _ROLE_FAMILY_BY_ROLE.get(role, "other")
+
+
+def _patch_evidence_spans(op: Dict[str, Any], value: Any) -> List[str]:
+    """The spans this patch offers, and nothing else.
+
+    The op's own ``evidence`` field plus, when the proposed actor row carries its
+    own quote, that row's evidence fields. Nothing is read from the payload: see the
+    comment above for why that restriction is the point rather than a shortcut.
+
+    ``_normalize_patch_op`` promotes ``reason`` into ``evidence`` when the model
+    supplied no ``evidence`` of its own, so a bare rationale does arrive here as a
+    span. It needs no special case: it is judged on its own text, and a rationale
+    that argues from the payload's shape names no actor performing a role.
+    """
+
+    spans: List[str] = []
+    for candidate in (op.get("evidence"),):
+        if isinstance(candidate, str) and candidate.strip():
+            spans.append(candidate)
+    if isinstance(value, dict):
+        for key in _ACTOR_ROW_EVIDENCE_KEYS:
+            candidate = value.get(key)
+            if isinstance(candidate, str) and candidate.strip() and candidate not in spans:
+                spans.append(candidate)
+    return spans
+
+
+def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
+    """Does this span name ``actor`` performing a ``family`` role?
+
+    Whole-token containment after registry normalization -- the same comparison
+    discipline bench.semantic_production._actor_named_in_span uses, so "LpxA" does
+    not match inside "LpxA2" and no substring, per-token union or edit distance is
+    involved -- and then a role cue within :data:`_ACTOR_CUE_WINDOW` characters of
+    that occurrence.
+
+    A name carrying no letter at all -- "2", "+" -- cannot be located in prose, so
+    it is treated as unlocatable and the span does not license it. That is the
+    closed direction: the patch is refused and the payload is left exactly as the
+    gate last accepted it. There is deliberately no minimum LENGTH beyond that. A
+    one-letter protein symbol is a real identifier (complement C, the P protein of
+    the paramyxoviruses), and the boundary assertions below already do the work a
+    length floor would be standing in for: "p" matches the standalone token and
+    never the "p" inside another word.
+    """
+
+    haystack = _registry_normalize(span)
+    needle = _registry_normalize(actor)
+    if not needle or not re.search(r"[a-z]", needle):
+        return False
+    if not haystack:
+        return False
+    cue = _ROLE_CUE_RES.get(family, _ANY_ROLE_CUE_RE)
+    for match in re.finditer(rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])", haystack):
+        start = max(0, match.start() - _ACTOR_CUE_WINDOW)
+        end = min(len(haystack), match.end() + _ACTOR_CUE_WINDOW)
+        if cue.search(haystack[start:end]):
+            return True
+    return False
+
+
+def _unevidenced_actor_role_rejection(op: Dict[str, Any]) -> Optional[str]:
+    """Why this patch may not introduce the actor role it proposes, or ``None``.
+
+    Pure in ``op``. Takes no payload argument, by design -- see the block comment
+    above -- so "the entity is already in this reaction" is not merely rejected as
+    evidence, it is unreachable as evidence.
+    """
+
+    action = str(op.get("op", "")).lower()
+    if action not in {"add", "replace"}:
+        return None
+    container = _actor_role_target(str(op.get("path", "")))
+    if not container:
+        return None
+    value = op.get("value")
+    names = _proposed_actor_names(value)
+    if not names:
+        return None
+    spans = _patch_evidence_spans(op, value)
+    listed = ", ".join(f"'{name}'" for name in names)
+    if not spans:
+        return (
+            f"{UNEVIDENCED_ACTOR_ROLE_REASON_PREFIX}: {action} of {listed} to "
+            f"{container} carries no evidence span."
+        )
+    family = _actor_role_family(container, value)
+    unlicensed = [
+        name for name in names
+        if not any(_span_licenses_actor(span, name, family) for span in spans)
+    ]
+    if not unlicensed:
+        return None
+    listed = ", ".join(f"'{name}'" for name in unlicensed)
+    return (
+        f"{UNEVIDENCED_ACTOR_ROLE_REASON_PREFIX}: no evidence span names {listed} "
+        f"performing the {family} role of {container}; an actor role may not be "
+        f"added to satisfy payload structure."
+    )
+
+
 def _should_accept(
     op: Dict[str, Any],
     source_payload: Dict[str, Any],
@@ -1335,6 +1630,12 @@ def _should_accept(
     if action == "remove" and _is_core_semantics_path(path):
         if not _is_safe_core_remove(op, source_payload):
             return False, "Remove on core process semantics is blocked unless target is provable no-op."
+    # The actor-role guard. Runs last so every reason string the existing guards
+    # emit keeps its precedence in reports that already grep for them, and because
+    # a patch below the confidence bar should still be reported as below the bar.
+    actor_role_rejection = _unevidenced_actor_role_rejection(op)
+    if actor_role_rejection is not None:
+        return False, actor_role_rejection
     # Removals under /entities are intentionally NOT judged here. _is_core_semantics_path
     # covers only /processes/*, and widening it would still leave this function blind:
     # `source_payload` is the pre-batch payload, so after any earlier entity removal the
