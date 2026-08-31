@@ -8894,3 +8894,94 @@ and committed, and the peer then traced its own report to a **torn `git status` 
 another session was mutating the tree**, and retracted it along with a second observation it had
 passed to `project14-t2pw-b1`. **One peer claim verified false, one verified true, neither taken on
 trust.**
+
+## C-106 MERGED — `fa69c57`, gates pinned at the merged tip · 2026-08-31
+
+**REV-106 APPROVE**, independent reviewer, 18 G11 reports, **10 mutations of its own across three
+rounds**. Both traps the criteria named were checked **by execution**, not by reading.
+
+| Merge rule | Verdict |
+|---|---|
+| 1 dependency merged | ✔ base `c7fb5c5` is an ancestor of the integration tip |
+| 2 diff inside boundary | ✔ **40 paths**, all on the card's table. 0 under `src/`, gold, `runs_verify/`, `bounded_run.py`, `g11_evidence.py` |
+| 3 focused tests pass | ✔ c102 **14 passed** (base 2 failed / 12 passed); new file **16 passed** |
+| 4 pinned baseline moved deliberately | ✔ SMOKE **473 → 503**, arithmetic `473 + 14 + 16`, documented in `TEST_MATRIX.md` in four places |
+| 5 independent reviewer on the actual diff | ✔ REV-106, non-author, reproduced every number |
+| 6 no biological gate weakened | ✔ test/evidence tooling only; no production line changed |
+| 7 incomplete-but-correct preserved | ✔ n/a — no pathway behaviour touched |
+| 8 no exporter repairs biology post-freeze | ✔ n/a |
+| 9 G9 | ✔ two behavioural base failures; the new file explicitly labelled NEW ACCEPTANCE TEST |
+| 10 SMOKE after merge | ✔ **503 passed in 47.94s** |
+| 11 test-process lifecycle | ✔ every job zero survivors, cleanup success |
+
+**Gates measured by the Lead on the merged tip `fa69c57`**, not inherited from the branch:
+
+| Gate | Result |
+|---|---|
+| SMOKE (22 files) | **503 passed in 47.94s** |
+| gold-readers (22 files) | **456 passed / 8 skipped / exit 0** |
+| `acceptance.py` sha before / after SMOKE | `70a642ca…` / `70a642ca…` — **identical** |
+
+That last row is deliberate. REV-106 advisory finding 3 is that the new test writes to the tracked
+`src/t2pw/bench/acceptance.py` during the run and restores it in a `finally`, so **SMOKE is no
+longer read-only with respect to the working tree.** It is safe under the one-heavy-job-at-a-time
+and never-`-n auto` rules, and I verified the restore by hashing the file either side of my own
+SMOKE run. **A future card that parallelises SMOKE would corrupt that file.**
+
+### What the card found that its own charter got wrong
+
+**Four pins moved, not the two every document named.** `assert 72 == 62` fires first; `withheld`
+(92 → 97) and `with_matched_forbidden` (23 → 26) are *derived* pins sitting behind it that had never
+executed against the grown corpus. The attribution was derived **independently three times** — by me
+before chartering, by the author, by the reviewer — and agrees exactly: the other thirteen runs sum
+to **62 / 92 / 23**, and `runs_verify/2026-08-28_1816` under `e77ad3d` contributes **10 / 5 / 3**.
+
+**The preservation case is what makes this a fix.** The harness still REFUSES a red baseline. The
+reviewer broke a pin, ran the driver, and confirmed it aborts having applied **zero** mutations —
+proved by unchanged sha256 on both mutated files, not by reading the output. An author who had made
+the harness runnable by deleting that precondition would have shipped a **strictly worse instrument
+than the broken one**, because a harness that certifies against a red suite is worse than one that
+refuses to start.
+
+**R5 went through the driver for the first time** since C-104 registered it, and went RED.
+
+### Two things the CARD got wrong, both caught by the people doing the work
+
+1. **The card ordered `TEST_MATRIX.md` edits above `:477`**, which `:538` forbids because addresses
+   are pinned by citation. The implementer **flagged the conflict rather than silently violating one
+   of the two**, and resolved it line-neutrally. Verified: 477 lines above the pin on both sides,
+   `:477` byte-identical, every change at or below it in-place. **The card was wrong and the
+   implementer was right.** Registered as **F-154**, together with the larger discovery that
+   `:213-218` and `:242-252` have been citing the wrong tables all along.
+2. **My path count was wrong.** I told the reviewer 39; it is **40**, and the reviewer said so rather
+   than adopting my number. Small, and exactly the behaviour the role exists for.
+
+### A committed finding corrected
+
+**REV-104 `bytes=78077` is arithmetically impossible.** `79745 − 1673 = 78072`. The author caught it;
+the reviewer reproduced the text-mode round trip on a copy of the real file and measured
+`78072 / crlf=0 / bare_lf=1673`, a delta of exactly the 1673 CR bytes. **The defect REV-104 describes
+is entirely real — only the transcribed number was wrong, by five.**
+
+### REV-106 three advisory findings — none blocking, all recorded
+
+1. **Cosmetic.** A message says *"Four pins move together"* and then lists five lines. The five line
+   numbers are all exact; the wording is off by one, in a message whose whole purpose is to be
+   actionable.
+2. **Second-order, advisory.** test_02 non-vacuity guard calls `HARNESS.find_occurrences`, so a
+   defect in *that function* is invisible to it — forcing it to `return 1` left all 16 tests green.
+   Mitigated in practice: `apply_mutation` independently re-counts at runtime and aborts, which the
+   committed 8-mutation run exercises. **A fix would arguably violate R9** by replacing the real
+   primitive with a reimplementation, so this is a note, not a card.
+3. **SMOKE is no longer read-only w.r.t. the working tree** — see the gate table above.
+
+## Run ledger — this wave, continued
+
+| # | G11 report | Job | Result |
+|---|---|---|---|
+| 03 | `ORCH-717/03-f148-timeout-probe.json` | F-148 classification from committed artifacts | two mechanisms; budget-bound; reserve consumed. 0 survivors |
+| 04 | `ORCH-717/04-f150-verify.json` | F-150 verify, attempt 1 | **FAILED** — cp1252 console encode error on the delta sign. Preserved |
+| 05 | `ORCH-717/05-f150-verify-r2.json` | F-150 verify, corrected | both halves confirmed. 0 survivors |
+| 06 | `ORCH-717/06-c107-claims.json` | C-107 routed claims vs shipped code | all reproduce; plural bypass **3 → 5**. 0 survivors |
+| 07 | `ORCH-717/07-smoke-post-c106.json` | SMOKE on merged tip `fa69c57` | **503 passed in 47.94s**. 0 survivors |
+| 08 | `ORCH-717/08-goldreaders-post-c106.json` | gold-readers on merged tip | **456 / 8 skipped / exit 0**. 0 survivors |
