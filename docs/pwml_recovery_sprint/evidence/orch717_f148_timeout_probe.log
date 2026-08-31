@@ -1,0 +1,138 @@
+==============================================================================
+1. THE THREE TIMEOUTS -- two mechanisms, not one
+==============================================================================
+
+  PMC12444477/strict
+      termination_reason  : operation_timeout
+      stage               : input
+      operational_failure : True
+      files               : []
+      counts              : {}
+      budget              : ABSENT
+      budget_unrecorded   : True
+
+  PMC12444477/research
+      termination_reason  : budget_exhausted
+      stage               : unknown
+      operational_failure : True
+      files               : []
+      counts              : {}
+      leg_timeout_seconds         : 1800.0
+      leg_timeout_default_seconds : 3600.0
+      leg_timeout_overridden      : True
+      leg_timeout_override_reason : ''
+      leg_timeout_override_source : ''
+      elapsed_seconds             : 1800.47
+      remaining_seconds           : -0.47
+      finalization_reserve_seconds: 120.0
+      child_deadline_seconds      : 1680.0
+
+  PMC12096016/strict
+      termination_reason  : budget_exhausted
+      stage               : unknown
+      operational_failure : True
+      files               : []
+      counts              : {}
+      leg_timeout_seconds         : 1800.0
+      leg_timeout_default_seconds : 3600.0
+      leg_timeout_overridden      : True
+      leg_timeout_override_reason : ''
+      leg_timeout_override_source : ''
+      elapsed_seconds             : 1800.16
+      remaining_seconds           : -0.16
+      finalization_reserve_seconds: 120.0
+      child_deadline_seconds      : 1680.0
+
+==============================================================================
+2. TIMING DISTRIBUTION of the legs that FINISHED, against the ceiling
+==============================================================================
+
+  legs parsed        : 20   finished: 17   timed out: 3
+  leg ceiling used   : 1800s   (default is 3600s -- this run HALVED it)
+
+  slowest legs that FINISHED, as a fraction of the ceiling:
+        1657.8s   92.1%  #######################################################
+        1486.2s   82.6%  ##################################################
+        1263.4s   70.2%  ##########################################
+        1210.4s   67.2%  ########################################
+        1118.1s   62.1%  #####################################
+        1005.3s   55.9%  ##################################
+
+  max finished       : 1657.8s = 92.1% of ceiling
+  median finished    : 720.1s
+  headroom on slowest: 142.2s
+
+  Against the DEFAULT 3600s ceiling the slowest finished leg is 46.0%.
+
+==============================================================================
+3. NON-TERMINATION vs BUDGET -- does the other leg of the same paper finish?
+==============================================================================
+
+  PMC12444477
+      strict    TIMEOUT (operation_timeout)
+      research  TIMEOUT (budget_exhausted)
+
+  PMC12096016
+      strict    TIMEOUT (budget_exhausted)
+      research  FINISHED  counts={'stage0_observed_pathways': 1, 'stage0_observed_organisms': 1, 'reactions': 5, 'transports': 0}
+
+==============================================================================
+4. RETRY AMPLIFICATION -- what evidence survived to test it with?
+==============================================================================
+
+  batch.log lines            : 142
+  occurrences of 'retry'     : 0
+  occurrences of 'retrying'  : 0
+  occurrences of 'attempt'   : 0
+  occurrences of 'backoff'   : 0
+  occurrences of 'rate limit': 0
+  occurrences of '429'       : 0
+
+  attempt records preserved on the three timed-out legs:
+      PMC12444477/strict    -> NONE
+      PMC12444477/research  -> NONE
+      PMC12096016/strict    -> NONE
+
+==============================================================================
+5. THE OVERRIDE -- recorded as a fact, unrecorded as a decision
+==============================================================================
+
+  PMC12444477/research
+      overridden : True   3600.0 -> 1800.0
+      reason     : ''
+      source     : ''
+      finalization reserve : 120.0s, child deadline 1680.0s
+      elapsed              : 1800.47s  -> overran the child deadline by 120.47s and consumed the ENTIRE reserve
+
+  PMC12096016/strict
+      overridden : True   3600.0 -> 1800.0
+      reason     : ''
+      source     : ''
+      finalization reserve : 120.0s, child deadline 1680.0s
+      elapsed              : 1800.16s  -> overran the child deadline by 120.16s and consumed the ENTIRE reserve
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ed8a5b69f2bb57b5d332e0d7dbd9fca517bd8d35  [git, worktree dirty=True]
+label                   : orch717-f148-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch717_f148_timeout_probe.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 52736 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 240 s
+duration                : 0.15 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  52180:python.exe
+descendants terminated  : 1  52180
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-717\03-f148-timeout-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
