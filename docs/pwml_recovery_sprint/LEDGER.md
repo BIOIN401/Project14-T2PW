@@ -8725,3 +8725,103 @@ actor-evidence spans are upstream of C-105 and outside its boundary.
 A `FAILED (\S+)` regex split a parametrized test id and reported a mutation as 3 reds instead of 1;
 and a first Pgp diagnosis matched the wrong row. **Both preserved beside their corrections**, along
 with two staging slots that produced no artifact. That is the practice working.
+
+---
+
+# WAVE ORCH-717 — post-triage: repair the instruments, then the C-105 follow-on
+
+Opened at integration tip `24c58c2` by the Lead Orchestrator (session `project14-t2pw-ab`).
+
+## Takeover verification — all checks passed at open
+
+| Check | Expected | Observed |
+|---|---|---|
+| local = `origin/` = `git ls-remote` | all three equal | all three `24c58c2` ✔ |
+| `main` | local `7531692`, remote `03f1af5`, untouched | both as expected, untouched ✔ |
+| merge in progress / staged | none / none | none / none ✔ |
+| heavy lock `C:/t/heavylock` | absent | absent ✔ |
+| sprint-owned Python | zero | zero ✔ |
+| IDE processes | two `ms-python.isort`, never cleanup targets | PIDs 30380, 12516, matched on command line ✔ |
+| `streamlit_app.py` | 35 ins / 2 del, `sha256:47e4fafa789d359d…` | 35/2, `47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632` ✔ |
+| caches, `topics_*.txt`, stray `ValueError` | uncommitted, untouched | uncommitted, untouched ✔ |
+
+## Peer coordination — a SECOND orchestrator had claimed the same role
+
+`ListAgents` showed one live interactive peer, `project14-t2pw-93`. It replied that it holds none
+of the sprint resources, has run no job of any class this session, and is doing read-only
+reconnaissance of the RAG subsystem for a different question. **No contention.**
+
+It also reported that roughly ten minutes earlier, session `project14-t2pw-b1` had sent it the
+**same coordination check**, declaring itself *"Lead Orchestrator for the T-107 TRIAGE AND
+CLOSE-OUT wave"* and intending to take the heavy lock, charter and merge cards, and push to
+`origin/sprint/pwml-recovery`. **Two orchestrators pushing one integration branch is the failure
+mode worth spending a message to avoid**, so I attempted to contact it before proceeding.
+
+`SendMessage` to `project14-t2pw-b1` returned **no agent reachable**, and it is absent from
+`ListAgents`. It has exited. I am sole integration authority for this wave. Two things about it are
+worth recording:
+
+* **It was working from a stale tip.** It cited `36f773c`; that is an ancestor of `24c58c2`.
+  Anything it measured predates C-104, C-105, the T-107 triage and F-146…F-152.
+* **It intended to re-triage T-107's strict legs**, which are already triaged and committed in
+  `T107-TRIAGE.md`. Had it run, it would have duplicated a finished wave against stale evidence.
+
+**One peer claim checked and found wrong.** `project14-t2pw-93` reported
+`evidence/g11/REV-101/40..47-r3-*.json` as *uncommitted* and possibly needing preservation.
+`git ls-files` shows **all eight are tracked and committed**. Nothing was at risk. Recorded because
+a peer's report about your own tree is a claim to verify, not a fact to act on.
+
+## C-106 CHARTERED — Card 1, the instruments
+
+**F-151 + F-152 + the D-084-violating harness, in three files.** Chartered first because the broken
+harness blocks a mandatory practice: D-078 / F-144 make mutation testing required on every card,
+and `c102_mutation_attack.py` has been **unrunnable since `e77ad3d`**.
+
+### The finding that changed the card — the repair is bigger than three documents say
+
+The handoff, F-151 and REV-104's correction all describe this as **"re-pin 62 → 72"**.
+**That alone leaves both tests red.**
+
+`assert 72 == 62` is the assertion that fires *first*. Tests 10 and 13 carry **further derived pins
+after it** that have never executed against the grown corpus, because the census assert aborts the
+test before reaching them. Predictions were recorded first
+(`evidence/orch717_census_predictions.md`), then measured with the census assert removed
+(`evidence/orch717_census_probe.py`):
+
+| Pin | Current | Measured | Moves? |
+|---|---|---|---|
+| test 10 `legs` | `== 62` | **72** | yes |
+| test 13 `checked` | `== 62` | **72** | yes |
+| test 10 `withheld` | `== 92` | **97** | **yes — named nowhere before this wave** |
+| test 13 `with_matched_forbidden` | `== 23` | **26** | **yes — named nowhere before this wave** |
+| test 10 `affected − F132_PAPERS` | `{"PMC13231680"}` | `{'PMC13231680'}` | no |
+| test 10 `cleared` | `[]` | `[]` | no |
+
+**Attribution:** `runs_verify/2026-08-28_1816` (T-107, commit `e77ad3d`) contributes exactly
+**10 legs, 5 withheld terms, 3 matched-forbidden legs**, and no other run's contribution changes.
+That is the whole of 62→72, 92→97 and 23→26.
+
+**P6 was the one at risk and it held.** Had a T-107 leg belonged to a gold paper outside
+`F132_PAPERS`, the set-equality would have failed too and the correct fix would have been larger
+than a census re-pin. It did not. Recorded because the prediction was written before the answer was
+known, and a prediction that survives is worth as much as one that fails.
+
+### The card also closes the reason nobody saw it
+
+`tests/test_c102_coverage_denominator.py` is **in no chunk, no SMOKE and no gold-readers**. The tip
+has been red there since `e77ad3d` while every gate stayed green. C-106 adds it to SMOKE — an
+authorized merge-rule-4 baseline move, 20 files → 22, with the arithmetic pinned to
+`473 + 14 + N` exactly.
+
+**Review criteria fixed in writing before the diff exists:** `prompts/REV-106.md`, 15 card-specific
+items plus the binding table, adapted from `REV-104-105.md`. The two traps it names explicitly are
+(a) an author who trusts the "re-pin to 72" prose over the measurement and ships a still-red file,
+and (b) an author who makes the harness runnable by **deleting its baseline precondition**, which
+satisfies the card's headline and destroys its purpose.
+
+## Run ledger — this wave
+
+| # | G11 report | Job | Result |
+|---|---|---|---|
+| 01 | `ORCH-717/01-c102-base-red.json` | c102 focused, base measurement at `24c58c2` | **2 failed, 12 passed** — F-151 reproduced. 0 survivors, cleanup success |
+| 02 | `ORCH-717/02-census-probe.json` | census probe, all derived pins | 72 / 97 / 26, P6 and P7 hold. 0 survivors, cleanup success |
