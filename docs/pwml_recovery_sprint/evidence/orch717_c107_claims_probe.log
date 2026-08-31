@@ -1,0 +1,92 @@
+============================================================================
+1a. INHIBITION NEAR-SYNONYMS vs the catalysis contra-cue
+============================================================================
+
+  word             contra fires  ALSO a catalysis cue  verdict
+  blockade         False         False                 DEFEATS contra
+  impairment       False         False                 DEFEATS contra
+  disruption       False         False                 DEFEATS contra
+  reduction        False         False                 DEFEATS contra
+  loss             False         False                 DEFEATS contra
+  silencing        False         False                 DEFEATS contra
+  sequestration    False         False                 DEFEATS contra
+  depletion        False         False                 DEFEATS contra
+  ablation         False         False                 DEFEATS contra
+  interference     False         False                 DEFEATS contra
+  quenching        False         False                 DEFEATS contra
+  inhibition       True          False                 caught
+
+  11 of 12 defeat the contra-cue
+
+  The live sentence, through the REAL predicate:
+      licenses NDM-1 as CATALYST: True   <- 'the reduction of NDM-1 activity by PSA'
+      licenses NDM-1 as CATALYST: False  <- 'PSA significantly inhibited NDM-1 enzyme activity'
+      licenses NDM-1 as CATALYST: True   <- 'NDM-1 catalyses the hydrolysis of meropenem'
+
+============================================================================
+1c. THE -ase STOPLIST PLURAL BYPASS
+============================================================================
+
+  stoplist entries              : 33
+  entries with NO plural listed : 13
+      ['briefcase', 'ceased', 'chase', 'decreased', 'erase', 'increased', 'lease', 'please', 'purchase', 'released', 'showcase', 'staircase', 'vase']
+
+  does the unlisted plural slip through the enzyme-noun rule?
+      briefcase    cue=False   briefcases    cue=True   <-- BYPASS
+      ceased       cue=False   ceaseds       cue=False
+      chase        cue=False   chases        cue=False
+      decreased    cue=False   decreaseds    cue=False
+      erase        cue=False   erases        cue=False
+      increased    cue=False   increaseds    cue=False
+      lease        cue=False   leases        cue=False
+      please       cue=False   pleases       cue=True   <-- BYPASS
+      purchase     cue=False   purchases     cue=True   <-- BYPASS
+      released     cue=False   releaseds     cue=False
+      showcase     cue=False   showcases     cue=True   <-- BYPASS
+      staircase    cue=False   staircases    cue=True   <-- BYPASS
+      vase         cue=False   vases         cue=False
+
+============================================================================
+1f. 'mediat' MATCHES INSIDE 'intermediate'
+============================================================================
+  catalysis cue on 'intermediate'                     -> True
+  catalysis cue on 'intermediates'                    -> True
+  catalysis cue on 'mediates'                         -> True
+  catalysis cue on 'an intermediate of the pathway'   -> True
+
+  through the real predicate, a span that names a protein beside 'intermediate':
+      licenses EntB as CATALYST: True  <- 'EntB is an intermediate carrier in this pathway'
+
+============================================================================
+1d / 1e. TRANSPORT ENZYME-NOUN, and the cofactor role
+============================================================================
+  family=transport  licenses MsbA  : False  <- 'MsbA is the flippase for lipid A'
+  family=transport  licenses MsbA  : True   <- 'MsbA transports lipid A across the membrane'
+  family=other      licenses Zn2+  : False  <- 'NDM-1 requires Zn2+ as a cofactor'
+  family=other      licenses Zn2+  : False  <- 'Zn2+ is the cofactor of this enzyme'
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d699f9661dedff3b7eb0f943497ec48bc8ccdd8b  [git, worktree dirty=True]
+label                   : orch717-c107-claims
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch717_c107_claims_probe.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 10176 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 240 s
+duration                : 0.15 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  54368:python.exe
+descendants terminated  : 1  54368
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-717\06-c107-claims.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
