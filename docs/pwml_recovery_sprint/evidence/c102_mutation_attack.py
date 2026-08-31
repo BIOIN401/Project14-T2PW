@@ -22,10 +22,40 @@ proves it share a name. It reverts `to_dict`'s deep copy of
 ran it, and test 4's identity and mutation-consequence assertions are what now
 make it RED.
 
+RESTORE DISCIPLINE -- D-084, and C-106 is the card that fixed it
+----------------------------------------------------------------
 Every mutation is applied by exact text substitution to a COMMITTED file and
-reverted with ``git checkout --`` afterwards, and the tree is verified clean at
-the end. A mutation whose substitution does not apply aborts the run: a mutation
-that silently did nothing would produce a green suite and read as a pass.
+restored by writing back the **bytes that were read before the mutation**. A
+mutation whose substitution does not apply aborts the run: a mutation that
+silently did nothing would produce a green suite and read as a pass.
+
+This file previously did neither half of that correctly, and hit **both rows of
+D-084's table in one loop** (measured in ``c106_d084_probe.log``):
+
+* it wrote the mutant with ``write_text(..., newline="")`` after a ``read_text``,
+  which rewrote every CRLF in the whole file to a bare LF. On the real target
+  that is ``bytes=79745 crlf=1673`` becoming ``bytes=78072 crlf=0`` **with the
+  mutation content held identical** -- a text-mode round trip reverts LESS than
+  it took;
+* and it restored with ``git checkout -- <path>``, which reverts MORE: it
+  discards anything else in the working tree for that path. It is also what
+  MASKED the damage above for an entire card, because it repaired the line
+  endings as a side effect and left ``git status --porcelain`` clean.
+
+So ``git checkout --`` is gone from the restore path entirely, and a clean
+``git status`` is no longer accepted as proof of a restore: each mutation asserts
+the target's **sha256 and its CRLF count** are unchanged, with the porcelain
+check kept only as an additional, insufficient-on-its-own signal.
+
+Substitutions are written with ``\\n`` but the working tree is CRLF
+(``core.autocrlf=true``, and ``.gitattributes`` carries no rule for these paths).
+``find_occurrences`` and ``apply_mutation`` translate the pattern to the target's
+own newline rather than translating the target to the pattern's -- which is what
+made the old text-mode round trip destructive in the first place.
+
+This module is IMPORTABLE. Nothing runs at import time, so
+``tests/test_c106_mutation_harness_executable.py`` can check every substitution
+still matches, and exercise the restore path, without running the attack.
 
 Usage::
 
@@ -34,12 +64,12 @@ Usage::
 
 from __future__ import annotations
 
+import hashlib
 import re
 import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(sys.argv[1]).resolve()
 PY = sys.executable
 ACCEPTANCE = "src/t2pw/bench/acceptance.py"
 SEMANTIC = "src/t2pw/bench/semantic.py"
@@ -117,11 +147,79 @@ MUTATIONS = [
 ]
 
 
-def run_suite() -> tuple[int, list[str]]:
+# ---------------------------------------------------------------------------
+# Byte-exact mutation primitives -- D-084. Used by the driver below AND by
+# tests/test_c106_mutation_harness_executable.py, so the test exercises the
+# harness's real restore path rather than a reimplementation of it.
+# ---------------------------------------------------------------------------
+
+def sha256_of(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def crlf_count(data: bytes) -> int:
+    return data.count(b"\r\n")
+
+
+def newline_of(text: str) -> str:
+    """The target's OWN newline. We translate the pattern to the file, never the
+    file to the pattern -- translating the file is precisely the D-084 defect."""
+    return "\r\n" if "\r\n" in text else "\n"
+
+
+def find_occurrences(path: Path, old: str) -> int:
+    """How many times this substitution matches, newline-aware."""
+    text = path.read_bytes().decode("utf-8")
+    return text.count(old.replace("\n", newline_of(text)))
+
+
+def apply_mutation(path: Path, old: str, new: str) -> bytes:
+    """Apply one substitution and return the SAVED BYTES to restore with.
+
+    Reads and writes bytes throughout. The only bytes that change are the ones
+    inside the substituted region; every line ending outside it is untouched.
+    """
+    saved = path.read_bytes()
+    text = saved.decode("utf-8")
+    newline = newline_of(text)
+    old_nl = old.replace("\n", newline)
+    new_nl = new.replace("\n", newline)
+    count = text.count(old_nl)
+    if count != 1:
+        raise ValueError(f"the substitution matched {count} times, not 1")
+    path.write_bytes(text.replace(old_nl, new_nl, 1).encode("utf-8"))
+    return saved
+
+
+def restore_saved_bytes(path: Path, saved: bytes) -> None:
+    """Replay the saved bytes and PROVE it, by sha256 and CRLF count.
+
+    D-084: `git checkout --` reverts more, a text-mode write reverts less.
+    Neither is used here. `git status --porcelain` is deliberately NOT the
+    check -- a clean porcelain is exactly what the broken loop produced while
+    it was rewriting every line ending in the file.
+    """
+    path.write_bytes(saved)
+    after = path.read_bytes()
+    if sha256_of(after) != sha256_of(saved):
+        raise AssertionError(
+            f"restore was not byte-exact: {sha256_of(saved)} -> {sha256_of(after)}"
+        )
+    if crlf_count(after) != crlf_count(saved):
+        raise AssertionError(
+            f"restore changed line endings: crlf {crlf_count(saved)} -> {crlf_count(after)}"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Driver
+# ---------------------------------------------------------------------------
+
+def run_suite(root: Path) -> tuple[int, list[str]]:
     proc = subprocess.run(
         [PY, "-m", "pytest", TESTS, "-q", "--no-header", "-rf",
          "--basetemp=" + str(Path("C:/t/bt/c102mut"))],
-        cwd=str(ROOT), capture_output=True, text=True, encoding="utf-8", errors="replace",
+        cwd=str(root), capture_output=True, text=True, encoding="utf-8", errors="replace",
     )
     out = proc.stdout + proc.stderr
     failed = sorted(set(re.findall(r"FAILED [^:]+::(\w+)", out)))
@@ -129,46 +227,112 @@ def run_suite() -> tuple[int, list[str]]:
     return proc.returncode, [*failed, *tail]
 
 
-def git(*args: str) -> str:
+def git(root: Path, *args: str) -> str:
     return subprocess.run(
-        ["git", *args], cwd=str(ROOT), capture_output=True, text=True, encoding="utf-8",
+        ["git", *args], cwd=str(root), capture_output=True, text=True, encoding="utf-8",
     ).stdout.strip()
 
 
-# The two mutated files must be clean; the attack driver and its own log are
-# untracked while it runs, so the check is scoped to what it will revert.
-assert git("status", "--porcelain", "--", ACCEPTANCE, SEMANTIC) == "", "mutated files must be clean"
-code, summary = run_suite()
-print(f"=== BASELINE (unmutated tip) === exit={code}")
-for line in summary:
-    print(f"    {line}")
-assert code == 0, "the unmutated suite must be green before any mutation means anything"
+def main(root: Path) -> int:
+    # The two mutated files must be clean; the attack driver and its own log are
+    # untracked while it runs, so the check is scoped to what it will revert.
+    assert git(root, "status", "--porcelain", "--", ACCEPTANCE, SEMANTIC) == "", \
+        "mutated files must be clean"
 
-failures = 0
-for name, what, rel, old, new in MUTATIONS:
-    path = ROOT / rel
-    text = path.read_text(encoding="utf-8")
-    if text.count(old) != 1:
-        print(f"=== {name}: ABORT -- the substitution matched {text.count(old)} times, not 1")
-        raise SystemExit(2)
-    path.write_text(text.replace(old, new, 1), encoding="utf-8", newline="")
-    code, summary = run_suite()
-    print(f"\n=== {name}: {what}")
-    print(f"    file={rel}  exit={code}  {'RED (detected)' if code else 'GREEN -- NOT DETECTED'}")
+    code, summary = run_suite(root)
+    print(f"=== BASELINE (unmutated tip) === exit={code}")
     for line in summary:
         print(f"    {line}")
-    git("checkout", "--", rel)
-    assert git("status", "--porcelain", "--", rel) == "", f"{name} did not revert"
-    if code == 0:
-        failures += 1
 
-restored = git("status", "--porcelain", "--", ACCEPTANCE, SEMANTIC)
-print(f"\n=== tree after restore: {restored!r}  (must be empty)")
-code, summary = run_suite()
-print(f"=== SUITE AFTER RESTORE === exit={code}")
-for line in summary:
-    print(f"    {line}")
-if failures or restored or code:
-    print(f"\nATTACK FAILED: {failures} mutation(s) went undetected")
-    raise SystemExit(1)
-print(f"\nATTACK PASSED: all {len(MUTATIONS)} mutations detected, tree clean, suite green")
+    # ------------------------------------------------------------------
+    # THE BASELINE PRECONDITION. Do not delete it, and do not weaken it.
+    #
+    # It is the thing that makes every mutation result below mean anything:
+    # against a red suite, every mutation "goes RED" for free and the harness
+    # certifies guards it never exercised. F-151 left this unsatisfiable for a
+    # whole card, and the correct repair -- C-106 -- was to fix the census pin
+    # in tests/test_c102_coverage_denominator.py so the baseline is honestly
+    # green, NOT to remove this check so the harness would run.
+    #
+    # The diagnostic below exists so the failure names the actionable thing
+    # rather than only the disappointed condition. The assertion itself is
+    # unchanged.
+    # ------------------------------------------------------------------
+    if code != 0:
+        print()
+        print("=== BASELINE PRECONDITION FAILED -- NOTHING BELOW WOULD MEAN ANYTHING ===")
+        print("    The unmutated c102 suite is RED, so every mutation would 'go RED'")
+        print("    for free and this harness would certify guards it never exercised.")
+        print()
+        print("    MOST LIKELY CAUSE: the artifact-census pin is stale -- see C-106.")
+        print("    tests/test_c102_coverage_denominator.py pins four census-derived")
+        print("    quantities with `==` against the committed quarantine_report.json")
+        print("    population. Committing a benchmark run grows that population and")
+        print("    turns tests 10 and 13 red. Four pins move together, not one:")
+        print("        line ~380  len(paths) floor      >= 72")
+        print("        line ~415  test 10 legs          == 72")
+        print("        line ~430  test 10 withheld      == 97")
+        print("        line ~540  test 13 checked       == 72")
+        print("        line ~549  test 13 matched-forb  == 26")
+        print()
+        print("    Re-measure with evidence/orch717_census_probe.py, move the pins to")
+        print("    the measured values WITH the per-run attribution recorded beside")
+        print("    them, and re-run this harness. DO NOT delete this precondition.")
+        print()
+    assert code == 0, (
+        "the unmutated suite must be green before any mutation means anything -- "
+        "the census pin is probably stale, see C-106 and the diagnostic above"
+    )
+
+    failures = 0
+    greens: list[str] = []
+    for name, what, rel, old, new in MUTATIONS:
+        path = root / rel
+        before = path.read_bytes()
+        print(f"\n=== {name}: {what}")
+        print(f"    file={rel}  before: bytes={len(before)} crlf={crlf_count(before)} "
+              f"sha256={sha256_of(before)[:16]}")
+        try:
+            saved = apply_mutation(path, old, new)
+        except ValueError as exc:
+            # A substitution that silently matched zero times would produce a
+            # green suite that reads as a pass. Abort instead.
+            print(f"=== {name}: ABORT -- {exc}")
+            return 2
+        try:
+            code, summary = run_suite(root)
+        finally:
+            # Saved bytes, always, on every exit path from the suite run.
+            restore_saved_bytes(path, saved)
+        after = path.read_bytes()
+        print(f"    exit={code}  {'RED (detected)' if code else 'GREEN -- NOT DETECTED'}")
+        for line in summary:
+            print(f"    {line}")
+        print(f"    restored: bytes={len(after)} crlf={crlf_count(after)} "
+              f"sha256={sha256_of(after)[:16]}")
+        print(f"    byte-exact={after == before}  crlf-preserved="
+              f"{crlf_count(after) == crlf_count(before)}")
+        # Additional, and NOT sufficient on its own -- see the module docstring.
+        porcelain = git(root, "status", "--porcelain", "--", rel)
+        print(f"    git status --porcelain (secondary): {porcelain!r}")
+        assert after == before, f"{name} did not restore byte-exactly"
+        assert porcelain == "", f"{name} left {rel} dirty"
+        if code == 0:
+            failures += 1
+            greens.append(name)
+
+    restored = git(root, "status", "--porcelain", "--", ACCEPTANCE, SEMANTIC)
+    print(f"\n=== tree after restore: {restored!r}  (must be empty)")
+    code, summary = run_suite(root)
+    print(f"=== SUITE AFTER RESTORE === exit={code}")
+    for line in summary:
+        print(f"    {line}")
+    if failures or restored or code:
+        print(f"\nATTACK FAILED: {failures} mutation(s) went undetected: {greens}")
+        return 1
+    print(f"\nATTACK PASSED: all {len(MUTATIONS)} mutations detected, tree clean, suite green")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(Path(sys.argv[1]).resolve()))

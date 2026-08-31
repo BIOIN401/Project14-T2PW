@@ -1,0 +1,72 @@
+P1  tracked quarantine_report.json : 72
+
+per-run population:
+    runs_verify/2026-08-18_1328                    3
+    runs_verify/2026-08-21_1822                    2
+    runs_verify/2026-08-21_2014                    2
+    runs_verify/2026-08-21_2057                    4
+    runs_verify/2026-08-21_2239                   10
+    runs_verify/2026-08-22_1821                    1
+    runs_verify/2026-08-22_2017                    4
+    runs_verify/2026-08-22_2147                   12
+    runs_verify/2026-08-24_1203                    7
+    runs_verify/2026-08-24_1402                    2
+    runs_verify/2026-08-24_1428                   10
+    runs_verify/2026-08-25_1216                    3
+    runs_verify/2026-08-27_1341                    2
+    runs_verify/2026-08-28_1816                   10
+
+P2  test 10  legs                   : 72      (pinned == 62)
+P3  test 13  checked                : 72      (pinned == 62)
+P4  test 10  withheld               : 97      (pinned == 92)
+P5  test 13  with_matched_forbidden : 26      (pinned == 23)
+P7  test 10  cleared                : []   (pinned == [])
+
+P6  affected_papers OUTSIDE F132_PAPERS : ['PMC13231680']
+    (pinned == {'PMC13231680'})
+    F132_PAPERS all present : True
+    affected_papers         : {'PMC12096016': 14, 'PMC12312563': 2, 'PMC12444477': 2, 'PMC12452463': 12, 'PMC12782028': 5, 'PMC12856317': 13, 'PMC13231680': 4}
+
+ATTRIBUTION -- what each run contributes to the three moving pins:
+    run                                           legs  withheld  matched
+    runs_verify/2026-08-18_1328                      3         7        1
+    runs_verify/2026-08-21_1822                      2         4        0
+    runs_verify/2026-08-21_2014                      2         7        1
+    runs_verify/2026-08-21_2057                      4         6        2
+    runs_verify/2026-08-21_2239                     10        10        2
+    runs_verify/2026-08-22_1821                      1         1        0
+    runs_verify/2026-08-22_2017                      4         3        1
+    runs_verify/2026-08-22_2147                     12        14        4
+    runs_verify/2026-08-24_1203                      7        10        5
+    runs_verify/2026-08-24_1402                      2         3        0
+    runs_verify/2026-08-24_1428                     10        19        4
+    runs_verify/2026-08-25_1216                      3         2        2
+    runs_verify/2026-08-27_1341                      2         6        1
+    runs_verify/2026-08-28_1816                     10         5        3
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c7fb5c541b282c18c5e45df67f0d52b9a926ecd3  [git, worktree dirty=False]
+label                   : census-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch717_census_probe.py C:/t/c106
+cwd                     : C:\t\c106
+root PID / process group: 48940 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.36 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  22892:python.exe
+descendants terminated  : 1  22892
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c106\docs\pwml_recovery_sprint\evidence\g11\C-106\02-census-probe.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

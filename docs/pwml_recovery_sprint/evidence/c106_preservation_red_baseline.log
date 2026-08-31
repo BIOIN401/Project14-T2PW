@@ -1,0 +1,54 @@
+precondition present in the harness source: True
+  ^ orientation only. The proof is the behaviour below, not this line.
+
+c102 before : bytes=29576 crlf=579 sha256=2f9bb52df56bdde1
+acceptance  : bytes=79745 crlf=1673 sha256=70a642cac41f3624
+
+=== c102 DELIBERATELY BROKEN (test 10 `cleared`, not a census pin) ===
+    harness exit           : 1   (must be nonzero)
+    aborted on precondition: True   (must be True)
+    mutations APPLIED      : []   (must be [])
+    diagnostic names census: True
+    diagnostic names C-106 : True
+    acceptance.py untouched: True  sha256=70a642cac41f3624
+    raised: assert code == 0, (
+    raised: AssertionError: the unmutated suite must be green before any mutation means anything -- the census pin is probably stale, see C-106 and the diagnostic above
+
+c102 restored: bytes=29576 crlf=579 sha256=2f9bb52df56bdde1
+    byte-exact=True  crlf-preserved=True
+
+=== AND THE REJECTION CASE MUST NOT BE THE ONLY ONE IT KNOWS ===
+A guard that refuses everything is a defect, not a fix (REV-106 R8/A7).
+    harness on the RESTORED tree: exit=0 (must be 0)
+    mutations applied           : ['M1', 'M2', 'M3', 'M4', 'M5', 'M7', 'R5', 'M6']
+    ATTACK PASSED               : True
+
+PRESERVATION PASSED: the harness refuses a red baseline and applies no
+mutation against it, and still certifies normally once the tree is restored.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c7fb5c541b282c18c5e45df67f0d52b9a926ecd3  [git, worktree dirty=True]
+label                   : preservation-red-baseline
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c106_preservation_red_baseline.py C:/t/c106
+cwd                     : C:\t\c106
+root PID / process group: 57728 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 42.01 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 36  57740:python.exe, 57760:python.exe, 57780:python.exe, 57920:python.exe, 57940:python.exe, 58260:python.exe, 58280:python.exe, 57016:python.exe, 57396:python.exe, 57632:python.exe, 57844:python.exe, 57936:python.exe, 57792:python.exe, 57816:python.exe, 57824:python.exe, 56740:git.exe, 53360:python.exe, 57604:python.exe, 57884:git.exe, 50564:python.exe, 57368:python.exe, 15916:git.exe, 55964:git.exe, 57096:python.exe, 57840:python.exe, 57860:git.exe, 49448:python.exe, 56384:python.exe, 57532:git.exe, 46280:git.exe, 57432:python.exe, 57748:python.exe, 57904:git.exe, 57788:python.exe, 57944:python.exe, 45976:git.exe
+descendants terminated  : 36  15916, 45976, 46280, 49448, 50564, 53360, 55964, 56384, 56740, 57016, 57096, 57368, 57396, 57432, 57532, 57604, 57632, 57740, 57748, 57760, 57780, 57788, 57792, 57816, 57824, 57840, 57844, 57860, 57884, 57904, 57920, 57936, 57940, 57944, 58260, 58280
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c106\docs\pwml_recovery_sprint\evidence\g11\C-106\13-preservation-red-baseline.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -372,7 +372,12 @@ def test_10_f132_population_regression_over_the_six_papers(gold):
         cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
     )
     paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
-    assert len(paths) >= 62, "the committed artifact population shrank; re-pin before reading on"
+    # FLOOR, not a census. This one catches the population SHRINKING, which is
+    # why it is `>=` while the two derived pins below are `==`. Moved 62 -> 72 by
+    # C-106: commit `e77ad3d` ("T-107 official result") committed
+    # `runs_verify/2026-08-28_1816`, which carries 10 quarantine_report.json
+    # files. Raising the floor keeps it catching a shrink against current truth.
+    assert len(paths) >= 72, "the committed artifact population shrank; re-pin before reading on"
 
     legs = 0
     affected_papers: dict[str, int] = {}
@@ -394,7 +399,20 @@ def test_10_f132_population_regression_over_the_six_papers(gold):
         if out["cleared_by_reconciliation"]:
             cleared.append(f"{case.paper_id}:{leg_dir.name}")
 
-    assert legs == 62
+    # CENSUS PIN -- 62 -> 72, moved deliberately by C-106 under merge rule 4.
+    # Commit `e77ad3d` ("T-107 official result") committed
+    # `runs_verify/2026-08-28_1816`, which contributes EXACTLY 10 legs; every
+    # other run's contribution is unchanged, and 62 is precisely the sum over the
+    # other thirteen runs. Per-run attribution: `evidence/c106_census_probe.log`.
+    #
+    # This stays `==` and must NOT be relaxed to `>=`. The floor above uses `>=`
+    # to catch the corpus SHRINKING. This one asserts the loop above VISITED
+    # every leg it should have, and the census is how it knows how many that is.
+    # A `>=` here would let a leg join the corpus and go unvisited -- a quiet
+    # vacuity of exactly the F-144 shape. Moving it by hand whenever a run is
+    # committed is the correct cost: that is the moment someone confirms the new
+    # legs were meant to be there.
+    assert legs == 72
     # Every one of the six ORCH-702 papers is still in the population.
     assert set(F132_PAPERS) <= set(affected_papers), sorted(affected_papers)
     # And ONE paper outside it, which ORCH-702 could not see: it counted
@@ -402,7 +420,14 @@ def test_10_f132_population_regression_over_the_six_papers(gold):
     # actually matched -- and was given coverage credit for -- was invisible to
     # it. PMC13231680 has three such legs and no unmatched forbidden term.
     assert set(affected_papers) - set(F132_PAPERS) == {"PMC13231680"}
-    assert withheld == 92
+    # 92 -> 97: the same run under the same commit -- `runs_verify/2026-08-28_1816`
+    # under `e77ad3d` -- withholds 5 further terms, and the other thirteen runs
+    # still sum to 92. DERIVED from the census above, and it had never executed
+    # against the grown corpus before C-106 because the `legs` assert aborted the
+    # test first. That is why F-151, REV-104 and the wave handoff all described
+    # this repair as "re-pin to 72" and all three were wrong. Measured, not
+    # inferred: `evidence/c106_census_probe.log`.
+    assert withheld == 97
     # Measured, not predicted: no leg in the corpus clears the unchanged
     # threshold on the accepted ratio. Reported as it fell.
     assert cleared == []
@@ -508,11 +533,20 @@ def test_13_the_accepted_rate_is_a_rate_on_every_committed_leg(gold):
             # Withheld from the numerator, so the accepted count MUST drop.
             assert out["accepted_matched"] < out["raw_matched"], rel
 
-    assert checked == 62
+    # CENSUS PIN -- 62 -> 72. Same delta, same run, same commit as test 10's
+    # `legs`: `e77ad3d` committed `runs_verify/2026-08-28_1816` and its 10 legs.
+    # Stays `==`; see the note beside test 10 for why a `>=` here would make this
+    # loop vacuous rather than tolerant.
+    assert checked == 72
     # Non-vacuity, and the reason this test is not an empty loop: the corpus
-    # really does contain matched forbidden terms. Twenty-three legs, measured
-    # here and re-measured independently in c102_numerator_verify.log.
-    assert with_matched_forbidden == 23, with_matched_forbidden
+    # really does contain matched forbidden terms. Twenty-three legs when
+    # c102_numerator_verify.log measured it independently; TWENTY-SIX now.
+    # 23 -> 26 is the 3 matched-forbidden legs `runs_verify/2026-08-28_1816`
+    # contributes under commit `e77ad3d`; the other thirteen runs still sum to
+    # 23. Like `withheld` in test 10 this pin is DERIVED and sat behind the
+    # census assert, so C-106 is the first time it has ever run against the
+    # grown corpus. Stays `==`.
+    assert with_matched_forbidden == 26, with_matched_forbidden
 
 
 # ---------------------------------------------------------------------------

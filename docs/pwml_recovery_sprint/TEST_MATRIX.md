@@ -236,10 +236,10 @@ modify `runner.py` (that file is owned by C-032).
 | **D-apptest** | `test_streamlit_stage8_export_contract` · `test_streamlit_quarantine_boundary` — one process **per NODE** (H-007) | 4 + 23 | ~10.5 min, all 27 |
 | **E** | `test_strict_quarantine_real_artifact_replay` | parameterized over `runs/` | tens of s per leg |
 
-**SMOKE = A + B + C = 473 tests, ~40 s.** Runs after **every** merge, on the integration
-branch. Gate G10. **457, 460 and 465 are all stale**: C-010 moved 457 -> 460, C-054 moved
-460 -> 465, C-067 moved 465 -> 473 (eight ADDED tests, `test_strict_quarantine.py` 32 ->
-40; Chunk **A** 126 -> 134). Each under merge rule 4; nothing has ever been removed.
+**SMOKE = A + B + C + the two C-106 gate files = 503 tests, ~38 s.** Runs after **every** merge, on the integration
+branch. Gate G10. **457, 460, 465 and 473 are all stale**: C-010 moved 457 -> 460, C-054 moved 460 -> 465, C-067 moved
+465 -> 473 (eight ADDED tests, `test_strict_quarantine.py` 32 -> 40; Chunk **A** 126 -> 134), and **C-106 moved 473 -> 503**
+(+14 `test_c102_coverage_denominator.py`, +16 `test_c106_mutation_harness_executable.py` — see the C-106 entry at end-of-file). Each under merge rule 4; nothing has ever been removed.
 
 **Chunk D is excluded from the smoke gate.** Its deterministic core is 160 tests in
 **~1 s**, but the complete 187-test gate cost **9–13 min** over six runs — the 27 AppTest
@@ -256,7 +256,7 @@ C-010's allowlist is unverifiable in an isolated worktree.
 ## Commands
 
 ```bash
-# SMOKE (every merge) — expect 473 passed
+# SMOKE (every merge) — expect 503 passed  (22 files; C-106 added the last two, +14 +16)
 .venv/Scripts/python.exe -m pytest -q --basetemp=<tmp>/smoke \
   tests/test_reference_repair.py tests/test_strict_quarantine.py \
   tests/test_strict_quarantine_contract_alignment.py \
@@ -268,7 +268,7 @@ C-010's allowlist is unverifiable in an isolated worktree.
   tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py \
   tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py \
   tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py \
-  tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py
+  tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
 
 # CHUNK D — AUTHORITATIVE GATE is the split-process runner, never the one-process form.
 # ONE call runs the whole gate: it proves the partition, runs the 160-test core in one
@@ -511,8 +511,8 @@ different Stage-1 draws at temperature 0 in this repository.
 
 ## Baseline to preserve (filled by INIT-001)
 
-Full suite per-chunk counts - smoke **473** (457 at INIT-001; 457->460 C-010, 460->465
-C-054, 465->473 C-067, each an exact documented delta) - chunk A **134** - chunk D 187 -
+Full suite per-chunk counts - smoke **503** (457 at INIT-001; 457->460 C-010, 460->465 C-054, 465->473 C-067,
+473->503 C-106, each an exact documented delta) - chunk A **134** - chunk D 187 -
 `runs/2026-08-02_2130` · `FULL_STACK_BASELINE` and `RESIDUAL_CODES_BY_{LEG,ROW}` as
 currently pinned. See `BASELINE.md`.
 
@@ -618,6 +618,7 @@ than for want of code, and that is not a base result.
 |---|---|---|---|
 | gold-readers (22 files) | **2 failed, 453 passed, 8 skipped** (exit 1) | **2 failed, 453 passed, 8 skipped** (exit 1) | identical; both reds are F-142 `[only_unrelated_reactions_survive]`, chartered as C-103. **No third failure.** |
 | SMOKE (20 files) | — | **473 passed** | merge rule 10 |
+| SMOKE (22 files) — **superseded by C-106**, the row above is C-102's measurement at its own tip and stays as it fell | — | **503 passed** | merge rule 10. `473 + 14 + 16`; see the C-106 entry below |
 | focused `test_c102_coverage_denominator.py` | **does not collect — `ImportError`** | **14 passed** | **not the G9 proof.** A missing import is *symbol absence*, which G9 explicitly refuses. The behavioural proof is `evidence/c102_g9_denominator_proof.py`, in the row below |
 | `c102_g9_denominator_proof.py` — which denominators does the report state for `PMC12782028/strict`? | **`[]`**, and no withheld term named | **`[23, 27]`**, all four named | **this is G9.** A statement about values in the report, not about a symbol |
 
@@ -665,3 +666,62 @@ pre-F5 shape without editing a file), so the deltas are self-consistent:
 F5 removes **23,818 bytes, 49% of the growth**, on the full run: the two priority copies fall from
 12,288 bytes each to 379. **It makes the small report 76 bytes larger**, because the summary adds
 `legs_at` where the whole record had an empty `legs` array — stated rather than rounded away.
+
+---
+
+## C-106 — the authorized SMOKE baseline move, 473 -> 503, and why the gate grew
+
+**Merge rule 4's escape hatch, used deliberately.** Nothing was removed from SMOKE. Two files
+were ADDED, and the delta is exact and attributable.
+
+| | files | tests | note |
+|---|---|---|---|
+| SMOKE before C-106 | 20 | **473** | A + B + C |
+| `+ tests/test_c102_coverage_denominator.py` | +1 | **+14** | C-102's suite. Measured 3.87 s by the Lead, 3.49 s here |
+| `+ tests/test_c106_mutation_harness_executable.py` | +1 | **+16** | new, structural only, **0.17 s** |
+| **SMOKE after C-106** | **22** | **503** | `473 + 14 + 16 = 503`, measured, not inferred |
+
+### Why the c102 file was added — this is the root cause F-151 actually had
+
+`tests/test_c102_coverage_denominator.py` was **in no chunk, in no SMOKE and in no
+gold-readers selection.** The integration tip had been RED there since `e77ad3d` and every
+gate the sprint ran stayed green. Nobody saw it for a whole card, and the consequence was
+not cosmetic: the harness at `evidence/c102_mutation_attack.py` asserts its unmutated
+baseline is green before applying any mutation, so **the sprint's mutation-attack driver
+was unrunnable** while D-078 and F-144 made mutation testing mandatory on every card.
+
+Re-pinning the census without closing that hole would have left the next census drift
+equally invisible. The file is now in the gate.
+
+### The census pins the c102 file carries, and their cost
+
+Four pins move together whenever a benchmark run is committed — not one, which is what
+F-151, REV-104 and the wave handoff all said:
+
+| Pin | was | now | attribution |
+|---|---|---|---|
+| `len(paths)` floor | `>= 62` | `>= 72` | floor; catches a shrink |
+| test 10 `legs` | `== 62` | `== 72` | `runs_verify/2026-08-28_1816` (`e77ad3d`) contributes exactly 10 legs |
+| test 10 `withheld` | `== 92` | `== 97` | the same run withholds 5 further terms |
+| test 13 `checked` | `== 62` | `== 72` | same 10 legs |
+| test 13 `with_matched_forbidden` | `== 23` | `== 26` | the same run contributes 3 matched-forbidden legs |
+
+The other thirteen runs sum to exactly `62 / 92 / 23`, so the whole delta is one named run.
+Measured in `evidence/c106_census_probe.log`; per-run table reproduced there.
+
+**The derived pins stay `==` and must not be relaxed to `>=`.** The floor is `>=` because it
+catches the corpus SHRINKING; the derived pins assert their loop VISITED every leg it should
+have, and the census is how they know how many. `tests/test_c106_mutation_harness_executable.py`
+tests 08 and 09 now enforce both halves of that, so the next drift is reported with an
+actionable message instead of as an unexplained red.
+
+**The cost is that the pins must be moved by hand every time a run is committed. That is the
+correct cost** — moving them is the moment someone confirms the new legs were meant to be there.
+
+### Line-address discipline
+
+C-054's end-of-file note records that this file's line addresses are pinned by citation up to
+`:477`. C-106's edits at `:239-242`, `:259`, `:271` and `:514-515` are therefore **line-neutral
+by construction** — each rewrites or extends a line in place, none inserts or deletes one — and
+this record is appended at end-of-file for the same reason C-054's was. `:213-218`, `:242-252`,
+`:265` and `:268-273` all still address what they addressed.

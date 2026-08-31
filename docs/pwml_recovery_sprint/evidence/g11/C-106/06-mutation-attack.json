@@ -1,0 +1,252 @@
+{
+  "label": "mutation-attack",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py",
+    "C:/t/c106"
+  ],
+  "cwd": "C:\\t\\c106",
+  "started_at": "2026-08-31T23:05:37+00:00",
+  "finished_at": "2026-08-31T23:06:15+00:00",
+  "duration_seconds": 38.067255499991006,
+  "timeout_seconds": 400.0,
+  "root_pid": 51252,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 47916,
+      "name": "python.exe",
+      "ppid": 51252
+    },
+    {
+      "pid": 28272,
+      "name": "python.exe",
+      "ppid": 48728
+    },
+    {
+      "pid": 48728,
+      "name": "python.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 51264,
+      "name": "python.exe",
+      "ppid": 51284
+    },
+    {
+      "pid": 51284,
+      "name": "python.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 16516,
+      "name": "git.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 42316,
+      "name": "python.exe",
+      "ppid": 49700
+    },
+    {
+      "pid": 49700,
+      "name": "python.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 51288,
+      "name": "python.exe",
+      "ppid": 51652
+    },
+    {
+      "pid": 51652,
+      "name": "python.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 46848,
+      "name": "git.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 46816,
+      "name": "python.exe",
+      "ppid": 51300
+    },
+    {
+      "pid": 51300,
+      "name": "python.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 52492,
+      "name": "python.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 52512,
+      "name": "python.exe",
+      "ppid": 52492
+    },
+    {
+      "pid": 53012,
+      "name": "python.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 53032,
+      "name": "python.exe",
+      "ppid": 53012
+    },
+    {
+      "pid": 53148,
+      "name": "git.exe",
+      "ppid": 53032
+    },
+    {
+      "pid": 53176,
+      "name": "git.exe",
+      "ppid": 53032
+    },
+    {
+      "pid": 52320,
+      "name": "python.exe",
+      "ppid": 52352
+    },
+    {
+      "pid": 52352,
+      "name": "python.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 52584,
+      "name": "git.exe",
+      "ppid": 52320
+    },
+    {
+      "pid": 52608,
+      "name": "git.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 52864,
+      "name": "python.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 52884,
+      "name": "python.exe",
+      "ppid": 52864
+    },
+    {
+      "pid": 53004,
+      "name": "git.exe",
+      "ppid": 52884
+    },
+    {
+      "pid": 52272,
+      "name": "git.exe",
+      "ppid": 47916
+    },
+    {
+      "pid": 52460,
+      "name": "python.exe",
+      "ppid": 52488
+    },
+    {
+      "pid": 52488,
+      "name": "python.exe",
+      "ppid": 47916
+    }
+  ],
+  "descendants_terminated": [
+    16516,
+    28272,
+    42316,
+    46816,
+    46848,
+    47916,
+    48728,
+    49700,
+    51264,
+    51284,
+    51288,
+    51300,
+    51652,
+    52272,
+    52320,
+    52352,
+    52460,
+    52488,
+    52492,
+    52512,
+    52584,
+    52608,
+    52864,
+    52884,
+    53004,
+    53012,
+    53032,
+    53148,
+    53176
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 12516,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 48412,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c106\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-106\\06-mutation-attack.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c106\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c106",
+    "repo_head": "c7fb5c541b282c18c5e45df67f0d52b9a926ecd3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-106",
+    "token": "C-106:48412:55585ba0c393f825",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
