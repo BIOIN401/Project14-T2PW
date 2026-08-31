@@ -1,0 +1,55 @@
+base sha : c7fb5c5
+base scans the whole stream  : True
+tip  scopes to a summary line: True
+
+SCENARIO green_with_warning_text
+  BASE exit=1  aborted=True   files_reported=0 (aborted)   row=1. c106_scenarios/test_green_with_warning_text.py                 passed=  2 failed=0 skipped=0 errors=3  exit=0
+       abort : INFRASTRUCTURE FAILURE on c106_scenarios/test_green_with_warning_text.py: exit=0 errors=3 failed=0 passed=2 -- a setup error or an unexpected exit is 
+  TIP  exit=0  aborted=False  files_reported=1             row=1. c106_scenarios/test_green_with_warning_text.py                 passed=  2 failed=0 skipped=0 errors=0  exit=0
+
+SCENARIO genuine_red
+  BASE exit=0  aborted=False  files_reported=1             row=1. c106_scenarios/test_genuine_red.py                             passed=  1 failed=1 skipped=0 errors=0  exit=1
+  TIP  exit=0  aborted=False  files_reported=1             row=1. c106_scenarios/test_genuine_red.py                             passed=  1 failed=1 skipped=0 errors=0  exit=1
+
+SCENARIO red_with_errors_prose
+  BASE exit=1  aborted=True   files_reported=0 (aborted)   row=1. c106_scenarios/test_red_with_errors_prose.py                   passed=  1 failed=1 skipped=0 errors=3  exit=1
+       abort : INFRASTRUCTURE FAILURE on c106_scenarios/test_red_with_errors_prose.py: exit=1 errors=3 failed=1 passed=1 -- a setup error or an unexpected exit is no
+  TIP  exit=0  aborted=False  files_reported=1             row=1. c106_scenarios/test_red_with_errors_prose.py                   passed=  1 failed=1 skipped=0 errors=0  exit=1
+
+---- VERDICTS ----
+  OK   green_with_warning_text  BASE aborted=True (want True ) contains 'errors=3'=True
+  OK   green_with_warning_text  TIP  aborted=False(want False) contains 'errors=0'=True
+  OK   genuine_red              BASE aborted=False(want False) contains 'failed=1'=True
+  OK   genuine_red              TIP  aborted=False(want False) contains 'failed=1'=True
+  OK   red_with_errors_prose    BASE aborted=True (want True ) contains 'errors=3'=True
+  OK   red_with_errors_prose    TIP  aborted=False(want False) contains 'failed=1'=True
+
+All six expectations met: the false positive is gone in BOTH directions,
+and a genuine red is still counted and still folded into the totals.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c7fb5c541b282c18c5e45df67f0d52b9a926ecd3  [git, worktree dirty=True]
+label                   : f152-scenarios
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c106_f152_scenarios.py C:/t/c106 c7fb5c5
+cwd                     : C:\t\c106
+root PID / process group: 53440 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 5.98 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 49  53544:python.exe, 53488:python.exe, 53532:python.exe, 53724:python.exe, 53800:python.exe, 54012:python.exe, 54032:python.exe, 54052:python.exe, 54072:python.exe, 53984:python.exe, 54092:python.exe, 54144:python.exe, 54164:python.exe, 54184:python.exe, 54220:python.exe, 54128:python.exe, 54268:python.exe, 3824:python.exe, 44608:python.exe, 45164:python.exe, 54232:python.exe, 53344:python.exe, 53688:python.exe, 53764:python.exe, 54112:python.exe, 53508:python.exe, 53620:python.exe, 53656:python.exe, 53736:python.exe, 53852:python.exe, 53880:python.exe, 53968:python.exe, 53964:python.exe, 53312:python.exe, 53324:python.exe, 53288:python.exe, 53808:python.exe, 54036:python.exe, 54132:python.exe, 54152:python.exe, 54180:python.exe, 53996:python.exe, 54196:python.exe, 54204:python.exe, 54264:python.exe, 53428:python.exe, 53456:python.exe, 53372:python.exe, 53408:python.exe
+descendants terminated  : 49  3824, 44608, 45164, 53288, 53312, 53324, 53344, 53372, 53408, 53428, 53456, 53488, 53508, 53532, 53544, 53620, 53656, 53688, 53724, 53736, 53764, 53800, 53808, 53852, 53880, 53964, 53968, 53984, 53996, 54012, 54032, 54036, 54052, 54072, 54092, 54112, 54128, 54132, 54144, 54152, 54164, 54180, 54184, 54196, 54204, 54220, 54232, 54264, 54268
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c106\docs\pwml_recovery_sprint\evidence\g11\C-106\08-f152-scenarios.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
