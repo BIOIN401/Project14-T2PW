@@ -6664,3 +6664,95 @@ it was unwired.** C-055 wired the loop controller and left two documents saying 
 is covered by any gate, and no test can catch either: prose staleness is invisible to CI by
 construction, so the only control is the card that changes the code changing the words in the same
 commit.
+
+---
+
+## F-154 -- the pinned line addresses drifted ABOVE the pin, and a sprint agent reads the wrong table
+
+- **Severity** MEDIUM · **Class `product_contract_violation`** (of the sprint's own citation
+  discipline) · **Registered 2026-08-31 (ORCH-717)**
+- **Surfaced by the C-106 implementer** while resolving a conflict in its own card, reported rather
+  than worked around. **Re-verified by the Lead against the base tree before registration.**
+
+### The measurement
+
+`.claude/agents/pwml-test-runner.md:59` tells that agent to certify chunk membership by a
+**stem-exact** match against three addresses. Two of the three point at the wrong content, measured
+at base `c7fb5c5`:
+
+| Citation | What it claims | What is ACTUALLY there |
+|---|---|---|
+| `TEST_MATRIX.md:213-218` | the chunk membership table | the **bounded-runner function table** -- `launch_child`, `_kill_tree`, `child_env` |
+| `TEST_MATRIX.md:242-252` | the SMOKE command block | the **Chunk-D-excluded / Chunk-E** paragraphs |
+| `evidence/chunk_d_gate.py:63-70` | Chunk D's file list | correct |
+
+The real locations, measured:
+
+```
+chunk table  : TEST_MATRIX.md:230   header, rows 232-237 (A B C D-core D-apptest E)
+SMOKE block  : TEST_MATRIX.md:259   through :271
+```
+
+A consistent drift of roughly **+17 to +19 lines**. `FINDINGS.md:1120-1124` carries the same error
+from the other side: it cites `TEST_MATRIX.md:213` for *"Chunk A, 6 files"*, and Chunk A is at
+`:232`.
+
+### Why this one is not cosmetic
+
+**The instruction is a stem-exact match, and the range it names contains no test-file stems at all.**
+An agent obeying `pwml-test-runner.md:59` literally would match `launch_child`, `_kill_tree` and
+`child_env` against a list of test files and find **nothing** -- then either report every file as
+unchunked, or report the match as empty and move on. Both are silent. Neither looks like an error.
+
+The same line warns, correctly, **never to certify membership by grepping the filename**, because
+`tests/test_map_ids.py` collides with `test_map_ids_name_gate`. So the agent is steered away from
+the working method and toward a broken address.
+
+### The irony worth recording, because it is the lesson
+
+`TEST_MATRIX.md:538` states the constraint that exists to prevent exactly this:
+
+> *"addresses are pinned by citation up to `:477`, so nothing may be inserted above that."*
+
+and `:567-568` explains it again: *"Inserting there would shift every line between 209 and 477 and
+break those citations."*
+
+**The insertion already happened, above the chunk table, before the pin was written or in spite of
+it.** The rule is correct and it is being obeyed going forward; what nobody checked is whether the
+addresses were right **at the moment the pin was declared**. A pin freezes whatever it is pointing
+at, including a mistake.
+
+### What C-106 did, and did not do
+
+C-106's card ordered `TEST_MATRIX.md` edits at the chunk table and the SMOKE block -- **both above
+`:477`** -- which put the card in direct conflict with the `:477` rule. **The implementer flagged
+the conflict rather than silently violating one of the two**, and resolved it by making every edit
+above `:477` **line-neutral**: rewrite and extend in place, never add or remove a line, with the
+full record appended at end-of-file.
+
+Verified by the Lead: base and tip both have **477 lines above the pin**, line `:477` is
+byte-identical, and the only changes at or below it are in-place (`239-242c`, `259c`, `271c`). The
+chunk table is still at `:230` and the SMOKE block still at `:259` **at the tip**, so the drift did
+not get worse.
+
+**The card was wrong and the implementer was right.** That is recorded as a defect in the card, not
+in the work.
+
+### Disposition
+
+**Registered, NOT fixed.** The wrong addresses live in `.claude/agents/pwml-test-runner.md` and in
+`FINDINGS.md:1120-1124`, and **no card in this wave owns either**. Fixing an agent definition
+opportunistically is the same boundary drift F-153 declined, and this one is larger: it changes how
+a sprint agent behaves.
+
+**The fix is one edit and the correct values are above** -- `:213-218` -> `:230-237`, `:242-252` ->
+`:259-271` -- so whoever charters it does not need to re-derive them.
+
+### Standing lesson
+
+**A line-address pin is only as good as the addresses at the moment it is declared, and nothing
+checks them.** Two documents and one agent definition have been citing the wrong table for long
+enough that nobody noticed, because a citation that points somewhere plausible fails silently.
+Prefer an anchor that cannot drift -- a heading, a unique string, a named table -- and where a line
+address is unavoidable, **verify it at declaration time and re-verify whenever the file is edited
+above it**.
