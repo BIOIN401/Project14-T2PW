@@ -1,0 +1,107 @@
+byte snapshots taken before any mutation:
+    docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py bytes= 15578 crlf=  338 sha256=819678b2711cd5ea
+    tests/test_c106_mutation_harness_executable.py             bytes= 16439 crlf=  333 sha256=756c6167855ee8cd
+    tests/test_c102_coverage_denominator.py                    bytes= 29576 crlf=  579 sha256=2f9bb52df56bdde1
+    src/t2pw/bench/acceptance.py                               bytes= 79745 crlf= 1673 sha256=70a642cac41f3624
+
+=== BASELINE (unmutated tip) === exit=0  ['16 passed in 0.14s']
+
+=== own-1-d084-textmode-restore: the D-084 defect reintroduced: read_text + write_text(newline='')
+    target=docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py  before: bytes=15578 crlf=338 sha256=819678b2711cd5ea
+    !! acceptance.py was left damaged by the child -- force-restoring from snapshot
+    exit=1  RED (guard held)
+    ['3 failed, 13 passed in 0.18s']
+    expected red: ['test_03', 'test_04', 'test_05']
+    actually red: ['test_03_restore_replays_saved_bytes_on_a_crlf_fixture', 'test_04_restore_is_byte_exact_on_the_real_mutated_module', 'test_05_a_text_mode_round_trip_is_actually_caught_by_this_guard']
+    restored: bytes=15578 crlf=338 sha256=819678b2711cd5ea
+    byte-exact=True  crlf-preserved=True
+    VERDICT: OK
+
+=== own-2-dead-mutation: M2's substitution is corrupted so it matches ZERO times
+    target=docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py  before: bytes=15578 crlf=338 sha256=819678b2711cd5ea
+    exit=1  RED (guard held)
+    ['1 failed, 15 passed in 0.20s']
+    expected red: ['test_02']
+    actually red: ['test_02_every_mutation_substitution_matches_exactly_once']
+    restored: bytes=15578 crlf=338 sha256=819678b2711cd5ea
+    byte-exact=True  crlf-preserved=True
+    VERDICT: OK
+
+=== own-3-baseline-precondition-deleted: the harness stops refusing a red baseline
+    target=docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py  before: bytes=15578 crlf=338 sha256=819678b2711cd5ea
+    exit=1  RED (guard held)
+    ['1 failed, 15 passed in 0.19s']
+    expected red: ['test_06']
+    actually red: ['test_06_the_harness_still_refuses_to_certify_against_a_red_baseline']
+    restored: bytes=15578 crlf=338 sha256=819678b2711cd5ea
+    byte-exact=True  crlf-preserved=True
+    VERDICT: OK
+
+=== own-4-git-checkout-restored: git checkout -- is back in the restore path
+    target=docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py  before: bytes=15578 crlf=338 sha256=819678b2711cd5ea
+    exit=1  RED (guard held)
+    ['1 failed, 15 passed in 0.19s']
+    expected red: ['test_07']
+    actually red: ['test_07_the_restore_path_does_not_shell_out_to_git_checkout']
+    restored: bytes=15578 crlf=338 sha256=819678b2711cd5ea
+    byte-exact=True  crlf-preserved=True
+    VERDICT: OK
+
+=== own-5-derived-pin-relaxed: a derived census pin is relaxed from == to >=
+    target=tests/test_c102_coverage_denominator.py  before: bytes=29576 crlf=579 sha256=2f9bb52df56bdde1
+    exit=1  RED (guard held)
+    ['1 failed, 15 passed in 0.18s']
+    expected red: ['test_09']
+    actually red: ['test_09_the_derived_census_pins_are_equality_not_a_floor']
+    restored: bytes=29576 crlf=579 sha256=2f9bb52df56bdde1
+    byte-exact=True  crlf-preserved=True
+    VERDICT: OK
+
+=== own-6-census-pin-stale: the census pin goes stale by one, exactly as a committed run makes it
+    target=tests/test_c102_coverage_denominator.py  before: bytes=29576 crlf=579 sha256=2f9bb52df56bdde1
+    exit=1  RED (guard held)
+    ['1 failed, 15 passed in 0.19s']
+    expected red: ['test_08']
+    actually red: ['test_08_the_census_pins_still_match_the_committed_corpus']
+    restored: bytes=29576 crlf=579 sha256=2f9bb52df56bdde1
+    byte-exact=True  crlf-preserved=True
+    VERDICT: OK
+
+=== AFTER ALL MUTATIONS ===
+    docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py byte-identical=True  crlf=338 sha256=819678b2711cd5ea
+    tests/test_c106_mutation_harness_executable.py             byte-identical=True  crlf=333 sha256=756c6167855ee8cd
+    tests/test_c102_coverage_denominator.py                    byte-identical=True  crlf=579 sha256=2f9bb52df56bdde1
+    src/t2pw/bench/acceptance.py                               byte-identical=True  crlf=1673 sha256=70a642cac41f3624
+    git status --porcelain on src/t2pw/bench/acceptance.py: ''
+      ^ this one, and only this one, must also be clean against HEAD:
+        C-106 changes no production line, it only borrows the file.
+    new test file after restore: exit=0  ['16 passed in 0.14s']
+
+OWN-GUARD ATTACK PASSED: all 6 guards went RED under their own mutation, every restore byte-exact, tree clean, suite green
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c7fb5c541b282c18c5e45df67f0d52b9a926ecd3  [git, worktree dirty=True]
+label                   : own-guard-mutations
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c106_own_guard_mutations.py C:/t/c106
+cwd                     : C:\t\c106
+root PID / process group: 57304 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 4.66 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 19  40280:python.exe, 50860:python.exe, 51756:python.exe, 28384:python.exe, 57340:python.exe, 55796:python.exe, 57068:python.exe, 56480:git.exe, 45588:python.exe, 50712:python.exe, 39596:python.exe, 57004:python.exe, 45928:python.exe, 55992:python.exe, 55576:python.exe, 57104:python.exe, 55696:git.exe, 53680:python.exe, 56444:python.exe
+descendants terminated  : 19  28384, 39596, 40280, 45588, 45928, 50712, 50860, 51756, 53680, 55576, 55696, 55796, 55992, 56444, 56480, 57004, 57068, 57104, 57340
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c106\docs\pwml_recovery_sprint\evidence\g11\C-106\12-own-guard-mutations.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

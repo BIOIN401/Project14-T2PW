@@ -1,0 +1,128 @@
+=== BASELINE (unmutated tip) === exit=0
+    14 passed in 3.23s
+
+=== M1: the exclusion never happens -- the contradictory denominator is restored
+    file=src/t2pw/bench/acceptance.py  before: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    exit=1  RED (detected)
+    test_10_f132_population_regression_over_the_six_papers
+    test_11_restoring_the_contradictory_denominator_collapses_raw_and_accepted
+    test_12_a_matched_forbidden_term_is_withheld_from_the_numerator_too
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    test_14_the_reconciliation_is_rendered_under_priorities_4_and_5_only
+    test_1_forbidden_terms_are_present_in_the_raw_anchor_set
+    test_2_the_same_terms_are_excluded_from_the_accepted_denominator
+    test_3_priority1_still_scores_a_forbidden_identifier_that_is_exported
+    test_4_withheld_terms_remain_in_the_diagnostics
+    test_6_a_similar_but_unlisted_name_is_still_required
+    test_7_the_exclusion_is_case_local
+    test_8_an_empty_accepted_denominator_is_undefined_and_not_a_success
+    test_9_raw_and_accepted_are_reported_separately_and_differ
+    13 failed, 1 passed in 2.07s
+    restored: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    byte-exact=True  crlf-preserved=True
+    git status --porcelain (secondary): ''
+
+=== M2: the parenthetical-gloss head retry is dropped
+    file=src/t2pw/bench/acceptance.py  before: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    exit=1  RED (detected)
+    test_10_f132_population_regression_over_the_six_papers
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    2 failed, 12 passed in 3.28s
+    restored: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    byte-exact=True  crlf-preserved=True
+    git status --porcelain (secondary): ''
+
+=== M3: guard rail 1 is weakened from exact matching to containment
+    file=src/t2pw/bench/acceptance.py  before: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    exit=1  RED (detected)
+    test_10_f132_population_regression_over_the_six_papers
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    test_6_a_similar_but_unlisted_name_is_still_required
+    3 failed, 11 passed in 3.66s
+    restored: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    byte-exact=True  crlf-preserved=True
+    git status --porcelain (secondary): ''
+
+=== M4: an empty accepted denominator is reported as a coverage success
+    file=src/t2pw/bench/acceptance.py  before: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    exit=1  RED (detected)
+    test_8_an_empty_accepted_denominator_is_undefined_and_not_a_success
+    1 failed, 13 passed in 3.32s
+    restored: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    byte-exact=True  crlf-preserved=True
+    git status --porcelain (secondary): ''
+
+=== M5: guard rail 3 is silenced -- withheld terms vanish from the record
+    file=src/t2pw/bench/acceptance.py  before: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    exit=1  RED (detected)
+    test_12_a_matched_forbidden_term_is_withheld_from_the_numerator_too
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    test_2_the_same_terms_are_excluded_from_the_accepted_denominator
+    test_4_withheld_terms_remain_in_the_diagnostics
+    test_6_a_similar_but_unlisted_name_is_still_required
+    test_8_an_empty_accepted_denominator_is_undefined_and_not_a_success
+    6 failed, 8 passed in 2.77s
+    restored: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    byte-exact=True  crlf-preserved=True
+    git status --porcelain (secondary): ''
+
+=== M7: the NUMERATOR half is reverted to D-072's literal denominator-only text
+    file=src/t2pw/bench/acceptance.py  before: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    exit=1  RED (detected)
+    test_12_a_matched_forbidden_term_is_withheld_from_the_numerator_too
+    test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+    2 failed, 12 passed in 3.21s
+    restored: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    byte-exact=True  crlf-preserved=True
+    git status --porcelain (secondary): ''
+
+=== R5: the to_dict copy goes shallow again -- excluded_terms aliases the scored leg
+    file=src/t2pw/bench/acceptance.py  before: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    exit=1  RED (detected)
+    test_4_withheld_terms_remain_in_the_diagnostics
+    1 failed, 13 passed in 3.36s
+    restored: bytes=79745 crlf=1673 sha256=70a642cac41f3624
+    byte-exact=True  crlf-preserved=True
+    git status --porcelain (secondary): ''
+
+=== M6: the coverage exemption leaks into Priority 1 and stops scoring a forbidden export
+    file=src/t2pw/bench/semantic.py  before: bytes=87315 crlf=1877 sha256=bc05bcf499c09291
+    exit=1  RED (detected)
+    test_3_priority1_still_scores_a_forbidden_identifier_that_is_exported
+    1 failed, 13 passed in 3.35s
+    restored: bytes=87315 crlf=1877 sha256=bc05bcf499c09291
+    byte-exact=True  crlf-preserved=True
+    git status --porcelain (secondary): ''
+
+=== tree after restore: ''  (must be empty)
+=== SUITE AFTER RESTORE === exit=0
+    14 passed in 3.19s
+
+ATTACK PASSED: all 8 mutations detected, tree clean, suite green
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c7fb5c541b282c18c5e45df67f0d52b9a926ecd3  [git, worktree dirty=True]
+label                   : mutation-attack
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c102_mutation_attack.py C:/t/c106
+cwd                     : C:\t\c106
+root PID / process group: 51252 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 38.07 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 29  47916:python.exe, 28272:python.exe, 48728:python.exe, 51264:python.exe, 51284:python.exe, 16516:git.exe, 42316:python.exe, 49700:python.exe, 51288:python.exe, 51652:python.exe, 46848:git.exe, 46816:python.exe, 51300:python.exe, 52492:python.exe, 52512:python.exe, 53012:python.exe, 53032:python.exe, 53148:git.exe, 53176:git.exe, 52320:python.exe, 52352:python.exe, 52584:git.exe, 52608:git.exe, 52864:python.exe, 52884:python.exe, 53004:git.exe, 52272:git.exe, 52460:python.exe, 52488:python.exe
+descendants terminated  : 29  16516, 28272, 42316, 46816, 46848, 47916, 48728, 49700, 51264, 51284, 51288, 51300, 51652, 52272, 52320, 52352, 52460, 52488, 52492, 52512, 52584, 52608, 52864, 52884, 53004, 53012, 53032, 53148, 53176
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c106\docs\pwml_recovery_sprint\evidence\g11\C-106\06-mutation-attack.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

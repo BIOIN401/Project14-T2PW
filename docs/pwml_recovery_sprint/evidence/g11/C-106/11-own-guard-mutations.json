@@ -1,0 +1,198 @@
+{
+  "label": "own-guard-mutations",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/c106_own_guard_mutations.py",
+    "C:/t/c106"
+  ],
+  "cwd": "C:\\t\\c106",
+  "started_at": "2026-08-31T23:14:12+00:00",
+  "finished_at": "2026-08-31T23:14:17+00:00",
+  "duration_seconds": 4.86766930000158,
+  "timeout_seconds": 400.0,
+  "root_pid": 56616,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 56644,
+      "name": "python.exe",
+      "ppid": 56616
+    },
+    {
+      "pid": 56588,
+      "name": "python.exe",
+      "ppid": 56608
+    },
+    {
+      "pid": 56608,
+      "name": "python.exe",
+      "ppid": 56644
+    },
+    {
+      "pid": 57116,
+      "name": "git.exe",
+      "ppid": 56588
+    },
+    {
+      "pid": 53040,
+      "name": "python.exe",
+      "ppid": 56644
+    },
+    {
+      "pid": 57212,
+      "name": "python.exe",
+      "ppid": 53040
+    },
+    {
+      "pid": 56328,
+      "name": "python.exe",
+      "ppid": 57292
+    },
+    {
+      "pid": 57292,
+      "name": "python.exe",
+      "ppid": 56644
+    },
+    {
+      "pid": 56448,
+      "name": "python.exe",
+      "ppid": 56644
+    },
+    {
+      "pid": 56528,
+      "name": "python.exe",
+      "ppid": 56448
+    },
+    {
+      "pid": 56600,
+      "name": "python.exe",
+      "ppid": 56644
+    },
+    {
+      "pid": 56768,
+      "name": "python.exe",
+      "ppid": 56600
+    },
+    {
+      "pid": 55844,
+      "name": "python.exe",
+      "ppid": 56636
+    },
+    {
+      "pid": 56636,
+      "name": "python.exe",
+      "ppid": 56644
+    },
+    {
+      "pid": 54296,
+      "name": "git.exe",
+      "ppid": 55844
+    },
+    {
+      "pid": 39340,
+      "name": "python.exe",
+      "ppid": 57332
+    },
+    {
+      "pid": 57332,
+      "name": "python.exe",
+      "ppid": 56644
+    },
+    {
+      "pid": 56468,
+      "name": "git.exe",
+      "ppid": 39340
+    },
+    {
+      "pid": 56132,
+      "name": "python.exe",
+      "ppid": 57028
+    },
+    {
+      "pid": 57028,
+      "name": "python.exe",
+      "ppid": 56644
+    }
+  ],
+  "descendants_terminated": [
+    39340,
+    53040,
+    54296,
+    55844,
+    56132,
+    56328,
+    56448,
+    56468,
+    56528,
+    56588,
+    56600,
+    56608,
+    56636,
+    56644,
+    56768,
+    57028,
+    57116,
+    57212,
+    57292,
+    57332
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 12516,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 56400,
+      "name": "python.exe"
+    },
+    {
+      "pid": 56416,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c106\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-106\\11-own-guard-mutations.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c106\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c106",
+    "repo_head": "c7fb5c541b282c18c5e45df67f0d52b9a926ecd3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-106",
+    "token": "C-106:56400:077de23e3af531ec",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
