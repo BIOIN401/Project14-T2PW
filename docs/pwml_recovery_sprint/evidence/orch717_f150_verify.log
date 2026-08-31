@@ -1,0 +1,50 @@
+=== F-150 half 1: the delta spelling gap ===
+  forbidden_match('5-aminolevulinic acid'           ) -> '5-aminolevulinic acid'
+  forbidden_match('delta-aminolevulinic acid'       ) -> None
+  forbidden_match('δ-aminolevulinic acid'           ) -> None
+  forbidden_match('protoporphyrin IX'               ) -> '5-aminolevulinic acid'
+  forbidden_match('ALA'                             ) -> '5-aminolevulinic acid'
+
+  forbidden_identifiers[0].name    : 5-aminolevulinic acid
+  forbidden_identifiers[0].aliases : ['ALA', 'porphobilinogen', 'protoporphyrin IX', 'succinyl-CoA', 'coproporphyrinogen III', 'uroporphyrinogen III']
+
+=== F-150 half 2: supported_reactions_complete across ALL gold cases ===
+  PMC12096016    supported_reactions_complete=False    max_retained_reactions=None
+  PMC12180156    supported_reactions_complete=False    max_retained_reactions=2
+  PMC12312563    supported_reactions_complete=False    max_retained_reactions=None
+  PMC12421875    supported_reactions_complete=False    max_retained_reactions=None
+  PMC12444477    supported_reactions_complete=False    max_retained_reactions=None
+  PMC12452463    supported_reactions_complete=False    max_retained_reactions=None
+  PMC12657337    supported_reactions_complete=False    max_retained_reactions=None
+  PMC12782028    supported_reactions_complete=False    max_retained_reactions=None
+  PMC12856317    supported_reactions_complete=False    max_retained_reactions=None
+  PMC13231680    supported_reactions_complete=False    max_retained_reactions=0
+
+  TRUE=0  FALSE=10  MISSING=0   (total 10)
+  -> Priority 2 is evaluable only through max_retained_reactions
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65546352afb81ea954060d50a81ea4fae3b7dd80  [git, worktree dirty=True]
+label                   : orch717-f150-verify-r2
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch717_f150_verify.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 53812 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 240 s
+duration                : 0.14 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  51672:python.exe
+descendants terminated  : 1  51672
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-717\05-f150-verify-r2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
