@@ -6594,3 +6594,73 @@ A file with **both** a genuine red **and** a setup error (`exit=1, failed=1, err
 the totals at base and now **aborts** the gate (REV-104: `fail_plus_error BASE False / TIP True`).
 This is **correct** under D-083's *"a setup error is never a legitimate outcome of this gate"*, but
 it is a third behaviour change beyond the two the card describes. Recorded, not a defect.
+
+---
+
+## F-153 -- the map that exists to stop rebuilding told two agents to rebuild
+
+- **Severity** MEDIUM · **Class `product_contract_violation`** (of the sprint's own
+  do-not-rebuild discipline, not of the biological contract) · **Registered 2026-08-31 (ORCH-717)**
+- **Surfaced by a peer session** doing read-only reconnaissance of the RAG subsystem for an
+  unrelated question, and **re-verified by the Lead before registration**. Recorded because the
+  route matters: this was found by someone reading the map in order to use it, which is the only
+  way a stale map gets found.
+
+### The measurement
+
+`MASTER_PLAN.md:153`, in the section `CLAUDE.md` points every agent at with the instruction
+**"Do not rebuild what exists"**:
+
+> *"Genuinely missing in RAG: a stopping policy and a loop controller."*
+
+Both exist, and both are wired:
+
+```
+src/t2pw/rag/loop_policy.py      14647 bytes
+src/t2pw/rag/controller.py       16234 bytes
+src/t2pw/rag/graph_delta.py      24722 bytes
+streamlit_app.py:1270    from t2pw.rag.controller import ... run_rag_loop
+streamlit_app.py:1426        outcome = run_rag_loop(
+streamlit_app.py:5669        rag_loop_record = run_rag_rounds(
+tests/test_c055_rag_loop_wiring.py    exists
+```
+
+And `src/t2pw/rag/controller.py:11` still says, in its own module docstring:
+
+> *"**UNWIRED**: nothing in production calls it; wiring is C-055's."*
+
+C-055 is merged. The docstring is false at this tip.
+
+### Why this is worth a finding rather than a typo fix
+
+**A stale map is not symmetrical with a stale test.** A test that pins an old number goes RED and
+someone looks at it -- that is F-151, and it was found in a week. A map that says a module is
+missing goes on being read as true, and the cost lands as **duplicated work by an agent who
+believed it**, months later, with nothing to attribute it to.
+
+MASTER_PLAN section 2 exists for exactly one purpose, stated in `CLAUDE.md`: *"Do not rebuild what
+exists."* On these two components it said the opposite. **The one section whose job is to prevent
+duplicated work was, for these items, instructing it.**
+
+### Disposition
+
+* **`MASTER_PLAN.md:153` CORRECTED in this wave** by the Lead, who owns that document. The false
+  sentence is struck through rather than deleted, with the wiring call sites named, so a reader who
+  remembers the old claim sees it was retracted rather than silently rewritten.
+* **`controller.py:11` NOT corrected.** It is a `src/` change and **no card in this wave owns that
+  file**. C-106 is test/evidence tooling; C-107 owns `curation/apply_audit_patch.py` only. Fixing
+  it opportunistically would be an out-of-boundary production edit, which is the thing the merge
+  rules exist to stop -- **a one-line docstring is exactly the change that feels too small to
+  charter and is therefore the one most likely to normalise boundary drift.** Handed forward.
+* The **third** claim in the same paragraph -- that graph-delta validation is partial because
+  `conform.py` conforms and merges without validating the delta against a policy -- was **not**
+  re-verified and is left standing as written. Correcting two claims is not licence to certify a
+  third that nobody measured.
+
+### Standing lesson
+
+**When a card wires a module, the same card must retire the docstring and the plan entry that said
+it was unwired.** C-055 wired the loop controller and left two documents saying it had not. Neither
+is covered by any gate, and no test can catch either: prose staleness is invisible to CI by
+construction, so the only control is the card that changes the code changing the words in the same
+commit.

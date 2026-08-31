@@ -8825,3 +8825,72 @@ satisfies the card's headline and destroys its purpose.
 |---|---|---|---|
 | 01 | `ORCH-717/01-c102-base-red.json` | c102 focused, base measurement at `24c58c2` | **2 failed, 12 passed** — F-151 reproduced. 0 survivors, cleanup success |
 | 02 | `ORCH-717/02-census-probe.json` | census probe, all derived pins | 72 / 97 / 26, P6 and P7 hold. 0 survivors, cleanup success |
+
+## C-107 CHARTERED -- Card 2, the C-105 follow-on from REV-105's routed findings
+
+Charter and review criteria written while C-106 was still implementing. **C-107 is dispatched only
+from the merged and independently approved C-106 tip**, because C-106 is what makes the
+mutation-attack harness runnable and D-078 / F-144 require every load-bearing guard on C-107 to be
+mutated.
+
+Seven routed findings; six chartered, one registered and not chartered:
+
+| # | Finding | Direction | Disposition |
+|---|---|---|---|
+| 1a | Inhibition near-synonyms defeat the contra-cue; 11 of 12 tested | refuses **more** | chartered -- `product_contract_violation`, a paraphrase route back to F-146 |
+| 1b | Passive-with-agent fires when the agent is not the actor | accepts **more** | chartered |
+| 1c | 17 ordinary English `-ase` words over-accept, incl. a plural bypass | accepts **more** | chartered |
+| 1d | Transport family has no enzyme-noun rule, so `flippase MsbA` refuses | accepts **more** | chartered |
+| 1e | Role `cofactor` refuses | accepts **more** | chartered |
+| 1f | `mediat` matches inside "intermediate" | refuses **more** | chartered |
+| 1g | 62 of 692 evidence spans exceed 5,000 chars, max 176,375 | -- | **registered, NOT chartered** -- upstream of C-105 and outside the boundary |
+
+### The one I judge highest-value, and why it is not merely calibration
+
+**`reduction of` is a contradiction inside the shipped file.** It is in the **catalysis** cue set
+(`reduces|reducing|reduction of`) and absent from the **inhibition** set that supplies the
+contra-cue. So *"the reduction of NDM-1 activity by PSA"* reads as a catalysis cue **with no
+contra**, and licenses the exact promotion C-105 exists to prevent -- one rephrase away, on a stage
+that regenerates its rationale every round. That is a `product_contract_violation` of F-146's own
+class, and it authorizes production code on its own.
+
+**The trap, written into the card:** `reduction` is legitimately a catalysis cue for redox
+chemistry. An implementer who closes the paraphrase by deleting it from the catalysis set has
+broken redox and will pass a naive review. REV-107 B2 is written to fail exactly that.
+
+### Why this card is more dangerous than C-105, and the criteria say so
+
+C-105 moved the guard in one direction. **C-107 moves it in both at once** -- 1a and 1f refuse
+more, 1b/1c/1d/1e accept more. A large error in one direction can be masked by movement in the
+other, and the net corpus row count will look reasonable. **REV-107 B5 requires the two directions
+reported separately and makes a net-only report a correction round on its own.**
+
+The pinned safety property, required after **every** change rather than only at the tip: the F-146
+patch stays **rejected**, and the 29-case battery stays at **at most 1 refusal**.
+
+## F-153 registered -- and one document corrected
+
+A peer session doing read-only RAG reconnaissance reported that `MASTER_PLAN.md:153` says *"Genuinely
+missing in RAG: a stopping policy and a loop controller"* while both exist and are wired.
+**Re-verified by the Lead before acting** -- `loop_policy.py`, `controller.py` and `graph_delta.py`
+all exist; `streamlit_app.py:1270/:1426/:5669` import and call `run_rag_loop` via `run_rag_rounds`;
+`tests/test_c055_rag_loop_wiring.py` covers it. `controller.py:11` still says **UNWIRED**.
+
+**This is the section `CLAUDE.md` points every agent at with the instruction "Do not rebuild what
+exists", and on these two components it said the opposite.** A stale test goes red and gets found in
+a week -- that is F-151. A stale map goes on being believed, and the cost lands as duplicated work
+months later with nothing to attribute it to.
+
+`MASTER_PLAN.md:153` **corrected** (struck through, not deleted, with the call sites named).
+`controller.py:11` **deliberately NOT corrected**: no card in this wave owns that file, and a
+one-line docstring is exactly the change that feels too small to charter and is therefore the one
+most likely to normalise boundary drift. The paragraph's **third** claim, about partial graph-delta
+validation, was not re-verified and is left standing -- correcting two claims is not licence to
+certify a third nobody measured.
+
+**Peer-report discipline, both directions in one exchange.** The same peer earlier reported eight
+`REV-101` r3 G11 files as uncommitted and possibly at risk; `git ls-files` showed all eight tracked
+and committed, and the peer then traced its own report to a **torn `git status` read taken while
+another session was mutating the tree**, and retracted it along with a second observation it had
+passed to `project14-t2pw-b1`. **One peer claim verified false, one verified true, neither taken on
+trust.**

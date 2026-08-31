@@ -150,9 +150,22 @@ Strict failures by boundary: 6 stage3_normalization_gate, 2 stage1_extraction,
 | RAG atomic claim schema | `admission.RagReactionCandidate` | read |
 | RAG evidence admission | `admission.py` (3100 L): `AdmissionPolicy`, `admit_candidates`, `validate_evidence_span`, `_gap_type_verdict` | read |
 
-**Genuinely missing in RAG:** a stopping policy and a loop controller. Graph-delta
-validation is partial (`conform.py` conforms and merges but does not validate the delta
-against a policy).
+**CORRECTED 2026-08-31 (ORCH-717, F-153). The paragraph below was true when written and is
+now FALSE, and it was the most harmful kind of stale: this section's whole job is to stop an
+agent rebuilding what exists, and on these two items it said the opposite.**
+
+~~*Genuinely missing in RAG: a stopping policy and a loop controller.*~~ **Both exist and both
+are WIRED.** `rag/loop_policy.py` and `rag/controller.py` are present, and
+`streamlit_app.py:1270` imports `run_rag_loop`, `:1426` calls it inside `run_rag_rounds`, and
+`:5669` calls `run_rag_rounds` from the production pass. `tests/test_c055_rag_loop_wiring.py`
+covers the wiring. `rag/graph_delta.py` exists as well.
+
+**`rag/controller.py:11` still carries `UNWIRED: nothing in production calls it; wiring is
+C-055's` in its own module docstring.** That line is false at this tip and is registered under
+F-153. It is a `src/` change and is **not** fixed here -- no card in this wave owns that file.
+
+Graph-delta validation being partial (`conform.py` conforms and merges but does not validate the
+delta against a policy) is **not** re-verified by this correction and stands as written.
 
 ---
 
