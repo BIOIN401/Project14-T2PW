@@ -1,0 +1,64 @@
+REV-112 -- independent M16 / dropped-pipe checks
+worktree : C:\t\rev112
+base     : ab16a3a7
+tip      : 53673d5c4aa661bb3654b5be1308a11f5d99d1f5
+
+=== 1. M16 WAS DEAD AT BASE, AND IS ALIVE AT TIP (behavioural, on bytes) ===
+  [OK ] the TARGET is byte-identical base to tip -- C-112 changed no product code  -- base 145585 bytes, tip 145585 bytes
+  [OK ] M16 still EXISTS at the tip -- it was re-pointed, not deleted
+  [OK ] BASE: M16's anchor occurs ZERO times in the target -> apply_mutation raises -> the harness printed ABORT and returned 3  -- count=0
+  [OK ] TIP : M16's anchor occurs EXACTLY ONCE in the same target bytes  -- count=1
+  [OK ] ...and the base anchor is the 8-space nested-alternation spelling, the tip anchor the 4-space assignment-body spelling C-108 (d) created  -- base='        r"|(?<![a-z])(?:blockades?|impair(?:s|ed|ing|ment|ments)?"' tip='    r"(?<![a-z])(?:blockades?|impair(?:s|ed|ing|ment|ments)?"'
+
+=== 2. THE MUTATION WAS NOT WEAKENED ===
+  [OK ] stem 'blockade' present in BOTH the base and the tip replacement
+  [OK ] stem 'impair' present in BOTH the base and the tip replacement
+  [OK ] stem 'silenc' present in BOTH the base and the tip replacement
+  [OK ] stem 'sequestr' present in BOTH the base and the tip replacement
+  [OK ] stem 'ablat' present in BOTH the base and the tip replacement
+  [OK ] stem 'interfer' present in BOTH the base and the tip replacement
+  [OK ] anchor '(?<![a-z])' is in the PATTERN and stripped by the REPLACEMENT, base and tip alike -- the mutation still removes it
+  [OK ] anchor '(?![a-z])' is in the PATTERN and stripped by the REPLACEMENT, base and tip alike -- the mutation still removes it
+  [OK ] the completions (?:s|ed|ing|ment|ments) etc. are dropped by BOTH replacements
+  [OK ] the only textual difference between the two replacements is the indent and the leading pipe  -- base='r"|blockade|impair|silenc|sequestr|ablat|interfer(?:e|i)"  # MUTATION M16'
+                tip ='r"blockade|impair|silenc|sequestr|ablat|interfer(?:e|i)"  # MUTATION M16'
+
+=== 3. THE DROPPED LEADING `|` -- DEMONSTRATED, NOT ASSERTED ===
+    use sites of _C107_INHIBITION_WORDS_SRC in the target: [1911, 2160]
+  [OK ] every use site supplies the pipe itself (r"|" + _C107_INHIBITION_WORDS_SRC)  -- [1911, 2160]
+    as landed  : 'blockade|impair|silenc|sequestr|ablat|interfer(?:e|i)'
+    with pipe  : '|blockade|impair|silenc|sequestr|ablat|interfer(?:e|i)'
+    use site as landed            -> 'somethingelse|blockade|impair|silenc|sequestr|ablat|interfer'...  matches-empty-everywhere=False
+  [OK ] as landed: the spliced use-site pattern does NOT match the empty string in unrelated text -- the mutation is the one M16 names
+    use site with the pipe kept   -> 'somethingelse||blockade|impair|silenc|sequestr|ablat|interfe'...  matches-empty-everywhere=True
+  [OK ] with the pipe kept: the spliced use-site pattern DOES match empty everywhere -- C-112's stated reason for dropping it is CORRECT
+
+==========================================================================
+RESULT: ALL CHECKS PASSED
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev112\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 53673d5c4aa661bb3654b5be1308a11f5d99d1f5  [git, worktree dirty=False]
+label                   : rev112-m16-pipe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev112/docs/pwml_recovery_sprint/evidence/REV112_m16_and_pipe.py C:/t/rev112 ab16a3a7
+cwd                     : C:/t/rev112
+root PID / process group: 537808 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 200 s
+duration                : 0.50 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 3  510420:python.exe, 561732:git.exe, 563508:git.exe
+descendants terminated  : 3  510420, 561732, 563508
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rev112/docs/pwml_recovery_sprint/evidence/g11/REV-112/03-rev112-m16-pipe.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-112  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
