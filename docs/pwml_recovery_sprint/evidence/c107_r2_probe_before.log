@@ -1,0 +1,102 @@
+================================================================================================
+BLOCKING A -- legitimate evidenced CATALYSIS spans that must LICENSE
+================================================================================================
+  REFUSED <<   'the reductase P4X catalyses the conversion of A to B'
+      why: F1:'reductase p4x'
+  REFUSED <<   'the nitroreductase NfsB catalyses the conversion of A to B'
+      why: F1:'reductase nfsb'
+  REFUSED <<   'the oxidoreductase YkgC catalyses the conversion of A to B'
+      why: F1:'reductase ykgc'
+  REFUSED <<   'the blocker protein P4X catalyses the conversion of A to B'
+      why: F1:'blocker protein p4x'
+  REFUSED <<   'the silencer complex P4X catalyses the conversion of A to B'
+      why: inhibition-family:'silenc'; F1:'silencer complex p4x'
+  REFUSED <<   'interferon IRF3 catalyses the conversion of A to B'
+      why: F1:'interferon irf3'
+  REFUSED <<   'the disulfide reductase P4X catalyses the reduction of the substrate'
+      why: F1:'reductase p4x'
+  licensed     'P4X, a quinone oxidoreductase, catalyses the conversion of A to B'
+  REFUSED <<   'the ferredoxin-NADP reductase P4X reduces the flavin cofactor'
+      why: F1:'reductase p4x'
+  licensed     'the hydrolase P4X catalyses the conversion of A to B'
+
+  FALSELY REFUSED (want 0): 8 / 10
+
+================================================================================================
+BLOCKING A -- the refusals that must SURVIVE the repair
+================================================================================================
+  refused       'the reduction of P4X activity is mediated by Q'
+  refused       'the reduction of P4X is mediated by Q'
+  refused       'P4X activity showed reduction in the Q-mediated assay'
+  refused       'the blockade of P4X activity is mediated by Q'
+  refused       'the silencing of P4X is mediated by Q'
+  refused       'the interference of P4X activity is mediated by Q'
+  refused       'the blocking of P4X is mediated by Q'
+  refused       'the loss of P4X is mediated by Q'
+  refused       'the quenching of P4X is mediated by Q'
+  refused       'the depletion of P4X is mediated by Q'
+  refused       'the disruption of P4X is mediated by Q'
+
+  ADMITTED (want 0): 0 / 11
+
+================================================================================================
+BLOCKING B -- the cofactor dependence route must reach NO other family
+================================================================================================
+  catalysis via container    refused       'the enzyme is dependent on P for activity'
+  catalysis via container 2  refused       'the reaction requires P as a cofactor'
+  catalysis via role         refused       'the conversion proceeds only in the presence of P'
+  inhibition via role        refused       'the reaction requires P as a cofactor'
+  activation via role        refused       'the enzyme is dependent on P for activity'
+  transport via container    refused       'the conversion proceeds only in the presence of P'
+  other, unmapped role       refused       'the reaction requires P as a cofactor'
+  other, unmapped role 2     refused       'the assembly is dependent on P for activity'
+
+  ADMITTED (want 0): 0 / 8
+
+  and the cofactor family itself must still license all of these:
+  licensed      'P is a required cofactor for the step'
+  licensed      'the reaction requires P as a cofactor'
+  licensed      'the enzyme is dependent on P for activity'
+  licensed      'the conversion proceeds only in the presence of P'
+  licensed      'P is the coenzyme of this reaction'
+  licensed      'P is the prosthetic group of the enzyme'
+  licensed      'the reaction requires the cofactor P'
+
+  REFUSED (want 0): 0 / 7
+
+================================================================================================
+REGISTERED 3 / 4 -- residuals, measured and NOT fixed this round
+================================================================================================
+  R3 requires-subject    ACCEPTED   actor='NDM-1'
+      'the reaction requires NDM-1 to resolve the structural inconsistency'
+  R3 dependent-subject   ACCEPTED   actor='NDM-1'
+      'the structure is dependent on the enzyme NDM-1 being listed'
+  R4 shared token        refused    actor='flavin reductase'
+      'NADPH-dependent reduction of flavin is required for enzyme function'
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b569205e0361d0734cd3d2085ecc49a9078e2972  [git, worktree dirty=False]
+label                   : r2-probe-before
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_r2_probe.py C:/t/c107
+cwd                     : C:\t\c107
+root PID / process group: 117184 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.18 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  102776:python.exe
+descendants terminated  : 1  102776
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c107\docs\pwml_recovery_sprint\evidence\g11\C-107\49-r2-probe-before.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

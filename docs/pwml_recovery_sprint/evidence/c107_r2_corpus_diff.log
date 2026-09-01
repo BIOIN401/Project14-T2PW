@@ -1,0 +1,50 @@
+rows at base : 692    rows at tip : 692
+population drift: keys only at base = 0, only at tip = 0
+
+BASE accepted : 397 of 692
+TIP  accepted : 401 of 692
+
+==========================================================================================
+DIRECTION 1 -- NEWLY REFUSED (accepted at base, refused at tip): 0
+==========================================================================================
+
+==========================================================================================
+DIRECTION 2 -- NEWLY ADMITTED (refused at base, accepted at tip): 4
+==========================================================================================
+  [modifiers/reactions role='inhibitor'] 'Fur'
+      'holo-Fur binds to the promoters of three ent gene clusters, silencing gene expression'
+  [transporters/transports role='None'] 'MsbA'
+      'core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA'
+  [transporters/transports role='None'] 'MsbA'
+      'flippase MsbA'
+  [transporters/transports role='None'] 'MsbA'
+      'flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA'
+
+SUMMARY  newly_refused=0  newly_admitted=4  (reported separately, by C-107 section 3 / REV-107 B5)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b569205e0361d0734cd3d2085ecc49a9078e2972  [git, worktree dirty=True]
+label                   : r2-corpus-diff
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_corpus_diff.py C:/t/c107scratch/corpus_base.json C:/t/c107scratch/corpus_r2.json 20
+cwd                     : C:\t\c107
+root PID / process group: 117084 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.18 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  119396:python.exe
+descendants terminated  : 1  119396
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c107\docs\pwml_recovery_sprint\evidence\g11\C-107\55-r2-corpus-diff.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -606,3 +606,123 @@ def test_a_span_naming_a_different_protein_is_still_refused() -> None:
     assert not accepted("P", "Q catalyses the conversion of A to B")
     assert not accepted("P", "Q is the flippase for lipid A",
                         container="transporters", bucket="transports")
+
+
+# ---------------------------------------------------------------------------
+# 3. CORRECTION ROUND 2 -- the attenuation words are WORDS, not stems.
+#
+# Written as stems with a trailing "[a-z]*", the contra added for 1a matched
+# "reduc" inside "reductase", "block" inside "blocker", "silenc" inside
+# "silencer" and "interfer" inside "interferon", and refused legitimate evidenced
+# catalysis spans naming EC class 1 enzymes -- whose members are literally called
+# reductase. That is finding 1f's defect class reintroduced in the OVER-REFUSAL
+# direction, which is the direction C-105 round 1 was rejected for.
+#
+# Measured: 0 of 10 refused at the C-106 base, 8 of 10 at the round-1 tip.
+# A LEFT ANCHOR ALONE IS NOT THE FIX and these cases say why: it repairs the two
+# where the stem starts mid-word and leaves the four where the stem starts a
+# genuine word, because "[a-z]*" still eats the rest of it.
+# ---------------------------------------------------------------------------
+
+ENZYME_NOUNS_CONTAINING_AN_ATTENUATION_WORD = [
+    ("P4X", "the reductase P4X catalyses the conversion of A to B"),
+    ("NfsB", "the nitroreductase NfsB catalyses the conversion of A to B"),
+    ("YkgC", "the oxidoreductase YkgC catalyses the conversion of A to B"),
+    ("P4X", "the blocker protein P4X catalyses the conversion of A to B"),
+    ("P4X", "the silencer complex P4X catalyses the conversion of A to B"),
+    ("IRF3", "interferon IRF3 catalyses the conversion of A to B"),
+    ("P4X", "the disulfide reductase P4X catalyses the reduction of the substrate"),
+    ("P4X", "P4X, a quinone oxidoreductase, catalyses the conversion of A to B"),
+    ("P4X", "the ferredoxin-NADP reductase P4X reduces the flavin cofactor"),
+    ("P4X", "the hydrolase P4X catalyses the conversion of A to B"),
+]
+
+
+@pytest.mark.parametrize(
+    "name,span", ENZYME_NOUNS_CONTAINING_AN_ATTENUATION_WORD,
+    ids=[s.split()[1] for _n, s in ENZYME_NOUNS_CONTAINING_AN_ATTENUATION_WORD],
+)
+def test_an_enzyme_noun_containing_an_attenuation_word_still_licenses(
+    name: str, span: str
+) -> None:
+    assert accepted(name, span), span
+
+
+#: The other direction, on the same words: an attenuation word that really IS one
+#: must still refuse. Without these the repair above could be "delete the contra".
+ATTENUATION_WORDS_STILL_REFUSE = [
+    "the reduction of P4X activity is mediated by Q",
+    "the reduction of P4X is mediated by Q",
+    "P4X activity showed reduction in the Q-mediated assay",
+    "the blockade of P4X activity is mediated by Q",
+    "the silencing of P4X is mediated by Q",
+    "the interference of P4X activity is mediated by Q",
+    "the blocking of P4X is mediated by Q",
+    "the loss of P4X is mediated by Q",
+    "the quenching of P4X is mediated by Q",
+    "the depletion of P4X is mediated by Q",
+    "the disruption of P4X is mediated by Q",
+]
+
+
+@pytest.mark.parametrize("span", ATTENUATION_WORDS_STILL_REFUSE)
+def test_a_real_attenuation_word_still_refuses_after_the_anchoring(span: str) -> None:
+    assert not accepted("P4X", span), span
+
+
+# ---------------------------------------------------------------------------
+# 4. CORRECTION ROUND 2 -- the cofactor dependence route's family SCOPE.
+#
+# Correction round 1 moved the loose dependence terms out of the family
+# vocabulary and into an actor-anchored route reaching the cofactor family only.
+# Nothing pinned the SCOPE half of that: flipping the route's family test to
+# `if True` put it back on every family with the entire suite GREEN, which makes
+# blocking finding 2's regression reintroducible for free. That is an F-144
+# vacuity in the fix for a blocking finding.
+#
+# Every span below is licensable ONLY by the dependence route: none of them
+# carries a catalysis, activation, inhibition or transport cue.
+# ---------------------------------------------------------------------------
+
+DEPENDENCE_ONLY_SPANS = [
+    ("enzymes", "reactions", None, "the enzyme is dependent on P for activity"),
+    ("enzymes", "reactions", None, "the reaction requires P as a cofactor"),
+    ("modifiers", "reactions", "catalyst",
+     "the conversion proceeds only in the presence of P"),
+    ("modifiers", "reactions", "inhibitor", "the reaction requires P as a cofactor"),
+    ("modifiers", "reactions", "activator",
+     "the enzyme is dependent on P for activity"),
+    ("transporters", "transports", None,
+     "the conversion proceeds only in the presence of P"),
+    ("modifiers", "reactions", "chaperone", "the reaction requires P as a cofactor"),
+    ("modifiers", "reactions", "scaffold",
+     "the assembly is dependent on P for activity"),
+]
+
+
+@pytest.mark.parametrize(
+    "container,bucket,role,span", DEPENDENCE_ONLY_SPANS,
+    ids=[f"{c}-{r}" for c, _b, r, _s in DEPENDENCE_ONLY_SPANS],
+)
+def test_the_cofactor_dependence_route_is_scoped_to_the_cofactor_family(
+    container: str, bucket: str, role: str, span: str
+) -> None:
+    """Catalysis, activation, inhibition, transport and "other" must all refuse."""
+
+    assert not accepted(
+        "P", span, container=container, bucket=bucket, role=role
+    ), (container, role, span)
+
+
+def test_the_cofactor_family_itself_still_licenses_the_same_spans() -> None:
+    """The scope pin above must not be satisfiable by breaking the route.
+
+    Asserted in the same file and against the same sentences, so a change that
+    turns the route off entirely fails here instead of passing there.
+    """
+
+    for span in ("the enzyme is dependent on P for activity",
+                 "the reaction requires P as a cofactor",
+                 "the conversion proceeds only in the presence of P",
+                 "the assembly is dependent on P for activity"):
+        assert accepted("P", span, container="modifiers", role="cofactor"), span

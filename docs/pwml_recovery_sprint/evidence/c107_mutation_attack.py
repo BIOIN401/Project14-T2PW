@@ -68,9 +68,9 @@ MUTATIONS = [
         '    contra = None  # MUTATION M2\n',
     ),
     (
-        "M3", "1a F1: the attenuation stem stops being bound to the actor",
-        '                _ATTENUATION_STEM_SRC + r"[a-z]*\\b(?:\\s+(?:of|in))?"\n',
-        '                r"(?!)" + r"[a-z]*\\b(?:\\s+(?:of|in))?"  # MUTATION M3\n',
+        "M3", "1a F1: the attenuation word stops being bound to the actor",
+        '                _ATTENUATION_WORD_SRC + r"(?:\\s+(?:of|in))?"\n',
+        '                r"(?!)" + r"(?:\\s+(?:of|in))?"  # MUTATION M3\n',
     ),
     (
         "M4", "1c: the stoplist exclusion loses its optional plural, reopening the bypass",
@@ -131,6 +131,26 @@ MUTATIONS = [
         '        r"|prosthetic group"\n',
         '        r"|prosthetic group"  # MUTATION M13\n'
         '        r"|requires|required for|depends on|dependent on|in the presence of"\n',
+    ),
+    # --- correction round 2 ------------------------------------------------
+    (
+        "M14", "1e SCOPE: the dependence route goes family-wide again (REV-107's V9)",
+        '        if family == "cofactor":\n',
+        '        if True:  # MUTATION M14\n',
+    ),
+    (
+        "M15", "A: one attenuation WORD reverts to an open stem, so 'reduc' eats 'reductase'",
+        '    r"reduce|reduces|reduced|reducing|reduction|reductions"\n',
+        '    r"reduc[a-z]*"  # MUTATION M15\n',
+    ),
+    (
+        "M16", "A: this card's six inhibition additions revert to bare unanchored stems",
+        '        r"|(?<![a-z])(?:blockades?|impair(?:s|ed|ing|ment|ments)?"\n'
+        '        r"|silenc(?:e|es|ed|ing)"\n'
+        '        r"|sequestr(?:ation|ations|ate|ates|ated|ating)"\n'
+        '        r"|ablat(?:e|es|ed|ing|ion|ions)"\n'
+        '        r"|interfer(?:e|es|ed|ing|ence))(?![a-z])"\n',
+        '        r"|blockade|impair|silenc|sequestr|ablat|interfer(?:e|i)"  # MUTATION M16\n',
     ),
 ]
 

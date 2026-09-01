@@ -1576,7 +1576,17 @@ _ROLE_CUE_RES = {
         # "reduction", "loss", "depletion", "disruption", "quenching" and
         # "blocking" all name things enzymes legitimately do to substrates, so
         # they are matched only in the activity-directed form built below.
-        r"|blockade|impair|silenc|sequestr|ablat|interfer(?:e|i)"
+        # CORRECTION ROUND 2. Anchored and completed on both sides, for the reason
+        # given at _ATTENUATION_WORD_SRC below: written as bare stems, "silenc"
+        # matched inside "silencer" and refused "the silencer complex <protein>
+        # catalyses ...". Only these six are touched -- they are this card's
+        # additions. The stems above them are C-105's and are left exactly as they
+        # were merged.
+        r"|(?<![a-z])(?:blockades?|impair(?:s|ed|ing|ment|ments)?"
+        r"|silenc(?:e|es|ed|ing)"
+        r"|sequestr(?:ation|ations|ate|ates|ated|ating)"
+        r"|ablat(?:e|es|ed|ing|ion|ions)"
+        r"|interfer(?:e|es|ed|ing|ence))(?![a-z])"
     ),
     "transport": re.compile(
         r"transport|translocat|import|export|efflux|influx|uptake|secret"
@@ -1749,9 +1759,39 @@ _ANY_ROLE_CUE_RE = re.compile(
 # Making it actor-bound also retired the B2 residual REV-107 raised: "level" and
 # "function" no longer fire on the substrate's level or the enzyme's function,
 # because those are not the actor's.
-_ATTENUATION_STEM_SRC = (
-    r"(?:reduc|loss|deplet|disrupt|quench|blockade|block|impair|silenc"
-    r"|sequestr|ablat|interfer)"
+# CORRECTION ROUND 2. THESE ARE WHOLE WORDS, NOT STEMS, AND BOTH SIDES ARE
+# ANCHORED. The first version wrote them as stems and let "[a-z]*" run to the end
+# of whatever word they started, which is finding 1f's own defect class -- the one
+# this card spent a whole finding anchoring "mediat" for -- reintroduced inside the
+# contra written to fix 1a, and in the OVER-REFUSAL direction that got C-105 round
+# 1 rejected. "reduc" matched inside "reductase", "block" inside "blocker",
+# "silenc" inside "silencer" and "interfer" inside "interferon", so a legitimate
+# evidenced catalysis span naming an EC class 1 enzyme -- whose members are
+# literally called reductase -- was REFUSED: 8 of 10 measured, against 0 at the
+# C-106 base.
+#
+# A left anchor alone does NOT fix it, and that was tested rather than assumed:
+# it repairs "nitroreductase" and "oxidoreductase", where the stem starts mid-word,
+# and leaves bare "reductase", "blocker", "silencer" and "interferon" broken,
+# because there the stem STARTS a genuine word and "[a-z]*" eats the rest of it.
+# The stem has to COMPLETE as an attenuation word, which is what the explicit
+# inflections below do. Ordering inside the group is safe: a shorter alternative
+# that matches leaves the trailing (?![a-z]) to fail, and the engine backtracks to
+# the longer one -- "blocking" is not matched as "block".
+_ATTENUATION_WORD_SRC = (
+    r"(?<![a-z])(?:"
+    r"reduce|reduces|reduced|reducing|reduction|reductions"
+    r"|loss|losses"
+    r"|deplete|depletes|depleted|depleting|depletion|depletions"
+    r"|disrupt|disrupts|disrupted|disrupting|disruption|disruptions"
+    r"|quench|quenches|quenched|quenching"
+    r"|blockade|blockades|block|blocks|blocked|blocking"
+    r"|impair|impairs|impaired|impairing|impairment|impairments"
+    r"|silence|silences|silenced|silencing"
+    r"|sequester|sequesters|sequestered|sequestering|sequestration|sequestrations"
+    r"|ablate|ablates|ablated|ablating|ablation|ablations"
+    r"|interfere|interferes|interfered|interfering|interference"
+    r")(?![a-z])"
 )
 _ATTENUATION_OBJECT_SRC = r"(?:activit|express|level|abundance|function)"
 
@@ -1930,7 +1970,7 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
         if family == "catalysis":
             actor_contra = re.compile(
                 # F1: "<stem> [of|in] <modifiers> <actor>"
-                _ATTENUATION_STEM_SRC + r"[a-z]*\b(?:\s+(?:of|in))?"
+                _ATTENUATION_WORD_SRC + r"(?:\s+(?:of|in))?"
                 r"(?:\s+" + _PASSIVE_AGENT_MODIFIERS_SRC + r"){0,4}\s+"
                 + escaped + r"(?![a-z0-9])"
                 # F2: "<actor> ... <activity noun> ... <stem>"
@@ -1938,7 +1978,7 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
                 r"[^.]{0," + str(_ATTENUATION_GAP) + r"}?\b"
                 + _ATTENUATION_OBJECT_SRC + r"[a-z]*\b"
                 r"[^.]{0," + str(_ATTENUATION_GAP) + r"}?\b"
-                + _ATTENUATION_STEM_SRC
+                + _ATTENUATION_WORD_SRC
             )
         # CORRECTION ROUND 1. The cofactor dependence route, anchored the same way
         # and reaching the cofactor family ONLY, so it can never widen the "other"
