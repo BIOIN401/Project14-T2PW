@@ -7393,3 +7393,55 @@ REV-110 independently asked for it to be durable:
 > --porcelain`, not merely that the bytes were restored. An uncommitted edit presents as **502
 > passed / 1 failed** — which reads exactly like a regression and is not one. C-110 hit this and
 > round 0 passed only because it happened to run after its own commit.
+
+### AMENDMENT to F-160, 2026-08-31 — it is not confined to mutation harnesses. **PYTEST reports a false GREEN.**
+
+**Escalated by the C-108 author in round 2, after correcting its own first measurement.**
+
+The finding was registered as a hazard to *mutation harnesses*. **That understated it.** Measured
+with the arms run in isolation:
+
+```
+ARM 0  plain import, no purge   ->  returns the OLD value; the edit never executed
+ARM 1  pytest,       no purge   ->  220 passed, exit 0   on a tree whose SOURCE SAYS OTHERWISE
+ARM 2  pytest,       purged     ->  RED, 2 failed        (the truth)
+```
+
+**A stale-bytecode false green can reach ANY suite run**, not just a mutation arm. A green
+`503 passed` proves the bytecode that ran was green — **it does not prove the source on disk is
+green**, whenever a same-length edit has landed in the same wall-clock second.
+
+### The author's first attempt was WRONG in the reassuring direction, and that is the useful part
+
+It initially measured ARM 1 as RED and **nearly recorded "pytest is immune" as a finding.** The run
+was contaminated: the (e) mutation tests apply and restore mutations *to the same file*, so a pytest
+warm-up churns that file's mtime and the later `os.utime` moves the source **away** from the cached
+key. The cache then missed **for a reason unrelated to the defect**, and the suite went red for the
+wrong reason.
+
+> **The probe was perturbed by the very mechanism it was measuring.** Preserved as
+> `c108_r2_f160_demo.attempt1-pytest-warmup-churned-mtime.log`. Running ARM 0 first and **alone** is
+> what produced the clean measurement.
+
+### CORRECTION to this finding's own remedy — the Lead's instruction was unsafe
+
+F-160 as first written said *"clear `__pycache__`"*. **In this repository that deletes tracked
+files.** Both the C-108 author and REV-110 hit it independently; the author's unscoped
+`find -name __pycache__ -exec rm -rf` removed **all 56**, and it was caught only by that card's own
+pre-commit boundary check, restored from `HEAD` without overwriting, with `git ls-files -d` verified
+back to 0.
+
+**The rule, corrected:**
+
+> **Purge only `src/t2pw` and `tests`.** Neither contains tracked `__pycache__`
+> (`git ls-files | grep -E "^(src/t2pw|tests)/.*__pycache__"` → 0). **Never purge unscoped**, and
+> **never "solve" it by untracking the 56** — that is a repo-wide change nobody has chartered, on a
+> `.git` already at 158 MB. **Restore what you purge and verify clean before SMOKE**, which asserts
+> `git status --porcelain` on the file the mutation harness guards.
+
+### Standing lesson, revised
+
+The original lesson was *distrust a green mutation*. **The stronger form: a green test run is a
+statement about the bytecode that executed, and only a statement about your source if you can show
+the two agree.** Every mechanism this sprint uses to check its own work — pytest, the mutation
+harnesses, the split runs — reads through that same cache.
