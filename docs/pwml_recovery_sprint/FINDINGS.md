@@ -6917,3 +6917,119 @@ schema noun."** (e) is the coverage that would stop (d) recurring a fourth time.
 
 **A follow-on card should take all five together.** Each fix touches the same two functions, and the
 sprint has now watched this class recur three times in three consecutive cards on one file.
+
+---
+
+## F-156 — the third stale claim in `MASTER_PLAN` § 2 is also false, and the enforcement is load-bearing
+
+- **Severity** MEDIUM · **Class `product_contract_violation`** (of the sprint's own do-not-rebuild
+  discipline, like F-153) · **Registered 2026-08-31 (ORCH-717)**
+- **Refuted on the code by the peer session `project14-t2pw-93`**, static reading only, pinned to
+  `03138d1`. **Certified behaviourally by the Lead**, who ran the tests and then mutated the
+  enforcement. **Both halves of that provenance are load-bearing and are recorded separately on
+  purpose** — see § "Why the provenance is written this way".
+
+### The claim
+
+`MASTER_PLAN.md` § 2, the **third** claim in the paragraph F-153 corrected:
+
+> *"Graph-delta validation being partial (`conform.py` conforms and merges but does not validate the
+> delta against a policy)."*
+
+F-153 deliberately left it standing: *"Correcting two claims is not licence to certify a third that
+nobody measured."* **That was the right call, and this is the measurement.**
+
+### The premise is TRUE and the conclusion is FALSE
+
+**Premise, confirmed:** `src/t2pw/rag/conform.py` contains **zero** references to `graph_delta`,
+`validate_graph_delta` or `DeltaVerdict`. It genuinely conforms and merges without validating.
+
+**Conclusion, refuted.** Validation is not partial. It is implemented, wired, reached in production
+and **enforced**, verified at `03138d1` by `git show` rather than a working-tree read:
+
+```
+implemented : rag/graph_delta.py:386  def validate_graph_delta(...)   11 rules in RULES
+called      : rag/controller.py:297   validate_graph_delta(mark.graph, candidate, RoundRecord(...))
+enforced    : rag/controller.py:306   if verdict.admissible:
+                                          graph = candidate
+production  : streamlit_app.py:5636   rag_loop_record = run_rag_rounds(...)  ->  run_rag_loop
+```
+
+A refused delta **does not advance the canonical graph**; the round is recorded via
+`LoopOutcome.refused` and nothing is repaired.
+
+### Why both are true at once — this is the part worth keeping
+
+**Validation was never `conform.py`'s job.** `conform` builds the `{"additions": …}` envelope that
+`pipeline.merge_additions` injects; the validator runs **one level up**, in the controller, comparing
+the checkpoint graph against the post-stage candidate. `graph_delta.py`'s own header says so:
+
+> *"It neither conforms nor merges: `t2pw.rag.conform` already builds the envelope."*
+
+**So the map looked for the validator in the module that by design does not hold it, and read its
+correct absence as a gap.** That is the same failure shape as the other two stale statements in the
+same paragraph: the map describes the **pre-C-043 / pre-C-055 world**.
+
+### Behavioural certification — because a static read is not proof under G9
+
+The peer was explicit that it had run nothing and that its status was *"refuted on the code,
+certification needs those tests actually run"*. It was right to say so. Two steps followed:
+
+**1. The tests run and are green.** `tests/test_rag_graph_delta.py` +
+`tests/test_c055_rag_loop_wiring.py` → **52 passed**. G11 `ORCH-717/19`.
+
+**2. Green tests do not prove the enforcement is load-bearing, so it was mutated.**
+`evidence/orch717_f156_mutation.py`, G11 `ORCH-717/21`. The guard was removed so a **refused** delta
+advances the graph anyway — precisely the fail-open the claim feared:
+
+```
+baseline (unmutated)        : 52 passed
+mutant (enforcement removed): 1 failed, 51 passed
+  FAILED tests/test_c055_rag_loop_wiring.py::
+         test_a_refused_delta_does_not_advance_the_graph_and_says_which_rule
+restore replayed saved bytes: True
+```
+
+**MUTATION CAUGHT. The enforcement is load-bearing and covered**, by a test whose name states the
+exact property. **D-084: the restore replayed SAVED BYTES**; `git checkout --` was not used, and the
+mutation ran in a disposable worktree, never in the integration tree.
+
+### The probe's first run is preserved, and it is the more instructive one
+
+`orch717_f156_mutation.attempt1-lf-anchor-crlf-tree.log`. The probe's byte anchor was written with
+`\n`; the tree checks out **CRLF**. It **refused to mutate and exited 2** rather than guess.
+
+**That refusal is the behaviour to keep.** A probe that "helpfully" normalised the line endings would
+have silently mutated the wrong bytes — and a mutation probe that mutates the wrong thing reports
+`MUTATION SURVIVED` and is read as **missing coverage that is actually present**. The second version
+detects the endings from the file and says which it found.
+
+### Why the provenance is written this way
+
+The peer asked, unprompted, that its caveat survive into the record — *"'session 93 refuted it' reads
+stronger than what I actually did"* — and it was right to insist. **A static read and a mutation-proved
+property are different epistemic objects and this sprint has been burned by conflating them.** The
+refutation is the peer's; the certification is the Lead's; neither is the other.
+
+It also found this the same way F-153 was found: **by reading the map in order to use it.** That is
+the only way a stale map ever gets found, and it is now twice in one wave.
+
+### Disposition
+
+* **`MASTER_PLAN.md` § 2's third claim is FALSE and must be retracted** the way F-153's was — struck
+  through, not deleted, with the call sites named.
+* **NOT folded into C-109 mid-flight.** C-109 is dispatched with an explicit instruction *not* to
+  certify or delete this claim, and that instruction was correct when written. **Widening a card
+  mid-flight to chase a newly-found item is exactly how C-105's first round reached four production
+  callers instead of the one its card named.** Preserving a now-refuted claim for one more card costs
+  nothing; breaking a card's boundary costs a round.
+* **Handed forward as a one-paragraph correction** on the next control-plane card, with this finding
+  as its evidence. The measurement is done; nobody needs to re-derive it.
+
+### Standing lesson
+
+**A claim of the form "X does not do Y" is only as good as the assumption that X is where Y belongs.**
+All three stale claims in that paragraph shared one root: they were written against an older
+architecture, and the two that named a *module* were falsified by the wiring moving, not by the
+functionality being absent. **When a card moves a responsibility between modules, the claim that the
+old module lacks it becomes true and misleading in the same commit.**
