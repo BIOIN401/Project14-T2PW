@@ -312,8 +312,8 @@ expected · minimal reproducer or evidence · current-card impact · future owne
 | F-028 | `pipeline.py:1873` | `evidence` is deliberately excluded from `_RAG_ROW_CARRIER_KEYS`, so a RAG row's evidence span is not carried; R-003's F7 attribution required a verbatim join |
 | F-029 | `map_ids.py:7647 map_payload` | C-033 lands effectively unwired: the only reachable production path is the `T2PW_IDENTITY_EVIDENCE` env switch, which builds a source with **no PathBank resolver**, leaving D-003 step 2 reachable only by programmatic install |
 | F-030 | `map_ids.py:5548-5563` | `meta["rejected_mapped_ids"]` is still written on the `unavailable` path, co-existing with the honest preserved claim |
-| F-031 | `MASTER_PLAN.md:336` | Lists `src/t2pw/rag/extract.py` as a decoy; it is **live**, reached via a multi-line tuple import at `streamlit_app.py:454` and used at `:645` in `maybe_run_rag` |
-| F-032 | `MASTER_PLAN.md:363` | Assigns `rag/admission.py` to C-035 (lineage writes), but a future **C-061** needs behavioural changes to `parse_span_relation` and `validate_evidence_span` in the same file. C-035 merged with both **byte-identical** to keep them free; the §9 row still needs fixing before C-061 is dispatched |
+| F-031 | `MASTER_PLAN.md` § 9 — the **Canonical paths** table, row `extract.py` (anchor, not a line; ~~`:336`~~ struck by C-112 — that address held § 7's heading even at C-109's base) | Lists `src/t2pw/rag/extract.py` as a decoy; it is **live**, reached via a multi-line tuple import at `streamlit_app.py:454` and used at `:645` in `maybe_run_rag` |
+| F-032 | `MASTER_PLAN.md` § 9 — the branch-register row `C-035` (anchor, not a line; ~~`:363`~~ struck by C-112 — that address held TRAP-5 even at C-109's base) | Assigns `rag/admission.py` to C-035 (lineage writes), but a future **C-061** needs behavioural changes to `parse_span_relation` and `validate_evidence_span` in the same file. C-035 merged with both **byte-identical** to keep them free; the §9 row still needs fixing before C-061 is dispatched |
 | F-033 | H-009 commit `90b9da9` | Subject carries a stray leading `@` from PowerShell here-string syntax used in the Bash tool. Amending is forbidden; the merge commit is authoritative for integration history |
 | F-034 | `src/t2pw/extraction/extract.py` | Dead demo code — 29 lines, one hardcoded glutathione paragraph, `run_demo()` under `__main__`, zero test references, imported only by the `src/extract.py` re-export shim. C-034's declared target |
 | F-035 | `bench/metrics.BLOCKER_SCOPE_LABELS` | Produces a 125-column line in `render._blockers`, over that module's own 100-column budget. Pre-existing |
@@ -1123,7 +1123,7 @@ magnitude.
 | D-core | 5 | `chunk_d_gate.py` symbol `CORE` — ~~`:63-67`~~ |
 | D-s8 | 1 | `chunk_d_gate.py` symbol `S8` — ~~`:69`~~ |
 | D-qb | 1 | `:70` |
-| E | 1 | `TEST_MATRIX.md:218` |
+| E | 1 | `TEST_MATRIX.md` `## Chunks` table, row `**E**` — ~~`:218`~~ struck by C-112: that is the `child_env` row of the bounded-runner table; Chunk E's row measured at `:237` |
 
 Static `def test_` across the 119 chunkless files is **1843**, and static counts run ~88% of collected node
 IDs on calibrated samples (the 20 SMOKE files give 415 static against 460 collected), so roughly **2100
@@ -6621,7 +6621,7 @@ src/t2pw/rag/controller.py       16234 bytes
 src/t2pw/rag/graph_delta.py      24722 bytes
 streamlit_app.py:1270    from t2pw.rag.controller import ... run_rag_loop
 streamlit_app.py:1426        outcome = run_rag_loop(
-streamlit_app.py:5669        rag_loop_record = run_rag_rounds(
+streamlit_app.py :: run_rag_rounds       rag_loop_record = run_rag_rounds(   <- SYMBOL, not a line (F-157)
 tests/test_c055_rag_loop_wiring.py    exists
 ```
 
@@ -6676,7 +6676,7 @@ commit.
 
 ### The measurement
 
-`.claude/agents/pwml-test-runner.md:59` tells that agent to certify chunk membership by a
+The `## Test discipline` chunk-membership bullet of `.claude/agents/pwml-test-runner.md` (~~`:59`~~) tells that agent to certify chunk membership by a
 **stem-exact** match against three addresses. Two of the three point at the wrong content, measured
 at base `c7fb5c5`:
 
@@ -7103,9 +7103,9 @@ seen and not chased.
 * **Corrected in `controller.py` and the `MASTER_PLAN.md` note by C-109**, which cites `:5636`,
   explains the discrepancy, and whose probe asserts **both halves** — that `:5636` resolves and that
   `:5669` does not.
-* **`FINDINGS.md` § F-153's own text still carries `:5669`.** It is **outside C-109's boundary**
-  (which permits `FINDINGS.md:1120-1124` only) and is **deliberately not fixed there**. Handed
-  forward with the correct value above, so nobody re-derives it.
+* **`FINDINGS.md` § F-153's own text carried `:5669`** — **CLOSED by C-112.** It now cites the
+  **symbol** `run_rag_rounds`, not the corrected number `:5636`: a line address inside a file that
+  carries an uncommitted diff is unciteable by construction. Was outside C-109's boundary.
 * **No change to `streamlit_app.py`.** It is protected and stays exactly as it is at 35/2.
 
 ### Standing lesson

@@ -16,6 +16,23 @@ The three failure modes that matter, all proven here:
   check calls green (``test_same_name_different_bytes_is_not_reachable``);
 * nothing enumerated at all, e.g. a mistyped task id, which must not pass silently
   (``test_nothing_enumerated_does_not_pass_silently``).
+
+C-112 -- the three REV-109 R2 false-PASS vectors, and a different G9 label
+--------------------------------------------------------------------------
+**The C-112 additions at the end of this file are CORRECTIONS OF OBSERVABLE BEHAVIOUR,
+not new capability**, and each carries a make-it-fail / make-it-pass pair plus a base-SHA
+measurement in ``evidence/c112_r2_false_pass_vectors.{py,log}``:
+
+* a probe **subdirectory** was never enumerated -- the glob is non-recursive and
+  ``is_file()`` dropped the directory silently, so the gate exited 0, green, having
+  looked at none of the evidence (``test_probe_subdirectory_is_enumerated_not_dropped``);
+* a **zero-byte** file always reported ``reachable``, because the empty blob oid is a
+  universal constant (``test_zero_byte_evidence_is_indeterminate_not_reachable``);
+* ``--allow-empty`` disarmed the **mistyped-id** protection sitting beside it
+  (``test_allow_empty_does_not_disarm_the_mistyped_id_protection``).
+
+One pre-existing assertion moved deliberately as part of the third fix; the exact delta
+is recorded at its site in ``test_nothing_enumerated_does_not_pass_silently``.
 """
 
 from __future__ import annotations
@@ -262,7 +279,15 @@ def test_nothing_enumerated_does_not_pass_silently(route, tmp_path):
     assert report["enumerated"] == 0
     assert report["exit_reason"] == "nothing_enumerated"
 
-    code_allowed, _ = _run(
+    # C-112 -- DELIBERATE BASELINE MOVE, merge rule 4, exact delta below.
+    #
+    # This stanza used to assert `code_allowed == EXIT_OK`: that `--allow-empty` made a
+    # MISTYPED task id exit 0. It encoded REV-109 R2 vector 3 -- the silent pass -- as
+    # though it were the contract, which is precisely why the vector survived review.
+    # The two protections are now independent: the flag excuses an EMPTY task and never
+    # an UNKNOWN one. One assertion changed, EXIT_OK -> EXIT_USAGE, and one added. The
+    # full pair lives in test_allow_empty_does_not_disarm_the_mistyped_id_protection.
+    code_allowed, report_allowed = _run(
         route,
         task="REV-999",
         worktree=worktree,
@@ -270,7 +295,8 @@ def test_nothing_enumerated_does_not_pass_silently(route, tmp_path):
         allow_empty=True,
         json=tmp_path / "empty_allowed.json",
     )
-    assert code_allowed == route.EXIT_OK
+    assert code_allowed == route.EXIT_USAGE
+    assert report_allowed["exit_reason"] == "allow_empty_on_an_unknown_task"
 
 
 def test_bad_worktree_is_a_usage_error_not_a_verdict(route, tmp_path):
@@ -431,3 +457,231 @@ def test_scope_discipline_it_does_not_judge_evidence_quality(route, tmp_path):
     )
     assert code == route.EXIT_OK
     assert report["enumerated"] == 5
+
+
+# ==========================================================================
+# C-112 -- REV-109 R2. THREE FALSE-PASS VECTORS.
+#
+# **G9 label: CORRECTIONS OF OBSERVABLE BEHAVIOUR, not new capability.** Each of the
+# three tests below FAILS against the C-112 base SHA of `reviewer_evidence_route.py`
+# and passes at its tip; the base-vs-tip measurement is
+# `evidence/c112_r2_false_pass_vectors.{py,log}`, taken against the COMMITTED BLOB,
+# never a working tree.
+#
+# Every one is written as a make-it-FAIL / make-it-PASS pair, the standard REV-109 set
+# proving B9 non-vacuous. A test that passes at tip and was never observed to fail
+# proves nothing about what it guards -- and these three guard the worst answer this
+# check can give, which is "your evidence is safe" when it is not.
+# ==========================================================================
+
+
+def test_probe_subdirectory_is_enumerated_not_dropped(route, tmp_path):
+    """R2 vector 1 -- THE ONE THAT MATTERS. A directory of probes was dropped silently.
+
+    The stem glob is non-recursive and the loop body tested ``is_file()``, so
+    ``evidence/rev109_probes/deep_probe.py`` -- the shape REV-109 demonstrated -- was
+    never enumerated. The gate then exited 0 with a green G11 while missing the
+    evidence entirely: a check that says evidence is safe when it is not, which is
+    worse than no check because it retires the manual habit that works.
+    """
+    worktree = tmp_path / "wt"
+    integration = tmp_path / "integration"
+    contents = _make_worktree(worktree)
+    deep = f"{EVIDENCE_REL}/{STEM}_probes/deep_probe.py"
+    deeper = f"{EVIDENCE_REL}/{STEM}_probes/nested/deeper.log"
+    _write(worktree, deep, "print('the probe REV-109 demonstrated the vector with')\n")
+    _write(worktree, deeper, "output of a probe two levels down\n")
+
+    items = route.enumerate_evidence(worktree, TASK)
+    found = {p.relative_to(worktree).as_posix() for p in (i["path"] for i in items)}
+    assert deep in found, "a stem-matching DIRECTORY must not be dropped silently"
+    assert deeper in found, "the recursion must not stop after one level"
+    assert "probe_in_subdir" in {i["kind"] for i in items}
+
+    # ---- MAKE IT FAIL: integration carries every flat item but not the subdirectory.
+    for rel, text in contents.items():
+        _write(integration, rel, text)
+    code_red, report_red = _run(
+        route,
+        task=TASK,
+        worktree=worktree,
+        integration_dir=integration,
+        json=tmp_path / "deep_red.json",
+    )
+    assert code_red == route.EXIT_UNREACHABLE, (
+        "the pre-C-112 code exited 0 here -- it never enumerated the subdirectory, so "
+        "there was nothing to report unreachable"
+    )
+    assert sorted(
+        i["worktree_path"] for i in report_red["items"] if i["verdict"] != route.REACHABLE
+    ) == sorted([deep, deeper])
+    assert report_red["probe_directories"] == [f"{EVIDENCE_REL}/{STEM}_probes"]
+
+    # ---- MAKE IT PASS: commit the subdirectory's bytes; nothing else changes.
+    _write(integration, deep, (worktree / deep).read_text(encoding="utf-8"))
+    _write(integration, deeper, (worktree / deeper).read_text(encoding="utf-8"))
+    code_green, report_green = _run(
+        route,
+        task=TASK,
+        worktree=worktree,
+        integration_dir=integration,
+        json=tmp_path / "deep_green.json",
+    )
+    assert code_green == route.EXIT_OK
+    assert report_green["enumerated"] == 6
+    assert report_green["unreachable"] == 0
+
+
+def test_a_probe_directory_is_announced_loudly_never_silently(route, tmp_path, capsys):
+    """A loud WARN was the stated minimum; recursion plus the announcement is both."""
+    worktree = tmp_path / "wt"
+    integration = tmp_path / "integration"
+    contents = _make_worktree(worktree)
+    _write(worktree, f"{EVIDENCE_REL}/{STEM}_probes/deep_probe.py", "x = 1\n")
+    for rel, text in contents.items():
+        _write(integration, rel, text)
+    _write(integration, f"{EVIDENCE_REL}/{STEM}_probes/deep_probe.py", "x = 1\n")
+
+    route.run(
+        [
+            "--task", TASK,
+            "--worktree", str(worktree),
+            "--integration-dir", str(integration),
+        ]
+    )
+    captured = capsys.readouterr()
+    assert "PROBE DIRECTORY" in captured.out, "the recursion must be visible, not merely correct"
+    assert f"{STEM}_probes" in captured.out
+    assert "PROBE DIRECTORY" in captured.err
+
+
+def test_zero_byte_evidence_is_indeterminate_not_reachable(route, tmp_path):
+    """R2 vector 2 -- the empty blob oid is a universal constant.
+
+    A truncated probe log, or one whose redirect failed, is zero bytes; its blob oid is
+    ``e69de29b...``, which is the same in every repository that has ever existed. Before
+    C-112 it therefore "resolved" against any unrelated empty file in the integration
+    tree -- ``evidence/.gitkeep`` is the real one -- and was reported ``reachable``.
+    C-112 decides it rather than keeping it silently: content identity cannot judge an
+    empty file, so the check does not pretend it can.
+    """
+    worktree = tmp_path / "wt"
+    integration = tmp_path / "integration"
+    contents = _make_worktree(worktree)
+    truncated = f"{EVIDENCE_REL}/{STEM}_truncated_probe.log"
+    _write(worktree, truncated, "")
+    for rel, text in contents.items():
+        _write(integration, rel, text)
+    # The unrelated empty file that used to make the false PASS. This one is real: it
+    # is committed at docs/pwml_recovery_sprint/evidence/.gitkeep on integration.
+    _write(integration, f"{EVIDENCE_REL}/.gitkeep", "")
+
+    # ---- MAKE IT FAIL.
+    code, report = _run(
+        route,
+        task=TASK,
+        worktree=worktree,
+        integration_dir=integration,
+        json=tmp_path / "empty.json",
+    )
+    assert code == route.EXIT_UNREACHABLE, (
+        "pre-C-112 this exited 0: the empty oid matched .gitkeep and a probe log that "
+        "contains nothing at all was certified as surviving evidence"
+    )
+    assert report["exit_reason"] == "indeterminate_empty_evidence"
+    assert report["indeterminate"] == 1
+    bad = [i for i in report["items"] if i["verdict"] != route.REACHABLE]
+    assert [i["worktree_path"] for i in bad] == [truncated]
+    assert bad[0]["verdict"] == route.EMPTY_INDETERMINATE
+    assert bad[0]["blob"] == route.EMPTY_BLOB_OID == route.blob_oid(b"")
+
+    # ---- MAKE IT PASS: the probe says out loud that it found nothing, in bytes.
+    said = "probe ran; 0 findings. Said so, rather than shipping a zero-byte file.\n"
+    _write(worktree, truncated, said)
+    _write(integration, truncated, said)
+    code2, report2 = _run(
+        route,
+        task=TASK,
+        worktree=worktree,
+        integration_dir=integration,
+        json=tmp_path / "empty_fixed.json",
+    )
+    assert code2 == route.EXIT_OK
+    assert report2["indeterminate"] == 0
+    assert report2["exit_reason"] == "all_reachable"
+
+
+def test_allow_empty_does_not_disarm_the_mistyped_id_protection(route, tmp_path):
+    """R2 vector 3 -- one flag used to switch off two unrelated protections.
+
+    ``--allow-empty`` asserts exactly one thing: *this task produced no evidence*. It
+    says nothing about whether the id is real, and after C-112 it cannot be made to.
+    """
+    worktree = tmp_path / "wt"
+    integration = tmp_path / "integration"
+    _make_worktree(worktree)
+    _write(integration, "README.md", "x\n")
+
+    # ---- MAKE IT FAIL (a): right shape, unknown to this tree.
+    code, report = _run(
+        route,
+        task="REV-999",
+        worktree=worktree,
+        integration_dir=integration,
+        allow_empty=True,
+        json=tmp_path / "unknown.json",
+    )
+    assert code == route.EXIT_USAGE, (
+        "pre-C-112 this returned 0 -- the flag disarmed the exit-3 nothing-enumerated "
+        "protection AND the mistyped-id protection sitting beside it, in one move"
+    )
+    assert report["exit_reason"] == "allow_empty_on_an_unknown_task"
+    assert report["task_dir_exists"] is False
+
+    # ---- MAKE IT FAIL (b): wrong shape never reaches enumeration at all. The guard is
+    # independent by construction: it runs before the worktree is even resolved.
+    for typo in ("REV-1O9", "rev109", "C112", "REV_109", "REV-109x9"):
+        assert (
+            route.run(
+                [
+                    "--task", typo,
+                    "--worktree", str(worktree),
+                    "--integration-dir", str(integration),
+                    "--allow-empty",
+                ]
+            )
+            == route.EXIT_USAGE
+        ), typo
+
+    # Known-positive beside the known-negative: every real g11 task id must pass the
+    # grammar, or the guard would reject honest work.
+    for real in ("REV-109", "C-050k", "C-030a", "INTEG-069", "MERGE-040a",
+                 "RECONCILEB-001", "ORCH-717", "T-100", "H-004", "R-089"):
+        assert route.TASK_ID_RE.match(real), real
+
+    # ---- MAKE IT PASS (c): the flag still does its one job.
+    (worktree / EVIDENCE_REL / "g11" / "REV-107").mkdir(parents=True)
+    code_ok, report_ok = _run(
+        route,
+        task="REV-107",
+        worktree=worktree,
+        integration_dir=integration,
+        allow_empty=True,
+        json=tmp_path / "known_empty.json",
+    )
+    assert code_ok == route.EXIT_OK
+    assert report_ok["enumerated"] == 0
+    assert report_ok["task_dir_exists"] is True
+
+    # ---- and (d): without the flag, a real-but-empty task is still exit 3. The
+    # nothing-enumerated protection is unchanged; only the coupling is gone.
+    assert (
+        route.run(
+            [
+                "--task", "REV-107",
+                "--worktree", str(worktree),
+                "--integration-dir", str(integration),
+            ]
+        )
+        == route.EXIT_NOTHING_ENUMERATED
+    )

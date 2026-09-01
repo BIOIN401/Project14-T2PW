@@ -530,7 +530,7 @@ currently pinned. See `BASELINE.md`.
 ## Stale SMOKE / Chunk D counts still live elsewhere — enumerated by C-054, deliberately NOT edited
 
 C-054 moved SMOKE 460 → 465 under merge rule 4 and updated every record inside its
-bounds: this file, `MASTER_PLAN.md:281`, and `.claude/agents/pwml-test-runner.md:52`.
+bounds: this file, `MASTER_PLAN.md` § 5 *Merge gates — all must hold*, and the `## Test discipline` SMOKE bullet of `.claude/agents/pwml-test-runner.md`.
 The entries below are **outside an implementer's bounds** — `prompts/` and `CLAUDE.md`
 are the orchestrator's, `DECISIONS.md` is append-only and the product owner's. They are
 listed rather than changed so they can be routed. **Verified at the C-054 + integration
@@ -564,8 +564,8 @@ decision itself and only the product owner may amend it.
 ## Isolated collection (F-066 / C-070) — appended 2026-08-21 under D-061
 
 **⚠ Why this sits at the end of the file and not in § Chunks, where a reader would look for
-it.** The standing constraint pins citations through **line 477**, and § Chunks begins at
-line 209. Inserting there would shift every line between 209 and 477 and break those
+it.** The standing constraint pins citations through **line 477**, and § Chunks begins at the
+**`## Chunks`** heading — ~~line 209~~, struck by C-112; measured `:228`. Inserting there would break those
 citations. **D-061 authorized the file to grow; it did not authorize moving pinned lines.**
 So the entry is appended and § Chunks is left byte-identical. Cross-referenced, not relocated.
 
@@ -806,3 +806,77 @@ line numbers and, immediately after, says to re-verify them by grepping `run_rag
 Chunk E — Chunk E's row is at `:237`). C-109's boundary was `FINDINGS.md:1120-1124` only;
 the two rows below it were left rather than silently exceeding a merge-gate boundary. The
 same file's `:1129` is a **historical record** and correctly stays as it fell.
+
+### Never cite a line number in a file that carries an uncommitted diff — the F-157 rule, C-112
+
+**A protected uncommitted file is a citation hazard, not just a merge hazard.** F-153, the merged
+`MASTER_PLAN.md` § 2 correction and the Lead's own C-109 charter all cited `streamlit_app.py:5669`
+as the production `run_rag_rounds` call site. **The committed value is `:5636`**; the `+33` is
+exactly the protected product-owner diff (35 insertions / 2 deletions, `sha256:47e4fafa789d359d…`),
+so `:5669` was read off a **working copy** and **resolves for no reader** — it addresses bytes that
+exist in **no commit**, and the number propagated through three documents before anyone noticed.
+
+**The rule, in force from C-112:**
+
+1. **Never cite a line number in `src/t2pw/app/streamlit_app.py`**, or in any other file the sprint
+   deliberately holds uncommitted. Cite the **symbol** — `run_rag_rounds`, `run_rag_loop`,
+   `freeze_canonical_payload` — which is identical in both trees and cannot drift by 33 lines.
+2. **Verify every citation against the committed blob, never the working tree:**
+   `git show <ref>:<path> | sed -n '<n>p'`. A claim checked against a working copy is a claim about
+   bytes that exist in no commit. This is the whole lesson of F-157.
+3. Where a line address is genuinely unavoidable, name **in the same breath** the symbol or unique
+   string that re-verifies it, per the F-154 rule above.
+
+### C-112 closure notes — appended, because the records they concern are left as they fell
+
+* **The "Still carrying drifted addresses" paragraph above is C-109's routing record and is left
+  byte-identical.** Both items it routed are now closed: `FINDINGS.md` row **E** was converted to
+  the `## Chunks` anchor, and row **D-qb**'s `chunk_d_gate.py:70` was **verified correct and
+  deliberately left** — REV-109 checked both rows and C-109's routing was half-wrong in its own
+  disfavour. "Fixing" a correct citation would have repeated the error in reverse.
+* **`TEST_MATRIX.md:568`'s *"§ Chunks begins at line 209"*** was **struck in place** and replaced
+  with the `## Chunks` heading anchor; the measured value at C-112's tip is `:228`. It was not
+  silently restated. **`DECISIONS.md:3619` repeats the same `209` and was LEFT UNTOUCHED** —
+  `DECISIONS.md` is append-only and read-only to an implementer, and only the product owner may
+  amend it.
+* **`TEST_MATRIX.md:726-727`**, C-106's signed record that those addresses *"all still address what
+  they addressed"*, **is false and was LEFT UNTOUCHED.** It is another card's signed record;
+  editing one is exactly what this sprint refuses. It is annotated here instead.
+* **The 26 stale citations of REV-109 R1 were bucketed before any one was touched.** **Seven are
+  live** and were converted to anchors — never renumbered, because a corrected number drifts again
+  on the next insertion and that is the entire finding. **Nineteen are frozen historical records
+  and every one was left**: six in append-only `DECISIONS.md`; four in signed artifacts and another
+  card's charter (`evidence/c054_gate_counts.json`, `evidence/c106_predictions.md`,
+  `evidence/c109_citation_probe.log`, `prompts/C-109.md`); three in `SPIKE-002-REPORT.md`'s signed
+  `CONTROL-PLANE-RECONCILE-001` annotations; two in the dispatched `C-011` charter; one in
+  `FINDINGS.md`'s probe-antecedent narrative; and three named frozen by the C-112 charter itself.
+* **C-112 created no new line drift.** Every citation edit is **line-neutral, rewritten in place**;
+  the only growth in any file is this end-of-file block, which nothing cites by number.
+
+### Same class, found while doing the above — RAISED, not fixed
+
+* **Three of the 26 addresses were already wrong before C-109 inserted anything.** The drift log's
+  `+16` arithmetic is mechanical: it assumes the base content was the intended target.
+  `MASTER_PLAN.md:336` (F-031) addressed § 7's *heading*; `:363` (F-032) addressed **TRAP-5**; and
+  `:372` — cited **five times**, by `DECISIONS.md:1919`, `MASTER_PLAN.md:477` and
+  `SPIKE-002-REPORT.md` `:138 :143 :253` — addressed the § 8 **Schedule** table, never the `C-045`
+  § 9 row it is offered for. The two live ones were anchored to the rows they were always meant to
+  name; the four frozen ones were left. **A drift measurement that starts from a wrong address
+  reports a shift, not a resolution.**
+* **`FINDINGS.md` F-032's remaining action is already discharged.** § 9's `C-035` row now carries
+  the `parse_span_relation` / `validate_evidence_span` carve-out and the `C-061` row records the
+  correction, so *"the §9 row still needs fixing before C-061 is dispatched"* is stale in
+  substance. **Reported, not edited** — the address column was C-112's to anchor; the finding's
+  substance is not C-112's to rewrite.
+* **`FINDINGS.md` F-031's own row cites `streamlit_app.py:454` and `:645`** — two more line
+  addresses inside the protected uncommitted file, the exact class rule 1 above forbids. The same
+  is true of F-153's `:1270` and `:1426`, which F-157 measured as correct in **both** trees.
+  **Reported, not edited**: only `:5669` was chartered, and only `:5669` was changed.
+* **The citing *site* of one of the 26 has itself drifted.** REV-109 measured the F-154 row at
+  `RESUME-NEXT-SESSION.md:94`; at C-112's base it is `:189`. A citation *of* a citation is no more
+  stable than the citation.
+* **`evidence/c107_mutation_attack.py` is run by no gate.** SMOKE's
+  `test_c106_mutation_harness_executable.py` targets `c102_mutation_attack.py` **only**, which is
+  why M16's `ABORT` (exit 3) survived a green 503 from C-108's merge until C-112 repaired it.
+  **Whether the c107 harness should also be gated is RAISED here, not answered** — it is a
+  `TEST_MATRIX` change with its own cost and it is not C-112's to make.

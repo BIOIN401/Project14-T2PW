@@ -89,7 +89,7 @@ wired, reached in production **and load-bearing**, proved by mutation. Refuted o
 session `project14-t2pw-93`, **certified behaviourally by me** — the provenance is split on purpose.
 **F-157** — a citation pinned to bytes that exist in no commit: `streamlit_app.py:5669` was read off
 the **uncommitted** working copy of the never-commit file; committed value is **`:5636`**, the `+33`
-being exactly the protected diff. It propagated F-153 → `MASTER_PLAN` → my own charter.
+being exactly the protected diff. It propagated F-153 → `MASTER_PLAN` → my own charter. **Closed by C-112**: F-153 cites the symbol now, and the standing rule is `TEST_MATRIX.md` § *Never cite a line number in a file that carries an uncommitted diff*.
 
 ### T-108 — `NO-GO`. See `T108-READINESS.md`
 
@@ -186,7 +186,7 @@ exclude it is the one the kill destroyed.
 | Id | Class | One line |
 |---|---|---|
 | **F-153** | `product_contract_violation` | `MASTER_PLAN §2` — the section `CLAUDE.md` points every agent at with *"do not rebuild what exists"* — said the RAG loop controller was missing. **Corrected.** `controller.py:11`'s stale `UNWIRED` docstring **not** fixed: no card owns that file |
-| **F-154** | `product_contract_violation` | `pwml-test-runner.md:59` sends that agent to `TEST_MATRIX.md:213-218` for a **stem-exact** chunk match; `:213-218` is the bounded-runner **function** table. Real locations `:230-237` and `:259-271`. **Registered, not fixed** — correct values are in the finding |
+| **F-154** | `product_contract_violation` | The `## Test discipline` chunk-membership bullet of `.claude/agents/pwml-test-runner.md` (~~`:59`~~) sent that agent to `TEST_MATRIX.md:213-218` for a **stem-exact** chunk match; `:213-218` is the bounded-runner **function** table. **Registered; C-109 replaced those line addresses with the `## Chunks` and `## Commands` anchors** — the numbers are kept only as the historical statement of what was wrong |
 | **F-155** | `product_contract_violation` | **Five members of one class** in `apply_audit_patch.py`. See below |
 
 ### F-155 is the one to charter next, and it has five members

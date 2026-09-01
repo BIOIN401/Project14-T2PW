@@ -474,8 +474,8 @@ row to these, and never edit a re-export shim:
   ratified while `_canonicalize_species_offline` was named in no §9 row, and it says so
   in the present tense (`DECISIONS.md:307`: *"It is currently named in no `MASTER_PLAN`
   §9 row — that ownership gap is closed by this ruling, not deferred."*). **That gap is
-  closed and no §9 entry is missing.** The row at **`MASTER_PLAN.md:372` IS the entry**:
-  it names C-045 **sole owner** of `ir.py :: _canonicalize_species_offline` under D-016.
+  closed and no §9 entry is missing.** The row at **§ 9's `C-045` branch-register row IS the
+  entry**: it names C-045 **sole owner** of `ir.py :: _canonicalize_species_offline` under D-016.
   D-016 is LOCKED, its sole-owner assignment is not overridden here, and no second owner
   is created. `DECISIONS.md:307`'s sentence is a statement of fact **as at ratification**
   and is read as history, not as a live claim about the current §9 table; D-016 itself is
