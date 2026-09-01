@@ -1,0 +1,43 @@
+Measured against C:/t/rev107 @ b569205 (C-107 correction round 1 tip)
+
+LEGITIMATE CATALYSIS SPANS -- do they still license?
+  REFUSED  actor=P4X    'the reductase P4X catalyses the conversion of A to B'
+  REFUSED  actor=NfsB   'the nitroreductase NfsB catalyses the conversion of A to B'
+  REFUSED  actor=YkgC   'the oxidoreductase YkgC catalyses the conversion of A to B'
+  REFUSED  actor=NfsB   'the purified reductase NfsB catalyses the conversion of A to B'
+  REFUSED  actor=P4X    'the blocker protein P4X catalyses the conversion of A to B'
+  REFUSED  actor=P4X    'the silencer complex P4X catalyses the conversion of A to B'
+  REFUSED  actor=IRF3   'interferon IRF3 catalyses the conversion of A to B'
+  ACCEPT   actor=P4X    'the hydrolase P4X catalyses the conversion of A to B'
+
+  falsely refused: 7 of 8  (the last one is the control and must ACCEPT)
+
+THE INTENDED REFUSAL must still hold:
+  REFUSED  'the reduction of NDM-1 activity is mediated by PSA'
+  REFUSED  'the reduction of NDM-1 is mediated by PSA'
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c52f1ef5a85abbd35d74a64c4d53f9cc5a562802  [git, worktree dirty=True]
+label                   : orch717-stem-anchor
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch717_stem_anchor_check.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 117168 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 240 s
+duration                : 0.18 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  113792:python.exe
+descendants terminated  : 1  113792
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-717\10-stem-anchor-check.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
