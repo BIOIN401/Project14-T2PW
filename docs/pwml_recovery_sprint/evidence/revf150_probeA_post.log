@@ -1,0 +1,89 @@
+==============================================================================
+REV-F150 probe A   arm=post-edit
+  repo       : C:\t\revf150
+  gold file  : C:\t\revf150\src\t2pw\bench\gold\pinned_v1.json
+  run tree   : C:\t\revf150\runs_verify\2026-08-28_1816   exists=True
+==============================================================================
+
+--- 1. reproduction of REV-F150.md section 1 ---
+  forbidden_match('5-aminolevulinic acid'           ) -> '5-aminolevulinic acid'
+  forbidden_match('delta-aminolevulinic acid'       ) -> '5-aminolevulinic acid'
+  forbidden_match('δ-aminolevulinic acid'           ) -> '5-aminolevulinic acid'
+  forbidden_identifiers[0].name    : '5-aminolevulinic acid'
+  forbidden_identifiers[0].aliases : ['ALA', 'porphobilinogen', 'protoporphyrin IX', 'succinyl-CoA', 'coproporphyrinogen III', 'uroporphyrinogen III', 'delta-aminolevulinic acid', 'δ-aminolevulinic acid']
+
+--- 2. normalization: are the two proposed strings distinct? ---
+  normalize_name('delta-aminolevulinic acid') = 'delta aminolevulinic acid'
+  normalize_name('δ-aminolevulinic acid') = 'delta aminolevulinic acid'
+  IDENTICAL AFTER NORMALIZATION: True
+  normalize_name('5-aminolevulinic acid') = '5 aminolevulinic acid'
+  normalize_name('ALA')                   = 'ala'
+
+--- 3. V1: does the gold author already use the delta spelling in THIS case? ---
+  acceptable/expected enzyme [1] name='ALAS2'
+      aliases = ['erythroid delta-aminolevulinic acid synthase']
+      quote   = 'inhibiting the translation of erythroid delta-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway'
+
+  raw acceptable_enzymes[1].name    = 'ALAS2'
+  raw acceptable_enzymes[1].aliases = ['erythroid delta-aminolevulinic acid synthase']
+
+  -- every literal occurrence of 'aminolevulinic' in this case's JSON --
+    "erythroid delta-aminolevulinic acid synthase"
+    "quote": "inhibiting the translation of erythroid delta-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway",
+    "name": "5-aminolevulinic acid",
+    "delta-aminolevulinic acid",
+    "δ-aminolevulinic acid"
+
+  literal 'delta-aminolevulinic acid' present in case JSON : True
+  literal 'δ-aminolevulinic acid' present in case JSON : True
+
+--- 4. V3: does the edit reach any acceptable enzyme or expected term? ---
+  (no '!!' lines above means the edit condemns nothing the case accepts)
+
+--- 5. corpus scan of C:\t\revf150\runs_verify\2026-08-28_1816 ---
+  PMC12180156/research /entities/compounds/2
+      name='δ-aminolevulinic acid' norm='delta aminolevulinic acid'
+      external_ids={'drugbank': 'DB00855', 'hmdb': 'HMDB0001149', 'kegg': 'C00430', 'chebi': '17549', 'pubchem': '137'}
+      forbidden_match -> '5-aminolevulinic acid'   PRIORITY-1 ELIGIBLE=True
+  PMC12856317/research /entities/compounds/2
+      name='aminolevulinic acid' norm='aminolevulinic acid'
+      external_ids={'drugbank': 'DB00855', 'hmdb': 'HMDB0001149', 'kegg': 'C00430', 'chebi': '17549', 'pubchem': '137'}
+      forbidden_match -> None   PRIORITY-1 ELIGIBLE=False
+  PMC12856317/strict /entities/compounds/1
+      name='aminolevulinic acid' norm='aminolevulinic acid'
+      external_ids={'drugbank': 'DB00855', 'hmdb': 'HMDB0001149', 'kegg': 'C00430', 'chebi': '17549', 'pubchem': '137'}
+      forbidden_match -> None   PRIORITY-1 ELIGIBLE=False
+
+  legs scanned: 10   matching entity rows: 3
+
+--- 6. D-072 coverage-denominator seam on C:\t\revf150\runs_verify\2026-08-28_1816 ---
+  coverage-term matches touching 'aminolevulinic': 0
+
+=== probe A complete ===
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\revf150\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4c077f012793260f05d5e0518c6459ca9ad13cc6  [git, worktree dirty=True]
+label                   : probea-post
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/revf150_probeA_reproduce_and_scan.py C:/t/revf150 C:/t/revf150/src/t2pw/bench/gold/pinned_v1.json post-edit
+cwd                     : C:\t\revf150
+root PID / process group: 467416 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.29 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  467220:python.exe
+descendants terminated  : 1  467220
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/F-150/07-probea-post.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=F-150  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
