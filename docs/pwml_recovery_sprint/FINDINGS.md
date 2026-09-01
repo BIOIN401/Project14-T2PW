@@ -7114,3 +7114,63 @@ seen and not chased.
 knows never to *commit* `streamlit_app.py`; what it did not have written down is that you must never
 *cite line numbers in it* either. Cite a **symbol** — `run_rag_rounds`, `run_rag_loop` — which is
 identical in both trees and cannot drift by 33 lines.
+
+---
+
+## F-158 — `RESULT.txt` prints the empty blocks but not the two fields that say WHY they are empty
+
+- **Severity** LOW–MEDIUM · **Class `product_contract_violation`** (§ 9 preservation, the reporting
+  half) · **Registered 2026-08-31 (ORCH-717)**
+- **Surfaced and measured by the C-110 implementer**, while taking that card's `batch/runner.py` stop
+  condition. **Reported rather than fixed**, because the seam belongs to F-148 and the card was
+  forbidden to build into it.
+
+### The measurement
+
+`src/t2pw/batch/runner.py::result_text(row, *, paper=None)` renders the per-paper-per-mode verdict
+file. It prints `status`, `stage`, wall time, warnings, issue codes, **`counts` and `files`**.
+
+It does **not** print **`termination_reason`** or **`operational_failure`** — *the two fields that
+state in terms that a leg was an operational casualty rather than a scientific decline.*
+
+### It corrects the Lead's framing, and the correction matters
+
+The C-110 charter said `result_text` *"drops the operational/biological distinction entirely"*.
+**That is wrong, and the implementer measured it rather than accepting it.** The distinction is
+partly visible: a timed-out leg shows empty `counts` and `files`, so a careful reader *can* see that
+nothing was produced. What the page never says is **why** — whether the emptiness was chosen or
+inflicted.
+
+**The gap is two named fields, not a whole missing capability**, and scoping it correctly is what
+makes it a cheap fix instead of an architecture change. The implementer corrected its own probe's
+wording when it caught this and kept the first version beside the fix.
+
+### Why it was not fixed in C-110
+
+Two separate reasons, and only the first is about scope:
+
+1. **Closing it needs no gold access**, so it is *not* blocked by C-110's stop condition — but
+   `RESULT.txt` is a **live pipeline artifact** and its seam belongs to **F-148 / C-111**, not to an
+   acceptance-instrument card.
+2. **Closing it does not fix the headline defect.** Even with both fields printed,
+   `RESULT: FAIL` **stays wrong on a correct decline**, because the verdict line is computed from
+   `status` alone and `result_text` receives *a manifest row and a paper dict — never a `GoldCase`*.
+   **Printing more context does not make a wrong verdict right.**
+
+### Disposition
+
+**Routed into C-111** as an in-scope item under "timeout source" — it is the same distinction that
+card exists to make visible, at the reporting end rather than the preservation end.
+
+**The verdict-line problem stays OPEN and is not chartered.** Making `RESULT: FAIL` correct on a
+decline requires the batch runner to know the paper is a negative control, and **that fact lives only
+in the gold set.** Coupling the live pipeline runner to the benchmark gold is an architecture
+decision the Lead has explicitly reserved. C-110 reports the correct status in the **acceptance
+instrument**, which is where the gold legitimately lives; `RESULT.txt` remains a run-time artifact
+that cannot know.
+
+### Standing lesson
+
+**"The information is absent" and "the information is present but unexplained" are different
+defects with different costs.** The first needs a new capability; the second needs two print
+statements. **Measure which one you have before charging the price of the first.**
