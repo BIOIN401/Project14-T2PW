@@ -66,6 +66,74 @@ would be misread as a pipeline failure.
 > and that timeouts are therefore an expected cost. **Do not launch at 1800 s with an empty
 > `leg_timeout_override_reason` and then classify the timeouts afterwards.**
 
+### 2.1 RULED by the Lead, 2026-09-01 — restore the 3600 s default. This row is now GREEN.
+
+**The decision is made and recorded here BEFORE launch, which is what the row asked for.**
+
+Measured first, decided second. `evidence/orch718_leg_duration_census.py` / `.log`, G11
+`ORCH-718/02`: a read-only census of **every** committed leg duration under **both** `runs/` and
+`runs_verify/` — named explicitly, because both roots are live and "the pinned run" is ambiguous.
+**No leg was run, re-run, re-scored or mutated. T-107 remains immutable and its verdict is
+untouched:** a duration is a fact about how long a process ran, never a verdict about what it
+produced.
+
+```
+POOLED, finished legs only, every tree
+  n=192   min=11.0   median=927.9   p90=1609.0   max=3421.4
+  slowest finisher anywhere : 3421.4 s in runs/2026-07-28_2122
+
+  1800s ceiling -> the slowest observed finisher needs 190.1% of it
+  2400s ceiling ->                                    142.6%
+  3000s ceiling ->                                    114.0%
+  3600s ceiling ->                                     95.0%   (179 s headroom)
+```
+
+**Three findings settle it:**
+
+1. **A leg has demonstrably needed 3421.4 s.** Every ceiling below 3600 s is *known-insufficient by
+   direct measurement*, not by extrapolation. 1800 s is **less than half** the observed requirement.
+2. **p90 is 1609 s — 89.4% of an 1800 s ceiling.** Roughly a tenth of all legs finish within 11% of
+   that budget. **That is not a ceiling that occasionally times out; it is a ceiling that times out
+   by construction.**
+3. **The 1800 s ceiling has produced timeouts in FOUR separate run trees, not just T-107** — with
+   the slowest finisher using 69.4%, 75.8%, 80.8% and 92.1% of budget respectively, and two to three
+   timeouts each time. T-107's three timeouts were never an anomaly; they were the fourth
+   observation of a repeating pattern.
+
+**Restoring the default also dissolves the contract problem rather than papering over it.** At
+3600 s there is **no override**, so `leg_timeout_overridden` is `false` and there is no
+`leg_timeout_override_reason` left empty for PRODUCT_CONTRACT § 9 to catch. **The honest way to
+satisfy a "record your reason" rule is to stop needing an exception.**
+
+**Two limits recorded with the decision, because a ceiling chosen on observed maxima is a ceiling
+chosen on censored data:**
+
+- **Every timed-out leg is CENSORED.** It proves the work needed *more* than the ceiling and never
+  *how much more*. The true requirement is **at least** 3421.4 s and may be larger. 3600 s clears
+  the slowest *observed* finisher by **179 s — 5%**. That is thin.
+- **A timeout at 3600 s is therefore NOT automatically a defect**, and must not be reported as one
+  without evidence. Equally, it must not be waved away: if T-108 times out at 3600 s, that is new
+  information about the requirement and belongs in the run report as such.
+
+**Registered for `FINDINGS.md` as soon as C-112 releases the file** (C-112 owns `FINDINGS.md` in the
+current wave and a concurrent edit would conflict): *the 1800 s ceiling is a recurring
+infrastructure cause of leg loss across four runs, and Priority 5's `0/2` on T-107 is partly
+attributable to it rather than to biology.* **Nothing is lost by the delay — the measurement, its
+probe, its correction and this ruling are all committed here.**
+
+**Probe correction preserved, per the sprint rule.** Attempt 1 classified a **crashed** leg as
+"finished" and swept in all 56 legs of `runs/2026-07-27_2135`, every one of which is
+`ModuleNotFoundError: No module named 'streamlit'` at 0.0 s — **F-143 itself, preserved in a
+committed run tree**: a bare `python` outside the venv. It is an infrastructure failure, not a
+duration. Excluding crashes moved **n 250 → 192**, **median 734.1 → 927.9** and **p90 1534.1 →
+1609.0**, and left the **max unchanged at 3421.4**. **The distribution was wrong and the ceiling
+conclusion was not.** Attempt 1's log is kept beside the corrected one as
+`orch718_leg_duration_census.attempt1-crashes-counted-as-finished.log`.
+
+**Launch obligation:** T-108 runs at the **3600 s default with no override**, and the run manifest
+must show `leg_timeout_overridden: false`. **Verify that in the staged directory before launch, not
+after.** The wrapper timeout is chosen separately, from these same durations plus cleanup headroom.
+
 ---
 
 ## 3. Traps that have already cost this sprint a false result
