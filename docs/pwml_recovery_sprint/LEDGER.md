@@ -8985,3 +8985,113 @@ is entirely real — only the transcribed number was wrong, by five.**
 | 06 | `ORCH-717/06-c107-claims.json` | C-107 routed claims vs shipped code | all reproduce; plural bypass **3 → 5**. 0 survivors |
 | 07 | `ORCH-717/07-smoke-post-c106.json` | SMOKE on merged tip `fa69c57` | **503 passed in 47.94s**. 0 survivors |
 | 08 | `ORCH-717/08-goldreaders-post-c106.json` | gold-readers on merged tip | **456 / 8 skipped / exit 0**. 0 survivors |
+
+## C-107 MERGED — `ca3c711`, gates pinned at the merged tip · 2026-08-31
+
+**REV-107 APPROVE after two correction rounds**, both spent deliberately, neither needing a third.
+117 G11 reports across author and reviewer. This card touched **production** and moved the guard in
+**both directions at once**, which the criteria named as making it more dangerous than C-105, not
+less.
+
+| Merge rule | Verdict |
+|---|---|
+| 1 dependency merged | ✔ C-106 merged first; C-107 based on `33a99e7`, an ancestor of the tip |
+| 2 diff inside boundary | ✔ `src` delta is `apply_audit_patch.py` alone, **341+/9−**. No gold, no `runs_verify/`, confidence gate and `placeholder_backed_proteins` untouched, **zero fixture names in any added `src` line** |
+| 3 focused tests pass | ✔ 150 + 35 split, 185 combined |
+| 4 pinned baseline | ✔ unmoved — SMOKE stays 503, gold-readers stays 456/8 |
+| 5 independent reviewer on the actual diff | ✔ REV-107, three passes, every load-bearing number re-derived |
+| 6 no biological gate weakened | ✔ **F-146 patch REJECTED at every tip**, in nine constructions the reviewer built itself; 29-case battery **0 mismatches** (base 1) |
+| 7 incomplete-but-correct preserved | ✔ 4 newly admitted rows, 0 newly refused — all four merge-rule-7 direction |
+| 8 no exporter repairs biology post-freeze | ✔ n/a |
+| 9 G9 | ✔ **90 failed at base `33a99e7`** → green at tip, ten distinct functions, all behavioural |
+| 10 SMOKE after merge | ✔ **503 passed in 50.48s** |
+| 11 test-process lifecycle | ✔ every job zero survivors, cleanup success |
+
+**Gates measured by the Lead on the merged tip `ca3c711`:**
+
+| Gate | Result |
+|---|---|
+| SMOKE (22 files) | **503 passed in 50.48s** |
+| gold-readers (22 files) | **456 passed / 8 skipped / exit 0** |
+
+### What the two correction rounds were actually for
+
+**Round 1 — the fix was bound LEXICALLY, so it closed the wording it was written from.** An
+attenuation stem plus an activity noun within 40 characters. REV-107 measured **15 of 44 frames
+still open**: one deleted word, one reordered clause, or 45 characters of padding defeated it.
+**A fix that is itself one rephrase from defeat has not closed a route whose whole thesis is that
+the audit stage regenerates its rationale every round.** The repair was to bind the contra
+**grammatically**: chemical reduction acts on a *substrate*, inhibition acts on *the actor*, so the
+question is whether the attenuation stem's object **is** the actor under judgement. That closes the
+class rather than the enumerated frames.
+
+**Round 1 also caught the 1e fix opening a NEW F-146-class route.** The new `cofactor` family
+excluded the bare noun `cofactor` and then admitted bare `requires`, `depends on`,
+`in the presence of` — the vocabulary a structural rationale is actually written in. *"The reaction
+requires a cofactor, so P is added to resolve the structural inconsistency"* went **refused at base
+→ accepted at tip**. And because `_ANY_ROLE_CUE_RE` is rebuilt from every family's vocabulary, it
+widened the fallback for **every unmapped role**. The card's own M6 mutation had already proved that
+leak mechanism; the consequence was not drawn from it.
+
+**Round 2 caught the round-1 repair reintroducing this card's OWN finding 1f.** The attenuation
+stems were unanchored, so `reduc` matched inside **`reductase`**, `block` inside `blocker`, `silenc`
+inside `silencer`. **Seven of eight legitimate catalysis spans falsely refused** — I verified that
+myself at `bde5b04` before routing it — against **EC class 1**, whose enzymes are named reductase.
+The card had spent an entire finding anchoring `mediat` for exactly this reason, one file-section
+above.
+
+### Three things about round 2 worth carrying forward
+
+1. **The reviewer TESTED the obvious repair instead of proposing it, and its hypothesis was wrong.**
+   A left lookbehind alone takes false refusals **8 → 6**: it fixes `nitroreductase` and
+   `oxidoreductase` and **not** bare `reductase`, `blocker`, `silencer`, where the stem *starts* a
+   genuine word and `[a-z]*` eats the rest. Had it proposed rather than measured, the author would
+   have shipped a fix that half works and a reviewer who had proposed it would have approved it.
+2. **The author did not apply the disproved fix**, and the reviewer verified the replacement's
+   alternation argument **directly** rather than accepting it: 57 inflections match themselves as
+   whole words, **0 leaks** across 57 × 11 suffix combinations, 18 real-world neighbours all refused.
+3. **The author found a second defect site the review did not name**, by **attributing** which guard
+   refused rather than guessing: the six near-synonym stems this card added to the *inhibition*
+   family carried the identical defect. It anchored those six and left **C-105's own stems
+   byte-identical** — verified by diff. *Fix the class you introduced; do not reach into the prior
+   card's.*
+
+### The caller enumeration corrects the C-105 record
+
+**Seven call sites across six modules, not four.** Three reach the guard via
+`run_apply → apply_audit_patch_payload → apply_patch_with_policy`: `interactive_curator.py:501`,
+`streamlit_app.py:3845/3915`, and `pipeline.py:116` — C-105 cited `:82`, which is the **import**
+line. Derived by AST, re-derived independently by the reviewer.
+
+**`src/t2pw/bench/` contains zero references to this guard**, so no scoring path can reach it and
+**B9 holds structurally rather than by measurement**: `PMC12452463/strict` and `PMC12180156/strict`
+**cannot** flip. Both remain correct-by-accident under F-147 and both stay failing.
+
+### Corpus, both directions, every round
+
+**692 rows — 0 newly refused, 4 newly admitted**, stable across all three tips and equal **row for
+row by dict equality**, not by count. One `Fur` inhibitor row on a *"silencing gene expression"*
+span, three `MsbA` transporter rows on *flippase* spans. Both merge-rule-7 direction.
+
+**Stated as the author stated it, because it is the honest version:** zero newly refused also means
+**the corpus never exercises 1a's paraphrase route.** 1a's value is that it closes a route the audit
+stage regenerates every round, not that it corrects a live row.
+
+### Registered, not fixed — all in the card's own commit messages
+
+R4 the residual **15 of 110** frames (base 99 → r0 45 → r1 15 → r2 15: real progress, not closure) ·
+R5 mutation-coverage gaps on the contra's modifier path · R6 two cofactor-dependence residuals ·
+R7 the B2 residual is **2 of 3, not 3 of 3** (`flavin reductase`, inherent to actor-anchoring) ·
+R8 two non-gate artifacts taken with a dirty worktree.
+
+**The cue/contra polarity note is the one to remember:** the closed modifier list and its `{0,4}`
+bound were borrowed from the passive-agent **cue**, where a bounded closed list **under-accepts** and
+is safe. Reused in a **contra** it **under-refuses** and is not. The constant was reused without
+noting the flip.
+
+### Two new findings, folded into F-155 rather than reopening the card
+
+**(d)** C-105's own attenuation stems carry the identical unanchored defect — `repressor`,
+`suppressor`, `inhibitor`. **The third independent instance of this defect in one file.**
+**(e)** three load-bearing anchors added by round 2 that no test covers; exposure measured at 4/2/4
+spans, all over-refusal, behaviour currently correct.

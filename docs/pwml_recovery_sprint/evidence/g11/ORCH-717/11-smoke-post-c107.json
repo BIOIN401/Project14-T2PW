@@ -1,0 +1,162 @@
+{
+  "label": "orch717-smoke-post-c107",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--no-header",
+    "--basetemp=C:/t/bt/o717smoke2",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-09-01T01:53:17+00:00",
+  "finished_at": "2026-09-01T01:54:09+00:00",
+  "duration_seconds": 52.058906999998726,
+  "timeout_seconds": 400.0,
+  "root_pid": 128200,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 128872,
+      "name": "python.exe",
+      "ppid": 128200
+    },
+    {
+      "pid": 115864,
+      "name": "python.exe",
+      "ppid": 128872
+    },
+    {
+      "pid": 118412,
+      "name": "python.exe",
+      "ppid": 115864
+    },
+    {
+      "pid": 124760,
+      "name": "python.exe",
+      "ppid": 128872
+    },
+    {
+      "pid": 128980,
+      "name": "python.exe",
+      "ppid": 124760
+    },
+    {
+      "pid": 123068,
+      "name": "python.exe",
+      "ppid": 128872
+    },
+    {
+      "pid": 127768,
+      "name": "python.exe",
+      "ppid": 123068
+    },
+    {
+      "pid": 128152,
+      "name": "python.exe",
+      "ppid": 128464
+    },
+    {
+      "pid": 128464,
+      "name": "python.exe",
+      "ppid": 128872
+    },
+    {
+      "pid": 129848,
+      "name": "git.exe",
+      "ppid": 128872
+    }
+  ],
+  "descendants_terminated": [
+    115864,
+    118412,
+    123068,
+    124760,
+    127768,
+    128152,
+    128464,
+    128872,
+    128980,
+    129848
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 74376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74532,
+      "name": "python.exe"
+    },
+    {
+      "pid": 128972,
+      "name": "python.exe"
+    },
+    {
+      "pid": 129016,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-717\\11-smoke-post-c107.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "ca3c711d5f219e715c8b2802940dc3b0dd18afad",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-717",
+    "token": "ORCH-717:129016:75d101b97d19eb93",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

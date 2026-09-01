@@ -6859,3 +6859,61 @@ failure mode as (a), which is exactly why (a) must be fixed before it is reprodu
 never generalised. When a guard is built family by family, **the reasoning behind each exclusion is
 the thing to carry across, not the word list** — a later family written from the word list alone
 inherits the vocabulary and loses the principle.
+
+### ADDENDUM, 2026-08-31 — two more members of the class, found while closing C-107
+
+Both surfaced by REV-107's final round, both measured, **neither blocking, both folded here rather
+than reopening C-107.**
+
+#### (d) C-105's OWN attenuation stems carry the identical unanchored defect
+
+C-107 round 2 fixed exactly this bug in the six stems **it** had added, and anchored them as words.
+**C-105's stems, one file-section above, were deliberately left untouched — and they have it too:**
+
+```
+REFUSED  "the repressor complex P4X catalyses the conversion of A to B"
+REFUSED  "the suppressor protein P4X catalyses ..."
+REFUSED  "the inhibitor protein P4X catalyses ..."
+```
+
+`repress` inside `repressor`, `suppress` inside `suppressor`, `inhibit` inside `inhibitor`. Present
+at base, at every C-107 tip, and today. **The author was right not to touch them** — they are the
+prior card's, and reaching into them mid-card is the scope creep that produced C-105's own round-1
+failure. They belong here.
+
+**This is the third independent instance of the same defect in one file** — `mediat` inside
+"intermediate" (C-107's finding 1f), the six stems C-107 added, and now C-105's. Any card touching
+this file should treat "is this stem anchored as a word on both sides?" as a checklist item rather
+than a discovery.
+
+#### (e) Three load-bearing anchors that no test covers
+
+REV-107 mutated the anchors C-107 round 2 added and found three green:
+
+| anchor removed | legitimate spans that flip ACCEPT → REFUSE |
+|---|---|
+| left anchor on `_ATTENUATION_WORD_SRC` | 4 — `photoablation`, `counterinterference`, `microablation`, `nonimpairment` |
+| right anchor on `_ATTENUATION_WORD_SRC` | 2 — `silencer` / `blocker` after the actor, via F2 |
+| left anchor on the six inhibition additions | 4 — the same four `-ablation` / `-interference` words |
+
+**None is dead code and current behaviour is correct in every case** — the reviewer measured the
+exposure rather than reasoning about it, and every flip is in the **over-refusal** direction, so
+each anchor is protecting precisely the class C-107 round 2 exists to protect. What is missing is a
+test, not a behaviour. Same class as the already-registered mutation-coverage gaps on the contra's
+modifier path.
+
+**Why this matters more than an ordinary coverage gap:** these anchors are the fix for a blocking
+finding. An untested fix for a blocking finding can be removed by a future refactor with the whole
+suite green — which is the exact shape of the `V9` gap C-107 round 2 was sent back to pin.
+
+#### The class, restated with all five members
+
+`(a)` transport bare schema noun · `(b)` `[^.]` is not a sentence bound · `(c)` an actor's own name
+supplies its cue · `(d)` C-105's unanchored stems · `(e)` three untested anchors.
+
+**(a)–(d) are all "something that is not evidence about this actor in this role is accepted, or
+something that is evidence is refused, because a pattern matched inside a longer word or matched a
+schema noun."** (e) is the coverage that would stop (d) recurring a fourth time.
+
+**A follow-on card should take all five together.** Each fix touches the same two functions, and the
+sprint has now watched this class recur three times in three consecutive cards on one file.
