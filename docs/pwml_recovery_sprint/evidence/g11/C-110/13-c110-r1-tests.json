@@ -1,0 +1,86 @@
+{
+  "label": "c110-r1-tests",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/tb110/r1",
+    "tests/test_c110_negative_control_status.py"
+  ],
+  "cwd": "C:\\t\\c110",
+  "started_at": "2026-09-01T04:11:02+00:00",
+  "finished_at": "2026-09-01T04:11:04+00:00",
+  "duration_seconds": 2.1363495999976294,
+  "timeout_seconds": 600.0,
+  "root_pid": 208776,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 211696,
+      "name": "python.exe",
+      "ppid": 208776
+    }
+  ],
+  "descendants_terminated": [
+    211696
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 182784,
+      "name": "python.exe"
+    },
+    {
+      "pid": 183116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212976,
+      "name": "python.exe"
+    },
+    {
+      "pid": 216740,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c110\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-110\\13-c110-r1-tests.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c110\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c110",
+    "repo_head": "db8caf16abe58fcd7f0a60380ec88144e45c6ffb",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-110",
+    "token": "C-110:212976:2a72cf7fcd82f2da",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,89 @@
+==============================================================================
+C-110 -- do DECLINED legs preserve artifacts, and do CASUALTIES not?
+==============================================================================
+manifests read    : 27
+EXCLUDED BY RULE  : ['runs_verify\\2026-08-28_1816\\manifest.jsonl']   <- T-107, never opened
+
+-- DECLARED DECLINE (NO_REACTIONS)  (8 non-passing legs)
+     with files      :    8 / 8   (100%)
+     with counts     :    8 / 8   (100%)
+     with a message  :    8 / 8   (100%)
+       e.g. 2026-07-28_2122/PMC12624714/strict  kind=no_reactions  status=fail  files=2  counts=yes
+       e.g. 2026-08-04_1306/PMC12180156/research  kind=no_reactions  status=fail  files=6  counts=yes
+       e.g. 2026-08-21_2239/PMC13231680/strict  kind=no_reactions  status=fail  files=6  counts=yes
+       e.g. 2026-08-21_2239/PMC13231680/research  kind=no_reactions  status=fail  files=6  counts=yes
+
+-- GATE STOP (CONTRACT) -- NOT A DECLINE  (55 non-passing legs)
+     with files      :   41 / 55   (75%)
+     with counts     :   37 / 55   (67%)
+     with a message  :   55 / 55   (100%)
+       e.g. 2026-07-27_1623/PMC12444477/research  kind=contract  status=fail  files=3  counts=yes
+       e.g. 2026-07-27_1623/PMC13231680/strict  kind=contract  status=fail  files=4  counts=yes
+       e.g. 2026-07-27_1623/PMC13231680/research  kind=contract  status=fail  files=3  counts=yes
+       e.g. 2026-07-28_0919/PMC12444477/research  kind=contract  status=fail  files=5  counts=yes
+
+-- CASUALTY  (67 non-passing legs)
+     with files      :    3 / 67   (4%)
+     with counts     :    3 / 67   (4%)
+     with a message  :   67 / 67   (100%)
+       e.g. 2026-07-27_1623/PMC13278307/research  kind=llm  status=fail  files=0  counts=no
+       e.g. 2026-07-27_2135/PMC12444477/strict  kind=crash  status=error  files=0  counts=no
+       e.g. 2026-07-27_2135/PMC12444477/research  kind=crash  status=error  files=0  counts=no
+       e.g. 2026-07-27_2135/PMC13278307/strict  kind=crash  status=error  files=0  counts=no
+
+-- OTHER  (34 non-passing legs)
+     with files      :   28 / 34   (82%)
+     with counts     :   25 / 34   (74%)
+     with a message  :   34 / 34   (100%)
+       e.g. 2026-07-27_1623/PMC12444477/strict  kind=ambiguous_review_scope  status=fail  files=0  counts=no
+       e.g. 2026-07-27_1623/PMC13278307/strict  kind=ambiguous_review_scope  status=fail  files=0  counts=no
+       e.g. 2026-07-28_2122/PMC13278307/strict  kind=ambiguous_review_scope  status=fail  files=0  counts=no
+       e.g. 2026-07-28_2122/PMC13278307/research  kind=ambiguous_review_scope  status=fail  files=0  counts=no
+
+-- PER failure_kind (the coarse buckets above hide the one that matters)
+       failure_kind              legs  with files  with counts
+       (none)                      25          25           25
+       ambiguous_review_scope       6           0            0
+       contract                    55          41           37
+       crash                       58           2            2
+       llm                          1           0            0
+       no_reactions                 8           8            8
+       timeout                      8           1            1
+       unknown                      3           3            0
+
+==============================================================================
+READING
+==============================================================================
+A high `with files` rate on DECLARED DECLINE and a low one on CASUALTY is
+what makes C-110's artifact condition discriminating rather than merely
+strict. A declined leg that preserved nothing does not earn the status --
+and by PRODUCT_CONTRACT 4 it also failed to preserve what a no-PWML
+outcome owes, so reporting it as unawarded is the honest answer, not a
+false negative.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ db8caf16abe58fcd7f0a60380ec88144e45c6ffb  [git, worktree dirty=True]
+label                   : c110-r1-artifacts
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c110_declined_legs_preserve_artifacts.py C:/t/c110
+cwd                     : C:\t\c110
+root PID / process group: 209944 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.20 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  218364:python.exe
+descendants terminated  : 1  218364
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\16-c110-r1-artifacts.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

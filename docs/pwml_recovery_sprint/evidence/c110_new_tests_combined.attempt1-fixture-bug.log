@@ -1,0 +1,64 @@
+F.....................                                                   [100%]
+================================== FAILURES ===================================
+___ test_population_1_a_positive_control_still_requires_reaction_production ___
+
+tmp_path = WindowsPath('C:/t/tb110/n1/test_population_1_a_positive_c0')
+
+    def test_population_1_a_positive_control_still_requires_reaction_production(tmp_path):
+        """POPULATION 1. A mechanistically relevant paper is untouched by this rule.
+    
+        Handed the EXACT row that earns the status on a negative control, a positive
+        control gets no record at all -- so nothing about it can be read as a pass,
+        and it still has to produce reactions to succeed at anything.
+        """
+    
+        report = _run(tmp_path, [_declined_row(POSITIVE)])
+        leg = _leg(report, POSITIVE)
+    
+        assert leg.negative_control is None, (
+            "a relevant paper must carry NO negative-control record: producing nothing "
+            "is not the right outcome for it, and the rule must not even apply"
+        )
+        assert not leg.extracted
+        assert not leg.passed
+>       assert report.negative_control_outcomes == {}
+E       AssertionError: assert {'NOT_AWARDED...1680:strict']} == {}
+E         
+E         Left contains 1 more item:
+E         {'NOT_AWARDED': ['PMC12180156:research',
+E                          'PMC12180156:strict',
+E                          'PMC13231680:research',
+E                          'PMC13231680:strict']}
+E         Use -v to get more diff
+
+tests\test_c110_negative_control_status.py:224: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c110_negative_control_status.py::test_population_1_a_positive_control_still_requires_reaction_production
+1 failed, 21 passed in 1.47s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ff4219bc53987cb5ae3a6dae0628a09204a85dc8  [git, worktree dirty=True]
+label                   : c110-new-tests
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q --basetemp=C:/t/tb110/n1 tests/test_c110_negative_control_status.py
+cwd                     : C:\t\c110
+root PID / process group: 196472 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 2.21 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  196484:python.exe
+descendants terminated  : 1  196484
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c110/docs/pwml_recovery_sprint/evidence/g11/C-110/01-c110-new-tests.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

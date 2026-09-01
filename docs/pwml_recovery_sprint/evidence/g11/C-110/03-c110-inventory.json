@@ -1,0 +1,83 @@
+{
+  "label": "c110-inventory",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/c110_leg_record_inventory.py"
+  ],
+  "cwd": "C:\\t\\c110",
+  "started_at": "2026-09-01T03:40:21+00:00",
+  "finished_at": "2026-09-01T03:40:22+00:00",
+  "duration_seconds": 0.4345437000010861,
+  "timeout_seconds": 300.0,
+  "root_pid": 195644,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 193992,
+      "name": "python.exe",
+      "ppid": 195644
+    }
+  ],
+  "descendants_terminated": [
+    193992
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 182784,
+      "name": "python.exe"
+    },
+    {
+      "pid": 183116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 194568,
+      "name": "python.exe"
+    },
+    {
+      "pid": 196724,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c110\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-110\\03-c110-inventory.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c110\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c110",
+    "repo_head": "ff4219bc53987cb5ae3a6dae0628a09204a85dc8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-110",
+    "token": "C-110:196724:656a7081fc158b70",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,85 @@
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 57%]
+........................................................................ [ 71%]
+........................................................................ [ 85%]
+.................................................................F.....  [100%]
+================================== FAILURES ===================================
+__________ test_04_restore_is_byte_exact_on_the_real_mutated_module ___________
+
+    def test_04_restore_is_byte_exact_on_the_real_mutated_module():
+        """R9 in spirit: the REAL artifact the harness mutates, not a stand-in.
+    
+        Applies and restores one real mutation through the harness's own restore
+        path. It runs no pytest and takes milliseconds; the `finally` guarantees the
+        tree is put back even if an assertion fires mid-test.
+        """
+        name, _what, rel, old, new = HARNESS.MUTATIONS[0]
+        assert name == "M1"
+        target = REPO / rel
+        before = target.read_bytes()
+        before_census = _census(before)
+        # The measured shape of this file. If it changes, that is a real event and
+        # the number is here so somebody has to look at it.
+        assert before_census[2] == 0, "acceptance.py has bare LFs on disk; investigate"
+    
+        saved = None
+        try:
+            saved = HARNESS.apply_mutation(target, old, new)
+            assert target.read_bytes() != before, "the mutation did not change the file"
+        finally:
+            if saved is not None:
+                HARNESS.restore_saved_bytes(target, saved)
+    
+        after = target.read_bytes()
+        after_census = _census(after)
+        assert after_census[3] == before_census[3], "restore was not byte-exact"
+        assert after_census[1] == before_census[1], "restore changed the CRLF count"
+        assert after == before
+    
+        # `git status --porcelain` is checked LAST and on purpose: it is the weakest
+        # of these signals, not the strongest. A clean porcelain is precisely what
+        # the broken `git checkout --` restore produced while it was silently
+        # rewriting all 1673 line endings in this file.
+        porcelain = subprocess.run(
+            ["git", "status", "--porcelain", "--", rel],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8",
+        ).stdout.strip()
+>       assert porcelain == "", f"the real module was left dirty: {porcelain!r}"
+E       AssertionError: the real module was left dirty: 'M src/t2pw/bench/acceptance.py'
+E       assert 'M src/t2pw/b...acceptance.py' == ''
+E         
+E         + M src/t2pw/bench/acceptance.py
+
+tests\test_c106_mutation_harness_executable.py:202: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c106_mutation_harness_executable.py::test_04_restore_is_byte_exact_on_the_real_mutated_module
+1 failed, 502 passed in 38.33s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ db8caf16abe58fcd7f0a60380ec88144e45c6ffb  [git, worktree dirty=True]
+label                   : c110-r1-smoke
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q --basetemp=C:/t/tb110/sm2 tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:\t\c110
+root PID / process group: 218276 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 39.77 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 9  218476:python.exe, 218400:python.exe, 219016:python.exe, 217884:python.exe, 218244:python.exe, 204204:python.exe, 219856:python.exe, 218396:python.exe, 218600:python.exe
+descendants terminated  : 9  204204, 217884, 218244, 218396, 218400, 218476, 218600, 219016, 219856
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\19-c110-r1-smoke.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -13,6 +13,7 @@ from typing import Any, List
 from t2pw.bench.acceptance import (
     MODE_RESEARCH,
     MODE_STRICT,
+    NEGATIVE_CONTROL_PASS,
     PRIORITY1_FAIL as _P1_FAIL,
     PRIORITY1_PASS as _P1_PASS,
     PRIORITY1_PASS_WITHIN_VARIANCE as _P1_VARIANCE,
@@ -292,6 +293,64 @@ def _release(leg: Any) -> List[str]:
     ]
 
 
+def _negative_control(leg: Any) -> List[str]:
+    """C-110. The leg's negative-control status, BESIDE its raw verdict.
+
+    Nothing here overwrites the ``strict :`` / ``research :`` head line above
+    it, which still prints the manifest status verbatim. That is the point: on
+    ``PMC13231680/strict`` the pipeline did exactly what the gold demands and
+    the reader saw only a failure token, so the fix is to STATE the other fact,
+    not to hide the first one.
+
+    When the status was withheld the line says WHY, from the closed
+    ``blocked_by`` vocabulary -- an empty leg that timed out reads as
+    ``NOT_AWARDED (execution_failure, ...)`` and can never be mistaken for a
+    correct decline.
+    """
+
+    record = getattr(leg, "negative_control", None)
+    if not record:
+        return []
+    status = str(record.get("status") or "")
+    blocked = [str(code) for code in (record.get("blocked_by") or ()) if code]
+    head = f"     neg control : {status}"
+    if blocked:
+        head += "  (" + ", ".join(blocked) + ")"
+    out = [head, f"                   arm={record.get('arm')}  "
+           f"raw_status={record.get('raw', {}).get('status') or '(none)'}  "
+           f"raw_failure_kind={record.get('raw', {}).get('failure_kind') or '(none)'}"]
+    reason = str(record.get("rejection_reason") or "")
+    if reason:
+        for index, line in enumerate(_wrap(reason, 70)):
+            out.append(("                   reason: " if index == 0 else "                           ") + line)
+    else:
+        out.append("                   reason: (NONE STATED -- a silence, not a decline)")
+    return out
+
+
+def _negative_controls(report: AcceptanceReport) -> List[str]:
+    """C-110. The run-wide roll-up. Omitted entirely when the gold set has none."""
+
+    outcomes = report.negative_control_outcomes
+    if not outcomes:
+        return []
+    out = _header("NEGATIVE CONTROLS -- where producing NOTHING is the right outcome")
+    out.append("A leg here earns PASS_NEGATIVE_CONTROL only when it released nothing, STATED why,")
+    out.append("and was not stopped by a timeout, crash, missing artifact or infrastructure fault.")
+    out.append("An empty result that cannot be shown to be a DECISION is never awarded it.")
+    out.append("")
+    out.append("These legs sit in NO denominator -- context_only papers are already excluded --")
+    out.append("so this status moves no rate. It is a reported verdict and nothing else.")
+    out.append("")
+    for status in sorted(outcomes, key=lambda key: (key != NEGATIVE_CONTROL_PASS, key)):
+        legs = outcomes[status]
+        out.append(f"  {len(legs):>3}  {status}")
+        for leg_id in legs:
+            out.append(f"         {leg_id}")
+    out.append("")
+    return out
+
+
 def _paper_block(paper: PaperResult) -> List[str]:
     case = paper.case
     out: List[str] = [_THIN]
@@ -323,6 +382,9 @@ def _paper_block(paper: PaperResult) -> List[str]:
             for line in _wrap(leg.boundary_evidence, 84):
                 out.append(f"              {line}")
         out.extend(_release(leg))
+        # C-110. After the raw verdict and the runtime release line, never
+        # instead of them.
+        out.extend(_negative_control(leg))
 
         semantic = leg.semantic
         if semantic is None or not semantic.evaluated:
@@ -489,6 +551,7 @@ def render_text(report: AcceptanceReport) -> str:
     lines.extend(_errors(report))
     lines.extend(_identity(report))
     lines.extend(_boundaries(report))
+    lines.extend(_negative_controls(report))
     lines.extend(_papers(report))
     lines.extend(_blockers(report))
     lines.extend(_notes(report))

@@ -1,0 +1,109 @@
+{
+  "label": "c110-split",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/c110_split_tests.py",
+    "C:/t/c110",
+    "C:/t/tb110/sp"
+  ],
+  "cwd": "C:\\t\\c110",
+  "started_at": "2026-09-01T03:41:20+00:00",
+  "finished_at": "2026-09-01T03:41:21+00:00",
+  "duration_seconds": 1.0357500999962213,
+  "timeout_seconds": 900.0,
+  "root_pid": 196232,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 197484,
+      "name": "python.exe",
+      "ppid": 196232
+    },
+    {
+      "pid": 193032,
+      "name": "python.exe",
+      "ppid": 197484
+    },
+    {
+      "pid": 193340,
+      "name": "python.exe",
+      "ppid": 193032
+    },
+    {
+      "pid": 194968,
+      "name": "python.exe",
+      "ppid": 197304
+    },
+    {
+      "pid": 197304,
+      "name": "python.exe",
+      "ppid": 197484
+    }
+  ],
+  "descendants_terminated": [
+    193032,
+    193340,
+    194968,
+    197304,
+    197484
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 182784,
+      "name": "python.exe"
+    },
+    {
+      "pid": 183116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 191872,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193168,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c110\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-110\\05-c110-split.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c110\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c110",
+    "repo_head": "5071715182a6c5ff8a9ec35008d7bf993ed65ad1",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-110",
+    "token": "C-110:193168:f886c47175efdf95",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
