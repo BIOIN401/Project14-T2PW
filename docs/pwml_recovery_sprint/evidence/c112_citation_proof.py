@@ -137,8 +137,22 @@ def section1(root: Path, base: str, tip: str) -> None:
           and "pwml-test-runner.md:52`" in line(b_tm, 533))
     check("BASE: MASTER_PLAN.md:281 is not the merge-gates heading any more -- FALSE",
           not line(b_mp, 281).startswith("## 5. Merge gates"), repr(line(b_mp, 281))[:70])
-    check("BASE: pwml-test-runner.md:52 is not the SMOKE bullet any more -- FALSE",
-          "Smoke = chunks" not in line(b_ptr, 52), repr(line(b_ptr, 52))[:70])
+    # HONEST DISAGREEMENT WITH MY OWN FIRST CLAIM, kept rather than quietly dropped.
+    # Attempt 2 of this probe asserted that `pwml-test-runner.md:52` was FALSE at base
+    # and it FAILED -- the failing run is preserved as
+    # `c112_citation_proof.attempt2-ptr52-not-false-at-base.log`. Measured: `:52` still
+    # lands on the SMOKE bullet at the C-112 base. REV-109 counted it among the 26 under
+    # its OTHER class -- "base content rewritten, no verbatim match at tip" (465 -> 503)
+    # -- not under "shift +N". So this ONE sub-citation of the seven was drift-PRONE, not
+    # false. **G9: converting it is HARDENING, and NO base failure is claimed for it.**
+    # The other six live citations are genuine false-at-base corrections, each proved
+    # above. Mislabelling this one would be exactly the kind of reject G9 names.
+    check("BASE: pwml-test-runner.md:52 STILL RESOLVES to the SMOKE bullet -- NOT false "
+          "at base, only drift-prone; conversion is HARDENING and claims no base failure",
+          line(b_ptr, 52).startswith("- Smoke = chunks A+B+C"), repr(line(b_ptr, 52))[:70])
+    check("BASE: ...and its CONTENT had been rewritten under it (465 -> 503), which is "
+          "REV-109's own second class and the reason it is in the 26",
+          "503" in line(b_ptr, 52) and "465" not in line(b_ptr, 52))
     check("TIP : both replaced by anchors, no line locators left",
           not re.search(r"MASTER_PLAN\.md:\d", line(t_tm, 533))
           and not re.search(r"pwml-test-runner\.md:\d", line(t_tm, 533)))

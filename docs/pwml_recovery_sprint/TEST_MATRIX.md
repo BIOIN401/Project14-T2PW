@@ -880,3 +880,24 @@ exist in **no commit**, and the number propagated through three documents before
   why M16's `ABORT` (exit 3) survived a green 503 from C-108's merge until C-112 repaired it.
   **Whether the c107 harness should also be gated is RAISED here, not answered** — it is a
   `TEST_MATRIX` change with its own cost and it is not C-112's to make.
+
+### C-112 G9 labelling — one of the seven live citations is HARDENING, not correction
+
+**Measured, and recorded because mislabelling it would be a reject.** Six of the seven live
+citations C-112 converted were **false at the C-112 base SHA** and are corrections of currently-false
+documentation, each proved false-at-base / true-at-tip against **committed blobs** in
+`evidence/c112_citation_proof.log`. The seventh is not:
+
+* **`.claude/agents/pwml-test-runner.md:52`**, cited from `TEST_MATRIX.md:533`, **still resolved to
+  the SMOKE bullet at the base SHA.** REV-109 counted it among the 26 under its *other* class —
+  *"base content rewritten, no verbatim match at tip"* (the bullet's own figure moved `465 → 503`) —
+  **not** under *"shift +N"*. The address was therefore **drift-prone, not false**, and converting it
+  to the `## Test discipline` SMOKE-bullet anchor is **hardening**. **No base failure is claimed for
+  it.** The first version of C-112's own probe asserted that it *was* false at base and **failed**;
+  that run is preserved at `evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log`
+  beside its correction, rather than being dropped.
+
+**The general point, for the next card that inherits a drift list:** a mechanical drift log mixes two
+classes — *the number now points somewhere else* and *the number still points here but the content
+under it changed*. Both are worth converting to anchors. **Only the first is a false-at-base
+correction.** Counting them together is what produced this card's one mislabel.
