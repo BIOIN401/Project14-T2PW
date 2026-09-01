@@ -1,0 +1,137 @@
+{
+  "label": "merge109-gold",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/bt/orchgold",
+    "tests/test_protein_export_policy.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c077_stage0_conflict_disposition.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c085_priority2_honesty.py",
+    "tests/test_c088_extracted_not_serialized_disposition.py",
+    "tests/test_cofactor_policy.py",
+    "tests/test_rag_multi_relation_spans.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c089_participant_schema.py",
+    "tests/test_c090_wrapper_identity_actor_evidence.py",
+    "tests/test_c097_semantic_name_keys.py",
+    "tests/test_semantic_release_gating.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-09-01T03:20:13+00:00",
+  "finished_at": "2026-09-01T03:21:08+00:00",
+  "duration_seconds": 54.6566962999932,
+  "timeout_seconds": 900.0,
+  "root_pid": 152376,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 179688,
+      "name": "python.exe",
+      "ppid": 152376
+    },
+    {
+      "pid": 184980,
+      "name": "git.exe",
+      "ppid": 179688
+    },
+    {
+      "pid": 184008,
+      "name": "git.exe",
+      "ppid": 179688
+    },
+    {
+      "pid": 179856,
+      "name": "git.exe",
+      "ppid": 179688
+    },
+    {
+      "pid": 184244,
+      "name": "git.exe",
+      "ppid": 179688
+    },
+    {
+      "pid": 155716,
+      "name": "git.exe",
+      "ppid": 179688
+    }
+  ],
+  "descendants_terminated": [
+    155716,
+    179688,
+    179856,
+    184008,
+    184244,
+    184980
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 174568,
+      "name": "python.exe"
+    },
+    {
+      "pid": 180988,
+      "name": "python.exe"
+    },
+    {
+      "pid": 182784,
+      "name": "python.exe"
+    },
+    {
+      "pid": 183116,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-717\\23-merge109.gold.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "efb2edc25a79dc2afda5fad219ae5c4fc33bdd4b",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-717",
+    "token": "ORCH-717:180988:17c130d3edae98ac",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
