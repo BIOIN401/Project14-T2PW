@@ -1,0 +1,143 @@
+{
+  "label": "rev108-own-mutations2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rev108/docs/pwml_recovery_sprint/evidence/rev108_own_mutations.py",
+    "C:/t/rev108"
+  ],
+  "cwd": "C:\\t\\rev108",
+  "started_at": "2026-09-01T03:33:39+00:00",
+  "finished_at": "2026-09-01T03:33:45+00:00",
+  "duration_seconds": 5.7848884999984875,
+  "timeout_seconds": 2400.0,
+  "root_pid": 182860,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 189824,
+      "name": "python.exe",
+      "ppid": 182860
+    },
+    {
+      "pid": 188204,
+      "name": "python.exe",
+      "ppid": 192340
+    },
+    {
+      "pid": 192340,
+      "name": "python.exe",
+      "ppid": 189824
+    },
+    {
+      "pid": 189188,
+      "name": "python.exe",
+      "ppid": 191380
+    },
+    {
+      "pid": 191380,
+      "name": "python.exe",
+      "ppid": 189824
+    },
+    {
+      "pid": 190924,
+      "name": "python.exe",
+      "ppid": 189824
+    },
+    {
+      "pid": 192212,
+      "name": "python.exe",
+      "ppid": 190924
+    },
+    {
+      "pid": 189372,
+      "name": "python.exe",
+      "ppid": 192088
+    },
+    {
+      "pid": 192088,
+      "name": "python.exe",
+      "ppid": 189824
+    },
+    {
+      "pid": 189164,
+      "name": "python.exe",
+      "ppid": 189824
+    },
+    {
+      "pid": 191900,
+      "name": "python.exe",
+      "ppid": 189164
+    }
+  ],
+  "descendants_terminated": [
+    188204,
+    189164,
+    189188,
+    189372,
+    189824,
+    190924,
+    191380,
+    191900,
+    192088,
+    192212,
+    192340
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 182784,
+      "name": "python.exe"
+    },
+    {
+      "pid": 183116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 183528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 192304,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev108\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-108\\17-rev108-own-mutations2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev108\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev108",
+    "repo_head": "fbf2047e69fa0464c7c128978f12c636a1455431",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-108",
+    "token": "REV-108:183528:e9d68a2dd8dd015a",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

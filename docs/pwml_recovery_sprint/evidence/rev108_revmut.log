@@ -1,0 +1,37 @@
+Traceback (most recent call last):
+  File "C:\t\rev108\docs\pwml_recovery_sprint\evidence\rev108_own_mutations.py", line 133, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "C:\t\rev108\docs\pwml_recovery_sprint\evidence\rev108_own_mutations.py", line 91, in main
+    start_sha = sha256_of(target)
+  File "C:\t\rev108\docs\pwml_recovery_sprint\evidence\c102_mutation_attack.py", line 157, in sha256_of
+    return hashlib.sha256(data).hexdigest()
+           ~~~~~~~~~~~~~~^^^^^^
+TypeError: object supporting the buffer API required
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fbf2047e69fa0464c7c128978f12c636a1455431  [git, worktree dirty=False]
+label                   : rev108-own-mutations
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev108/docs/pwml_recovery_sprint/evidence/rev108_own_mutations.py C:/t/rev108
+cwd                     : C:\t\rev108
+root PID / process group: 191056 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 2400 s
+duration                : 0.19 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  186952:python.exe
+descendants terminated  : 1  186952
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev108\docs\pwml_recovery_sprint\evidence\g11\REV-108\16-rev108-own-mutations.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
