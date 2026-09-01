@@ -1,0 +1,88 @@
+== target ==
+repo    : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+run dir : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-01_1612
+exists  : True
+
+== 1. find_resumable() ==
+returned : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-01_1612
+expected : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-01_1612
+MATCH    : True
+
+== 2. plan pairs / pending / legs present ==
+papers in plan : 10
+modes in plan  : ['strict', 'research']
+plan pairs     : 20
+manifest rows (already recorded) : 0
+pending                          : 20
+leg directories present : 0
+RESULT.txt present      : 0
+
+== 3. expected strict/research legs ==
+papers : 10
+modes  : ['strict', 'research']  missing=none
+expected legs : 20
+  PMC12096016/research
+  PMC12096016/strict
+  PMC12180156/research
+  PMC12180156/strict
+  PMC12312563/research
+  PMC12312563/strict
+  PMC12421875/research
+  PMC12421875/strict
+  PMC12444477/research
+  PMC12444477/strict
+  PMC12452463/research
+  PMC12452463/strict
+  PMC12657337/research
+  PMC12657337/strict
+  PMC12782028/research
+  PMC12782028/strict
+  PMC12856317/research
+  PMC12856317/strict
+  PMC13231680/research
+  PMC13231680/strict
+
+== 4. gold set identity ==
+working-tree blob : 36f4b7b690b577f72882c3045ca6728d1ec8d9d1
+HEAD blob         : 36f4b7b690b577f72882c3045ca6728d1ec8d9d1
+expected blob     : 36f4b7b690b577f72882c3045ca6728d1ec8d9d1
+sha256            : 5aed7a6d6a1e8d290ffd9435f1e4e2f3ee2df9cfca7e9deebab893d392cbf6db
+gold version      : 2026-08-01.1
+gold cases        : 10
+supported_reactions_complete TRUE : 0 / 10
+max_retained_reactions set        : 2 / 10
+
+== 5. per-leg ceiling resolves with NO override ==
+deadline.LEG_TIMEOUT_SECONDS        : 3600.0
+runner.DEFAULT_PAPER_TIMEOUT        : 3600.0
+_ceiling(3600.0).to_dict()      : {'leg_timeout_seconds': 3600.0, 'leg_timeout_default_seconds': 3600.0, 'leg_timeout_overridden': False}
+child deadline (leg - 120 grace)    : 3480.0
+
+== VERDICT ==
+T108_STAGE_VERIFY: OK
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0bbac3fd863d3ff22d1172354c4b367d34a6d1bd  [git, worktree dirty=True]
+label                   : stage-verify
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/t108_stage_verify.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW runs_verify/2026-09-01_1612
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 589332 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.70 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  590496:python.exe
+descendants terminated  : 1  590496
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\T-108\07-stage-verify.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

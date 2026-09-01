@@ -5056,3 +5056,84 @@ matters for every future estimate regardless of who is paying.
 **The gap that produced this uncertainty is worth closing separately:** the pipeline records no token
 usage, so no run in this sprint can be costed after the fact. That is a real observability hole and
 is registered here rather than lost now that it no longer blocks anything.
+
+---
+
+## D-087 — `supported_reactions_complete` stays unset by default; setting it requires an independent biological completeness audit · 2026-09-01 · LOCKED
+
+**Product-owner ruling, given directly**, answering the one open question of the sprint as stated in
+`DECISION-PACKET-F150-HALF2.md`:
+
+> **Should `supported_reactions_complete` be set on any gold case — and if so, which?**
+
+**Recorded before T-108 launched. Deliberately NOT implemented before T-108.** The currently gated
+tree is preserved exactly as certified; no gold byte, scorer line or production line was changed to
+record this.
+
+### The ruling
+
+1. **It remains unset by default.**
+2. It **may** be set only when the gold case **explicitly defines a bounded, exhaustive reaction
+   scope**.
+3. An **independent biological reviewer** must verify that the enumerated supported reactions are
+   **complete for that scope**.
+4. **The presence of several supported reactions is not evidence of completeness.**
+5. A missing completeness assertion **must remain `NOT EVALUATED`**, not become a confident
+   accusation of invented chemistry.
+6. **If none of the ten current cases meet this standard, leaving all ten unset is correct** — and
+   must be **reported as an acceptance-instrument limitation**, not passed over in silence.
+7. **This ruling does not block T-108** under the current contract.
+
+### What it settles, and what it refuses to settle
+
+It adopts the packet's **option A** as the current state — but **not** as the packet framed it. The
+packet's § 7 warned that option A is otherwise *"a decision that was defaulted into, not one that
+was taken."* **This ruling takes it.** Ten unset flags are now ten flags left unset on purpose,
+under a standard, rather than ten unexamined defaults.
+
+It does **not** close option B. Clause 2 is the doorway: a case that genuinely carries a bounded,
+exhaustive scope may have the flag set, **after** clause 3's independent biological audit. What the
+ruling refuses is setting it on the strength of a signature list *looking* long enough — which is
+exactly clause 4, and exactly the inference the packet identified as the dangerous one. **The
+declared signature counts are 0 to 3 per case, and 2, 3 and 3 on the three `core` papers.**
+
+### Why clause 5 is the load-bearing clause
+
+The failure modes are **not symmetric**, and the asymmetry is the whole decision. Leaving the flag
+unset yields a number that is **withheld and labelled as withheld**. Setting it wrongly yields a
+number that is **stated and wrong, in the direction of accusing the pipeline of inventing chemistry
+it did not invent** — the miscall `semantic.py` records as having read **227 fabricated reactions**
+in a run that produced far fewer. `PRODUCT_CONTRACT` § 11 already forbids collapsing *not evaluated*
+into *passed*; clause 5 forbids the mirror error of collapsing *not evaluated* into *failed*.
+
+The status quo is therefore **honest, not broken**: `semantic.py` stamps
+`UNSUPPORTED-REACTION VERDICT NOT EVALUATED` and withholds `false_positives` rather than reporting a
+hard zero. **Nothing here is a defect to be fixed.**
+
+### Clause 6 is an obligation on the run report, not a formality
+
+`supported_reactions_complete` is `False` on **all ten** cases and `max_retained_reactions` is set on
+exactly **two — both negative controls**. So Priority 2's unsupported-reaction verdict **can never be
+evaluated on a paper that is not a negative control**, on this run or any future one. Under clause 6
+that is reported as **a limitation of the acceptance instrument**, in the report, in those terms.
+
+**The standing limit travels with every report quoting Priority 2, under every option:**
+
+> **Priority 2 = 1 is a real number and it is not a measure of how much invented chemistry a run
+> produced.**
+
+### Guardrails carried forward from the packet, unchanged
+
+- **Half 2 stays separate from half 1.** Half 1 was an internal gold inconsistency and merged at
+  C-113; half 2 changes what the benchmark *means*. **A single commit containing both is a reject.**
+- **No agent may set this flag** without an explicit ruling recorded here naming the case.
+- **Setting it must never be justified by a benchmark number moving in a pleasing direction.** That
+  is `policy_disagreement` dressed as `gold_data_defect`, and merge rule 6's reasoning applies: a
+  gold change that improves a score is the case that **most** needs an independent reviewer.
+- If a case is ever set, **the flag and the audit that certified it are one artifact**, recorded
+  together.
+
+### Status
+
+**Recorded, not implemented.** No case is set. `DECISION-PACKET-F150-HALF2.md` is preserved unchanged
+as the statement of the question; this entry is the answer to it.

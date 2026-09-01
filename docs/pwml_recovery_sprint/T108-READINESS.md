@@ -1,6 +1,6 @@
 # T-108 release-candidate readiness
 
-**Status at last update: `NO-GO` — rebuilt at `848bc18b`, 2026-09-01. Eighteen of nineteen rows are GREEN; the single blocker is row 19, run ownership. See § 5.** Blockers named below. This file is updated as conditions close;
+**Status: `GO` — re-derived at `0bbac3fd`, 2026-09-01. All nineteen rows GREEN. Row 19 closed by a dedicated owning session; T-108 LAUNCHED once into `runs_verify/2026-09-01_1612`. See § 6.** The `NO-GO` at `848bc18b` (§ 5) is preserved as the record of what was true before this session, and it was the correct answer then. Blockers named below. This file is updated as conditions close;
 **a `GO` requires every row green, verified at the integration tip, not remembered.**
 
 **T-108 is a NEW milestone identity.** It is not a re-run, re-score or re-reading of T-107.
@@ -311,3 +311,96 @@ prerequisite for launching; quoting Priority 2 without its limit is what would b
    failure.**
 3. Then the launch protocol in § 4, unchanged, **at the 3600 s ceiling with no override**, verifying
    `leg_timeout_overridden: false` **in the staged directory before launch, not after**.
+
+---
+
+## 6. Readiness RE-DERIVED at `0bbac3fd`, 2026-09-01 — **decision: GO. T-108 LAUNCHED.**
+
+**Row 19 is now GREEN, and it is the only row whose state changed.** Everything else was re-derived
+rather than carried forward from § 5, per § 5.4 step 1.
+
+### 6.1 Row 19 — why it closed
+
+§ 5.2 recorded row 19 RED for a reason that was **about the operator, not the tree**: the session
+could not see a ~5–8 h run through, and there was no peer authorized to accept a transfer.
+
+**This session was convened specifically to own T-108 through completion** — instructed to remain
+active and retain ownership until the wrapper exits, the run is scored, every process is closed, and
+the result is committed and pushed. **That is exactly what row 19 asks for, and it is satisfied by
+the monitoring arm of the "or", not the transfer arm.** No transfer is needed and none is claimed.
+
+**The compliance objection dissolves with it.** § 5.2's decisive argument was that
+`TEST_MATRIX` § 0 rule 1 permits tracked background **only** when *"no detached or unowned job
+remains"*, so a T-108 launched by a session that would end mid-run is a G11 violation **by
+construction**. A run owned end-to-end by its launching session is the case rule 1 explicitly
+authorizes. `T108-RUN-OWNERSHIP.md` is the record.
+
+**Exclusivity was established before anything was claimed**, not assumed: `ListAgents` showed
+exactly one live peer in this repository, `project14-t2pw-93`, which stood down on all four points
+(no orchestrator role, no branch/worktree/lock/job/edit, no T-108 claim, will not launch or clear the
+lock while the run is live). **Its caveat that it cannot bind its user's future instructions is
+recorded in the ownership file rather than smoothed away** — it commits to notify first and wait, and
+unconditionally never to touch the lock. **One inherited fact was corrected by it: it is the same
+user on a different task, not a different user.**
+
+### 6.2 The rows § 5.4 required re-deriving — all re-measured, none carried forward
+
+| # | Condition | State at `0bbac3fd` | Evidence |
+|---|---|---|---|
+| 4 | F-146 remains rejected | **GREEN** | `F146=REJECTED`, re-measured. G11 `T-108/03` |
+| 5 | 29-case battery at zero mismatches | **GREEN** | `battery=0/29  C1..C6 all 0`. G11 `T-108/03` |
+| 11 | Deterministic SMOKE + gold-reader gates | **GREEN** | SMOKE **503 / exit 0** (`T-108/01`); gold-readers **456 passed / 0 failed / 8 skipped / 0 errors / exit 0** (`T-108/02`), against gold `36f4b7b6` |
+| 16 | Heavy lock free | **GREEN at launch**, now **held by T-108** | absent at every pre-launch sample; acquired `2026-09-01T22:14:52Z`, token `T-108:584068:06cdcf139f4c2b80` |
+| 17 | Zero sprint-owned Python | **GREEN** | only the two `ms-python.isort` IDE processes, matched on **command line**, never on name. Independently corroborated by the peer, which flagged the same two PIDs unprompted |
+
+**Also re-derived, because they are cheap and load-bearing:** row 12 — `acceptance.py` is
+`sha256:4bd893ac410d16d3…` **before and after** SMOKE, byte-identical · row 13 —
+`local = origin/ = git ls-remote` all `0bbac3fd`, `main` untouched at local `7531692` / remote
+`03f1af5` · row 15 — provider preflight **OK** (`T-108/04`) · whole-tree G11 — **5032 artifacts, 0
+non-compliant**, which reconciles exactly with the previous wave's count because nothing had been
+added yet · C-111 / C-112 / C-113 all **ancestors** of the measured tip.
+
+### 6.3 Row 14 discharged inside T-108's own staged directory, as it required
+
+| Step | Result |
+|---|---|
+| Fresh milestone identity, **stage-only** | `runs_verify/2026-09-01_1612`, 2.19 s, **0 legs executed** |
+| `--verify-plan` on that exact directory | **`verdict: OK`** · `cases checked: 10   search calls: 0` · **all 10 `[pinned_override]`** |
+| Continuity proof | `find_resumable()` returned **that exact path**; **20 pairs, 20 pending, 0 recorded, 0 leg directories, 0 `RESULT.txt`** |
+| Gold identity in the staged tree | working-tree blob **=** HEAD blob **=** pinned `36f4b7b6…`, version `2026-08-01.1`, 10 cases |
+| Leg ceiling **before** launch | `_ceiling(3600.0)` → `leg_timeout_overridden: **False**`, **no** `leg_timeout_override_reason` key emitted. Child deadline `3480 s` |
+| Continue **without** `--fresh` | runner confirmed `CONTINUING the incomplete run 2026-09-01_1612 (no --fresh given)` · `already recorded : 0` · `still to do : 20` |
+
+**The runner's own hint remains the trap § 4 step 6 exists to defeat** — *"rerun the same command
+WITHOUT --stage-only"* still carries `--fresh`, which would have discarded the staging just
+certified. The discriminator is `already recorded : 0`, asserted directly rather than through the
+`--fresh` proxy.
+
+### 6.4 The one environment decision that is not a repeat of T-107's paperwork
+
+**`T2PW_OFFLINE_CURATOR` is deliberately NOT set for the live run**, against the sprint's blanket
+rule, and the exception is documented in `T108-MANIFEST.md` § 5. § 3 of this file requires the flag
+on sprint jobs; **that rule governs deterministic test and gate jobs.** `run_pathway_curator` is a
+ratified production stage using the pinned `OPENROUTER_CURATOR_MODEL`, and the flag makes it *"an
+explicit, deterministic no-op: zero model calls"*. Setting it would disable a ratified stage — the
+`LLM_PROVIDER=local` failure mode wearing different clothes.
+
+**It was settled by measurement, not by argument.** T-107's own committed artifact
+(`runs_verify/2026-08-28_1816/papers/PMC12096016/strict/RESULT.txt:68`) records a live curator call
+on the pinned model. **T-107 ran the curator online; T-108 matches it, so comparability holds.** The
+same line reads `on attempt 1/3`, which **independently confirms `LLM_MAX_RETRIES=3` on the real
+run** — § 3's `.env` trap closed by observation of the production path rather than by re-reading the
+file that documents it.
+
+### 6.5 What is NOT claimed
+
+**This is a launch decision, not a result.** T-108's verdict is whatever its artifacts say. Nothing
+here predicts it, and **no T-108 outcome re-opens T-107**, whose `NOT ACCEPTED` verdict is a fact
+about the artifacts it produced.
+
+**T-108 is ONE-SHOT and was launched exactly once.** It is not re-run for a timeout, stochastic
+composition, an unexpected count, a seven instead of a six, a failed acceptance priority, or missing
+model-usage telemetry.
+
+**A timeout at 3600 s is not automatically a defect and must not be waved away either** — § 2.1's
+censoring limit stands, and any T-108 timeout is new information about the requirement.
