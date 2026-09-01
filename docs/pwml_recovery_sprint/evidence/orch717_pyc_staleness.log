@@ -1,0 +1,43 @@
+==============================================================================
+Does a SAME-LENGTH mutation get executed, or silently ignored?
+==============================================================================
+  1. wrote ORIGINAL, imported            -> VALUE = 'AAA'
+  2. bytecode cached                     -> victim.cpython-313.pyc exists=True
+  3. wrote MUTANT (same length)          -> size 15 -> 15, mtime_s 1788236424 -> 1788236424
+  4. (mtime_s, size) UNCHANGED?          -> True
+  5. reloaded                            -> VALUE = 'AAA'
+
+==============================================================================
+HAZARD REPRODUCED -- the mutant was NOT executed; stale bytecode ran.
+A harness would report MUTATION SURVIVED for a guard it never removed.
+==============================================================================
+
+MITIGATION: clear __pycache__ between mutation and test, or make every
+mutation change the file SIZE (a marker comment does this incidentally --
+which is why some mutations in this sprint escaped the hazard by luck).
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 550930d304577e67f3e0702f37b71f33393a1fc4  [git, worktree dirty=True]
+label                   : pyc-staleness
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/orch717_pyc_staleness.py C:/t/pycscratch
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 216012 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 180 s
+duration                : 0.20 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  223180:python.exe
+descendants terminated  : 1  223180
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-717\29-pyc.staleness.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

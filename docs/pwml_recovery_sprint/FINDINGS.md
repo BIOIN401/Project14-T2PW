@@ -7254,3 +7254,86 @@ MEANS.** `_classify` prefers structured evidence over wording, which is right. B
 the output as a claim about the world, and the further a label travels from its classifier the more
 authority it silently acquires. **Before depending on an enum value, read the branch that produces
 it** — the name will always sound more specific than the condition.
+
+---
+
+## F-160 — a same-length mutation can be silently NOT EXECUTED, and the harness reports it as SURVIVED
+
+- **Severity** HIGH for the sprint's own instruments · **Class: infrastructure defect** — it
+  corrupts *measurements*, not the product · **Registered 2026-08-31 (ORCH-717)**
+- **Found by REV-108** when its own re-run of a fixed finding reported a **false GREEN**.
+  **Reproduced independently by the Lead** — `evidence/orch717_pyc_staleness.py` / `.log`, G11
+  `ORCH-717/29`.
+
+### The measurement
+
+CPython's default bytecode invalidation (PEP 552 *timestamp* mode) keys a `.pyc` on
+**(source mtime truncated to whole seconds, source size)**. A mutation that changes **neither** —
+any same-length edit landing in the same wall-clock second as the write before it — leaves the
+cached `.pyc` looking valid, and **the interpreter runs the OLD bytecode.**
+
+Reproduced from a clean scratch module:
+
+```
+1. wrote ORIGINAL, imported            -> VALUE = 'AAA'
+2. bytecode cached                     -> victim.cpython-313.pyc exists=True
+3. wrote MUTANT (same length)          -> size 15 -> 15, mtime_s unchanged
+4. (mtime_s, size) UNCHANGED?          -> True
+5. reloaded                            -> VALUE = 'AAA'      <-- the MUTANT never ran
+```
+
+REV-108 confirmed it on the real tree: source git-clean with `{0,3}` twice, while the `.pyc`
+recorded identical mtime **and** size. Its `{0,3}` → `{0,0}` mutation is length-preserving.
+
+### Why this is worse than an ordinary flaky test
+
+**The failure direction is a false GREEN, and a false green here INVENTS A COVERAGE GAP THAT DOES
+NOT EXIST.**
+
+A mutation harness removes a guard and expects a test to go red. If the mutant never executes, the
+suite passes and the harness reports **`MUTATION SURVIVED`** — which reads as *"this guard is
+protected by no test"*. **The natural response to that report is to weaken or delete the guard, or
+to spend a correction round writing a test for coverage that is already there.** The instrument
+built to prove a guard is load-bearing can therefore argue for its removal.
+
+**It is intermittent, which makes it worse.** Whether it fires depends on whether the two writes
+straddle a second boundary. **A passing re-run looks like confirmation** rather than like a coin
+landing the other way.
+
+### Who escaped it, and only by luck
+
+The mutations in this sprint that appended a **marker comment** — `# MUTATION M16`,
+`# MUTANT: enforcement removed` — changed the file **size** and were therefore invalidated
+correctly. **That is incidental, not designed.** C-108's `N17` is named by REV-108 as escaping for
+exactly this reason.
+
+**It also produced a near-miss report.** REV-108 saw three failures running the C-108 test file
+alone, and was about to report a split-vs-combined discrepancy — a finding shape this sprint takes
+seriously. After clearing `__pycache__` the split run was **211 passed**. **It was contamination,
+not a finding, and the reviewer caught it before reporting.**
+
+### Disposition
+
+**Registered. Not chartered as its own card**, because the fix belongs wherever mutations are
+applied and two cards are mid-flight there. **The rule, effective immediately:**
+
+> **Clear `__pycache__` between applying a mutation and running the suite** — or guarantee every
+> mutation changes the file **size**. **Do not rely on mtime.**
+>
+> **A `MUTATION SURVIVED` result from a same-length mutation is not a result.** Re-take it with
+> caches cleared before recording it, and never act on it.
+
+Relevant to `evidence/c102_mutation_attack.py` (the harness SMOKE gates), `c107_mutation_attack.py`,
+C-108's own 18 mutations and C-110's 12. **The ones that changed size are sound; the ones that did
+not must be re-taken before they are trusted.**
+
+**Also recorded:** REV-108 deleted tracked `.pyc` files while clearing caches and restored them;
+both worktrees verified git-clean afterwards.
+
+### Standing lesson
+
+**An instrument that reports "no coverage here" is making a claim about the world, and it can be
+wrong in the direction that costs a guard.** This sprint already knows to distrust a green test
+suite. **The harder discipline is distrusting a green MUTATION — because the reassuring reading of
+`SURVIVED` is that your tests are weak, and the alarming one, that your mutation never happened, is
+the one nobody checks.**
