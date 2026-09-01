@@ -7337,3 +7337,59 @@ wrong in the direction that costs a guard.** This sprint already knows to distru
 suite. **The harder discipline is distrusting a green MUTATION — because the reassuring reading of
 `SURVIVED` is that your tests are weak, and the alarming one, that your mutation never happened, is
 the one nobody checks.**
+
+### ADDENDUM to F-159, 2026-08-31 — two more routes, both ZERO-INSTANCE, found by REV-110 round 1
+
+**The same disease one level down: `failure_kind` is a lossy label and its consumers trust it.**
+Registered here rather than as new findings, because the mechanism is identical.
+
+**(i) `_NO_REACTION_MARKERS` is also tested before the network/LLM markers.** So a provider casualty
+with **no** issue codes and no-reaction *wording* is labelled `no_reactions` — the one label C-110
+does still accept as a declared decline. Measured across 27 manifests (T-107 excluded by name,
+non-vacuously): `no_reactions` = 8 legs, **all 8 with files, all 8 with zero codes, suspicious = 0**.
+
+**Why this is registerable where round 0's was blocking:** `contract` was 55 legs and needed only
+*any* code. This needs a rare conjunction — provider failure, no codes, and no-reaction wording —
+and it occurs **nowhere** in the corpus.
+
+**(ii) `driver.py:2217` labels an ACQUISITION failure as `KIND_NO_REACTIONS`** — *"paper has no full
+text, so there was nothing to extract"*, `status=fail`. **That is the ruling's missing-artifact
+population wearing a decline label.** It is refused today **only** because that path preserves no
+artifacts. **With one file preserved it would earn the status.** Zero occurrences.
+
+> **(ii) is the sharpest available evidence that C-110's artifact condition is LOAD-BEARING rather
+> than merely strict.** The condition was questioned as over-conservative — 14 of 55 `contract` legs
+> pay for it. This is the row it was buying.
+
+---
+
+### ADDENDUM to F-160, 2026-08-31 — the remedy dirties the worktree, and that breaks SMOKE
+
+**Found by REV-110 while applying F-160's own fix.**
+
+**Purging `__pycache__` DELETES TRACKED FILES in this repository.** Measured by the Lead:
+
+```
+56 tracked .pyc files:  51 src/__pycache__ · 2 src/tools/__pycache__
+                         2 __pycache__      · 1 scripts/__pycache__
+.gitignore lists BOTH  __pycache__/  and  *.pyc
+```
+
+They predate the ignore rule, and **git tracks what it already tracks regardless of `.gitignore`**.
+
+So F-160's remedy leaves the worktree dirty — and SMOKE contains
+`test_c106_mutation_harness_executable.py`, which asserts `git status --porcelain` is clean for the
+file it guards. **The fix for one instrument trips another.** REV-110 restored both trees and
+verified them clean; **the next agent following F-160 will hit this unless warned.**
+
+**Do not "solve" it by untracking the 56 files.** That is a repository-wide change nobody has
+chartered, and `.git` is already 158 MB. **Restore what you purge, and verify clean before SMOKE.**
+
+**A second, general process rule falls out of the same collision**, and both the C-110 author and
+REV-110 independently asked for it to be durable:
+
+> **Any card modifying a file that `c102_mutation_attack.py` guards must COMMIT before running
+> SMOKE.** `test_04_restore_is_byte_exact_on_the_real_mutated_module` checks `git status
+> --porcelain`, not merely that the bytes were restored. An uncommitted edit presents as **502
+> passed / 1 failed** — which reads exactly like a regression and is not one. C-110 hit this and
+> round 0 passed only because it happened to run after its own commit.
