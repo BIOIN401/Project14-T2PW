@@ -1,0 +1,50 @@
+collected 13 node(s) from tests/test_c109_reviewer_evidence_route.py
+
+--- COMBINED (all nodes, one process) ---
+  exit=0  {'passed': 13}
+
+--- SPLIT (one process per node) ---
+  [01] exit=0 {'passed': 1}  test_enumerates_g11_reports_and_probes_and_nothing_else
+  [02] exit=0 {'passed': 1}  test_task_stem
+  [03] exit=0 {'passed': 1}  test_reachable_evidence_passes
+  [04] exit=0 {'passed': 1}  test_reachable_under_a_different_path_still_counts
+  [05] exit=0 {'passed': 1}  test_missing_evidence_fails
+  [06] exit=0 {'passed': 1}  test_all_evidence_missing_fails_and_lists_every_item
+  [07] exit=0 {'passed': 1}  test_same_name_different_bytes_is_not_reachable
+  [08] exit=0 {'passed': 1}  test_nothing_enumerated_does_not_pass_silently
+  [09] exit=0 {'passed': 1}  test_bad_worktree_is_a_usage_error_not_a_verdict
+  [10] exit=0 {'passed': 1}  test_git_ref_mode_passes_and_fails
+  [11] exit=0 {'passed': 1}  test_bad_ref_is_a_usage_error
+  [12] exit=0 {'passed': 1}  test_runs_as_a_subprocess_with_a_nonzero_exit
+  [13] exit=0 {'passed': 1}  test_scope_discipline_it_does_not_judge_evidence_quality
+
+combined : exit=0  {'passed': 13}
+split    : 13 processes  {'passed': 13}
+VERDICT  : SPLIT AND COMBINED AGREE, all green
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c109\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4be70561a632ec4b951897d57d181a14aedb4654  [git, worktree dirty=False]
+label                   : c109-focused-split
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c109_focused_split.py C:/t/c109 C:/t/bt109/split
+cwd                     : C:\t\c109
+root PID / process group: 160284 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 480 s
+duration                : 9.98 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 44  148772:python.exe, 147556:python.exe, 160888:python.exe, 156848:python.exe, 158852:python.exe, 161156:git.exe, 158724:git.exe, 159312:git.exe, 160996:git.exe, 161240:git.exe, 155012:python.exe, 160584:python.exe, 150576:python.exe, 160788:python.exe, 160804:python.exe, 161708:python.exe, 160260:python.exe, 160556:python.exe, 159960:python.exe, 160892:python.exe, 148792:python.exe, 154104:python.exe, 153088:python.exe, 160980:python.exe, 154312:python.exe, 160648:python.exe, 160880:python.exe, 153920:python.exe, 160388:python.exe, 160592:python.exe, 148752:git.exe, 159696:git.exe, 160036:git.exe, 160712:git.exe, 161524:git.exe, 152628:python.exe, 158924:python.exe, 151308:git.exe, 160824:python.exe, 161036:python.exe, 159520:python.exe, 160624:python.exe, 161176:python.exe, 159276:python.exe
+descendants terminated  : 44  147556, 148752, 148772, 148792, 150576, 151308, 152628, 153088, 153920, 154104, 154312, 155012, 156848, 158724, 158852, 158924, 159276, 159312, 159520, 159696, 159960, 160036, 160260, 160388, 160556, 160584, 160592, 160624, 160648, 160712, 160788, 160804, 160824, 160880, 160888, 160892, 160980, 160996, 161036, 161156, 161176, 161240, 161524, 161708
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c109\docs\pwml_recovery_sprint\evidence\g11\C-109\10-c109-focused-split.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-109  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,32 @@
+task        : C-109 (stem c109)
+worktree    : C:\t\c109
+integration : C:\t\c109@card/C-109-control-plane
+enumerated  : 12  reachable 12  unreachable 0
+exit_reason : all_reachable
+exit_code   : 0
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c109\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4be70561a632ec4b951897d57d181a14aedb4654  [git, worktree dirty=False]
+label                   : c109-route-committed
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/reviewer_evidence_route.py --task C-109 --worktree C:/t/c109 --integration-repo C:/t/c109 --integration-ref card/C-109-control-plane
+cwd                     : C:\t\c109
+root PID / process group: 143664 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 180 s
+duration                : 0.30 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 2  158204:python.exe, 158584:git.exe
+descendants terminated  : 2  158204, 158584
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c109\docs\pwml_recovery_sprint\evidence\g11\C-109\07-c109-route-committed.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
