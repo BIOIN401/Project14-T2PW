@@ -7625,3 +7625,95 @@ Under this wave's contention, acquiring took **19, 15, 120 and 330 attempts** on
 never let a lock-wait retry loop share the job's budget. A gate that must queue behind other agents
 belongs in **tracked background under D-026**, which is precisely the judgement the C-111 agent made
 for its gold-readers gate and which REV-111 endorsed.
+
+---
+
+## F-164 — the recursion fix that closed a false PASS opened a false FAIL, via the allocator's own `.staging`
+
+- **Severity** MEDIUM · **Class** orchestration-tooling defect, introduced by C-112's R2 vector-1 fix ·
+  **NOT REPAIRED — chartered for the next wave** · **Found by the Lead at integration, 2026-09-01**
+- **Neither C-112 nor REV-112 could have seen it**, and that is the point: it is only reachable by
+  running the check **across all four of this wave's reviewer worktrees at once**, which is an
+  integration action, not a card action.
+
+### The measurement
+
+Closing out the wave, `evidence/reviewer_evidence_route.py` was run for all four reviews:
+
+```
+REV-111   enumerated 14   reachable 14   unreachable 0   all_reachable      exit 0
+REV-113   enumerated 16   reachable 16   unreachable 0   all_reachable      exit 0
+F-150     enumerated  9   reachable  9   unreachable 0   all_reachable      exit 0
+REV-112   enumerated 17   reachable 12   unreachable 5   unreachable_evidence exit 1
+```
+
+**All five "unreachable" files are inside `evidence/g11/REV-112/.staging/`** — the allocator's
+**reservation** directory, not evidence:
+
+```
+UNREACHABLE [unreachable_absent] g11_report: .../g11/REV-112/.staging/03-rev112-c107-mutation.json
+UNREACHABLE [unreachable_absent] g11_report: .../g11/REV-112/.staging/04-rev112-route-split.json
+UNREACHABLE [unreachable_absent] g11_report: .../g11/REV-112/.staging/06-rev112-smoke.json
+UNREACHABLE [unreachable_absent] g11_report: .../g11/REV-112/.staging/07-rev112-goldreaders.json
+UNREACHABLE [unreachable_absent] g11_report: .../g11/REV-112/.staging/08-rev112-own-driftscan.json
+```
+
+### REV-112's evidence is COMPLETE. The verdict is wrong, not the evidence.
+
+**21 REV-112 files are on integration** — all **10** final G11 reports `01`…`10`, **9** logs and
+**2** probe sources. **Nothing is missing.** `.staging` is **untracked and has never been tracked**:
+`git ls-files … | grep -c '\.staging/'` returns **0** repo-wide, and the directory does not exist on
+integration at all. The checker is comparing transient scratch files against a tree that is
+*correctly* not carrying them.
+
+### Why it is C-112's fix, and why it fires on exactly one task
+
+C-112's R2 vector 1 — **the vector that mattered** — was that *probes in a subdirectory are never
+enumerated* because the glob was non-recursive and `is_file()` dropped the directory silently. The
+fix recurses. **The recursion now also descends into the allocator's dot-prefixed `.staging`
+directory**, whose *contents* are ordinary non-dot `.json` files even though its *name* is dotted.
+The old `iter_reports` rule — *"every non-dot file in a task folder"* — protected the folder level
+only, and recursion moved past it.
+
+**Why only REV-112:** every reviewer worktree has a `.staging` directory, but only REV-112 has files
+left in it.
+
+```
+rev111 : staging_dirs=1  staging_files=0
+rev113 : staging_dirs=1  staging_files=0
+revf150: staging_dirs=1  staging_files=0
+rev112 : staging_dirs=1  staging_files=5
+```
+
+**A reservation is staged before the job runs; a job that never starts leaves it behind.** REV-112
+reported **seven `exit 95` lock-held events**, the most of any job this wave. **So the two dominant
+infrastructure phenomena of this wave are the same phenomenon here** — F-163's lock contention
+manufactures the leftovers that F-164's recursion then misreads.
+
+### Direction of the failure, and why it is MEDIUM not HIGH
+
+**It fails safe.** C-112 replaced a **false PASS** (evidence missing, check green) with, in this
+corner, a **false FAIL** (evidence present, check red). A false FAIL costs an investigation; a false
+PASS retires the manual habit that works. **The trade is still strongly positive and the fix
+stands.** But a check that goes red on correct evidence will be *disbelieved*, and a disbelieved
+check is on its way back to being no check.
+
+### Disposition — NOT fixed this wave
+
+The obvious repair is to skip dot-prefixed **directories** during the walk, restoring the folder
+rule at every level, and it is one line. **It is not taken here** for the same reason `bounded_run.py`
+was not repaired for F-163: this is an instrument the wave's own certifications were produced
+through, it has just been independently reviewed, and changing it after its review — without a new
+review — is precisely the move this sprint refuses.
+
+**Chartered for the next wave.** Any card taking it must:
+- skip dot-prefixed directories at **every** level, not just the task folder;
+- **prove the C-112 vector stays closed** — `rev109_probes/deep_probe.py` must still be enumerated
+  (a fix that re-breaks recursion to silence `.staging` would restore the original false PASS);
+- add a case with a **populated** `.staging` and assert `all_reachable`;
+- and consider whether `.staging` leftovers should be cleaned on exit-95, which is F-163's territory
+  and may be the better root fix.
+
+**Until it lands:** a `unreachable_evidence` verdict naming only `.staging/` paths is **this defect,
+not missing evidence**. Confirm by checking that the task's final reports are present on integration
+— and do not let that shortcut become a habit of dismissing red route checks.
