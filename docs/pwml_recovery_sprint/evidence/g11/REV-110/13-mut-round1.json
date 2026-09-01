@@ -1,0 +1,169 @@
+{
+  "label": "mut-round1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rev110/docs/pwml_recovery_sprint/evidence/rev110_r1_mutations_cachesafe.py",
+    "C:/t/c110",
+    "C:/t/bt110",
+    "mut-round1"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-09-01T04:27:21+00:00",
+  "finished_at": "2026-09-01T04:27:37+00:00",
+  "duration_seconds": 15.5885777999938,
+  "timeout_seconds": 900.0,
+  "root_pid": 228940,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 228948,
+      "name": "python.exe",
+      "ppid": 228940
+    },
+    {
+      "pid": 212936,
+      "name": "python.exe",
+      "ppid": 228948
+    },
+    {
+      "pid": 229204,
+      "name": "python.exe",
+      "ppid": 212936
+    },
+    {
+      "pid": 228416,
+      "name": "python.exe",
+      "ppid": 228948
+    },
+    {
+      "pid": 229176,
+      "name": "python.exe",
+      "ppid": 228416
+    },
+    {
+      "pid": 228804,
+      "name": "python.exe",
+      "ppid": 228992
+    },
+    {
+      "pid": 228992,
+      "name": "python.exe",
+      "ppid": 228948
+    },
+    {
+      "pid": 215312,
+      "name": "python.exe",
+      "ppid": 225256
+    },
+    {
+      "pid": 225256,
+      "name": "python.exe",
+      "ppid": 228948
+    },
+    {
+      "pid": 227652,
+      "name": "python.exe",
+      "ppid": 228948
+    },
+    {
+      "pid": 227768,
+      "name": "python.exe",
+      "ppid": 227652
+    },
+    {
+      "pid": 219800,
+      "name": "python.exe",
+      "ppid": 228948
+    },
+    {
+      "pid": 229320,
+      "name": "python.exe",
+      "ppid": 219800
+    },
+    {
+      "pid": 223320,
+      "name": "python.exe",
+      "ppid": 227628
+    },
+    {
+      "pid": 227628,
+      "name": "python.exe",
+      "ppid": 228948
+    }
+  ],
+  "descendants_terminated": [
+    212936,
+    215312,
+    219800,
+    223320,
+    225256,
+    227628,
+    227652,
+    227768,
+    228416,
+    228804,
+    228948,
+    228992,
+    229176,
+    229204,
+    229320
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 182784,
+      "name": "python.exe"
+    },
+    {
+      "pid": 183116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 215252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 222480,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev110\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-110\\13-mut-round1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev110\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev110",
+    "repo_head": "71915163b30449bf8ebeb5e9f70e96f52ae38145",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-110",
+    "token": "REV-110:222480:e7042763cbbe1b16",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

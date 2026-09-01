@@ -1,0 +1,63 @@
+LABEL             : mut-round1
+tree              : C:\t\c110
+target            : C:\t\c110\src\t2pw\bench\acceptance.py
+sha256 BEFORE all : 4bd893ac410d16d35b026e7f24fa85edbc39be3d31c519181e6acb3ada57d2b3
+source size       : 101176 bytes
+BASELINE          : exit=0  32 passed in 1.41s   (__pycache__ dirs purged: 17)
+
+  RED   control_artifacts          size delta -32
+          removes the >=1-preserved-artifact condition
+          exit=1  3 failed, 29 passed in 1.51s   (caches purged: 9)
+  RED   only_operational_failure   size delta -24
+          removes reading 1: the row's own operational_failure boolean
+          exit=1  1 failed, 31 passed in 1.55s   (caches purged: 9)
+  RED   only_termination_reason    size delta -41
+          removes reading 2: OPERATIONAL_TERMINATION_REASONS
+          exit=1  1 failed, 31 passed in 1.55s   (caches purged: 9)
+  RED   only_status                size delta -26
+          removes reading 3: status timeout/error
+          exit=1  1 failed, 31 passed in 1.55s   (caches purged: 9)
+  RED   only_failure_kind          size delta -21
+          removes reading 4: failure_kind timeout/crash/network/llm
+          exit=1  1 failed, 31 passed in 1.55s   (caches purged: 9)
+  RED   only_boundary              size delta -34
+          removes reading 5: classify_strict_boundary
+          exit=1  1 failed, 31 passed in 1.55s   (caches purged: 9)
+
+sha256 AFTER  all      : 4bd893ac410d16d35b026e7f24fa85edbc39be3d31c519181e6acb3ada57d2b3
+byte-identical restore : True
+
+==============================================================================
+same-length mutations (F-160 exposure) : 0  -> []
+control caught (harness works)         : True
+condition-3 readings mutated           : 5
+  RED   (a test kills it)              : 5
+  GREEN (no test pins it)              : 0
+==============================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 71915163b30449bf8ebeb5e9f70e96f52ae38145  [git, worktree dirty=True]
+label                   : mut-round1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev110/docs/pwml_recovery_sprint/evidence/rev110_r1_mutations_cachesafe.py C:/t/c110 C:/t/bt110 mut-round1
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 228940 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 15.59 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 15  228948:python.exe, 212936:python.exe, 229204:python.exe, 228416:python.exe, 229176:python.exe, 228804:python.exe, 228992:python.exe, 215312:python.exe, 225256:python.exe, 227652:python.exe, 227768:python.exe, 219800:python.exe, 229320:python.exe, 223320:python.exe, 227628:python.exe
+descendants terminated  : 15  212936, 215312, 219800, 223320, 225256, 227628, 227652, 227768, 228416, 228804, 228948, 228992, 229176, 229204, 229320
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev110\docs\pwml_recovery_sprint\evidence\g11\REV-110\13-mut-round1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
