@@ -1,0 +1,28 @@
+<3>WSL (9 - Relay) ERROR: CreateProcessCommon:800: execvpe(/bin/bash) failed: No such file or directory
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5db928f56f1b15e654a558b3bc948b8c68c3e8e6  [git, worktree dirty=True]
+label                   : focused-split
+command                 : bash -c PY="c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe"; for f in tests/test_c107_actor_cue_calibration.py tests/test_c105_actor_role_evidence.py; do echo "=== $f ==="; "$PY" -m pytest "$f" -q --no-header -rf --basetemp=C:/t/bt/c107split; echo "exit=$?"; done
+cwd                     : C:\t\c107
+root PID / process group: 86244 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.98 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  85116:wsl.exe
+descendants terminated  : 1  85116
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c107\docs\pwml_recovery_sprint\evidence\g11\C-107\25-focused-split.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,142 @@
+=== BASELINE (unmutated tip) === exit=0
+    155 passed in 0.25s
+
+=== M1: 1f: the 'mediat' anchor is reverted, so it matches inside 'intermediate'
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        1 failed, 154 passed in 0.32s
+        RED: test_mediat_inside_intermediate_does_not_license_catalysis
+
+=== M2: 1a: the contra-cue is switched off entirely for the catalysis family
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        3 failed, 152 passed in 0.34s
+        RED: test_inhibition_cue_in_the_same_window_cannot_license_catalysis
+        RED: test_unlicensed_actor_adds_are_still_refused
+
+=== M3: 1a F1: the attenuation stem stops being bound to the actor
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        16 failed, 139 passed in 0.38s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== M4: 1c: the stoplist exclusion loses its optional plural, reopening the bypass
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        10 failed, 145 passed in 0.36s
+        RED: test_no_singular_only_stoplist_entry_can_be_bypassed_by_its_plural
+        RED: test_ordinary_english_ase_words_do_not_license_an_enzyme
+
+=== M5: 1d: the transport family loses the enzyme-family noun rule again
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        2 failed, 153 passed in 0.32s
+        RED: test_a_transporter_named_by_its_family_noun_licenses
+
+=== M6: 1e: the cofactor role loses its family entry and falls back to 'other'
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        4 failed, 151 passed in 0.33s
+        RED: test_a_refused_cofactor_row_is_reported_against_the_cofactor_family
+        RED: test_an_evidenced_cofactor_row_is_licensed
+
+=== M6b: 1e: the cofactor VOCABULARY is emptied -- the guard M6 turned out not to be
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        1 failed, 154 passed in 0.32s
+        RED: test_an_evidenced_cofactor_row_is_licensed
+
+=== M7: 1b: the passive-agent gap accepts ANY token, so a bystander inherits agency
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        6 failed, 149 passed in 0.34s
+        RED: test_a_structural_rationale_cannot_license_the_cofactor_role
+        RED: test_passive_with_agent_does_not_license_a_bystander
+        RED: test_redox_catalysis_still_licenses
+
+=== M8: 1b: the passive-agent route is removed outright -- a PRESERVATION attack
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        5 failed, 150 passed in 0.33s
+        RED: test_evidenced_actor_adds_survive_the_guard
+        RED: test_passive_with_agent_still_licenses_the_real_agent
+
+=== M9: 1a: 'reduction of' is deleted from catalysis -- the trap the card names
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        5 failed, 150 passed in 0.34s
+        RED: test_redox_catalysis_still_licenses
+
+=== M10: 1a F2: the object-before-stem ordering stops being matched
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        5 failed, 150 passed in 0.33s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+
+=== M11: 1a: the whole actor-anchored contra is switched off
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        21 failed, 134 passed in 0.39s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== M12: 1e: the cofactor dependence gap accepts ANY token, reopening the rationale route
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        1 failed, 154 passed in 0.32s
+        RED: test_a_structural_rationale_cannot_license_the_cofactor_role
+
+=== M13: 1e: the loose dependence terms go back into the FAMILY, widening the fallback
+    before: bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    after : bytes=113400 crlf=0 sha256=135522d7d88a23e9
+    suite : exit=1  RED (guard is tested)
+        5 failed, 150 passed in 0.36s
+        RED: test_a_structural_rationale_cannot_license_the_cofactor_role
+        RED: test_the_other_fallback_did_not_widen_for_an_unmapped_role
+
+==============================================================================
+MUTATIONS: 14   SURVIVORS: 0 []
+==============================================================================
+final target: bytes=113400 crlf=0 sha256=135522d7d88a23e9d088c758ba26037f1c6857583e5d6bdafc5b3d0952a43027
+git status --porcelain -- src/t2pw/curation/apply_audit_patch.py: 'M src/t2pw/curation/apply_audit_patch.py' (additional signal only -- sha256 and CRLF above are the check)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9890770e565377ddb00179449714a49f4dc2a8c8  [git, worktree dirty=True]
+label                   : r1-mutation
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_mutation_attack.py C:/t/c107
+cwd                     : C:\t\c107
+root PID / process group: 101168 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 12.55 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 31  104976:python.exe, 103516:python.exe, 104568:python.exe, 103556:python.exe, 104324:python.exe, 103724:python.exe, 105384:python.exe, 88652:python.exe, 105236:python.exe, 90580:python.exe, 92972:python.exe, 100280:python.exe, 105344:python.exe, 101780:python.exe, 105216:python.exe, 98764:python.exe, 101536:python.exe, 104396:python.exe, 103612:python.exe, 103048:python.exe, 105284:python.exe, 96172:python.exe, 105000:python.exe, 103852:python.exe, 104288:python.exe, 93840:python.exe, 103340:python.exe, 101436:python.exe, 105104:python.exe, 105512:python.exe, 105532:python.exe
+descendants terminated  : 31  88652, 90580, 92972, 93840, 96172, 98764, 100280, 101436, 101536, 101780, 103048, 103340, 103516, 103556, 103612, 103724, 103852, 104288, 104324, 104396, 104568, 104976, 105000, 105104, 105216, 105236, 105284, 105344, 105384, 105512, 105532
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c107\docs\pwml_recovery_sprint\evidence\g11\C-107\38-r1-mutation.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

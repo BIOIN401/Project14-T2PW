@@ -1,0 +1,90 @@
+==============================================================================
+C-107 -- CALL GRAPH OUTWARD FROM THE CHANGED SYMBOLS  (src/ only, by AST)
+==============================================================================
+changed symbols: 17
+    _ANY_ROLE_CUE_RE
+    _ATTENUATION_GAP
+    _ATTENUATION_OBJECT_SRC
+    _ATTENUATION_STEM_SRC
+    _CATALYSIS_CONTRA_RE
+    _COFACTOR_DEPENDENCE_SRC
+    _COFACTOR_MAX_MODIFIERS
+    _COFACTOR_MODIFIERS_SRC
+    _ENZYME_NOUN_RE_SRC
+    _NON_ENZYME_ASE_WORDS
+    _PASSIVE_AGENT_MAX_MODIFIERS
+    _PASSIVE_AGENT_MODIFIERS_SRC
+    _PASSIVE_AGENT_VERBS_SRC
+    _ROLE_CUE_RES
+    _ROLE_FAMILY_BY_ROLE
+    _actor_role_family
+    _span_licenses_actor
+
+_span_licenses_actor()  --  1 call site(s) in src/
+    src/t2pw/curation/apply_audit_patch.py:2021  in _unevidenced_actor_role_rejection()  <-- SAME MODULE
+
+_actor_role_family()  --  1 call site(s) in src/
+    src/t2pw/curation/apply_audit_patch.py:2018  in _unevidenced_actor_role_rejection()  <-- SAME MODULE
+
+_unevidenced_actor_role_rejection()  --  1 call site(s) in src/
+    src/t2pw/curation/apply_audit_patch.py:2068  in _should_accept()  <-- SAME MODULE
+
+_should_accept()  --  1 call site(s) in src/
+    src/t2pw/curation/apply_audit_patch.py:2122  in apply_patch_with_policy()  <-- SAME MODULE
+
+apply_patch_with_policy()  --  4 call site(s) in src/
+    src/t2pw/curation/apply_audit_patch.py:2254  in apply_audit_patch_payload()  <-- SAME MODULE
+    src/t2pw/curation/gap_resolver.py:3341  in resolve_gaps()  <-- PRODUCTION CALLER
+    src/t2pw/curation/pathway_curator.py:348  in run_pathway_curator()  <-- PRODUCTION CALLER
+    src/t2pw/pipeline/focused_repair.py:215  in _apply_pass_patches()  <-- PRODUCTION CALLER
+
+apply_audit_patch_payload()  --  1 call site(s) in src/
+    src/t2pw/curation/apply_audit_patch.py:2299  in run_apply()  <-- SAME MODULE
+
+run_apply()  --  5 call site(s) in src/
+    src/t2pw/app/streamlit_app.py:3845  in run_post_pipeline_sbml_artifacts()  <-- PRODUCTION CALLER
+    src/t2pw/app/streamlit_app.py:3915  in run_post_pipeline_sbml_artifacts()  <-- PRODUCTION CALLER
+    src/t2pw/curation/apply_audit_patch.py:2364  in main()  <-- SAME MODULE
+    src/t2pw/curation/interactive_curator.py:501  in apply_patch_and_rerender()  <-- PRODUCTION CALLER
+    src/t2pw/pipeline/pipeline.py:116  in run_legacy_sbml_pipeline()  <-- PRODUCTION CALLER
+
+==============================================================================
+PRODUCTION ENTRY POINTS THAT REACH THE GUARD
+==============================================================================
+    src/t2pw/app/streamlit_app.py:3845  run_post_pipeline_sbml_artifacts() -> run_apply()
+    src/t2pw/app/streamlit_app.py:3915  run_post_pipeline_sbml_artifacts() -> run_apply()
+    src/t2pw/curation/gap_resolver.py:3341  resolve_gaps() -> apply_patch_with_policy()
+    src/t2pw/curation/interactive_curator.py:501  apply_patch_and_rerender() -> run_apply()
+    src/t2pw/curation/pathway_curator.py:348  run_pathway_curator() -> apply_patch_with_policy()
+    src/t2pw/pipeline/focused_repair.py:215  _apply_pass_patches() -> apply_patch_with_policy()
+    src/t2pw/pipeline/pipeline.py:116  run_legacy_sbml_pipeline() -> run_apply()
+
+    distinct call sites outside the module: 7
+    distinct modules                      : 6
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 109a6f9e6e3871d6babb5fe5155241c5f77ea1f0  [git, worktree dirty=True]
+label                   : r1-callers
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_caller_enumeration.py C:/t/c107
+cwd                     : C:\t\c107
+root PID / process group: 109616 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.40 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  109612:python.exe
+descendants terminated  : 1  109612
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c107\docs\pwml_recovery_sprint\evidence\g11\C-107\48-r1-callers.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

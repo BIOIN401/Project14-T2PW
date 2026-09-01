@@ -1440,6 +1440,16 @@ _ROLE_FAMILY_BY_ROLE = {
     "inhibitor": "inhibition",
     "repressor": "inhibition",
     "transporter": "transport",
+    # C-107 1e. "cofactor" is the role a modifier row carries most often outside
+    # the exported vocabulary above, and with no entry here _actor_role_family
+    # returned "other", which sent _span_licenses_actor to the _ANY_ROLE_CUE_RE
+    # fallback its own docstring calls "strictly more permissive than the four
+    # families". Measured, the fallback still REFUSED every cofactor span,
+    # because it is built from the four families' patterns and not one of them
+    # contains a single cofactor-predicating word: no "cofactor", no "requires",
+    # no "dependent on", no "in the presence of". A permissive fallback with no
+    # vocabulary for the role has nothing to be permissive with.
+    "cofactor": "cofactor",
 }
 
 # Enzyme-family noun suffixes, as an ALLOWLIST of real EC-class stems rather than a
@@ -1450,12 +1460,34 @@ _ROLE_FAMILY_BY_ROLE = {
 # English word over-accepts a CUE, which costs little on its own because the actor
 # name must independently match, whereas an unlisted ENZYME under-accepts and
 # refuses a legitimate repair -- the failure REV-105 measured at 12 of 29 cases.
+#
+# C-107 1c. THE STOPLIST IS STILL CLOSED AND IT STAYS CLOSED. The fix below is to
+# the RULE, not to the list: the entries are ordinary English, never enzymes, so
+# the asymmetry the paragraph above states is preserved exactly. Replacing this
+# with an allowlist of enzyme stems would invert it, and that inversion is how
+# C-105's first draft refused 12 of 29 legitimate evidenced cases.
+#
+# Two defects, both measured against the shipped code:
+#
+#   (i)  a SINGULAR-ONLY entry was bypassed by its own plural. 13 of the 33
+#        entries listed no plural, and five of those plurals matched as an enzyme
+#        noun -- briefcases, pleases, purchases, showcases, staircases. The
+#        exclusion is now written "<entry>s?" in _ENZYME_NOUN_RE_SRC below, so a
+#        singular entry covers its plural by construction and no future entry can
+#        reintroduce the bypass. Listing the five measured instances would have
+#        fixed the instances and not the defect.
+#   (ii) the list was short. The entries from "appease" down are the ordinary
+#        English words measured to match the generic rule -- every one at least
+#        three characters before "ase" and therefore reachable by it.
 _NON_ENZYME_ASE_WORDS = (
     "disease", "diseases", "increase", "increases", "increased", "decrease",
     "decreases", "decreased", "release", "releases", "released", "database",
     "databases", "purchase", "phrase", "phrases", "chase", "erase", "cease",
     "ceases", "ceased", "lease", "please", "case", "cases", "base", "bases",
     "phase", "phases", "vase", "showcase", "staircase", "briefcase",
+    "appease", "bookcase", "crease", "debase", "decease", "displease",
+    "encase", "grease", "lowercase", "nutcase", "paraphrase", "pillowcase",
+    "rebase", "rephrase", "suitcase", "surcease", "uppercase",
 )
 # Enzyme nouns with fewer than three characters before "ase". The generic rule
 # below cannot reach them and dropping them was a REGRESSION against this card's
@@ -1467,7 +1499,10 @@ _SHORT_ENZYME_NOUNS = ("lyase", "lyases", "dnase", "dnases", "rnase", "rnases")
 _ENZYME_NOUN_RE_SRC = (
     # The left boundary is load-bearing: without it the stoplist is bypassed by
     # starting the match one character in, and "database" matches as "atabase".
-    r"(?:(?<![a-z])(?!(?:" + "|".join(_NON_ENZYME_ASE_WORDS) + r")(?![a-z]))"
+    # The trailing "s?" inside the exclusion is C-107 1c's general fix: a
+    # singular-only stoplist entry covers its own plural, so "purchases" can no
+    # longer walk through by failing the exclusion one character early.
+    r"(?:(?<![a-z])(?!(?:" + "|".join(_NON_ENZYME_ASE_WORDS) + r")s?(?![a-z]))"
     r"[a-z]{3,}ases?(?![a-z]))"
     r"|(?:(?<![a-z])(?:" + "|".join(_SHORT_ENZYME_NOUNS) + r")(?![a-z]))"
 )
@@ -1489,7 +1524,17 @@ _ENZYME_NOUN_RE_SRC = (
 _ROLE_CUE_RES = {
     "catalysis": re.compile(
         r"catalys|catalyz|catalytic|biocatalys"
-        r"|hydroly|cleav|degrad|metabolis|metaboliz|mediat"
+        r"|hydroly|cleav|degrad|metabolis|metaboliz"
+        # C-107 1f. "mediat" is a REQUIRED catalysis cue -- "<enzyme> mediates
+        # the condensation ..." is _actor_named_in_span's own docstring example
+        # and a legitimate repair -- but unanchored it also matches inside
+        # "intermediate", a word pathway prose is full of, so "<protein> is an
+        # intermediate carrier in this pathway" licensed that protein as the
+        # reaction's CATALYST. The left boundary is written against the FOLDED
+        # haystack, which holds only [a-z0-9 ], so a preceding letter is the
+        # only thing that can precede a mid-word occurrence. "X-mediated" folds
+        # to "x mediated" and still matches.
+        r"|(?<![a-z])mediat"
         r"|oxidis|oxidiz|dehydrogenat|hydroxylat|oxygenat"
         r"|reduces|reducing|reduction of"
         r"|phosphorylat|methylat|acetylat|acylat|glycosylat|sulfonat|adenylat|prenylat"
@@ -1506,10 +1551,16 @@ _ROLE_CUE_RES = {
         r"\b(?:group|residue|moiety|molecule|atom|phosphate|acyl|methyl|sugar)"
         r"|(?:removal|addition|transfer|incorporation) of\b[^.]{0,40}"
         r"\b(?:group|residue|moiety|molecule|atom|phosphate|acyl|methyl|sugar)"
-        # passive with a named agent: "... converted to X by Y"
-        r"|(?:converted|catalyzed|catalysed|hydrolyzed|hydrolysed|cleaved|oxidized"
-        r"|oxidised|phosphorylated|methylated|acetylated|degraded|metabolized"
-        r"|metabolised|synthesized|synthesised|produced|formed)\b[^.]{0,80}\bby\b"
+        # C-107 1b. The passive-with-agent construction USED to live here, as
+        # "<passive verb> [^.]{0,80} by", and it is gone from this pattern on
+        # purpose. Written that way it fired whenever the verb was followed by
+        # "by" within 80 characters REGARDLESS OF WHO FOLLOWED "by", so "A is
+        # converted to B by Q, and P was also detected in the assay" licensed P
+        # as the reaction's catalyst. The construction is evidence only when the
+        # agent named after "by" IS the actor under judgement, and that is a
+        # question about the actor, which a family-wide vocabulary cannot ask.
+        # It is asked in _span_licenses_actor instead, against the needle, using
+        # _PASSIVE_AGENT_VERBS_SRC and _PASSIVE_AGENT_MODIFIERS_SRC below.
         r"|" + _ENZYME_NOUN_RE_SRC
     ),
     "activation": re.compile(
@@ -1518,12 +1569,140 @@ _ROLE_CUE_RES = {
     "inhibition": re.compile(
         r"inhibit|suppress|repress|downregulat|down regulat|blocks|blocked|blocking"
         r"|antagonis|inactivat|abolish|attenuat"
+        # C-107 1a, the half of the near-synonyms that is inhibitory whatever its
+        # object. These are safe as BARE stems: none of them describes a
+        # transformation an enzyme performs, so adding them costs no catalysis
+        # window. The other six near-synonyms are NOT here, and deliberately --
+        # "reduction", "loss", "depletion", "disruption", "quenching" and
+        # "blocking" all name things enzymes legitimately do to substrates, so
+        # they are matched only in the activity-directed form built below.
+        # CORRECTION ROUND 2. Anchored and completed on both sides, for the reason
+        # given at _ATTENUATION_WORD_SRC below: written as bare stems, "silenc"
+        # matched inside "silencer" and refused "the silencer complex <protein>
+        # catalyses ...". Only these six are touched -- they are this card's
+        # additions. The stems above them are C-105's and are left exactly as they
+        # were merged.
+        r"|(?<![a-z])(?:blockades?|impair(?:s|ed|ing|ment|ments)?"
+        r"|silenc(?:e|es|ed|ing)"
+        r"|sequestr(?:ation|ations|ate|ates|ated|ating)"
+        r"|ablat(?:e|es|ed|ing|ion|ions)"
+        r"|interfer(?:e|es|ed|ing|ence))(?![a-z])"
     ),
     "transport": re.compile(
         r"transport|translocat|import|export|efflux|influx|uptake|secret"
         r"|shuttl|permeas|symport|antiport|uniport|extrud|channel|carrier|pump"
+        # C-107 1d. The enzyme-family noun rule was appended to the catalysis
+        # pattern only, so a transporter named the way papers actually name one
+        # -- "<protein> is the translocase of the inner membrane" -- refused,
+        # while "permeas" sat in the list above as a one-off: the tell that the
+        # general rule was missing rather than
+        # deliberately withheld. It is the SAME rule, with the same closed
+        # stoplist, so the asymmetry argued above holds here unchanged: an
+        # over-accepted cue costs little because the actor name must still match
+        # independently, an under-accepted transporter refuses a legitimate
+        # repair. It admits enzyme-family nouns that are not transport nouns
+        # ("P is a hydrolase" would cue a transporter row); that is the accepted
+        # cost of a general rule over an allowlist of transporter families,
+        # which is the inversion C-105 round 1 was rejected for.
+        r"|" + _ENZYME_NOUN_RE_SRC
+    ),
+    # C-107 1e. Cofactor-predicating vocabulary, and it is written the way the
+    # catalysis family writes "enzyme" -- the BARE SCHEMA NOUN IS NOT A CUE. A
+    # rationale the audit stage promotes into `evidence` says "add P as a
+    # cofactor to resolve the structural inconsistency", so "as a cofactor" is
+    # deliberately absent while "is the cofactor", "cofactor for" and "cofactor
+    # of" are present, exactly as "is the enzyme" is a cue above and "as an
+    # enzyme" is not. That is the single line between licensing a real cofactor
+    # and re-admitting F-146 in a fifth family.
+    #
+    # THIS IS NOT THE GATE THAT TYPES AN ENTITY. Licensing the ROLE lets an
+    # evidenced cofactor modifier row survive this guard; whether the thing named
+    # is a protein at all is decided elsewhere and is untouched here -- see the
+    # note under _ROLE_FAMILY_BY_ROLE's "cofactor" entry and F-100.
+    # CORRECTION ROUND 1. Only phrases that NAME A COFACTOR are family-wide cues.
+    # The first version also listed bare "requires", "required for", "depends on",
+    # "dependent on" and "in the presence of", and REV-107 measured what that
+    # bought: "the reaction requires a cofactor, so <protein> is added to resolve
+    # the structural inconsistency" and "<protein> depends on the payload
+    # structure being consistent" went from REFUSED at base to ACCEPTED. Drawing
+    # the line at the bare schema noun and then admitting the vocabulary a
+    # structural rationale is actually WRITTEN IN is the F-146 class reopened in a
+    # fifth family, and C-107 section 5's explicit stop condition.
+    #
+    # It was also wider than this role. _ANY_ROLE_CUE_RE is rebuilt from every
+    # value of this dict, so those five terms widened the "other" fallback for
+    # EVERY unmapped role: role "chaperone" with "<protein> is required for the
+    # reaction to proceed" was refused at base and accepted at that tip. That is
+    # the corollary of this card's own M6 mutation finding -- the vocabulary is
+    # what leaks -- and it is why the dependence terms are now actor-anchored in
+    # _span_licenses_actor and reach the cofactor family ONLY.
+    "cofactor": re.compile(
+        r"is a cofactor|is the cofactor|cofactor for|cofactor of|cofactor in this"
+        r"|is a coenzyme|is the coenzyme|coenzyme for|coenzyme of"
+        r"|prosthetic group"
     ),
 }
+
+# C-107 1b. The passive-with-agent cue, as an ACTOR-ANCHORED construction. These
+# are the passive participles a paper uses to name the enzyme after "by"; most of
+# them carry their own stem cue in the catalysis set above, so what this route
+# genuinely adds is "converted", "produced" and "formed", which do not.
+_PASSIVE_AGENT_VERBS_SRC = (
+    r"(?:converted|catalyzed|catalysed|hydrolyzed|hydrolysed|cleaved|oxidized"
+    r"|oxidised|phosphorylated|methylated|acetylated|degraded|metabolized"
+    r"|metabolised|synthesized|synthesised|produced|formed)"
+)
+
+# What may stand between "by" and the actor's own token and still leave the actor
+# the HEAD of the agent phrase: determiners, and the adjectives and appositive
+# nouns papers put in front of a protein name. A CLOSED list, for the reason the
+# stoplist above is closed -- an unlisted modifier costs one supplementary route
+# on a span that usually still carries an ordinary stem cue, whereas an open gap
+# is the defect itself. "by Q, and P ..." and "by Q; P ..." both fold to a token
+# that is not on this list standing between "by" and P, so neither licenses P.
+_PASSIVE_AGENT_MODIFIERS_SRC = (
+    r"(?:the|a|an|its|their|his|her|this|that|these|those|of"
+    r"|action|activity|activities|enzyme|enzymes|protein|proteins|complex"
+    r"|purified|recombinant|native|endogenous|exogenous|bacterial|microbial"
+    r"|human|host|intestinal|gut|mitochondrial|cytosolic|periplasmic|membrane"
+    r"|bound|associated)"
+)
+
+#: How many such modifiers may stand between "by" and the actor's token.
+_PASSIVE_AGENT_MAX_MODIFIERS = 4
+
+# CORRECTION ROUND 1. The dependence vocabulary that USED to sit in the cofactor
+# family as bare terms. It is inhibitory of nothing and predicating of nothing on
+# its own -- "requires", "dependent on" and "in the presence of" are exactly the
+# words a structural rationale is written in -- so it is only evidence when the
+# thing required IS THE ACTOR. Anchored that way in _span_licenses_actor:
+#
+#     "the reaction requires <NEEDLE> as a cofactor"        licenses
+#     "the enzyme is dependent on <NEEDLE> for activity"    licenses
+#     "proceeds only in the presence of <NEEDLE>"           licenses
+#     "the reaction requires a cofactor, so <NEEDLE> is     refuses -- "so" is not
+#      added to resolve the structural inconsistency"        a modifier, and the
+#                                                            actor is not what is
+#                                                            required
+#     "<NEEDLE> depends on the payload structure"           refuses -- the actor
+#                                                            is the SUBJECT here,
+#                                                            not the object
+_COFACTOR_DEPENDENCE_SRC = (
+    r"(?:requires|requiring|required|requirement"
+    r"|depends|depend|dependent|dependence"
+    r"|in the presence)"
+)
+
+# The modifiers that may stand between the dependence term and the actor's token.
+# The passive-agent list plus the nouns a paper puts in front of a cofactor name.
+_COFACTOR_MODIFIERS_SRC = (
+    _PASSIVE_AGENT_MODIFIERS_SRC[:-1]
+    + r"|cofactor|cofactors|coenzyme|coenzymes|metal|divalent|ion|ions"
+    + r"|essential|catalytic|added|exogenous|free)"
+)
+
+#: How many such modifiers may stand between the dependence term and the actor.
+_COFACTOR_MAX_MODIFIERS = 4
 
 # Used only for a declared role outside the exported vocabulary above (a "cofactor"
 # modifier, say). The actor must still be NAMED in a span that says something
@@ -1533,6 +1712,100 @@ _ROLE_CUE_RES = {
 _ANY_ROLE_CUE_RE = re.compile(
     "|".join(pattern.pattern for pattern in _ROLE_CUE_RES.values())
 )
+
+# C-107 1a. THE DISTINCTION THIS CARD TURNS ON: chemical reduction OF A SUBSTRATE
+# is catalysis; reduction OF AN ACTIVITY, A LEVEL OR AN EXPRESSION is inhibition.
+#
+# "reduces|reducing|reduction of" is a catalysis cue in the set above and it stays
+# one, because redox chemistry is half of enzymology -- "NADH-dependent reduction
+# of the substrate", "ferrochelatase reduces ...". Deleting it to close the
+# paraphrase would break redox to fix a rephrase, which is the wrong trade and the
+# trap this finding carries. But left alone it made "the reduction of <protein>
+# activity by <inhibitor>" read as a catalysis cue WITH NO CONTRA, which is F-146
+# one rephrase away, and the audit stage regenerates its rationale every round.
+#
+# So the attenuation words are matched as a PHRASE and never as bare words. WHAT
+# BINDS THE PHRASE IS THE ACTOR, NOT AN ADJACENT NOUN -- and that is correction
+# round 1's repair. The first version bound the stem to an
+# activity/level/expression noun within 40 characters, which closed exactly the
+# frame the card quoted and nothing else: REV-107 measured 15 of 44 still open,
+# because five of the eleven stems went in conditionally and every one of them
+# survived
+#
+#     "the reduction of <protein> is mediated by ..."        object ABSENT
+#     "<protein> activity showed reduction in the ... assay"  object BEFORE the stem
+#     "the reduction of <protein> <45 chars> activity ..."    object BEYOND 40 chars
+#
+# A fix that is itself one rephrase from defeat has not closed a route whose whole
+# thesis is that the audit stage regenerates its rationale every round.
+#
+# The discriminator that survives rephrasing is GRAMMATICAL, not lexical: chemical
+# reduction acts on A SUBSTRATE, inhibition acts on THE ACTOR. So the contra now
+# asks whether the attenuation stem's object IS the actor under judgement, which
+# is a question only _span_licenses_actor can ask, because only it knows the
+# needle. Two frames, built per needle:
+#
+#   F1  stem [of|in] <modifiers> NEEDLE     "the reduction of P", "reduction of
+#                                            P activity", "quenching of the P signal"
+#   F2  NEEDLE ... <object> ... stem        "P activity showed reduction"
+#
+# F1 makes the object IRRELEVANT, which is what closes the absent and beyond-40
+# frames at once; F2 covers the object-first ordering. Redox survives both because
+# its object is a substrate, not the actor: "reduction of the substrate by P" puts
+# "substrate" -- not a modifier -- between "of" and the needle, and
+# "ferrochelatase reduces the cellular level of protoporphyrin" names the level
+# AFTER the stem, which F2 does not match.
+#
+# Making it actor-bound also retired the B2 residual REV-107 raised: "level" and
+# "function" no longer fire on the substrate's level or the enzyme's function,
+# because those are not the actor's.
+# CORRECTION ROUND 2. THESE ARE WHOLE WORDS, NOT STEMS, AND BOTH SIDES ARE
+# ANCHORED. The first version wrote them as stems and let "[a-z]*" run to the end
+# of whatever word they started, which is finding 1f's own defect class -- the one
+# this card spent a whole finding anchoring "mediat" for -- reintroduced inside the
+# contra written to fix 1a, and in the OVER-REFUSAL direction that got C-105 round
+# 1 rejected. "reduc" matched inside "reductase", "block" inside "blocker",
+# "silenc" inside "silencer" and "interfer" inside "interferon", so a legitimate
+# evidenced catalysis span naming an EC class 1 enzyme -- whose members are
+# literally called reductase -- was REFUSED: 8 of 10 measured, against 0 at the
+# C-106 base.
+#
+# A left anchor alone does NOT fix it, and that was tested rather than assumed:
+# it repairs "nitroreductase" and "oxidoreductase", where the stem starts mid-word,
+# and leaves bare "reductase", "blocker", "silencer" and "interferon" broken,
+# because there the stem STARTS a genuine word and "[a-z]*" eats the rest of it.
+# The stem has to COMPLETE as an attenuation word, which is what the explicit
+# inflections below do. Ordering inside the group is safe: a shorter alternative
+# that matches leaves the trailing (?![a-z]) to fail, and the engine backtracks to
+# the longer one -- "blocking" is not matched as "block".
+_ATTENUATION_WORD_SRC = (
+    r"(?<![a-z])(?:"
+    r"reduce|reduces|reduced|reducing|reduction|reductions"
+    r"|loss|losses"
+    r"|deplete|depletes|depleted|depleting|depletion|depletions"
+    r"|disrupt|disrupts|disrupted|disrupting|disruption|disruptions"
+    r"|quench|quenches|quenched|quenching"
+    r"|blockade|blockades|block|blocks|blocked|blocking"
+    r"|impair|impairs|impaired|impairing|impairment|impairments"
+    r"|silence|silences|silenced|silencing"
+    r"|sequester|sequesters|sequestered|sequestering|sequestration|sequestrations"
+    r"|ablate|ablates|ablated|ablating|ablation|ablations"
+    r"|interfere|interferes|interfered|interfering|interference"
+    r")(?![a-z])"
+)
+_ATTENUATION_OBJECT_SRC = r"(?:activit|express|level|abundance|function)"
+
+#: How far F2 may look from the actor to its object, and from the object to the stem.
+_ATTENUATION_GAP = 40
+
+# What refuses a catalysis window that also says the protein is being shut down.
+# Separate from _ROLE_CUE_RES["inhibition"] because the two do different jobs:
+# that one licenses an INHIBITOR row, this one refuses a CATALYST row, and 1a's
+# near-synonyms belong in the second without all of them belonging in the first.
+# This half carries the six stems that are inhibitory whatever their object; the
+# five that are not are built per-needle inside _span_licenses_actor, the same
+# way the passive-agent route is, because both are questions about the actor.
+_CATALYSIS_CONTRA_RE = _ROLE_CUE_RES["inhibition"]
 
 # The +/-80 character window enzyme_cues.cue_near_name scans around a name,
 # measured here from the MATCHED TOKEN rather than from the whole name, since the
@@ -1684,15 +1957,74 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
     if not needles:
         return False
     cue = _ROLE_CUE_RES.get(family, _ANY_ROLE_CUE_RE)
-    contra = _ROLE_CUE_RES["inhibition"] if family == "catalysis" else None
+    contra = _CATALYSIS_CONTRA_RE if family == "catalysis" else None
     for needle in needles:
-        for match in re.finditer(rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])", haystack):
+        escaped = re.escape(needle)
+        # CORRECTION ROUND 1. The other half of the catalysis contra: an
+        # attenuation stem whose OBJECT IS THIS ACTOR. F1 makes the
+        # activity/level/expression noun irrelevant, which is what closes the
+        # object-absent and object-beyond-40-characters rephrasings together; F2
+        # covers the object-first ordering. Redox is untouched by both, because
+        # its object is a substrate and never the actor.
+        actor_contra = None
+        if family == "catalysis":
+            actor_contra = re.compile(
+                # F1: "<stem> [of|in] <modifiers> <actor>"
+                _ATTENUATION_WORD_SRC + r"(?:\s+(?:of|in))?"
+                r"(?:\s+" + _PASSIVE_AGENT_MODIFIERS_SRC + r"){0,4}\s+"
+                + escaped + r"(?![a-z0-9])"
+                # F2: "<actor> ... <activity noun> ... <stem>"
+                r"|(?<![a-z0-9])" + escaped + r"(?![a-z0-9])"
+                r"[^.]{0," + str(_ATTENUATION_GAP) + r"}?\b"
+                + _ATTENUATION_OBJECT_SRC + r"[a-z]*\b"
+                r"[^.]{0," + str(_ATTENUATION_GAP) + r"}?\b"
+                + _ATTENUATION_WORD_SRC
+            )
+        # CORRECTION ROUND 1. The cofactor dependence route, anchored the same way
+        # and reaching the cofactor family ONLY, so it can never widen the "other"
+        # fallback the way the bare terms did.
+        dependence = None
+        if family == "cofactor":
+            dependence = re.compile(
+                _COFACTOR_DEPENDENCE_SRC + r"\b(?:\s+(?:on|of|upon|for))?"
+                r"(?:\s+" + _COFACTOR_MODIFIERS_SRC + r"){0,"
+                + str(_COFACTOR_MAX_MODIFIERS) + r"}\s+"
+                + escaped + r"(?![a-z0-9])"
+            )
+        for match in re.finditer(rf"(?<![a-z0-9]){escaped}(?![a-z0-9])", haystack):
             start = max(0, match.start() - _ACTOR_CUE_WINDOW)
             end = min(len(haystack), match.end() + _ACTOR_CUE_WINDOW)
             window = haystack[start:end]
-            if not cue.search(window):
+            licensed = cue.search(window) or (
+                dependence is not None and dependence.search(window)
+            )
+            if not licensed:
                 continue
             if contra is not None and contra.search(window):
+                continue
+            if actor_contra is not None and actor_contra.search(window):
+                continue
+            return True
+        if family != "catalysis":
+            continue
+        # C-107 1b, the passive-with-agent route, asked of THIS actor rather than
+        # of the window. The match is anchored on the needle as the agent, so an
+        # agent who is somebody else cannot license it, and the contra-cue is
+        # still judged on the ordinary window around the agent so the paraphrase
+        # route 1a closes is not reopened through this door.
+        passive = (
+            _PASSIVE_AGENT_VERBS_SRC
+            + r"\b[^.]{0,80}\bby(?:\s+" + _PASSIVE_AGENT_MODIFIERS_SRC
+            + r"){0," + str(_PASSIVE_AGENT_MAX_MODIFIERS) + r"}\s+"
+            + escaped + r"(?![a-z0-9])"
+        )
+        for match in re.finditer(passive, haystack):
+            start = max(0, match.end() - len(needle) - _ACTOR_CUE_WINDOW)
+            end = min(len(haystack), match.end() + _ACTOR_CUE_WINDOW)
+            window = haystack[start:end]
+            if contra is not None and contra.search(window):
+                continue
+            if actor_contra is not None and actor_contra.search(window):
                 continue
             return True
     return False
