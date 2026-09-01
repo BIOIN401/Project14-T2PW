@@ -415,19 +415,62 @@ def test_10_f132_population_regression_over_the_six_papers(gold):
     assert legs == 72
     # Every one of the six ORCH-702 papers is still in the population.
     assert set(F132_PAPERS) <= set(affected_papers), sorted(affected_papers)
-    # And ONE paper outside it, which ORCH-702 could not see: it counted
-    # forbidden terms only among the UNMATCHED, so a forbidden term the pipeline
-    # actually matched -- and was given coverage credit for -- was invisible to
-    # it. PMC13231680 has three such legs and no unmatched forbidden term.
-    assert set(affected_papers) - set(F132_PAPERS) == {"PMC13231680"}
-    # 92 -> 97: the same run under the same commit -- `runs_verify/2026-08-28_1816`
-    # under `e77ad3d` -- withholds 5 further terms, and the other thirteen runs
-    # still sum to 92. DERIVED from the census above, and it had never executed
-    # against the grown corpus before C-106 because the `legs` assert aborted the
-    # test first. That is why F-151, REV-104 and the wave handoff all described
-    # this repair as "re-pin to 72" and all three were wrong. Measured, not
-    # inferred: `evidence/c106_census_probe.log`.
-    assert withheld == 97
+    # And TWO papers outside it.
+    #
+    # PMC13231680, which ORCH-702 could not see: it counted forbidden terms only
+    # among the UNMATCHED, so a forbidden term the pipeline actually matched --
+    # and was given coverage credit for -- was invisible to it. PMC13231680 has
+    # three such legs and no unmatched forbidden term.
+    #
+    # PMC12180156 JOINS THE SET at C-113. This is a DELIBERATE pinned-baseline
+    # move under merge rule 4's second clause, NOT a new capability: F-150 half 1
+    # (gold blob `aee8cb4f` -> `36f4b7b6`) adds the two delta spellings of
+    # 5-aminolevulinic acid to that case's EXISTING forbidden entry, so the
+    # spelling three committed legs actually emitted stops escaping the gate.
+    #
+    # NO LEG JOINED THE CORPUS -- `legs` above is unmoved at 72. Three legs
+    # already in it changed classification, and it is exactly these three:
+    #   runs_verify/2026-08-21_2239/papers/PMC12180156/research  excluded 0 -> 1
+    #   runs_verify/2026-08-21_2239/papers/PMC12180156/strict    excluded 0 -> 1
+    #   runs_verify/2026-08-28_1816/papers/PMC12180156/research  excluded 0 -> 1
+    # each drawing the single term "delta-aminolevulinic acid" in its Greek
+    # spelling (U+03B4) as requested core. The other five committed
+    # PMC12180156 legs are unchanged, and no leg anywhere leaves the set.
+    #
+    # CONFIRMED these three legs were meant to be here, and HOW: a FOURTH
+    # committed leg, runs_verify/2026-08-24_1402/papers/PMC12180156/research,
+    # also draws a Greek delta spelling -- but it draws the ENZYME,
+    # "<delta>-aminolevulinic acid synthase (ALAS2)", which the paper really
+    # names and which this same gold case quotes as acceptable. That leg is NOT
+    # in the set, because `forbidden_match` refuses containment. So the gate
+    # separates the fabricated metabolite from the legitimately named enzyme on
+    # the real corpus, leg by leg -- which is what makes the three additions
+    # correct rather than merely expected.
+    #
+    # Measured INDEPENDENTLY of this assert, against both gold blobs in one
+    # tree: `evidence/c113_census_attribution.py` / `c113_census_attribution.log`.
+    assert set(affected_papers) - set(F132_PAPERS) == {"PMC12180156", "PMC13231680"}
+    # 92 -> 97 at C-106: the same run under the same commit --
+    # `runs_verify/2026-08-28_1816` under `e77ad3d` -- withheld 5 further terms,
+    # and the other thirteen runs still summed to 92. DERIVED from the census
+    # above, and it had never executed against the grown corpus before C-106
+    # because the `legs` assert aborted the test first. That is why F-151,
+    # REV-104 and the wave handoff all described this repair as "re-pin to 72"
+    # and all three were wrong. Measured, not inferred:
+    # `evidence/c106_census_probe.log`.
+    #
+    # 97 -> 100 at C-113, and this pin had STILL never executed under the
+    # post-F-150 gold: the set-equality above aborts the test before reaching it,
+    # so at the failed merge `b05a7281` nobody knew whether it moved. It does.
+    # The delta is exactly the three legs named above, one withheld term apiece:
+    #   runs_verify/2026-08-21_2239/.../PMC12180156/research  excluded_count 0 -> 1
+    #   runs_verify/2026-08-21_2239/.../PMC12180156/strict    excluded_count 0 -> 1
+    #   runs_verify/2026-08-28_1816/.../PMC12180156/research  excluded_count 0 -> 1
+    # Every other leg's `excluded_count` is unchanged and the other 69 legs still
+    # sum to 97 under the pre-edit gold. Deliberate pinned-baseline move under
+    # merge rule 4's second clause; NOT a new capability. Measured, not read off
+    # a failure message: `evidence/c113_census_attribution.log`.
+    assert withheld == 100
     # Measured, not predicted: no leg in the corpus clears the unchanged
     # threshold on the accepted ratio. Reported as it fell.
     assert cleared == []
@@ -540,13 +583,29 @@ def test_13_the_accepted_rate_is_a_rate_on_every_committed_leg(gold):
     assert checked == 72
     # Non-vacuity, and the reason this test is not an empty loop: the corpus
     # really does contain matched forbidden terms. Twenty-three legs when
-    # c102_numerator_verify.log measured it independently; TWENTY-SIX now.
-    # 23 -> 26 is the 3 matched-forbidden legs `runs_verify/2026-08-28_1816`
-    # contributes under commit `e77ad3d`; the other thirteen runs still sum to
-    # 23. Like `withheld` in test 10 this pin is DERIVED and sat behind the
-    # census assert, so C-106 is the first time it has ever run against the
-    # grown corpus. Stays `==`.
-    assert with_matched_forbidden == 26, with_matched_forbidden
+    # c102_numerator_verify.log measured it independently; TWENTY-NINE now.
+    # 23 -> 26 at C-106 is the 3 matched-forbidden legs
+    # `runs_verify/2026-08-28_1816` contributes under commit `e77ad3d`; the other
+    # thirteen runs still sum to 23. Like `withheld` in test 10 this pin is
+    # DERIVED and sat behind the census assert, so C-106 was the first time it
+    # had ever run against the grown corpus.
+    #
+    # 26 -> 29 at C-113 is the 3 legs that F-150 half 1 newly puts a MATCHED
+    # forbidden term on -- and only those three; no leg stops carrying one:
+    #   runs_verify/2026-08-21_2239  PMC12180156:research   +1
+    #   runs_verify/2026-08-21_2239  PMC12180156:strict     +1
+    #   runs_verify/2026-08-28_1816  PMC12180156:research   +1
+    # i.e. +2 in run tree `runs_verify/2026-08-21_2239` and +1 in
+    # `runs_verify/2026-08-28_1816`; the other twelve run trees are untouched and
+    # the corpus still sums to 26 under the pre-edit gold. All 72 tracked legs
+    # live under `runs_verify/`; `runs/` contributes none. The same three legs
+    # move `withheld` 97 -> 100 and put PMC12180156 into `affected_papers` in
+    # test 10 -- see the attribution and the enzyme/metabolite confirmation
+    # beside that assert. `checked` above is UNMOVED at 72: no leg joined.
+    # Deliberate pinned-baseline move under merge rule 4's second clause, NOT a
+    # new capability. Measured independently of this assert:
+    # `evidence/c113_census_attribution.py` / `.log`. Stays `==`.
+    assert with_matched_forbidden == 29, with_matched_forbidden
 
 
 # ---------------------------------------------------------------------------

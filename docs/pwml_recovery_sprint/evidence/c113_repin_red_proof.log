@@ -1,0 +1,196 @@
+.........F..F.                                                           [100%]
+================================== FAILURES ===================================
+___________ test_10_f132_population_regression_over_the_six_papers ____________
+
+gold = {'PMC12096016': GoldCase(paper_id='PMC12096016', title='The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoi...ontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure."), ...}
+
+    def test_10_f132_population_regression_over_the_six_papers(gold):
+        """Offline, over every committed quarantine_report.json. No leg is re-run."""
+    
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
+        # FLOOR, not a census. This one catches the population SHRINKING, which is
+        # why it is `>=` while the two derived pins below are `==`. Moved 62 -> 72 by
+        # C-106: commit `e77ad3d` ("T-107 official result") committed
+        # `runs_verify/2026-08-28_1816`, which carries 10 quarantine_report.json
+        # files. Raising the floor keeps it catching a shrink against current truth.
+        assert len(paths) >= 72, "the committed artifact population shrank; re-pin before reading on"
+    
+        legs = 0
+        affected_papers: dict[str, int] = {}
+        withheld = 0
+        cleared: list[str] = []
+        for rel in paths:
+            leg_dir = (REPO / rel).parent
+            case = gold.get(leg_dir.parent.name)
+            if case is None:
+                continue
+            coverage = json.load(io.open(REPO / rel, encoding="utf-8")).get("coverage") or {}
+            out = contract_accepted_coverage(case, coverage)
+            if out is None:
+                continue
+            legs += 1
+            if out["excluded_count"]:
+                affected_papers[case.paper_id] = affected_papers.get(case.paper_id, 0) + 1
+                withheld += out["excluded_count"]
+            if out["cleared_by_reconciliation"]:
+                cleared.append(f"{case.paper_id}:{leg_dir.name}")
+    
+        # CENSUS PIN -- 62 -> 72, moved deliberately by C-106 under merge rule 4.
+        # Commit `e77ad3d` ("T-107 official result") committed
+        # `runs_verify/2026-08-28_1816`, which contributes EXACTLY 10 legs; every
+        # other run's contribution is unchanged, and 62 is precisely the sum over the
+        # other thirteen runs. Per-run attribution: `evidence/c106_census_probe.log`.
+        #
+        # This stays `==` and must NOT be relaxed to `>=`. The floor above uses `>=`
+        # to catch the corpus SHRINKING. This one asserts the loop above VISITED
+        # every leg it should have, and the census is how it knows how many that is.
+        # A `>=` here would let a leg join the corpus and go unvisited -- a quiet
+        # vacuity of exactly the F-144 shape. Moving it by hand whenever a run is
+        # committed is the correct cost: that is the moment someone confirms the new
+        # legs were meant to be there.
+        assert legs == 72
+        # Every one of the six ORCH-702 papers is still in the population.
+        assert set(F132_PAPERS) <= set(affected_papers), sorted(affected_papers)
+        # And TWO papers outside it.
+        #
+        # PMC13231680, which ORCH-702 could not see: it counted forbidden terms only
+        # among the UNMATCHED, so a forbidden term the pipeline actually matched --
+        # and was given coverage credit for -- was invisible to it. PMC13231680 has
+        # three such legs and no unmatched forbidden term.
+        #
+        # PMC12180156 JOINS THE SET at C-113. This is a DELIBERATE pinned-baseline
+        # move under merge rule 4's second clause, NOT a new capability: F-150 half 1
+        # (gold blob `aee8cb4f` -> `36f4b7b6`) adds the two delta spellings of
+        # 5-aminolevulinic acid to that case's EXISTING forbidden entry, so the
+        # spelling three committed legs actually emitted stops escaping the gate.
+        #
+        # NO LEG JOINED THE CORPUS -- `legs` above is unmoved at 72. Three legs
+        # already in it changed classification, and it is exactly these three:
+        #   runs_verify/2026-08-21_2239/papers/PMC12180156/research  excluded 0 -> 1
+        #   runs_verify/2026-08-21_2239/papers/PMC12180156/strict    excluded 0 -> 1
+        #   runs_verify/2026-08-28_1816/papers/PMC12180156/research  excluded 0 -> 1
+        # each drawing the single term "delta-aminolevulinic acid" in its Greek
+        # spelling (U+03B4) as requested core. The other five committed
+        # PMC12180156 legs are unchanged, and no leg anywhere leaves the set.
+        #
+        # CONFIRMED these three legs were meant to be here, and HOW: a FOURTH
+        # committed leg, runs_verify/2026-08-24_1402/papers/PMC12180156/research,
+        # also draws a Greek delta spelling -- but it draws the ENZYME,
+        # "<delta>-aminolevulinic acid synthase (ALAS2)", which the paper really
+        # names and which this same gold case quotes as acceptable. That leg is NOT
+        # in the set, because `forbidden_match` refuses containment. So the gate
+        # separates the fabricated metabolite from the legitimately named enzyme on
+        # the real corpus, leg by leg -- which is what makes the three additions
+        # correct rather than merely expected.
+        #
+        # Measured INDEPENDENTLY of this assert, against both gold blobs in one
+        # tree: `evidence/c113_census_attribution.py` / `c113_census_attribution.log`.
+>       assert set(affected_papers) - set(F132_PAPERS) == {"PMC12180156", "PMC13231680"}
+E       AssertionError: assert {'PMC13231680'} == {'PMC12180156', 'PMC13231680'}
+E         
+E         Extra items in the right set:
+E         'PMC12180156'
+E         Use -v to get more diff
+
+tests\test_c102_coverage_denominator.py:452: AssertionError
+_________ test_13_the_accepted_rate_is_a_rate_on_every_committed_leg __________
+
+gold = {'PMC12096016': GoldCase(paper_id='PMC12096016', title='The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoi...ontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure."), ...}
+
+    def test_13_the_accepted_rate_is_a_rate_on_every_committed_leg(gold):
+        """A numerator can never exceed its denominator, on any committed leg."""
+    
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
+    
+        checked = with_matched_forbidden = 0
+        for rel in paths:
+            leg_dir = (REPO / rel).parent
+            case = gold.get(leg_dir.parent.name)
+            if case is None:
+                continue
+            coverage = json.load(io.open(REPO / rel, encoding="utf-8")).get("coverage") or {}
+            out = contract_accepted_coverage(case, coverage)
+            if out is None:
+                continue
+            checked += 1
+            assert out["accepted_matched"] <= out["accepted_denominator"], rel
+            if out["accepted_ratio"] is not None:
+                assert 0.0 <= out["accepted_ratio"] <= 1.0, f"{rel}: {out['accepted_ratio']}"
+            if any(e["matched_in_raw"] for e in out["excluded_terms"]):
+                with_matched_forbidden += 1
+                # Withheld from the numerator, so the accepted count MUST drop.
+                assert out["accepted_matched"] < out["raw_matched"], rel
+    
+        # CENSUS PIN -- 62 -> 72. Same delta, same run, same commit as test 10's
+        # `legs`: `e77ad3d` committed `runs_verify/2026-08-28_1816` and its 10 legs.
+        # Stays `==`; see the note beside test 10 for why a `>=` here would make this
+        # loop vacuous rather than tolerant.
+        assert checked == 72
+        # Non-vacuity, and the reason this test is not an empty loop: the corpus
+        # really does contain matched forbidden terms. Twenty-three legs when
+        # c102_numerator_verify.log measured it independently; TWENTY-NINE now.
+        # 23 -> 26 at C-106 is the 3 matched-forbidden legs
+        # `runs_verify/2026-08-28_1816` contributes under commit `e77ad3d`; the other
+        # thirteen runs still sum to 23. Like `withheld` in test 10 this pin is
+        # DERIVED and sat behind the census assert, so C-106 was the first time it
+        # had ever run against the grown corpus.
+        #
+        # 26 -> 29 at C-113 is the 3 legs that F-150 half 1 newly puts a MATCHED
+        # forbidden term on -- and only those three; no leg stops carrying one:
+        #   runs_verify/2026-08-21_2239  PMC12180156:research   +1
+        #   runs_verify/2026-08-21_2239  PMC12180156:strict     +1
+        #   runs_verify/2026-08-28_1816  PMC12180156:research   +1
+        # i.e. +2 in run tree `runs_verify/2026-08-21_2239` and +1 in
+        # `runs_verify/2026-08-28_1816`; the other twelve run trees are untouched and
+        # the corpus still sums to 26 under the pre-edit gold. All 72 tracked legs
+        # live under `runs_verify/`; `runs/` contributes none. The same three legs
+        # move `withheld` 97 -> 100 and put PMC12180156 into `affected_papers` in
+        # test 10 -- see the attribution and the enzyme/metabolite confirmation
+        # beside that assert. `checked` above is UNMOVED at 72: no leg joined.
+        # Deliberate pinned-baseline move under merge rule 4's second clause, NOT a
+        # new capability. Measured independently of this assert:
+        # `evidence/c113_census_attribution.py` / `.log`. Stays `==`.
+>       assert with_matched_forbidden == 29, with_matched_forbidden
+E       AssertionError: 26
+E       assert 26 == 29
+
+tests\test_c102_coverage_denominator.py:608: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c102_coverage_denominator.py::test_10_f132_population_regression_over_the_six_papers
+FAILED tests/test_c102_coverage_denominator.py::test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+2 failed, 12 passed in 3.98s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c113\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5f69aca405331e4f81f8f756e3292f00843497c6  [git, worktree dirty=False]
+label                   : repin-red-proof
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q --basetemp=C:/t/btc113/redproof tests/test_c102_coverage_denominator.py
+cwd                     : C:\t\c113
+root PID / process group: 540056 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.02 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 2  539912:python.exe, 540200:git.exe
+descendants terminated  : 2  539912, 540200
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c113/docs/pwml_recovery_sprint/evidence/g11/C-113/03-repin-red-proof.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-113  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

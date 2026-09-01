@@ -1,0 +1,146 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_10_f132_population_regression_over_the_six_papers ____________
+
+gold = {'PMC12096016': GoldCase(paper_id='PMC12096016', title='The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoi...ontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure."), ...}
+
+    def test_10_f132_population_regression_over_the_six_papers(gold):
+        """Offline, over every committed quarantine_report.json. No leg is re-run."""
+    
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
+        # FLOOR, not a census. This one catches the population SHRINKING, which is
+        # why it is `>=` while the two derived pins below are `==`. Moved 62 -> 72 by
+        # C-106: commit `e77ad3d` ("T-107 official result") committed
+        # `runs_verify/2026-08-28_1816`, which carries 10 quarantine_report.json
+        # files. Raising the floor keeps it catching a shrink against current truth.
+        assert len(paths) >= 72, "the committed artifact population shrank; re-pin before reading on"
+    
+        legs = 0
+        affected_papers: dict[str, int] = {}
+        withheld = 0
+        cleared: list[str] = []
+        for rel in paths:
+            leg_dir = (REPO / rel).parent
+            case = gold.get(leg_dir.parent.name)
+            if case is None:
+                continue
+            coverage = json.load(io.open(REPO / rel, encoding="utf-8")).get("coverage") or {}
+            out = contract_accepted_coverage(case, coverage)
+            if out is None:
+                continue
+            legs += 1
+            if out["excluded_count"]:
+                affected_papers[case.paper_id] = affected_papers.get(case.paper_id, 0) + 1
+                withheld += out["excluded_count"]
+            if out["cleared_by_reconciliation"]:
+                cleared.append(f"{case.paper_id}:{leg_dir.name}")
+    
+        # CENSUS PIN -- 62 -> 72, moved deliberately by C-106 under merge rule 4.
+        # Commit `e77ad3d` ("T-107 official result") committed
+        # `runs_verify/2026-08-28_1816`, which contributes EXACTLY 10 legs; every
+        # other run's contribution is unchanged, and 62 is precisely the sum over the
+        # other thirteen runs. Per-run attribution: `evidence/c106_census_probe.log`.
+        #
+        # This stays `==` and must NOT be relaxed to `>=`. The floor above uses `>=`
+        # to catch the corpus SHRINKING. This one asserts the loop above VISITED
+        # every leg it should have, and the census is how it knows how many that is.
+        # A `>=` here would let a leg join the corpus and go unvisited -- a quiet
+        # vacuity of exactly the F-144 shape. Moving it by hand whenever a run is
+        # committed is the correct cost: that is the moment someone confirms the new
+        # legs were meant to be there.
+        assert legs == 72
+        # Every one of the six ORCH-702 papers is still in the population.
+        assert set(F132_PAPERS) <= set(affected_papers), sorted(affected_papers)
+        # And TWO papers outside it.
+        #
+        # PMC13231680, which ORCH-702 could not see: it counted forbidden terms only
+        # among the UNMATCHED, so a forbidden term the pipeline actually matched --
+        # and was given coverage credit for -- was invisible to it. PMC13231680 has
+        # three such legs and no unmatched forbidden term.
+        #
+        # PMC12180156 JOINS THE SET at C-113. This is a DELIBERATE pinned-baseline
+        # move under merge rule 4's second clause, NOT a new capability: F-150 half 1
+        # (gold blob `aee8cb4f` -> `36f4b7b6`) adds the two delta spellings of
+        # 5-aminolevulinic acid to that case's EXISTING forbidden entry, so the
+        # spelling three committed legs actually emitted stops escaping the gate.
+        #
+        # NO LEG JOINED THE CORPUS -- `legs` above is unmoved at 72. Three legs
+        # already in it changed classification, and it is exactly these three:
+        #   runs_verify/2026-08-21_2239/papers/PMC12180156/research  excluded 0 -> 1
+        #   runs_verify/2026-08-21_2239/papers/PMC12180156/strict    excluded 0 -> 1
+        #   runs_verify/2026-08-28_1816/papers/PMC12180156/research  excluded 0 -> 1
+        # each drawing the single term "delta-aminolevulinic acid" in its Greek
+        # spelling (U+03B4) as requested core. The other five committed
+        # PMC12180156 legs are unchanged, and no leg anywhere leaves the set.
+        #
+        # CONFIRMED these three legs were meant to be here, and HOW: a FOURTH
+        # committed leg, runs_verify/2026-08-24_1402/papers/PMC12180156/research,
+        # also draws a Greek delta spelling -- but it draws the ENZYME,
+        # "<delta>-aminolevulinic acid synthase (ALAS2)", which the paper really
+        # names and which this same gold case quotes as acceptable. That leg is NOT
+        # in the set, because `forbidden_match` refuses containment. So the gate
+        # separates the fabricated metabolite from the legitimately named enzyme on
+        # the real corpus, leg by leg -- which is what makes the three additions
+        # correct rather than merely expected.
+        #
+        # Measured INDEPENDENTLY of this assert, against both gold blobs in one
+        # tree: `evidence/c113_census_attribution.py` / `c113_census_attribution.log`.
+        assert set(affected_papers) - set(F132_PAPERS) == {"PMC12180156", "PMC13231680"}
+        # 92 -> 97 at C-106: the same run under the same commit --
+        # `runs_verify/2026-08-28_1816` under `e77ad3d` -- withheld 5 further terms,
+        # and the other thirteen runs still summed to 92. DERIVED from the census
+        # above, and it had never executed against the grown corpus before C-106
+        # because the `legs` assert aborted the test first. That is why F-151,
+        # REV-104 and the wave handoff all described this repair as "re-pin to 72"
+        # and all three were wrong. Measured, not inferred:
+        # `evidence/c106_census_probe.log`.
+        #
+        # 97 -> 100 at C-113, and this pin had STILL never executed under the
+        # post-F-150 gold: the set-equality above aborts the test before reaching it,
+        # so at the failed merge `b05a7281` nobody knew whether it moved. It does.
+        # The delta is exactly the three legs named above, one withheld term apiece:
+        #   runs_verify/2026-08-21_2239/.../PMC12180156/research  excluded_count 0 -> 1
+        #   runs_verify/2026-08-21_2239/.../PMC12180156/strict    excluded_count 0 -> 1
+        #   runs_verify/2026-08-28_1816/.../PMC12180156/research  excluded_count 0 -> 1
+        # Every other leg's `excluded_count` is unchanged and the other 69 legs still
+        # sum to 97 under the pre-edit gold. Deliberate pinned-baseline move under
+        # merge rule 4's second clause; NOT a new capability. Measured, not read off
+        # a failure message: `evidence/c113_census_attribution.log`.
+>       assert withheld == 101
+E       assert 100 == 101
+
+tests\test_c102_coverage_denominator.py:473: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c102_coverage_denominator.py::test_10_f132_population_regression_over_the_six_papers
+1 failed in 0.38s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev113\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c0c3e077b4d030ba6202475fe7f37f2697724637  [git, worktree dirty=True]
+label                   : withheld-pin-mutation
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q --no-header --basetemp=C:/t/btrev113/withheldmut2 tests/test_c102_coverage_denominator.py::test_10_f132_population_regression_over_the_six_papers
+cwd                     : C:\t\rev113
+root PID / process group: 552648 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.08 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  543204:python.exe
+descendants terminated  : 1  543204
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev113\docs\pwml_recovery_sprint\evidence\g11\REV-113\04-withheld-pin-mutation.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-113  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
