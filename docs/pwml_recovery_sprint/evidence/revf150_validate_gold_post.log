@@ -1,0 +1,51 @@
+gold set 2026-08-01.1 loaded from C:\t\revf150\src\t2pw\bench\gold\pinned_v1.json
+  10 case(s): 9 mechanistic, 1 negative control
+  strict-exportable expected: 2
+
+  PMC12444477    lipid A biosynthesis       rel=core         export=partial_only      min_core=3
+                 anchors=3 enzymes=8 metabolites=8 forbidden_ids=14 forbidden_organisms=11
+  PMC13231680    lipid A biosynthesis       rel=context_only export=partial_only      min_core=0 [negative control]
+                 anchors=0 enzymes=0 metabolites=0 forbidden_ids=8 forbidden_organisms=3
+  PMC12657337    menaquinone biosynthesis   rel=core         export=partial_only      min_core=3
+                 anchors=4 enzymes=3 metabolites=6 forbidden_ids=10 forbidden_organisms=10
+  PMC12421875    menaquinone biosynthesis   rel=core         export=partial_only      min_core=7
+                 anchors=4 enzymes=8 metabolites=10 forbidden_ids=8 forbidden_organisms=8
+  PMC12312563    menaquinone biosynthesis   rel=partial      export=partial_only      min_core=1
+                 anchors=4 enzymes=1 metabolites=3 forbidden_ids=9 forbidden_organisms=6
+  PMC12856317    heme biosynthesis          rel=partial      export=partial_only      min_core=1
+                 anchors=4 enzymes=1 metabolites=3 forbidden_ids=10 forbidden_organisms=10
+  PMC12180156    heme biosynthesis          rel=context_only export=partial_only      min_core=0
+                 anchors=2 enzymes=0 metabolites=2 forbidden_ids=9 forbidden_organisms=9
+  PMC12096016    enterobactin biosynthesis  rel=core         export=strict_exportable min_core=4
+                 anchors=5 enzymes=5 metabolites=8 forbidden_ids=12 forbidden_organisms=6
+  PMC12452463    enterobactin biosynthesis  rel=partial      export=partial_only      min_core=2
+                 anchors=4 enzymes=3 metabolites=5 forbidden_ids=10 forbidden_organisms=11
+  PMC12782028    cholesterol biosynthesis   rel=partial      export=strict_exportable min_core=2
+                 anchors=4 enzymes=4 metabolites=5 forbidden_ids=11 forbidden_organisms=4
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\revf150\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4c077f012793260f05d5e0518c6459ca9ad13cc6  [git, worktree dirty=True]
+label                   : validate-gold-post
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u scripts/bench_acceptance.py --validate-gold --gold C:/t/revf150/src/t2pw/bench/gold/pinned_v1.json
+cwd                     : C:\t\revf150
+root PID / process group: 469196 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.28 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  469108:python.exe
+descendants terminated  : 1  469108
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/F-150/08-validate-gold-post.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=F-150  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
