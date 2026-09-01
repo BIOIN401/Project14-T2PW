@@ -1,0 +1,75 @@
+target                : C:\t\c108r1\src\t2pw\curation\apply_audit_patch.py
+target sha256 at start: 44b308a469c3cbb0dba65a0f6e55806943fb5c72f8c28ed5b056532b5c9b3dff
+
+BEFORE THE CANDIDATE (round 1 as committed)
+  --- as committed ---
+    ACCEPT  'P4X, its inhibitor bound at the active site, converts A to B slowly'
+    ACCEPT  'P4X, this inhibitor notwithstanding, catalyses the conversion of A to B'
+    ACCEPT  'P4X, an inhibitor target in oncology, catalyses the conversion of A to B'
+    ACCEPT  'P4X, the inhibitor binding site mapped, catalyses the conversion of A to B'
+    ACCEPT  'P4X, their inhibitors profiled, catalyses the conversion of A to B'
+    ACCEPT  'the repressor complex P4X catalyses the conversion of A to B'
+    ACCEPT  'the suppressor protein P4X catalyses the conversion of A to B'
+    ACCEPT  'the inhibitor protein P4X catalyses the conversion of A to B'
+    ACCEPT  'P4X, a repressor, catalyses the conversion of A to B'
+    ACCEPT  'P4X, the inhibitor, catalyses the conversion of A to B'
+    ACCEPT  'the repressor P4X catalyses the conversion of A to B'
+    ACCEPT  'the inhibitor P4X catalyses the conversion of A to B'
+    ACCEPT  'the potent inhibitor P4X catalyses the conversion of A to B'
+    escapes still ACCEPTED : 5 of 5
+    appositives ACCEPTED   : 8 of 8
+  focused suite: exit=0  396 passed in 0.81s
+
+AFTER THE CANDIDATE (_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an|this|that|its|their)" -> _APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an)"  # REV-108 CANDIDATE)
+  --- candidate applied ---
+    REFUSE  'P4X, its inhibitor bound at the active site, converts A to B slowly'
+    REFUSE  'P4X, this inhibitor notwithstanding, catalyses the conversion of A to B'
+    ACCEPT  'P4X, an inhibitor target in oncology, catalyses the conversion of A to B'
+    ACCEPT  'P4X, the inhibitor binding site mapped, catalyses the conversion of A to B'
+    REFUSE  'P4X, their inhibitors profiled, catalyses the conversion of A to B'
+    ACCEPT  'the repressor complex P4X catalyses the conversion of A to B'
+    ACCEPT  'the suppressor protein P4X catalyses the conversion of A to B'
+    ACCEPT  'the inhibitor protein P4X catalyses the conversion of A to B'
+    ACCEPT  'P4X, a repressor, catalyses the conversion of A to B'
+    ACCEPT  'P4X, the inhibitor, catalyses the conversion of A to B'
+    ACCEPT  'the repressor P4X catalyses the conversion of A to B'
+    ACCEPT  'the inhibitor P4X catalyses the conversion of A to B'
+    ACCEPT  'the potent inhibitor P4X catalyses the conversion of A to B'
+    escapes still ACCEPTED : 2 of 5
+    appositives ACCEPTED   : 8 of 8
+  focused suite: exit=0  396 passed in 0.69s
+
+target sha256 after   : 44b308a469c3cbb0dba65a0f6e55806943fb5c72f8c28ed5b056532b5c9b3dff
+byte-identical        : True
+CRLF preserved        : True
+
+============================================================================================
+CANDIDATE RESULT  escapes ACCEPTED 5 -> 2   appositives ACCEPTED 8 -> 8
+============================================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bc6485e87d20b8372eaf112d3fb5003450d09348  [git, worktree dirty=False]
+label                   : rev108-r1-repair-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev108/docs/pwml_recovery_sprint/evidence/rev108_r1_repair_probe.py C:/t/c108r1
+cwd                     : C:\t\c108r1
+root PID / process group: 213280 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 2.62 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 5  211496:python.exe, 214740:python.exe, 214772:python.exe, 187996:python.exe, 214968:python.exe
+descendants terminated  : 5  187996, 211496, 214740, 214772, 214968
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev108\docs\pwml_recovery_sprint\evidence\g11\REV-108\30-rev108-r1-repair-probe.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

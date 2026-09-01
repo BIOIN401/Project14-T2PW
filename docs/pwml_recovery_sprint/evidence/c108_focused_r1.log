@@ -1,0 +1,75 @@
+........................................................................ [ 41%]
+........................................................................ [ 83%]
+.........................F...                                            [100%]
+================================== FAILURES ===================================
+_ test_e_new_coverage_the_anchor_is_load_bearing[left-anchor-on-_ATTENUATION_WORD_SRC] _
+
+old = '_ATTENUATION_WORD_SRC = (\n    r"(?<![a-z])(?:"'
+new = '_ATTENUATION_WORD_SRC = (\n    r"(?:"'
+spans = ['the photoablation of P was measured while Q mediates the conversion', 'counterinterference with P was noted while Q ... of P was recorded while Q mediates the conversion', 'nonimpairment of P was recorded while Q mediates the conversion']
+
+    @pytest.mark.parametrize("old,new,spans", ANCHOR_MUTATIONS)
+    def test_e_new_coverage_the_anchor_is_load_bearing(old, new, spans) -> None:
+        """NEW COVERAGE. Remove the anchor and these legitimate spans flip to REFUSE.
+    
+        The assertion before the mutation is the non-vacuity control: if the spans do
+        not license on the unmutated tree, the mutation proves nothing.
+        """
+    
+        harness = _harness()
+        assert harness.find_occurrences(GUARD_PATH, old) == 1, (
+            "the anchor's source text moved; re-pin this mutation before reading on"
+        )
+    
+        unmutated = _fresh_seam()
+        for span in spans:
+            assert accepted("P", span, seam=unmutated), (
+                "non-vacuity: this span must license BEFORE the mutation", span
+            )
+    
+        saved = harness.apply_mutation(GUARD_PATH, old, new)
+        try:
+            mutated = _fresh_seam()
+            flipped = [span for span in spans if not accepted("P", span, seam=mutated)]
+>           assert flipped == spans, (
+                "removing this anchor changed nothing; the anchor is untested for a "
+                "reason other than oversight", flipped
+            )
+E           AssertionError: ('removing this anchor changed nothing; the anchor is untested for a reason other than oversight', ['the photoablation...of P was recorded while Q mediates the conversion', 'nonimpairment of P was recorded while Q mediates the conversion'])
+E           assert ['the photoab...e conversion'] == ['the photoab...e conversion']
+E             
+E             At index 1 diff: 'the microablation of P was recorded while Q mediates the conversion' != 'counterinterference with P was noted while Q mediates the conversion'
+E             Right contains one more item: 'nonimpairment of P was recorded while Q mediates the conversion'
+E             Use -v to get more diff
+
+tests\test_c108_f155_class.py:796: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c108_f155_class.py::test_e_new_coverage_the_anchor_is_load_bearing[left-anchor-on-_ATTENUATION_WORD_SRC]
+1 failed, 172 passed in 0.51s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6c20879d6b286d42c8c822bcd09d323623fd1bd8  [git, worktree dirty=True]
+label                   : focused-c108-r1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u -m pytest -q --no-header -rf --basetemp=C:/t/bt/c108foc tests/test_c108_f155_class.py
+cwd                     : C:\t\c108
+root PID / process group: 155984 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.14 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  160412:python.exe
+descendants terminated  : 1  160412
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\26-focused-c108-r1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

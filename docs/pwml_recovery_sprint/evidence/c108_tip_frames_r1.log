@@ -1,0 +1,35 @@
+Traceback (most recent call last):
+  File "C:\t\c108\docs\pwml_recovery_sprint\evidence\c108_frames.py", line 22, in <module>
+    from t2pw.curation.apply_audit_patch import apply_patch_with_policy  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\t\c108\src\t2pw\curation\apply_audit_patch.py", line 1802
+    r"transport(?!ers?(?![a-z]))|translocat(?!ors?(?![a-z]))"
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6c20879d6b286d42c8c822bcd09d323623fd1bd8  [git, worktree dirty=True]
+label                   : tip-frames-r1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c108_frames.py C:/t/c108
+cwd                     : C:\t\c108
+root PID / process group: 150892 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.20 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  155100:python.exe
+descendants terminated  : 1  155100
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\09-tip-frames-r1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

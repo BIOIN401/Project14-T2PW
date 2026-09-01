@@ -1,0 +1,192 @@
+====================================================================================================
+REV-108 ROUND-1 ATTACK   base=C:\t\rev108base  r0=C:\t\rev108  r1=C:\t\c108r1
+====================================================================================================
+
+--- T-new ---
+  [enzymes] actor='P4X'
+      'resistance to the inhibitor was lost in P4X, which catalyses A to B'
+      base=REFUSE  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+  [enzymes] actor='P4X'
+      'P4X and its inhibitor were co-purified; P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+  [enzymes] actor='P4X'
+      'the inhibitor, which targets P4X, was added while P4X catalyses A to B'
+      base=REFUSE  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+  [enzymes] actor='P4X'
+      'P4X activity fell in the presence of its antagonist, yet P4X catalyses A to B'
+      base=REFUSE  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+  [enzymes] actor='P4X'
+      'an antagonist raised in rabbits recognised P4X, which catalyses A to B'
+      base=REFUSE  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+  [enzymes] actor='P4X'
+      'knockdown of the P4X repressor changed nothing, though P4X catalyses A to B'
+      base=REFUSE  r0=REFUSE  r1=REFUSE  want=REFUSE   OK
+  [enzymes] actor='P4X'
+      'the inhibitor bound the P4X enzyme and catalysis of A to B ceased'
+      base=REFUSE  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+  [enzymes] actor='P4X'
+      'inhibitor treated P4X still catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+  [enzymes] actor='P4X'
+      'the repressor sits upstream of P4X, which catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+  [enzymes] actor='P4X'
+      'co-incubation of P4X with a suppressor abolished nothing; P4X catalyses A to B'
+      base=REFUSE  r0=REFUSE  r1=REFUSE  want=REFUSE   OK
+
+--- A2-attack ---
+  [enzymes] actor='P4X'
+      'P4X, its inhibitor bound at the active site, converts A to B slowly'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=REFUSE   << BLOCKING: gate weakened vs base
+  [enzymes] actor='P4X'
+      'P4X, this inhibitor notwithstanding, catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=REFUSE   << BLOCKING: gate weakened vs base
+  [enzymes] actor='P4X'
+      'P4X, an inhibitor target in oncology, catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=REFUSE   << BLOCKING: gate weakened vs base
+  [enzymes] actor='P4X'
+      'P4X, the inhibitor binding site mapped, catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=REFUSE   << BLOCKING: gate weakened vs base
+  [enzymes] actor='P4X'
+      'P4X, their inhibitors profiled, catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=REFUSE   << BLOCKING: gate weakened vs base
+  [enzymes] actor='P4X'
+      'P4X, a known inhibitor target, catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+
+--- A1-attack ---
+  [enzymes] actor='P4X'
+      'the inhibitor sensitive P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+  [enzymes] actor='P4X'
+      'the inhibitor small molecule P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the suppressor enzyme complex P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the inhibitor of the enzyme P4X was added while P4X catalyses A to B'
+      base=REFUSE  r0=REFUSE  r1=REFUSE  want=REFUSE   OK
+
+--- P-appositive ---
+  [enzymes] actor='P4X'
+      'the repressor complex P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the suppressor protein P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the inhibitor protein P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'P4X, a repressor, catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the repressor P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the attenuator isoform P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+
+--- S-subset ---
+  [enzymes] actor='P4X'
+      'the co-inhibitor P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the down-regulator P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the pan-antagonist P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the inhibitors P4X and Q catalyse the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the attenuator variant P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'P4X, the abolisher, catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [enzymes] actor='P4X'
+      'the inactivator subunit P4X catalyses the conversion of A to B'
+      base=REFUSE  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+
+--- X-pinned ---
+  [enzymes] actor='P'
+      'A significantly inhibited P activity in the assay'
+      base=REFUSE  r0=REFUSE  r1=REFUSE  want=REFUSE   OK
+  [enzymes] actor='NDM-1'
+      'PSA significantly inhibited NDM-1 enzyme activity'
+      base=REFUSE  r0=REFUSE  r1=REFUSE  want=REFUSE   OK
+  [enzymes] actor='P'
+      'the inhibitory effect on P activity abolished the catalysis of A to B'
+      base=REFUSE  r0=REFUSE  r1=REFUSE  want=REFUSE   OK
+  [enzymes] actor='P'
+      'repression of P activity was observed while P catalyses A to B'
+      base=REFUSE  r0=REFUSE  r1=REFUSE  want=REFUSE   OK
+  [transporters] actor='P'
+      'P transports A across the inner membrane'
+      base=ACCEPT  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [transporters] actor='P'
+      'add P as a transporter to resolve the structural inconsistency'
+      base=ACCEPT  r0=REFUSE  r1=REFUSE  want=REFUSE   OK
+
+--- X-ra-rc ---
+  [transporters] actor='P'
+      'P channeled calcium into the cytosol'
+      base=ACCEPT  r0=REFUSE  r1=ACCEPT  want=ACCEPT   << FIXED BY ROUND 1
+  [transporters] actor='P'
+      'P channelled calcium into the cytosol'
+      base=ACCEPT  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [transporters] actor='P'
+      'P is a substrate of the transporter TonB'
+      base=ACCEPT  r0=ACCEPT  r1=REFUSE  want=REFUSE   << FIXED BY ROUND 1
+  [transporters] actor='P'
+      'P is a high affinity transporter for A'
+      base=ACCEPT  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+  [transporters] actor='P'
+      'P acts as an inner membrane channel for A'
+      base=ACCEPT  r0=ACCEPT  r1=ACCEPT  want=ACCEPT   OK
+
+====================================================================================================
+REV108 R1 TOTALS  cases=44  blocking=5  over_refusal_vs_base=0  open_at_base=0  fixed_by_round1=12
+====================================================================================================
+BLOCKING      A2-attack   actor=P4X base=REFUSE r0=ACCEPT r1=ACCEPT want=REFUSE
+              'P4X, its inhibitor bound at the active site, converts A to B slowly'
+BLOCKING      A2-attack   actor=P4X base=REFUSE r0=ACCEPT r1=ACCEPT want=REFUSE
+              'P4X, this inhibitor notwithstanding, catalyses the conversion of A to B'
+BLOCKING      A2-attack   actor=P4X base=REFUSE r0=ACCEPT r1=ACCEPT want=REFUSE
+              'P4X, an inhibitor target in oncology, catalyses the conversion of A to B'
+BLOCKING      A2-attack   actor=P4X base=REFUSE r0=ACCEPT r1=ACCEPT want=REFUSE
+              'P4X, the inhibitor binding site mapped, catalyses the conversion of A to B'
+BLOCKING      A2-attack   actor=P4X base=REFUSE r0=ACCEPT r1=ACCEPT want=REFUSE
+              'P4X, their inhibitors profiled, catalyses the conversion of A to B'
+
+SUBSET CLAIM (catalysis rows only): spans REFUSED at r1 but ACCEPTED at base = 0
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bc6485e87d20b8372eaf112d3fb5003450d09348  [git, worktree dirty=False]
+label                   : rev108-r1-attack
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev108/docs/pwml_recovery_sprint/evidence/rev108_r1_attack.py C:/t/rev108base C:/t/rev108 C:/t/c108r1
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 213028 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 0.32 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  213040:python.exe
+descendants terminated  : 1  213040
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev108\docs\pwml_recovery_sprint\evidence\g11\REV-108\25-rev108-r1-attack.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

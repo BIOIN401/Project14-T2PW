@@ -1,0 +1,216 @@
+====================================================================================================
+ROOT BASE  (C:\t\rev108base\src\t2pw\curation\apply_audit_patch.py)
+====================================================================================================
+contra pattern len = 301
+inhibition CUE len = 301
+cue == contra object? True
+
+  actor='P4X'
+  folded='p4x is a target of the inhibitor and catalyses the conversion of a to b'
+    _CATALYSIS_CONTRA_RE  : 'inhibit'
+    catalysis CUE (raw)   : 'catalys'
+    transport CUE (raw)   : NO MATCH
+    seam catalysis verdict: False
+    seam transport verdict: False
+
+  actor='P4X'
+  folded='p4x was subject to inhibitors during the assay yet catalyses a to b'
+    _CATALYSIS_CONTRA_RE  : 'inhibit'
+    catalysis CUE (raw)   : 'catalys'
+    transport CUE (raw)   : NO MATCH
+    seam catalysis verdict: False
+    seam transport verdict: False
+
+  actor='P4X'
+  folded='p4x whose inhibitor was characterised catalyses the conversion of a to b'
+    _CATALYSIS_CONTRA_RE  : 'inhibit'
+    catalysis CUE (raw)   : 'catalys'
+    transport CUE (raw)   : NO MATCH
+    seam catalysis verdict: False
+    seam transport verdict: False
+
+  actor='P4X'
+  folded='the repressor bound p4x and the catalysis of a to b stopped'
+    _CATALYSIS_CONTRA_RE  : 'repress'
+    catalysis CUE (raw)   : 'catalys'
+    transport CUE (raw)   : NO MATCH
+    seam catalysis verdict: False
+    seam transport verdict: False
+
+  actor='P4X'
+  folded='the inhibitor of p4x was added before the assay'
+    _CATALYSIS_CONTRA_RE  : 'inhibit'
+    catalysis CUE (raw)   : NO MATCH
+    transport CUE (raw)   : NO MATCH
+    seam catalysis verdict: False
+    seam transport verdict: False
+
+  actor='P4X'
+  folded='the inhibitor protein p4x catalyses the conversion of a to b'
+    _CATALYSIS_CONTRA_RE  : 'inhibit'
+    catalysis CUE (raw)   : 'catalys'
+    transport CUE (raw)   : NO MATCH
+    seam catalysis verdict: False
+    seam transport verdict: False
+
+  actor='P'
+  folded='p channeled calcium into the cytosol'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : NO MATCH
+    transport CUE (raw)   : 'channel'
+    seam catalysis verdict: False
+    seam transport verdict: True
+
+  actor='P'
+  folded='p channelled calcium into the cytosol'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : NO MATCH
+    transport CUE (raw)   : 'channel'
+    seam catalysis verdict: False
+    seam transport verdict: True
+
+  actor='P'
+  folded='p channels calcium into the cytosol'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : NO MATCH
+    transport CUE (raw)   : 'channel'
+    seam catalysis verdict: False
+    seam transport verdict: True
+====================================================================================================
+ROOT TIP  (C:\t\rev108\src\t2pw\curation\apply_audit_patch.py)
+====================================================================================================
+contra pattern len = 453
+inhibition CUE len = 301
+cue == contra object? False
+
+  actor='P4X'
+  folded='p4x is a target of the inhibitor and catalyses the conversion of a to b'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : 'catalys'
+    transport CUE (raw)   : NO MATCH
+    masked window         : '    is a target of the inhibitor and catalyses the conversion of a to b'
+    seam catalysis verdict: True
+    seam transport verdict: False
+    F3 target-directed    : NO MATCH
+    F4 head-final compound: NO MATCH
+
+  actor='P4X'
+  folded='p4x was subject to inhibitors during the assay yet catalyses a to b'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : 'catalys'
+    transport CUE (raw)   : NO MATCH
+    masked window         : '    was subject to inhibitors during the assay yet catalyses a to b'
+    seam catalysis verdict: True
+    seam transport verdict: False
+    F3 target-directed    : NO MATCH
+    F4 head-final compound: NO MATCH
+
+  actor='P4X'
+  folded='p4x whose inhibitor was characterised catalyses the conversion of a to b'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : 'catalys'
+    transport CUE (raw)   : NO MATCH
+    masked window         : '    whose inhibitor was characterised catalyses the conversion of a to b'
+    seam catalysis verdict: True
+    seam transport verdict: False
+    F3 target-directed    : NO MATCH
+    F4 head-final compound: NO MATCH
+
+  actor='P4X'
+  folded='the repressor bound p4x and the catalysis of a to b stopped'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : 'catalys'
+    transport CUE (raw)   : NO MATCH
+    masked window         : 'the repressor bound     and the catalysis of a to b stopped'
+    seam catalysis verdict: True
+    seam transport verdict: False
+    F3 target-directed    : NO MATCH
+    F4 head-final compound: NO MATCH
+
+  actor='P4X'
+  folded='the inhibitor of p4x was added before the assay'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : NO MATCH
+    transport CUE (raw)   : NO MATCH
+    masked window         : 'the inhibitor of     was added before the assay'
+    seam catalysis verdict: False
+    seam transport verdict: False
+    F3 target-directed    : 'inhibitor of p4x'
+    F4 head-final compound: NO MATCH
+
+  actor='P4X'
+  folded='the inhibitor protein p4x catalyses the conversion of a to b'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : 'catalys'
+    transport CUE (raw)   : NO MATCH
+    masked window         : 'the inhibitor protein     catalyses the conversion of a to b'
+    seam catalysis verdict: True
+    seam transport verdict: False
+    F3 target-directed    : NO MATCH
+    F4 head-final compound: NO MATCH
+
+  actor='P'
+  folded='p channeled calcium into the cytosol'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : NO MATCH
+    transport CUE (raw)   : NO MATCH
+    masked window         : '  channeled calcium into the cytosol'
+    seam catalysis verdict: False
+    seam transport verdict: False
+    F3 target-directed    : NO MATCH
+    F4 head-final compound: NO MATCH
+
+  actor='P'
+  folded='p channelled calcium into the cytosol'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : NO MATCH
+    transport CUE (raw)   : 'channelled'
+    masked window         : '  channelled calcium into the cytosol'
+    seam catalysis verdict: False
+    seam transport verdict: True
+    F3 target-directed    : NO MATCH
+    F4 head-final compound: NO MATCH
+
+  actor='P'
+  folded='p channels calcium into the cytosol'
+    _CATALYSIS_CONTRA_RE  : NO MATCH
+    catalysis CUE (raw)   : NO MATCH
+    transport CUE (raw)   : 'channels'
+    masked window         : '  channels calcium into the cytosol'
+    seam catalysis verdict: False
+    seam transport verdict: True
+    F3 target-directed    : NO MATCH
+    F4 head-final compound: NO MATCH
+
+====================================================================================================
+CUE BYTE-IDENTITY CHECK (member (d)'s central claim)
+====================================================================================================
+base inhibition cue len=301  tip len=301  identical=True
+_ANY_ROLE_CUE_RE base len=2584 tip len=6461 identical=False
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fbf2047e69fa0464c7c128978f12c636a1455431  [git, worktree dirty=False]
+label                   : rev108-attribute
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev108/docs/pwml_recovery_sprint/evidence/rev108_attribute.py C:/t/rev108base C:/t/rev108
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 185632 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.20 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  186560:python.exe
+descendants terminated  : 1  186560
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev108\docs\pwml_recovery_sprint\evidence\g11\REV-108\05-rev108-attribute.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

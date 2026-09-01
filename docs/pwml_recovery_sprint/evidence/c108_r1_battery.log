@@ -1,0 +1,167 @@
+====================================================================================================
+SECTION A -- REV-105's 29-case battery, through apply_patch_with_policy
+====================================================================================================
+ACCEPT  (want ACCEPT)     author's own catalysis span
+ACCEPT  (want ACCEPT)     hyphenated adjectival: P-catalyzed
+ACCEPT  (want ACCEPT)     hyphenated adjectival: P-mediated
+ACCEPT  (want ACCEPT)     'is the enzyme responsible for'
+ACCEPT  (want ACCEPT)     passive: 'A is converted to B by P'
+ACCEPT  (want ACCEPT)     passive: 'catalysed by P'
+ACCEPT  (want ACCEPT)     'P converts A into B'
+ACCEPT  (want ACCEPT)     'P hydrolyses A'
+ACCEPT  (want ACCEPT)     'P acts on A to give B'
+ACCEPT  (want ACCEPT)     'P breaks down A'
+ACCEPT  (want ACCEPT)     'P is an enzyme that acts upon A'
+ACCEPT  (want ACCEPT)     'P was shown to catalyse this step'
+ACCEPT  (want ACCEPT)     multi-word name, exact in span
+ACCEPT  (want ACCEPT)     registry name vs paper symbol
+ACCEPT  (want ACCEPT)     systematic name vs gene symbol
+ACCEPT  (want ACCEPT)     ' complex' suffix, symbol in span
+ACCEPT  (want ACCEPT)     hyphenated NAME, exact in span
+ACCEPT  (want ACCEPT)     hyphenated NAME + hyphenated cue
+REFUSE  (want REFUSE)     cue >80 chars from the name
+           reason: unevidenced_actor_role: no evidence span names 'P' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload structu
+ACCEPT  (want ACCEPT)     dict row w/ own evidence
+ACCEPT  (want ACCEPT)     transport, plain
+ACCEPT  (want ACCEPT)     transport, 'P is the importer of A'
+ACCEPT  (want ACCEPT)     modifier inhibitor, evidenced
+ACCEPT  (want ACCEPT)     modifier activator, evidenced
+ACCEPT  (want ACCEPT)     modifier cofactor (role outside vocab)
+REFUSE  (want REFUSE)     B2 DEFECT: inhibitor span for enzymes
+           reason: unevidenced_actor_role: no evidence span names 'P' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload structu
+REFUSE  (want REFUSE)     B3 structural rationale
+           reason: unevidenced_actor_role: no evidence span names 'P' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload structu
+REFUSE  (want REFUSE)     no evidence at all
+           reason: unevidenced_actor_role: add of 'P' to enzymes carries no evidence span.
+REFUSE  (want REFUSE)     span names a DIFFERENT protein
+           reason: unevidenced_actor_role: no evidence span names 'P' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload structu
+
+BATTERY MISMATCHES: 0 / 29
+BATTERY MISMATCH LABELS: []
+
+====================================================================================================
+SECTION B -- F-146 PINNED PATCH.  Must print REJECTED.
+====================================================================================================
+  accepted_count = 0   enzymes after = []
+  reason         = unevidenced_actor_role: no evidence span names 'NDM-1' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload structure.
+  F-146 VERDICT  : REJECTED  <-- REQUIRED
+
+====================================================================================================
+SECTION C1 -- 1a REJECTION: each near-synonym in a window that ALSO carries a
+real catalysis cue ('mediated'). At the C-106 base every one of these is ADMITTED.
+====================================================================================================
+  blockade         refused   'the blockade of NDM-1 activity is mediated by PSA'
+  impairment       refused   'the impairment of NDM-1 activity is mediated by PSA'
+  disruption       refused   'the disruption of NDM-1 activity is mediated by PSA'
+  reduction        refused   'the reduction of NDM-1 activity is mediated by PSA'
+  loss             refused   'the loss of NDM-1 activity is mediated by PSA'
+  silencing        refused   'the silencing of NDM-1 activity is mediated by PSA'
+  sequestration    refused   'the sequestration of NDM-1 activity is mediated by PSA'
+  depletion        refused   'the depletion of NDM-1 activity is mediated by PSA'
+  ablation         refused   'the ablation of NDM-1 activity is mediated by PSA'
+  interference     refused   'the interference of NDM-1 activity is mediated by PSA'
+  quenching        refused   'the quenching of NDM-1 activity is mediated by PSA'
+  C1 ADMITTED (want 0): 0 / 11
+
+====================================================================================================
+SECTION C2 -- 1a PRESERVATION: redox chemistry must keep licensing (REV-107 B2)
+====================================================================================================
+  licensed     'NADH-dependent reduction of the substrate by P'
+  licensed     'ferrochelatase reduces the substrate in this step'
+  licensed     'P catalyses the reduction of the quinone to the quinol'
+  licensed     'the reduction of A to B is carried out by P'
+  licensed     'P reduces nitrite to nitric oxide'
+  licensed     'reducing equivalents are transferred by P during the reduction of the disulfide'
+  C2 REFUSED (want 0): 0 / 6
+
+====================================================================================================
+SECTION C3 -- 1b passive-with-agent: the agent must BE the actor
+====================================================================================================
+  REFUSE (want REFUSE)              'A is converted to B by Q, and P was also detected in the assay'
+  REFUSE (want REFUSE)              'A is produced by Q while P remained bound to the membrane'
+  REFUSE (want REFUSE)              'B is formed by Q; P is unrelated to this step'
+  ACCEPT (want ACCEPT)              'A is converted to B by P in the intestine'
+  ACCEPT (want ACCEPT)              'A is produced by P during the second step'
+  ACCEPT (want ACCEPT)              'the reaction is catalyzed by serine hydroxymethyltransferase'
+  ACCEPT (want ACCEPT)              'isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate by EntB isochorismatase activity'
+  ACCEPT (want ACCEPT)              'the beta-lactam ring is converted to the open form by NDM-1'
+  C3 MISMATCHES (want 0): 0 / 8
+
+====================================================================================================
+SECTION C4 -- 1c the -ase stoplist: plural bypass closed, real enzymes preserved
+====================================================================================================
+  REFUSE (want REFUSE)              'LpxA appears in three purchases recorded in the supplement'
+  REFUSE (want REFUSE)              'LpxA appears beside two showcases in the exhibition'
+  REFUSE (want REFUSE)              'LpxA was photographed on the staircases of the institute'
+  REFUSE (want REFUSE)              'LpxA was left in one of the briefcases'
+  REFUSE (want REFUSE)              'LpxA pleases the reviewers of this manuscript'
+  REFUSE (want REFUSE)              'LpxA was found in the suitcases of the courier'
+  REFUSE (want REFUSE)              'LpxA was noted beside the grease on the bench'
+  REFUSE (want REFUSE)              'LpxA paraphrases the earlier report'
+  REFUSE (want REFUSE)              'LpxA was noted while the incidence of disease did not increase after release of the database'
+  ACCEPT (want ACCEPT)              'LpxA is the acyltransferase for this step'
+  ACCEPT (want ACCEPT)              'P and its paralogues are hydrolases of the same family'
+  ACCEPT (want ACCEPT)              'P belongs to the kinases described earlier'
+  ACCEPT (want ACCEPT)              'P is the lyase for this step'
+  ACCEPT (want ACCEPT)              'EndA is the DNase for this step'
+  C4 MISMATCHES (want 0): 0 / 14
+
+====================================================================================================
+SECTION C5 -- 1d transport, and 1e cofactor
+====================================================================================================
+  ACCEPT (want ACCEPT)              'MsbA is the flippase for lipid A'
+  ACCEPT (want ACCEPT)              'P is the translocase of the inner membrane'
+  ACCEPT (want ACCEPT)              'P is the permease for this substrate'
+  ACCEPT (want ACCEPT)              'P transports A across the inner membrane'
+  REFUSE (want REFUSE)              'P was detected in the membrane fraction'
+  REFUSE (want REFUSE)              'add P as a transporter to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              'A significantly inhibited P activity in the assay'
+  ACCEPT (want ACCEPT)              cofactor: 'P is a required cofactor for the step'
+  ACCEPT (want ACCEPT)              cofactor: 'the reaction requires P as a cofactor'
+  ACCEPT (want ACCEPT)              cofactor: 'the enzyme is dependent on P for activity'
+  ACCEPT (want ACCEPT)              cofactor: 'the conversion proceeds only in the presence of P'
+  ACCEPT (want ACCEPT)              cofactor: 'P is the coenzyme of this reaction'
+  REFUSE (want REFUSE)              cofactor: 'P was purchased from a commercial supplier'
+  REFUSE (want REFUSE)              cofactor: 'add P as a cofactor to resolve the structural inconsistency'
+  C5 MISMATCHES (want 0): 0 / 14
+
+====================================================================================================
+SECTION C6 -- 1f 'mediat' anchoring
+====================================================================================================
+  REFUSE (want REFUSE)              'EntB is an intermediate carrier in this pathway'
+  REFUSE (want REFUSE)              'EntB accumulates as one of the intermediates'
+  ACCEPT (want ACCEPT)              'ALAS2 mediates the condensation of glycine and succinyl-CoA'
+  ACCEPT (want ACCEPT)              'P-mediated hydrolysis of A yields B'
+  ACCEPT (want ACCEPT)              'the step is mediated by P'
+  C6 MISMATCHES (want 0): 0 / 5
+
+====================================================================================================
+TOTALS  battery=0/29  F146=REJECTED  C1=0 C2=0 C3=0 C4=0 C5=0 C6=0
+====================================================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fbf2047e69fa0464c7c128978f12c636a1455431  [git, worktree dirty=True]
+label                   : r1-battery
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_battery.py C:/t/c108
+cwd                     : C:\t\c108
+root PID / process group: 201868 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.20 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  201880:python.exe
+descendants terminated  : 1  201880
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\58-r1-battery.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

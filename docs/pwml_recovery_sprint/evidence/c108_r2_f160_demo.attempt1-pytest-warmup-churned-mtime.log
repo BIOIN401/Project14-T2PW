@@ -1,0 +1,49 @@
+target sha256 : de21d64c0218054d8499c91abe5a8a427a66a8d02dfd01dacb00e6677cab0ec0
+target size   : 145586
+ARM 0 warm-up (cold cache, unmutated) : (?:the|a|an)
+pytest warm-up (caches now primed)    : exit=0  220 passed in 0.47s
+
+MUTATED. size unchanged: True   mtime restored: True
+
+ARM 0 -- plain import, NO purge : (?:xhe|a|an)
+   the mutant executed
+
+ARM 1 -- pytest, NO purge : exit=1  2 failed, 218 passed in 0.49s
+   RED -- pytest import machinery did not serve stale bytecode here
+
+ARM 2 -- pytest, purged 5 caches : exit=1  2 failed, 218 passed in 0.56s
+   RED -- the mutant executes
+
+restored byte-identical: True
+CRLF count preserved   : True
+
+F-160 REPRODUCED ON A PLAIN IMPORT : False
+F-160 REPRODUCED UNDER PYTEST      : False
+PURGE MAKES THE MUTANT EXECUTE     : True
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 34fe2ced1b44c0ab6f801c16be19f632f788850e  [git, worktree dirty=True]
+label                   : r2-f160-demo
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c108_r2_f160_demo.py C:/t/c108
+cwd                     : C:\t\c108
+root PID / process group: 226056 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 3.50 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 11  229924:python.exe, 227740:python.exe, 229872:python.exe, 227636:python.exe, 229116:python.exe, 226164:python.exe, 229560:python.exe, 109596:python.exe, 229544:python.exe, 226324:python.exe, 230248:python.exe
+descendants terminated  : 11  109596, 226164, 226324, 227636, 227740, 229116, 229544, 229560, 229872, 229924, 230248
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\82-r2-f160-demo.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

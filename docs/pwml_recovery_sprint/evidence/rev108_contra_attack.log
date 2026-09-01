@@ -1,0 +1,282 @@
+====================================================================================================
+REV-108 OWN ADVERSARIAL PROBE  base=C:\t\rev108base  tip=C:\t\rev108
+====================================================================================================
+
+--- S1-contra ---
+  [enzymes] actor='P'
+      'A significantly inhibited P activity in the assay'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P4X'
+      'the inhibitor of P4X was added before the assay'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P4X'
+      'the P4X inhibitor was added before the assay'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P4X'
+      'the P4X specific inhibitor abrogated the signal'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P4X'
+      'an inhibitor selective for P4X was used and P4X catalyses A to B'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+
+--- S1-rephrase ---
+  [enzymes] actor='P4X'
+      'P4X is a target of the inhibitor and catalyses the conversion of A to B'
+      base=REFUSE tip=ACCEPT want=REFUSE  << REGRESSION INTRODUCED BY THIS CARD
+  [enzymes] actor='P4X'
+      'P4X was subject to inhibitors during the assay, yet catalyses A to B'
+      base=REFUSE tip=ACCEPT want=REFUSE  << REGRESSION INTRODUCED BY THIS CARD
+  [enzymes] actor='P4X'
+      'treatment with the inhibitor abolished the catalysis of A to B by P4X'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P4X'
+      'P4X, whose inhibitor was characterised, catalyses the conversion of A to B'
+      base=REFUSE tip=ACCEPT want=REFUSE  << REGRESSION INTRODUCED BY THIS CARD
+  [enzymes] actor='P4X'
+      'addition of the inhibitor reduced P4X catalysis of A to B'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P4X'
+      'the repressor bound P4X and the catalysis of A to B stopped'
+      base=REFUSE tip=ACCEPT want=REFUSE  << REGRESSION INTRODUCED BY THIS CARD
+  [enzymes] actor='P4X'
+      'a suppressor of the P4X reaction was added, though P4X catalyses A to B'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P4X'
+      'P4X catalysis of A to B was blocked by the antagonist'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P4X'
+      'P4X is inhibited and does not catalyse the conversion of A to B'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+
+--- S2-anchor ---
+  [enzymes] actor='P'
+      'the inhibitory effect on P activity abolished the catalysis of A to B'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P'
+      'repression of P activity was observed while P catalyses A to B'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P'
+      'inhibition of P catalysis of A to B was complete'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P'
+      'attenuating P activity stopped the catalysis of A to B'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P'
+      'suppression of P activity blocked the catalysis of A to B'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+
+--- S3-appositive ---
+  [enzymes] actor='P4X'
+      'the repressor complex P4X catalyses the conversion of A to B'
+      base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+  [enzymes] actor='P4X'
+      'the suppressor protein P4X catalyses the conversion of A to B'
+      base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+  [enzymes] actor='P4X'
+      'the inhibitor protein P4X catalyses the conversion of A to B'
+      base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+  [enzymes] actor='P4X'
+      'P4X, a repressor, catalyses the conversion of A to B'
+      base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+  [enzymes] actor='P4X'
+      'the repressor P4X catalyses the conversion of A to B'
+      base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+
+--- S4-a-transport ---
+  [transporters] actor='P'
+      'add P as a transporter to resolve the structural inconsistency'
+      base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+  [transporters] actor='P'
+      'P should be added as a transporter'
+      base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+  [transporters] actor='P'
+      'P is added to the transporters'
+      base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+  [transporters] actor='P'
+      'the transporter P resolves the inconsistency'
+      base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+  [transporters] actor='P'
+      'P transports A across the inner membrane'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [transporters] actor='P'
+      'P is the transporter for A'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [transporters] actor='P'
+      'P is a substrate of the transporter TonB'
+      base=ACCEPT tip=ACCEPT want=REFUSE  << still open at BOTH SHAs (not this card's regression)
+
+--- S4-verbforms ---
+  [transporters] actor='P'
+      'P channeled calcium into the cytosol'
+      base=ACCEPT tip=REFUSE want=ACCEPT  << REGRESSION INTRODUCED BY THIS CARD
+  [transporters] actor='P'
+      'P channels calcium into the cytosol'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [transporters] actor='P'
+      'P carries A across the membrane'
+      base=REFUSE tip=REFUSE want=ACCEPT  << still open at BOTH SHAs (not this card's regression)
+  [transporters] actor='P'
+      'P is the carrier of A across the membrane'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [transporters] actor='P'
+      'A is carried by P across the membrane'
+      base=REFUSE tip=REFUSE want=ACCEPT  << still open at BOTH SHAs (not this card's regression)
+  [transporters] actor='P'
+      'P pumps protons across the membrane'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [transporters] actor='P'
+      'the channel P was added to the payload'
+      base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+
+--- S5-a-catalysis ---
+  [enzymes] actor='P'
+      'add P as a catalyst to resolve the structural inconsistency'
+      base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+  [enzymes] actor='P'
+      'P is the catalyst responsible for the conversion of A to B'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [enzymes] actor='P'
+      'P is a catalyst for the conversion of A to B'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [enzymes] actor='P'
+      'P is the catalyst of this reaction'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [enzymes] actor='P'
+      'P catalyses the conversion of A to B'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [enzymes] actor='P'
+      'the catalyst P was listed without evidence'
+      base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+
+--- S6-c-name ---
+  [enzymes] actor='LpxC hydrolase'
+      'LpxC hydrolase was quantified in the lysate'
+      base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+  [enzymes] actor='LpxC hydrolase'
+      'LpxC, a hydrolase, was quantified in the lysate'
+      base=ACCEPT tip=ACCEPT want=REFUSE  << still open at BOTH SHAs (not this card's regression)
+  [enzymes] actor='LpxC hydrolase'
+      'LpxC (a hydrolase) was quantified in the lysate'
+      base=ACCEPT tip=ACCEPT want=REFUSE  << still open at BOTH SHAs (not this card's regression)
+  [enzymes] actor='LpxC hydrolase'
+      'the hydrolase LpxC was quantified in the lysate'
+      base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+  [enzymes] actor='LpxC hydrolase'
+      'LpxC hydrolase catalyses the conversion of A to B'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [enzymes] actor='LpxC hydrolase'
+      'LpxC hydrolase is the enzyme responsible for the conversion'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+
+--- S6-c-trap ---
+  [transporters] actor='inner membrane translocase'
+      'P is the translocase of the inner membrane'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [enzymes] actor='EntB isochorismatase'
+      'chorismate is converted to 2,3-diDHB by EntB isochorismatase activity'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+
+--- S7-collide ---
+  [enzymes] actor='P'
+      'P is a reductase that reduces A to B'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [enzymes] actor='P'
+      'the blocker of P was added and P catalyses A to B'
+      base=ACCEPT tip=ACCEPT want=REFUSE  << still open at BOTH SHAs (not this card's regression)
+  [enzymes] actor='P'
+      'the silencer element upstream of P was deleted, P catalyses A to B'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [enzymes] actor='P'
+      'interferon signalling rose while P catalyses A to B'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [enzymes] actor='P'
+      'the intermediate is consumed as P mediates the condensation'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [transporters] actor='P'
+      'P is the transporter subunit; the transporters list is empty'
+      base=ACCEPT tip=ACCEPT want=REFUSE  << still open at BOTH SHAs (not this card's regression)
+
+--- S8-actorname ---
+  [enzymes] actor='inhibitor of apoptosis protein'
+      'inhibitor of apoptosis protein catalyses the conversion of A to B'
+      base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+  [enzymes] actor='inhibitor of apoptosis protein'
+      'inhibitor of apoptosis protein was quantified in the lysate'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [transporters] actor='ABC transporter MsbA'
+      'ABC transporter MsbA was detected in the membrane'
+      base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+  [transporters] actor='ABC transporter MsbA'
+      'ABC transporter MsbA transports lipid A across the membrane'
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+
+--- S9-multisent ---
+  [enzymes] actor='P'
+      'P catalyses the conversion of A to B. The inhibitor of P was added.'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+  [enzymes] actor='P'
+      'P catalyses the conversion of A to B. x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x '
+      base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+  [enzymes] actor='P'
+      'The inhibitor of P was added. P catalyses the conversion of A to B.'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+
+--- S10-f146 ---
+  [enzymes] actor='P'
+      'add P as an enzyme to resolve the structural inconsistency where an inhibitor is listed without a target enzyme'
+      base=REFUSE tip=REFUSE want=REFUSE  OK
+
+====================================================================================================
+REV108 PROBE TOTALS  cases=66  regressions=5  open_at_both=7  closed=16
+====================================================================================================
+REGRESSION  S1-rephrase  actor=P4X  base=REFUSE tip=ACCEPT want=REFUSE
+            'P4X is a target of the inhibitor and catalyses the conversion of A to B'
+REGRESSION  S1-rephrase  actor=P4X  base=REFUSE tip=ACCEPT want=REFUSE
+            'P4X was subject to inhibitors during the assay, yet catalyses A to B'
+REGRESSION  S1-rephrase  actor=P4X  base=REFUSE tip=ACCEPT want=REFUSE
+            'P4X, whose inhibitor was characterised, catalyses the conversion of A to B'
+REGRESSION  S1-rephrase  actor=P4X  base=REFUSE tip=ACCEPT want=REFUSE
+            'the repressor bound P4X and the catalysis of A to B stopped'
+REGRESSION  S4-verbforms  actor=P  base=ACCEPT tip=REFUSE want=ACCEPT
+            'P channeled calcium into the cytosol'
+OPEN-BOTH   S4-a-transport  actor=P want=REFUSE
+            'P is a substrate of the transporter TonB'
+OPEN-BOTH   S4-verbforms  actor=P want=ACCEPT
+            'P carries A across the membrane'
+OPEN-BOTH   S4-verbforms  actor=P want=ACCEPT
+            'A is carried by P across the membrane'
+OPEN-BOTH   S6-c-name  actor=LpxC hydrolase want=REFUSE
+            'LpxC, a hydrolase, was quantified in the lysate'
+OPEN-BOTH   S6-c-name  actor=LpxC hydrolase want=REFUSE
+            'LpxC (a hydrolase) was quantified in the lysate'
+OPEN-BOTH   S7-collide  actor=P want=REFUSE
+            'the blocker of P was added and P catalyses A to B'
+OPEN-BOTH   S7-collide  actor=P want=REFUSE
+            'P is the transporter subunit; the transporters list is empty'
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fbf2047e69fa0464c7c128978f12c636a1455431  [git, worktree dirty=False]
+label                   : rev108-contra-attack
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev108/docs/pwml_recovery_sprint/evidence/rev108_contra_attack.py C:/t/rev108base C:/t/rev108
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 186048 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.31 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  168168:python.exe
+descendants terminated  : 1  168168
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev108\docs\pwml_recovery_sprint\evidence\g11\REV-108\04-rev108-contra-attack.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

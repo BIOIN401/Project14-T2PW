@@ -1,0 +1,41 @@
+
+BOUNDED_RUN_HEAVY_LOCK_HELD path=C:\t\heavylock holder_attempted=C-108 reason=held
+---- current holder file (C:\t\heavylock\holder.json) ----
+{
+  "token": "REV-109:168788:75f3753e5d8ee29a",
+  "holder": "REV-109",
+  "label": "rev109-smoke",
+  "pid": 168788,
+  "command": [
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/btr109/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\rev109",
+  "acquired_at": "2026-09-01T03:06:10+00:00"
+}
+---- the child was NOT started; nothing was removed ----

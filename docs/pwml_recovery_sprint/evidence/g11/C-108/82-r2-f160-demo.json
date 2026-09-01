@@ -1,0 +1,144 @@
+{
+  "label": "r2-f160-demo",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/c108_r2_f160_demo.py",
+    "C:/t/c108"
+  ],
+  "cwd": "C:\\t\\c108",
+  "started_at": "2026-09-01T04:28:17+00:00",
+  "finished_at": "2026-09-01T04:28:20+00:00",
+  "duration_seconds": 3.5009233000018867,
+  "timeout_seconds": 900.0,
+  "root_pid": 226056,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 229924,
+      "name": "python.exe",
+      "ppid": 226056
+    },
+    {
+      "pid": 227740,
+      "name": "python.exe",
+      "ppid": 229872
+    },
+    {
+      "pid": 229872,
+      "name": "python.exe",
+      "ppid": 229924
+    },
+    {
+      "pid": 227636,
+      "name": "python.exe",
+      "ppid": 229924
+    },
+    {
+      "pid": 229116,
+      "name": "python.exe",
+      "ppid": 227636
+    },
+    {
+      "pid": 226164,
+      "name": "python.exe",
+      "ppid": 229924
+    },
+    {
+      "pid": 229560,
+      "name": "python.exe",
+      "ppid": 226164
+    },
+    {
+      "pid": 109596,
+      "name": "python.exe",
+      "ppid": 229924
+    },
+    {
+      "pid": 229544,
+      "name": "python.exe",
+      "ppid": 109596
+    },
+    {
+      "pid": 226324,
+      "name": "python.exe",
+      "ppid": 230248
+    },
+    {
+      "pid": 230248,
+      "name": "python.exe",
+      "ppid": 229924
+    }
+  ],
+  "descendants_terminated": [
+    109596,
+    226164,
+    226324,
+    227636,
+    227740,
+    229116,
+    229544,
+    229560,
+    229872,
+    229924,
+    230248
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 182784,
+      "name": "python.exe"
+    },
+    {
+      "pid": 183116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 226180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 228704,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c108\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-108\\82-r2-f160-demo.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c108\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c108",
+    "repo_head": "34fe2ced1b44c0ab6f801c16be19f632f788850e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-108",
+    "token": "C-108:226180:c363cd9408bc60c8",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

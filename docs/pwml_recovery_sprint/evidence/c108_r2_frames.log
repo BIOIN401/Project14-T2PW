@@ -1,0 +1,337 @@
+code loaded from: C:\t\c108\src\t2pw\curation\apply_audit_patch.py
+
+====================================================================================================
+SECTION A -- member (a): bare transport SCHEMA NOUN in a promoted rationale -- all must REFUSE
+====================================================================================================
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a transport to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a transporter to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a translocation to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a translocator to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a import to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a importer to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a export to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a exporter to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a efflux to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a efflux pump to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a influx to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a uptake to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a secretion to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a shuttle to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a permease to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a symporter to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a antiporter to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a uniporter to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a extruder to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a channel to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a carrier to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a pump to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a cargo to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'add P as a cargo complex to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [transporters] actor='P'
+        'add P as a flippase to resolve the structural inconsistency'
+  A MISMATCHES (want 0): 12 / 25
+
+====================================================================================================
+SECTION A2 -- member (a) control: the catalysis family schema nouns -- all must REFUSE
+====================================================================================================
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'add P as a enzyme to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'add P as a enzymatic component to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'add P as a activity to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'add P as a catalyst to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'add P as a catalysts to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'add P as a modifier to resolve the structural inconsistency'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'add P as a biocatalyst to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [enzymes] actor='P'
+        'add P as a hydrolase to resolve the structural inconsistency'
+  ACCEPT (want REFUSE) << MISMATCH  [enzymes] actor='P'
+        'add P as a synthase to resolve the structural inconsistency'
+  A2 MISMATCHES (want 0): 2 / 9
+
+====================================================================================================
+SECTION A3 -- member (a) PRESERVATION: the transport VERB and real transporter predications
+====================================================================================================
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P transports A across the inner membrane'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P transported A into the periplasm'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P is transporting A across the membrane'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'A is transported across the inner membrane by P'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P mediates the transport of A across the inner membrane'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'the transport of A is carried out by P'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P is the importer of A'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P imports A into the cell'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P exports A from the cytoplasm'
+  ACCEPT (want ACCEPT)              [transporters] actor='MsbA'
+        'MsbA is the flippase for lipid A'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P is the translocase of the inner membrane'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P is the permease for this substrate'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P translocates A across the bilayer'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P pumps protons across the membrane'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P channels calcium into the cytosol'
+  REFUSE (want ACCEPT) << MISMATCH  [transporters] actor='P'
+        'P carries A to the periplasm'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P shuttles A between the two compartments'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P secretes A into the medium'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'the efflux of A is driven by P'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P drives the uptake of A'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P is a symporter for A and sodium'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P is the channel through which A crosses the membrane'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P is the carrier protein for A in this step'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P is the efflux pump for A'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'P was detected in the membrane fraction'
+  A3 MISMATCHES (want 0): 1 / 25
+
+====================================================================================================
+SECTION C -- member (c): an actor whose own NAME is an enzyme noun
+====================================================================================================
+  REFUSE (want REFUSE)              [enzymes] actor='LpxC hydrolase'
+        'LpxC hydrolase was quantified in the lysate'
+  REFUSE (want REFUSE)              [enzymes] actor='LpxC synthase'
+        'LpxC synthase was quantified in the lysate'
+  REFUSE (want REFUSE)              [enzymes] actor='LpxC transferase'
+        'LpxC transferase was detected in the membrane fraction'
+  REFUSE (want REFUSE)              [enzymes] actor='LpxC hydrolase'
+        'LpxC hydrolase was purchased from a commercial supplier'
+  REFUSE (want REFUSE)              [enzymes] actor='MurA synthase'
+        'MurA synthase levels were unchanged in the mutant'
+  REFUSE (want REFUSE)              [enzymes] actor='P kinase'
+        'P kinase was resolved on the gel'
+  ACCEPT (want ACCEPT)              [enzymes] actor='LpxC hydrolase'
+        'LpxC hydrolase catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='LpxC hydrolase'
+        'LpxC hydrolase is a hydrolase'
+  ACCEPT (want ACCEPT)              [enzymes] actor='LpxC hydrolase'
+        'LpxC hydrolase hydrolyses A to give B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='LpxC synthase'
+        'LpxC synthase is the enzyme responsible for this step'
+  ACCEPT (want ACCEPT)              [enzymes] actor='MurA synthase'
+        'the conversion of A to B is catalysed by MurA synthase'
+  ACCEPT (want ACCEPT)              [enzymes] actor='LpxC hydrolase'
+        'LpxC is the hydrolase for this step'
+  C MISMATCHES (want 0): 0 / 12
+
+====================================================================================================
+SECTION C2 -- member (c) OVER-REFUSAL TRAP: name shares a token with the predicating phrase
+====================================================================================================
+  ACCEPT (want ACCEPT)              [transporters] actor='inner membrane translocase'
+        'P is the translocase of the inner membrane'
+  ACCEPT (want ACCEPT)              [enzymes] actor='acyltransferase complex'
+        'LpxA is the acyltransferase for this step'
+  ACCEPT (want ACCEPT)              [enzymes] actor='DNA polymerase I'
+        'DNA polymerase I catalyses the extension'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P hydrolase'
+        'P is a hydrolase'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P hydrolase'
+        'P is the hydrolase for this step'
+  ACCEPT (want ACCEPT)              [enzymes] actor='serine hydroxymethyltransferase'
+        'the reaction is catalyzed by serine hydroxymethyltransferase'
+  ACCEPT (want ACCEPT)              [enzymes] actor='UDP-N-acetylglucosamine acyltransferase'
+        'LpxA, the first enzyme in the pathway, catalyzes the reversible acylation of UDP-GlcNAc'
+  ACCEPT (want ACCEPT)              [transporters] actor='P permease'
+        'P is the permease for this substrate'
+  C2 MISMATCHES (want 0): 0 / 8
+
+====================================================================================================
+SECTION D -- member (d): C-105 unanchored attenuation stems -- appositive agent nouns
+====================================================================================================
+  ACCEPT (want ACCEPT)              [enzymes] actor='P4X'
+        'the repressor complex P4X catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P4X'
+        'the suppressor protein P4X catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P4X'
+        'the inhibitor protein P4X catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P4X'
+        'the inhibitor P4X catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P4X'
+        'the antagonist P4X catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P4X'
+        'the downregulator P4X catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P4X'
+        'the inactivator P4X catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P4X'
+        'the attenuator protein P4X catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P4X'
+        'the abolisher P4X catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P4X'
+        'the blocker protein P4X catalyses the conversion of A to B'
+  D MISMATCHES (want 0): 0 / 10
+
+====================================================================================================
+SECTION D2 -- member (d) PRESERVATION: the contra is a biological gate
+====================================================================================================
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'A significantly inhibited P activity in the assay'
+  REFUSE (want REFUSE)              [enzymes] actor='NDM-1'
+        'PSA significantly inhibited NDM-1 enzyme activity'
+  REFUSE (want REFUSE)              [enzymes] actor='NDM-1'
+        'PSA-mediated inhibition of NDM-1 activity'
+  REFUSE (want REFUSE)              [enzymes] actor='NDM-1'
+        'the inhibition of NDM-1 is mediated by PSA'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'the inhibitor of P was added to the assay'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'an inhibitor of P blocks the mediated conversion'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'the repression of P is mediated by Q'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'the suppression of P activity is mediated by Q'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'Q suppresses P and mediates the conversion of A to B'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'Q represses P and mediates the conversion of A to B'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'P was inactivated before the mediated conversion of A to B'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'the downregulation of P is mediated by Q'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'P is attenuated in the mutant, which mediates the conversion'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'the antagonism of P is mediated by Q'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'abolishing P activity is mediated by Q'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'Q blocks P and mediates the conversion of A to B'
+  ACCEPT (want ACCEPT)              [modifiers] actor='P'
+        'P is an inhibitor of X'
+  ACCEPT (want ACCEPT)              [modifiers] actor='P'
+        'P inhibits the reaction'
+  ACCEPT (want ACCEPT)              [modifiers] actor='P'
+        'P is the repressor of the operon'
+  ACCEPT (want ACCEPT)              [modifiers] actor='P'
+        'P suppresses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [modifiers] actor='P'
+        'P is a suppressor of this step'
+  ACCEPT (want ACCEPT)              [modifiers] actor='Fur'
+        'holo-Fur binds to the promoters of three ent gene clusters, silencing gene expression'
+  D2 MISMATCHES (want 0): 0 / 22
+
+====================================================================================================
+SECTION S -- substring collisions
+====================================================================================================
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'P is the nitroreductase for this step'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'P is an oxidoreductase acting on the substrate'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'P is the reductase for this step'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'P belongs to the reductases of this family'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'P is a blocker of the channel and catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'the silencer element upstream of P is mediated by Q'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'interferon is produced while P catalyses the conversion of A to B'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P is the transporter for A in this step'
+  ACCEPT (want ACCEPT)              [transporters] actor='P'
+        'P is one of the transporters of the inner membrane'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'P is an intermediate carrier in this pathway'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'P accumulates as one of the intermediates'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'the photoablation of P was measured while Q mediates the conversion'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'counterinterference with P was noted while Q mediates the conversion'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'the microablation of P was recorded while Q mediates the conversion'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'nonimpairment of P was recorded while Q mediates the conversion'
+  S MISMATCHES (want 0): 0 / 15
+
+====================================================================================================
+SECTION X -- period-stripped multi-sentence evidence
+====================================================================================================
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'P catalyses the conversion of A to B. The inhibitor of P was added later.'
+  REFUSE (want REFUSE)              [enzymes] actor='P'
+        'P catalyses the conversion of A to B. Separately, Q inhibits P in the assay.'
+  ACCEPT (want ACCEPT)              [enzymes] actor='P'
+        'P catalyses the conversion of A to B. x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x The inhibitor of P was added later.'
+  REFUSE (want REFUSE)              [transporters] actor='P'
+        'P was detected in the lysate. add P as a transporter to resolve the structural inconsistency'
+  X MISMATCHES (want 0): 0 / 4
+
+====================================================================================================
+C108 TOTALS  A=12  A2=2  A3=1  C=0  C2=0  D=0  D2=0  S=0  X=0
+====================================================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 34fe2ced1b44c0ab6f801c16be19f632f788850e  [git, worktree dirty=True]
+label                   : r2-frames
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c108_frames.py C:/t/c108
+cwd                     : C:\t\c108
+root PID / process group: 234268 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.33 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  233500:python.exe
+descendants terminated  : 1  233500
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\88-r2-frames.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

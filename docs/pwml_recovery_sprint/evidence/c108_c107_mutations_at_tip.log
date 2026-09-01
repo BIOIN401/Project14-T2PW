@@ -1,0 +1,160 @@
+=== BASELINE (unmutated tip) === exit=0
+    185 passed in 0.32s
+
+=== M1: 1f: the 'mediat' anchor is reverted, so it matches inside 'intermediate'
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        1 failed, 184 passed in 0.37s
+        RED: test_mediat_inside_intermediate_does_not_license_catalysis
+
+=== M2: 1a: the contra-cue is switched off entirely for the catalysis family
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        3 failed, 182 passed in 0.41s
+        RED: test_inhibition_cue_in_the_same_window_cannot_license_catalysis
+        RED: test_unlicensed_actor_adds_are_still_refused
+
+=== M3: 1a F1: the attenuation word stops being bound to the actor
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        22 failed, 163 passed in 0.49s
+        RED: test_a_real_attenuation_word_still_refuses_after_the_anchoring
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== M4: 1c: the stoplist exclusion loses its optional plural, reopening the bypass
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        10 failed, 175 passed in 0.40s
+        RED: test_no_singular_only_stoplist_entry_can_be_bypassed_by_its_plural
+        RED: test_ordinary_english_ase_words_do_not_license_an_enzyme
+
+=== M5: 1d: the transport family loses the enzyme-family noun rule again
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        2 failed, 183 passed in 0.38s
+        RED: test_a_transporter_named_by_its_family_noun_licenses
+
+=== M6: 1e: the cofactor role loses its family entry and falls back to 'other'
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        5 failed, 180 passed in 0.39s
+        RED: test_a_refused_cofactor_row_is_reported_against_the_cofactor_family
+        RED: test_an_evidenced_cofactor_row_is_licensed
+        RED: test_the_cofactor_family_itself_still_licenses_the_same_spans
+
+=== M6b: 1e: the cofactor VOCABULARY is emptied -- the guard M6 turned out not to be
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        1 failed, 184 passed in 0.37s
+        RED: test_an_evidenced_cofactor_row_is_licensed
+
+=== M7: 1b: the passive-agent gap accepts ANY token, so a bystander inherits agency
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        6 failed, 179 passed in 0.40s
+        RED: test_a_structural_rationale_cannot_license_the_cofactor_role
+        RED: test_passive_with_agent_does_not_license_a_bystander
+        RED: test_redox_catalysis_still_licenses
+
+=== M8: 1b: the passive-agent route is removed outright -- a PRESERVATION attack
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        5 failed, 180 passed in 0.38s
+        RED: test_evidenced_actor_adds_survive_the_guard
+        RED: test_passive_with_agent_still_licenses_the_real_agent
+
+=== M9: 1a: 'reduction of' is deleted from catalysis -- the trap the card names
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        6 failed, 179 passed in 0.38s
+        RED: test_redox_catalysis_still_licenses
+        RED: test_redox_still_licenses_when_the_actor_is_not_the_thing_reduced
+
+=== M10: 1a F2: the object-before-stem ordering stops being matched
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        6 failed, 179 passed in 0.39s
+        RED: test_a_real_attenuation_word_still_refuses_after_the_anchoring
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+
+=== M11: 1a: the whole actor-anchored contra is switched off
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        28 failed, 157 passed in 0.44s
+        RED: test_a_real_attenuation_word_still_refuses_after_the_anchoring
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== M12: 1e: the cofactor dependence gap accepts ANY token, reopening the rationale route
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        1 failed, 184 passed in 0.37s
+        RED: test_a_structural_rationale_cannot_license_the_cofactor_role
+
+=== M13: 1e: the loose dependence terms go back into the FAMILY, widening the fallback
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        7 failed, 178 passed in 0.39s
+        RED: test_a_structural_rationale_cannot_license_the_cofactor_role
+        RED: test_the_cofactor_dependence_route_is_scoped_to_the_cofactor_family
+        RED: test_the_other_fallback_did_not_widen_for_an_unmapped_role
+
+=== M14: 1e SCOPE: the dependence route goes family-wide again (REV-107's V9)
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        8 failed, 177 passed in 0.41s
+        RED: test_the_cofactor_dependence_route_is_scoped_to_the_cofactor_family
+
+=== M15: A: one attenuation WORD reverts to an open stem, so 'reduc' eats 'reductase'
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    after : bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+    suite : exit=1  RED (guard is tested)
+        3 failed, 182 passed in 0.38s
+        RED: test_an_enzyme_noun_containing_an_attenuation_word_still_licenses
+
+=== M16: A: this card's six inhibition additions revert to bare unanchored stems
+    before: bytes=138030 crlf=0 sha256=dfd5b7c7a769515e
+=== M16: ABORT -- the substitution matched 0 times, not 1
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e263be9d134c272bd471415026eb1f8cb750c972  [git, worktree dirty=True]
+label                   : c107-mutations-at-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_mutation_attack.py C:/t/c108
+cwd                     : C:\t\c108
+root PID / process group: 172176 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 14.85 s
+exit reason             : nonzero
+exit code (real)        : 3
+returned code           : 3
+descendants observed    : 35  172188:python.exe, 172208:python.exe, 172228:python.exe, 172252:python.exe, 172272:python.exe, 172368:python.exe, 172388:python.exe, 172408:python.exe, 172428:python.exe, 172524:python.exe, 172544:python.exe, 172568:python.exe, 172588:python.exe, 172612:python.exe, 172632:python.exe, 172724:python.exe, 172744:python.exe, 172764:python.exe, 172784:python.exe, 172880:python.exe, 172900:python.exe, 172924:python.exe, 172944:python.exe, 172968:python.exe, 172988:python.exe, 167048:python.exe, 169940:python.exe, 172048:python.exe, 172068:python.exe, 172084:python.exe, 172172:python.exe, 172212:python.exe, 172236:python.exe, 172340:python.exe, 172360:python.exe
+descendants terminated  : 35  167048, 169940, 172048, 172068, 172084, 172172, 172188, 172208, 172212, 172228, 172236, 172252, 172272, 172340, 172360, 172368, 172388, 172408, 172428, 172524, 172544, 172568, 172588, 172612, 172632, 172724, 172744, 172764, 172784, 172880, 172900, 172924, 172944, 172968, 172988
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\38-c107-mutations-at-tip.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

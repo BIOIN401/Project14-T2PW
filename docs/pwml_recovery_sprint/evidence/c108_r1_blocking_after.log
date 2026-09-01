@@ -1,0 +1,104 @@
+base: C:\t\c108base\src\t2pw\curation\apply_audit_patch.py
+tip : C:\t\c108\src\t2pw\curation\apply_audit_patch.py
+
+====================================================================================================
+BLOCKING -- the four REV-108 spans, actor is the TARGET -- want REFUSE
+====================================================================================================
+  base=REFUSE tip=REFUSE                'P4X is a target of the inhibitor and catalyses the conversion of A to B'
+  base=REFUSE tip=REFUSE                'P4X was subject to inhibitors during the assay, yet catalyses A to B'
+  base=REFUSE tip=REFUSE                'P4X, whose inhibitor was characterised, catalyses the conversion of A to B'
+  base=REFUSE tip=REFUSE                'the repressor bound P4X and the catalysis of A to B stopped'
+  wrong at base: 0 / 4      wrong at tip: 0 / 4
+
+====================================================================================================
+BLOCKING PARAPHRASE -- same grammar, this round own attack -- want REFUSE
+====================================================================================================
+  base=REFUSE tip=REFUSE                'P4X is the target of a suppressor and catalyses the conversion of A to B'
+  base=REFUSE tip=REFUSE                'P4X remained a target of the antagonist while catalysing A to B'
+  base=REFUSE tip=REFUSE                'the inhibitor was raised against P4X, which catalyses A to B'
+  base=REFUSE tip=REFUSE                'an inhibitor was co-crystallised with P4X, which catalyses A to B'
+  base=REFUSE tip=REFUSE                'P4X, for which an inhibitor exists, catalyses the conversion of A to B'
+  base=REFUSE tip=REFUSE                'the suppressor bound P4X and the catalysis of A to B stopped'
+  base=REFUSE tip=REFUSE                'the antagonist blocked P4X and the conversion of A to B stopped'
+  base=REFUSE tip=REFUSE                'the repressor acts on P4X, which catalyses the conversion of A to B'
+  base=REFUSE tip=REFUSE                'inhibitors were screened against P4X, which catalyses A to B'
+  base=REFUSE tip=REFUSE                'P4X sensitivity to the inhibitor was measured while it catalyses A to B'
+  wrong at base: 0 / 10      wrong at tip: 0 / 10
+
+====================================================================================================
+APPOSITIVE -- member (d) itself, actor IS the attenuator -- want ACCEPT
+====================================================================================================
+  base=REFUSE tip=ACCEPT                'the repressor complex P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the suppressor protein P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the inhibitor protein P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the inhibitor P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'P4X, the inhibitor, catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the potent inhibitor P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'inhibitor P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the antagonist P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the downregulator P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the inactivator P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the attenuator protein P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the abolisher P4X catalyses the conversion of A to B'
+  base=ACCEPT tip=ACCEPT                'the blocker protein P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the repressor P4X hydrolyses A to give B'
+  base=REFUSE tip=ACCEPT                'the suppressor P4X mediates the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the antagonist P4X converts A into B'
+  base=REFUSE tip=ACCEPT                'the selective inhibitor P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT                'the small molecule inhibitor P4X catalyses the conversion of A to B'
+  wrong at base: 17 / 18      wrong at tip: 0 / 18
+
+====================================================================================================
+PINNED -- target readings round 0 already refused -- want REFUSE
+====================================================================================================
+  base=REFUSE tip=REFUSE                'the inhibitor of P was added while Q mediates the conversion'
+  base=REFUSE tip=REFUSE                'inhibitors of P were added while Q mediates the conversion'
+  base=REFUSE tip=REFUSE                'the inhibitor for P was added while Q mediates the conversion'
+  base=REFUSE tip=REFUSE                'an inhibitor selective for P was added while Q mediates'
+  base=REFUSE tip=REFUSE                'the inhibitor targeting P was added while Q mediates'
+  base=REFUSE tip=REFUSE                'the inhibitor directed against P was added while Q mediates'
+  base=REFUSE tip=REFUSE                'the suppressor acting on P was added while Q mediates'
+  base=REFUSE tip=REFUSE                'the P inhibitor was added while Q mediates the conversion'
+  base=REFUSE tip=REFUSE                'the P specific inhibitor was added while Q mediates'
+  base=REFUSE tip=REFUSE                'the P activity inhibitor was added while Q mediates'
+  base=REFUSE tip=REFUSE                'the repressor of the P gene was deleted while Q mediates'
+  base=REFUSE tip=REFUSE                'P inhibitors were used while Q mediates the conversion'
+  base=REFUSE tip=REFUSE                'an inhibitor of P blocks the mediated conversion'
+  base=REFUSE tip=REFUSE                'an inhibitory effect on P was seen while Q mediates the conversion'
+  base=REFUSE tip=REFUSE                'A significantly inhibited P activity in the assay'
+  base=REFUSE tip=REFUSE                'PSA significantly inhibited NDM-1 enzyme activity'
+  base=REFUSE tip=REFUSE                'PSA-mediated inhibition of NDM-1 activity'
+  base=REFUSE tip=REFUSE                'the inhibition of NDM-1 is mediated by PSA'
+  wrong at base: 0 / 18      wrong at tip: 0 / 18
+
+====================================================================================================
+C108-R1 BASE  blocking_admitted=0 paraphrase_admitted=0 appositive_refused=17 pinned_leaked=0
+C108-R1 TIP   blocking_admitted=0 paraphrase_admitted=0 appositive_refused=0 pinned_leaked=0
+====================================================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fbf2047e69fa0464c7c128978f12c636a1455431  [git, worktree dirty=True]
+label                   : r1-blocking-after
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c108_r1_blocking.py C:/t/c108base C:/t/c108
+cwd                     : C:\t\c108
+root PID / process group: 199992 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.19 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  200184:python.exe
+descendants terminated  : 1  200184
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\57-r1-blocking-after.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

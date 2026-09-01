@@ -1,0 +1,15 @@
+./src/t2pw/curation/apply_audit_patch.py:1445:    # returned "other", which sent _span_licenses_actor to the _ANY_ROLE_CUE_RE
+./src/t2pw/curation/apply_audit_patch.py:1539:# _CATALYSIS_CONTRA_RE was a bare alias of _ROLE_CUE_RES["inhibition"], so one
+./src/t2pw/curation/apply_audit_patch.py:1558:# unchanged -- byte for byte, which is what leaves _ANY_ROLE_CUE_RE and the
+./src/t2pw/curation/apply_audit_patch.py:1742:_ROLE_CUE_RES = {
+./src/t2pw/curation/apply_audit_patch.py:1801:        # keeps _ANY_ROLE_CUE_RE -- and therefore the "other" fallback for every
+./src/t2pw/curation/apply_audit_patch.py:1880:    # It was also wider than this role. _ANY_ROLE_CUE_RE is rebuilt from every
+./src/t2pw/curation/apply_audit_patch.py:1960:_ANY_ROLE_CUE_RE = re.compile(
+./src/t2pw/curation/apply_audit_patch.py:1961:    "|".join(pattern.pattern for pattern in _ROLE_CUE_RES.values())
+./src/t2pw/curation/apply_audit_patch.py:2050:# Separate from _ROLE_CUE_RES["inhibition"] because the two do different jobs:
+./src/t2pw/curation/apply_audit_patch.py:2064:_CATALYSIS_CONTRA_RE = re.compile(
+./src/t2pw/curation/apply_audit_patch.py:2311:    cue = _ROLE_CUE_RES.get(family, _ANY_ROLE_CUE_RE)
+./src/t2pw/curation/apply_audit_patch.py:2312:    contra = _CATALYSIS_CONTRA_RE if family == "catalysis" else None
+./tests/test_c107_actor_cue_calibration.py:519:#: The corollary, and it is wider than the cofactor role. _ANY_ROLE_CUE_RE is
+./tests/test_c107_actor_cue_calibration.py:520:#: rebuilt from every _ROLE_CUE_RES value, so anything added to the cofactor
+./tests/test_c107_actor_cue_calibration.py:545:    _ANY_ROLE_CUE_RE is rebuilt from every _ROLE_CUE_RES value -- so once the

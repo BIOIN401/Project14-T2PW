@@ -1,0 +1,62 @@
+target                       : C:\t\rev108\src\t2pw\curation\apply_audit_patch.py
+target sha256 at start       : f0057ea6a1e5f59464f24f51bb6a385e0be068e7d82ae8888bb675049748bcb1
+target CRLF count            : 2816
+BASELINE (unmutated): exit=0  358 passed in 0.67s
+
+============================================================================================
+R1  (d) F4: no adjective may stand between the actor and the agent noun. 'the P4X specific inhibitor' stops being a target-directed frame.
+============================================================================================
+  result: RED  (guard is tested)  exit=1  2 failed, 356 passed in 0.72s
+    RED: tests/test_c108_f155_class.py::test_d_the_contra_still_refuses_every_attenuation_aimed_at_the_actor[the
+    RED: tests/test_c108_f155_class.py::test_d_the_contra_still_refuses_every_attenuation_aimed_at_the_actor[the
+
+============================================================================================
+R2  (a): the predication modifier gap closes to zero, so 'is a membrane transporter' stops being a predication. Also the gap that lets 'is a substrate of the transporter' license.
+============================================================================================
+  result: GREEN  << SURVIVOR: NO TEST COVERS THIS  exit=0  358 passed in 0.67s
+
+============================================================================================
+R3  (a): the transport verb inflections collapse to 'channels' and 'pumps'. If this survives, the inflection SET is untested and a missing inflection cannot be caught by any test.
+============================================================================================
+  result: GREEN  << SURVIVOR: NO TEST COVERS THIS  exit=0  358 passed in 0.67s
+
+============================================================================================
+R4  (d) F3: only 'of' and the participial heads remain a target head. 'an inhibitor against P4X' / 'selective for P4X' stop refusing.
+============================================================================================
+  result: RED  (guard is tested)  exit=1  1 failed, 357 passed in 0.71s
+    RED: tests/test_c108_f155_class.py::test_d_the_contra_still_refuses_every_attenuation_aimed_at_the_actor[the
+
+============================================================================================
+target sha256 after everything: f0057ea6a1e5f59464f24f51bb6a385e0be068e7d82ae8888bb675049748bcb1
+byte-identical to the start   : True
+CRLF count preserved          : True
+REV108 OWN MUTATIONS: 4 run, 2 SURVIVED
+  SURVIVOR R2 -- (a): the predication modifier gap closes to zero, so 'is a membrane transporter' stops being a predication. Also the gap that lets 'is a substrate of the transporter' license.
+  SURVIVOR R3 -- (a): the transport verb inflections collapse to 'channels' and 'pumps'. If this survives, the inflection SET is untested and a missing inflection cannot be caught by any test.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fbf2047e69fa0464c7c128978f12c636a1455431  [git, worktree dirty=False]
+label                   : rev108-own-mutations2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev108/docs/pwml_recovery_sprint/evidence/rev108_own_mutations.py C:/t/rev108
+cwd                     : C:\t\rev108
+root PID / process group: 182860 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 2400 s
+duration                : 5.78 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 11  189824:python.exe, 188204:python.exe, 192340:python.exe, 189188:python.exe, 191380:python.exe, 190924:python.exe, 192212:python.exe, 189372:python.exe, 192088:python.exe, 189164:python.exe, 191900:python.exe
+descendants terminated  : 11  188204, 189164, 189188, 189372, 189824, 190924, 191380, 191900, 192088, 192212, 192340
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev108\docs\pwml_recovery_sprint\evidence\g11\REV-108\17-rev108-own-mutations2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

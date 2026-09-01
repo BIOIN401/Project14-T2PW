@@ -1,0 +1,51 @@
+code loaded from: C:\t\c108\src\t2pw\curation\apply_audit_patch.py
+attributing 2 rows
+------------------------------------------------------------------------------------------
+  [enzymes/reactions role='catalyst' family=catalysis] actor='Pgp phosphatase complex'
+      span: 'Discussion The outer membrane of Gram-negative bacteria is primarily composed of lipopolysaccharides and phospholipids. In E . coli , FASII generates two products, acyl-ACP and β-hydroxyacyl-ACP, which are components of LPS and PLs biosynthesis. Acyl-ACPs are used by PlsB and PlsC enzymes to generat' ...(140214 chars)
+      LICENSED: False
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        ... and 81 more needle/occurrence records
+------------------------------------------------------------------------------------------
+  [modifiers/reactions role='catalyst' family=catalysis] actor='Pgp phosphatase complex'
+      span: 'Discussion The outer membrane of Gram-negative bacteria is primarily composed of lipopolysaccharides and phospholipids. In E . coli , FASII generates two products, acyl-ACP and β-hydroxyacyl-ACP, which are components of LPS and PLs biosynthesis. Acyl-ACPs are used by PlsB and PlsC enzymes to generat' ...(140214 chars)
+      LICENSED: False
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        needle='pgp' route=window cue='phosphorylat' contra=None actor_contra=None agent_noun='suppressor' dependence=None passive=None -> False (agent-noun contra fired (actor is the TARGET))
+        ... and 81 more needle/occurrence records
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fbf2047e69fa0464c7c128978f12c636a1455431  [git, worktree dirty=True]
+label                   : r1-pgp-attrib
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c108_guard_attribution.py C:/t/c108 corpus C:/t/c108scratch/flat_r1.json C:/t/c108scratch/movers_admitted.txt
+cwd                     : C:\t\c108
+root PID / process group: 202720 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.32 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  202572:python.exe
+descendants terminated  : 1  202572
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\63-r1-pgp-attrib.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

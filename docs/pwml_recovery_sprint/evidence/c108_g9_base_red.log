@@ -1,0 +1,947 @@
+..F....FFFFFFFFFFFFFFFFFFFFFF........................................... [ 41%]
+....FFFFFFFFFFFFFF...................FFFFFFFFFFFFFFF.................... [ 83%]
+...........................F.                                            [100%]
+================================== FAILURES ===================================
+__ test_p2_the_inhibition_cue_is_untouched_so_the_other_fallback_cannot_move __
+
+    def test_p2_the_inhibition_cue_is_untouched_so_the_other_fallback_cannot_move() -> None:
+        """The (d) split anchors the CONTRA and leaves the CUE exactly as it was.
+    
+        _ANY_ROLE_CUE_RE is rebuilt from every _ROLE_CUE_RES value, so a change to
+        the inhibition CUE would widen or narrow the ``other`` fallback for every
+        unmapped role -- C-107's own M6 mutation finding. This asserts the two
+        objects are no longer the same object AND that the cue's source is unchanged,
+        which is the only combination that closes (d) without moving the fallback.
+        """
+    
+>       from t2pw.curation.apply_audit_patch import (  # noqa: PLC0415
+            _C105_INHIBITION_STEMS_SRC,
+            _C107_INHIBITION_WORDS_SRC,
+            _CATALYSIS_CONTRA_RE,
+            _ROLE_CUE_RES,
+        )
+E       ImportError: cannot import name '_C105_INHIBITION_STEMS_SRC' from 't2pw.curation.apply_audit_patch' (C:\t\c108g9\src\t2pw\curation\apply_audit_patch.py)
+
+tests\test_c108_f155_class.py:180: ImportError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as a transporter to resolve the structural inconsistency] _
+
+span = 'add P as a transporter to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: add P as a transporter to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'add P as a transporter to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as the transporter to resolve the structural inconsistency] _
+
+span = 'add P as the transporter to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: add P as the transporter to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'add P as the transporter to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as transporters to resolve the structural inconsistency] _
+
+span = 'add P as transporters to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: add P as transporters to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'add P as transporters to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[P should be added as a transporter to resolve the inconsistency] _
+
+span = 'P should be added as a transporter to resolve the inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: P should be added as a transporter to resolve the inconsistency
+E       assert not True
+E        +  where True = transports('P', 'P should be added as a transporter to resolve the inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[adding P as a transporter resolves the structural inconsistency] _
+
+span = 'adding P as a transporter resolves the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: adding P as a transporter resolves the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'adding P as a transporter resolves the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[listing P among the transporters resolves the inconsistency] _
+
+span = 'listing P among the transporters resolves the inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: listing P among the transporters resolves the inconsistency
+E       assert not True
+E        +  where True = transports('P', 'listing P among the transporters resolves the inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[the payload lists no transporter, so P is added] _
+
+span = 'the payload lists no transporter, so P is added'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: the payload lists no transporter, so P is added
+E       assert not True
+E        +  where True = transports('P', 'the payload lists no transporter, so P is added')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[P, a transporter, is added to resolve the structural inconsistency] _
+
+span = 'P, a transporter, is added to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: P, a transporter, is added to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'P, a transporter, is added to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[assign P the transporter role to resolve the inconsistency] _
+
+span = 'assign P the transporter role to resolve the inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: assign P the transporter role to resolve the inconsistency
+E       assert not True
+E        +  where True = transports('P', 'assign P the transporter role to resolve the inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[register P as a channel to resolve the structural inconsistency] _
+
+span = 'register P as a channel to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: register P as a channel to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'register P as a channel to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as a translocator to resolve the structural inconsistency] _
+
+span = 'add P as a translocator to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: add P as a translocator to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'add P as a translocator to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as an importer to resolve the structural inconsistency] _
+
+span = 'add P as an importer to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: add P as an importer to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'add P as an importer to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as an exporter to resolve the structural inconsistency] _
+
+span = 'add P as an exporter to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: add P as an exporter to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'add P as an exporter to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as a symporter to resolve the structural inconsistency] _
+
+span = 'add P as a symporter to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: add P as a symporter to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'add P as a symporter to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as an antiporter to resolve the structural inconsistency] _
+
+span = 'add P as an antiporter to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: add P as an antiporter to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'add P as an antiporter to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as a uniporter to resolve the structural inconsistency] _
+
+span = 'add P as a uniporter to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: add P as a uniporter to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'add P as a uniporter to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as an extruder to resolve the structural inconsistency] _
+
+span = 'add P as an extruder to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_TRANSPORT)
+    def test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+        """The rationale may not license the role it is requesting.
+    
+        THE FIX IS BOUND GRAMMATICALLY, NOT LEXICALLY, and that is what these
+        seventeen phrasings test: nine of them do not contain the card's quoted
+        wording at all. A fix bound to "add P as a transporter" would close one row
+        here.
+        """
+    
+>       assert not transports("P", span), span
+E       AssertionError: add P as an extruder to resolve the structural inconsistency
+E       assert not True
+E        +  where True = transports('P', 'add P as an extruder to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:257: AssertionError
+_ test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for[add P as a catalyst to resolve the structural inconsistency] _
+
+span = 'add P as a catalyst to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_CATALYSIS)
+    def test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: add P as a catalyst to resolve the structural inconsistency
+E       assert not True
+E        +  where True = accepted('P', 'add P as a catalyst to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:277: AssertionError
+_ test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for[add P as the catalyst to resolve the structural inconsistency] _
+
+span = 'add P as the catalyst to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_CATALYSIS)
+    def test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: add P as the catalyst to resolve the structural inconsistency
+E       assert not True
+E        +  where True = accepted('P', 'add P as the catalyst to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:277: AssertionError
+_ test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for[add P to the catalysts so the reaction has an actor] _
+
+span = 'add P to the catalysts so the reaction has an actor'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_CATALYSIS)
+    def test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: add P to the catalysts so the reaction has an actor
+E       assert not True
+E        +  where True = accepted('P', 'add P to the catalysts so the reaction has an actor')
+
+tests\test_c108_f155_class.py:277: AssertionError
+_ test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for[P is proposed as a catalyst to resolve the inconsistency] _
+
+span = 'P is proposed as a catalyst to resolve the inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_CATALYSIS)
+    def test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P is proposed as a catalyst to resolve the inconsistency
+E       assert not True
+E        +  where True = accepted('P', 'P is proposed as a catalyst to resolve the inconsistency')
+
+tests\test_c108_f155_class.py:277: AssertionError
+_ test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for[add P as a biocatalyst to resolve the structural inconsistency] _
+
+span = 'add P as a biocatalyst to resolve the structural inconsistency'
+
+    @pytest.mark.parametrize("span", SCHEMA_RATIONALES_CATALYSIS)
+    def test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: add P as a biocatalyst to resolve the structural inconsistency
+E       assert not True
+E        +  where True = accepted('P', 'add P as a biocatalyst to resolve the structural inconsistency')
+
+tests\test_c108_f155_class.py:277: AssertionError
+_____ test_b_new_the_folded_character_class_is_the_spelling_that_says_so ______
+
+    def test_b_new_the_folded_character_class_is_the_spelling_that_says_so() -> None:
+        """NEW. The constant exists and is what the affected patterns are built from.
+    
+        This is a STRUCTURAL assertion about a NEW symbol and it is deliberately NOT
+        offered as a base failure: symbol absence is not proof of anything, which is
+        exactly why (b) carries the behavioural pins above as well.
+        """
+    
+>       from t2pw.curation.apply_audit_patch import (  # noqa: PLC0415
+            _FOLDED_CHAR_SRC,
+            _ROLE_CUE_RES,
+        )
+E       ImportError: cannot import name '_FOLDED_CHAR_SRC' from 't2pw.curation.apply_audit_patch' (C:\t\c108g9\src\t2pw\curation\apply_audit_patch.py)
+
+tests\test_c108_f155_class.py:430: ImportError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-LpxC hydrolase was quantified in the lysate] _
+
+name = 'LpxC hydrolase', span = 'LpxC hydrolase was quantified in the lysate'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('LpxC hydrolase', 'LpxC hydrolase was quantified in the lysate')
+E       assert not True
+E        +  where True = accepted('LpxC hydrolase', 'LpxC hydrolase was quantified in the lysate')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC synthase-LpxC synthase was quantified in the lysate] _
+
+name = 'LpxC synthase', span = 'LpxC synthase was quantified in the lysate'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('LpxC synthase', 'LpxC synthase was quantified in the lysate')
+E       assert not True
+E        +  where True = accepted('LpxC synthase', 'LpxC synthase was quantified in the lysate')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC transferase-LpxC transferase was detected in the membrane fraction] _
+
+name = 'LpxC transferase'
+span = 'LpxC transferase was detected in the membrane fraction'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('LpxC transferase', 'LpxC transferase was detected in the membrane fraction')
+E       assert not True
+E        +  where True = accepted('LpxC transferase', 'LpxC transferase was detected in the membrane fraction')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-LpxC hydrolase was purchased from a commercial supplier] _
+
+name = 'LpxC hydrolase'
+span = 'LpxC hydrolase was purchased from a commercial supplier'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('LpxC hydrolase', 'LpxC hydrolase was purchased from a commercial supplier')
+E       assert not True
+E        +  where True = accepted('LpxC hydrolase', 'LpxC hydrolase was purchased from a commercial supplier')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[MurA synthase-MurA synthase levels were unchanged in the mutant] _
+
+name = 'MurA synthase'
+span = 'MurA synthase levels were unchanged in the mutant'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('MurA synthase', 'MurA synthase levels were unchanged in the mutant')
+E       assert not True
+E        +  where True = accepted('MurA synthase', 'MurA synthase levels were unchanged in the mutant')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[P kinase-P kinase was resolved on the gel] _
+
+name = 'P kinase', span = 'P kinase was resolved on the gel'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('P kinase', 'P kinase was resolved on the gel')
+E       assert not True
+E        +  where True = accepted('P kinase', 'P kinase was resolved on the gel')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-the hydrolase LpxC was quantified in the lysate] _
+
+name = 'LpxC hydrolase'
+span = 'the hydrolase LpxC was quantified in the lysate'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('LpxC hydrolase', 'the hydrolase LpxC was quantified in the lysate')
+E       assert not True
+E        +  where True = accepted('LpxC hydrolase', 'the hydrolase LpxC was quantified in the lysate')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-we quantified LpxC hydrolase in the lysate] _
+
+name = 'LpxC hydrolase', span = 'we quantified LpxC hydrolase in the lysate'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('LpxC hydrolase', 'we quantified LpxC hydrolase in the lysate')
+E       assert not True
+E        +  where True = accepted('LpxC hydrolase', 'we quantified LpxC hydrolase in the lysate')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-the LpxC hydrolase band was excised from the gel] _
+
+name = 'LpxC hydrolase'
+span = 'the LpxC hydrolase band was excised from the gel'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('LpxC hydrolase', 'the LpxC hydrolase band was excised from the gel')
+E       assert not True
+E        +  where True = accepted('LpxC hydrolase', 'the LpxC hydrolase band was excised from the gel')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-LpxC hydrolase, LpxD and LpxA were all detected] _
+
+name = 'LpxC hydrolase'
+span = 'LpxC hydrolase, LpxD and LpxA were all detected'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('LpxC hydrolase', 'LpxC hydrolase, LpxD and LpxA were all detected')
+E       assert not True
+E        +  where True = accepted('LpxC hydrolase', 'LpxC hydrolase, LpxD and LpxA were all detected')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-purified LpxC hydrolase was stored at minus 80] _
+
+name = 'LpxC hydrolase', span = 'purified LpxC hydrolase was stored at minus 80'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('LpxC hydrolase', 'purified LpxC hydrolase was stored at minus 80')
+E       assert not True
+E        +  where True = accepted('LpxC hydrolase', 'purified LpxC hydrolase was stored at minus 80')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[ferrochelatase-modulating ferrochelatase levels] _
+
+name = 'ferrochelatase', span = 'modulating ferrochelatase levels'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('ferrochelatase', 'modulating ferrochelatase levels')
+E       assert not True
+E        +  where True = accepted('ferrochelatase', 'modulating ferrochelatase levels')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_c_an_actors_own_name_is_not_evidence_about_the_actor[enterobactin synthase complex-enterobactin synthase complex, which includes EntD, EntE, and EntF] _
+
+name = 'enterobactin synthase complex'
+span = 'enterobactin synthase complex, which includes EntD, EntE, and EntF'
+
+    @pytest.mark.parametrize("name,span", NAME_ONLY_SPANS)
+    def test_c_an_actors_own_name_is_not_evidence_about_the_actor(
+        name: str, span: str
+    ) -> None:
+>       assert not accepted(name, span), (name, span)
+E       AssertionError: ('enterobactin synthase complex', 'enterobactin synthase complex, which includes EntD, EntE, and EntF')
+E       assert not True
+E        +  where True = accepted('enterobactin synthase complex', 'enterobactin synthase complex, which includes EntD, EntE, and EntF')
+
+tests\test_c108_f155_class.py:472: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the repressor complex P4X catalyses the conversion of A to B] _
+
+span = 'the repressor complex P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the repressor complex P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the repressor complex P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the suppressor protein P4X catalyses the conversion of A to B] _
+
+span = 'the suppressor protein P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the suppressor protein P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the suppressor protein P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the inhibitor protein P4X catalyses the conversion of A to B] _
+
+span = 'the inhibitor protein P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the inhibitor protein P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the inhibitor protein P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the inhibitor P4X catalyses the conversion of A to B] _
+
+span = 'the inhibitor P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the inhibitor P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the inhibitor P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[P4X, the inhibitor, catalyses the conversion of A to B] _
+
+span = 'P4X, the inhibitor, catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: P4X, the inhibitor, catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'P4X, the inhibitor, catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the potent inhibitor P4X catalyses the conversion of A to B] _
+
+span = 'the potent inhibitor P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the potent inhibitor P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the potent inhibitor P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[inhibitor P4X catalyses the conversion of A to B] _
+
+span = 'inhibitor P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: inhibitor P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'inhibitor P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the antagonist P4X catalyses the conversion of A to B] _
+
+span = 'the antagonist P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the antagonist P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the antagonist P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the downregulator P4X catalyses the conversion of A to B] _
+
+span = 'the downregulator P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the downregulator P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the downregulator P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the inactivator P4X catalyses the conversion of A to B] _
+
+span = 'the inactivator P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the inactivator P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the inactivator P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the attenuator protein P4X catalyses the conversion of A to B] _
+
+span = 'the attenuator protein P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the attenuator protein P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the attenuator protein P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the abolisher P4X catalyses the conversion of A to B] _
+
+span = 'the abolisher P4X catalyses the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the abolisher P4X catalyses the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the abolisher P4X catalyses the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the repressor P4X hydrolyses A to give B] _
+
+span = 'the repressor P4X hydrolyses A to give B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the repressor P4X hydrolyses A to give B
+E       assert False
+E        +  where False = accepted('P4X', 'the repressor P4X hydrolyses A to give B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the suppressor P4X mediates the conversion of A to B] _
+
+span = 'the suppressor P4X mediates the conversion of A to B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the suppressor P4X mediates the conversion of A to B
+E       assert False
+E        +  where False = accepted('P4X', 'the suppressor P4X mediates the conversion of A to B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the antagonist P4X converts A into B] _
+
+span = 'the antagonist P4X converts A into B'
+
+    @pytest.mark.parametrize("span", APPOSITIVE_AGENT_NOUNS)
+    def test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down(
+        span: str,
+    ) -> None:
+>       assert accepted("P4X", span), span
+E       AssertionError: the antagonist P4X converts A into B
+E       assert False
+E        +  where False = accepted('P4X', 'the antagonist P4X converts A into B')
+
+tests\test_c108_f155_class.py:587: AssertionError
+_ test_e_new_coverage_the_anchor_is_load_bearing[left-anchor-on-the-six-inhibition-additions] _
+
+old = '_C107_INHIBITION_WORDS_SRC = (\n    r"(?<![a-z])(?:blockades?'
+new = '_C107_INHIBITION_WORDS_SRC = (\n    r"(?:blockades?'
+spans = ['the photoablation of P was measured while Q mediates the conversion', 'the counterinterference of P was noted while ... of P was recorded while Q mediates the conversion', 'nonimpairment of P was recorded while Q mediates the conversion']
+
+    @pytest.mark.parametrize("old,new,spans", ANCHOR_MUTATIONS)
+    def test_e_new_coverage_the_anchor_is_load_bearing(old, new, spans) -> None:
+        """NEW COVERAGE. Remove the anchor and these legitimate spans flip to REFUSE.
+    
+        The assertion before the mutation is the non-vacuity control: if the spans do
+        not license on the unmutated tree, the mutation proves nothing.
+        """
+    
+        harness = _harness()
+>       assert harness.find_occurrences(GUARD_PATH, old) == 1, (
+            "the anchor's source text moved; re-pin this mutation before reading on"
+        )
+E       AssertionError: the anchor's source text moved; re-pin this mutation before reading on
+E       assert 0 == 1
+E        +  where 0 = <function find_occurrences at 0x0000027CA40B5C60>(WindowsPath('C:/t/c108g9/src/t2pw/curation/apply_audit_patch.py'), '_C107_INHIBITION_WORDS_SRC = (\n    r"(?<![a-z])(?:blockades?')
+E        +    where <function find_occurrences at 0x0000027CA40B5C60> = <module 'c108_mutation_harness' from 'C:\\t\\c108g9\\docs\\pwml_recovery_sprint\\evidence\\c102_mutation_attack.py'>.find_occurrences
+
+tests\test_c108_f155_class.py:782: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c108_f155_class.py::test_p2_the_inhibition_cue_is_untouched_so_the_other_fallback_cannot_move
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as a transporter to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as the transporter to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as transporters to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[P should be added as a transporter to resolve the inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[adding P as a transporter resolves the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[listing P among the transporters resolves the inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[the payload lists no transporter, so P is added]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[P, a transporter, is added to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[assign P the transporter role to resolve the inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[register P as a channel to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as a translocator to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as an importer to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as an exporter to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as a symporter to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as an antiporter to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as a uniporter to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_transport_schema_noun_cannot_license_the_row_it_asks_for[add P as an extruder to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for[add P as a catalyst to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for[add P as the catalyst to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for[add P to the catalysts so the reaction has an actor]
+FAILED tests/test_c108_f155_class.py::test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for[P is proposed as a catalyst to resolve the inconsistency]
+FAILED tests/test_c108_f155_class.py::test_a_a_catalysis_schema_noun_cannot_license_the_row_it_asks_for[add P as a biocatalyst to resolve the structural inconsistency]
+FAILED tests/test_c108_f155_class.py::test_b_new_the_folded_character_class_is_the_spelling_that_says_so
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-LpxC hydrolase was quantified in the lysate]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC synthase-LpxC synthase was quantified in the lysate]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC transferase-LpxC transferase was detected in the membrane fraction]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-LpxC hydrolase was purchased from a commercial supplier]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[MurA synthase-MurA synthase levels were unchanged in the mutant]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[P kinase-P kinase was resolved on the gel]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-the hydrolase LpxC was quantified in the lysate]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-we quantified LpxC hydrolase in the lysate]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-the LpxC hydrolase band was excised from the gel]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-LpxC hydrolase, LpxD and LpxA were all detected]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[LpxC hydrolase-purified LpxC hydrolase was stored at minus 80]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[ferrochelatase-modulating ferrochelatase levels]
+FAILED tests/test_c108_f155_class.py::test_c_an_actors_own_name_is_not_evidence_about_the_actor[enterobactin synthase complex-enterobactin synthase complex, which includes EntD, EntE, and EntF]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the repressor complex P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the suppressor protein P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the inhibitor protein P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the inhibitor P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[P4X, the inhibitor, catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the potent inhibitor P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[inhibitor P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the antagonist P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the downregulator P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the inactivator P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the attenuator protein P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the abolisher P4X catalyses the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the repressor P4X hydrolyses A to give B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the suppressor P4X mediates the conversion of A to B]
+FAILED tests/test_c108_f155_class.py::test_d_an_appositive_agent_noun_is_not_evidence_the_actor_is_shut_down[the antagonist P4X converts A into B]
+FAILED tests/test_c108_f155_class.py::test_e_new_coverage_the_anchor_is_load_bearing[left-anchor-on-the-six-inhibition-additions]
+53 failed, 120 passed in 0.72s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6c20879d6b286d42c8c822bcd09d323623fd1bd8  [git, worktree dirty=True]
+label                   : g9-base-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u -m pytest -q --no-header -rf --basetemp=C:/t/bt/c108g9 C:/t/c108g9/tests/test_c108_f155_class.py
+cwd                     : C:\t\c108g9
+root PID / process group: 166296 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.27 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  166308:python.exe
+descendants terminated  : 1  166308
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\28-g9-base-red.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
