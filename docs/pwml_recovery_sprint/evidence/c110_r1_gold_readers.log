@@ -1,0 +1,35 @@
+........................................................................ [ 15%]
+........................................................................ [ 31%]
+........................................................................ [ 46%]
+........................................................................ [ 62%]
+........................ss...s..sss.ss.................................. [ 77%]
+........................................................................ [ 93%]
+................................                                         [100%]
+456 passed, 8 skipped in 32.20s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d64e198edffa61615c424f8f3be49409439c6d82  [git, worktree dirty=False]
+label                   : c110-r1-gold-readers
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q --basetemp=C:/t/tb110/gr2 tests/test_protein_export_policy.py tests/test_c056b_semantic_denominators.py tests/test_batch_pwml_artifact_naming.py tests/test_c074_strict_core_floor.py tests/test_c076_alias_holo_apo_identity.py tests/test_c077_stage0_conflict_disposition.py tests/test_c081_cofactor_role_identity.py tests/test_c085_priority2_honesty.py tests/test_c088_extracted_not_serialized_disposition.py tests/test_cofactor_policy.py tests/test_rag_multi_relation_spans.py tests/test_release_status_classification.py tests/test_semantic_production_no_gold.py tests/test_strict_failure_replay.py tests/test_batch_driver_quarantine_artifacts.py tests/test_c056c_semantic_evaluability.py tests/test_c071_actor_evidence_gate.py tests/test_c080_production_gate_kind_aware.py tests/test_c089_participant_schema.py tests/test_c090_wrapper_identity_actor_evidence.py tests/test_c097_semantic_name_keys.py tests/test_semantic_release_gating.py
+cwd                     : C:\t\c110
+root PID / process group: 222808 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 33.16 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 9  223408:python.exe, 220916:git.exe, 220692:git.exe, 222756:git.exe, 222272:git.exe, 222896:git.exe, 223452:git.exe, 216056:python.exe, 217668:python.exe
+descendants terminated  : 9  216056, 217668, 220692, 220916, 222272, 222756, 222896, 223408, 223452
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\22-c110-r1-gold-readers.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
