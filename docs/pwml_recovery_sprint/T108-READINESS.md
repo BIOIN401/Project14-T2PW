@@ -1,6 +1,6 @@
 # T-108 release-candidate readiness
 
-**Status at last update: `NO-GO`.** Blockers named below. This file is updated as conditions close;
+**Status at last update: `NO-GO` — rebuilt at `848bc18b`, 2026-09-01. Eighteen of nineteen rows are GREEN; the single blocker is row 19, run ownership. See § 5.** Blockers named below. This file is updated as conditions close;
 **a `GO` requires every row green, verified at the integration tip, not remembered.**
 
 **T-108 is a NEW milestone identity.** It is not a re-run, re-score or re-reading of T-107.
@@ -221,3 +221,93 @@ cases, **both negative controls**. `supported_reactions_complete` is `False` on 
 **`LpxH` is UNVERIFIED on T-107** — both `PMC12444477` legs timed out with no payload to inspect. It
 is verified only on the pinned run `runs/2026-08-02_2130`. **Do not report any T-107 result as
 confirming it**, and do not carry the claim into T-108 unmeasured.
+
+---
+
+## 5. Readiness REBUILT at `848bc18b`, 2026-09-01 — **decision: NO-GO, on one row**
+
+**Rebuilt against the then-current tip, not against § 1's remembered state.** Every row below was
+re-derived this session. § 1's table is left standing as the record of what was true before this
+wave.
+
+### 5.1 The rows
+
+| # | Condition | State | Evidence at this tip |
+|---|---|---|---|
+| 1 | F-155 merged and independently approved | **GREEN** | C-108 `2e2a294e`, REV-108 approved. Unchanged this wave |
+| 2 | Mutation harness executable and green | **GREEN** | REV-112 ran the **whole** `c107` harness independently: **17 mutations, SURVIVORS 0, all RED, no ABORT**, target sha256 identical before and after. Run with `PYTHONDONTWRITEBYTECODE=1`, which is stronger than a pre-purge — F-160's failure mode is a *false* `MUTATION SURVIVED`, and an all-red zero-survivor result cannot be an F-160 artefact. **C-108 R4's abort is closed** |
+| 3 | Census pin is in SMOKE | **GREEN** | `test_c102_coverage_denominator.py` is in the 22-file selection and passes inside 503 |
+| 4 | F-146 remains rejected | **GREEN** | re-measured at this tip: **`F146=REJECTED`**. G11 `ORCH-718/12` |
+| 5 | 29-case battery at zero mismatches | **GREEN** | re-measured at this tip: **`battery=0/29`**, `C1=0 C2=0 C3=0 C4=0 C5=0 C6=0`. **Unmoved after the gold change AND the production instrumentation** |
+| 6 | Corpus movers understood in both directions | **GREEN** | 19 refused / 0 admitted, mover set stable. Closed by C-108 last wave |
+| 7 | Negative controls scored per the Q1 ruling | **GREEN** | C-110 merged; `PASS_NEGATIVE_CONTROL` implemented, default-deny |
+| 8 | Q2/Q3 decision merged and reviewed | **GREEN** | Q3 ruled, no code change. **Q2 half 1 is now MERGED** (C-113, REV-113 approved). Half 2 is an open product-owner question that is **explicitly not a launch blocker** — see § 5.3 |
+| 9 | Every applied F-150 correction passed its independent A/B | **GREEN** | applied at C-113; the four-step A/B ran, and REV-113 re-derived it independently rather than accepting it |
+| 10 | No absolute acceptance priority guaranteed to fail | **GREEN, was AT RISK** | Priority 5's risk was **operational**: `PMC12096016`, one of only two strict-denominator papers, was lost to the clock at the 1800 s ceiling. **§ 2.1 restores 3600 s**, which the census shows clears every observed finisher. It is no longer *guaranteed* to fail |
+| 11 | Deterministic SMOKE + gold-reader gates green | **GREEN** | at the combined tip: SMOKE **503 / exit 0**, gold-readers **456 / 0 / 8 / 0 / exit 0** against gold `36f4b7b6`. G11 `ORCH-718/10`, `/11` |
+| 12 | `acceptance.py` hashes identically before and after | **GREEN** | `4bd893ac410d16d3…` at every sample point all wave. **Note the form**: that is the CRLF working-tree hash; the LF blob is `d9f817e1…`. Quote which one you mean |
+| 13 | Integration pushed and remotely verified | **GREEN** | `local = origin/ = git ls-remote` re-verified after **every** push this wave |
+| 14 | Pinned 10-paper / 20-leg plan verifies offline | **GREEN, re-verify at launch** | unchanged. **Must still be re-verified inside T-108's own staged directory** — that is a launch step, not a pre-launch blocker |
+| 15 | Configured provider and pinned model available | **GREEN** | verified without printing secrets: `LLM_PROVIDER=openrouter`, `LLM_TEMPERATURE=0`, all nine `OPENROUTER_*_MODEL` pinned to `deepseek/deepseek-v4-flash`, key present. **`LLM_MAX_RETRIES=3`** — see § 3's ratified note; the challenge to that value was the `.env` worktree trap |
+| 16 | Heavy lock free | **GREEN** | `C:/t/heavylock` absent. Four strands this wave, all recovered; **F-163** |
+| 17 | Zero sprint-owned Python | **GREEN** | only the two `ms-python.isort` IDE processes, matched on command line |
+| 18 | No peer owns an overlapping live job | **GREEN** | `project14-t2pw-93` confirmed read-only: no branch, worktree, lock, job or edit |
+| **19** | **Enough time to monitor or formally transfer the run** | **RED — THE ONLY BLOCKER** | see § 5.2 |
+
+**The three blockers § 6 of the previous handoff named are all CLOSED:** F-150 is resolved and
+merged · C-112 and C-111 are dispatched, reviewed and merged · the leg ceiling is deliberately
+chosen and recorded.
+
+### 5.2 The one red row, stated exactly
+
+**Row 19 fails, and it fails on the "or" clause as much as the "and".**
+
+The row requires *enough time to monitor* **or** *formally transfer*. Neither holds:
+
+- **Monitoring.** T-105's comparable 20-leg run took **4.85 hours** at a *lower* ceiling. Restoring
+  3600 s raises the worst case substantially. **This session cannot see a run of that length
+  through.**
+- **Transfer.** There is no recipient. The only live peer is `project14-t2pw-93`, which is
+  read-only, working for a different user on an unrelated assessment, and has **not** been
+  authorized for sprint work. **A transfer nobody has accepted is not a transfer.**
+
+**And the compliance rule decides it independently of judgement.** `TEST_MATRIX` § 0 rule 1 permits
+a tracked background job **only** when the orchestrator *"polls rather than launching duplicates"*
+and **"no detached or unowned job remains."** A T-108 launched now becomes **unowned** the moment
+this session ends. That is not a risk assessment — **it is a G11 violation by construction**, and
+G11 is merge gate 11.
+
+**Compounding it, and this is why waiting is cheap while launching is not:** T-108 is **one-shot**.
+*"If T-108 fails, preserve it as a failed official release candidate and triage from committed
+artifacts. Do NOT rerun it."* A later candidate needs a **new milestone identity** and a separately
+recorded readiness decision. **Launching unmonitored risks burning the milestone identity on an
+infrastructure failure nobody was watching** — the worst available outcome, and strictly worse than
+launching tomorrow.
+
+**Cost is not the constraint and was never considered.** There is no OpenRouter spending, token,
+request or model-usage ceiling. **The blocker is ownership and observability, not money.**
+
+### 5.3 Why half 2 is not a blocker, stated so nobody re-derives it
+
+`supported_reactions_complete` is unset on all ten cases and **the status quo is honest**:
+`semantic.py` stamps `UNSUPPORTED-REACTION VERDICT NOT EVALUATED` and withholds `false_positives`
+rather than reporting a hard zero, which is what `PRODUCT_CONTRACT` § 11 requires. **T-108 can
+launch under that.** What T-108 must **not** do is quote a Priority 2 number without the standing
+limit attached:
+
+> **Priority 2 = 1 is a real number and it is not a measure of how much invented chemistry a run
+> produced.**
+
+The question is preserved unanswered in `DECISION-PACKET-F150-HALF2.md`. **Answering it is not a
+prerequisite for launching; quoting Priority 2 without its limit is what would be wrong.**
+
+### 5.4 What the next session must do — in this order
+
+1. **Re-verify rows 4, 5, 11, 16, 17 at the then-current tip.** They are cheap and they are the ones
+   that can silently rot. Do not carry these numbers forward from this table — **re-derive them.**
+2. **Confirm row 19 is satisfiable for you** before anything else, because it is the only one that
+   depends on the operator rather than the tree. **If you cannot monitor ~5–8 hours or hand the run
+   to a named owner who has accepted it, T-108 stays NO-GO and that is the correct answer, not a
+   failure.**
+3. Then the launch protocol in § 4, unchanged, **at the 3600 s ceiling with no override**, verifying
+   `leg_timeout_overridden: false` **in the staged directory before launch, not after**.
