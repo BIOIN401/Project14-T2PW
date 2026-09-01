@@ -153,6 +153,25 @@ amplification occurred on T-107, but it is why F-148 records it as **unexcluded 
 excluded**: the mechanism exists and the artifact that would have measured it was destroyed by the
 kill.
 
+> **This value was challenged and it SURVIVED — the challenge was the trap above, firing again.**
+> REV-111 reported, in good faith, that `LLM_MAX_RETRIES` is **8** at base and tip and that this row
+> was stale. It measured honestly and it measured **the wrong tree**. `client.py:484` reads
+> `int(os.getenv("LLM_MAX_RETRIES", "8"))` — **8 is the CODE DEFAULT when the variable is unset** —
+> and the primary checkout's `.env:34` sets **`LLM_MAX_RETRIES=3`**. A reviewer's worktree
+> (`C:/t/rev111`) has **no `.env` at all**, so it saw the default.
+>
+> **T-108 runs from the primary checkout, so 3 is the operative value and this row is correct.**
+>
+> **The lesson is sharper than the number.** This is not a new trap; it is the trap this very
+> section documents, and it caught a careful reviewer *reading this file* — because the trap does not
+> announce itself. A worktree does not error on a missing `.env`; it silently substitutes defaults
+> and every measurement taken in it is internally consistent. **Any claim about configuration
+> measured in a worktree is a claim about the code's defaults, not about the run.** Verify config in
+> the primary or not at all.
+>
+> Note the error ran in the *safe* direction here — 8 would mean more amplification headroom than 3,
+> so acting on it would have overstated the risk rather than hidden it. **That is luck, not method.**
+
 **A bare `python` is system 3.13 with no `streamlit`** → 35 spurious import errors that read exactly
 like a regression (F-143). Always the explicit venv interpreter.
 
