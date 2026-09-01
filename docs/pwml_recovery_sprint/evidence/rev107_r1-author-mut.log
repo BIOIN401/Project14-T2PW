@@ -1,0 +1,142 @@
+=== BASELINE (unmutated tip) === exit=0
+    155 passed in 0.27s
+
+=== M1: 1f: the 'mediat' anchor is reverted, so it matches inside 'intermediate'
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        1 failed, 154 passed in 0.31s
+        RED: test_mediat_inside_intermediate_does_not_license_catalysis
+
+=== M2: 1a: the contra-cue is switched off entirely for the catalysis family
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        3 failed, 152 passed in 0.31s
+        RED: test_inhibition_cue_in_the_same_window_cannot_license_catalysis
+        RED: test_unlicensed_actor_adds_are_still_refused
+
+=== M3: 1a F1: the attenuation stem stops being bound to the actor
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        16 failed, 139 passed in 0.37s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== M4: 1c: the stoplist exclusion loses its optional plural, reopening the bypass
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        10 failed, 145 passed in 0.35s
+        RED: test_no_singular_only_stoplist_entry_can_be_bypassed_by_its_plural
+        RED: test_ordinary_english_ase_words_do_not_license_an_enzyme
+
+=== M5: 1d: the transport family loses the enzyme-family noun rule again
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        2 failed, 153 passed in 0.32s
+        RED: test_a_transporter_named_by_its_family_noun_licenses
+
+=== M6: 1e: the cofactor role loses its family entry and falls back to 'other'
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        4 failed, 151 passed in 0.33s
+        RED: test_a_refused_cofactor_row_is_reported_against_the_cofactor_family
+        RED: test_an_evidenced_cofactor_row_is_licensed
+
+=== M6b: 1e: the cofactor VOCABULARY is emptied -- the guard M6 turned out not to be
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        1 failed, 154 passed in 0.30s
+        RED: test_an_evidenced_cofactor_row_is_licensed
+
+=== M7: 1b: the passive-agent gap accepts ANY token, so a bystander inherits agency
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        6 failed, 149 passed in 0.33s
+        RED: test_a_structural_rationale_cannot_license_the_cofactor_role
+        RED: test_passive_with_agent_does_not_license_a_bystander
+        RED: test_redox_catalysis_still_licenses
+
+=== M8: 1b: the passive-agent route is removed outright -- a PRESERVATION attack
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        5 failed, 150 passed in 0.32s
+        RED: test_evidenced_actor_adds_survive_the_guard
+        RED: test_passive_with_agent_still_licenses_the_real_agent
+
+=== M9: 1a: 'reduction of' is deleted from catalysis -- the trap the card names
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        5 failed, 150 passed in 0.33s
+        RED: test_redox_catalysis_still_licenses
+
+=== M10: 1a F2: the object-before-stem ordering stops being matched
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        5 failed, 150 passed in 0.32s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+
+=== M11: 1a: the whole actor-anchored contra is switched off
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        21 failed, 134 passed in 0.37s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== M12: 1e: the cofactor dependence gap accepts ANY token, reopening the rationale route
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        1 failed, 154 passed in 0.31s
+        RED: test_a_structural_rationale_cannot_license_the_cofactor_role
+
+=== M13: 1e: the loose dependence terms go back into the FAMILY, widening the fallback
+    before: bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    after : bytes=115786 crlf=2386 sha256=c6453b9c3af12a53
+    suite : exit=1  RED (guard is tested)
+        5 failed, 150 passed in 0.33s
+        RED: test_a_structural_rationale_cannot_license_the_cofactor_role
+        RED: test_the_other_fallback_did_not_widen_for_an_unmapped_role
+
+==============================================================================
+MUTATIONS: 14   SURVIVORS: 0 []
+==============================================================================
+final target: bytes=115786 crlf=2386 sha256=c6453b9c3af12a537b2857302cb2bfc82a4e4a6551962ffbdd5020f30d5b82f2
+git status --porcelain -- src/t2pw/curation/apply_audit_patch.py: '' (additional signal only -- sha256 and CRLF above are the check)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b569205e0361d0734cd3d2085ecc49a9078e2972  [git, worktree dirty=False]
+label                   : rev107-r1-author-mut
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_mutation_attack.py C:/t/rev107
+cwd                     : C:\t\rev107
+root PID / process group: 108804 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 12.21 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 31  111140:python.exe, 111668:python.exe, 112220:python.exe, 106072:python.exe, 108304:python.exe, 106480:python.exe, 113464:python.exe, 93080:python.exe, 113052:python.exe, 111824:python.exe, 109972:python.exe, 109644:python.exe, 112396:python.exe, 112108:python.exe, 112356:python.exe, 110020:python.exe, 111812:python.exe, 109864:python.exe, 112452:python.exe, 110440:python.exe, 112956:python.exe, 108580:python.exe, 109508:python.exe, 103864:python.exe, 112928:python.exe, 110008:python.exe, 112332:python.exe, 110248:python.exe, 112284:python.exe, 112588:python.exe, 112596:python.exe
+descendants terminated  : 31  93080, 103864, 106072, 106480, 108304, 108580, 109508, 109644, 109864, 109972, 110008, 110020, 110248, 110440, 111140, 111668, 111812, 111824, 112108, 112220, 112284, 112332, 112356, 112396, 112452, 112588, 112596, 112928, 112956, 113052, 113464
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev107\docs\pwml_recovery_sprint\evidence\g11\REV-107\28-r1-author-mut.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

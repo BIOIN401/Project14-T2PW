@@ -1,0 +1,35 @@
+........................................................................ [ 15%]
+........................................................................ [ 30%]
+........................................................................ [ 45%]
+........................................................................ [ 60%]
+........................................................................ [ 76%]
+........................................................................ [ 91%]
+.........................................                                [100%]
+473 passed in 34.10s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba2bf6830ad0c9b5ad6c9817ffb348806740d7d0  [git, worktree dirty=False]
+label                   : smoke20-at-tip
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py -q --no-header -rf --basetemp=C:/t/bt/rev106sm20
+cwd                     : C:\t\rev106
+root PID / process group: 70572 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 35.36 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 9  70068:python.exe, 70472:python.exe, 70504:python.exe, 70364:python.exe, 70672:python.exe, 70700:python.exe, 70880:python.exe, 66716:python.exe, 70976:python.exe
+descendants terminated  : 9  66716, 70068, 70364, 70472, 70504, 70672, 70700, 70880, 70976
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev106\docs\pwml_recovery_sprint\evidence\g11\REV-106\14-smoke20-at-tip.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

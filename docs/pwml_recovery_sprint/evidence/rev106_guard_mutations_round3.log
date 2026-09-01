@@ -1,0 +1,66 @@
+harness: 339 split-parts, crlf=338, sha=819678b2711cd5ea
+  locate M5 old-string: line indices [117]
+  locate find_occurrences body: line indices [172]
+  locate apply_mutation write: line indices [189]
+
+=== CONTROL: exit=0  16 passed in 0.14s
+
+=== G-fR2: M5's `old` string altered so its substitution matches ZERO times -- the exact non-vacuity failure the harness exists to prevent
+    line[117] OLD: '        \'        "excluded_terms": excluded,\\n\','
+    line[117] NEW: '        \'        "excluded_terms": excluded_NOPE,\\n\','
+    mutated: bytes=15583 crlf=338 bare_lf=0
+    exit=1
+      | E       AssertionError: mutation M5 matches 0 times in src/t2pw/bench/acceptance.py, not 1 -- the attack set has drifted from the code it attacks and every 'RED' it reports is suspect
+      | E       assert 0 == 1
+      | 1 failed, 15 passed in 0.18s
+    -> CAUGHT (non-zero)
+    restored: sha 819678b2711cd5ea -> 819678b2711cd5ea  crlf 338 -> 338  byte-exact=True
+
+=== G-h2: find_occurrences forced to always report 1 -- would make test_02 vacuous
+    line[172] OLD: '    return text.count(old.replace("\\n", newline_of(text)))'
+    line[172] NEW: '    return 1'
+    mutated: bytes=15532 crlf=338 bare_lf=0
+    exit=0
+      | 16 passed in 0.14s
+    -> *** NOT CAUGHT ***
+    restored: sha 819678b2711cd5ea -> 819678b2711cd5ea  crlf 338 -> 338  byte-exact=True
+
+=== G-a2R2: apply_mutation's WRITE genuinely damaged: emit LF-only bytes
+    line[189] OLD: '    path.write_bytes(text.replace(old_nl, new_nl, 1).encode("utf-8"))'
+    line[189] NEW: '    path.write_bytes(text.replace(old_nl, new_nl, 1).replace(chr(13)+chr(10), chr(10)).encode("utf-8"))'
+    mutated: bytes=15612 crlf=338 bare_lf=0
+    exit=1
+      | E       AssertionError: applying the mutation changed line endings
+      | E       assert 0 == 120
+      | 1 failed, 15 passed in 0.18s
+    -> CAUGHT (non-zero)
+    restored: sha 819678b2711cd5ea -> 819678b2711cd5ea  crlf 338 -> 338  byte-exact=True
+
+=== CONTROL AFTER: exit=0  16 passed in 0.14s   porcelain=''
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba2bf6830ad0c9b5ad6c9817ffb348806740d7d0  [git, worktree dirty=False]
+label                   : guard-mutations-round3
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/rev106_guard_mutations_round3.py C:/t/rev106
+cwd                     : C:\t\rev106
+root PID / process group: 68068 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 2.91 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 11  68184:python.exe, 18296:python.exe, 61836:python.exe, 64384:python.exe, 65840:python.exe, 68676:python.exe, 68696:python.exe, 68940:python.exe, 68960:python.exe, 69128:python.exe, 69148:python.exe
+descendants terminated  : 11  18296, 61836, 64384, 65840, 68184, 68676, 68696, 68940, 68960, 69128, 69148
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev106\docs\pwml_recovery_sprint\evidence\g11\REV-106\09-guard-mutations-round3.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

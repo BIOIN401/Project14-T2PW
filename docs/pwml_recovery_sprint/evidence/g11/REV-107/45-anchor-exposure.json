@@ -1,0 +1,132 @@
+{
+  "label": "rev107-anchor-exposure",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/rev107_anchor_exposure.py",
+    "C:/t/rev107"
+  ],
+  "cwd": "C:\\t\\rev107",
+  "started_at": "2026-09-01T01:46:55+00:00",
+  "finished_at": "2026-09-01T01:46:56+00:00",
+  "duration_seconds": 0.630730400007451,
+  "timeout_seconds": 380.0,
+  "root_pid": 125540,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 125552,
+      "name": "python.exe",
+      "ppid": 125540
+    },
+    {
+      "pid": 125572,
+      "name": "python.exe",
+      "ppid": 125552
+    },
+    {
+      "pid": 125592,
+      "name": "python.exe",
+      "ppid": 125572
+    },
+    {
+      "pid": 125612,
+      "name": "python.exe",
+      "ppid": 125552
+    },
+    {
+      "pid": 125632,
+      "name": "python.exe",
+      "ppid": 125612
+    },
+    {
+      "pid": 125652,
+      "name": "python.exe",
+      "ppid": 125552
+    },
+    {
+      "pid": 125672,
+      "name": "python.exe",
+      "ppid": 125652
+    },
+    {
+      "pid": 125692,
+      "name": "python.exe",
+      "ppid": 125552
+    },
+    {
+      "pid": 125712,
+      "name": "python.exe",
+      "ppid": 125692
+    }
+  ],
+  "descendants_terminated": [
+    125552,
+    125572,
+    125592,
+    125612,
+    125632,
+    125652,
+    125672,
+    125692,
+    125712
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 74376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74532,
+      "name": "python.exe"
+    },
+    {
+      "pid": 125256,
+      "name": "python.exe"
+    },
+    {
+      "pid": 125268,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev107\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-107\\45-anchor-exposure.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev107\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev107",
+    "repo_head": "0b6f538a2da758f66b4ff1a4507552f194f286ab",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-107",
+    "token": "REV-107:125268:59826e5a1f23a464",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

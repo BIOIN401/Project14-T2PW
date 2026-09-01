@@ -1,0 +1,35 @@
+........................................................................ [ 15%]
+........................................................................ [ 31%]
+........................................................................ [ 46%]
+........................................................................ [ 62%]
+........................ss...s..sss.ss.................................. [ 77%]
+........................................................................ [ 93%]
+................................                                         [100%]
+456 passed, 8 skipped in 32.00s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba2bf6830ad0c9b5ad6c9817ffb348806740d7d0  [git, worktree dirty=False]
+label                   : goldreaders22
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest tests/test_protein_export_policy.py tests/test_c056b_semantic_denominators.py tests/test_batch_pwml_artifact_naming.py tests/test_c074_strict_core_floor.py tests/test_c076_alias_holo_apo_identity.py tests/test_c077_stage0_conflict_disposition.py tests/test_c081_cofactor_role_identity.py tests/test_c085_priority2_honesty.py tests/test_c088_extracted_not_serialized_disposition.py tests/test_cofactor_policy.py tests/test_rag_multi_relation_spans.py tests/test_release_status_classification.py tests/test_semantic_production_no_gold.py tests/test_strict_failure_replay.py tests/test_batch_driver_quarantine_artifacts.py tests/test_c056c_semantic_evaluability.py tests/test_c071_actor_evidence_gate.py tests/test_c080_production_gate_kind_aware.py tests/test_c089_participant_schema.py tests/test_c090_wrapper_identity_actor_evidence.py tests/test_c097_semantic_name_keys.py tests/test_semantic_release_gating.py -q --no-header -rf --basetemp=C:/t/bt/rev106gr
+cwd                     : C:\t\rev106
+root PID / process group: 63204 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 32.86 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 8  68320:python.exe, 71856:git.exe, 72048:git.exe, 72076:git.exe, 72288:git.exe, 72416:git.exe, 71720:python.exe, 72700:python.exe
+descendants terminated  : 8  68320, 71720, 71856, 72048, 72076, 72288, 72416, 72700
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev106\docs\pwml_recovery_sprint\evidence\g11\REV-106\15-goldreaders22.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

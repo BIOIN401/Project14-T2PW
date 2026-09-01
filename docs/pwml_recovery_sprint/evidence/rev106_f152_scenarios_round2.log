@@ -1,0 +1,81 @@
+BASE parse pattern lifted from rev106base: '(\\d+) (passed|failed|skipped|errors|error)'
+TIP parse block lifted from rev106: 638 chars, defines summary_counts=True
+
+=== SCENARIO green_with_warning_text   pytest exit=0
+    real summary line : '1 passed, 1 warning in 0.02s'
+    output contains '3 errors' : True
+    BASE parse : {'passed': 1, 'failed': 0, 'skipped': 0, 'error': 0, 'errors': 3}
+    TIP  parse : {'passed': 1, 'failed': 0, 'skipped': 0, 'error': 0, 'errors': 0}
+    BASE errors=3 aborts=True   TIP errors=0 aborts=False
+    EXPECT tip: no abort, failed=0, errors=0, passed>=1  -> OK
+    (base aborts spuriously: True)
+
+=== SCENARIO genuine_red   pytest exit=1
+    real summary line : '1 failed, 1 passed in 0.03s'
+    output contains '3 errors' : False
+    BASE parse : {'passed': 1, 'failed': 1, 'skipped': 0, 'error': 0, 'errors': 0}
+    TIP  parse : {'passed': 1, 'failed': 1, 'skipped': 0, 'error': 0, 'errors': 0}
+    BASE errors=0 aborts=False   TIP errors=0 aborts=False
+    EXPECT tip: failed=1, passed=1, errors=0, folds into totals (no abort) -> OK
+
+=== SCENARIO genuine_collection_error   pytest exit=2
+    real summary line : '1 error in 0.08s'
+    output contains '3 errors' : False
+    BASE parse : {'passed': 0, 'failed': 0, 'skipped': 0, 'error': 1, 'errors': 0}
+    TIP  parse : {'passed': 0, 'failed': 0, 'skipped': 0, 'error': 1, 'errors': 0}
+    BASE errors=1 aborts=True   TIP errors=1 aborts=True
+    EXPECT tip: errors>=1 and the D-083 abort STILL fires -> OK
+
+=== SCENARIO green_with_failure_prose   pytest exit=0
+    real summary line : '1 passed, 1 warning in 0.00s'
+    output contains '3 errors' : True
+    BASE parse : {'passed': 1, 'failed': 7, 'skipped': 0, 'error': 0, 'errors': 3}
+    TIP  parse : {'passed': 1, 'failed': 0, 'skipped': 0, 'error': 0, 'errors': 0}
+    BASE errors=3 aborts=True   TIP errors=0 aborts=False
+    EXPECT tip: no abort, failed=0, errors=0, passed>=1  -> OK
+    (base aborts spuriously: True)
+
+=== SCENARIO red_plus_prose   pytest exit=1
+    real summary line : '1 failed, 1 passed, 1 warning in 0.04s'
+    output contains '3 errors' : True
+    BASE parse : {'passed': 1, 'failed': 1, 'skipped': 0, 'error': 0, 'errors': 3}
+    TIP  parse : {'passed': 1, 'failed': 1, 'skipped': 0, 'error': 0, 'errors': 0}
+    BASE errors=3 aborts=True   TIP errors=0 aborts=False
+    EXPECT tip: SHARPEST CASE -- a genuine red whose output ALSO says '3 errors': failed=1, passed=1, errors=0, no abort -> OK
+
+=== SCENARIO plain_green   pytest exit=0
+    real summary line : '2 passed in 0.01s'
+    output contains '3 errors' : False
+    BASE parse : {'passed': 2, 'failed': 0, 'skipped': 0, 'error': 0, 'errors': 0}
+    TIP  parse : {'passed': 2, 'failed': 0, 'skipped': 0, 'error': 0, 'errors': 0}
+    BASE errors=0 aborts=False   TIP errors=0 aborts=False
+    EXPECT tip: passed=2, clean -> OK
+
+A8 VERDICT: BOTH DIRECTIONS HOLD
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba2bf6830ad0c9b5ad6c9817ffb348806740d7d0  [git, worktree dirty=False]
+label                   : f152-scenarios-round2
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/rev106_f152_scenarios.py C:/t/rev106 C:/t/rev106base
+cwd                     : C:\t\rev106
+root PID / process group: 69772 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 2.57 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 13  70104:python.exe, 63456:python.exe, 69540:python.exe, 62908:python.exe, 68688:python.exe, 68352:python.exe, 70336:python.exe, 65104:python.exe, 70012:python.exe, 60448:python.exe, 68880:python.exe, 58580:python.exe, 60564:python.exe
+descendants terminated  : 13  58580, 60448, 60564, 62908, 63456, 65104, 68352, 68688, 68880, 69540, 70012, 70104, 70336
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev106\docs\pwml_recovery_sprint\evidence\g11\REV-106\12-f152-scenarios-round2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

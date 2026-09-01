@@ -1,0 +1,137 @@
+{
+  "label": "guard-mutations-round2",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/rev106_guard_mutations_round2.py",
+    "C:/t/rev106"
+  ],
+  "cwd": "C:\\t\\rev106",
+  "started_at": "2026-08-31T23:34:54+00:00",
+  "finished_at": "2026-08-31T23:34:57+00:00",
+  "duration_seconds": 2.2658670999953756,
+  "timeout_seconds": 400.0,
+  "root_pid": 60816,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 2,
+  "returned_code": 2,
+  "descendants_observed": [
+    {
+      "pid": 67420,
+      "name": "python.exe",
+      "ppid": 60816
+    },
+    {
+      "pid": 62808,
+      "name": "python.exe",
+      "ppid": 67420
+    },
+    {
+      "pid": 67444,
+      "name": "python.exe",
+      "ppid": 62808
+    },
+    {
+      "pid": 66976,
+      "name": "python.exe",
+      "ppid": 67420
+    },
+    {
+      "pid": 67116,
+      "name": "python.exe",
+      "ppid": 66976
+    },
+    {
+      "pid": 57352,
+      "name": "python.exe",
+      "ppid": 67420
+    },
+    {
+      "pid": 68104,
+      "name": "python.exe",
+      "ppid": 57352
+    },
+    {
+      "pid": 68176,
+      "name": "python.exe",
+      "ppid": 68200
+    },
+    {
+      "pid": 68200,
+      "name": "python.exe",
+      "ppid": 67420
+    },
+    {
+      "pid": 62348,
+      "name": "git.exe",
+      "ppid": 68176
+    }
+  ],
+  "descendants_terminated": [
+    57352,
+    62348,
+    62808,
+    66976,
+    67116,
+    67420,
+    67444,
+    68104,
+    68176,
+    68200
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 12516,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 65072,
+      "name": "python.exe"
+    },
+    {
+      "pid": 66696,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev106\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-106\\08-guard-mutations-round2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev106\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev106",
+    "repo_head": "ba2bf6830ad0c9b5ad6c9817ffb348806740d7d0",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-106",
+    "token": "REV-106:65072:dd53cb3925910ab2",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

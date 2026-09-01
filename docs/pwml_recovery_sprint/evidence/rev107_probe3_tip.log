@@ -1,0 +1,198 @@
+code loaded from: C:\t\rev107\src\t2pw\curation\apply_audit_patch.py
+
+==========================================================================================
+CLAIM 5 -- 1g attribution: which stage produces the oversized spans?
+==========================================================================================
+  final_mapped.json files carrying an actor span > 5000 chars: 14
+    max= 176375  \runs\2026-07-28_0919\papers\PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g\strict\final_mapped.json
+    max= 143520  \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+    max= 108335  \runs\2026-07-27_1623\papers\PMC12312563__structures-of-listeria-monocytogenes-mend-in-th\strict\final_mapped.json
+    max=   5802  \runs\2026-08-02_2130\papers\PMC12096016\research\final_mapped.json
+    max=   5802  \runs_verify\2026-08-04_1207\papers\PMC12452463\strict\final_mapped.json
+    max=   5802  \runs_verify\2026-08-04_1306\papers\PMC12096016\research\final_mapped.json
+    max=   5802  \runs_verify\2026-08-04_1306\papers\PMC12452463\research\final_mapped.json
+    max=   5802  \runs_verify\2026-08-04_1358\papers\PMC12096016\research\final_mapped.json
+    max=   5802  \runs_verify\2026-08-04_1754\papers\PMC12096016\research\final_mapped.json
+    max=   5802  \runs_verify\2026-08-04_1754\papers\PMC12096016\strict\final_mapped.json
+    max=   5802  \runs_verify\2026-08-04_1754\papers\PMC12452463\research\final_mapped.json
+    max=   5802  \runs_verify\2026-08-04_1754\papers\PMC12452463\strict\final_mapped.json
+    max=   5802  \runs_verify\2026-08-18_1328\papers\PMC12096016\strict\final_mapped.json
+    max=   5802  \runs_verify\2026-08-18_1328\papers\PMC12452463\strict\final_mapped.json
+
+  For each affected paper, the same measurement on the UPSTREAM artifacts:
+
+    \runs\2026-07-28_0919\papers\PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g\strict
+      stage1_payload.json        actor rows=   1  spans=   1  max_span=     78  over5000=0
+      merged_payload.json        actor rows=  75  spans=  75  max_span= 176375  over5000=11
+      final_mapped.json          actor rows= 150  spans= 150  max_span= 176375  over5000=22
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict
+      stage1_payload.json        actor rows=  10  spans=  10  max_span=    108  over5000=0
+      merged_payload.json        actor rows= 205  spans= 205  max_span= 143520  over5000=15
+      final_mapped.json          actor rows= 407  spans= 407  max_span= 143520  over5000=30
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs\2026-07-27_1623\papers\PMC12312563__structures-of-listeria-monocytogenes-mend-in-th\strict
+      stage1_payload.json        actor rows=   1  spans=   1  max_span=     87  over5000=0
+      merged_payload.json        actor rows=   8  spans=   8  max_span= 108335  over5000=3
+      final_mapped.json          actor rows=  16  spans=  16  max_span= 108335  over5000=6
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs\2026-08-02_2130\papers\PMC12096016\research
+      stage1_payload.json        actor rows=   4  spans=   4  max_span=    109  over5000=0
+      merged_payload.json        actor rows=   9  spans=   9  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  16  spans=  16  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs_verify\2026-08-04_1207\papers\PMC12452463\strict
+      stage1_payload.json        actor rows=   4  spans=   4  max_span=     84  over5000=0
+      merged_payload.json        actor rows=   7  spans=   7  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  11  spans=  11  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs_verify\2026-08-04_1306\papers\PMC12096016\research
+      stage1_payload.json        actor rows=   7  spans=   7  max_span=    121  over5000=0
+      merged_payload.json        actor rows=  11  spans=  11  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  20  spans=  20  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs_verify\2026-08-04_1306\papers\PMC12452463\research
+      stage1_payload.json        actor rows=   5  spans=   5  max_span=     91  over5000=0
+      merged_payload.json        actor rows=   8  spans=   8  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  14  spans=  14  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs_verify\2026-08-04_1358\papers\PMC12096016\research
+      stage1_payload.json        actor rows=   7  spans=   7  max_span=    121  over5000=0
+      merged_payload.json        actor rows=  12  spans=  11  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  25  spans=  24  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs_verify\2026-08-04_1754\papers\PMC12096016\research
+      stage1_payload.json        actor rows=   5  spans=   5  max_span=     76  over5000=0
+      merged_payload.json        actor rows=  10  spans=  10  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  18  spans=  18  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs_verify\2026-08-04_1754\papers\PMC12096016\strict
+      stage1_payload.json        actor rows=   5  spans=   5  max_span=     67  over5000=0
+      merged_payload.json        actor rows=  10  spans=  10  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  16  spans=  16  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs_verify\2026-08-04_1754\papers\PMC12452463\research
+      stage1_payload.json        actor rows=   4  spans=   4  max_span=     85  over5000=0
+      merged_payload.json        actor rows=   5  spans=   5  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  10  spans=  10  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs_verify\2026-08-04_1754\papers\PMC12452463\strict
+      stage1_payload.json        actor rows=   5  spans=   5  max_span=    103  over5000=0
+      merged_payload.json        actor rows=   9  spans=   9  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  15  spans=  15  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs_verify\2026-08-18_1328\papers\PMC12096016\strict
+      stage1_payload.json        actor rows=   5  spans=   5  max_span=     67  over5000=0
+      merged_payload.json        actor rows=   8  spans=   8  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  14  spans=  14  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+    \runs_verify\2026-08-18_1328\papers\PMC12452463\strict
+      stage1_payload.json        actor rows=   5  spans=   5  max_span=     99  over5000=0
+      merged_payload.json        actor rows=   9  spans=   9  max_span=   5802  over5000=1
+      final_mapped.json          actor rows=  15  spans=  15  max_span=   5802  over5000=2
+      stage2_payload.json        (absent)
+      normalized_payload.json    (absent)
+
+  batch/driver.py: who writes merged_payload.json?
+    driver.py:195: #: on disk as ``stage1_payload.json`` and ``merged_payload.json`` and, on two of
+    driver.py:533: ``merged_payload.json`` were both written before this function is reached.
+    driver.py:1381: out["merged_payload.json"] = _json_text(merged)
+    driver.py:1413: stored a mapped payload, and ``merged_payload.json`` is *pre-mapping*: it
+
+==========================================================================================
+T1 CORRECTION -- the earlier multi-token name 'LpxC hydrolase' contains an
+     enzyme noun, so the NAME itself supplied the cue. Re-run the >80-char
+     case with a name carrying no enzyme noun.
+==========================================================================================
+  name='LpxC hydrolase'     cue >80 chars away -> ACCEPT   (want REFUSE)
+  name='LpxC hydrolase'     no cue at all      -> ACCEPT   (want REFUSE)
+  name='MenD complex'       cue >80 chars away -> REFUSE   (want REFUSE)
+  name='MenD complex'       no cue at all      -> REFUSE   (want REFUSE)
+  name='Qrx7 factor'        cue >80 chars away -> REFUSE   (want REFUSE)
+  name='Qrx7 factor'        no cue at all      -> REFUSE   (want REFUSE)
+
+==========================================================================================
+THE FIVE NEAR-SYNONYMS THAT REMAIN OPEN, as PRODUCTION verdicts through
+apply_patch_with_policy -- an F-146-shaped promotion of an inhibited
+protein to catalyst, at the TIP.
+==========================================================================================
+  disruption     ACCEPTED  <-- F-146 BY PARAPHRASE   evidence='the disruption of NDM-1 is mediated by PSA'
+  reduction      ACCEPTED  <-- F-146 BY PARAPHRASE   evidence='the reduction of NDM-1 is mediated by PSA'
+  loss           ACCEPTED  <-- F-146 BY PARAPHRASE   evidence='the loss of NDM-1 is mediated by PSA'
+  depletion      ACCEPTED  <-- F-146 BY PARAPHRASE   evidence='the depletion of NDM-1 is mediated by PSA'
+  quenching      ACCEPTED  <-- F-146 BY PARAPHRASE   evidence='the quenching of NDM-1 is mediated by PSA'
+  blockade       refused   evidence='the blockade of NDM-1 is mediated by PSA'
+  impairment     refused   evidence='the impairment of NDM-1 is mediated by PSA'
+  silencing      refused   evidence='the silencing of NDM-1 is mediated by PSA'
+  sequestration  refused   evidence='the sequestration of NDM-1 is mediated by PSA'
+  ablation       refused   evidence='the ablation of NDM-1 is mediated by PSA'
+  interference   refused   evidence='the interference of NDM-1 is mediated by PSA'
+
+  and with the paper's own object noun, but >40 chars from the stem:
+  disruption     ACCEPTED  <-- 40-char window evaded
+  reduction      ACCEPTED  <-- 40-char window evaded
+  loss           ACCEPTED  <-- 40-char window evaded
+  depletion      ACCEPTED  <-- 40-char window evaded
+  quenching      ACCEPTED  <-- 40-char window evaded
+
+  and with the object BEFORE the stem (ordinary English word order):
+  disruption     ACCEPTED  <-- word order evades
+  reduction      ACCEPTED  <-- word order evades
+  loss           ACCEPTED  <-- word order evades
+  depletion      ACCEPTED  <-- word order evades
+  quenching      ACCEPTED  <-- word order evades
+
+REV107_PROBE3_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9890770e565377ddb00179449714a49f4dc2a8c8  [git, worktree dirty=False]
+label                   : rev107-probe3-tip
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/rev107_probe3.py C:/t/rev107 C:/t/rev107
+cwd                     : C:\t\rev107
+root PID / process group: 92056 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 380 s
+duration                : 0.62 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  93896:python.exe
+descendants terminated  : 1  93896
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev107\docs\pwml_recovery_sprint\evidence\g11\REV-107\10-probe3-tip.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

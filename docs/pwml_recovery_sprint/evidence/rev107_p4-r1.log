@@ -1,0 +1,183 @@
+code loaded from: C:\t\rev107\src\t2pw\curation\apply_audit_patch.py
+LABEL: p4-r1
+
+============================================================================================
+A -- the 11 x 4 = 44 matrix. Every cell must REFUSE. Through the real seam.
+============================================================================================
+  A object AFTER stem    ref :block ref :impai ref :disru ref :reduc ref :loss ref :silen ref :seque ref :deple ref :ablat ref :inter ref :quenc
+  B object ABSENT        ref :block ref :impai ref :disru ref :reduc ref :loss ref :silen ref :seque ref :deple ref :ablat ref :inter ref :quenc
+  C object BEFORE stem   ref :block ref :impai ref :disru ref :reduc ref :loss ref :silen ref :seque ref :deple ref :ablat ref :inter ref :quenc
+  D object BEYOND 40     ref :block ref :impai ref :disru ref :reduc ref :loss ref :silen ref :seque ref :deple ref :ablat ref :inter ref :quenc
+
+  MATRIX OPEN CELLS: 0 of 44
+
+============================================================================================
+B -- FRAMES THE AUTHOR DID NOT ENUMERATE (REV-107 own)
+============================================================================================
+  E possessive               OPEN  0 of 11   []
+  F stem first, actor far    OPEN  5 of 11   ['disruption', 'reduction', 'loss', 'depletion', 'quenching']
+  G passive verb form        OPEN  5 of 11   ['disruption', 'reduction', 'loss', 'depletion', 'quenching']
+  H apposition               OPEN  0 of 11   []
+  I two modifiers            OPEN  0 of 11   []
+  J six modifiers            OPEN  5 of 11   ['disruption', 'reduction', 'loss', 'depletion', 'quenching']
+  K cross-clause             OPEN  0 of 11   []
+  L object 100 after actor   OPEN  0 of 11   []
+  M no of/in linker          OPEN  0 of 11   []
+  N hyphen linker            OPEN  0 of 11   []
+
+  EXTRA-FRAME OPEN CELLS: 15 of 110
+
+============================================================================================
+C -- F1 LEFT BOUNDARY. _ATTENUATION_STEM_SRC is unanchored inside
+    actor_contra, and 'reduc' lives inside 'reductase'. Every span below
+    is LEGITIMATE catalysis and must be ACCEPTED.
+============================================================================================
+  REFUSE  <<< FALSE REFUSAL   reductase, name adjacent     'the reductase P4X catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   nitroreductase adjacent      'the nitroreductase NfsB catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   oxidoreductase adjacent      'the oxidoreductase YkgC catalyses the conversion of A to B'
+  ACCEPT   reductase is the own name    'aldo-keto reductase catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   reductase + modifier         'the purified reductase NfsB catalyses the conversion of A '
+  REFUSE  <<< FALSE REFUSAL   blocker adjacent             'the blocker protein P4X catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   silencer adjacent            'the silencer complex P4X catalyses the conversion of A to '
+  REFUSE  <<< FALSE REFUSAL   interferon adjacent          'interferon IRF3 catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   quenchase nonsense control   'the quenchase P4X catalyses the conversion of A to B'
+  ACCEPT   CONTROL: no stem in noun     'the hydrolase P4X catalyses the conversion of A to B'
+
+  FALSE REFUSALS: 8 of 10   ['reductase, name adjacent', 'nitroreductase adjacent', 'oxidoreductase adjacent', 'reductase + modifier', 'blocker adjacent', 'silencer adjacent', 'interferon adjacent', 'quenchase nonsense control']
+
+============================================================================================
+D -- REDOX PRESERVATION. All must be ACCEPTED.
+============================================================================================
+  ACCEPT   [ferrochelatase] 'NADH-dependent reduction of the substrate by ferrochelatase'
+  ACCEPT   [ferrochelatase] 'ferrochelatase reduces protoporphyrin IX to heme'
+  ACCEPT   [nitroreductase] 'nitroreductase catalyses the reduction of the nitro group'
+  ACCEPT   [thioredoxin] 'the reduction of the disulfide bond is mediated by thioredoxin'
+  ACCEPT   [ferredoxin reductase] 'reducing equivalents are transferred by ferredoxin reductase'
+  ACCEPT   [enzyme] 'the enzyme catalyses the reduction of the substrate level in vit'
+  ACCEPT   [ferrochelatase] 'ferrochelatase reduces the cellular level of protoporphyrin'
+  REFUSE  <<< BROKEN   [flavin reductase] 'NADPH-dependent reduction of flavin is required for enzyme funct'
+  ACCEPT   [GshR] 'GshR reduces oxidised glutathione using NADPH as electron donor'
+  ACCEPT   [MsrA] 'MsrA catalyses the reduction of methionine sulfoxide residues'
+  ACCEPT   [TrxB] 'the reduction of the substrate is catalysed by TrxB in the prese'
+  ACCEPT   [NfsB] 'NfsB, a nitroreductase, reduces the nitro group of the prodrug'
+  ACCEPT   [Fdx] 'Fdx supplies reducing power for the hydroxylation step'
+  ACCEPT   [LpxC] 'the disruption of the substrate ring is catalysed by LpxC'
+  ACCEPT   [MenD] 'MenD catalyses the cleavage and loss of the pyruvate leaving gro'
+
+  REDOX/CATALYSIS REFUSED: 1 of 15
+     ('flavin reductase', 'NADPH-dependent reduction of flavin is required for enzy')
+
+============================================================================================
+E -- BLOCKING 2: cofactor dependence and the unmapped-role fallback
+============================================================================================
+  cofactor family pattern: 'is a cofactor|is the cofactor|cofactor for|cofactor of|cofactor in this|is a coenzyme|is the coenzyme|coenzyme for|coenzyme of|prosthetic group'
+  are the loose dependence terms still reachable from _ANY_ROLE_CUE_RE?
+     requires             _ANY_ROLE_CUE_RE match: False
+     required for         _ANY_ROLE_CUE_RE match: False
+     depends on           _ANY_ROLE_CUE_RE match: False
+     dependent on         _ANY_ROLE_CUE_RE match: False
+     in the presence of   _ANY_ROLE_CUE_RE match: False
+     requirement for      _ANY_ROLE_CUE_RE match: False
+     dependence on        _ANY_ROLE_CUE_RE match: False
+
+  E1 -- the rationale spans REV-107 raised (role=cofactor).
+  refuse   requires-a-cofactor rationale    'the reaction requires a cofactor, so NDM-1 is added to resolve'
+  refuse   payload-structure rationale      'NDM-1 depends on the payload structure being consistent'
+  refuse   bare required-for                'NDM-1 is required for the reaction to proceed'
+  ACCEPT   bare dependent-on                'the reaction is dependent on NDM-1'
+  ACCEPT   bare presence-of                 'the decomposition proceeds in the presence of NDM-1'
+  refuse   as-a-cofactor rationale          'add NDM-1 as a cofactor to resolve the structural inconsistenc'
+  ACCEPT   REV-107 new: requires-to-resolve 'the reaction requires NDM-1 to resolve the structural inconsis'
+  ACCEPT   REV-107 new: dependent-added     'the structure is dependent on the enzyme NDM-1 being listed'
+
+  E2 -- cofactor PRESERVATION. All must ACCEPT.
+  ACCEPT   [PLP] 'PLP is the cofactor for ALAS2 in this condensation'
+  ACCEPT   [Zn2+] 'the reaction requires Zn2+ as a cofactor'
+  ACCEPT   [PLP] 'the enzyme is dependent on PLP for activity'
+  ACCEPT   [PLP] 'the condensation proceeds only in the presence of PLP'
+  ACCEPT   [PLP] 'PLP is the prosthetic group of the enzyme'
+  ACCEPT   [Zn2+] 'the enzyme requires the divalent metal ion Zn2+'
+  ACCEPT   [PLP] 'catalysis is dependent upon PLP'
+  ACCEPT   [NAD+] 'NAD+ is a coenzyme for the dehydrogenase'
+  ACCEPT   [PLP] 'the reaction has an absolute requirement for PLP'
+  COFACTOR PRESERVATION REFUSED: 0 of 9   []
+
+  E3 -- THE UNMAPPED-ROLE FALLBACK, with REV-107 roles and REV-107 spans.
+     role='chaperone'              family='other'
+     role='scaffold'               family='other'
+     role='adaptor'                family='other'
+     role='regulator'              family='other'
+     role='subunit'                family='other'
+     role='allosteric modulator'   family='other'
+     role='coenzyme'               family='other'
+     role='metal'                  family='other'
+     role='substrate'              family='other'
+     role='product'                family='other'
+     --- role='chaperone' (family 'other') ---
+       refuse   'NDM-1 is required for the reaction to proceed'
+       refuse   'the reaction proceeds in the presence of NDM-1'
+       refuse   'the enzyme requires NDM-1'
+       refuse   'the reaction is dependent on NDM-1'
+       ACCEPT   'catalysis depends on NDM-1'
+       refuse   'NDM-1 depends on the payload structure being consistent'
+       refuse   'the requirement for NDM-1 was demonstrated'
+       refuse   'the dependence on NDM-1 is absolute'
+       refuse   'NDM-1 was detected in the assay'
+       refuse   'add NDM-1 as a chaperone to resolve the structural inconsistency'
+       ACCEPT   'NDM-1 is the cofactor for the reaction'
+       ACCEPT   'NDM-1 catalyses the hydrolysis of meropenem'
+     --- role='scaffold' (family 'other') ---
+       refuse   'NDM-1 is required for the reaction to proceed'
+       refuse   'the reaction proceeds in the presence of NDM-1'
+       refuse   'the enzyme requires NDM-1'
+       refuse   'the reaction is dependent on NDM-1'
+       ACCEPT   'catalysis depends on NDM-1'
+       refuse   'NDM-1 depends on the payload structure being consistent'
+       refuse   'the requirement for NDM-1 was demonstrated'
+       refuse   'the dependence on NDM-1 is absolute'
+       refuse   'NDM-1 was detected in the assay'
+       refuse   'add NDM-1 as a chaperone to resolve the structural inconsistency'
+       ACCEPT   'NDM-1 is the cofactor for the reaction'
+       ACCEPT   'NDM-1 catalyses the hydrolysis of meropenem'
+     --- role='allosteric modulator' (family 'other') ---
+       refuse   'NDM-1 is required for the reaction to proceed'
+       refuse   'the reaction proceeds in the presence of NDM-1'
+       refuse   'the enzyme requires NDM-1'
+       refuse   'the reaction is dependent on NDM-1'
+       ACCEPT   'catalysis depends on NDM-1'
+       refuse   'NDM-1 depends on the payload structure being consistent'
+       refuse   'the requirement for NDM-1 was demonstrated'
+       refuse   'the dependence on NDM-1 is absolute'
+       refuse   'NDM-1 was detected in the assay'
+       refuse   'add NDM-1 as a chaperone to resolve the structural inconsistency'
+       ACCEPT   'NDM-1 is the cofactor for the reaction'
+       ACCEPT   'NDM-1 catalyses the hydrolysis of meropenem'
+
+REV107_PROBE4_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b569205e0361d0734cd3d2085ecc49a9078e2972  [git, worktree dirty=False]
+label                   : rev107-p4-r1
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/rev107_probe4.py p4-r1
+cwd                     : C:\t\rev107
+root PID / process group: 105520 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 380 s
+duration                : 0.29 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  111436:python.exe
+descendants terminated  : 1  111436
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev107\docs\pwml_recovery_sprint\evidence\g11\REV-107\23-p4-r1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

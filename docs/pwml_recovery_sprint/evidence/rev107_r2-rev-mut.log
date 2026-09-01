@@ -1,0 +1,136 @@
+=== BASELINE (unmutated r2 tip) === exit=0
+    185 passed in 0.30s
+
+=== V1: F1: the of/in linker is made MANDATORY  [RE-POINTED: the round-1 text targeted _ATTENUATION_STEM_SRC, which this round replaced]
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=0  GREEN  (EXPECTED -- registered gap, authorised not-fixed)
+        185 passed in 0.31s
+
+=== V2: F1: the modifier budget drops to zero  [RE-POINTED]
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=0  GREEN  (EXPECTED -- registered gap, authorised not-fixed)
+        185 passed in 0.31s
+
+=== V4: F2: the attenuation OBJECT vocabulary is emptied
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=1  RED (guard is tested)
+        6 failed, 179 passed in 0.37s
+        RED: test_a_real_attenuation_word_still_refuses_after_the_anchoring
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+
+=== V5: F2: the look distance collapses to zero
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=1  RED (guard is tested)
+        6 failed, 179 passed in 0.38s
+        RED: test_a_real_attenuation_word_still_refuses_after_the_anchoring
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+
+=== V6: 1e: the cofactor dependence vocabulary is emptied
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=1  RED (guard is tested)
+        4 failed, 181 passed in 0.36s
+        RED: test_an_evidenced_cofactor_row_is_licensed
+        RED: test_the_cofactor_family_itself_still_licenses_the_same_spans
+
+=== V7: 1e: the cofactor modifier budget drops to zero
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=0  GREEN  (EXPECTED -- registered gap, authorised not-fixed)
+        185 passed in 0.31s
+
+=== V8: 1e: the cofactor-specific modifier nouns are removed
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=0  GREEN  (EXPECTED -- registered gap, authorised not-fixed)
+        185 passed in 0.31s
+
+=== V9: 1e SCOPE: the dependence route goes family-wide again. BLOCKING last round; must now be RED.
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=1  RED (guard is tested)
+        8 failed, 177 passed in 0.39s
+        RED: test_the_cofactor_dependence_route_is_scoped_to_the_cofactor_family
+
+=== W1: A: the LEFT anchor comes off _ATTENUATION_WORD_SRC -- 'reduce' matches inside 'oxidoreduce'
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=0  GREEN  <<< UNEXPECTED SURVIVOR
+        185 passed in 0.31s
+
+=== W2: A: the RIGHT anchor comes off _ATTENUATION_WORD_SRC -- 'reduce' matches inside 'reductase'
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=0  GREEN  <<< UNEXPECTED SURVIVOR
+        185 passed in 0.30s
+
+=== W3: A: ONE inflection is dropped from the list -- does anything notice that 'reduction' is no longer an attenuation word?
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=1  RED (guard is tested)
+        8 failed, 177 passed in 0.39s
+        RED: test_a_real_attenuation_word_still_refuses_after_the_anchoring
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== W4: A: the LEFT anchor comes off this card's six inhibition additions
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=0  GREEN  <<< UNEXPECTED SURVIVOR
+        185 passed in 0.32s
+
+=== W5: A: the RIGHT anchor comes off this card's six inhibition additions -- 'silenc' matches inside 'silencer' again, the SECOND SITE
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=1  RED (guard is tested)
+        1 failed, 184 passed in 0.36s
+        RED: test_an_enzyme_noun_containing_an_attenuation_word_still_licenses
+
+=== W6: B: the cofactor dependence route is DISABLED outright. The scope pin alone would go green; the companion preservation test must go RED.
+    before: bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    after : bytes=118352 crlf=2426 sha256=67e55210305ddbc3
+    suite : exit=1  RED (guard is tested)
+        4 failed, 181 passed in 0.36s
+        RED: test_an_evidenced_cofactor_row_is_licensed
+        RED: test_the_cofactor_family_itself_still_licenses_the_same_spans
+
+==============================================================================
+REV-107 r2 MUTATIONS: 14
+RED   : 7  ['V4', 'V5', 'V6', 'V9', 'W3', 'W5', 'W6']
+GREEN : 7  ['V1', 'V2', 'V7', 'V8', 'W1', 'W2', 'W4']
+EXPECTED-GREEN (registered gaps): ['V1', 'V2', 'V7', 'V8']
+UNEXPECTED SURVIVORS: 3  ['W1', 'W2', 'W4']
+==============================================================================
+final target: bytes=118352 crlf=2426 sha256=67e55210305ddbc3d2f10e247b1e25df0947a4bb1b59aa6f18d3c8603502dd2e
+porcelain: '' (secondary signal only)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0b6f538a2da758f66b4ff1a4507552f194f286ab  [git, worktree dirty=False]
+label                   : rev107-r2-rev-mut
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/rev107_r2_mutation_attack.py C:/t/rev107
+cwd                     : C:\t\rev107
+root PID / process group: 116888 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 12.47 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 31  103964:python.exe, 114732:python.exe, 122264:python.exe, 124076:python.exe, 124168:python.exe, 121088:python.exe, 122448:python.exe, 119416:python.exe, 123480:python.exe, 115208:python.exe, 124120:python.exe, 123580:python.exe, 124440:python.exe, 116676:python.exe, 121844:python.exe, 124060:python.exe, 124072:python.exe, 120432:python.exe, 123964:python.exe, 118528:python.exe, 121756:python.exe, 121576:python.exe, 124192:python.exe, 122132:python.exe, 124368:python.exe, 124296:python.exe, 124432:python.exe, 117124:python.exe, 121776:python.exe, 123324:python.exe, 124504:python.exe
+descendants terminated  : 31  103964, 114732, 115208, 116676, 117124, 118528, 119416, 120432, 121088, 121576, 121756, 121776, 121844, 122132, 122264, 122448, 123324, 123480, 123580, 123964, 124060, 124072, 124076, 124120, 124168, 124192, 124296, 124368, 124432, 124440, 124504
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev107\docs\pwml_recovery_sprint\evidence\g11\REV-107\44-r2-rev-mut.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

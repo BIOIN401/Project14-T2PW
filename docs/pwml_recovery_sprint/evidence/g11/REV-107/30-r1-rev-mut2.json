@@ -1,0 +1,222 @@
+{
+  "label": "rev107-r1-rev-mut2",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/rev107_r1_mutation_attack.py",
+    "C:/t/rev107"
+  ],
+  "cwd": "C:\\t\\rev107",
+  "started_at": "2026-09-01T01:21:48+00:00",
+  "finished_at": "2026-09-01T01:21:57+00:00",
+  "duration_seconds": 8.655298999990919,
+  "timeout_seconds": 400.0,
+  "root_pid": 113352,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 112940,
+      "name": "python.exe",
+      "ppid": 113352
+    },
+    {
+      "pid": 112560,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 113608,
+      "name": "python.exe",
+      "ppid": 112560
+    },
+    {
+      "pid": 105124,
+      "name": "python.exe",
+      "ppid": 112800
+    },
+    {
+      "pid": 112800,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 112392,
+      "name": "python.exe",
+      "ppid": 112948
+    },
+    {
+      "pid": 112948,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 113672,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 113692,
+      "name": "python.exe",
+      "ppid": 113672
+    },
+    {
+      "pid": 113716,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 113736,
+      "name": "python.exe",
+      "ppid": 113716
+    },
+    {
+      "pid": 113756,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 113776,
+      "name": "python.exe",
+      "ppid": 113756
+    },
+    {
+      "pid": 113872,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 113892,
+      "name": "python.exe",
+      "ppid": 113872
+    },
+    {
+      "pid": 113912,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 113932,
+      "name": "python.exe",
+      "ppid": 113912
+    },
+    {
+      "pid": 113952,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 113972,
+      "name": "python.exe",
+      "ppid": 113952
+    },
+    {
+      "pid": 114084,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 114104,
+      "name": "python.exe",
+      "ppid": 114084
+    },
+    {
+      "pid": 114140,
+      "name": "python.exe",
+      "ppid": 112940
+    },
+    {
+      "pid": 114160,
+      "name": "python.exe",
+      "ppid": 114140
+    },
+    {
+      "pid": 114180,
+      "name": "git.exe",
+      "ppid": 112940
+    }
+  ],
+  "descendants_terminated": [
+    105124,
+    112392,
+    112560,
+    112800,
+    112940,
+    112948,
+    113608,
+    113672,
+    113692,
+    113716,
+    113736,
+    113756,
+    113776,
+    113872,
+    113892,
+    113912,
+    113932,
+    113952,
+    113972,
+    114084,
+    114104,
+    114140,
+    114160,
+    114180
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 74376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74532,
+      "name": "python.exe"
+    },
+    {
+      "pid": 111832,
+      "name": "python.exe"
+    },
+    {
+      "pid": 112660,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev107\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-107\\30-r1-rev-mut2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev107\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev107",
+    "repo_head": "b569205e0361d0734cd3d2085ecc49a9078e2972",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-107",
+    "token": "REV-107:112660:162a40f8fa67ebd3",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

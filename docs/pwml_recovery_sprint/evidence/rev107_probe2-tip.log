@@ -1,0 +1,188 @@
+code loaded from: C:\t\rev107\src\t2pw\curation\apply_audit_patch.py
+
+==========================================================================================
+T1 -- the one-character-name trap: REV-105's battery uses 'P' for 20 of 29
+     cases. Re-run every 'P' case with a MULTI-TOKEN name that exercises
+     _identifying_match_tokens rather than the whole-name fallback.
+==========================================================================================
+  ACCEPT (want ACCEPT)  catalysis span
+  ACCEPT (want ACCEPT)  N-catalyzed
+  ACCEPT (want ACCEPT)  N-mediated
+  ACCEPT (want ACCEPT)  is the enzyme resp.
+  ACCEPT (want ACCEPT)  passive by N
+  ACCEPT (want ACCEPT)  catalysed by N
+  ACCEPT (want ACCEPT)  N converts A into B
+  ACCEPT (want ACCEPT)  N hydrolyses A
+  ACCEPT (want ACCEPT)  N acts on A
+  ACCEPT (want ACCEPT)  N breaks down A
+  ACCEPT (want ACCEPT)  N is an enzyme that
+  ACCEPT (want ACCEPT)  N shown to catalyse
+  ACCEPT (want REFUSE)  << MISMATCH  cue >80 chars away
+  ACCEPT (want ACCEPT)  transport plain
+  ACCEPT (want ACCEPT)  transport importer
+  REFUSE (want REFUSE)  B2 inhibitor span
+  REFUSE (want REFUSE)  B3 structural rationale
+  REFUSE (want REFUSE)  different protein
+
+  T1 MULTI-TOKEN-NAME MISMATCHES: 1 / 18   ['cue >80 chars away']
+  ACCEPT (want ACCEPT)  dict row own evidence
+  ACCEPT (want ACCEPT)  inhibitor evidenced
+  ACCEPT (want ACCEPT)  activator evidenced
+  ACCEPT (want ACCEPT)  cofactor evidenced
+  T1b DICT-ROW MISMATCHES: 0  []
+
+==========================================================================================
+T2 -- B3 CLEAN residual frames. The earlier Frame C/D carried an
+     INDEPENDENT legitimate catalysis claim, so a True there was not
+     necessarily wrong. These frames carry NO independent claim.
+==========================================================================================
+
+  Frame E object AFTER stem (the fix's shape)
+     blockade       -> False
+     impairment     -> False
+     disruption     -> False
+     reduction      -> False
+     loss           -> False
+     silencing      -> False
+     sequestration  -> False
+     depletion      -> False
+     ablation       -> False
+     interference   -> False
+     quenching      -> False
+
+  Frame F object BEFORE stem, mediat cue
+     blockade       -> False
+     impairment     -> False
+     disruption     -> True
+     reduction      -> True
+     loss           -> True
+     silencing      -> False
+     sequestration  -> False
+     depletion      -> True
+     ablation       -> False
+     interference   -> False
+     quenching      -> True
+
+  Frame G object BEFORE stem, catalys cue
+     blockade       -> False
+     impairment     -> False
+     disruption     -> True
+     reduction      -> True
+     loss           -> True
+     silencing      -> False
+     sequestration  -> False
+     depletion      -> True
+     ablation       -> False
+     interference   -> False
+     quenching      -> True
+
+  Frame H object >40 chars after stem
+     blockade       -> False
+     impairment     -> False
+     disruption     -> True
+     reduction      -> True
+     loss           -> True
+     silencing      -> False
+     sequestration  -> False
+     depletion      -> True
+     ablation       -> False
+     interference   -> False
+     quenching      -> True
+
+  Frame I no object noun at all, mediat cue
+     blockade       -> False
+     impairment     -> False
+     disruption     -> True
+     reduction      -> True
+     loss           -> True
+     silencing      -> False
+     sequestration  -> False
+     depletion      -> True
+     ablation       -> False
+     interference   -> False
+     quenching      -> True
+
+==========================================================================================
+T3 -- N4: is the contra seen when it sits far BEFORE the passive verb?
+==========================================================================================
+  contra 120 chars before the verb       -> True
+  contra 120 chars after the agent       -> True
+  attenuation contra far before          -> True
+
+==========================================================================================
+T4 -- claim 3: REV-105 finding-2's example, both halves
+==========================================================================================
+  the quoted example: 'produced by decomposition, and NDM-1 is an inhibitor target'
+     -> False   (False at BASE == the
+        example no longer demonstrates the finding)
+     does the base contra fire on 'inhibitor'? True
+  the FINDING itself (passive agent is somebody else), on a clean span:
+     'A is produced by decomposition of PSA, and NDM-1 was quantified in the same assay'
+       -> False
+
+==========================================================================================
+T5 -- B10: the cancelling pair, located in the REAL corpus
+==========================================================================================
+  corpus rows whose span carries BOTH 'suppressor' and 'intermediate': 16
+     143520 chars  [modifiers/reactions role='catalyst'] 'phosphatidylglycerophosphate synthase' family=catalysis  LICENSES=True
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     143520 chars  [modifiers/reactions role='catalyst'] 'phosphatidylglycerophosphatase' family=catalysis  LICENSES=False
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     143520 chars  [modifiers/reactions role='catalyst'] 'CDP-diglyceride synthetase' family=catalysis  LICENSES=True
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     143520 chars  [modifiers/reactions role='catalyst'] 'CDP-DAG synthase complex' family=catalysis  LICENSES=True
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     143520 chars  [enzymes/reactions role='catalyst'] 'phosphatidylglycerophosphate synthase' family=catalysis  LICENSES=True
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     143520 chars  [enzymes/reactions role='catalyst'] 'phosphatidylglycerophosphatase' family=catalysis  LICENSES=False
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     143520 chars  [enzymes/reactions role='catalyst'] 'CDP-diglyceride synthetase' family=catalysis  LICENSES=True
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     143520 chars  [enzymes/reactions role='catalyst'] 'CDP-DAG synthase complex' family=catalysis  LICENSES=True
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     140214 chars  [modifiers/reactions role='catalyst'] 'phosphatidylglycerophosphate synthase' family=catalysis  LICENSES=True
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     140214 chars  [modifiers/reactions role='catalyst'] 'glycerol-3-phosphate acyltransferase' family=catalysis  LICENSES=True
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     140214 chars  [modifiers/reactions role='catalyst'] 'Pgp phosphatase complex' family=catalysis  LICENSES=False
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+     140214 chars  [modifiers/reactions role='catalyst'] '1-acylglycerol-3-phosphate O-acyltransferase' family=catalysis  LICENSES=True
+        \runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+
+  cue occurrences inside the largest such span:
+     intermediate   occurrences in folded span: 29
+     suppressor     occurrences in folded span: 232
+     mediat         occurrences in folded span: 29
+     suppress       occurrences in folded span: 261
+     catalys        occurrences in folded span: 0
+     hydroly        occurrences in folded span: 0
+     inhibit        occurrences in folded span: 29
+
+REV107_PROBE2_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9890770e565377ddb00179449714a49f4dc2a8c8  [git, worktree dirty=False]
+label                   : rev107-probe2-tip
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/rev107_probe2.py C:/t/rev107 C:/t/rev107
+cwd                     : C:\t\rev107
+root PID / process group: 96588 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 380 s
+duration                : 0.73 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  96596:python.exe
+descendants terminated  : 1  96596
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev107\docs\pwml_recovery_sprint\evidence\g11\REV-107\09-probe2-tip.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

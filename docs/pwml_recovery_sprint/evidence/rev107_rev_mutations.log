@@ -1,0 +1,103 @@
+=== BASELINE (unmutated tip) === exit=0
+    109 passed in 0.22s
+
+=== R1: 1a: the ATTENUATION OBJECT noun list is emptied -- the phrase rule can no longer find activity/level/expression
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        6 failed, 103 passed in 0.29s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== R2: 1a: the ATTENUATION STEM list is emptied -- no stem can start the phrase
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        6 failed, 103 passed in 0.29s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== R3: 1a: the SIX new bare inhibition stems are removed, leaving only the activity-directed phrase
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        11 failed, 98 passed in 0.29s
+        RED: test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests
+
+=== R4: 1a: the 40-character gap between stem and object is closed to zero
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        6 failed, 103 passed in 0.28s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== R5: 1b: the modifier budget between 'by' and the actor drops to zero
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        2 failed, 107 passed in 0.28s
+        RED: test_passive_with_agent_still_licenses_the_real_agent
+
+=== R6: 1c: the SEVENTEEN newly added stoplist words are removed -- the list reverts to its C-106 content while the s? rule stays
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        5 failed, 104 passed in 0.28s
+        RED: test_ordinary_english_ase_words_do_not_license_an_enzyme
+
+=== R7: 1a: the contra is applied to EVERY family, not only catalysis -- the over-refusal direction C-105 round 1 was rejected for
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        12 failed, 97 passed in 0.31s
+        RED: test_actor_already_in_the_reaction_is_not_evidence_for_a_new_role
+        RED: test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests
+
+=== R8: 1e: the cofactor family is made to license the BARE SCHEMA NOUN, the single line the author says separates it from F-146
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        1 failed, 108 passed in 0.27s
+        RED: test_licensing_the_cofactor_role_is_not_a_route_for_a_rationale
+
+=== R9: control (pre-existing C-105 guard): _SHORT_ENZYME_NOUNS is emptied
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        6 failed, 103 passed in 0.29s
+        RED: test_evidenced_actor_adds_survive_the_guard
+        RED: test_real_enzyme_family_nouns_still_license
+
+==============================================================================
+REV-107 MUTATIONS: 9   SURVIVORS: 0 []
+==============================================================================
+final target: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d49083001d72df0817f8f3bcb3bf42e7b3b91f6b2f284ac2e
+porcelain: '' (secondary signal only)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9890770e565377ddb00179449714a49f4dc2a8c8  [git, worktree dirty=False]
+label                   : rev107-rev-mutations
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/rev107_mutation_attack.py C:/t/rev107
+cwd                     : C:\t\rev107
+root PID / process group: 98244 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 7.66 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 21  97368:python.exe, 97424:python.exe, 97880:python.exe, 73548:python.exe, 97440:python.exe, 96632:python.exe, 97048:python.exe, 96488:python.exe, 96536:python.exe, 90840:python.exe, 96944:python.exe, 90264:python.exe, 90516:python.exe, 7240:python.exe, 90952:python.exe, 92212:python.exe, 96560:python.exe, 93056:python.exe, 95444:python.exe, 95176:python.exe, 96732:python.exe
+descendants terminated  : 21  7240, 73548, 90264, 90516, 90840, 90952, 92212, 93056, 95176, 95444, 96488, 96536, 96560, 96632, 96732, 96944, 97048, 97368, 97424, 97440, 97880
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev107\docs\pwml_recovery_sprint\evidence\g11\REV-107\15-rev-mutations.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

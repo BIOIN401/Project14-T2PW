@@ -1,0 +1,87 @@
+=== BEFORE ===
+  before     test_c102_coverage_denominator.py          bytes=29576 crlf=579 bare_lf=0 sha=2f9bb52df56bdde1
+  before     acceptance.py                              bytes=79745 crlf=1673 bare_lf=0 sha=70a642cac41f3624
+  before     semantic.py                                bytes=87315 crlf=1877 bare_lf=0 sha=bc05bcf499c09291
+
+=== c102 BROKEN (assert legs == 72 -> == 999) ===
+  broken     test_c102_coverage_denominator.py          bytes=29577 crlf=579 bare_lf=0 sha=bf07ab76e371f1fe
+  CRLF preserved by my own edit: True
+
+=== HARNESS OUTPUT (verbatim) ===
+=== BASELINE (unmutated tip) === exit=1
+    test_10_f132_population_regression_over_the_six_papers
+    1 failed, 13 passed in 3.44s
+
+=== BASELINE PRECONDITION FAILED -- NOTHING BELOW WOULD MEAN ANYTHING ===
+    The unmutated c102 suite is RED, so every mutation would 'go RED'
+    for free and this harness would certify guards it never exercised.
+
+    MOST LIKELY CAUSE: the artifact-census pin is stale -- see C-106.
+    tests/test_c102_coverage_denominator.py pins four census-derived
+    quantities with `==` against the committed quarantine_report.json
+    population. Committing a benchmark run grows that population and
+    turns tests 10 and 13 red. Four pins move together, not one:
+        line ~380  len(paths) floor      >= 72
+        line ~415  test 10 legs          == 72
+        line ~430  test 10 withheld      == 97
+        line ~540  test 13 checked       == 72
+        line ~549  test 13 matched-forb  == 26
+
+    Re-measure with evidence/orch717_census_probe.py, move the pins to
+    the measured values WITH the per-run attribution recorded beside
+    them, and re-run this harness. DO NOT delete this precondition.
+
+Traceback (most recent call last):
+  File "C:\t\rev106\docs\pwml_recovery_sprint\evidence\c102_mutation_attack.py", line 338, in <module>
+    raise SystemExit(main(Path(sys.argv[1]).resolve()))
+                     ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\t\rev106\docs\pwml_recovery_sprint\evidence\c102_mutation_attack.py", line 282, in main
+    assert code == 0, (
+           ^^^^^^^^^
+AssertionError: the unmutated suite must be green before any mutation means anything -- the census pin is probably stale, see C-106 and the diagnostic above
+
+=== harness exit code: 1
+
+A7 CHECK 1  harness printed the abort diagnostic : True
+A7 CHECK 2  precondition AssertionError raised    : True
+A7 CHECK 3  mutation banners printed (must be []) : []
+A7 CHECK 4  harness exit non-zero                 : True
+A7 CHECK 5  acceptance.py sha unchanged           : True
+A7 CHECK 6  semantic.py   sha unchanged           : True
+A7 CHECK 7  porcelain on mutated modules (must be ''): ''
+
+=== RESTORE (saved bytes replayed) ===
+  after      test_c102_coverage_denominator.py          bytes=29576 crlf=579 bare_lf=0 sha=2f9bb52df56bdde1
+  sha256 equal : True  (2f9bb52df56bdde1 -> 2f9bb52df56bdde1)
+  CRLF equal   : True  (579 -> 579)
+  bytes equal  : True
+  git status --porcelain tests/ src/ (secondary): ''
+
+A7 VERDICT: PASS -- the harness refuses a red baseline
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba2bf6830ad0c9b5ad6c9817ffb348806740d7d0  [git, worktree dirty=False]
+label                   : a7-preservation
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/rev106_a7_preservation.py C:/t/rev106
+cwd                     : C:\t\rev106
+root PID / process group: 65000 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 4.37 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 6  66936:python.exe, 63976:python.exe, 64764:python.exe, 66392:python.exe, 64684:python.exe, 62688:git.exe
+descendants terminated  : 6  62688, 63976, 64684, 64764, 66392, 66936
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev106\docs\pwml_recovery_sprint\evidence\g11\REV-106\06-a7-preservation.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

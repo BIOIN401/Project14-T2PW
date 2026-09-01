@@ -1,0 +1,299 @@
+
+==============================================================================
+B1 -- the F-146 patch, constructed by REV-107 from C-105.md section 1
+==============================================================================
+  F146/enzymes/-  bare string value
+      accepted=False  reason=unevidenced_actor_role: no evidence span names 'NDM-1' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload str
+  F146/enzymes/-  dict value
+      accepted=False  reason=unevidenced_actor_role: no evidence span names 'NDM-1' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload str
+  F146/modifiers/- role=catalyst
+      accepted=False  reason=unevidenced_actor_role: no evidence span names 'NDM-1' performing the catalysis role of modifiers; an actor role may not be added to satisfy payload s
+  F146 evidence field not reason
+      accepted=False  reason=unevidenced_actor_role: no evidence span names 'NDM-1' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload str
+  F146 row-carried evidence
+      accepted=False  reason=unevidenced_actor_role: no evidence span names 'NDM-1' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload str
+  F146 paraphrase: reduction of activity
+      accepted=False  reason=unevidenced_actor_role: no evidence span names 'NDM-1' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload str
+  F146 paraphrase: blockade
+      accepted=False  reason=unevidenced_actor_role: no evidence span names 'NDM-1' performing the catalysis role of enzymes; an actor role may not be added to satisfy payload str
+  F146 via cofactor role (C-107 1e, new family)
+      accepted=False  reason=unevidenced_actor_role: no evidence span names 'NDM-1' performing the cofactor role of modifiers; an actor role may not be added to satisfy payload st
+  F146 via transporter container (C-107 1d, enzyme-noun rule now on transport)
+      accepted=True  reason=accepted
+  F146-class: cofactor rationale using 'requires'
+      accepted=True  reason=accepted
+  [ok ] B1 PINNED F-146 rejected: got=False want=False
+  [ok ] B1 PINNED F-146 reason prefix: got=True want=True
+
+==============================================================================
+B2 -- 'reduction of' closed WITHOUT breaking redox
+==============================================================================
+  catalysis pattern still contains 'reduces|reducing|reduction of': True
+  'reduces' present: True
+  'reducing' present: True
+  [ok ] B2 'the reduction of NDM-1 activity by PSA' / NDM-1: got=False want=False
+  [ok ] B2 'PSA caused a reduction of NDM-1 enzyme activity' / NDM-1: got=False want=False
+  [ok ] B2 'NADH-dependent reduction of the substrate by ferroch' / ferrochelatase: got=True want=True
+  [ok ] B2 'ferrochelatase reduces protoporphyrin IX to heme' / ferrochelatase: got=True want=True
+  [ok ] B2 'nitroreductase catalyses the reduction of the nitro ' / nitroreductase: got=True want=True
+  [ok ] B2 'the reduction of the disulfide bond is mediated by t' / thioredoxin: got=True want=True
+  [ok ] B2 'reducing equivalents are transferred by ferredoxin r' / ferredoxin reductase: got=True want=True
+
+  -- REV-107 additional redox stress (residual hunt, not in the card) --
+     'the enzyme catalyses the reduction of the substrate level in vitro' / enzyme -> False
+     'ferrochelatase reduces the cellular level of protoporphyrin' / ferrochelatase -> False
+     'NADPH-dependent reduction of flavin is required for enzyme function' / flavin reductase -> False
+
+==============================================================================
+B3 -- all eleven near-synonyms, INDIVIDUALLY, in three frames
+==============================================================================
+
+  Frame A -- bare Lead frame: 'the <word> of NDM-1 activity by PSA'
+     blockade       -> False
+     impairment     -> False
+     disruption     -> False
+     reduction      -> False
+     loss           -> False
+     silencing      -> False
+     sequestration  -> False
+     depletion      -> False
+     ablation       -> False
+     interference   -> False
+     quenching      -> False
+
+  Frame B -- with a REAL catalysis cue in the window:
+            '<word> of NDM-1 activity is mediated by PSA'
+     blockade       -> False
+     impairment     -> False
+     disruption     -> False
+     reduction      -> False
+     loss           -> False
+     silencing      -> False
+     sequestration  -> False
+     depletion      -> False
+     ablation       -> False
+     interference   -> False
+     quenching      -> False
+
+  Frame C -- object BEFORE the stem: 'NDM-1 activity is <word>ed, mediated by PSA'
+     blockade       -> False
+     impairment     -> False
+     disruption     -> True
+     reduction      -> True
+     loss           -> True
+     silencing      -> False
+     sequestration  -> False
+     depletion      -> True
+     ablation       -> False
+     interference   -> False
+     quenching      -> True
+
+  Frame D -- no activity/level/expression object at all:
+            'the <word> of NDM-1 by PSA, and hydrolysis is mediated by NDM-1'
+     blockade       -> False
+     impairment     -> False
+     disruption     -> True
+     reduction      -> True
+     loss           -> True
+     silencing      -> False
+     sequestration  -> False
+     depletion      -> True
+     ablation       -> False
+     interference   -> False
+     quenching      -> True
+
+==============================================================================
+C4 -- the Lead's word-level probe, adjudicated
+==============================================================================
+  bare word 'reduction' alone as a catalysis cue in the shipped pattern:
+     _ROLE_CUE_RES['catalysis'].search('reduction') = False
+     _ROLE_CUE_RES['catalysis'].search('reduction of') = True
+
+  For each of the eleven, does the BARE frame carry ANY catalysis cue?
+     blockade       cue=None
+     impairment     cue=None
+     disruption     cue=None
+     reduction      cue='reduction of'
+     loss           cue=None
+     silencing      cue=None
+     sequestration  cue=None
+     depletion      cue=None
+     ablation       cue=None
+     interference   cue=None
+     quenching      cue=None
+
+==============================================================================
+B6/B7 -- the closed stoplist and the plural bypass
+==============================================================================
+  _NON_ENZYME_ASE_WORDS entries : 50
+  _SHORT_ENZYME_NOUNS           : ('lyase', 'lyases', 'dnase', 'dnases', 'rnase', 'rnases')
+  stoplist                      : ['disease', 'diseases', 'increase', 'increases', 'increased', 'decrease', 'decreases', 'decreased', 'release', 'releases', 'released', 'database', 'databases', 'purchase', 'phrase', 'phrases', 'chase', 'erase', 'cease', 'ceases', 'ceased', 'lease', 'please', 'case', 'cases', 'base', 'bases', 'phase', 'phases', 'vase', 'showcase', 'staircase', 'briefcase', 'appease', 'bookcase', 'crease', 'debase', 'decease', 'displease', 'encase', 'grease', 'lowercase', 'nutcase', 'paraphrase', 'pillowcase', 'rebase', 'rephrase', 'suitcase', 'surcease', 'uppercase']
+
+  entries with NO explicit plural listed: 40
+     ['diseases', 'increases', 'increased', 'decreases', 'decreased', 'releases', 'released', 'databases', 'purchase', 'phrases', 'chase', 'erase', 'ceases', 'ceased', 'lease', 'please', 'cases', 'bases', 'phases', 'vase', 'showcase', 'staircase', 'briefcase', 'appease', 'bookcase', 'crease', 'debase', 'decease', 'displease', 'encase', 'grease', 'lowercase', 'nutcase', 'paraphrase', 'pillowcase', 'rebase', 'rephrase', 'suitcase', 'surcease', 'uppercase']
+
+  does each singular-only entry's -s plural BYPASS (match as enzyme noun)?
+     diseasess      match=None
+     increasess     match=None
+     increaseds     match=None
+     decreasess     match=None
+     decreaseds     match=None
+     releasess      match=None
+     releaseds      match=None
+     databasess     match=None
+     purchases      match=None
+     phrasess       match=None
+     chases         match=None
+     erases         match=None
+     ceasess        match=None
+     ceaseds        match=None
+     leases         match=None
+     pleases        match=None
+     casess         match=None
+     basess         match=None
+     phasess        match=None
+     vases          match=None
+     showcases      match=None
+     staircases     match=None
+     briefcases     match=None
+     appeases       match=None
+     bookcases      match=None
+     creases        match=None
+     debases        match=None
+     deceases       match=None
+     displeases     match=None
+     encases        match=None
+     greases        match=None
+     lowercases     match=None
+     nutcases       match=None
+     paraphrases    match=None
+     pillowcases    match=None
+     rebases        match=None
+     rephrases      match=None
+     suitcases      match=None
+     surceases      match=None
+     uppercases     match=None
+
+  BYPASSING PLURALS: []
+  [ok ] B7 no singular-only plural bypasses: got=[] want=[]
+
+  every entry, singular and plural, must NOT match:
+     leaks: []
+
+  real enzymes must STILL match (preservation, incl. -ases plurals):
+     enzymes NOT matched: []
+  [ok ] B6/B7 no real enzyme lost: got=[] want=[]
+
+  B6 -- is the stoplist still a CLOSED STOPLIST of English words?
+     _ENZYME_NOUN_RE_SRC = (?:(?<![a-z])(?!(?:disease|diseases|increase|increases|increased|decrease|decreases|decreased|release|releases|released|...
+     contains a negative lookahead (stoplist) : True
+     generic [a-z]{3,}ases? rule retained    : True
+
+==============================================================================
+1f / B10 -- 'mediat' anchoring
+==============================================================================
+     [legit, must license] 'ALAS2 mediates the condensation of glycine and succinyl-CoA' -> True
+     [intermediate, must NOT license] 'NDM-1 is an intermediate carrier in this pathway' -> False
+     [hyphenated, must license] 'hydrolysis is NDM-1-mediated in the periplasm' -> True
+     [must NOT license] 'the intermediates accumulate near NDM-1 in this pathway' -> False
+
+  the cancelling pair, isolated:
+     'suppressor mutations were mapped, and NDM-1 appears as an intermediate in the discussion o'
+       -> False
+     'suppress' still unanchored in inhibition set: True
+
+==============================================================================
+1d -- transport enzyme-noun rule
+==============================================================================
+  [ok ] 1d 'MsbA is the flippase that translocates lipid A acr': got=True want=True
+  [ok ] 1d 'MsbA is the flippase of the inner membrane': got=True want=True
+  [ok ] 1d 'MsbA was detected in the lysate': got=False want=False
+  [ok ] 1d 'Fur is a transcriptional regulator of iron genes': got=False want=False
+
+  cost of the general rule (author admits it):
+     'P is a hydrolase' cues TRANSPORT for P: True
+
+==============================================================================
+1e / B8 -- cofactor role
+==============================================================================
+  _ROLE_FAMILY_BY_ROLE.get('cofactor') = 'cofactor'
+  'cofactor' in _ROLE_CUE_RES          = True
+  [ok ] 1e 'PLP is the cofactor for ALAS2 in this condensation': got=True want=True
+  [ok ] 1e 'the enzyme requires Zn2+ for activity': got=True want=True
+  [ok ] 1e 'add PLP as a cofactor to resolve the structural inco': got=False want=False
+  [ok ] 1e 'PLP was detected in the assay': got=False want=False
+
+  N1 -- REV-107 residual: does a bare rationale with a cofactor stem self-license?
+     'add NDM-1 as a cofactor because the reaction requires a cofactor' -> True
+     'NDM-1 is required for the reaction to proceed' -> True
+     'the reaction is dependent on NDM-1' -> True
+     'the decomposition proceeds in the presence of NDM-1' -> True
+     'NDM-1 depends on the payload structure being consistent' -> True
+
+  N2 -- does the widened _ANY_ROLE_CUE_RE leak to EVERY unmapped role?
+     _actor_role_family('modifiers', {'role':'chaperone'}) = other
+     role=chaperone (family 'other'): 'NDM-1 is required for the reaction to proceed' -> True
+     role=chaperone (family 'other'): 'the reaction proceeds in the presence of NDM-1' -> True
+
+==============================================================================
+1b / N4 -- passive-with-agent, actor-anchored
+==============================================================================
+  [ok ] 1b 'phthalylsulfacetamide is converted to sulfacetamide by NDM': got=True want=True
+  [ok ] 1b 'phthalylsulfacetamide is converted to sulfacetamide by Q9X': got=False want=False
+  [ok ] 1b 'the substrate is converted to product by the purified reco': got=True want=True
+  [ok ] 1b 'the substrate is converted to product by Q9X; NDM-1 was pr': got=False want=False
+
+  N4 -- is the contra seen when it sits BEFORE the passive verb?
+     'PSA inhibited NDM-1 and the substrate is converted to product by NDM-1' -> False
+     'the substrate is converted to product by NDM-1, which PSA inhibited' -> False
+
+==============================================================================
+C6 -- the two new findings the author registered
+==============================================================================
+  (a) transport family bare schema noun self-licenses:
+     'add MsbA as a transporter to resolve the structural inconsistency'
+       family=transport -> True
+       through the production seam: accepted=True reason=accepted
+     'transport' is a bare stem in the transport family: True
+
+     control -- the catalysis family does NOT do this:
+       'add MsbA as an enzyme to resolve the structural inconsistency' -> False
+
+  (b) [^.] is a no-op because _match_fold strips periods:
+     _match_fold('One sentence here. A second sentence there.')
+        = 'one sentence here a second sentence there'
+     '.' in folded haystack: False
+     cross-sentence contra reaches across the period: False  (False => contra crossed the '.')
+
+==============================================================================
+REV-107 PROBE SUMMARY [TIP]
+==============================================================================
+  assertion failures: 0
+REV107_PROBE_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9890770e565377ddb00179449714a49f4dc2a8c8  [git, worktree dirty=False]
+label                   : rev107-tip-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/rev107_probe.py TIP
+cwd                     : C:\t\rev107
+root PID / process group: 90040 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.28 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  94388:python.exe
+descendants terminated  : 1  94388
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev107\docs\pwml_recovery_sprint\evidence\g11\REV-107\02-tip-probe.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

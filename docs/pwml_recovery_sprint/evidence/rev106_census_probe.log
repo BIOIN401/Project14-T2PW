@@ -1,0 +1,54 @@
+git ls-files *quarantine_report.json : 72 paths
+skipped: no gold case=0  contract returned None=0
+
+run                                       legs  withheld  matched_forb
+2026-08-18_1328                              3         7             1
+2026-08-21_1822                              2         4             0
+2026-08-21_2014                              2         7             1
+2026-08-21_2057                              4         6             2
+2026-08-21_2239                             10        10             2
+2026-08-22_1821                              1         1             0
+2026-08-22_2017                              4         3             1
+2026-08-22_2147                             12        14             4
+2026-08-24_1203                              7        10             5
+2026-08-24_1402                              2         3             0
+2026-08-24_1428                             10        19             4
+2026-08-25_1216                              3         2             2
+2026-08-27_1341                              2         6             1
+2026-08-28_1816                             10         5             3
+----------------------------------------------------------------------
+TOTAL                                       72        97            26
+
+2026-08-28_1816 contributes: legs=10 withheld=5 matched_forb=3
+all OTHER runs sum to: legs=62 withheld=92 matched_forb=23
+
+REV-106 DERIVED: legs=72 checked=72 withheld=97 with_matched_forbidden=26
+affected - F132_PAPERS = ['PMC13231680']
+cleared = []
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba2bf6830ad0c9b5ad6c9817ffb348806740d7d0  [git, worktree dirty=False]
+label                   : census-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/rev106_census_probe.py C:/t/rev106
+cwd                     : C:\t\rev106
+root PID / process group: 50624 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 0.81 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  63100:python.exe
+descendants terminated  : 1  63100
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev106\docs\pwml_recovery_sprint\evidence\g11\REV-106\01-census-probe.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

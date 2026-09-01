@@ -1,0 +1,73 @@
+BASE parse pattern lifted from rev106base: '(\\d+) (passed|failed|skipped|errors|error)'
+TIP parse block lifted from rev106: 638 chars, defines summary_counts=True
+
+=== SCENARIO green_with_warning_text   pytest exit=0
+    real summary line : '1 passed, 1 warning in 0.01s'
+    output contains '3 errors' : True
+    BASE parse : {'passed': 1, 'failed': 0, 'skipped': 0, 'error': 0, 'errors': 3}
+    TIP  parse : {'passed': 1, 'failed': 0, 'skipped': 0, 'error': 0, 'errors': 0}
+    BASE errors=3 aborts=True   TIP errors=0 aborts=False
+    EXPECT tip: no abort, failed=0, errors=0, passed>=1  -> OK
+    (base aborts spuriously: True)
+
+=== SCENARIO genuine_red   pytest exit=1
+    real summary line : '1 failed, 1 passed in 0.04s'
+    output contains '3 errors' : False
+    BASE parse : {'passed': 1, 'failed': 1, 'skipped': 0, 'error': 0, 'errors': 0}
+    TIP  parse : {'passed': 1, 'failed': 1, 'skipped': 0, 'error': 0, 'errors': 0}
+    BASE errors=0 aborts=False   TIP errors=0 aborts=False
+    EXPECT tip: failed=1, passed=1, errors=0, folds into totals (no abort) -> OK
+
+=== SCENARIO genuine_collection_error   pytest exit=2
+    real summary line : '1 error in 0.08s'
+    output contains '3 errors' : False
+    BASE parse : {'passed': 0, 'failed': 0, 'skipped': 0, 'error': 1, 'errors': 0}
+    TIP  parse : {'passed': 0, 'failed': 0, 'skipped': 0, 'error': 1, 'errors': 0}
+    BASE errors=1 aborts=True   TIP errors=1 aborts=True
+    EXPECT tip: errors>=1 and the D-083 abort STILL fires -> OK
+
+=== SCENARIO green_with_failure_prose   pytest exit=2
+    real summary line : '1 error in 0.14s'
+    output contains '3 errors' : True
+    BASE parse : {'passed': 0, 'failed': 7, 'skipped': 0, 'error': 1, 'errors': 3}
+    TIP  parse : {'passed': 0, 'failed': 0, 'skipped': 0, 'error': 1, 'errors': 0}
+    BASE errors=4 aborts=True   TIP errors=1 aborts=True
+    EXPECT tip: no abort, failed=0, errors=0, passed>=1  -> VIOLATED
+    (base aborts spuriously: True)
+
+=== SCENARIO plain_green   pytest exit=0
+    real summary line : '2 passed in 0.00s'
+    output contains '3 errors' : False
+    BASE parse : {'passed': 2, 'failed': 0, 'skipped': 0, 'error': 0, 'errors': 0}
+    TIP  parse : {'passed': 2, 'failed': 0, 'skipped': 0, 'error': 0, 'errors': 0}
+    BASE errors=0 aborts=False   TIP errors=0 aborts=False
+    EXPECT tip: passed=2, clean -> OK
+
+A8 VERDICT: 1 scenario(s) VIOLATED
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba2bf6830ad0c9b5ad6c9817ffb348806740d7d0  [git, worktree dirty=False]
+label                   : f152-scenarios
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/rev106_f152_scenarios.py C:/t/rev106 C:/t/rev106base
+cwd                     : C:\t\rev106
+root PID / process group: 69312 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 2.24 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 11  63124:python.exe, 57672:python.exe, 61292:python.exe, 55732:python.exe, 62556:python.exe, 64392:python.exe, 67148:python.exe, 31368:python.exe, 67112:python.exe, 66128:python.exe, 69232:python.exe
+descendants terminated  : 11  31368, 55732, 57672, 61292, 62556, 63124, 64392, 66128, 67112, 67148, 69232
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev106\docs\pwml_recovery_sprint\evidence\g11\REV-106\11-f152-scenarios.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

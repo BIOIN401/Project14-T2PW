@@ -1,0 +1,38 @@
+C:\t\rev107_v11check.py:6: SyntaxWarning: invalid escape sequence '\s'
+  OLD='                _ATTENUATION_STEM_SRC + r"[a-z]*\b(?:\s+(?:of|in))?"\n'
+C:\t\rev107_v11check.py:7: SyntaxWarning: invalid escape sequence '\s'
+  NEW='                r"(?<![a-z])" + _ATTENUATION_STEM_SRC + r"[a-z]*\b(?:\s+(?:of|in))?"\n'
+before bytes=115786 crlf=2386 sha=c6453b9c3af12a53
+Traceback (most recent call last):
+  File "C:\t\rev107_v11check.py", line 10, in <module>
+    saved=apply_mutation(p,OLD,NEW)
+  File "C:\t\rev107\docs/pwml_recovery_sprint/evidence\c102_mutation_attack.py", line 189, in apply_mutation
+    raise ValueError(f"the substitution matched {count} times, not 1")
+ValueError: the substitution matched 0 times, not 1
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b569205e0361d0734cd3d2085ecc49a9078e2972  [git, worktree dirty=False]
+label                   : rev107-v11-check
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/rev107_v11check.py
+cwd                     : C:\t\rev107
+root PID / process group: 108860 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 380 s
+duration                : 0.18 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  109344:python.exe
+descendants terminated  : 1  109344
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev107\docs\pwml_recovery_sprint\evidence\g11\REV-107\31-v11-check.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

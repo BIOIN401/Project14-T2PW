@@ -1,0 +1,204 @@
+{
+  "label": "rev107-rev-mutations",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/rev107_mutation_attack.py",
+    "C:/t/rev107"
+  ],
+  "cwd": "C:\\t\\rev107",
+  "started_at": "2026-09-01T00:47:05+00:00",
+  "finished_at": "2026-09-01T00:47:13+00:00",
+  "duration_seconds": 7.6644702999910805,
+  "timeout_seconds": 400.0,
+  "root_pid": 98244,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 97368,
+      "name": "python.exe",
+      "ppid": 98244
+    },
+    {
+      "pid": 97424,
+      "name": "python.exe",
+      "ppid": 97880
+    },
+    {
+      "pid": 97880,
+      "name": "python.exe",
+      "ppid": 97368
+    },
+    {
+      "pid": 73548,
+      "name": "python.exe",
+      "ppid": 97440
+    },
+    {
+      "pid": 97440,
+      "name": "python.exe",
+      "ppid": 97368
+    },
+    {
+      "pid": 96632,
+      "name": "python.exe",
+      "ppid": 97368
+    },
+    {
+      "pid": 97048,
+      "name": "python.exe",
+      "ppid": 96632
+    },
+    {
+      "pid": 96488,
+      "name": "python.exe",
+      "ppid": 97368
+    },
+    {
+      "pid": 96536,
+      "name": "python.exe",
+      "ppid": 96488
+    },
+    {
+      "pid": 90840,
+      "name": "python.exe",
+      "ppid": 97368
+    },
+    {
+      "pid": 96944,
+      "name": "python.exe",
+      "ppid": 90840
+    },
+    {
+      "pid": 90264,
+      "name": "python.exe",
+      "ppid": 97368
+    },
+    {
+      "pid": 90516,
+      "name": "python.exe",
+      "ppid": 90264
+    },
+    {
+      "pid": 7240,
+      "name": "python.exe",
+      "ppid": 90952
+    },
+    {
+      "pid": 90952,
+      "name": "python.exe",
+      "ppid": 97368
+    },
+    {
+      "pid": 92212,
+      "name": "python.exe",
+      "ppid": 96560
+    },
+    {
+      "pid": 96560,
+      "name": "python.exe",
+      "ppid": 97368
+    },
+    {
+      "pid": 93056,
+      "name": "python.exe",
+      "ppid": 95444
+    },
+    {
+      "pid": 95444,
+      "name": "python.exe",
+      "ppid": 97368
+    },
+    {
+      "pid": 95176,
+      "name": "python.exe",
+      "ppid": 97368
+    },
+    {
+      "pid": 96732,
+      "name": "python.exe",
+      "ppid": 95176
+    }
+  ],
+  "descendants_terminated": [
+    7240,
+    73548,
+    90264,
+    90516,
+    90840,
+    90952,
+    92212,
+    93056,
+    95176,
+    95444,
+    96488,
+    96536,
+    96560,
+    96632,
+    96732,
+    96944,
+    97048,
+    97368,
+    97424,
+    97440,
+    97880
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 74376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74532,
+      "name": "python.exe"
+    },
+    {
+      "pid": 93284,
+      "name": "python.exe"
+    },
+    {
+      "pid": 97548,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev107\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-107\\15-rev-mutations.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev107\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev107",
+    "repo_head": "9890770e565377ddb00179449714a49f4dc2a8c8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-107",
+    "token": "REV-107:97548:7261acd9c3cde8a7",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

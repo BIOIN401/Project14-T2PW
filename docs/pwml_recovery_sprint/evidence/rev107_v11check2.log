@@ -1,0 +1,52 @@
+before bytes=115786 crlf=2386 sha=c6453b9c3af12a53
+after  bytes=115786 crlf=2386 sha=c6453b9c3af12a53
+RESTORE PROVED byte-exact by sha256 AND CRLF count
+
+  MATRIX OPEN CELLS: 0 of 44
+  E possessive               OPEN  0 of 11   []
+  F stem first, actor far    OPEN  5 of 11   ['disruption', 'reduction', 'loss', 'depletion', 'quenching']
+  G passive verb form        OPEN  5 of 11   ['disruption', 'reduction', 'loss', 'depletion', 'quenching']
+  H apposition               OPEN  0 of 11   []
+  I two modifiers            OPEN  0 of 11   []
+  J six modifiers            OPEN  5 of 11   ['disruption', 'reduction', 'loss', 'depletion', 'quenching']
+  K cross-clause             OPEN  0 of 11   []
+  L object 100 after actor   OPEN  0 of 11   []
+  M no of/in linker          OPEN  0 of 11   []
+  N hyphen linker            OPEN  0 of 11   []
+  EXTRA-FRAME OPEN CELLS: 15 of 110
+  REFUSE  <<< FALSE REFUSAL   reductase, name adjacent     'the reductase P4X catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   reductase + modifier         'the purified reductase NfsB catalyses the conversion of A '
+  REFUSE  <<< FALSE REFUSAL   blocker adjacent             'the blocker protein P4X catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   silencer adjacent            'the silencer complex P4X catalyses the conversion of A to '
+  REFUSE  <<< FALSE REFUSAL   interferon adjacent          'interferon IRF3 catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   quenchase nonsense control   'the quenchase P4X catalyses the conversion of A to B'
+  FALSE REFUSALS: 6 of 10   ['reductase, name adjacent', 'reductase + modifier', 'blocker adjacent', 'silencer adjacent', 'i
+  REDOX/CATALYSIS REFUSED: 1 of 15
+  COFACTOR PRESERVATION REFUSED: 0 of 9   []
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b569205e0361d0734cd3d2085ecc49a9078e2972  [git, worktree dirty=False]
+label                   : rev107-v11-check2
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/rev107_v11check.py
+cwd                     : C:\t\rev107
+root PID / process group: 111328 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 380 s
+duration                : 0.29 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 3  114128:python.exe, 113748:python.exe, 113824:python.exe
+descendants terminated  : 3  113748, 113824, 114128
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev107\docs\pwml_recovery_sprint\evidence\g11\REV-107\32-v11-check2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

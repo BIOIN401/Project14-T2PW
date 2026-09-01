@@ -1,0 +1,52 @@
+=== CONTROL: exit=0  16 passed in 0.14s
+
+=== G-a2R: the WRITE side genuinely damaged: emit LF-only bytes from apply_mutation
+    matches=1
+    exit=2  1 error in 0.18s
+    RED: []
+    -> CAUGHT by the new test file
+    restored: sha 819678b2711cd5ea -> 819678b2711cd5ea  crlf 338 -> 338  byte-exact=True
+
+=== G-fR: M5's `old` string altered so the substitution matches ZERO times
+    matches=0
+    !! DID NOT APPLY (matched 0) -- recorded, not hidden
+
+=== G-g: drop the sha256 assertion from restore_saved_bytes
+    matches=1
+    exit=0  16 passed in 0.15s
+    RED: []
+    -> NOT CAUGHT
+    restored: sha 819678b2711cd5ea -> 819678b2711cd5ea  crlf 338 -> 338  byte-exact=True
+
+=== G-h: make find_occurrences always report 1 -- would make test_02 vacuous
+    matches=0
+    !! DID NOT APPLY (matched 0) -- recorded, not hidden
+
+=== CONTROL AFTER: exit=0  16 passed in 0.14s   porcelain=''
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba2bf6830ad0c9b5ad6c9817ffb348806740d7d0  [git, worktree dirty=False]
+label                   : guard-mutations-round2
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/rev106_guard_mutations_round2.py C:/t/rev106
+cwd                     : C:\t\rev106
+root PID / process group: 60816 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 2.27 s
+exit reason             : nonzero
+exit code (real)        : 2
+returned code           : 2
+descendants observed    : 10  67420:python.exe, 62808:python.exe, 67444:python.exe, 66976:python.exe, 67116:python.exe, 57352:python.exe, 68104:python.exe, 68176:python.exe, 68200:python.exe, 62348:git.exe
+descendants terminated  : 10  57352, 62348, 62808, 66976, 67116, 67420, 67444, 68104, 68176, 68200
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev106\docs\pwml_recovery_sprint\evidence\g11\REV-106\08-guard-mutations-round2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

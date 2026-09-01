@@ -1,0 +1,157 @@
+{
+  "label": "rev107-r1-smoke22",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--no-header",
+    "-rf",
+    "--basetemp=C:/t/bt/r1smk",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\rev107",
+  "started_at": "2026-09-01T01:23:50+00:00",
+  "finished_at": "2026-09-01T01:24:33+00:00",
+  "duration_seconds": 43.15822610000032,
+  "timeout_seconds": 400.0,
+  "root_pid": 115160,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 115172,
+      "name": "python.exe",
+      "ppid": 115160
+    },
+    {
+      "pid": 114092,
+      "name": "python.exe",
+      "ppid": 115172
+    },
+    {
+      "pid": 110900,
+      "name": "python.exe",
+      "ppid": 115172
+    },
+    {
+      "pid": 90108,
+      "name": "python.exe",
+      "ppid": 110900
+    },
+    {
+      "pid": 115508,
+      "name": "python.exe",
+      "ppid": 115172
+    },
+    {
+      "pid": 115536,
+      "name": "python.exe",
+      "ppid": 115508
+    },
+    {
+      "pid": 105128,
+      "name": "python.exe",
+      "ppid": 111552
+    },
+    {
+      "pid": 111552,
+      "name": "python.exe",
+      "ppid": 115172
+    },
+    {
+      "pid": 115696,
+      "name": "git.exe",
+      "ppid": 115172
+    }
+  ],
+  "descendants_terminated": [
+    90108,
+    105128,
+    110900,
+    111552,
+    114092,
+    115172,
+    115508,
+    115536,
+    115696
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 74376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74532,
+      "name": "python.exe"
+    },
+    {
+      "pid": 110156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 114136,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev107\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-107\\37-r1-smoke22.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev107\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev107",
+    "repo_head": "b569205e0361d0734cd3d2085ecc49a9078e2972",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-107",
+    "token": "REV-107:114136:dcef6a5221aa08a9",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

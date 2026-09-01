@@ -1,0 +1,83 @@
+{
+  "label": "d084-probe",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rev106/docs/pwml_recovery_sprint/evidence/rev106_d084_probe.py",
+    "C:/t/rev106base"
+  ],
+  "cwd": "C:\\t\\rev106base",
+  "started_at": "2026-08-31T23:32:13+00:00",
+  "finished_at": "2026-08-31T23:32:13+00:00",
+  "duration_seconds": 0.1502316999976756,
+  "timeout_seconds": 400.0,
+  "root_pid": 66204,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 61960,
+      "name": "python.exe",
+      "ppid": 66204
+    }
+  ],
+  "descendants_terminated": [
+    61960
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 12516,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 67016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 67068,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev106\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-106\\05-d084-probe.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev106base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev106base",
+    "repo_head": "c7fb5c541b282c18c5e45df67f0d52b9a926ecd3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-106",
+    "token": "REV-106:67016:51b61d915a71c9d7",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

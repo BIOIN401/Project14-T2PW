@@ -1,0 +1,91 @@
+=== CONTROL: unmutated tip ===
+  exit=0  16 passed in 0.14s  reds=[]
+
+=== G-a: A13: reintroduce the exact D-084 defect -- read_text (universal newlines) + write_text(newline='') in apply_mutation
+    target=c102_mutation_attack.py  matches=1
+    mutated: bytes=15589 crlf=338 bare_lf=0
+    exit=1  1 failed, 15 passed in 0.19s
+    RED tests: ['test_03_restore_replays_saved_bytes_on_a_crlf_fixture']
+    expected red: ['test_03', 'test_04']   -> GUARD FAILED TO CATCH IT
+    restored: sha 819678b2711cd5ea -> 819678b2711cd5ea  crlf 338 -> 338  byte-exact=True
+
+=== G-a2: A13 second half: the write side alone
+    target=c102_mutation_attack.py  matches=1
+    mutated: bytes=15591 crlf=338 bare_lf=0
+    exit=0  16 passed in 0.14s
+    RED tests: []
+    expected red: ['test_03', 'test_04']   -> GUARD FAILED TO CATCH IT
+    restored: sha 819678b2711cd5ea -> 819678b2711cd5ea  crlf 338 -> 338  byte-exact=True
+
+=== G-b: delete the baseline precondition -- the C-106 headline-satisfying wrecking change
+    target=c102_mutation_attack.py  matches=1
+    mutated: bytes=15578 crlf=338 bare_lf=0
+    exit=1  1 failed, 15 passed in 0.18s
+    RED tests: ['test_06_the_harness_still_refuses_to_certify_against_a_red_baseline']
+    expected red: ['test_06']   -> DEFEATED-BY-GUARD (good)
+    restored: sha 819678b2711cd5ea -> 819678b2711cd5ea  crlf 338 -> 338  byte-exact=True
+
+=== G-c: put `git checkout --` back into the restore path
+    target=c102_mutation_attack.py  matches=1
+    mutated: bytes=15629 crlf=339 bare_lf=0
+    exit=1  1 failed, 15 passed in 0.23s
+    RED tests: ['test_07_the_restore_path_does_not_shell_out_to_git_checkout']
+    expected red: ['test_07']   -> DEFEATED-BY-GUARD (good)
+    restored: sha 819678b2711cd5ea -> 819678b2711cd5ea  crlf 338 -> 338  byte-exact=True
+
+=== G-d: relax a DERIVED census pin from == to >= (F-151's original proposal)
+    target=test_c102_coverage_denominator.py  matches=1
+    mutated: bytes=29576 crlf=579 bare_lf=0
+    exit=1  1 failed, 15 passed in 0.17s
+    RED tests: ['test_09_the_derived_census_pins_are_equality_not_a_floor']
+    expected red: ['test_09']   -> DEFEATED-BY-GUARD (good)
+    restored: sha 2f9bb52df56bdde1 -> 2f9bb52df56bdde1  crlf 579 -> 579  byte-exact=True
+
+=== G-e: let the census floor go stale again (72 -> 62), i.e. F-151 recurring
+    target=test_c102_coverage_denominator.py  matches=1
+    mutated: bytes=29576 crlf=579 bare_lf=0
+    exit=1  1 failed, 15 passed in 0.17s
+    RED tests: ['test_08_the_census_pins_still_match_the_committed_corpus']
+    expected red: ['test_08']   -> DEFEATED-BY-GUARD (good)
+    restored: sha 2f9bb52df56bdde1 -> 2f9bb52df56bdde1  crlf 579 -> 579  byte-exact=True
+
+=== G-f: make one mutation's `old` string match ZERO times -- the non-vacuity guard
+    target=c102_mutation_attack.py  matches=1
+    mutated: bytes=15594 crlf=339 bare_lf=0
+    exit=0  16 passed in 0.14s
+    RED tests: []
+    expected red: (non-zero exit)   -> GUARD FAILED TO CATCH IT
+    restored: sha 819678b2711cd5ea -> 819678b2711cd5ea  crlf 338 -> 338  byte-exact=True
+
+=== CONTROL AFTER: tree restored ===
+  exit=0  16 passed in 0.14s
+  git status --porcelain (secondary): ''
+
+R7 VERDICT: PROBLEM rc=1
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev106\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba2bf6830ad0c9b5ad6c9817ffb348806740d7d0  [git, worktree dirty=False]
+label                   : guard-mutations
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/rev106_guard_mutations.py C:/t/rev106
+cwd                     : C:\t\rev106
+root PID / process group: 67468 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 5.24 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 22  54928:python.exe, 62972:python.exe, 67504:python.exe, 66132:python.exe, 67492:python.exe, 67668:python.exe, 67688:python.exe, 67856:python.exe, 67876:python.exe, 68044:python.exe, 68064:python.exe, 68336:git.exe, 68396:python.exe, 68416:python.exe, 68508:git.exe, 67596:python.exe, 67616:python.exe, 67744:python.exe, 67764:python.exe, 67952:python.exe, 67972:python.exe, 68168:git.exe
+descendants terminated  : 22  54928, 62972, 66132, 67492, 67504, 67596, 67616, 67668, 67688, 67744, 67764, 67856, 67876, 67952, 67972, 68044, 68064, 68168, 68336, 68396, 68416, 68508
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev106\docs\pwml_recovery_sprint\evidence\g11\REV-106\07-guard-mutations.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-106  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

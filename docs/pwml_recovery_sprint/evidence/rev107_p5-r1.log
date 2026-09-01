@@ -1,0 +1,178 @@
+code loaded from: C:\t\rev107r1\src\t2pw\curation\apply_audit_patch.py
+LABEL: p5-r1
+
+==============================================================================================
+A1 -- THE ALTERNATION-ORDERING CLAIM, TESTED, NOT ARGUED.
+==============================================================================================
+  (this tree has _ATTENUATION_STEM_SRC, not _ATTENUATION_WORD_SRC)
+
+  57 declared inflections, each matched against ITSELF:
+    inflections that do NOT match themselves as a whole word: 51  ['reduce', 'reduces', 'reduced', 'reducing', 'reduction', 'reductions', 'losses', 'deplete', 'depletes', 'depleted', 'depleting', 'depletion', 'depletions', 'disrupts', 'disrupted', 'disrupting', 'disruption', 'disruptions', 'quenches', 'quenched', 'quenching', 'blockades', 'blocks', 'blocked', 'blocking', 'impairs', 'impaired', 'impairing', 'impairment', 'impairments', 'silence', 'silences', 'silenced', 'silencing', 'sequester', 'sequesters', 'sequestered', 'sequestering', 'sequestration', 'sequestrations', 'ablate', 'ablates', 'ablated', 'ablating', 'ablation', 'ablations', 'interfere', 'interferes', 'interfered', 'interfering', 'interference']
+
+  each inflection EMBEDDED in a longer word (must NOT match):
+    longer words the pattern still matches inside: 612
+       ablateal
+       ablatease
+       ablateases
+       ablatedal
+       ablatedase
+       ablatedases
+       ablateded
+       ablateding
+       ablatedment
+       ablatedon
+       ablatedons
+       ablatedr
+       ablatedrs
+       ablateds
+       ablatedy
+       ablateed
+       ablateing
+       ablatement
+       ablateon
+       ablateons
+       ablater
+       ablaters
+       ablatesal
+       ablatesase
+       ablatesases
+       ablatesed
+       ablatesing
+       ablatesment
+       ablateson
+       ablatesons
+
+  the specific words REV-107 measured, and their real-world neighbours:
+     reductase        match='reduc'  <<< MATCHES INSIDE
+     reductases       match='reduc'  <<< MATCHES INSIDE
+     oxidoreductase   match='reduc'  <<< MATCHES INSIDE
+     nitroreductase   match='reduc'  <<< MATCHES INSIDE
+     blocker          match='block'  <<< MATCHES INSIDE
+     blockers         match='block'  <<< MATCHES INSIDE
+     silencer         match='silenc'  <<< MATCHES INSIDE
+     silencers        match='silenc'  <<< MATCHES INSIDE
+     interferon       match='interfer'  <<< MATCHES INSIDE
+     interferons      match='interfer'  <<< MATCHES INSIDE
+     quenchase        match='quench'  <<< MATCHES INSIDE
+     disruptor        match='disrupt'  <<< MATCHES INSIDE
+     depletor         match='deplet'  <<< MATCHES INSIDE
+     sequestrant      match='sequestr'  <<< MATCHES INSIDE
+     ablator          match='ablat'  <<< MATCHES INSIDE
+     impairer         match='impair'  <<< MATCHES INSIDE
+     lossless         match='loss'  <<< MATCHES INSIDE
+     blockage         match='block'  <<< MATCHES INSIDE
+
+  the SIX anchored inhibition stems, same two tests:
+    declared inhibition inflections not matched: 0  []
+    inhibition pattern still matching inside a longer word: ['silencer', 'silencers', 'blockader', 'impairer', 'ablator', 'sequestrant']
+    C-105 stems (UNTOUCHED, expected to still leak): ['inhibitor', 'suppressor', 'repressor']
+
+==============================================================================================
+A2 -- THE BOUNDARY BATTERY, WIDENED. All legitimate catalysis: must ACCEPT.
+==============================================================================================
+  REFUSE  <<< FALSE REFUSAL   reductase adjacent       'the reductase P4X catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   nitroreductase adjacent  'the nitroreductase NfsB catalyses the conversion of A to'
+  REFUSE  <<< FALSE REFUSAL   oxidoreductase adjacent  'the oxidoreductase YkgC catalyses the conversion of A to'
+  ACCEPT   reductase own name       'aldo-keto reductase catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   reductase + modifier     'the purified reductase NfsB catalyses the conversion of '
+  REFUSE  <<< FALSE REFUSAL   blocker adjacent         'the blocker protein P4X catalyses the conversion of A to'
+  REFUSE  <<< FALSE REFUSAL   silencer adjacent        'the silencer complex P4X catalyses the conversion of A t'
+  REFUSE  <<< FALSE REFUSAL   interferon adjacent      'interferon IRF3 catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   quenchase nonsense       'the quenchase P4X catalyses the conversion of A to B'
+  ACCEPT   CONTROL no stem          'the hydrolase P4X catalyses the conversion of A to B'
+  REFUSE  <<< FALSE REFUSAL   reductases plural        'the reductases P4X and Q7Y catalyse the conversion of A '
+  REFUSE  <<< FALSE REFUSAL   disruptor adjacent       'the disruptor protein P4X catalyses the conversion of A '
+  REFUSE  <<< FALSE REFUSAL   sequestrant adjacent     'the sequestrant P4X catalyses the conversion of A to B'
+  ACCEPT   blockage adjacent        'the blockage assay showed P4X catalyses the conversion o'
+  REFUSE  <<< FALSE REFUSAL   C-105 repressor          'the repressor complex P4X catalyses the conversion of A '
+  REFUSE  <<< FALSE REFUSAL   C-105 suppressor         'the suppressor complex P4X catalyses the conversion of A'
+  REFUSE  <<< FALSE REFUSAL   C-105 inhibitor-noun     'the inhibitor screen showed P4X catalyses the conversion'
+
+  FALSE REFUSALS attributable to THIS CARD: 11  ['reductase adjacent', 'nitroreductase adjacent', 'oxidoreductase adjacent', 'reductase + modifier', 'blocker adjacent', 'silencer adjacent', 'interferon adjacent', 'quenchase nonsense', 'reductases plural', 'disruptor adjacent', 'sequestrant adjacent']
+  FALSE REFUSALS from C-105's untouched stems: ['C-105 repressor', 'C-105 suppressor', 'C-105 inhibitor-noun']
+
+==============================================================================================
+A3 -- ATTENUATION THAT IS REALLY ATTENUATION MUST STILL REFUSE.
+==============================================================================================
+  cells: 33 words x 3 frames = 99
+  ADMITTED (should be 0): 3
+     ('sequestered', 'the {w} of NDM-1 is mediat')
+     ('sequestered', 'the {w} of NDM-1 activity ')
+     ('sequestered', 'NDM-1 activity showed {w} ')
+
+==============================================================================================
+A4 -- the 44 matrix and REV-107's own 110 frames
+==============================================================================================
+  MATRIX OPEN CELLS: 0 of 44   []
+  E possessive               OPEN  0 of 11   []
+  F stem first, actor far    OPEN  5 of 11   ['disruption', 'reduction', 'loss', 'depletion', 'quenching']
+  G passive verb form        OPEN  5 of 11   ['disruption', 'reduction', 'loss', 'depletion', 'quenching']
+  H apposition               OPEN  0 of 11   []
+  I two modifiers            OPEN  0 of 11   []
+  J six modifiers            OPEN  5 of 11   ['disruption', 'reduction', 'loss', 'depletion', 'quenching']
+  K cross-clause             OPEN  0 of 11   []
+  L object 100 after actor   OPEN  0 of 11   []
+  M no of/in linker          OPEN  0 of 11   []
+  N hyphen linker            OPEN  0 of 11   []
+  EXTRA-FRAME OPEN CELLS: 15 of 110
+
+==============================================================================================
+A5 -- REDOX / LEGITIMATE CATALYSIS PRESERVATION. All must ACCEPT.
+==============================================================================================
+  ACCEPT   [ferrochelatase] 'NADH-dependent reduction of the substrate by ferrochelatase'
+  ACCEPT   [ferrochelatase] 'ferrochelatase reduces protoporphyrin IX to heme'
+  ACCEPT   [nitroreductase] 'nitroreductase catalyses the reduction of the nitro group'
+  ACCEPT   [thioredoxin] 'the reduction of the disulfide bond is mediated by thioredoxin'
+  ACCEPT   [ferredoxin reductase] 'reducing equivalents are transferred by ferredoxin reductase'
+  ACCEPT   [enzyme] 'the enzyme catalyses the reduction of the substrate level in v'
+  ACCEPT   [ferrochelatase] 'ferrochelatase reduces the cellular level of protoporphyrin'
+  REFUSE  <<< BROKEN   [flavin reductase] 'NADPH-dependent reduction of flavin is required for enzyme fun'
+  ACCEPT   [GshR] 'GshR reduces oxidised glutathione using NADPH as electron dono'
+  ACCEPT   [MsrA] 'MsrA catalyses the reduction of methionine sulfoxide residues'
+  ACCEPT   [TrxB] 'the reduction of the substrate is catalysed by TrxB in the pre'
+  ACCEPT   [NfsB] 'NfsB, a nitroreductase, reduces the nitro group of the prodrug'
+  ACCEPT   [Fdx] 'Fdx supplies reducing power for the hydroxylation step'
+  ACCEPT   [LpxC] 'the disruption of the substrate ring is catalysed by LpxC'
+  ACCEPT   [MenD] 'MenD catalyses the cleavage and loss of the pyruvate leaving g'
+
+  REFUSED: 1 of 15   [('flavin reductase', 'NADPH-dependent reduction of flavin is required for ')]
+
+==============================================================================================
+B -- the cofactor route scope, re-checked with REV-107 roles and spans
+==============================================================================================
+  role='chaperone'            family='other'  verdicts=rrrrrrrr   (all 'r' == back to base)
+  role='scaffold'             family='other'  verdicts=rrrrrrrr   (all 'r' == back to base)
+  role='allosteric modulator' family='other'  verdicts=rrrrrrrr   (all 'r' == back to base)
+  role='subunit'              family='other'  verdicts=rrrrrrrr   (all 'r' == back to base)
+  cofactor preservation refused: 0 of 9   []
+  refuse   requires-a-cofactor rationale
+  refuse   payload-structure rationale
+
+REV107_PROBE5_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0b6f538a2da758f66b4ff1a4507552f194f286ab  [git, worktree dirty=False]
+label                   : rev107-p5-r1
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/rev107_probe5.py p5-r1
+cwd                     : C:\t\rev107
+root PID / process group: 120580 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 380 s
+duration                : 0.42 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  123112:python.exe
+descendants terminated  : 1  123112
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev107\docs\pwml_recovery_sprint\evidence\g11\REV-107\41-p5-r1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
