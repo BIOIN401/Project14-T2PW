@@ -1,0 +1,119 @@
+REV-112 -- content-rewrite drift (the second class), an ADDITION to W10
+worktree : C:\t\rev112
+base     : ab16a3a7
+tip      : 62be4d33f490593e0eee04203ce437ddef8b5cd5
+
+=== 1. LINES REWRITTEN IN PLACE (content changed, number did not move) ===
+  FINDINGS.md                [315, 316, 1126, 6624, 6679, 7106, 7107, 7108]
+  MASTER_PLAN.md             [477, 478]
+  RESUME-NEXT-SESSION.md     [92, 189]
+  TEST_MATRIX.md             [533, 567, 568]
+
+=== 2. COMMITTED CITATIONS LANDING ON A REWRITTEN LINE ===
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/HANDOFF.md:217 cites TEST_MATRIX.md:568  |  `chunk_d_gate.py:70` is CORRECT — leave it**) and `TEST_MATRIX.md:568` (`"§ Chunks begins at line
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/LEDGER.md:9304 cites TEST_MATRIX.md:568  |  2. **`TEST_MATRIX.md:568`** — *"§ Chunks begins at line 209"*; it begins at `:228`. **This one WAS in
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/TEST_MATRIX.md:837 cites TEST_MATRIX.md:568  |  * **`TEST_MATRIX.md:568`'s *"§ Chunks begins at line 209"*** was **struck in place** and replaced
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/TEST_MATRIX.md:861 cites MASTER_PLAN.md:477  |  `:372` — cited **five times**, by `DECISIONS.md:1919`, `MASTER_PLAN.md:477` and
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/TEST_MATRIX.md:891 cites TEST_MATRIX.md:533  |  * **`.claude/agents/pwml-test-runner.md:52`**, cited from `TEST_MATRIX.md:533`, **still resolved to
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:15 cites FINDINGS.md:316  |  L2  FINDINGS.md:316 (F-032)  MASTER_PLAN.md:363 -> '## 9 branch register, C-035'
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:22 cites FINDINGS.md:6679  |  L3  FINDINGS.md:6679  pwml-test-runner.md:59 -> '## Test discipline' bullet
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:28 cites MASTER_PLAN.md:477  |  L4  MASTER_PLAN.md:477 (self-citation)  :372 -> '§ 9 C-045 register row'
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:29 cites MASTER_PLAN.md:477  |  [OK ] BASE: MASTER_PLAN.md:477 cites MASTER_PLAN.md:372
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:34 cites TEST_MATRIX.md:533  |  L5+L6  TEST_MATRIX.md:533  MASTER_PLAN.md:281 + pwml-test-runner.md:52
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:35 cites TEST_MATRIX.md:533  |  [OK ] BASE: TEST_MATRIX.md:533 cites both by line
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:46 cites FINDINGS.md:1126  |  R-A  FINDINGS.md:1126 row E  TEST_MATRIX.md:218 -> '## Chunks' anchor
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:54 cites TEST_MATRIX.md:568  |  R-B  TEST_MATRIX.md:568  '§ Chunks begins at line 209' -> struck
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:8 cites FINDINGS.md:315  |  L1  FINDINGS.md:315 (F-031)  MASTER_PLAN.md:336 -> '## 9 Canonical paths' row
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:15 cites FINDINGS.md:316  |  L2  FINDINGS.md:316 (F-032)  MASTER_PLAN.md:363 -> '## 9 branch register, C-035'
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:22 cites FINDINGS.md:6679  |  L3  FINDINGS.md:6679  pwml-test-runner.md:59 -> '## Test discipline' bullet
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:28 cites MASTER_PLAN.md:477  |  L4  MASTER_PLAN.md:477 (self-citation)  :372 -> '§ 9 C-045 register row'
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:29 cites MASTER_PLAN.md:477  |  [OK ] BASE: MASTER_PLAN.md:477 cites MASTER_PLAN.md:372
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:34 cites TEST_MATRIX.md:533  |  L5+L6  TEST_MATRIX.md:533  MASTER_PLAN.md:281 + pwml-test-runner.md:52
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:35 cites TEST_MATRIX.md:533  |  [OK ] BASE: TEST_MATRIX.md:533 cites both by line
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:46 cites FINDINGS.md:1126  |  R-A  FINDINGS.md:1126 row E  TEST_MATRIX.md:218 -> '## Chunks' anchor
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:54 cites TEST_MATRIX.md:568  |  R-B  TEST_MATRIX.md:568  '§ Chunks begins at line 209' -> struck
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:8 cites FINDINGS.md:315  |  L1  FINDINGS.md:315 (F-031)  MASTER_PLAN.md:336 -> '## 9 Canonical paths' row
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:15 cites FINDINGS.md:316  |  L2  FINDINGS.md:316 (F-032)  MASTER_PLAN.md:363 -> '## 9 branch register, C-035'
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:22 cites FINDINGS.md:6679  |  L3  FINDINGS.md:6679  pwml-test-runner.md:59 -> '## Test discipline' bullet
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:28 cites MASTER_PLAN.md:477  |  L4  MASTER_PLAN.md:477 (self-citation)  :372 -> '§ 9 C-045 register row'
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:29 cites MASTER_PLAN.md:477  |  [OK ] BASE: MASTER_PLAN.md:477 cites MASTER_PLAN.md:372
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:34 cites TEST_MATRIX.md:533  |  L5+L6  TEST_MATRIX.md:533  MASTER_PLAN.md:281 + pwml-test-runner.md:52
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:35 cites TEST_MATRIX.md:533  |  [OK ] BASE: TEST_MATRIX.md:533 cites both by line
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:47 cites FINDINGS.md:1126  |  R-A  FINDINGS.md:1126 row E  TEST_MATRIX.md:218 -> '## Chunks' anchor
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:55 cites TEST_MATRIX.md:568  |  R-B  TEST_MATRIX.md:568  '§ Chunks begins at line 209' -> struck
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:8 cites FINDINGS.md:315  |  L1  FINDINGS.md:315 (F-031)  MASTER_PLAN.md:336 -> '## 9 Canonical paths' row
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:104 cites FINDINGS.md:6679  |  # --- L3  FINDINGS.md:6679 (F-154 measurement, present tense)
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:105 cites FINDINGS.md:6679  |  print("\n  L3  FINDINGS.md:6679  pwml-test-runner.md:59 -> '## Test discipline' bullet")
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:120 cites MASTER_PLAN.md:477  |  # --- L4  MASTER_PLAN.md:477 citing itself
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:121 cites MASTER_PLAN.md:477  |  print("\n  L4  MASTER_PLAN.md:477 (self-citation)  :372 -> '§ 9 C-045 register row'")
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:122 cites MASTER_PLAN.md:477  |  check("BASE: MASTER_PLAN.md:477 cites MASTER_PLAN.md:372",
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:133 cites TEST_MATRIX.md:533  |  # --- L5/L6  TEST_MATRIX.md:533 -- TWO citations on one line
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:134 cites TEST_MATRIX.md:533  |  print("\n  L5+L6  TEST_MATRIX.md:533  MASTER_PLAN.md:281 + pwml-test-runner.md:52")
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:135 cites TEST_MATRIX.md:533  |  check("BASE: TEST_MATRIX.md:533 cites both by line",
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:180 cites FINDINGS.md:1126  |  print("\n  R-A  FINDINGS.md:1126 row E  TEST_MATRIX.md:218 -> '## Chunks' anchor")
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:198 cites TEST_MATRIX.md:568  |  # --- routed item B: TEST_MATRIX.md:568
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:199 cites TEST_MATRIX.md:568  |  print("\n  R-B  TEST_MATRIX.md:568  '§ Chunks begins at line 209' -> struck")
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:77 cites FINDINGS.md:315  |  # --- L1  FINDINGS.md:315 (F-031) -> MASTER_PLAN.md:336
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:78 cites FINDINGS.md:315  |  print("\n  L1  FINDINGS.md:315 (F-031)  MASTER_PLAN.md:336 -> '## 9 Canonical paths' row")
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:90 cites FINDINGS.md:316  |  # --- L2  FINDINGS.md:316 (F-032) -> MASTER_PLAN.md:363
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:91 cites FINDINGS.md:316  |  print("\n  L2  FINDINGS.md:316 (F-032)  MASTER_PLAN.md:363 -> '## 9 branch register, C-035'")
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:112 cites docs/pwml_recovery_sprint/TEST_MATRIX.md:533  |  docs/pwml_recovery_sprint/TEST_MATRIX.md:533 cites pwml-test-runner.md:52
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:37 cites docs/pwml_recovery_sprint/FINDINGS.md:315  |  docs/pwml_recovery_sprint/FINDINGS.md:315 cites MASTER_PLAN.md:336
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:42 cites docs/pwml_recovery_sprint/FINDINGS.md:316  |  docs/pwml_recovery_sprint/FINDINGS.md:316 cites MASTER_PLAN.md:363
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:52 cites docs/pwml_recovery_sprint/MASTER_PLAN.md:477  |  docs/pwml_recovery_sprint/MASTER_PLAN.md:477 cites MASTER_PLAN.md:372
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:72 cites docs/pwml_recovery_sprint/TEST_MATRIX.md:533  |  docs/pwml_recovery_sprint/TEST_MATRIX.md:533 cites MASTER_PLAN.md:281
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:97 cites docs/pwml_recovery_sprint/FINDINGS.md:6679  |  docs/pwml_recovery_sprint/FINDINGS.md:6679 cites pwml-test-runner.md:59
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_independent_checks.log:88 cites FINDINGS.md:1126  |  FINDINGS.md:1126 -> | E | 1 | `TEST_MATRIX.md:218` |
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_independent_checks.log:92 cites FINDINGS.md:1126  |  [NOTE] routed item 1b: FINDINGS.md:1126 cites TEST_MATRIX.md:218 for Chunk E; :218 is the child_env row of the
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_independent_checks.py:243 cites FINDINGS.md:1126  |  print(f"  FINDINGS.md:1126 -> {fi[1125]}")
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_independent_checks.py:251 cites FINDINGS.md:1126  |  note(f"routed item 1b: FINDINGS.md:1126 cites TEST_MATRIX.md:218 for Chunk E; "
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_independent_checks_round1_anomaly.log:87 cites FINDINGS.md:1126  |  FINDINGS.md:1126 -> | E | 1 | `TEST_MATRIX.md:218` |
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/evidence/rev109_independent_checks_round1_anomaly.log:91 cites FINDINGS.md:1126  |  [NOTE] routed item 1b: FINDINGS.md:1126 cites TEST_MATRIX.md:218 for Chunk E; :218 is the child_env row of the
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/prompts/C-112.md:29 cites TEST_MATRIX.md:533  |  `DECISIONS.md` (6), `FINDINGS.md` (3), `TEST_MATRIX.md:533`, `SPIKE-002-REPORT.md` (3),
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/prompts/C-112.md:30 cites MASTER_PLAN.md:477  |  `prompts/C-011.md` (2), and `MASTER_PLAN.md:477` citing **itself**.
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/prompts/C-112.md:32 cites FINDINGS.md:6679  |  `FINDINGS.md:6679`** (present tense — *"tells that agent to certify"*), **`RESUME-NEXT-SESSION.md:94`**
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/prompts/C-112.md:33 cites TEST_MATRIX.md:533  |  and **`TEST_MATRIX.md:533`**. The rest are frozen historical records and **must be left alone.**
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/prompts/C-112.md:92 cites TEST_MATRIX.md:568  |  - **`TEST_MATRIX.md:568`** — *"§ Chunks begins at line 209"*; it begins at **`:228`**. **Below the
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/prompts/REV-112.md:40 cites FINDINGS.md:6679  |  | **W1** | **Every one of the 26 R1 citations is BUCKETED before it is touched** | The card must say, per cita
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/prompts/REV-112.md:40 cites TEST_MATRIX.md:533  |  | **W1** | **Every one of the 26 R1 citations is BUCKETED before it is touched** | The card must say, per cita
+    LANDS ON A REWRITE: docs/pwml_recovery_sprint/prompts/REV-112.md:47 cites TEST_MATRIX.md:568  |  | **W8** | **The two routed items are corrected as specified, and the correct one is untouched** | `FINDINGS.m
+  [FAIL] no committed citation addresses a line C-112 rewrote in place  -- 67 found
+
+=== 3. SCANNER KNOWN-POSITIVE / KNOWN-NEGATIVE ===
+  [OK ] KNOWN-POSITIVE: pretending MASTER_PLAN.md:372 were rewritten finds citations  -- 18 citing sites: ['docs/pwml_recovery_sprint/DECISIONS.md:1919', 'docs/pwml_recovery_sprint/SPIKE-002-REPORT.md:138', 'docs/pwml_recovery_sprint/SPIKE-002-REPORT.md:143', 'docs/pwml_recovery_sprint/SPIKE-002-REPORT.md:253', 'docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:29', 'docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log:30', 'docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:29', 'docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt2-ptr52-not-false-at-base.log:30', 'docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:29', 'docs/pwml_recovery_sprint/evidence/c112_citation_proof.log:30', 'docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:122', 'docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:123', 'docs/pwml_recovery_sprint/evidence/c112_citation_proof.py:124', 'docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:12', 'docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:52', 'docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:57', 'docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:62', 'docs/pwml_recovery_sprint/evidence/rev109_drift_created.log:67']
+  [OK ] KNOWN-NEGATIVE: a line number nothing cites finds nothing
+
+=== 4. acceptance.py, hashed after every REV-112 job ===
+    sha256 4bd893ac410d16d35b026e7f24fa85edbc39be3d31c519181e6acb3ada57d2b3
+  [OK ] acceptance.py is byte-identical to the pinned value  -- 4bd893ac410d16d35b026e7f24fa85edbc39be3d31c519181e6acb3ada57d2b3
+
+==========================================================================
+RESULT: 1 CHECK(S) FAILED
+  FAILED: no committed citation addresses a line C-112 rewrote in place
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev112\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 62be4d33f490593e0eee04203ce437ddef8b5cd5  [git, worktree dirty=False]
+label                   : rev112-content-drift
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/REV112_content_drift.py C:/t/rev112 ab16a3a7
+cwd                     : C:/t/rev112
+root PID / process group: 567612 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 240 s
+duration                : 1.13 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 5  568348:python.exe, 568764:git.exe, 568892:git.exe, 569224:git.exe, 565480:git.exe
+descendants terminated  : 5  565480, 568348, 568764, 568892, 569224
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rev112/docs/pwml_recovery_sprint/evidence/g11/REV-112/10-rev112-content-drift.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-112  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
