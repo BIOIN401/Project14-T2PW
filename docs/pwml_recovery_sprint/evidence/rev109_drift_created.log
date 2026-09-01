@@ -1,0 +1,175 @@
+
+===== docs/pwml_recovery_sprint/MASTER_PLAN.md
+  base 489 lines -> tip 505 lines   (net +16)
+  first differing line: 160
+  citations at or below the first change: 16 now STALE
+
+    docs/pwml_recovery_sprint/DECISIONS.md:1361 cites MASTER_PLAN.md:420
+      base  :420 | | C-031 | `agent/p02-quarantine-artifacts` | B | C-012 | `driver.py` :: `_add_common_artifacts`, `_a
+      tip   :420 | 
+      -> now at :436 (shift +16)
+
+    docs/pwml_recovery_sprint/DECISIONS.md:1919 cites MASTER_PLAN.md:372
+      base  :372 | | 2 | Wave B; T-100 (M1, 4 legs, ~1.5 h) |
+      tip   :372 | 
+      -> now at :388 (shift +16)
+
+    docs/pwml_recovery_sprint/DECISIONS.md:1950 cites MASTER_PLAN.md:163
+      base  :163 | **`rag/controller.py:11` still carries `UNWIRED: nothing in production calls it; wiring is
+      tip   :163 | 
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/DECISIONS.md:1956 cites MASTER_PLAN.md:161
+      base  :161 | covers the wiring. `rag/graph_delta.py` exists as well.
+      tip   :161 | defined at `:1239`). `tests/test_c055_rag_loop_wiring.py` covers the wiring.
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/DECISIONS.md:1959 cites MASTER_PLAN.md:424
+      base  :424 | | C-035 | `agent/p22-lineage-rag` | B | C-015 | `rag/synthesize.py`, `rag/admission.py` — **except `
+      tip   :424 | | C-011 | `agent/p00a-freeze-seam` | A0 | — | `streamlit_app.py` :: `run_post_pipeline_sbml_artifact
+      -> now at :440 (shift +16)
+
+    docs/pwml_recovery_sprint/DECISIONS.md:3206 cites MASTER_PLAN.md:417
+      base  :417 | | C-021 | `agent/p31-rag-graph-delta` | A1 | C-015 | NEW `rag/graph_delta.py` | C-016 impl | new, C 
+      tip   :417 | | `gate_reports.py` | `src/t2pw/pipeline/gate_reports.py` | — unique |
+      -> now at :433 (shift +16)
+
+    docs/pwml_recovery_sprint/FINDINGS.md:315 cites MASTER_PLAN.md:336
+      base  :336 | ## 7. Standing traps
+      tip   :336 | - Each card charter carries: branch and exact dispatch base · function-level ownership ·
+      -> now at :352 (shift +16)
+
+    docs/pwml_recovery_sprint/FINDINGS.md:316 cites MASTER_PLAN.md:363
+      base  :363 | cache modification. `.git` is already 158 MB.
+      tip   :363 | 
+      -> now at :379 (shift +16)
+
+    docs/pwml_recovery_sprint/FINDINGS.md:2887 cites MASTER_PLAN.md:215
+      base  :215 |    assertion states. Re-pointing a **stale comparand** is in scope; **weakening the comparison**
+      tip   :215 | |---|---|---|
+      -> now at :231 (shift +16)
+
+    docs/pwml_recovery_sprint/MASTER_PLAN.md:477 cites MASTER_PLAN.md:372
+      base  :372 | | 2 | Wave B; T-100 (M1, 4 legs, ~1.5 h) |
+      tip   :372 | 
+      -> now at :388 (shift +16)
+
+    docs/pwml_recovery_sprint/SPIKE-002-REPORT.md:138 cites MASTER_PLAN.md:372
+      base  :372 | | 2 | Wave B; T-100 (M1, 4 legs, ~1.5 h) |
+      tip   :372 | 
+      -> now at :388 (shift +16)
+
+    docs/pwml_recovery_sprint/SPIKE-002-REPORT.md:143 cites MASTER_PLAN.md:372
+      base  :372 | | 2 | Wave B; T-100 (M1, 4 legs, ~1.5 h) |
+      tip   :372 | 
+      -> now at :388 (shift +16)
+
+    docs/pwml_recovery_sprint/SPIKE-002-REPORT.md:253 cites MASTER_PLAN.md:372
+      base  :372 | | 2 | Wave B; T-100 (M1, 4 legs, ~1.5 h) |
+      tip   :372 | 
+      -> now at :388 (shift +16)
+
+    docs/pwml_recovery_sprint/TEST_MATRIX.md:533 cites MASTER_PLAN.md:281
+      base  :281 | ## 5. Merge gates — all must hold
+      tip   :281 |          affected files, expected corrections and regression fixtures.
+      -> now at :297 (shift +16)
+
+    docs/pwml_recovery_sprint/prompts/C-011.md:196 cites MASTER_PLAN.md:358
+      base  :358 | No agent may "fix" it. Escalate.
+      tip   :358 | chasing the wrong target.
+      -> now at :374 (shift +16)
+
+    docs/pwml_recovery_sprint/prompts/C-011.md:235 cites MASTER_PLAN.md:375
+      base  :375 | | 5 | Wave E, integration, subsystem suites; **T-104 first RC benchmark starts ~18:00 (~7 h)** |
+      tip   :375 | 
+      -> now at :391 (shift +16)
+
+===== .claude/agents/pwml-test-runner.md
+  base 105 lines -> tip 124 lines   (net +19)
+  first differing line: 52
+  citations at or below the first change: 10 now STALE
+
+    docs/pwml_recovery_sprint/FINDINGS.md:1193 cites pwml-test-runner.md:52
+      base  :52 | - Smoke = chunks A+B+C = **465** tests, ~40 s. Chunk D = **187** tests: the deterministic
+      tip   :52 | - Smoke = chunks A+B+C **plus the two C-106 gate files** = 22 files, **503** tests, ~38 s.
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/FINDINGS.md:6679 cites pwml-test-runner.md:59
+      base  :59 |   **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+      tip   :59 |   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/FINDINGS.md:6703 cites pwml-test-runner.md:59
+      base  :59 |   **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+      tip   :59 |   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/RESUME-NEXT-SESSION.md:94 cites pwml-test-runner.md:59
+      base  :59 |   **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+      tip   :59 |   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/TEST_MATRIX.md:533 cites pwml-test-runner.md:52
+      base  :52 | - Smoke = chunks A+B+C = **465** tests, ~40 s. Chunk D = **187** tests: the deterministic
+      tip   :52 | - Smoke = chunks A+B+C **plus the two C-106 gate files** = 22 files, **503** tests, ~38 s.
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/TEST_MATRIX.md:785 cites pwml-test-runner.md:59
+      base  :59 |   **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+      tip   :59 |   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/evidence/c054_gate_counts.json:202 cites pwml-test-runner.md:59
+      base  :59 |   **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+      tip   :59 |   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/evidence/c106_predictions.md:190 cites pwml-test-runner.md:59
+      base  :59 |   **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+      tip   :59 |   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/evidence/c109_citation_probe.log:50 cites pwml-test-runner.md:59
+      base  :59 |   **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+      tip   :59 |   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
+      -> base content rewritten, no verbatim match at tip
+
+    docs/pwml_recovery_sprint/prompts/C-109.md:66 cites pwml-test-runner.md:59
+      base  :59 |   **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+      tip   :59 |   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
+      -> base content rewritten, no verbatim match at tip
+
+===== docs/pwml_recovery_sprint/FINDINGS.md  (contrast)
+  base 6919 -> tip 6919 lines; first differing line 1120; line-neutral / append-only: creates NO drift
+
+===== docs/pwml_recovery_sprint/TEST_MATRIX.md  (contrast)
+  base 727 -> tip 808 lines; first differing line None; line-neutral / append-only: creates NO drift
+
+================ TOTAL newly-stale committed citations: 26
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev109\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3f4422857c3f585085b4632f15b8abccf8dce399  [git, worktree dirty=False]
+label                   : rev109-drift-created
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev109/docs/pwml_recovery_sprint/evidence/rev109_drift_created.py C:/t/rev109 2ac8404
+cwd                     : C:\t\rev109
+root PID / process group: 174492 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.92 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 4  173544:python.exe, 173512:git.exe, 176724:git.exe, 177004:git.exe
+descendants terminated  : 4  173512, 173544, 176724, 177004
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev109\docs\pwml_recovery_sprint\evidence\g11\REV-109\12-rev109-drift-created.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-109  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

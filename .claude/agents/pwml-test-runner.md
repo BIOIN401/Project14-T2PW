@@ -49,16 +49,35 @@ surviving count (**must be 0**) · cleanup success/failure.
 - `--basetemp=<unique dir>` on **every** pytest invocation. Without it 83 tests error
   with `PermissionError` and you will report a false regression.
 - **Never** run the full suite unchunked — it approaches 16 GB. Use `TEST_MATRIX.md`.
-- Smoke = chunks A+B+C = **465** tests, ~40 s. Chunk D = **187** tests: the deterministic
+- Smoke = chunks A+B+C **plus the two C-106 gate files** = 22 files, **503** tests, ~38 s.
+  ~~`465`~~ was C-054's value and is stale: C-067 moved 465 → 473 and **C-106 moved 473 → 503**
+  (`+14` `test_c102_coverage_denominator.py`, `+16` `test_c106_mutation_harness_executable.py`).
+  **457, 460, 465 and 473 are all stale.** Re-measured 503 by C-109 at its own tip; the
+  authoritative selection is the SMOKE block anchor named below, never this sentence.
+  Chunk D = **187** tests: the deterministic
   core is 160 tests in ~1 s, the **complete 187-test gate 9–13 min**, dominated by the 27
   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
   carrying C-050k** (merged `d8de94d`; D-044 § 2) — the integration branch does. Anything
   saying 177 or 179, or a core of 150 or 152, is stale.
 - **Chunk membership covers only 28 of the 147 test files.** The other 119 belong to no
   chunk (F-049), so a green chunk run is not evidence about them. Certify membership by
-  **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
-  `evidence/chunk_d_gate.py:63-70` — **never by grepping the filename**, which wrongly
-  reports `tests/test_map_ids.py` as covered through a substring collision with
+  **stem-exact** match against three sources, addressed by **anchor, never by line number**
+  (F-154: the line addresses that used to stand here — `TEST_MATRIX.md:213-218` and its SMOKE
+  block `:242-252` — had drifted +17 to +19 and pointed at the bounded-runner function table
+  and the Chunk-D/E paragraphs, which contain **no test-file stems at all**, so a literal
+  stem-exact match against them silently found nothing):
+
+  1. the **chunk membership table** — the first markdown table under the `## Chunks` heading
+     in `TEST_MATRIX.md`, whose rows are `**A**`, `**B**`, `**C**`, `**D-core**`,
+     `**D-apptest**`, `**E**`;
+  2. the **SMOKE block** — the `bash` block under the `## Commands` heading in
+     `TEST_MATRIX.md` beginning `# SMOKE (every merge) — expect 503 passed`;
+  3. `evidence/chunk_d_gate.py`'s **`CORE`**, **`S8`**, **`QB`** and **`MONOLITHIC`**
+     symbols — the file list is those literals, not a line range.
+
+  Locate each by searching for its anchor string. **If an anchor does not resolve, stop and
+  report it — never substitute a line number and never fall back to grepping the filename**,
+  which wrongly reports `tests/test_map_ids.py` as covered through a substring collision with
   `test_map_ids_name_gate`. Chunk E skips silently when `runs/` is absent — **report the
   skip**, never treat it as a pass.
 - Never launch a full pinned benchmark (~7 h) unless the prompt is `T-104`/`T-105`.

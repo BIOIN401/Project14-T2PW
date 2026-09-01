@@ -1,0 +1,44 @@
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/C-109/01-c109-inertness.json  blob=4da6172c08ef5bc42b15d1dfc4f6ef07aa4c6afd
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/C-109/02-c109-citations.json  blob=96b2e1303f91c3f540136655818392dbfcb7a7fa
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/C-109/03-c109-citations-2.json  blob=a35c342877681bf7d5df58d44ec8477ba9b47b60
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/C-109/04-c109-inertness-2.json  blob=1deca9df9bb1550f0598312ace99515451a4647d
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/C-109/05-c109-focused.json  blob=faa3355269e3a245e2691274bf29b0e59998b3f6
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/c109_citation_probe.log  blob=7f540bd8bd974e53c591a9b85caf736cf9b7ca39
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/c109_citation_probe.py  blob=f4fb52b8453beb90780e2db0086372b863de6f25
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/c109_controller_inertness.log  blob=6f33f04f6e640d7ac2f9188c94b83eb8031b9b51
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/c109_controller_inertness.py  blob=dfe41458b552646b1c0a0ef746d54088f494874c
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/c109_focused.log  blob=177aaef07782f2a0a96f9fa0ae1fcaf8b11ce643
+
+10 item(s) of reviewer evidence exist ONLY in the worktree. Commit them to the integration branch before merging this card and before releasing or cleaning the worktree.
+task        : C-109 (stem c109)
+worktree    : C:\t\c109
+integration : C:\t\c109@card/C-109-control-plane
+enumerated  : 10  reachable 0  unreachable 10
+exit_reason : unreachable_evidence
+exit_code   : 1
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c109\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2ac8404de8e800c0a30476f175a5fe9a7f5c11d3  [git, worktree dirty=True]
+label                   : c109-route-uncommitted
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/reviewer_evidence_route.py --task C-109 --worktree C:/t/c109 --integration-repo C:/t/c109 --integration-ref card/C-109-control-plane
+cwd                     : C:\t\c109
+root PID / process group: 156416 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 180 s
+duration                : 0.31 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 2  146852:python.exe, 154492:git.exe
+descendants terminated  : 2  146852, 154492
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c109\docs\pwml_recovery_sprint\evidence\g11\C-109\06-c109-route-uncommitted.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

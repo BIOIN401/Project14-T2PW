@@ -1,0 +1,60 @@
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/REV-109/03-rev109-route-adversarial.json  blob=dd800d1989cb0505a9c7408486c46606e38b7806
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/REV-109/04-rev109-independent-checks.json  blob=023a0b4f6b22abf9325135804284afbd6526f6d4
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/REV-109/05-rev109-independent-checks-2.json  blob=cb1f014b59117d04998bbc0dff94bf9185b6b850
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/REV-109/08-rev109-smoke.json  blob=a9cece3ecc235a84f07f696380a2e2c593001d27
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/REV-109/09-rev109-goldreaders.json  blob=ada1f57a3725c3ea6aafaaed80903fec894212bb
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/REV-109/10-rev109-newtest-combined.json  blob=54b08ae0e2644f3ade2452d7cbdb1a28b4702783
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/REV-109/11-rev109-newtest-split.json  blob=37834ea590832747cfbc465d18f1c6bd7ddc5865
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/REV-109/12-rev109-drift-created.json  blob=79a247b52d88fae1ba72650667275d827ba46189
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/REV-109/13-rev109-route-mutation.json  blob=f8c9e286630cd300bca02a2c22ae97c328ff7c81
+UNREACHABLE [unreachable_absent] g11_report: docs/pwml_recovery_sprint/evidence/g11/REV-109/14-rev109-self-route.json  blob=46aa454fc291a2ccd32d2a12749494fd0e6eba42
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_drift_created.log  blob=76d110dbbd8ba088a7e0e3b5a3a467607ce2a3c3
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_drift_created.py  blob=d0d7c56be6d4c1c0ce281630b088244430edfb0c
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_goldreaders.log  blob=e96f59e26cb1998250bcc5df5ab9256361d132f4
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_independent_checks.log  blob=369cedaee63e32ccc15e5afe5edfa84d0efb664a
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_independent_checks.py  blob=d706f7db2b1e6bece9783818721fb10afc2da505
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_independent_checks_round1_anomaly.log  blob=e1ce78501e5ac0e3a6a2697d7fe5c158d4426f9b
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_newtest_combined.log  blob=42898ce74a814e0ed70b8d8ded3ca2c3b8286f1d
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_route_adversarial.log  blob=27c172a7be0dc5fa48997d2e654f8417d3f5099a
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_route_adversarial.py  blob=4c18b3537f94e2e371f75c301a0511da49bace3e
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_route_mutation.log  blob=93ada4b58d56828fb4f7dbf9b96a6c1e2e153e7d
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_route_mutation.py  blob=487b9df94284b6fb1b89c877dde8eceb33955c24
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_run_with_retry.sh  blob=5c530e07c896e6b702a182d19180d68c7788cb4f
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_smoke.log  blob=258c8415a56a9d58a49fb91bf0f913dba157bf87
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_split_newtest.log  blob=8823724d8f9041b13ddadce6c3a19d189aec8a1d
+UNREACHABLE [unreachable_absent] probe: docs/pwml_recovery_sprint/evidence/rev109_split_newtest.py  blob=b495ebc744538d205afc63d1fab95b85307e50d2
+
+25 item(s) of reviewer evidence exist ONLY in the worktree. Commit them to the integration branch before merging this card and before releasing or cleaning the worktree.
+task        : REV-109 (stem rev109)
+worktree    : C:\t\rev109
+integration : C:\t\rev109@sprint/pwml-recovery
+enumerated  : 25  reachable 0  unreachable 25
+exit_reason : unreachable_evidence
+exit_code   : 1
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev109\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ dfcd6ee6fa3fb5ba94b094d35f61cec4326cac28  [git, worktree dirty=False]
+label                   : rev109-self-route-integration
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev109/docs/pwml_recovery_sprint/evidence/reviewer_evidence_route.py --task REV-109 --worktree C:/t/rev109 --integration-repo C:/t/rev109 --integration-ref sprint/pwml-recovery
+cwd                     : C:\t\rev109
+root PID / process group: 180152 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.32 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 2  180568:python.exe, 180728:git.exe
+descendants terminated  : 2  180568, 180728
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev109\docs\pwml_recovery_sprint\evidence\g11\REV-109\15-rev109-self-route-integration.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-109  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

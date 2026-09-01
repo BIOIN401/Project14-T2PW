@@ -1,0 +1,132 @@
+
+=== 1a. F-154 -- what the RETIRED addresses contain at base ===========
+  docs/pwml_recovery_sprint/TEST_MATRIX.md at 2ac8404: 727 lines
+  TEST_MATRIX.md:213-218 (claimed: the chunk membership table) actually reads:
+     213 | 
+     214 | | Function | Lines | Does |
+     215 | |---|---|---|
+     216 | | `launch_child` | 1140–1180 | `CREATE_NEW_PROCESS_GROUP` (nt) / `start_new_session` (posix); bo
+     217 | | `_kill_tree` | 1107–1137 | `taskkill /F /T /PID <owned pid>`, then `os.killpg`, then `proc.kil
+     218 | | `child_env` | 265–276 | child environment |
+  TEST_MATRIX.md:242-252 (claimed: the SMOKE command block) actually reads:
+     242 | (+14 `test_c102_coverage_denominator.py`, +16 `test_c106_mutation_harness_executable.py` — see t
+     243 | 
+     244 | **Chunk D is excluded from the smoke gate.** Its deterministic core is 160 tests in
+     245 | **~1 s**, but the complete 187-test gate cost **9–13 min** over six runs — the 27 AppTest
+     246 | processes, not the core — which is too slow per merge. It is **mandatory as a focused
+     247 | test** for every branch marked ✔ below, because that is exactly where their regressions
+     248 | land and none of it appears in the smoke suite.
+     249 | 
+     250 | **Chunk E skips silently when `runs/` is absent.** `runs/` is committed, so a clean clone
+     251 | has it; `runs_verify/2026-08-04_1754/` is not yet committed and INIT-001 must fix that or
+     252 | C-010's allowlist is unverifiable in an isolated worktree.
+  [OK ] 213-218 contains NO test-file stem, so a stem-exact match against it finds nothing
+  [OK ] 213-218 is in fact the bounded-runner function table
+  [OK ] 242-252 is in fact the Chunk-D-excluded / Chunk-E paragraphs
+  [OK ] 242-252 does NOT contain the SMOKE command block
+
+=== 1b. F-154 -- the ANCHORS that replaced them, resolved at tip ======
+  [OK ] anchor '## Chunks' heading resolves
+    '## Chunks' -> line 228
+    chunk table rows -> {'**A**': 232, '**B**': 233, '**C**': 234, '**D-core**': 235, '**D-apptest**': 236, '**E**': 237}
+  [OK ] all six chunk rows resolve under the '## Chunks' anchor
+  [OK ] the chunk table under the anchor DOES carry test-file stems (unlike :213-218)
+  [OK ] anchor '## Commands' heading resolves
+  [OK ] anchor '# SMOKE (every merge) - expect 503 passed' resolves
+  [OK ] the SMOKE anchor is BELOW the '## Commands' anchor
+    '## Commands' -> line 256;  SMOKE block -> line 259
+    SMOKE block names 22 test files
+  [OK ] the SMOKE anchor block names 22 test files
+    chunk_d_gate.py symbol CORE -> line 63
+  [OK ] anchor symbol chunk_d_gate.py::CORE resolves
+    chunk_d_gate.py symbol S8 -> line 69
+  [OK ] anchor symbol chunk_d_gate.py::S8 resolves
+    chunk_d_gate.py symbol QB -> line 70
+  [OK ] anchor symbol chunk_d_gate.py::QB resolves
+    chunk_d_gate.py symbol MONOLITHIC -> line 75
+  [OK ] anchor symbol chunk_d_gate.py::MONOLITHIC resolves
+
+=== 1c. F-154 -- the citing sites: false at base, true at tip =========
+  .claude/agents/pwml-test-runner.md:59 at base |   **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+  [OK ] BASE: pwml-test-runner.md cites the drifted 'TEST_MATRIX.md:213-218'
+  [OK ] BASE: pwml-test-runner.md cites the drifted ':242-252'
+  [OK ] TIP: no drifting locator is used as the certification address
+  [OK ] TIP: cites the '## Chunks' anchor
+  [OK ] TIP: cites the SMOKE block anchor text
+  [OK ] TIP: cites the chunk_d_gate.py symbols
+  [OK ] TIP: the underlying claim is UNCHANGED -- still stem-exact
+  [OK ] TIP: the underlying claim is UNCHANGED -- still forbids grepping the filename
+  [OK ] TIP: the load-bearing provenance pin `d8de94d` is RETAINED
+  [OK ] BASE: pwml-test-runner.md states the stale SMOKE count 465
+  [OK ] TIP: pwml-test-runner.md states the measured SMOKE count 503
+  docs/pwml_recovery_sprint/FINDINGS.md:1120 at base | | A | 6 | `TEST_MATRIX.md:213` |
+  docs/pwml_recovery_sprint/FINDINGS.md:1120 at tip  | | A | 6 | `TEST_MATRIX.md` `## Chunks` table, row `**A**` — ~~`:213`~~ drifted, see F-154 |
+  [OK ] BASE: FINDINGS.md:1120 cites `TEST_MATRIX.md:213` for Chunk A
+  [OK ] TIP: FINDINGS.md:1120 cites the '## Chunks' table anchor instead
+  [OK ] FINDINGS.md edit is LINE-NEUTRAL
+
+=== 2. F-153 -- controller.py docstring, false at base, retracted at tip 
+  src/t2pw/rag/controller.py:11 at base | RAG. **UNWIRED**: nothing in production calls it; wiring is C-055's.
+  [OK ] BASE: the docstring asserts UNWIRED / nothing in production calls it
+  [OK ] TIP: that sentence is retracted, struck, not deleted
+  [OK ] TIP: the retraction is labelled
+  [OK ] TIP: names call site streamlit_app.py:1270
+  [OK ] TIP: names call site streamlit_app.py:1426
+  [OK ] TIP: names call site streamlit_app.py:5636
+  [OK ] TIP: names tests/test_c055_rag_loop_wiring.py
+  [OK ] TIP: graph-delta partiality is PRESERVED, not certified
+  [OK ] TIP: says explicitly it did not certify it
+  [OK ] TIP: conform.py is still named as the incomplete part
+  [OK ] wiring test file exists
+  [OK ] F-153's cited :5669 does NOT resolve to run_rag_rounds( at the committed tip
+    src/t2pw/app/streamlit_app.py:5669 (as cited by F-153) |     st.session_state["pathway_context"] = pathway_context
+    src/t2pw/app/streamlit_app.py:1239 | def run_rag_rounds(
+  [OK ] src/t2pw/app/streamlit_app.py:1239 resolves to def run_rag_rounds(
+    src/t2pw/app/streamlit_app.py:1270 |     from t2pw.rag.controller import RoundAborted, RoundResult, run_rag_loop  # noqa: PLC0415
+  [OK ] src/t2pw/app/streamlit_app.py:1270 resolves to run_rag_loop
+    src/t2pw/app/streamlit_app.py:1426 |         outcome = run_rag_loop(
+  [OK ] src/t2pw/app/streamlit_app.py:1426 resolves to run_rag_loop(
+    src/t2pw/app/streamlit_app.py:5636 |         rag_loop_record = run_rag_rounds(
+  [OK ] src/t2pw/app/streamlit_app.py:5636 resolves to run_rag_rounds(
+    by symbol, run_rag_loop/run_rag_rounds occur at lines: [838, 1239, 1255, 1270, 1426, 5595, 5596, 5636]
+  [OK ] re-verifiable BY SYMBOL, independent of the line numbers
+
+=== 3. TEST_MATRIX.md -- the `:477` line-neutrality proof =============
+  lines above :477   base 476   tip 476
+  [OK ] identical count of lines above :477
+  [OK ] every line above :477 byte-identical
+  line 477 base |    behaviour.** That claim is what needs proof.
+  line 477 tip  |    behaviour.** That claim is what needs proof.
+  [OK ] line :477 byte-identical
+  [OK ] the chunk table is still at :230 and SMOKE still at :259 (drift did not worsen)
+  first differing line: None   (base 727 lines -> tip 808)
+  [OK ] every TEST_MATRIX.md change is at end-of-file, strictly below :477
+
+=== VERDICT ===========================================================
+  all citations resolve; all base/tip claims measured true
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c109\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2ac8404de8e800c0a30476f175a5fe9a7f5c11d3  [git, worktree dirty=True]
+label                   : c109-citations-2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c109_citation_probe.py C:/t/c109 2ac8404
+cwd                     : C:\t\c109
+root PID / process group: 4256 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 180 s
+duration                : 0.31 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 2  157028:python.exe, 156888:git.exe
+descendants terminated  : 2  156888, 157028
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c109\docs\pwml_recovery_sprint\evidence\g11\C-109\03-c109-citations-2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

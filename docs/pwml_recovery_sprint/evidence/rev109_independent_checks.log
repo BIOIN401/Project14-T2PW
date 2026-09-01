@@ -1,0 +1,132 @@
+repo C:/t/rev109  base 2ac8404  integration-ref sprint/pwml-recovery
+
+=== A. controller.py inertness -- TWO independent witnesses ===
+  bytes: base 15912  tip 17934
+  ast nodes: base 1293 tip 1293
+  [OK  ] witness 1: docstring-stripped AST dumps identical
+  [OK  ] witness 2: marshalled bytecode of the stripped modules identical (positions normalised -- see the note in strip_docstrings)
+  [OK  ] witness 3: co_code / co_names / co_consts tree identical (position-free by construction)
+  [OK  ] the ONLY docstring that changed is the module docstring
+         changed = ['Module']
+  [OK  ] no docstring owner added or removed (base 14, tip 14)
+  [OK  ] B3: the withdrawn word UNWIRED is PRESERVED, not deleted
+  [OK  ] B3: the old sentence is present verbatim inside strike markers
+  [OK  ] B3: the retraction is explicitly labelled
+  [OK  ] B14: the docstring names :1270
+  [OK  ] B14: the docstring names :1426
+  [OK  ] B14: the docstring names :5636
+  [OK  ] B14: the docstring names :1239
+  [OK  ] B14: the docstring names tests/test_c055_rag_loop_wiring.py
+  [OK  ] B14: the wrong address :5669 is named and explained
+  [OK  ] B2: graph-delta / conform.py partiality is REPRODUCED
+  [OK  ] B2: it is explicitly marked NOT certified
+  [OK  ] B2: it is said to stand as written
+  [OK  ] B2: the docstring does not assert the third claim 'now validates'
+  [OK  ] B2: the docstring does not assert the third claim 'is fixed'
+  [OK  ] B2: the docstring does not assert the third claim 'has been fixed'
+  [OK  ] B2: the docstring does not assert the third claim 'no longer partial'
+  [OK  ] B2: the docstring does not assert the third claim 'resolved'
+  [OK  ] F-154 lesson encoded: the line numbers say how to re-verify them
+
+=== B. citations resolved out of COMMITTED blobs ===
+  [OK  ] [base 2ac8404] :1239 is def run_rag_rounds(
+         def run_rag_rounds(
+  [OK  ] [base 2ac8404] :1270 imports run_rag_loop
+             from t2pw.rag.controller import RoundAborted, RoundResult, run_rag_loop  # noqa: PLC0415
+  [OK  ] [base 2ac8404] :1426 calls run_rag_loop(
+                 outcome = run_rag_loop(
+  [OK  ] [base 2ac8404] :5636 calls run_rag_rounds(
+                 rag_loop_record = run_rag_rounds(
+  [OK  ] [base 2ac8404] :5669 does NOT call run_rag_rounds -- the charter, F-153 and MASTER_PLAN were wrong
+             st.session_state["pathway_context"] = pathway_context
+  [OK  ] [integration sprint/pwml-recovery] :1239 is def run_rag_rounds(
+         def run_rag_rounds(
+  [OK  ] [integration sprint/pwml-recovery] :1270 imports run_rag_loop
+             from t2pw.rag.controller import RoundAborted, RoundResult, run_rag_loop  # noqa: PLC0415
+  [OK  ] [integration sprint/pwml-recovery] :1426 calls run_rag_loop(
+                 outcome = run_rag_loop(
+  [OK  ] [integration sprint/pwml-recovery] :5636 calls run_rag_rounds(
+                 rag_loop_record = run_rag_rounds(
+  [OK  ] [integration sprint/pwml-recovery] :5669 does NOT call run_rag_rounds -- the charter, F-153 and MASTER_PLAN were wrong
+             st.session_state["pathway_context"] = pathway_context
+
+=== C. TEST_MATRIX.md anchors resolve at the tip ===
+  [OK  ] '## Chunks' heading resolves (line 228)
+  [OK  ] '## Chunks' is UNIQUE, so the anchor is unambiguous
+  [OK  ] '## Commands' is UNIQUE
+  [OK  ] all six chunk rows resolve in the FIRST table under '## Chunks'
+         {'**A**': 232, '**B**': 233, '**C**': 234, '**D-core**': 235, '**D-apptest**': 236, '**E**': 237}
+  [OK  ] B15: the chunk table is STILL at :230 (found 230) -- the target was not moved to fit the citation
+  [OK  ] B15: the SMOKE block is STILL at :259 (found 259)
+  [OK  ] the SMOKE anchor is under the '## Commands' heading
+  [OK  ] the SMOKE anchor line states 503
+  [OK  ] the anchored table carries test-file stems (the retired :213-218 carried none)
+
+=== D. chunk_d_gate.py symbols ===
+  [OK  ] symbol CORE resolves
+         line 63
+  [OK  ] symbol S8 resolves
+         line 69
+  [OK  ] symbol QB resolves
+         line 70
+  [OK  ] symbol MONOLITHIC resolves
+         line 75
+
+=== E. B6 -- the claim did not change ===
+  [OK  ] B6: still orders a stem-exact match
+  [OK  ] B6: still forbids grepping the filename
+  [OK  ] B6: the real substring collision it warns about survives intact
+  [OK  ] B6: the load-bearing provenance pin d8de94d is retained
+  [OK  ] B4: anchors, not renumbered line addresses, are what it now cites
+  [OK  ] B4: the tip did NOT simply renumber to :230-237
+  [OK  ] B4: the tip did NOT simply renumber to :259-271
+  [OK  ] B4: the tip did NOT simply renumber to TEST_MATRIX.md:230
+  [OK  ] B4: the tip did NOT simply renumber to TEST_MATRIX.md:259
+
+=== F. the four routed items -- still broken? in boundary? ===
+  FINDINGS.md:1125 -> | D-qb | 1 | `:70` |
+  FINDINGS.md:1126 -> | E | 1 | `TEST_MATRIX.md:218` |
+  chunk_d_gate.py:70 -> QB = ["tests/test_streamlit_quarantine_boundary.py"]
+  [NOTE] routed item 1a: FINDINGS.md:1125 cites chunk_d_gate.py `:70` for D-qb; chunk_d_gate.py:70 is 'QB = ["tests/test_streamlit_quarantine_boundary.py"]' -- that address is CORRECT today, so this half of the routed item is fragile, not broken
+  TEST_MATRIX.md:218 -> | `child_env` | 265–276 | child environment |
+  [NOTE] routed item 1b: FINDINGS.md:1126 cites TEST_MATRIX.md:218 for Chunk E; :218 is the child_env row of the bounded-runner table and Chunk E is at :237 -- GENUINELY BROKEN, and outside the card's stated `FINDINGS.md:1120-1124` boundary
+  [NOTE] routed item 2: TEST_MATRIX.md:None says '§ Chunks begins at line 209'; it begins at :228 -- GENUINELY STALE. This line is BELOW the :477 pin, and TEST_MATRIX.md is in the card's boundary, so it was editable without breaking line-neutrality
+  TEST_MATRIX.md:727 -> `:265` and `:268-273` all still address what they addressed.
+  [NOTE] routed item 3: TEST_MATRIX.md:727 (C-106's note) asserts `:213-218` / `:242-252` 'all still address what they addressed' -- F-154 proved they never did; still uncorrected
+
+=== G. NEW drift created by this diff (reviewer addition) ===
+  base pwml-test-runner.md:59 ->   **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+  tip  pwml-test-runner.md:59 ->   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
+  the stem-exact instruction now lives at :64
+  [NOTE] the stem-exact instruction moved from :59 to :64. Committed documents that still cite `pwml-test-runner.md:59` for it are listed below; none is in C-109's boundary, but the diff did not route them
+
+================ SUMMARY ================
+checks failed : 0
+notes         : 5
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev109\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3f4422857c3f585085b4632f15b8abccf8dce399  [git, worktree dirty=False]
+label                   : rev109-independent-checks-2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev109/docs/pwml_recovery_sprint/evidence/rev109_independent_checks.py C:/t/rev109 2ac8404 sprint/pwml-recovery
+cwd                     : C:\t\rev109
+root PID / process group: 170396 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.55 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 4  169832:python.exe, 154160:git.exe, 170584:git.exe, 170592:git.exe
+descendants terminated  : 4  154160, 169832, 170584, 170592
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev109\docs\pwml_recovery_sprint\evidence\g11\REV-109\05-rev109-independent-checks-2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-109  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

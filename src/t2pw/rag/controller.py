@@ -8,7 +8,42 @@ here: "go round again, and if not, exactly why not?" is
 checkpoint and the D-008 stage sequencing, and **no rule** -- it names none of the six
 termination reasons and none of the eleven delta rules. No network, no LLM, no database
 and no clock of its own (``clock`` is an input), so a test drives a whole loop without
-RAG. **UNWIRED**: nothing in production calls it; wiring is C-055's.
+RAG.
+
+WIRING -- RETRACTION, corrected 2026-08-31 (C-109, F-153). This paragraph used to read,
+and is preserved struck rather than deleted so a reader who remembers it can see it was
+withdrawn:
+
+    ~~**UNWIRED**: nothing in production calls it; wiring is C-055's.~~
+
+That sentence is FALSE at this tip. C-055 is merged and this module is called from
+production. The authoritative implementation and its call sites:
+
+* ``src/t2pw/app/streamlit_app.py:1270`` -- ``from t2pw.rag.controller import ...
+  run_rag_loop``
+* ``src/t2pw/app/streamlit_app.py:1426`` -- ``outcome = run_rag_loop(`` , inside
+  ``run_rag_rounds``
+* ``src/t2pw/app/streamlit_app.py:5636`` -- ``rag_loop_record = run_rag_rounds(`` , the
+  production pass. ``run_rag_rounds`` itself is defined at ``:1239``.
+* ``tests/test_c055_rag_loop_wiring.py`` -- covers that wiring
+
+**``:5636``, NOT ``:5669``.** F-153 and the MASTER_PLAN correction both cite ``:5669`` for
+that call. Measured at the integration tip ``2ac8404``, the committed file has it at
+``:5636``; ``:5669`` is where it sits in the *uncommitted working copy* of
+``streamlit_app.py`` in the primary checkout -- a file the sprint forbids committing. A
+citation that resolves only against uncommitted bytes is F-154's defect in its worst form,
+because no reader can ever reproduce it. Corrected here against the committed blob.
+
+Those are LINE addresses in a file that is edited often, and two of the four had already
+drifted. Re-verify them BY SYMBOL, never by number: grep ``streamlit_app.py`` for
+``run_rag_loop`` and ``run_rag_rounds``. If the numbers have moved, the numbers are wrong
+and the claim still holds; if the symbols are gone, the claim is what has broken.
+
+STILL INCOMPLETE, and deliberately NOT certified by the correction above: **graph-delta
+validation is partial** -- ``conform.py`` conforms and merges but does not validate the
+delta against a policy. F-153 re-verified the wiring claim only; it did not re-verify this
+one, which therefore stands exactly as written. Correcting two claims is not licence to
+certify a third that nobody measured.
 
 D-008 (LOCKED) and §10 -- "every RAG round must re-enter normalization, mapping, gates,
 persistence and classification". Enforced STRUCTURALLY, never by asking the caller:

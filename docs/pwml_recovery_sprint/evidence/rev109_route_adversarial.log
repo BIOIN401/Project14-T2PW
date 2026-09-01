@@ -1,0 +1,136 @@
+REV-109 adversarial probe of reviewer_evidence_route.py
+script   : C:\t\rev109\docs\pwml_recovery_sprint\evidence\reviewer_evidence_route.py
+exists   : True
+workdir  : C:\t\rev109probe\adv
+
+--- S1 satisfied (all committed to integration)
+    expected exit : 0
+    observed exit : 0   [PASS]
+    verdicts      : {'01-a.json': 'reachable', 'rev109_probe.log': 'reachable', 'rev109_probe.py': 'reachable'}
+
+--- S2 probe exists ONLY in the worktree
+    expected exit : 1
+    observed exit : 1   [PASS]
+    verdicts      : {'01-a.json': 'reachable', 'rev109_probe.py': 'unreachable_absent'}
+    NOTE          : stderr names it: yes
+
+--- S3 same NAME, different BYTES (B9 crux)
+    expected exit : 1
+    observed exit : 1   [PASS]
+    verdicts      : {'01-a.json': 'reachable', 'rev109_probe.py': 'unreachable_content_differs'}
+    NOTE          : verdict class is unreachable_content_differs: yes
+
+--- S4 committed only on a branch NOT reachable from integration
+    expected exit : 1
+    observed exit : 1   [PASS]
+    verdicts      : {'01-a.json': 'reachable', 'rev109_probe.py': 'unreachable_absent'}
+
+--- S5 same BYTES under a different path
+    expected exit : 0
+    observed exit : 0   [PASS]
+    verdicts      : {'01-a.json': 'reachable', 'rev109_probe.py': 'reachable'}
+    NOTE          : found_at = ['archive/moved_probe.py'] (deliberate per the docstring)
+
+--- S6 zero-byte probe log vs an unrelated empty blob in integration
+    expected exit : UNKNOWN
+    observed exit : 0   [PASS]
+    verdicts      : {'01-a.json': 'reachable', 'rev109_truncated.log': 'reachable'}
+    NOTE          : FALSE PASS: a zero-byte, never-committed probe log is reported reachable via an unrelated empty file
+
+--- S7 G11 report present, probe source never existed
+    expected exit : UNKNOWN
+    observed exit : 0   [PASS]
+    verdicts      : {'01-a.json': 'reachable'}
+    NOTE          : PASSES with zero probes enumerated -- the check cannot know a probe was owed
+
+--- S8 probes inside evidence/<stem>_*/ subdirectory
+    expected exit : UNKNOWN
+    observed exit : 0   [PASS]
+    verdicts      : enumerated=1 {'01-a.json': 'reachable'}
+    NOTE          : FALSE PASS: two uncommitted probe files inside evidence/rev109_probes/ were never enumerated (glob is non-recursive and is_file() drops the directory)
+
+--- S9 mistyped task id (REV-190)
+    expected exit : 3
+    observed exit : 3   [PASS]
+    verdicts      : {}
+
+--- S9b mistyped task id + --allow-empty
+    expected exit : 0
+    observed exit : 0   [PASS]
+    verdicts      : {}
+    NOTE          : documented escape hatch; a mistyped id with --allow-empty is a silent pass by design
+
+--- S10 nonexistent integration ref
+    expected exit : 2
+    observed exit : 2   [PASS]
+    verdicts      : {}
+    NOTE          : usage error, never a verdict
+
+--- S11 evidence deleted from integration by a later commit
+    expected exit : 1
+    observed exit : 1   [PASS]
+    verdicts      : {'01-a.json': 'reachable', 'rev109_probe.py': 'unreachable_absent'}
+
+--- S12 lowercase task id on a case-insensitive filesystem
+    expected exit : UNKNOWN
+    observed exit : 0   [PASS]
+    verdicts      : enumerated=2
+    NOTE          : informational: enumeration is filesystem-case dependent
+
+--- S13 real C-109 evidence vs sprint/pwml-recovery (NOT yet merged)
+    expected exit : 1
+    observed exit : 1   [PASS]
+    verdicts      : enumerated=23 unreachable=23
+    NOTE          : the check correctly refuses an unmerged card's evidence
+
+--- S13b real C-109 evidence vs its own card branch
+    expected exit : 0
+    observed exit : 0   [PASS]
+    verdicts      : enumerated=23 unreachable=0
+    NOTE          : author's claim reproduced independently
+
+================ SUMMARY ================
+PASS  exp=0        obs=0         S1 satisfied (all committed to integration)
+PASS  exp=1        obs=1         S2 probe exists ONLY in the worktree
+PASS  exp=1        obs=1         S3 same NAME, different BYTES (B9 crux)
+PASS  exp=1        obs=1         S4 committed only on a branch NOT reachable from integration
+PASS  exp=0        obs=0         S5 same BYTES under a different path
+PASS  exp=UNKNOWN  obs=0         S6 zero-byte probe log vs an unrelated empty blob in integration
+PASS  exp=UNKNOWN  obs=0         S7 G11 report present, probe source never existed
+PASS  exp=UNKNOWN  obs=0         S8 probes inside evidence/<stem>_*/ subdirectory
+PASS  exp=3        obs=3         S9 mistyped task id (REV-190)
+PASS  exp=0        obs=0         S9b mistyped task id + --allow-empty
+PASS  exp=2        obs=2         S10 nonexistent integration ref
+PASS  exp=1        obs=1         S11 evidence deleted from integration by a later commit
+PASS  exp=UNKNOWN  obs=0         S12 lowercase task id on a case-insensitive filesystem
+PASS  exp=1        obs=1         S13 real C-109 evidence vs sprint/pwml-recovery (NOT yet merged)
+PASS  exp=0        obs=0         S13b real C-109 evidence vs its own card branch
+
+expectation failures: 0
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev109\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3f4422857c3f585085b4632f15b8abccf8dce399  [git, worktree dirty=False]
+label                   : rev109-route-adversarial
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev109/docs/pwml_recovery_sprint/evidence/rev109_route_adversarial.py C:/t/rev109 C:/t/rev109probe/adv
+cwd                     : C:\t\rev109
+root PID / process group: 167136 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 5.79 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 71  167788:python.exe, 169348:git.exe, 169436:git.exe, 167516:python.exe, 167528:git.exe, 169376:python.exe, 169916:git.exe, 169264:git.exe, 169980:git.exe, 164848:python.exe, 169424:python.exe, 169292:git.exe, 167060:git.exe, 167532:git.exe, 168400:python.exe, 168604:git.exe, 169328:python.exe, 168568:git.exe, 168356:git.exe, 169212:git.exe, 167032:python.exe, 167036:python.exe, 165952:git.exe, 166252:git.exe, 169576:git.exe, 160376:python.exe, 167204:python.exe, 169196:git.exe, 167988:git.exe, 169340:python.exe, 169924:python.exe, 169932:git.exe, 168652:git.exe, 167612:git.exe, 169364:git.exe, 168064:python.exe, 168384:python.exe, 169972:git.exe, 165960:git.exe, 169128:git.exe, 167840:python.exe, 169316:python.exe, 169476:git.exe, 153492:git.exe, 125976:python.exe, 169180:python.exe, 170008:git.exe, 170036:python.exe, 170056:python.exe, 170104:git.exe, 170216:git.exe, 170320:git.exe, 170368:python.exe, 170388:python.exe, 170408:git.exe, 170524:git.exe, 170628:git.exe, 170752:python.exe, 170772:python.exe, 170848:git.exe, 170960:git.exe, 169100:git.exe, 170108:python.exe, 170128:python.exe, 170200:git.exe, 170300:python.exe, 170356:python.exe, 170420:git.exe, 170448:python.exe, 170472:python.exe, 170532:git.exe
+descendants terminated  : 71  125976, 153492, 160376, 164848, 165952, 165960, 166252, 167032, 167036, 167060, 167204, 167516, 167528, 167532, 167612, 167788, 167840, 167988, 168064, 168356, 168384, 168400, 168568, 168604, 168652, 169100, 169128, 169180, 169196, 169212, 169264, 169292, 169316, 169328, 169340, 169348, 169364, 169376, 169424, 169436, 169476, 169576, 169916, 169924, 169932, 169972, 169980, 170008, 170036, 170056, 170104, 170108, 170128, 170200, 170216, 170300, 170320, 170356, 170368, 170388, 170408, 170420, 170448, 170472, 170524, 170532, 170628, 170752, 170772, 170848, 170960
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev109\docs\pwml_recovery_sprint\evidence\g11\REV-109\03-rev109-route-adversarial.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-109  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

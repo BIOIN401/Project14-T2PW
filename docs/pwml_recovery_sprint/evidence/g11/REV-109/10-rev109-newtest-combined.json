@@ -1,0 +1,134 @@
+{
+  "label": "rev109-newtest-combined",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/btr109/new",
+    "tests/test_c109_reviewer_evidence_route.py"
+  ],
+  "cwd": "C:\\t\\rev109",
+  "started_at": "2026-09-01T03:07:54+00:00",
+  "finished_at": "2026-09-01T03:07:56+00:00",
+  "duration_seconds": 1.509745400006068,
+  "timeout_seconds": 300.0,
+  "root_pid": 173992,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 168116,
+      "name": "python.exe",
+      "ppid": 173992
+    },
+    {
+      "pid": 173644,
+      "name": "git.exe",
+      "ppid": 168116
+    },
+    {
+      "pid": 172772,
+      "name": "git.exe",
+      "ppid": 168116
+    },
+    {
+      "pid": 171168,
+      "name": "git.exe",
+      "ppid": 173240
+    },
+    {
+      "pid": 173240,
+      "name": "git.exe",
+      "ppid": 168116
+    },
+    {
+      "pid": 169860,
+      "name": "git.exe",
+      "ppid": 168116
+    },
+    {
+      "pid": 173076,
+      "name": "git.exe",
+      "ppid": 168116
+    },
+    {
+      "pid": 173532,
+      "name": "python.exe",
+      "ppid": 173948
+    },
+    {
+      "pid": 173948,
+      "name": "python.exe",
+      "ppid": 168116
+    }
+  ],
+  "descendants_terminated": [
+    168116,
+    169860,
+    171168,
+    172772,
+    173076,
+    173240,
+    173532,
+    173644,
+    173948
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 126840,
+      "name": "python.exe"
+    },
+    {
+      "pid": 128852,
+      "name": "python.exe"
+    },
+    {
+      "pid": 172748,
+      "name": "python.exe"
+    },
+    {
+      "pid": 173740,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev109\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-109\\10-rev109-newtest-combined.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev109\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev109",
+    "repo_head": "3f4422857c3f585085b4632f15b8abccf8dce399",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-109",
+    "token": "REV-109:172748:2ff01a2bfc805428",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
