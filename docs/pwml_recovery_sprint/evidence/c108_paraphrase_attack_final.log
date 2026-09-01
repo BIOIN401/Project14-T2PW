@@ -1,0 +1,233 @@
+base: C:\t\c108base\src\t2pw\curation\apply_audit_patch.py
+tip : C:\t\c108\src\t2pw\curation\apply_audit_patch.py
+
+====================================================================================================
+SECTION -- (a) the transport schema noun, rephrased
+====================================================================================================
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [transporters] actor='P'  'add P as the transporter to resolve the structural inconsistency'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [transporters] actor='P'  'add P as transporters to resolve the structural inconsistency'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [transporters] actor='P'  'P should be added as a transporter to resolve the inconsistency'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [transporters] actor='P'  'P is added as a transporter so the payload is consistent'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [transporters] actor='P'  'adding P as a transporter resolves the structural inconsistency'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [transporters] actor='P'  'listing P among the transporters resolves the inconsistency'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [transporters] actor='P'  'the payload lists no transporter, so P is added'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [transporters] actor='P'  'P, a transporter, is added to resolve the structural inconsistency'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [transporters] actor='P'  'assign P the transporter role to resolve the inconsistency'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [transporters] actor='P'  'register P as a channel to resolve the structural inconsistency'
+  base=ACCEPT tip=ACCEPT want=REFUSE  << STILL OPEN at base and tip -- NOT closed by this card
+        [transporters] actor='P'  'include P as a carrier so the transport step has an actor'
+  base=ACCEPT tip=ACCEPT want=REFUSE  << STILL OPEN at base and tip -- NOT closed by this card
+        [transporters] actor='P'  'P is required as a pump for the payload to validate'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P acts as a transporter of A across the inner membrane'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P functions as the channel for calcium entry'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P serves as a carrier for A in this step'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P was the transporter for A in the reconstituted system'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P is a transporter'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P is the efflux pump for A'
+
+====================================================================================================
+SECTION -- (a) the catalysis schema noun, rephrased
+====================================================================================================
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [enzymes] actor='P'  'add P as the catalyst to resolve the structural inconsistency'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [enzymes] actor='P'  'add P to the catalysts so the reaction has an actor'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [enzymes] actor='P'  'P is proposed as a catalyst to resolve the inconsistency'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='P'  'P is a catalyst'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='P'  'P is the catalyst for this step'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='P'  'P acts as a catalyst in the conversion of A to B'
+
+====================================================================================================
+SECTION -- (c) the actor name supplying its own cue, rephrased
+====================================================================================================
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [enzymes] actor='LpxC hydrolase'  'the hydrolase LpxC was quantified in the lysate'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [enzymes] actor='LpxC hydrolase'  'LpxC hydrolase levels were unchanged in the mutant'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [enzymes] actor='LpxC hydrolase'  'we quantified LpxC hydrolase in the lysate'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [enzymes] actor='LpxC hydrolase'  'the LpxC hydrolase band was excised from the gel'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [enzymes] actor='LpxC hydrolase'  'LpxC hydrolase, LpxD and LpxA were all detected'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [enzymes] actor='LpxC hydrolase'  'LpxC hydrolase is present in the complex'
+  base=ACCEPT tip=REFUSE want=REFUSE  << CLOSED BY THIS CARD
+        [enzymes] actor='LpxC hydrolase'  'purified LpxC hydrolase was stored at minus 80'
+  base=ACCEPT tip=ACCEPT want=REFUSE  << STILL OPEN at base and tip -- NOT closed by this card
+        [enzymes] actor='LpxC hydrolase'  'LpxC (a hydrolase) was quantified in the lysate'
+  base=ACCEPT tip=ACCEPT want=REFUSE  << STILL OPEN at base and tip -- NOT closed by this card
+        [enzymes] actor='LpxC hydrolase'  'LpxC, a hydrolase, was quantified in the lysate'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='LpxC hydrolase'  'LpxC hydrolase catalyses the conversion of A to B'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='LpxC hydrolase'  'A is converted to B by LpxC hydrolase'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='LpxC hydrolase'  'the conversion is catalysed by the LpxC hydrolase'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='LpxC hydrolase'  'LpxC hydrolase is the enzyme responsible for this step'
+
+====================================================================================================
+SECTION -- (d) the appositive agent noun, rephrased
+====================================================================================================
+  base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+        [enzymes] actor='P4X'  'the inhibitor P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+        [enzymes] actor='P4X'  'P4X, the inhibitor, catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+        [enzymes] actor='P4X'  'the potent inhibitor P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+        [enzymes] actor='P4X'  'inhibitor P4X catalyses the conversion of A to B'
+  base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+        [enzymes] actor='P4X'  'the repressor P4X hydrolyses A to give B'
+  base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+        [enzymes] actor='P4X'  'the suppressor P4X mediates the conversion of A to B'
+  base=REFUSE tip=ACCEPT want=ACCEPT  << CLOSED BY THIS CARD
+        [enzymes] actor='P4X'  'the antagonist P4X converts A into B'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the inhibitor of P was added while Q mediates the conversion'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'inhibitors of P were added while Q mediates the conversion'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the inhibitor for P was added while Q mediates the conversion'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'an inhibitor selective for P was added while Q mediates'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the inhibitor targeting P was added while Q mediates'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the inhibitor directed against P was added while Q mediates'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the suppressor acting on P was added while Q mediates'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the P inhibitor was added while Q mediates the conversion'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the P specific inhibitor was added while Q mediates'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the P activity inhibitor was added while Q mediates'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the repressor of the P gene was deleted while Q mediates'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'an inhibitory effect on P was seen while Q mediates the conversion'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'P inhibitors were used while Q mediates the conversion'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [modifiers] actor='P'  'P is an inhibitor of X'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [modifiers] actor='P'  'P is a suppressor of the operon'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [modifiers] actor='P'  'P is the repressor of the operon'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [modifiers] actor='P'  'P is an antagonist of the receptor'
+
+====================================================================================================
+SECTION -- (b) period-stripped multi-sentence evidence
+====================================================================================================
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'P catalyses the conversion of A to B. The inhibitor of P was added.'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'The inhibitor of P was added. P catalyses the conversion of A to B.'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'P catalyses the conversion of A to B.\nThe inhibitor of P was added.'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='P'  'P catalyses the conversion of A to B. x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x The inhibitor of P was added.'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='P'  'P catalyses the conversion of A to B'
+
+====================================================================================================
+SECTION -- substring collisions, including any this card creates
+====================================================================================================
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='P'  'P is the reductase for this step'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='P'  'P is the nitroreductase for this step'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='P'  'P is an oxidoreductase acting on the substrate'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='P'  'the silencer element upstream of P is mediated by Q'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [enzymes] actor='P'  'interferon is produced while P catalyses the conversion of A to B'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'P has an inhibitory role and Q catalyses the conversion'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the attenuation of P is mediated by Q'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'P is an intermediate carrier in this pathway'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the inhibition of P is mediated by Q'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the repression of P is mediated by Q'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the antagonism of P is mediated by Q'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'P was inactivated before the mediated conversion'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'the downregulation of P is mediated by Q'
+  base=REFUSE tip=REFUSE want=REFUSE  OK
+        [enzymes] actor='P'  'abolishing P activity is mediated by Q'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P transports A across the inner membrane'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'the transport of A is carried out by P'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P translocates A across the bilayer'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'the translocation of A is driven by P'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P imports A into the cell'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P exports A from the cytoplasm'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P channels calcium into the cytosol'
+  base=ACCEPT tip=ACCEPT want=ACCEPT  OK
+        [transporters] actor='P'  'P pumps protons across the membrane'
+
+====================================================================================================
+PARAPHRASE ATTACK TOTALS  cases=88  regressions_introduced=0  still_open=4
+====================================================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e263be9d134c272bd471415026eb1f8cb750c972  [git, worktree dirty=True]
+label                   : paraphrase-final
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c108_paraphrase_attack.py C:/t/c108base C:/t/c108
+cwd                     : C:\t\c108
+root PID / process group: 174768 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.32 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  174752:python.exe
+descendants terminated  : 1  174752
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\46-paraphrase-final.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

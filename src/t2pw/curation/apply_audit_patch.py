@@ -2345,7 +2345,13 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
                 # inhibitor" -- where the actor is again the TARGET. No
                 # determiner may intervene, which is what keeps the apposition
                 # "P4X, the inhibitor, catalyses ..." out of this frame.
-                r"|(?<![a-z0-9])" + escaped + r"(?![a-z0-9])"
+                # NOTE the spelling: written on two lines so the single-line
+                # form of C-107's F2 opening stays UNIQUE in this file, which is
+                # what evidence/c107_mutation_attack.py's M10 substitution keys
+                # on. A committed instrument should not stop working because a
+                # later card reused a line verbatim.
+                r"|(?<![a-z0-9])" + escaped
+                + r"(?![a-z0-9])"
                 r"(?:\s+" + _ATTENUATION_AGENT_ADJ_SRC + r"){0,"
                 + str(_ATTENUATION_AGENT_MAX_ADJ) + r"}\s+"
                 + _ATTENUATION_AGENT_NOUN_SRC + r"(?![a-z])"
