@@ -1,0 +1,58 @@
+REV-111 addendum -- what the fsync buys, measured
+target : C:\t\rev111\src\t2pw\batch\leg_trace.py
+
+tmp    : C:\Users\Angad\AppData\Local\Temp\rev111fsync_pk2wrvmc
+
+ARM 1 -- UNMUTATED (flush + fsync present)
+  {'timed_out': True, 'calls': 25, 'events': 25, 'present': True}
+
+ARM 2 -- MUTATED (flush + fsync REMOVED; the per-event open/close remains)
+  {'timed_out': True, 'calls': 25, 'events': 25, 'present': True}
+
+  restored byte-exact: sha256=ccdae37b5ea4b9e7
+
+---- controls ----
+  with_fsync_was_really_force_killed : OK
+  no_fsync_was_really_force_killed : OK
+
+---- result ----
+  attempts preserved WITH fsync    : 25 / 25
+  attempts preserved WITHOUT fsync : 25 / 25
+
+  VERDICT: the per-event open/close ALONE survives a force kill.
+  The fsync is insurance against a MACHINE crash, which is a wider
+  threat than the one C-111 documents -- so M3's survival is NOT a
+  missing guard for the threatened failure mode. It is an unguarded
+  belt-and-braces, and it is also the entire source of the
+  +0.55 ms/attempt timing side effect measured in arm E.
+
+git status --porcelain src/t2pw : (clean)
+
+OK.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev111\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ae9c1570ea77e7fea4cd9dccc9803ea4a516bbd3  [git, worktree dirty=False]
+label                   : rev111-fsync-threat-model
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/rev111/docs/pwml_recovery_sprint/evidence/rev111_fsync_threat_model.py
+cwd                     : C:\t\rev111
+root PID / process group: 561412 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 8.95 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 12  563448:python.exe, 562960:python.exe, 564660:python.exe, 562756:python.exe, 564696:python.exe, 565060:taskkill.exe, 561364:python.exe, 561476:python.exe, 563900:python.exe, 565240:python.exe, 559860:taskkill.exe, 548808:git.exe
+descendants terminated  : 12  548808, 559860, 561364, 561476, 562756, 562960, 563448, 563900, 564660, 564696, 565060, 565240
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rev111/docs/pwml_recovery_sprint/evidence/g11/REV-111/05-rev111-fsync-threat-model.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-111  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

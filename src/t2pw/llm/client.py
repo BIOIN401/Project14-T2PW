@@ -301,6 +301,49 @@ def _hash(value: Any) -> str:
     return "sha256:" + hashlib.sha256(raw).hexdigest()[:16]
 
 
+def _publish_attempt(diagnostics: "CompletionDiagnostics", row: Dict[str, Any]) -> None:
+    """Flush one attempt row to the batch leg trace, if a leg is recording. C-111.
+
+    ``CompletionDiagnostics`` already holds everything F-148 needed and could not
+    get -- attempt numbers, statuses, retry reasons, the model that answered and
+    the request/response hashes -- and then dies with the process. The three
+    timed-out T-107 legs preserved **no attempt record of any kind**, which is why
+    retry amplification is recorded as *unexcluded* rather than excluded: the
+    artifact needed to rule it out is exactly the artifact the kill destroyed.
+
+    This is a pure OBSERVATION at the boundary. **It changes nothing about retry
+    behaviour, retry counts or backoff**, it adds no call and no wait, and it is
+    a no-op outside a batch leg. The import is lazy because ``t2pw.batch`` imports
+    ``t2pw.llm``, not the other way round, and both guards are total: a leg must
+    never fail because its instrument did.
+
+    **Counts, reasons, timings and hashes only.** No prompt body and no response
+    body crosses this seam -- ``row`` carries an attempt number, a status, a
+    finish reason, a character count and an error string that ``_diag_clip``
+    already bounded, and the leg trace redacts every credential shape out of it
+    before it reaches disk.
+    """
+
+    try:
+        from t2pw.batch.leg_trace import record_model_attempt
+    except Exception:  # noqa: BLE001 - batch is optional for a standalone caller
+        return
+    try:
+        record_model_attempt(
+            stage=diagnostics.stage,
+            model=diagnostics.model,
+            attempt=row.get("attempt", 0),
+            status=row.get("status", ""),
+            reason=row.get("error", ""),
+            finish_reason=row.get("finish_reason", ""),
+            content_chars=row.get("content_chars", 0),
+            request_hash=diagnostics.request_hash,
+            response_hash=diagnostics.response_hash,
+        )
+    except Exception:  # noqa: BLE001
+        return
+
+
 @dataclass
 class CompletionDiagnostics:
     """What happened at one crossing of the provider boundary.
@@ -363,6 +406,10 @@ class CompletionDiagnostics:
         if finish_reason:
             self.finish_reason = str(finish_reason)
         self.response_status = str(status)
+        # C-111: the same row, durably, BEFORE the next attempt begins. An
+        # attempt record that only exists in memory is destroyed by the kill it
+        # exists to explain.
+        _publish_attempt(self, row)
 
 
 @dataclass

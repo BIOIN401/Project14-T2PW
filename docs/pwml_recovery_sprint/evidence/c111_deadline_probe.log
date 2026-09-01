@@ -1,0 +1,212 @@
+probe tmp root       : C:\Users\Angad\AppData\Local\Temp\c111probe_avb1jcr7
+tree under measure   : C:\t\c111
+live run trees NOT touched: runs, runs_verify
+
+M1 took 0.0s
+M2 took 0.0s
+M3 took 3.4s
+M4 took 3.5s
+M5 took 5.1s
+M6 took 22.3s
+
+{
+  "controls_failed": [],
+  "live_run_trees_touched": [],
+  "measurements": {
+    "M1": {
+      "argv": [
+        "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+        "C:\\Users\\Angad\\AppData\\Local\\Temp\\c111probe_avb1jcr7\\batch_run.py",
+        "--single",
+        "--run-dir",
+        "C:\\Users\\Angad\\AppData\\Local\\Temp\\c111probe_avb1jcr7\\run",
+        "--slug",
+        "slug",
+        "--mode",
+        "strict",
+        "--timeout",
+        "1680"
+      ],
+      "argv_timeout_flag": "1680",
+      "child_deadline_seconds_computed": 1680.0,
+      "control_negative_argv_does_not_say_1800": true,
+      "control_positive_1680_computed": true,
+      "control_positive_argv_says_1680": true,
+      "default_finalization_reserve_seconds": 120.0,
+      "leg_ceiling_seconds": 1800.0,
+      "parent_child_grace_seconds": 120.0
+    },
+    "M2": {
+      "child_timeout_flag": "1680",
+      "control_negative_parent_does_not_wait_child_deadline": true,
+      "control_positive_parent_waits_full_ceiling": true,
+      "launches_recorded": 1,
+      "manifest_rows": 1,
+      "parent_wait_seconds": 1800.0,
+      "timeout_row_budget": {
+        "child_deadline_seconds": 1680.0,
+        "elapsed_seconds": 0.0,
+        "finalization_reserve_seconds": 120.0,
+        "leg_timeout_default_seconds": 3600.0,
+        "leg_timeout_overridden": true,
+        "leg_timeout_override_reason": "",
+        "leg_timeout_override_source": "",
+        "leg_timeout_seconds": 1800.0,
+        "remaining_seconds": 1800.0
+      },
+      "timeout_row_files": [],
+      "timeout_row_stage": "unknown",
+      "timeout_row_termination_reason": "operation_timeout"
+    },
+    "M3": {
+      "control_negative_no_false_completion_past_total": true,
+      "control_positive_overrun_arm_timed_out": true,
+      "interactions": [
+        {
+          "detail": "",
+          "elapsed_after": 1.0,
+          "remaining_before": 3.0,
+          "slice_given": 1.0,
+          "timed_out": false
+        },
+        {
+          "detail": "",
+          "elapsed_after": 2.001,
+          "remaining_before": 2.0,
+          "slice_given": 1.0,
+          "timed_out": false
+        },
+        {
+          "detail": "",
+          "elapsed_after": 3.001,
+          "remaining_before": 0.999,
+          "slice_given": 1.0,
+          "timed_out": false
+        },
+        {
+          "detail": "whole-run budget of 3s was already spent",
+          "elapsed_after": 3.001,
+          "remaining_before": -0.001,
+          "slice_given": null,
+          "timed_out": true
+        }
+      ],
+      "max_slice_overrun_seconds": 0.001,
+      "overrun_past_total_seconds": 0.001,
+      "single_overrun_arm": {
+        "classified_as": "operation_timeout",
+        "detail": "app run timed out after 1.0s",
+        "elapsed": 0.4,
+        "timed_out": true
+      },
+      "slice_floor_seconds": 1.0,
+      "stop_classified_as": "budget_exhausted",
+      "stop_detail_carries_budget_spent_marker": true,
+      "stopped_at_elapsed": 3.001,
+      "total_budget_seconds": 3.0,
+      "work_admitted_after_budget_gone": false
+    },
+    "M4": {
+      "control_negative_instant_drive_is_not_the_total": true,
+      "control_positive_instant_drive_is_near_zero": true,
+      "in_process_total_seconds": 2.0,
+      "instant_drive_recorded_seconds": 0.0,
+      "overrun_beyond_total_seconds": 1.51,
+      "recorded_outcome_seconds": 3.51,
+      "synthetic_finalization_seconds": 1.5,
+      "work_stopped_at_seconds": 2.015
+    },
+    "M5": {
+      "control_negative_killed_arm_did_not_time_out": true,
+      "control_positive_killed_arm_started": true,
+      "control_positive_survivor_finalized": true,
+      "kill_mechanism": "runner._kill_tree (taskkill /F /T on nt)",
+      "killed_arm": {
+        "child_sleep_seconds": 25.0,
+        "elapsed": 3.518,
+        "finalized_marker": false,
+        "parent_wait_seconds": 3.0,
+        "returncode": null,
+        "started_marker": true,
+        "timed_out": true
+      },
+      "survived_arm": {
+        "child_sleep_seconds": 0.5,
+        "elapsed": 0.585,
+        "finalized_marker": true,
+        "parent_wait_seconds": 8.0,
+        "returncode": 0,
+        "started_marker": true,
+        "timed_out": false
+      }
+    },
+    "M6": {
+      "child_deadline_seconds": 8.0,
+      "control_negative_over_reserve_payload_absent": true,
+      "control_positive_over_reserve_started_work": true,
+      "control_positive_under_reserve_payload_present": true,
+      "finalization_over_reserve_arm": {
+        "elapsed": 12.615,
+        "finalization_seconds": 6.0,
+        "finalization_started": true,
+        "payload_present": false,
+        "timed_out": true,
+        "work_started": true,
+        "work_stopped_record": "8.010|whole-run budget of 8s was already spent"
+      },
+      "finalization_under_reserve_arm": {
+        "elapsed": 9.641,
+        "finalization_seconds": 1.5,
+        "finalization_started": true,
+        "payload_present": true,
+        "timed_out": false,
+        "work_started": true,
+        "work_stopped_record": "8.011|whole-run budget of 8s was already spent"
+      },
+      "grace_seconds": 4.0,
+      "leg_ceiling_seconds": 12.0
+    }
+  },
+  "probe": "c111_deadline_probe",
+  "tree": "C:\\t\\c111",
+  "verdicts": {
+    "reading_1_child_never_honoured_its_deadline": "REFUTED",
+    "reading_1_clause_a_work_admitted_after_budget_gone": false,
+    "reading_1_clause_b_max_slice_overrun_seconds": 0.001,
+    "reading_2_finalization_overran_the_reserve": "MECHANISM CONFIRMED, MAGNITUDE NOT MEASURABLE OFFLINE",
+    "reading_3_outer_kill_invokes_no_finalization": "CONFIRMED"
+  }
+}
+
+VERDICT reading_1_child_never_honoured_its_deadline = REFUTED
+VERDICT reading_1_clause_a_work_admitted_after_budget_gone = False
+VERDICT reading_1_clause_b_max_slice_overrun_seconds = 0.001
+VERDICT reading_2_finalization_overran_the_reserve = MECHANISM CONFIRMED, MAGNITUDE NOT MEASURABLE OFFLINE
+VERDICT reading_3_outer_kill_invokes_no_finalization = CONFIRMED
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c111\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4fde91b3c67e5e30b1a7c5586806326ebf285c0b  [git, worktree dirty=True]
+label                   : deadline-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c111_deadline_probe.py
+cwd                     : C:\t\c111
+root PID / process group: 480044 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 34.78 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 11  478104:python.exe, 478376:python.exe, 478432:python.exe, 480168:taskkill.exe, 471084:python.exe, 479616:python.exe, 480308:python.exe, 480328:python.exe, 478384:taskkill.exe, 480284:python.exe, 480500:python.exe
+descendants terminated  : 11  471084, 478104, 478376, 478384, 478432, 479616, 480168, 480284, 480308, 480328, 480500
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/C-111/02-deadline-probe.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-111  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

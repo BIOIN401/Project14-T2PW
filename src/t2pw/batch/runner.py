@@ -64,7 +64,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
-from t2pw.batch import driver, report
+from t2pw.batch import driver, leg_trace, report
 from t2pw.batch.driver import MODE_RESEARCH, MODE_STRICT, RunOutcome
 from t2pw.batch.fetch import BatchPaper, eligibility_summary, fetch_papers
 from t2pw.paths import PROJECT_ROOT
@@ -738,11 +738,26 @@ def result_text(row: Dict[str, Any], *, paper: Optional[Dict[str, Any]] = None) 
 
     if status != _STATUS_PASS:
         codes = _safe_list(row.get("issue_codes"))
+        # F-158 (C-111). ``counts`` and ``files`` already come out empty on a
+        # timed-out leg, so the distinction is not ABSENT here -- it is
+        # UNEXPLAINED. These are the two named fields that say in terms that a leg
+        # was an operational casualty rather than a scientific decline, and they
+        # are exactly two: this is a gap, not a missing capability.
+        #
+        # The verdict line above is deliberately untouched. Making it correct on a
+        # decline needs a ``GoldCase``, which ``result_text`` never receives, and
+        # that coupling is a reserved architecture decision. Printing more context
+        # does not make a wrong verdict right.
+        reason = _text(row.get("termination_reason"))
+        operational = row.get("operational_failure")
         lines += [
             "",
             "WHAT WENT WRONG",
             "-" * 40,
             f"failure_kind : {_text(row.get('failure_kind')) or '(unclassified)'}",
+            f"termination_reason  : {reason or '(not recorded)'}",
+            "operational_failure : "
+            + ("(not recorded)" if operational is None else str(bool(operational)).lower()),
             f"message      : {_text(row.get('message')) or '(no message recorded)'}",
             f"issue codes  : {', '.join(str(code) for code in codes) if codes else '(none reported)'}",
             "",
@@ -947,6 +962,16 @@ def _timeout_row(
     return _identify(
         {
             "status": _STATUS_TIMEOUT,
+            # ``unknown`` IS NOT A PIPELINE STAGE and is not a defect. C-111 /
+            # F-148 § 1: the parent genuinely does not know where the leg was,
+            # because it killed a child that never reported back. The in-process
+            # path DOES know (it records ``stage="input"``) and declares its
+            # missing budget rather than guessing -- F-092 defect 3, closed.
+            # Making the parent infer or default a stage here would be a
+            # regression dressed as a repair. What distinguishes the two
+            # epistemic situations is the TIMEOUT SOURCE, recorded durably in
+            # ``LEG_TERMINAL.json`` beside the leg (``leg_trace.record_terminal``),
+            # not a guessed stage.
             "stage": "unknown",
             "seconds": round(seconds, 2),
             "failure_kind": _STATUS_TIMEOUT,
@@ -999,6 +1024,97 @@ def _crash_row(*, slug: str, mode: str, paper: Dict[str, Any], seconds: float, r
     )
 
 
+def _record_leg_terminal(
+    target: Path,
+    *,
+    row: Dict[str, Any],
+    result: ChildResult,
+    child_reported: bool,
+    elapsed: float,
+    timeout: float,
+    payload_before_cleanup: Dict[str, Any],
+) -> None:
+    """C-111 / F-148. The PARENT's terminal record for one leg.
+
+    Items 4, 5, 6, 7 and 9 of the nine can only be written here: after an outer
+    kill the parent is the only process still alive, and the child ran no cleanup
+    of any kind because the kill is a force kill.
+
+    **Instrumentation only.** The manifest row is not modified, ``files`` and
+    ``counts`` are not repopulated from disk, and no stage is guessed. What this
+    adds is the record of what the row's emptiness actually described -- which is
+    exactly the artifact the T-107 kills destroyed, and without which retry
+    amplification cannot be excluded.
+
+    Guarded end to end: a diagnostic that can raise would turn a reportable
+    failure into an unreportable one.
+    """
+
+    try:
+        status = _text(row.get("status")).lower()
+        parent_killed = bool(getattr(result, "timed_out", False))
+        source = leg_trace.classify_timeout_source(
+            parent_killed=parent_killed,
+            child_reported=child_reported,
+            termination_reason=_text(row.get("termination_reason")),
+        )
+        reserve = leg_trace.finalization_reserve_record(
+            elapsed_seconds=float(elapsed),
+            leg_timeout_seconds=float(timeout),
+            grace_seconds=_CHILD_GRACE,
+        )
+        decisions: List[Dict[str, Any]] = []
+        row_files = {
+            _text(_safe_dict(item).get("name")) or _text(item)
+            for item in _safe_list(row.get("files"))
+        }
+        row_names = {Path(name).name for name in row_files if name}
+        for entry in _safe_list(payload_before_cleanup.get("files")):
+            data = _safe_dict(entry)
+            name = _text(data.get("name"))
+            if data.get("instrument") or not name or name in row_names:
+                continue
+            if name == RESULT_NAME:
+                continue
+            decisions.append(
+                leg_trace.cleanup_decision(
+                    artifact=name,
+                    decision="present_on_disk_but_absent_from_manifest_row",
+                    decided_by=(
+                        "batch.runner._timeout_row / _crash_row write files=[] and "
+                        "counts={} unconditionally on the paths the parent owns; the "
+                        "row is not built by reading the leg directory"
+                    ),
+                    detail=f"status={status or 'unknown'} timeout_source={source}",
+                    size_bytes=int(data.get("bytes") or -1),
+                )
+            )
+        terminal_state = {
+            "status": status or "unknown",
+            "stage_recorded_by_row": _text(row.get("stage")),
+            "termination_reason": _text(row.get("termination_reason")),
+            "operational_failure": bool(row.get("operational_failure")),
+            "failure_kind": _text(row.get("failure_kind")),
+            "parent_killed_child": parent_killed,
+            "child_reported_its_own_row": bool(child_reported),
+            "child_returncode": getattr(result, "returncode", None),
+            "elapsed_seconds": round(float(elapsed), 2),
+            "leg_timeout_seconds": round(float(timeout), 2),
+            "child_stdout_chars": len(_text(getattr(result, "stdout", ""))),
+            "child_stderr_chars": len(_text(getattr(result, "stderr", ""))),
+        }
+        leg_trace.record_terminal(
+            target,
+            timeout_source=source,
+            terminal_state=terminal_state,
+            finalization_reserve=reserve,
+            payload_before_cleanup=payload_before_cleanup,
+            cleanup_decisions=decisions,
+        )
+    except Exception:  # noqa: BLE001 - see the docstring
+        return
+
+
 # ---------------------------------------------------------------------------
 # The child half: one paper, one mode.
 # ---------------------------------------------------------------------------
@@ -1021,6 +1137,24 @@ def run_single(
     paper = paper_from_plan(run_dir, slug)
     target = paper_dir(run_dir, slug) / mode
     target.mkdir(parents=True, exist_ok=True)
+
+    # C-111 / F-148. Start the leg's own flush-as-you-go record BEFORE any work,
+    # because the outer kill is a FORCE kill: a leg that is killed runs no atexit
+    # hook, no signal handler and no ``finally``, so anything not already on disk
+    # is gone. Every event below is appended, flushed and fsync'ed on its own.
+    # Instrumentation only -- nothing here changes what the leg does.
+    trace = leg_trace.activate(
+        target / leg_trace.LEG_TRACE_NAME,
+        child_deadline_seconds=float(timeout),
+    )
+    leg_trace.record_event(
+        "leg_begin",
+        slug=slug,
+        mode=mode,
+        paper_id=_text(paper.get("paper_id")),
+        child_deadline_seconds=float(timeout),
+        run_dir=str(run_dir),
+    )
 
     read_error = _text(paper.get("source_text_error"))
     if read_error:
@@ -1050,13 +1184,28 @@ def run_single(
             mode,
         )
         _write_text(target / RESULT_NAME, result_text(row, paper=paper))
+        leg_trace.record_event("leg_end", status=_STATUS_ERROR, stage="init",
+                               timeout_source=leg_trace.SOURCE_NONE)
+        leg_trace.deactivate()
         return _relocate_files(row, slug, mode)
 
     runner = run_fn or driver.run_one
+    if trace is not None:
+        trace.stage_begin("driver")
     outcome = runner(paper, mode, timeout=max(60.0, float(timeout)))
+    if trace is not None:
+        trace.stage_end(
+            "driver",
+            status=_text(getattr(outcome, "status", "")),
+            termination_reason=_text(getattr(outcome, "termination_reason", "")),
+        )
 
     row = _identify(outcome.to_dict(), paper, slug, mode)
+    if trace is not None:
+        trace.stage_begin("artifacts")
     row["files"] = write_artifacts(target, getattr(outcome, "artifacts", {}) or {})
+    if trace is not None:
+        trace.stage_end("artifacts", artifact_count=len(_safe_list(row.get("files"))))
 
     # A "pass" whose required artifact never reached the disk is a failure. The
     # driver cannot see this: it hands over bytes, and only the write knows.
@@ -1079,6 +1228,27 @@ def run_single(
         )
 
     _write_text(target / RESULT_NAME, result_text(row, paper=paper))
+
+    # The child's own last word. A leg that reaches here was NOT killed: it
+    # either finished or stopped itself on its in-process deadline, and those two
+    # are different mechanisms from the parent's kill -- item 5. The child is the
+    # only process that can tell them apart, so it says so here.
+    child_reason = _text(row.get("termination_reason"))
+    leg_trace.record_event(
+        "leg_end",
+        status=_text(row.get("status")),
+        stage=_text(row.get("stage")),
+        termination_reason=child_reason,
+        operational_failure=bool(row.get("operational_failure")),
+        timeout_source=leg_trace.classify_timeout_source(
+            parent_killed=False,
+            child_reported=True,
+            termination_reason=child_reason,
+        ),
+        counts=_safe_dict(row.get("counts")),
+        artifact_count=len(_safe_list(row.get("files"))),
+    )
+    leg_trace.deactivate()
     return _relocate_files(row, slug, mode)
 
 
@@ -2270,6 +2440,13 @@ def _run_batch(
             result = ChildResult(None, "", traceback.format_exc(), False)
         elapsed = clock() - began
 
+        # C-111 / F-148 item 6: what was on disk in the leg directory the moment
+        # the child died, read BEFORE the parent writes anything into it. This is
+        # the reading that says whether ``files: []`` and ``counts: {}`` describe
+        # the disk or only describe the row. It looks; it does not repair.
+        target = paper_dir(run_dir, slug) / mode
+        payload_before_cleanup = leg_trace.scan_payload(target)
+
         # The child's own row is ground truth and is looked for FIRST, even on a
         # timeout: a child that finished its work, wrote its artifacts and printed
         # its row a moment before the parent's stopwatch expired really did pass,
@@ -2297,13 +2474,22 @@ def _run_batch(
         # exists. Writing unconditionally clobbered the child's version, which is
         # the richer one -- it is the only place a per-artifact write error is
         # spelled out -- with a reconstruction that had already lost it.
-        target = paper_dir(run_dir, slug) / mode
         result_path = target / RESULT_NAME
         if not result_path.exists():
             try:
                 _write_text(result_path, result_text(row, paper=paper))
             except OSError:
                 pass
+
+        _record_leg_terminal(
+            target,
+            row=row,
+            result=result,
+            child_reported=parsed is not None,
+            elapsed=elapsed,
+            timeout=timeout,
+            payload_before_cleanup=payload_before_cleanup,
+        )
 
         append_manifest(run_dir, row)
         refresh_reports(run_dir, started_at=started_at)

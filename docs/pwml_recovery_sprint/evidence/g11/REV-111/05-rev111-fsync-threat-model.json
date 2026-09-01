@@ -1,0 +1,149 @@
+{
+  "label": "rev111-fsync-threat-model",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/rev111/docs/pwml_recovery_sprint/evidence/rev111_fsync_threat_model.py"
+  ],
+  "cwd": "C:\\t\\rev111",
+  "started_at": "2026-09-01T21:19:58+00:00",
+  "finished_at": "2026-09-01T21:20:07+00:00",
+  "duration_seconds": 8.952384600008372,
+  "timeout_seconds": 900.0,
+  "root_pid": 561412,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 563448,
+      "name": "python.exe",
+      "ppid": 561412
+    },
+    {
+      "pid": 562960,
+      "name": "python.exe",
+      "ppid": 563448
+    },
+    {
+      "pid": 564660,
+      "name": "python.exe",
+      "ppid": 562960
+    },
+    {
+      "pid": 562756,
+      "name": "python.exe",
+      "ppid": 564660
+    },
+    {
+      "pid": 564696,
+      "name": "python.exe",
+      "ppid": 562756
+    },
+    {
+      "pid": 565060,
+      "name": "taskkill.exe",
+      "ppid": 564660
+    },
+    {
+      "pid": 561364,
+      "name": "python.exe",
+      "ppid": 561476
+    },
+    {
+      "pid": 561476,
+      "name": "python.exe",
+      "ppid": 563448
+    },
+    {
+      "pid": 563900,
+      "name": "python.exe",
+      "ppid": 565240
+    },
+    {
+      "pid": 565240,
+      "name": "python.exe",
+      "ppid": 561364
+    },
+    {
+      "pid": 559860,
+      "name": "taskkill.exe",
+      "ppid": 561364
+    },
+    {
+      "pid": 548808,
+      "name": "git.exe",
+      "ppid": 563448
+    }
+  ],
+  "descendants_terminated": [
+    548808,
+    559860,
+    561364,
+    561476,
+    562756,
+    562960,
+    563448,
+    563900,
+    564660,
+    564696,
+    565060,
+    565240
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 439056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 455056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 564368,
+      "name": "python.exe"
+    },
+    {
+      "pid": 564440,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rev111/docs/pwml_recovery_sprint/evidence/g11/REV-111/05-rev111-fsync-threat-model.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev111\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev111",
+    "repo_head": "ae9c1570ea77e7fea4cd9dccc9803ea4a516bbd3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-111",
+    "token": "REV-111:564368:dc54ea05287ea95d",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

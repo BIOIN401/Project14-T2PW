@@ -1,0 +1,188 @@
+REV-111 reviewer probe -- independent adversarial measurement of C-111
+tip tree      : C:\t\rev111
+base SHA      : 45c4f73996bdf312284d204936df2218dbb076db
+live run trees NOT touched: runs, runs_verify
+probe tmp root: C:\Users\Angad\AppData\Local\Temp\rev111probe_zta67kxy
+
+== ARM A -- B13: is the NEW-capability label true, behaviourally? ==
+  control A.base_archive_produced_bytes                        OK rc=0 bytes=7229440
+  control A.base_has_runner                                    OK 
+  control A.base_has_NO_leg_trace                              OK the module must be absent at base for the NEW label to be available
+  control A.base_arm_was_really_killed                         OK 
+  control A.tip_arm_was_really_killed                          OK 
+  control A.base_arm_did_produce_a_payload                     OK ['partial_reactions.json']
+  control A.base_arm_preserved_NO_trace                        OK ['partial_reactions.json']
+  control A.tip_arm_preserved_a_trace                          OK ['LEG_TRACE.jsonl', 'partial_reactions.json']
+  control A.base_leg_yields_zero_evidence                      OK 
+  control A.tip_leg_yields_three_attempts                      OK 3
+  control A.tip_row_STILL_says_files_empty                     OK the row must NOT have been repaired
+
+== ARM B -- B12: plant the reviewer's own secrets ==
+  control B.detector_fires_on_openai_style_key                 OK hits=['openai_style_key']
+  control B.detector_fires_on_bearer_token                     OK hits=['bearer_token']
+  control B.detector_fires_on_inline_secret_assignment         OK hits=['inline_secret_assignment']
+  control B.detector_fires_on_github_token                     OK hits=['github_token']
+  control B.detector_fires_on_google_api_key                   OK hits=['google_api_key']
+  control B.detector_fires_on_aws_access_key_id                FAILED hits=[]
+  control B.detector_fires_on_credentialed_url                 OK hits=['credentialed_url']
+  control B.no_false_positive_on_'task-1234567890123'          OK []
+  control B.no_false_positive_on_'risk-assessment-of'          OK []
+  control B.no_false_positive_on_'the extraction sta'          OK []
+  control B.no_false_positive_on_'sha256:deadbeefcaf'          OK []
+  control B.LEG_TRACE.jsonl_clean_by_scanner                   OK []
+  control B.LEG_TRACE.jsonl_no_verbatim_secret                 FAILED ['aws_access_key_id']
+  control B.LEG_TERMINAL.json_clean_by_scanner                 OK []
+  control B.LEG_TERMINAL.json_no_verbatim_secret               OK []
+  EDGE (reported, not a control): 'x-internal-credential 8fA2b9Qz71LmPd' -> []
+
+== ARM C -- B6: construct the first two mechanisms end to end ==
+  control C.outer_arm_really_killed                            OK 
+  control C.outer_labelled_outer_parent_kill                   OK outer_parent_kill
+  control C.inproc_labelled_in_process_deadline                OK in_process_deadline
+  control C.the_two_are_DIFFERENT_strings                      OK outer_parent_kill vs in_process_deadline
+  control C.outer_stage_is_still_unknown                       OK unknown
+  control C.inproc_stage_is_input_not_guessed                  OK input
+  control C.wrapper_inferred_from_shape_on_disk                OK wrapper
+
+== ARM E -- the measured cost of the instrument on the attempt path ==
+  control E.every_attempt_actually_reached_disk                OK 200/200
+  control E.control_arm_wrote_nothing                          OK 
+  control E.attempt_log_identical_either_way                   OK 
+  measured: +0.522 ms per model attempt
+  at the s9 cap of 3 attempts : +0.001566 s
+  at a runaway 1000 attempts  : +0.5219 s
+
+== ARM F -- B2/B3: the retry and ceiling knobs, base vs tip ==
+  control F.base_knob_read_succeeded                           OK 
+  control F.tip_knob_read_succeeded                            OK 
+  control F.every_knob_identical_base_and_tip                  OK base={'DEFAULT_PAPER_TIMEOUT': 3600.0, '_CHILD_GRACE': 120.0, 'LEG_TIMEOUT_SECONDS': 3600.0, 'PARENT_CHILD_GRACE_SECONDS': 120.0, 'DEFAULT_FINALIZATION_RESERVE_SECONDS': 120.0, 'child_deadline_1800': 1680.0, 'SDK_MAX_RETRIES': 0, 'LLM_MAX_RETRIES_default': 8} tip={'DEFAULT_PAPER_TIMEOUT': 3600.0, '_CHILD_GRACE': 120.0, 'LEG_TIMEOUT_SECONDS': 3600.0, 'PARENT_CHILD_GRACE_SECONDS': 120.0, 'DEFAULT_FINALIZATION_RESERVE_SECONDS': 120.0, 'child_deadline_1800': 1680.0, 'SDK_MAX_RETRIES': 0, 'LLM_MAX_RETRIES_default': 8}
+  base: {'DEFAULT_PAPER_TIMEOUT': 3600.0, '_CHILD_GRACE': 120.0, 'LEG_TIMEOUT_SECONDS': 3600.0, 'PARENT_CHILD_GRACE_SECONDS': 120.0, 'DEFAULT_FINALIZATION_RESERVE_SECONDS': 120.0, 'child_deadline_1800': 1680.0, 'SDK_MAX_RETRIES': 0, 'LLM_MAX_RETRIES_default': 8}
+  tip : {'DEFAULT_PAPER_TIMEOUT': 3600.0, '_CHILD_GRACE': 120.0, 'LEG_TIMEOUT_SECONDS': 3600.0, 'PARENT_CHILD_GRACE_SECONDS': 120.0, 'DEFAULT_FINALIZATION_RESERVE_SECONDS': 120.0, 'child_deadline_1800': 1680.0, 'SDK_MAX_RETRIES': 0, 'LLM_MAX_RETRIES_default': 8}
+
+================ RESULTS ================
+{
+  "A": {
+    "base_files_after_kill": [
+      "partial_reactions.json"
+    ],
+    "base_leg_read_by_tip_reader": {
+      "retry_reasons": [],
+      "total_model_calls": 0,
+      "trace_present": false
+    },
+    "row_counts": {},
+    "row_files": [],
+    "row_stage": "unknown",
+    "tip_files_after_kill": [
+      "LEG_TRACE.jsonl",
+      "partial_reactions.json"
+    ],
+    "tip_leg": {
+      "payload_existed": true,
+      "retry_reason_count": 2,
+      "timeout_source": "outer_parent_kill",
+      "total_model_calls": 3
+    }
+  },
+  "B": {
+    "edge_case": {
+      "hits": [],
+      "text": "x-internal-credential 8fA2b9Qz71LmPd"
+    },
+    "on_disk": {
+      "LEG_TERMINAL.json": {
+        "scanner_hits_on_disk": [],
+        "verbatim_present": []
+      },
+      "LEG_TRACE.jsonl": {
+        "scanner_hits_on_disk": [],
+        "verbatim_present": [
+          "aws_access_key_id"
+        ]
+      }
+    }
+  },
+  "C": {
+    "distinct_labels": [
+      "in_process_deadline",
+      "outer_parent_kill",
+      "wrapper"
+    ],
+    "in_process_deadline": {
+      "label": "in_process_deadline",
+      "row_stage": "input"
+    },
+    "outer_parent_kill": {
+      "label": "outer_parent_kill",
+      "row_stage": "unknown",
+      "terminal_on_disk_source": "outer_parent_kill"
+    },
+    "wrapper": {
+      "label": "wrapper"
+    }
+  },
+  "E": {
+    "added_ms_per_attempt": 0.5219,
+    "added_seconds_at_1000_attempts": 0.5219,
+    "added_seconds_at_3_attempts": 0.001566,
+    "attempts_measured": 200,
+    "finalization_reserve_seconds": 120.0,
+    "seconds_with_trace": 0.10452,
+    "seconds_without_trace": 0.000143
+  },
+  "F": {
+    "base": {
+      "DEFAULT_FINALIZATION_RESERVE_SECONDS": 120.0,
+      "DEFAULT_PAPER_TIMEOUT": 3600.0,
+      "LEG_TIMEOUT_SECONDS": 3600.0,
+      "LLM_MAX_RETRIES_default": 8,
+      "PARENT_CHILD_GRACE_SECONDS": 120.0,
+      "SDK_MAX_RETRIES": 0,
+      "_CHILD_GRACE": 120.0,
+      "child_deadline_1800": 1680.0
+    },
+    "tip": {
+      "DEFAULT_FINALIZATION_RESERVE_SECONDS": 120.0,
+      "DEFAULT_PAPER_TIMEOUT": 3600.0,
+      "LEG_TIMEOUT_SECONDS": 3600.0,
+      "LLM_MAX_RETRIES_default": 8,
+      "PARENT_CHILD_GRACE_SECONDS": 120.0,
+      "SDK_MAX_RETRIES": 0,
+      "_CHILD_GRACE": 120.0,
+      "child_deadline_1800": 1680.0
+    }
+  }
+}
+probe tmp removed: True
+
+CONTROLS_FAILED:
+  - B.detector_fires_on_aws_access_key_id: hits=[]
+  - B.LEG_TRACE.jsonl_no_verbatim_secret: ['aws_access_key_id']
+A probe whose controls failed has measured NOTHING.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev111\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ae9c1570ea77e7fea4cd9dccc9803ea4a516bbd3  [git, worktree dirty=False]
+label                   : rev111-adversarial-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/rev111_reviewer_probe.py
+cwd                     : C:\t\rev111
+root PID / process group: 558576 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 18.56 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 16  558588:python.exe, 558800:git.exe, 555864:git.exe, 558956:python.exe, 559064:python.exe, 556344:taskkill.exe, 416420:python.exe, 556288:python.exe, 558180:taskkill.exe, 558212:python.exe, 558256:python.exe, 556112:taskkill.exe, 552712:python.exe, 558088:python.exe, 557684:python.exe, 558448:python.exe
+descendants terminated  : 16  416420, 552712, 555864, 556112, 556288, 556344, 557684, 558088, 558180, 558212, 558256, 558448, 558588, 558800, 558956, 559064
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev111\docs\pwml_recovery_sprint\evidence\g11\REV-111\02-rev111-adversarial-probe.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-111  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

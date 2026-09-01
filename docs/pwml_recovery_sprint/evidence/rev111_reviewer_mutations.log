@@ -1,0 +1,80 @@
+REV-111 -- the reviewer's own mutations of the nine preservations
+tree   : C:\t\rev111
+target : tests/test_c111_timeout_observability.py
+
+tracked .pyc before : 56
+
+BASELINE (unmutated) : exit=0  23 passed in 6.15s
+
+--- M1_drop_item_6_payload_before_cleanup
+    removes: item 6 -- whether a payload existed before cleanup
+    exit=1  2 failed, 21 passed in 6.34s
+    red tests: ['test_new_c111_acceptance_an_exception_mid_stage_preserves_the_attempts', 'test_new_c111_acceptance_nine_items_survive_a_hard_kill']
+    caught.
+    restored byte-exact: sha256=ccdae37b5ea4b9e7
+
+--- M2_drop_item_2_retry_reasons
+    removes: item 2 -- the retry reason per retry. THE reason the card exists
+    exit=1  2 failed, 21 passed in 6.27s
+    red tests: ['test_new_c111_acceptance_an_exception_mid_stage_preserves_the_attempts', 'test_new_c111_acceptance_nine_items_survive_a_hard_kill']
+    caught.
+    restored byte-exact: sha256=ccdae37b5ea4b9e7
+
+--- M3_stop_fsyncing_each_event
+    removes: durability: the write is no longer forced before the next event
+    exit=0  23 passed in 6.04s
+    red tests: (none)
+    *** SURVIVED -- the preservation is not guarded ***
+    restored byte-exact: sha256=ccdae37b5ea4b9e7
+
+--- M4_collapse_outer_kill_into_the_in_process_label
+    removes: item 5 -- the two mechanisms F-148 says the run reports as one
+    exit=1  2 failed, 21 passed in 6.26s
+    red tests: ['test_new_c111_acceptance_nine_items_survive_a_hard_kill', 'test_new_c111_acceptance_timeout_source_separates_in_process_from_outer_kill']
+    caught.
+    restored byte-exact: sha256=ccdae37b5ea4b9e7
+
+--- M5_stop_publishing_attempts_to_disk
+    removes: items 1/8 at the LLM seam -- attempts stay in memory and die with it
+    exit=1  1 failed, 22 passed in 6.19s
+    red tests: ['test_new_c111_acceptance_the_llm_attempt_seam_reaches_disk']
+    caught.
+    restored byte-exact: sha256=966f4af473dc5252
+
+--- N0_neutral_comment_only (NEGATIVE CONTROL -- must stay GREEN)
+    exit=0  23 passed in 5.99s
+    stayed green, as required.
+
+FINAL (restored) : exit=0  23 passed in 6.09s
+git status --porcelain src/t2pw tests : (clean)
+tracked .pyc after  : 56
+
+================ VERDICT ================
+  FAILED: M3_stop_fsyncing_each_event: the suite stayed GREEN -- this is NOT guarded
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev111\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ae9c1570ea77e7fea4cd9dccc9803ea4a516bbd3  [git, worktree dirty=False]
+label                   : rev111-reviewer-mutations
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/rev111/docs/pwml_recovery_sprint/evidence/rev111_reviewer_mutations.py
+cwd                     : C:\t\rev111
+root PID / process group: 562908 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 56.05 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 57  548120:python.exe, 559152:git.exe, 557704:python.exe, 563024:python.exe, 562276:python.exe, 561416:python.exe, 561216:taskkill.exe, 561824:python.exe, 561912:python.exe, 553908:python.exe, 555340:python.exe, 556656:python.exe, 560304:python.exe, 560824:taskkill.exe, 558920:python.exe, 561920:python.exe, 526232:python.exe, 551640:python.exe, 561396:python.exe, 562728:python.exe, 562596:taskkill.exe, 563104:python.exe, 563152:python.exe, 560160:python.exe, 563012:python.exe, 560404:python.exe, 561444:python.exe, 561352:taskkill.exe, 563224:python.exe, 563244:python.exe, 563268:python.exe, 563288:python.exe, 563512:python.exe, 563532:python.exe, 562940:taskkill.exe, 564132:python.exe, 564192:python.exe, 560420:python.exe, 561236:python.exe, 559848:python.exe, 563368:python.exe, 563680:taskkill.exe, 562652:python.exe, 552696:python.exe, 563836:python.exe, 563844:python.exe, 561228:taskkill.exe, 561604:python.exe, 563932:python.exe, 558716:python.exe, 559756:python.exe, 550460:python.exe, 561500:python.exe, 520916:taskkill.exe, 563548:python.exe, 563712:python.exe, 563780:git.exe
+descendants terminated  : 57  520916, 526232, 548120, 550460, 551640, 552696, 553908, 555340, 556656, 557704, 558716, 558920, 559152, 559756, 559848, 560160, 560304, 560404, 560420, 560824, 561216, 561228, 561236, 561352, 561396, 561416, 561444, 561500, 561604, 561824, 561912, 561920, 562276, 562596, 562652, 562728, 562940, 563012, 563024, 563104, 563152, 563224, 563244, 563268, 563288, 563368, 563512, 563532, 563548, 563680, 563712, 563780, 563836, 563844, 563932, 564132, 564192
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rev111/docs/pwml_recovery_sprint/evidence/g11/REV-111/04-rev111-reviewer-mutations.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-111  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
