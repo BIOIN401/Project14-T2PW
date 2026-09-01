@@ -7174,3 +7174,83 @@ that cannot know.
 **"The information is absent" and "the information is present but unexplained" are different
 defects with different costs.** The first needs a new capability; the second needs two print
 statements. **Measure which one you have before charging the price of the first.**
+
+---
+
+## F-159 — `failure_kind = contract` does not mean a contract failure; it means "there were issue codes"
+
+- **Severity** MEDIUM · **Class `product_contract_violation`** (a classification that reads as
+  evidence and is not) · **Registered 2026-08-31 (ORCH-717)**
+- **Surfaced by REV-110** while attacking C-110's condition 2. **Verified by the Lead in shipped
+  code before registration.** Not introduced by C-110 — it is a pre-existing property of
+  `batch/driver.py` that C-110 was the first consumer to depend on.
+
+### The measurement
+
+`src/t2pw/batch/driver.py::_classify`, verbatim at the integration tip:
+
+```python
+if ambiguous:                        return KIND_AMBIGUOUS
+if no_reactions:                     return KIND_NO_REACTIONS
+if contract_signal or issue_codes:   return KIND_CONTRACT      # <-- before network/llm
+...
+if network:                          return KIND_NETWORK
+if llm:                              return KIND_LLM
+```
+
+**`issue_codes` alone returns `KIND_CONTRACT`, and it is tested before the network and LLM markers.**
+So a provider failure that happens to carry any issue code is classified `contract`.
+
+Measured against the shipped function:
+
+| input | resulting `failure_kind` |
+|---|---|
+| network text, no codes | `network` |
+| network text, **one code** | **`contract`** |
+| llm text, **one code** | **`contract`** |
+
+`_fail` clears no artifacts and **appends** codes, so `files` stays non-empty on such a row — an
+artifact-presence check does not catch it either.
+
+### It is not a bug in `_classify`, and that is what makes it dangerous
+
+`_classify`'s own docstring states the rule it is obeying: *"Order matters. Structured evidence beats
+wording, and wording beats the mere presence of a traceback."* **Issue codes are structured evidence
+and wording is not**, so preferring codes is deliberate and defensible **as a classifier**.
+
+**The defect is in what the label then licenses downstream.** `contract` reads, to any later
+consumer, as *"this leg stopped for a declared contractual reason"*. What it actually means is
+*"something attached an issue code"*. Those are different claims, and the second is not evidence of
+the first.
+
+**`contract` is also the dominant bucket** — 55 legs against `no_reactions`'s 8 in the 27-manifest
+survey — so a consumer that trusts it is trusting the largest and least specific class in the set.
+
+### What it cost, and what it will cost again
+
+C-110 read `contract` as a decline and, combined with issue codes independently satisfying its
+"stated reason" condition, admitted three casualties as `PASS_NEGATIVE_CONTROL` — including a row
+whose shipped message is literally **`"no research report was produced and no reason was given"`**
+(`driver.py:2565`). **A message that says no reason was given was scored as a stated reason.**
+
+That is C-110's blocking finding and it is being corrected there. **This finding exists so the next
+consumer does not repeat it.**
+
+### Disposition
+
+**Registered, not fixed.** Changing `_classify`'s ordering would move a classification every
+downstream reader already depends on, and **no card in this wave owns `batch/driver.py`**. The
+narrow fix is in the consumer: **do not read `failure_kind == contract` as evidence of a declared
+stop.** C-110 is removing it from its decline allow-list.
+
+**Relevant to T-108 reporting:** any run report that groups or counts by `failure_kind` must not
+present `contract` as "stopped for contract reasons" without saying it also absorbs coded provider
+failures.
+
+### Standing lesson
+
+**A classifier's precedence order is a statement about how to LABEL, not about what the label
+MEANS.** `_classify` prefers structured evidence over wording, which is right. But a consumer reads
+the output as a claim about the world, and the further a label travels from its classifier the more
+authority it silently acquires. **Before depending on an enum value, read the branch that produces
+it** — the name will always sound more specific than the condition.
