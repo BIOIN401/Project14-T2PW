@@ -1,0 +1,109 @@
+{
+  "label": "r2-affected-seam",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--no-header",
+    "-rf",
+    "--basetemp=C:/t/bt/c107seam",
+    "tests/test_apply_audit_patch_lineage.py",
+    "tests/test_apply_audit_patch_lock_policy.py",
+    "tests/test_apply_audit_patch_referential_integrity.py",
+    "tests/test_audit_json_llm_payload.py",
+    "tests/test_curation_patch_transaction.py",
+    "tests/test_curator_offline_mode.py",
+    "tests/test_interactive_curator.py",
+    "tests/test_streamlit_stage2_orchestration.py",
+    "tests/test_focused_repair.py",
+    "tests/test_gap_resolver.py",
+    "tests/test_gap_resolver_agent_tools.py",
+    "tests/test_gap_resolver_biological_state_resolution.py",
+    "tests/test_gap_resolver_lineage.py",
+    "tests/test_gap_resolver_stage3_issues.py",
+    "tests/test_adversarial_actor_entity_type.py",
+    "tests/test_transport_actor_guards.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c090_wrapper_identity_actor_evidence.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_cofactor_policy.py",
+    "tests/test_c105_actor_role_evidence.py",
+    "tests/test_c107_actor_cue_calibration.py"
+  ],
+  "cwd": "C:\\t\\c107",
+  "started_at": "2026-09-01T01:38:51+00:00",
+  "finished_at": "2026-09-01T01:38:58+00:00",
+  "duration_seconds": 7.622094800011837,
+  "timeout_seconds": 400.0,
+  "root_pid": 121604,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 118652,
+      "name": "python.exe",
+      "ppid": 121604
+    }
+  ],
+  "descendants_terminated": [
+    118652
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 74376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74532,
+      "name": "python.exe"
+    },
+    {
+      "pid": 103384,
+      "name": "python.exe"
+    },
+    {
+      "pid": 112600,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c107\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-107\\61-r2-affected-seam.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c107\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c107",
+    "repo_head": "2007c2493ab8b4947db0a2cb227462487f60a4d6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-107",
+    "token": "C-107:112600:8d77529c630d96c6",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
