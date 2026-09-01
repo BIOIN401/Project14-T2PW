@@ -1,0 +1,43 @@
+......................................................................F. [ 66%]
+....................................                                     [100%]
+================================== FAILURES ===================================
+_____________ test_mediat_still_licenses_the_repair_it_exists_for _____________
+
+    def test_mediat_still_licenses_the_repair_it_exists_for() -> None:
+        """The docstring example, and the two other shapes "mediat" must reach."""
+    
+>       assert accepted("P complex", "P mediates the condensation of glycine and succinyl-CoA")
+E       AssertionError: assert False
+E        +  where False = accepted('P complex', 'P mediates the condensation of glycine and succinyl-CoA')
+
+tests\test_c107_actor_cue_calibration.py:464: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c107_actor_cue_calibration.py::test_mediat_still_licenses_the_repair_it_exists_for
+1 failed, 107 passed in 0.27s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0764ec41f52c1edaccab22438f6a0612ac2b7c69  [git, worktree dirty=True]
+label                   : tip-focused
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest tests/test_c107_actor_cue_calibration.py tests/test_c105_actor_role_evidence.py -q --no-header -rf --basetemp=C:/t/bt/c107focus
+cwd                     : C:\t\c107
+root PID / process group: 83180 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 380 s
+duration                : 0.71 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  80516:python.exe
+descendants terminated  : 1  80516
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c107\docs\pwml_recovery_sprint\evidence\g11\C-107\16-tip-focused.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
