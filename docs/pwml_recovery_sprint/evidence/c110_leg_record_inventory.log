@@ -1,0 +1,170 @@
+==============================================================================
+1. INVENTORY -- what the leg record carries about declined-vs-killed
+==============================================================================
+Written by batch/driver.py::RunOutcome.to_dict and batch/runner.py::_timeout_row / _crash_row.
+
+row field             shape                                                     reached by scorer   note
+status                closed: pass|fail|error|timeout|scope_conflict            YES                 runner writes error/timeout; driver writes pass/fail/scope_conflict
+failure_kind          closed: ambiguous_review_scope, contract, crash, llm, ne  YES                 no_reactions is the declared decline; timeout/crash are casualties
+stage                 free-ish; 'unknown' on the OUTER kill path                YES                 F-148: 'unknown' means the PARENT could not see, not a pipeline stage
+message               free text                                                 YES                 the stated reason. EMPTY is a silence
+issue_codes           list of guard/gate codes                                  YES                 an explicit named stop
+termination_reason    closed, 7 values: retrieval_exhausted, no_new_claims, bu  NEW in C-110        conditional key; ABSENT on every leg that did not time out
+operational_failure   bool                                                      NEW in C-110        is_operational(termination_reason); written by BOTH kill paths under this name
+counts                dict; {} on the outer-kill path                           NEW in C-110        {} = NOT MEASURED; {'reactions': 0} = affirmatively none
+files                 list; [] on the outer-kill path                           NEW in C-110        F-148 section 3: [] is the signature of a kill with the reserve spent
+budget                dict, timeout rows only                                   NO                  GAP -- elapsed/remaining never reach the acceptance leg
+budget_unrecorded     str, inner timeout only                                   NO                  GAP
+detail                free text, capped                                         NO                  GAP -- the traceback tail never reaches the acceptance leg
+warnings              list                                                      NO                  GAP
+attempts / retries    DOES NOT EXIST                                            N/A                 F-148 section 5: the artifact needed to exclude retry amplification is the one the kill destroyed
+
+GAPS, NAMED (they belong to F-148, not to this card):
+  * `budget` / `budget_unrecorded` / `detail` / `warnings` are on the row
+    and are NOT carried onto the acceptance leg. C-110 did not add them:
+    none of them separates declined from killed better than the four it did.
+  * There is NO attempt or retry record of any kind on ANY row shape. A leg
+    that was killed cannot be shown to have retried or not retried.
+  * `stage` is 'unknown' on the outer-kill path BY DESIGN. A reader treating
+    it as a pipeline stage will mis-diagnose. C-110 does not read `stage`.
+  * A row written before termination_reason/operational_failure existed has
+    NEITHER key. C-110 treats that as INDETERMINATE, never as clean.
+
+==============================================================================
+2. DISCRIMINATION -- the four canonical shapes through the new rule
+==============================================================================
+declined (the ruling's case)     -> PASS_NEGATIVE_CONTROL
+                                    conditions : {'no_reactions_released': True, 'declared_decline_reason': True, 'no_execution_failure': True}
+                                    blocked_by : []
+timed out (outer kill)           -> NOT_AWARDED
+                                    conditions : {'no_reactions_released': True, 'declared_decline_reason': False, 'no_execution_failure': False}
+                                    blocked_by : ['execution_failure', 'no_artifacts_preserved', 'no_stated_reason']
+empty and silent                 -> NOT_AWARDED
+                                    conditions : {'no_reactions_released': True, 'declared_decline_reason': False, 'no_execution_failure': True}
+                                    blocked_by : ['no_stated_reason', 'indeterminate_classification']
+empty, no artifacts preserved    -> NOT_AWARDED
+                                    conditions : {'no_reactions_released': True, 'declared_decline_reason': True, 'no_execution_failure': False}
+                                    blocked_by : ['no_artifacts_preserved']
+
+BOTH ARMS of _empty_is_correct, on the pinned gold:
+  PMC13231680  is_negative_control=True  relevance=context_only  min_connected=0  -> arm=is_negative_control  status=PASS_NEGATIVE_CONTROL
+  PMC12180156  is_negative_control=False  relevance=context_only  min_connected=0  -> arm=context_only_no_minimum_core  status=PASS_NEGATIVE_CONTROL
+
+A relevant paper is not judged by this rule at all:
+  PMC12096016  _empty_is_correct=False  record=None
+  PMC12452463  _empty_is_correct=False  record=None
+
+OPERATIONAL_TERMINATION_REASONS (D-005, imported not restated): ['budget_exhausted', 'operation_timeout']
+
+==============================================================================
+3. THE batch/runner.py STOP CONDITION -- measured, not argued
+==============================================================================
+result_text(row, paper=...) signature carries NO GoldCase:
+  (row: 'Dict[str, Any]', *, paper: 'Optional[Dict[str, Any]]' = None) -> 'str'
+
+------------------------------------------------------------------------------
+row shape: DECLINED CORRECTLY
+------------------------------------------------------------------------------
+RESULT: FAIL
+========================================
+paper      : PMC13231680
+title      : a paper
+slug       : PMC13231680
+mode       : strict
+status     : fail
+stage      : stage1
+wall time  : n/a
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : no_reactions
+message      : extraction produced no reactions: nothing lipid-A-related is present in this paper at any level of partiality, so no pathway was exported
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+(stage 1 returned an empty process set)
+
+COUNTS
+----------------------------------------
+  entities = 0
+  reactions = 0
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - extraction_diagnostics.json  (812 B)
+
+------------------------------------------------------------------------------
+row shape: KILLED BY THE CLOCK
+------------------------------------------------------------------------------
+RESULT: FAIL
+========================================
+paper      : PMC13231680
+title      : a paper
+slug       : PMC13231680
+mode       : strict
+status     : timeout
+stage      : unknown
+wall time  : n/a
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : timeout
+message      : the child process was still running after 1800s and was killed, so this paper+mode produced nothing (budget_exhausted)
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+(the child printed nothing before it was killed)
+
+FILES WRITTEN
+----------------------------------------
+  (none)
+
+------------------------------------------------------------------------------
+WHAT THIS SHOWS
+------------------------------------------------------------------------------
+* Both rows render `RESULT: FAIL`. On a negative control the first one is
+  the outcome the gold DEMANDS, and the page says the opposite.
+* The two rows DO differ, and `result_text` prints SOME of the difference
+  and not the rest. It prints `counts` and `files` -- so the empty COUNTS
+  and FILES blocks on the timeout row are visible. It does NOT print
+  `termination_reason` or `operational_failure`, which are the two fields
+  that say IN TERMS that the leg was an operational casualty and that
+  D-005 forbids reading as a biological verdict. That omission is a
+  gold-free honesty gap, and it is REGISTERED here, not fixed: it belongs
+  to F-148's deadline seam, and RESULT.txt is a live pipeline artifact.
+* Even with that gap closed, `RESULT: FAIL` would still be wrong on the
+  DECLINE row, because nothing in the row says the decline was correct.
+* Making `RESULT: FAIL` non-misleading for the DECLINE case requires knowing
+  the paper is a negative control. That fact lives only in the gold set, and
+  `result_text` has no access to it. STOP CONDITION TAKEN: batch/runner.py is
+  NOT modified by C-110.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ff4219bc53987cb5ae3a6dae0628a09204a85dc8  [git, worktree dirty=True]
+label                   : c110-inventory-r2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c110_leg_record_inventory.py
+cwd                     : C:\t\c110
+root PID / process group: 196400 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.33 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  190076:python.exe
+descendants terminated  : 1  190076
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\04-c110-inventory-r2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

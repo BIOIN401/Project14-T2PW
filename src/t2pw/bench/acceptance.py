@@ -43,11 +43,14 @@ from t2pw.bench.metrics import (
     BLOCKERS_RESEARCH,
     BLOCKERS_STRICT,
     BLOCKER_SCOPES,
+    BOUNDARY_CRASH,
     BOUNDARY_EXTRACTION,
     BOUNDARY_LABELS,
     BOUNDARY_NONE,
     BOUNDARY_NOT_ATTEMPTED,
     BOUNDARY_ORDER,
+    BOUNDARY_PROVIDER,
+    BOUNDARY_TIMEOUT,
     DENOMINATOR_ORDER,
     DENOM_RELEVANCE,
     DENOM_EXTRACTION,
@@ -91,6 +94,15 @@ from t2pw.pipeline.release_status import (
     NO_DISPOSITION,
     release_disposition as _release_disposition,
 )
+# C-110 / ORCH-717 Q1. D-005's OWN closed vocabulary, imported rather than
+# restated: `operational_failure` on a manifest row is exactly
+# `is_operational(termination_reason)`, and a second copy of that set here
+# would let the benchmark's idea of "the clock killed it" drift away from the
+# pipeline's. Same forward direction as the two imports above.
+from t2pw.pipeline.deadline import (
+    OPERATIONAL_TERMINATION_REASONS,
+    SCIENTIFICALLY_UNRECOVERABLE,
+)
 
 
 MODE_STRICT = "strict"
@@ -115,6 +127,86 @@ _RESEARCH_DELIVERABLE = "research_pathway_report.txt"
 #: The exact text handed to the app, written by the batch runner as
 #: ``SOURCE_TEXT_NAME``. Gold quotes are verified against THIS file.
 _PAPER_TEXT_NAME = "01_source_text.txt"
+
+
+# ---------------------------------------------------------------------------
+# C-110 / ORCH-717 Q1 -- the negative-control status. NEW CAPABILITY.
+# ---------------------------------------------------------------------------
+#: The explicit status a gold case earns when producing NOTHING was the right
+#: outcome AND the emptiness was a DECISION rather than a CASUALTY.
+#:
+#: It is a REPORTED status and nothing else. No denominator, numerator,
+#: priority, blocker or boundary reads it, and :attr:`ModeResult.passed` is
+#: untouched -- so awarding it moves no count anywhere. That is deliberate:
+#: context_only papers are ALREADY excluded from every denominator by
+#: ``_build_denominators``'s ``is_relevant`` test, so the only place a correct
+#: decline was being scored as a normal positive pathway was the verdict a
+#: reader actually reads. This names it there and nowhere else.
+NEGATIVE_CONTROL_PASS = "PASS_NEGATIVE_CONTROL"
+#: Empty was the right outcome for this CASE, but this LEG did not earn the
+#: status. Never the word FAIL: the raw verdict is preserved verbatim beside
+#: this record and is the only thing entitled to say that.
+NEGATIVE_CONTROL_NOT_AWARDED = "NOT_AWARDED"
+
+#: Which arm of :func:`_empty_is_correct` placed the case. Recorded so a
+#: reader can tell a declared negative control from a ``context_only`` case
+#: that merely declares no minimum core -- the predicate covers both and they
+#: are not the same gold statement.
+NC_ARM_NEGATIVE_CONTROL = "is_negative_control"
+NC_ARM_CONTEXT_ONLY = "context_only_no_minimum_core"
+
+#: The CLOSED vocabulary of reasons the status was withheld. Every award is
+#: default-deny: the status is granted only when this list is empty, so a leg
+#: whose record this instrument cannot read ends up here rather than passing.
+NC_BLOCK_NOT_ATTEMPTED = "not_attempted"
+NC_BLOCK_REACTIONS_RELEASED = "reactions_released"
+NC_BLOCK_DELIVERABLE_PRODUCED = "deliverable_produced"
+NC_BLOCK_NO_STATED_REASON = "no_stated_reason"
+NC_BLOCK_INDETERMINATE = "indeterminate_classification"
+NC_BLOCK_EXECUTION_FAILURE = "execution_failure"
+NC_BLOCK_NO_ARTIFACTS = "no_artifacts_preserved"
+NC_BLOCK_CODES: Tuple[str, ...] = (
+    NC_BLOCK_NOT_ATTEMPTED,
+    NC_BLOCK_REACTIONS_RELEASED,
+    NC_BLOCK_DELIVERABLE_PRODUCED,
+    NC_BLOCK_EXECUTION_FAILURE,
+    NC_BLOCK_NO_ARTIFACTS,
+    NC_BLOCK_NO_STATED_REASON,
+    NC_BLOCK_INDETERMINATE,
+)
+
+#: ``failure_kind`` values that are an EXPLICIT declared decline. Mirrors
+#: ``batch.driver.KIND_NO_REACTIONS`` and ``KIND_CONTRACT``; the literals are
+#: repeated rather than imported because ``batch.driver`` pulls in the whole
+#: Streamlit app and ``bench`` must stay importable without it -- exactly as
+#: ``bench/metrics.py`` already repeats ``"no_reactions"``. The pin against
+#: the driver's own constants lives in
+#: ``tests/test_c110_negative_control_status.py`` so the two cannot drift.
+_NC_DECLINE_KINDS: Tuple[str, ...] = ("no_reactions", "contract")
+#: ``failure_kind`` values that name an EXECUTION failure. A leg carrying one
+#: of these produced nothing because it was stopped, not because it declined.
+_NC_CASUALTY_KINDS: Tuple[str, ...] = ("timeout", "crash", "network", "llm")
+#: ``failure_kind`` values that say NOTHING. F-148's standing lesson: a killed
+#: leg preserves the stop reason and little else, so an unclassified empty leg
+#: is indeterminate and an indeterminate empty result is NOT a pass.
+_NC_INDETERMINATE_KINDS: Tuple[str, ...] = ("", "unknown")
+#: Row ``status`` values that are infrastructure outcomes by construction.
+#: ``timeout`` is ``runner._timeout_row``; ``error`` is ``runner._crash_row``
+#: and the unreadable-source-text row, both of which the runner itself calls
+#: infrastructure faults. Neither is ever written by ``batch.driver``, whose
+#: own vocabulary is pass / fail / scope_conflict.
+_NC_CASUALTY_STATUSES: Tuple[str, ...] = ("timeout", "error")
+#: Boundaries that are execution failures. Belt and braces beside the two sets
+#: above: ``classify_strict_boundary`` reads the same row by a different route,
+#: and a leg has to clear BOTH readings.
+_NC_CASUALTY_BOUNDARIES: Tuple[str, ...] = (
+    BOUNDARY_TIMEOUT,
+    BOUNDARY_CRASH,
+    BOUNDARY_PROVIDER,
+    BOUNDARY_NOT_ATTEMPTED,
+)
+#: Row ``counts`` keys that mean pathway chemistry was released.
+_NC_RELEASE_COUNT_KEYS: Tuple[str, ...] = ("reactions", "transports")
 
 
 def _paper_text(run_dir: Path, slug: str) -> str:
@@ -365,6 +457,34 @@ class ModeResult:
     #: leg built outside that loop, and then no disposition can be established,
     #: because "not measured" is never a fact.
     required_connected_reactions: Optional[int] = None
+    #: C-110. D-005's stop reason as the manifest row recorded it, verbatim, or
+    #: ``""`` when the row carried none. NOT inferred from :attr:`status`:
+    #: ``status="timeout"`` says the clock was involved, this says WHICH clock,
+    #: and F-092 defect 3 is what happens when only the first survives to disk.
+    #: Carried because the negative-control status has to separate an empty leg
+    #: that DECLINED from one that was KILLED, and this is the sharpest fact the
+    #: row holds about that.
+    termination_reason: str = ""
+    #: C-110. The row's own ``operational_failure`` boolean, verbatim. ``False``
+    #: when the row carried none -- absence of a classification is not a claim
+    #: that the leg failed operationally, and it is not a claim that it did not.
+    operational_failure: bool = False
+    #: C-110. How many artifact entries the row recorded. F-148 measured
+    #: ``files: []`` and ``counts: {}`` as the signature of a child killed with
+    #: its finalization reserve already spent -- *payload absence caused by
+    #: cleanup rather than by pipeline failure*. A leg that genuinely declined
+    #: owes PRODUCT_CONTRACT 4 a preserved diagnostic bundle; one that preserved
+    #: nothing cannot show it decided anything.
+    artifacts_recorded: int = 0
+    #: C-110. The row's own ``counts`` block, verbatim. An EMPTY dict is *not
+    #: measured*; ``{"reactions": 0, ...}`` is an affirmative "I looked and found
+    #: none". The two are different facts and F-148 turns on the difference.
+    recorded_counts: Dict[str, Any] = field(default_factory=dict)
+    #: C-110. This leg's negative-control record, or ``None`` when the case is
+    #: not one where empty is the right outcome. Built by :func:`score_run` from
+    #: :func:`negative_control_outcome`, which needs the ``GoldCase`` -- the same
+    #: reason :attr:`coverage_reconciliation` is built there and not here.
+    negative_control: Optional[Dict[str, Any]] = None
 
     @property
     def passed(self) -> bool:
@@ -562,6 +682,13 @@ class ModeResult:
             data["release_disposition"] = disposition
             data["connected_core_reactions"] = self.connected_core_reactions
             data["required_connected_reactions"] = self.required_connected_reactions
+        # C-110. Conditional for the same reason as every optional key above: a
+        # leg of a case where empty is NOT the right outcome carries no record
+        # and serializes byte-identically to before this card. The four row
+        # facts the rule reads are published INSIDE the record rather than at
+        # the top level, so no unaffected leg grows a key either.
+        if self.negative_control:
+            data["negative_control"] = deepcopy(dict(self.negative_control))
         return data
 
 
@@ -877,6 +1004,33 @@ class AcceptanceReport:
 
         return list(self.release_dispositions.get(DISPOSITION_EXTRACTED_NOT_SERIALIZED, ()))
 
+    @property
+    def negative_control_outcomes(self) -> Dict[str, List[str]]:
+        """C-110. ``status`` -> the ``"paper_id:mode"`` legs carrying it, sorted.
+
+        The report-level view of :attr:`ModeResult.negative_control`, so a reader
+        can see which legs declined correctly without walking every paper. Empty
+        when no gold case in the run is one where empty is the right outcome, and
+        then :meth:`to_dict` omits the key entirely.
+
+        A ROLL-UP, NOT A SECOND RULE -- the same discipline
+        :attr:`release_dispositions` follows. Every entry comes from the leg
+        record, which comes from :func:`negative_control_outcome`. It is read by
+        nothing here: no priority, denominator, numerator or blocker consults it,
+        so it can neither add nor remove a success.
+        """
+
+        found: Dict[str, List[str]] = {}
+        for paper in self.papers:
+            for mode in MODES:
+                leg = paper.leg(mode)
+                if leg is None or not leg.negative_control:
+                    continue
+                token = str(leg.negative_control.get("status") or "")
+                if token:
+                    found.setdefault(token, []).append(f"{paper.paper_id}:{mode}")
+        return {key: sorted(value) for key, value in sorted(found.items())}
+
     # -- acceptance priorities -------------------------------------------
     def priorities(self) -> List[Dict[str, Any]]:
         """The user-declared acceptance priorities, in order, as pass/fail.
@@ -1059,6 +1213,11 @@ class AcceptanceReport:
         dispositions = self.release_dispositions
         if dispositions:
             data["release_dispositions"] = dispositions
+        # C-110. Conditional on the same principle: a run whose gold set has no
+        # case where empty is the right outcome serializes as it did before.
+        negative_controls = self.negative_control_outcomes
+        if negative_controls:
+            data["negative_control_outcomes"] = negative_controls
         return data
 
 
@@ -1166,6 +1325,20 @@ def score_run(
                 record = row.get("release_status")
                 leg.release_status = dict(record) if isinstance(record, dict) and record else None
                 leg.pwml_artifact = str(row.get("pwml_artifact") or "")
+                # C-110. Four more row facts, read VERBATIM and never derived.
+                # `termination_reason` / `operational_failure` are written by
+                # both kill paths under the same key names (driver.to_dict and
+                # runner._timeout_row), so one read covers both sides of the
+                # process boundary. A row from before those keys existed leaves
+                # all four at their falsy defaults, which the negative-control
+                # rule treats as INDETERMINATE, not as clean.
+                leg.termination_reason = canonical_text(row.get("termination_reason"))
+                leg.operational_failure = row.get("operational_failure") is True
+                leg.artifacts_recorded = len(
+                    [entry for entry in (row.get("files") or ()) if entry]
+                )
+                counts = row.get("counts")
+                leg.recorded_counts = dict(counts) if isinstance(counts, dict) else {}
 
             leg.boundary, leg.boundary_evidence = classify_strict_boundary(row)
             if mode == MODE_RESEARCH and row is not None and not leg.passed:
@@ -1208,6 +1381,12 @@ def score_run(
                         if check is not None and check.inapplicable_reason
                         else "the unsupported-reaction verdict was not reached for this leg"
                     )
+
+            # C-110. Built here for the reason D-072's reconciliation is built
+            # here: the gold case and the scored leg exist together in this loop
+            # and nowhere else. Placed AFTER the semantic block because the rule
+            # reads `leg.extracted`, which is a property of that report.
+            leg.negative_control = negative_control_outcome(case, leg)
 
             paper_result.legs[mode] = leg
 
@@ -1536,11 +1715,176 @@ def _empty_is_correct(case: GoldCase) -> bool:
     ``context_only`` case that declares no minimum core -- both are papers the
     gold set says contain no chemistry of the requested pathway, so an empty
     extraction is a success, not a blocker.
+
+    TWO CONSUMERS, ONE DEFINITION. :func:`_build_blockers` uses it to keep a
+    correct decline out of the extraction ranking; C-110's
+    :func:`negative_control_outcome` uses it as the ruling's own first
+    condition. Neither restates it. Two definitions of "empty was correct"
+    would diverge, and the divergence would show up as a negative control that
+    is absolved in one report section and blamed in another.
     """
 
     if case.is_negative_control:
         return True
     return case.mechanistic_relevance == RELEVANCE_CONTEXT_ONLY and case.min_connected_reactions == 0
+
+
+def _nc_released_rows(counts: Mapping[str, Any]) -> int:
+    """How many pathway rows the ROW ITSELF says were released.
+
+    Independent of the semantic validator on purpose. ``leg.extracted`` reads a
+    payload the scorer found on disk; this reads what the run recorded at the
+    time. A leg whose payload has since gone missing must not be able to look
+    empty by losing its evidence, so the two are checked together and either
+    one is enough to say chemistry was released.
+
+    An ABSENT or unparseable count contributes zero, because absence is not
+    evidence of release. Absence is handled on the other side, by the artifact
+    and classification conditions, which is where it means something.
+    """
+
+    total = 0
+    for key in _NC_RELEASE_COUNT_KEYS:
+        try:
+            total += int(counts.get(key, 0) or 0)
+        except (TypeError, ValueError):
+            continue
+    return total
+
+
+def negative_control_outcome(
+    case: GoldCase, leg: "ModeResult"
+) -> Optional[Dict[str, Any]]:
+    """C-110 / ORCH-717 Q1. Did this leg earn :data:`NEGATIVE_CONTROL_PASS`?
+
+    ``None`` for every case where producing nothing is NOT the right outcome --
+    a positive control is untouched by this rule and still has to produce
+    reactions to succeed at anything.
+
+    THE PREDICATE IS :func:`_empty_is_correct` AND THERE IS NO SECOND ONE. It
+    already answers *"is producing nothing the RIGHT outcome for this gold
+    case?"* -- the ruling's own condition, word for word -- across both arms:
+    a declared negative control, and any ``context_only`` case with no minimum
+    core. It is unchanged by this card and needed no new condition.
+
+    WHAT THIS ADDS IS THE OTHER TWO CONDITIONS, and they are about the LEG, not
+    the case:
+
+    1. **nothing was released** -- no reactions in the scored payload, no
+       reaction or transport rows in the row's own counts, no PWML artifact and
+       no deliverable;
+    2. **a reason was stated** -- a POSITIVE requirement. A leg that produced
+       nothing and said nothing is a silence, not a decline. It needs a message
+       AND an explicit classification: a declared decline ``failure_kind``, the
+       ``scientifically_unrecoverable`` termination reason, or at least one
+       issue code naming what stopped it;
+    3. **it was a decision, not a casualty** -- no operational termination, no
+       timeout / crash / provider status, kind or boundary, and at least one
+       preserved artifact.
+
+    **DEFAULT-DENY, and that is the whole design.** The status is granted only
+    when ``blocked_by`` is empty, and every condition must be affirmatively
+    TRUE to keep it empty. An unclassified empty leg -- ``failure_kind`` absent
+    or ``unknown``, no codes -- is INDETERMINATE and is refused, because
+    getting this wrong permissively converts every timeout on a negative
+    control into a pass, on exactly the papers where nothing looks normal.
+    F-148 is the standing evidence that a killed leg preserves the stop reason
+    and little else.
+
+    **IT MOVES NO COUNT.** Nothing here is read by a denominator, numerator,
+    priority, blocker or boundary; :attr:`ModeResult.passed` still reads the
+    manifest status and nothing else. The raw status, failure kind, boundary,
+    termination reason and counts travel inside the record verbatim, so the
+    adjusted view sits BESIDE the raw one and never overwrites it.
+    """
+
+    if not _empty_is_correct(case):
+        return None
+
+    arm = NC_ARM_NEGATIVE_CONTROL if case.is_negative_control else NC_ARM_CONTEXT_ONLY
+    status = canonical_text(leg.status).casefold()
+    kind = canonical_text(leg.failure_kind).casefold()
+    termination = canonical_text(leg.termination_reason).casefold()
+    message = str(leg.message or "").strip()
+    codes = [str(code) for code in (leg.issue_codes or ()) if str(code).strip()]
+    counts = leg.recorded_counts if isinstance(leg.recorded_counts, dict) else {}
+
+    blocked: List[str] = []
+
+    # -- 0. there is a leg record at all --------------------------------
+    if not leg.attempted:
+        blocked.append(NC_BLOCK_NOT_ATTEMPTED)
+
+    # -- 1. nothing was released ----------------------------------------
+    released_rows = _nc_released_rows(counts)
+    released = bool(leg.extracted) or released_rows > 0
+    if released:
+        blocked.append(NC_BLOCK_REACTIONS_RELEASED)
+    produced_file = bool(leg.deliverable) or bool(leg.pwml_artifact)
+    if produced_file:
+        blocked.append(NC_BLOCK_DELIVERABLE_PRODUCED)
+
+    # -- 3. it was a decision, not a casualty ---------------------------
+    # Four independent readings of the same row. A leg has to clear ALL of
+    # them: `operational_failure` is the row's own boolean, `termination` is
+    # D-005's closed set, `status`/`kind` are the runner's and driver's
+    # vocabularies, and `boundary` is `classify_strict_boundary`'s reading.
+    # Redundant on purpose -- a row that lost one of them still cannot pass.
+    casualty = (
+        bool(leg.operational_failure)
+        or termination in OPERATIONAL_TERMINATION_REASONS
+        or status in _NC_CASUALTY_STATUSES
+        or kind in _NC_CASUALTY_KINDS
+        or leg.boundary in _NC_CASUALTY_BOUNDARIES
+    )
+    if casualty:
+        blocked.append(NC_BLOCK_EXECUTION_FAILURE)
+    preserved = int(leg.artifacts_recorded or 0) > 0
+    if not preserved:
+        blocked.append(NC_BLOCK_NO_ARTIFACTS)
+
+    # -- 2. a reason was stated, affirmatively ---------------------------
+    declared = (
+        kind in _NC_DECLINE_KINDS
+        or termination == SCIENTIFICALLY_UNRECOVERABLE
+        or bool(codes)
+    )
+    stated = bool(message) and declared
+    if not stated:
+        blocked.append(NC_BLOCK_NO_STATED_REASON)
+    # Named separately from the line above so the record can say WHICH of the
+    # two silences this is: a leg that stopped for a reason it did not classify
+    # is a different finding from one that classified a stop it did not explain.
+    if not declared and kind in _NC_INDETERMINATE_KINDS and not codes:
+        blocked.append(NC_BLOCK_INDETERMINATE)
+
+    return {
+        "applies": True,
+        "arm": arm,
+        "status": NEGATIVE_CONTROL_PASS if not blocked else NEGATIVE_CONTROL_NOT_AWARDED,
+        "conditions": {
+            "no_reactions_released": not released and not produced_file,
+            "declared_decline_reason": stated,
+            "no_execution_failure": bool(leg.attempted) and not casualty and preserved,
+        },
+        "blocked_by": blocked,
+        # PRESERVED VERBATIM. The whole point of the record is that a reader can
+        # see what the run actually said next to what this instrument made of
+        # it; a status that replaced the raw verdict would be the same blindness
+        # from the other side.
+        "raw": {
+            "status": leg.status,
+            "failure_kind": leg.failure_kind,
+            "boundary": leg.boundary,
+            "termination_reason": leg.termination_reason,
+            "operational_failure": bool(leg.operational_failure),
+            "artifacts_recorded": int(leg.artifacts_recorded or 0),
+            "counts": dict(counts),
+            "released_rows": released_rows,
+        },
+        "rejection_reason": message,
+        "issue_codes": codes,
+    }
 
 
 def _build_blockers(report: AcceptanceReport) -> None:
