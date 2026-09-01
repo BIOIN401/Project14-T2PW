@@ -79,38 +79,78 @@ def main() -> int:
     status_counts = Counter(str(r.get("status")) for r in rows)
     print(f"  status tally  : {j(dict(status_counts))}")
 
-    timeouts, missing_payload, partial = [], [], []
+    # The manifest carries elapsed as ``seconds`` and the ceiling inside a nested
+    # ``budget`` object -- NOT as top-level ``elapsed_seconds`` /
+    # ``leg_timeout_seconds``. Read both shapes: a scorer that silently renders
+    # "-" for every timeout would drop the exact rows this run exists to measure.
+    def elapsed_of(r):
+        b = r.get("budget") or {}
+        for v in (r.get("seconds"), b.get("elapsed_seconds"), r.get("elapsed_seconds")):
+            if isinstance(v, (int, float)):
+                return float(v)
+        return None
+
+    def ceiling_of(r):
+        b = r.get("budget") or {}
+        for v in (b.get("leg_timeout_seconds"), r.get("leg_timeout_seconds")):
+            if isinstance(v, (int, float)):
+                return float(v)
+        return None
+
+    timeouts, missing_payload, overridden_legs = [], [], []
     print()
-    print(f"  {'leg':34s} {'status':22s} {'elapsed':>9s}  {'ceiling':>8s}  files")
-    print("  " + "-" * 92)
+    print(f"  {'leg':34s} {'status':16s} {'elapsed':>9s} {'ceiling':>8s} {'ovr':>5s} {'reserve':>8s}  files")
+    print("  " + "-" * 100)
     for r in sorted(rows, key=lambda x: (str(x.get("slug")), str(x.get("mode")))):
         leg = f"{r.get('slug')}/{r.get('mode')}"
         status = str(r.get("status"))
-        elapsed = r.get("elapsed_seconds")
-        ceiling = r.get("leg_timeout_seconds")
+        b = r.get("budget") or {}
+        elapsed, ceiling = elapsed_of(r), ceiling_of(r)
+        ovr = b.get("leg_timeout_overridden")
+        reserve = b.get("finalization_reserve_seconds")
         files = r.get("files") or []
         nfiles = len(files) if isinstance(files, list) else "?"
-        el = f"{float(elapsed):.1f}" if isinstance(elapsed, (int, float)) else "-"
-        ce = f"{float(ceiling):.0f}" if isinstance(ceiling, (int, float)) else "-"
-        print(f"  {leg:34s} {status:22s} {el:>9s}  {ce:>8s}  {nfiles}")
+        el = f"{elapsed:.1f}" if elapsed is not None else "-"
+        ce = f"{ceiling:.0f}" if ceiling is not None else "-"
+        rs = f"{float(reserve):.0f}" if isinstance(reserve, (int, float)) else "-"
+        print(f"  {leg:34s} {status:16s} {el:>9s} {ce:>8s} {str(ovr):>5s} {rs:>8s}  {nfiles}")
         if "timeout" in status.lower():
-            timeouts.append((leg, elapsed, ceiling, r.get("termination_reason")))
+            timeouts.append((leg, elapsed, ceiling, r.get("termination_reason"), b))
         if not files:
-            missing_payload.append(leg)
+            missing_payload.append((leg, status))
+        if ovr is True:
+            overridden_legs.append(leg)
 
     rule("2a. TIMEOUTS — every one, with its ceiling")
     if not timeouts:
         print("  NONE. No leg hit the 3600 s ceiling.")
-    for leg, elapsed, ceiling, reason in timeouts:
+    for leg, elapsed, ceiling, reason, b in timeouts:
         pct = ""
-        if isinstance(elapsed, (int, float)) and isinstance(ceiling, (int, float)) and ceiling:
-            pct = f"  ({100.0 * float(elapsed) / float(ceiling):.1f}% of ceiling)"
+        if elapsed is not None and ceiling:
+            pct = f"  ({100.0 * elapsed / ceiling:.1f}% of ceiling)"
         print(f"  {leg:34s} elapsed={elapsed}  ceiling={ceiling}{pct}  reason={reason}")
+        print(f"      budget = {j(b, 500)}")
+    print()
+    print("  A timeout at 3600 s is NOT automatically a defect and must NOT be waved away")
+    print("  either (T108-READINESS 2.1). Every timed-out leg is CENSORED: it proves the")
+    print("  work needed MORE than 3600 s and never how much more.")
 
-    rule("2b. MISSING OR PARTIAL PAYLOADS")
+    rule("2b. LEG-CEILING OVERRIDE AUDIT (must be empty)")
+    print(f"  legs with leg_timeout_overridden=true : {len(overridden_legs)} {overridden_legs}")
+    print("  Expected 0 -- T-108 runs at the 3600 s DEFAULT, so there is no override and no")
+    print("  empty leg_timeout_override_reason for PRODUCT_CONTRACT 9 to catch.")
+
+    rule("2c. MISSING OR PARTIAL PAYLOADS")
     print(f"  legs with an EMPTY files list : {len(missing_payload)}")
-    for leg in missing_payload:
-        print(f"    {leg}")
+    for leg, status in missing_payload:
+        preserved = []
+        d_leg = run_abs / "papers" / leg.split("/")[0] / leg.split("/")[1]
+        for name in ("LEG_TERMINAL.json", "LEG_TRACE.jsonl", "RESULT.txt",
+                     "stage1_payload.json", "merged_payload.json"):
+            f = d_leg / name
+            if f.is_file():
+                preserved.append(f"{name}({f.stat().st_size}B)")
+        print(f"    {leg:34s} status={status:16s} preserved: {', '.join(preserved) or 'NOTHING'}")
 
     # ------------------------------------------------------- C-111 telemetry
     rule("3. C-111 TIMEOUT / RETRY TELEMETRY (read off disk, per leg)")
