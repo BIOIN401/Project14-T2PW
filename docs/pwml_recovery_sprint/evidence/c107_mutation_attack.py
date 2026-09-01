@@ -32,6 +32,14 @@ the target's newline rather than the target to the pattern's, and prove the
 restore by sha256 AND CRLF count. ``git checkout --`` reverts more; a text-mode
 round trip reverts less; neither is used.
 
+THIS HARNESS IS RUN BY NO GATE -- RAISED BY C-112, NOT ANSWERED. SMOKE's
+``test_c106_mutation_harness_executable.py`` targets ``c102_mutation_attack.py`` **only**.
+That is why M16's ``ABORT``/exit 3, introduced when C-108 moved this harness's anchor,
+survived a green 503 all the way onto integration: nothing ran the file. **Whether the
+c107 harness should also be gated is a `TEST_MATRIX` change with its own cost and is not
+C-112's to make** -- it is registered in `TEST_MATRIX.md` § *Same class, found while doing
+the above* for the Lead to decide.
+
 Usage::  <python> c107_mutation_attack.py <worktree-root>
 """
 
@@ -143,14 +151,30 @@ MUTATIONS = [
         '    r"reduce|reduces|reduced|reducing|reduction|reductions"\n',
         '    r"reduc[a-z]*"  # MUTATION M15\n',
     ),
+    # M16 RE-POINTED BY C-112 (C-108 R4). The anchor below occurred ONCE at f67e00a and
+    # ZERO times after C-108, because C-108 member (d) lifted these six inhibition
+    # additions out of the inline alternation and into the module-level
+    # ``_C107_INHIBITION_WORDS_SRC``. ``apply_mutation`` raises on a 0-match, so the
+    # harness printed ``M16: ABORT`` and returned 3 -- and because M16 is LAST, M1-M15
+    # still ran: degraded, not dead. Only the ANCHOR moved. The mutation is unchanged in
+    # kind and strength: the same six stems, still stripped of the same two lookaround
+    # anchors.
+    #
+    # Two byte-level consequences of the lift, both deliberate:
+    #   * the indent is now 4 spaces, not 8 -- it is an assignment body, not a nested
+    #     alternation branch;
+    #   * the replacement carries NO leading ``|``. The pipe is supplied at each use
+    #     site (``r"|" + _C107_INHIBITION_WORDS_SRC``). Keeping it would inject an EMPTY
+    #     alternative that matches everywhere -- a different and far broader mutation
+    #     than the one M16 names, and one that would go red for the wrong reason.
     (
         "M16", "A: this card's six inhibition additions revert to bare unanchored stems",
-        '        r"|(?<![a-z])(?:blockades?|impair(?:s|ed|ing|ment|ments)?"\n'
-        '        r"|silenc(?:e|es|ed|ing)"\n'
-        '        r"|sequestr(?:ation|ations|ate|ates|ated|ating)"\n'
-        '        r"|ablat(?:e|es|ed|ing|ion|ions)"\n'
-        '        r"|interfer(?:e|es|ed|ing|ence))(?![a-z])"\n',
-        '        r"|blockade|impair|silenc|sequestr|ablat|interfer(?:e|i)"  # MUTATION M16\n',
+        '    r"(?<![a-z])(?:blockades?|impair(?:s|ed|ing|ment|ments)?"\n'
+        '    r"|silenc(?:e|es|ed|ing)"\n'
+        '    r"|sequestr(?:ation|ations|ate|ates|ated|ating)"\n'
+        '    r"|ablat(?:e|es|ed|ing|ion|ions)"\n'
+        '    r"|interfer(?:e|es|ed|ing|ence))(?![a-z])"\n',
+        '    r"blockade|impair|silenc|sequestr|ablat|interfer(?:e|i)"  # MUTATION M16\n',
     ),
 ]
 

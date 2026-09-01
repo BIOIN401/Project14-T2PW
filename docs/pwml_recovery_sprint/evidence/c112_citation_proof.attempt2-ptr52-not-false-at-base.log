@@ -1,0 +1,195 @@
+C-112 -- citation proof and self-drift measurement
+worktree : C:\t\c112
+base     : ab16a3a733c782a6f170dd9edf8bcbfc7c2b2aa2
+tip      : ee305755291ad445dc9b45391443d3d2655e8ac4
+
+=== 1. THE 7 LIVE CITATIONS -- false at BASE, anchor resolves at TIP ===
+
+  L1  FINDINGS.md:315 (F-031)  MASTER_PLAN.md:336 -> '## 9 Canonical paths' row
+  [OK ] BASE: F-031 cites MASTER_PLAN.md:336
+  [OK ] BASE: MASTER_PLAN.md:336 does NOT mention rag/extract.py -- the address is FALSE  -- '- Each card charter carries: branch and exact dispatch base · functio
+  [OK ] TIP : F-031 no longer carries a MASTER_PLAN line locator
+  [OK ] TIP : F-031 cites the Canonical paths table by name
+  [OK ] TIP : that anchor RESOLVES -- the row exists and names the decoy  -- MASTER_PLAN.md:[412]
+
+  L2  FINDINGS.md:316 (F-032)  MASTER_PLAN.md:363 -> '## 9 branch register, C-035'
+  [OK ] BASE: F-032 cites MASTER_PLAN.md:363
+  [OK ] BASE: MASTER_PLAN.md:363 is TRAP-5 text, not a §9 row -- the address is FALSE  -- ''
+  [OK ] TIP : F-032 no longer carries a MASTER_PLAN line locator
+  [OK ] TIP : F-032 cites the branch-register row C-035 by name
+  [OK ] TIP : that anchor RESOLVES -- exactly one C-035 register row names rag/admission.py  -- MASTER_PLAN.md:[440]
+
+  L3  FINDINGS.md:6679  pwml-test-runner.md:59 -> '## Test discipline' bullet
+  [OK ] BASE: cites pwml-test-runner.md:59
+  [OK ] BASE: pwml-test-runner.md:59 is NOT the certification instruction -- FALSE  -- '  per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it
+  [OK ] TIP : cites the chunk-membership bullet by name, number struck
+  [OK ] TIP : that anchor RESOLVES -- one '## Test discipline' heading, one bullet under it  -- heading:[47] bullet:[62]
+
+  L4  MASTER_PLAN.md:477 (self-citation)  :372 -> '§ 9 C-045 register row'
+  [OK ] BASE: MASTER_PLAN.md:477 cites MASTER_PLAN.md:372
+  [OK ] BASE: MASTER_PLAN.md:372 is the §8 Schedule table, not the C-045 row -- FALSE  -- ''
+  [OK ] TIP : cites the C-045 branch-register row by name
+  [OK ] TIP : that anchor RESOLVES -- exactly one C-045 row names the function  -- MASTER_PLAN.md:[451]
+
+  L5+L6  TEST_MATRIX.md:533  MASTER_PLAN.md:281 + pwml-test-runner.md:52
+  [OK ] BASE: TEST_MATRIX.md:533 cites both by line
+  [OK ] BASE: MASTER_PLAN.md:281 is not the merge-gates heading any more -- FALSE  -- '         affected files, expected corrections and regression fixtures
+  [FAIL] BASE: pwml-test-runner.md:52 is not the SMOKE bullet any more -- FALSE  -- '- Smoke = chunks A+B+C **plus the two C-106 gate files** = 22 files, 
+  [OK ] TIP : both replaced by anchors, no line locators left
+  [OK ] TIP : both anchors RESOLVE  -- merge-gates:[297] smoke-bullet:[52]
+
+  L7  RESUME-NEXT-SESSION.md F-154 row  pwml-test-runner.md:59 -> the bullet
+  [OK ] BASE: the F-154 row exists and cites pwml-test-runner.md:59  -- at :[189]
+  [OK ] SITE DRIFT: REV-109 measured this citing site at :94; at the C-112 base it is :189 -- a citation OF a citation is no more stable  -- base site :189
+  [OK ] TIP : the row cites the bullet by name, the number struck
+
+  R-A  FINDINGS.md:1126 row E  TEST_MATRIX.md:218 -> '## Chunks' anchor
+  [OK ] BASE: row E cites TEST_MATRIX.md:218
+  [OK ] BASE: TEST_MATRIX.md:218 is the child_env row, not Chunk E -- FALSE  -- '| `child_env` | 265–276 | child environment |'
+  [OK ] TIP : row E cites the ## Chunks table row by name
+  [OK ] TIP : that anchor RESOLVES, and Chunk E's row is where the note says  -- ## Chunks:[228] row E:[237]
+  [OK ] ROW D-qb LEFT ALONE -- it was already CORRECT (charter + REV-112 W8)  -- '| D-qb | 1 | `:70` |'
+  [OK ] ...and `chunk_d_gate.py:70` genuinely resolves to the QB symbol  -- 'QB = ["tests/test_streamlit_quarantine_boundary.py"]'
+
+  R-B  TEST_MATRIX.md:568  '§ Chunks begins at line 209' -> struck
+  [OK ] BASE: :568 claims line 209
+  [OK ] BASE: TEST_MATRIX.md:209 is not the ## Chunks heading -- FALSE  -- '### Existing machinery to build on'
+  [OK ] TIP : struck, not silently restated
+  [OK ] TIP : replaced by the ## Chunks heading anchor, and :228 is measured, not asserted  -- ## Chunks at [228]
+
+  F-157  FINDINGS.md § F-153  streamlit_app.py:5669 -> the SYMBOL
+  [OK ] BASE: F-153's block cites streamlit_app.py:5669
+  [OK ] BASE: the COMMITTED blob's :5669 is not the call -- resolves for no reader  -- '    st.session_state["pathway_context"] = pathway_context'
+  [OK ] BASE: the committed call site is :5636  -- '        rag_loop_record = run_rag_rounds('
+  [OK ] TIP : F-153 cites the SYMBOL, and carries no line number at all
+  [OK ] TIP : the symbol RESOLVES in the committed tree  -- def:[1239] refs:[1239, 5636]
+  [OK ] TIP : the standing rule landed where an agent meets it (TEST_MATRIX §, not a findings entry)  -- TEST_MATRIX.md:[810]
+  [OK ] TIP : and the next session is pointed at it from RESUME's own F-157 paragraph
+
+=== 2. FROZEN RECORDS -- byte-identical base to tip ===
+  [OK ] DECISIONS.md [1361, 1919, 1950, 1956, 1959, 3206, 3619] unchanged (append-only, product owner only)
+  [OK ] FINDINGS.md [1125, 1193, 2887, 6703] unchanged (row D-qb correct; C-109 repair record; probe antecedent; F-154 analysis)
+  [OK ] SPIKE-002-REPORT.md [138, 143, 253] unchanged (signed CONTROL-PLANE-RECONCILE-001 annotations)
+  [OK ] C-011.md [196, 235] unchanged (a dispatched card's charter)
+  [OK ] C-109.md [66] unchanged (another card's charter)
+  [OK ] TEST_MATRIX.md [726, 727, 785] unchanged (C-106's signed record; C-109's F-154 rule)
+  [OK ] c054_gate_counts.json [202] unchanged (a signed gate-count artifact)
+  [OK ] c106_predictions.md [190] unchanged (C-106's signed prediction record)
+  [OK ] c109_citation_probe.log [50] unchanged (a probe LOG)
+
+  Whole files the diff must not touch at all:
+  [OK ] docs/pwml_recovery_sprint/DECISIONS.md not in the diff
+  [OK ] docs/pwml_recovery_sprint/SPIKE-002-REPORT.md not in the diff
+  [OK ] docs/pwml_recovery_sprint/prompts/C-011.md not in the diff
+  [OK ] docs/pwml_recovery_sprint/prompts/C-109.md not in the diff
+  [OK ] docs/pwml_recovery_sprint/evidence/c054_gate_counts.json not in the diff
+  [OK ] docs/pwml_recovery_sprint/evidence/c106_predictions.md not in the diff
+  [OK ] docs/pwml_recovery_sprint/evidence/c109_citation_probe.log not in the diff
+  [OK ] .claude/agents/pwml-test-runner.md not in the diff
+  [OK ] src/t2pw/app/streamlit_app.py not in the diff
+
+  files changed by the C-112 diff (23):
+    docs/pwml_recovery_sprint/FINDINGS.md
+    docs/pwml_recovery_sprint/MASTER_PLAN.md
+    docs/pwml_recovery_sprint/RESUME-NEXT-SESSION.md
+    docs/pwml_recovery_sprint/TEST_MATRIX.md
+    docs/pwml_recovery_sprint/evidence/c107_mutation_attack.py
+    docs/pwml_recovery_sprint/evidence/c112_c107_mutation_m16_repointed.attempt1-exit95-lock-held.log
+    docs/pwml_recovery_sprint/evidence/c112_c107_mutation_m16_repointed.attempt2-exit95-lock-held.log
+    docs/pwml_recovery_sprint/evidence/c112_c107_mutation_m16_repointed.log
+    docs/pwml_recovery_sprint/evidence/c112_citation_proof.attempt1-timeout.log
+    docs/pwml_recovery_sprint/evidence/c112_citation_proof.py
+    docs/pwml_recovery_sprint/evidence/c112_r2_false_pass_vectors.attempt1-typo-assertion.log
+    docs/pwml_recovery_sprint/evidence/c112_r2_false_pass_vectors.log
+    docs/pwml_recovery_sprint/evidence/c112_r2_false_pass_vectors.py
+    docs/pwml_recovery_sprint/evidence/c112_route_combined.log
+    docs/pwml_recovery_sprint/evidence/c112_route_split.log
+    docs/pwml_recovery_sprint/evidence/g11/C-112/01-c112-r2-vectors.json
+    docs/pwml_recovery_sprint/evidence/g11/C-112/02-c112-r2-vectors-r2.json
+    docs/pwml_recovery_sprint/evidence/g11/C-112/03-c112-route-combined.json
+    docs/pwml_recovery_sprint/evidence/g11/C-112/04-c112-route-split.json
+    docs/pwml_recovery_sprint/evidence/g11/C-112/05-c112-m16-timing.json
+    docs/pwml_recovery_sprint/evidence/g11/C-112/08-c112-c107-mut-attempt3.json
+    docs/pwml_recovery_sprint/evidence/reviewer_evidence_route.py
+    tests/test_c109_reviewer_evidence_route.py
+
+=== 4. TEST_MATRIX.md `:477` LINE-NEUTRALITY -- all three parts ===
+  [OK ] part 1/3: identical line count at or above :477  -- base 477 tip 477
+  [OK ] part 2/3: line :477 is BYTE-IDENTICAL  -- '   behaviour.** That claim is what needs proof.'
+  [OK ] part 3/3: NO differing line anywhere in the common prefix :1-477  -- differing lines []
+    (edits made at :533, :567, :568 -- all BELOW the pin -- and 74 lines appended at end-of-file, which nothing cites)
+
+=== 3. THE DRIFT **THIS** DIFF CREATES (W10) ===
+  corpus: 251 committed lines carrying a <file>:<line> citation of a file this diff touches
+  [OK ] SCANNER KNOWN-POSITIVE: a synthetic 1-line insertion at MASTER_PLAN.md:160 IS reported as creating stale citations  -- boundary=159 stale=70
+    (the synthetic insertion strands 70 committed citations -- this is the shape of the defect C-112 exists to not repeat)
+  [OK ] SCANNER KNOWN-NEGATIVE: an unmodified file reports zero
+
+  docs/pwml_recovery_sprint/FINDINGS.md
+    base 7448 lines -> tip 7448 lines (net +0)
+    line numbers IDENTICAL up to and including base line 7448  (= the whole file: NOTHING SHIFTED)
+    committed citations below that boundary: 0
+
+  docs/pwml_recovery_sprint/MASTER_PLAN.md
+    base 506 lines -> tip 506 lines (net +0)
+    line numbers IDENTICAL up to and including base line 506  (= the whole file: NOTHING SHIFTED)
+    committed citations below that boundary: 0
+
+  docs/pwml_recovery_sprint/RESUME-NEXT-SESSION.md
+    base 282 lines -> tip 282 lines (net +0)
+    line numbers IDENTICAL up to and including base line 282  (= the whole file: NOTHING SHIFTED)
+    committed citations below that boundary: 0
+
+  docs/pwml_recovery_sprint/TEST_MATRIX.md
+    base 809 lines -> tip 883 lines (net +74)
+    line numbers IDENTICAL up to and including base line 809  (= the whole file: NOTHING SHIFTED)
+    committed citations below that boundary: 0
+
+  docs/pwml_recovery_sprint/evidence/c107_mutation_attack.py
+    base 231 lines -> tip 255 lines (net +24)
+    line numbers IDENTICAL up to and including base line 33
+    committed citations below that boundary: 0
+
+  docs/pwml_recovery_sprint/evidence/reviewer_evidence_route.py
+    base 390 lines -> tip 539 lines (net +149)
+    line numbers IDENTICAL up to and including base line 6
+    committed citations below that boundary: 0
+
+  tests/test_c109_reviewer_evidence_route.py
+    base 434 lines -> tip 688 lines (net +254)
+    line numbers IDENTICAL up to and including base line 18
+    committed citations below that boundary: 0
+
+--------------------------------------------------------------------------
+  [OK ] C-112 creates ZERO newly-stale committed citations (W10)  -- 0 found
+
+==========================================================================
+RESULT: 1 CHECK(S) FAILED
+  FAILED: BASE: pwml-test-runner.md:52 is not the SMOKE bullet any more -- FALSE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c112\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ee305755291ad445dc9b45391443d3d2655e8ac4  [git, worktree dirty=False]
+label                   : c112-citation-proof-r2
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c112_citation_proof.py C:/t/c112 ab16a3a733c782a6f170dd9edf8bcbfc7c2b2aa2
+cwd                     : C:\t\c112
+root PID / process group: 538572 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 150 s
+duration                : 4.11 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 23  538584:python.exe, 538604:git.exe, 537632:git.exe, 537872:git.exe, 538180:git.exe, 538256:git.exe, 538052:git.exe, 538388:git.exe, 537920:git.exe, 538548:git.exe, 536848:git.exe, 537896:git.exe, 537932:git.exe, 538272:git.exe, 538296:git.exe, 538340:git.exe, 538456:git.exe, 538524:git.exe, 538612:git.exe, 537876:git.exe, 537968:git.exe, 538208:git.exe, 538008:git.exe
+descendants terminated  : 23  536848, 537632, 537872, 537876, 537896, 537920, 537932, 537968, 538008, 538052, 538180, 538208, 538256, 538272, 538296, 538340, 538388, 538456, 538524, 538548, 538584, 538604, 538612
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c112/docs/pwml_recovery_sprint/evidence/g11/C-112/10-c112-citation-proof-r2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-112  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

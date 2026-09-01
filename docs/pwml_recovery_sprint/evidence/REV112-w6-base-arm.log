@@ -1,0 +1,250 @@
+T2PW: C:\t\rev112\src\t2pw\__init__.py
+.......F.....FFFF                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_nothing_enumerated_does_not_pass_silently ________________
+
+route = <module 'c109_reviewer_evidence_route' from 'C:\\t\\rev112\\docs\\pwml_recovery_sprint\\evidence\\reviewer_evidence_route.py'>
+tmp_path = WindowsPath('C:/t/btrev112/w6base/test_nothing_enumerated_does_n0')
+
+    def test_nothing_enumerated_does_not_pass_silently(route, tmp_path):
+        """A mistyped task id must not read as a clean gate -- that is the F-154 class."""
+        worktree = tmp_path / "wt"
+        integration = tmp_path / "integration"
+        _make_worktree(worktree)
+        _write(integration, "README.md", "x\n")
+    
+        code, report = _run(
+            route,
+            task="REV-999",
+            worktree=worktree,
+            integration_dir=integration,
+            json=tmp_path / "empty.json",
+        )
+    
+        assert code == route.EXIT_NOTHING_ENUMERATED
+        assert report["enumerated"] == 0
+        assert report["exit_reason"] == "nothing_enumerated"
+    
+        # C-112 -- DELIBERATE BASELINE MOVE, merge rule 4, exact delta below.
+        #
+        # This stanza used to assert `code_allowed == EXIT_OK`: that `--allow-empty` made a
+        # MISTYPED task id exit 0. It encoded REV-109 R2 vector 3 -- the silent pass -- as
+        # though it were the contract, which is precisely why the vector survived review.
+        # The two protections are now independent: the flag excuses an EMPTY task and never
+        # an UNKNOWN one. One assertion changed, EXIT_OK -> EXIT_USAGE, and one added. The
+        # full pair lives in test_allow_empty_does_not_disarm_the_mistyped_id_protection.
+        code_allowed, report_allowed = _run(
+            route,
+            task="REV-999",
+            worktree=worktree,
+            integration_dir=integration,
+            allow_empty=True,
+            json=tmp_path / "empty_allowed.json",
+        )
+>       assert code_allowed == route.EXIT_USAGE
+E       AssertionError: assert 0 == 2
+E        +  where 2 = <module 'c109_reviewer_evidence_route' from 'C:\\t\\rev112\\docs\\pwml_recovery_sprint\\evidence\\reviewer_evidence_route.py'>.EXIT_USAGE
+
+tests\test_c109_reviewer_evidence_route.py:298: AssertionError
+---------------------------- Captured stdout call -----------------------------
+task        : REV-999 (stem rev999)
+worktree    : C:\t\btrev112\w6base\test_nothing_enumerated_does_n0\wt
+integration : dir:C:\t\btrev112\w6base\test_nothing_enumerated_does_n0\integration
+enumerated  : 0  reachable 0  unreachable 0
+exit_reason : nothing_enumerated
+exit_code   : 3
+task        : REV-999 (stem rev999)
+worktree    : C:\t\btrev112\w6base\test_nothing_enumerated_does_n0\wt
+integration : dir:C:\t\btrev112\w6base\test_nothing_enumerated_does_n0\integration
+enumerated  : 0  reachable 0  unreachable 0
+exit_reason : nothing_enumerated
+exit_code   : 0
+---------------------------- Captured stderr call -----------------------------
+NOTHING ENUMERATED. Either the task id is wrong or this reviewer produced no evidence. Not a pass -- pass --allow-empty to assert the latter.
+NOTHING ENUMERATED. Either the task id is wrong or this reviewer produced no evidence. Not a pass -- pass --allow-empty to assert the latter.
+______________ test_probe_subdirectory_is_enumerated_not_dropped ______________
+
+route = <module 'c109_reviewer_evidence_route' from 'C:\\t\\rev112\\docs\\pwml_recovery_sprint\\evidence\\reviewer_evidence_route.py'>
+tmp_path = WindowsPath('C:/t/btrev112/w6base/test_probe_subdirectory_is_enu0')
+
+    def test_probe_subdirectory_is_enumerated_not_dropped(route, tmp_path):
+        """R2 vector 1 -- THE ONE THAT MATTERS. A directory of probes was dropped silently.
+    
+        The stem glob is non-recursive and the loop body tested ``is_file()``, so
+        ``evidence/rev109_probes/deep_probe.py`` -- the shape REV-109 demonstrated -- was
+        never enumerated. The gate then exited 0 with a green G11 while missing the
+        evidence entirely: a check that says evidence is safe when it is not, which is
+        worse than no check because it retires the manual habit that works.
+        """
+        worktree = tmp_path / "wt"
+        integration = tmp_path / "integration"
+        contents = _make_worktree(worktree)
+        deep = f"{EVIDENCE_REL}/{STEM}_probes/deep_probe.py"
+        deeper = f"{EVIDENCE_REL}/{STEM}_probes/nested/deeper.log"
+        _write(worktree, deep, "print('the probe REV-109 demonstrated the vector with')\n")
+        _write(worktree, deeper, "output of a probe two levels down\n")
+    
+        items = route.enumerate_evidence(worktree, TASK)
+        found = {p.relative_to(worktree).as_posix() for p in (i["path"] for i in items)}
+>       assert deep in found, "a stem-matching DIRECTORY must not be dropped silently"
+E       AssertionError: a stem-matching DIRECTORY must not be dropped silently
+E       assert 'docs/pwml_recovery_sprint/evidence/rev109_probes/deep_probe.py' in {'docs/pwml_recovery_sprint/evidence/g11/REV-109/01-rev109-focused.json', 'docs/pwml_recovery_sprint/evidence/g11/REV-...wml_recovery_sprint/evidence/rev109_boundary_probe.log', 'docs/pwml_recovery_sprint/evidence/rev109_boundary_probe.py'}
+
+tests\test_c109_reviewer_evidence_route.py:497: AssertionError
+__________ test_a_probe_directory_is_announced_loudly_never_silently __________
+
+route = <module 'c109_reviewer_evidence_route' from 'C:\\t\\rev112\\docs\\pwml_recovery_sprint\\evidence\\reviewer_evidence_route.py'>
+tmp_path = WindowsPath('C:/t/btrev112/w6base/test_a_probe_directory_is_anno0')
+capsys = <_pytest.capture.CaptureFixture object at 0x0000013238096BA0>
+
+    def test_a_probe_directory_is_announced_loudly_never_silently(route, tmp_path, capsys):
+        """A loud WARN was the stated minimum; recursion plus the announcement is both."""
+        worktree = tmp_path / "wt"
+        integration = tmp_path / "integration"
+        contents = _make_worktree(worktree)
+        _write(worktree, f"{EVIDENCE_REL}/{STEM}_probes/deep_probe.py", "x = 1\n")
+        for rel, text in contents.items():
+            _write(integration, rel, text)
+        _write(integration, f"{EVIDENCE_REL}/{STEM}_probes/deep_probe.py", "x = 1\n")
+    
+        route.run(
+            [
+                "--task", TASK,
+                "--worktree", str(worktree),
+                "--integration-dir", str(integration),
+            ]
+        )
+        captured = capsys.readouterr()
+>       assert "PROBE DIRECTORY" in captured.out, "the recursion must be visible, not merely correct"
+E       AssertionError: the recursion must be visible, not merely correct
+E       assert 'PROBE DIRECTORY' in 'task        : REV-109 (stem rev109)\nworktree    : C:\\t\\btrev112\\w6base\\test_a_probe_directory_is_anno0\\wt\ninte...ory_is_anno0\\integration\nenumerated  : 4  reachable 4  unreachable 0\nexit_reason : all_reachable\nexit_code   : 0\n'
+E        +  where 'task        : REV-109 (stem rev109)\nworktree    : C:\\t\\btrev112\\w6base\\test_a_probe_directory_is_anno0\\wt\ninte...ory_is_anno0\\integration\nenumerated  : 4  reachable 4  unreachable 0\nexit_reason : all_reachable\nexit_code   : 0\n' = CaptureResult(out='task        : REV-109 (stem rev109)\nworktree    : C:\\t\\btrev112\\w6base\\test_a_probe_directory_...no0\\integration\nenumerated  : 4  reachable 4  unreachable 0\nexit_reason : all_reachable\nexit_code   : 0\n', err='').out
+
+tests\test_c109_reviewer_evidence_route.py:553: AssertionError
+___________ test_zero_byte_evidence_is_indeterminate_not_reachable ____________
+
+route = <module 'c109_reviewer_evidence_route' from 'C:\\t\\rev112\\docs\\pwml_recovery_sprint\\evidence\\reviewer_evidence_route.py'>
+tmp_path = WindowsPath('C:/t/btrev112/w6base/test_zero_byte_evidence_is_ind0')
+
+    def test_zero_byte_evidence_is_indeterminate_not_reachable(route, tmp_path):
+        """R2 vector 2 -- the empty blob oid is a universal constant.
+    
+        A truncated probe log, or one whose redirect failed, is zero bytes; its blob oid is
+        ``e69de29b...``, which is the same in every repository that has ever existed. Before
+        C-112 it therefore "resolved" against any unrelated empty file in the integration
+        tree -- ``evidence/.gitkeep`` is the real one -- and was reported ``reachable``.
+        C-112 decides it rather than keeping it silently: content identity cannot judge an
+        empty file, so the check does not pretend it can.
+        """
+        worktree = tmp_path / "wt"
+        integration = tmp_path / "integration"
+        contents = _make_worktree(worktree)
+        truncated = f"{EVIDENCE_REL}/{STEM}_truncated_probe.log"
+        _write(worktree, truncated, "")
+        for rel, text in contents.items():
+            _write(integration, rel, text)
+        # The unrelated empty file that used to make the false PASS. This one is real: it
+        # is committed at docs/pwml_recovery_sprint/evidence/.gitkeep on integration.
+        _write(integration, f"{EVIDENCE_REL}/.gitkeep", "")
+    
+        # ---- MAKE IT FAIL.
+        code, report = _run(
+            route,
+            task=TASK,
+            worktree=worktree,
+            integration_dir=integration,
+            json=tmp_path / "empty.json",
+        )
+>       assert code == route.EXIT_UNREACHABLE, (
+            "pre-C-112 this exited 0: the empty oid matched .gitkeep and a probe log that "
+            "contains nothing at all was certified as surviving evidence"
+        )
+E       AssertionError: pre-C-112 this exited 0: the empty oid matched .gitkeep and a probe log that contains nothing at all was certified as surviving evidence
+E       assert 0 == 1
+E        +  where 1 = <module 'c109_reviewer_evidence_route' from 'C:\\t\\rev112\\docs\\pwml_recovery_sprint\\evidence\\reviewer_evidence_route.py'>.EXIT_UNREACHABLE
+
+tests\test_c109_reviewer_evidence_route.py:587: AssertionError
+---------------------------- Captured stdout call -----------------------------
+task        : REV-109 (stem rev109)
+worktree    : C:\t\btrev112\w6base\test_zero_byte_evidence_is_ind0\wt
+integration : dir:C:\t\btrev112\w6base\test_zero_byte_evidence_is_ind0\integration
+enumerated  : 5  reachable 5  unreachable 0
+exit_reason : all_reachable
+exit_code   : 0
+_________ test_allow_empty_does_not_disarm_the_mistyped_id_protection _________
+
+route = <module 'c109_reviewer_evidence_route' from 'C:\\t\\rev112\\docs\\pwml_recovery_sprint\\evidence\\reviewer_evidence_route.py'>
+tmp_path = WindowsPath('C:/t/btrev112/w6base/test_allow_empty_does_not_disa0')
+
+    def test_allow_empty_does_not_disarm_the_mistyped_id_protection(route, tmp_path):
+        """R2 vector 3 -- one flag used to switch off two unrelated protections.
+    
+        ``--allow-empty`` asserts exactly one thing: *this task produced no evidence*. It
+        says nothing about whether the id is real, and after C-112 it cannot be made to.
+        """
+        worktree = tmp_path / "wt"
+        integration = tmp_path / "integration"
+        _make_worktree(worktree)
+        _write(integration, "README.md", "x\n")
+    
+        # ---- MAKE IT FAIL (a): right shape, unknown to this tree.
+        code, report = _run(
+            route,
+            task="REV-999",
+            worktree=worktree,
+            integration_dir=integration,
+            allow_empty=True,
+            json=tmp_path / "unknown.json",
+        )
+>       assert code == route.EXIT_USAGE, (
+            "pre-C-112 this returned 0 -- the flag disarmed the exit-3 nothing-enumerated "
+            "protection AND the mistyped-id protection sitting beside it, in one move"
+        )
+E       AssertionError: pre-C-112 this returned 0 -- the flag disarmed the exit-3 nothing-enumerated protection AND the mistyped-id protection sitting beside it, in one move
+E       assert 0 == 2
+E        +  where 2 = <module 'c109_reviewer_evidence_route' from 'C:\\t\\rev112\\docs\\pwml_recovery_sprint\\evidence\\reviewer_evidence_route.py'>.EXIT_USAGE
+
+tests\test_c109_reviewer_evidence_route.py:634: AssertionError
+---------------------------- Captured stdout call -----------------------------
+task        : REV-999 (stem rev999)
+worktree    : C:\t\btrev112\w6base\test_allow_empty_does_not_disa0\wt
+integration : dir:C:\t\btrev112\w6base\test_allow_empty_does_not_disa0\integration
+enumerated  : 0  reachable 0  unreachable 0
+exit_reason : nothing_enumerated
+exit_code   : 0
+---------------------------- Captured stderr call -----------------------------
+NOTHING ENUMERATED. Either the task id is wrong or this reviewer produced no evidence. Not a pass -- pass --allow-empty to assert the latter.
+=========================== short test summary info ===========================
+FAILED tests/test_c109_reviewer_evidence_route.py::test_nothing_enumerated_does_not_pass_silently
+FAILED tests/test_c109_reviewer_evidence_route.py::test_probe_subdirectory_is_enumerated_not_dropped
+FAILED tests/test_c109_reviewer_evidence_route.py::test_a_probe_directory_is_announced_loudly_never_silently
+FAILED tests/test_c109_reviewer_evidence_route.py::test_zero_byte_evidence_is_indeterminate_not_reachable
+FAILED tests/test_c109_reviewer_evidence_route.py::test_allow_empty_does_not_disarm_the_mistyped_id_protection
+5 failed, 12 passed in 1.39s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev112\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 53673d5c4aa661bb3654b5be1308a11f5d99d1f5  [git, worktree dirty=True]
+label                   : rev112-w6-base-arm
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/rev112 -q --no-header --basetemp=C:/t/btrev112/w6base tests/test_c109_reviewer_evidence_route.py
+cwd                     : C:/t/rev112
+root PID / process group: 565396 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.01 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 9  565408:python.exe, 565452:git.exe, 565588:git.exe, 565648:git.exe, 565744:git.exe, 565792:git.exe, 565812:git.exe, 565972:python.exe, 565992:python.exe
+descendants terminated  : 9  565408, 565452, 565588, 565648, 565744, 565792, 565812, 565972, 565992
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rev112/docs/pwml_recovery_sprint/evidence/g11/REV-112/07-rev112-w6-base-arm.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-112  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

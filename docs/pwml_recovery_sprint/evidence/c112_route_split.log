@@ -1,0 +1,54 @@
+collected 17 node(s) from tests/test_c109_reviewer_evidence_route.py
+
+--- COMBINED (all nodes, one process) ---
+  exit=0  {'passed': 17}
+
+--- SPLIT (one process per node) ---
+  [01] exit=0 {'passed': 1}  test_enumerates_g11_reports_and_probes_and_nothing_else
+  [02] exit=0 {'passed': 1}  test_task_stem
+  [03] exit=0 {'passed': 1}  test_reachable_evidence_passes
+  [04] exit=0 {'passed': 1}  test_reachable_under_a_different_path_still_counts
+  [05] exit=0 {'passed': 1}  test_missing_evidence_fails
+  [06] exit=0 {'passed': 1}  test_all_evidence_missing_fails_and_lists_every_item
+  [07] exit=0 {'passed': 1}  test_same_name_different_bytes_is_not_reachable
+  [08] exit=0 {'passed': 1}  test_nothing_enumerated_does_not_pass_silently
+  [09] exit=0 {'passed': 1}  test_bad_worktree_is_a_usage_error_not_a_verdict
+  [10] exit=0 {'passed': 1}  test_git_ref_mode_passes_and_fails
+  [11] exit=0 {'passed': 1}  test_bad_ref_is_a_usage_error
+  [12] exit=0 {'passed': 1}  test_runs_as_a_subprocess_with_a_nonzero_exit
+  [13] exit=0 {'passed': 1}  test_scope_discipline_it_does_not_judge_evidence_quality
+  [14] exit=0 {'passed': 1}  test_probe_subdirectory_is_enumerated_not_dropped
+  [15] exit=0 {'passed': 1}  test_a_probe_directory_is_announced_loudly_never_silently
+  [16] exit=0 {'passed': 1}  test_zero_byte_evidence_is_indeterminate_not_reachable
+  [17] exit=0 {'passed': 1}  test_allow_empty_does_not_disarm_the_mistyped_id_protection
+
+combined : exit=0  {'passed': 17}
+split    : 17 processes  {'passed': 17}
+VERDICT  : SPLIT AND COMBINED AGREE, all green
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c112\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ab16a3a733c782a6f170dd9edf8bcbfc7c2b2aa2  [git, worktree dirty=True]
+label                   : c112-route-split
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c109_focused_split.py C:/t/c112 C:/t/btc112
+cwd                     : C:\t\c112
+root PID / process group: 475732 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 11.91 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 53  475596:python.exe, 476380:python.exe, 475172:python.exe, 435012:python.exe, 477056:python.exe, 457808:git.exe, 472364:git.exe, 475308:git.exe, 476340:git.exe, 473368:git.exe, 471488:git.exe, 476432:git.exe, 470440:python.exe, 471048:python.exe, 477204:python.exe, 477224:python.exe, 477244:python.exe, 477264:python.exe, 477288:python.exe, 477308:python.exe, 477332:python.exe, 477352:python.exe, 477456:python.exe, 477476:python.exe, 477504:python.exe, 477524:python.exe, 477548:python.exe, 477568:python.exe, 477588:python.exe, 477608:python.exe, 477628:python.exe, 477648:python.exe, 477752:git.exe, 477812:git.exe, 477872:git.exe, 477892:git.exe, 478084:git.exe, 478140:python.exe, 478160:python.exe, 478180:git.exe, 476688:python.exe, 476812:python.exe, 475836:python.exe, 477232:python.exe, 477208:python.exe, 471328:python.exe, 474940:python.exe, 461264:python.exe, 474380:python.exe, 477340:python.exe, 477368:python.exe, 477420:python.exe, 477444:python.exe
+descendants terminated  : 53  435012, 457808, 461264, 470440, 471048, 471328, 471488, 472364, 473368, 474380, 474940, 475172, 475308, 475596, 475836, 476340, 476380, 476432, 476688, 476812, 477056, 477204, 477208, 477224, 477232, 477244, 477264, 477288, 477308, 477332, 477340, 477352, 477368, 477420, 477444, 477456, 477476, 477504, 477524, 477548, 477568, 477588, 477608, 477628, 477648, 477752, 477812, 477872, 477892, 478084, 478140, 478160, 478180
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c112\docs\pwml_recovery_sprint\evidence\g11\C-112\04-c112-route-split.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-112  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

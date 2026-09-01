@@ -1,0 +1,136 @@
+{
+  "label": "rev112-w6-base-arm",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/rev112",
+    "-q",
+    "--no-header",
+    "--basetemp=C:/t/btrev112/w6base",
+    "tests/test_c109_reviewer_evidence_route.py"
+  ],
+  "cwd": "C:/t/rev112",
+  "started_at": "2026-09-01T21:20:59+00:00",
+  "finished_at": "2026-09-01T21:21:01+00:00",
+  "duration_seconds": 2.01113020000048,
+  "timeout_seconds": 300.0,
+  "root_pid": 565396,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 565408,
+      "name": "python.exe",
+      "ppid": 565396
+    },
+    {
+      "pid": 565452,
+      "name": "git.exe",
+      "ppid": 565408
+    },
+    {
+      "pid": 565588,
+      "name": "git.exe",
+      "ppid": 565408
+    },
+    {
+      "pid": 565648,
+      "name": "git.exe",
+      "ppid": 565408
+    },
+    {
+      "pid": 565744,
+      "name": "git.exe",
+      "ppid": 565408
+    },
+    {
+      "pid": 565792,
+      "name": "git.exe",
+      "ppid": 565408
+    },
+    {
+      "pid": 565812,
+      "name": "git.exe",
+      "ppid": 565792
+    },
+    {
+      "pid": 565972,
+      "name": "python.exe",
+      "ppid": 565408
+    },
+    {
+      "pid": 565992,
+      "name": "python.exe",
+      "ppid": 565972
+    }
+  ],
+  "descendants_terminated": [
+    565408,
+    565452,
+    565588,
+    565648,
+    565744,
+    565792,
+    565812,
+    565972,
+    565992
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 439056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 455056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 563572,
+      "name": "python.exe"
+    },
+    {
+      "pid": 564104,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rev112/docs/pwml_recovery_sprint/evidence/g11/REV-112/07-rev112-w6-base-arm.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev112\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev112",
+    "repo_head": "53673d5c4aa661bb3654b5be1308a11f5d99d1f5",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-112",
+    "token": "REV-112:563572:6eb9234796e93d2c",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

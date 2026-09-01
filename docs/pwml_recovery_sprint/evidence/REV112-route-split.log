@@ -1,0 +1,54 @@
+collected 17 node(s) from tests/test_c109_reviewer_evidence_route.py
+
+--- COMBINED (all nodes, one process) ---
+  exit=0  {'passed': 17}
+
+--- SPLIT (one process per node) ---
+  [01] exit=0 {'passed': 1}  test_enumerates_g11_reports_and_probes_and_nothing_else
+  [02] exit=0 {'passed': 1}  test_task_stem
+  [03] exit=0 {'passed': 1}  test_reachable_evidence_passes
+  [04] exit=0 {'passed': 1}  test_reachable_under_a_different_path_still_counts
+  [05] exit=0 {'passed': 1}  test_missing_evidence_fails
+  [06] exit=0 {'passed': 1}  test_all_evidence_missing_fails_and_lists_every_item
+  [07] exit=0 {'passed': 1}  test_same_name_different_bytes_is_not_reachable
+  [08] exit=0 {'passed': 1}  test_nothing_enumerated_does_not_pass_silently
+  [09] exit=0 {'passed': 1}  test_bad_worktree_is_a_usage_error_not_a_verdict
+  [10] exit=0 {'passed': 1}  test_git_ref_mode_passes_and_fails
+  [11] exit=0 {'passed': 1}  test_bad_ref_is_a_usage_error
+  [12] exit=0 {'passed': 1}  test_runs_as_a_subprocess_with_a_nonzero_exit
+  [13] exit=0 {'passed': 1}  test_scope_discipline_it_does_not_judge_evidence_quality
+  [14] exit=0 {'passed': 1}  test_probe_subdirectory_is_enumerated_not_dropped
+  [15] exit=0 {'passed': 1}  test_a_probe_directory_is_announced_loudly_never_silently
+  [16] exit=0 {'passed': 1}  test_zero_byte_evidence_is_indeterminate_not_reachable
+  [17] exit=0 {'passed': 1}  test_allow_empty_does_not_disarm_the_mistyped_id_protection
+
+combined : exit=0  {'passed': 17}
+split    : 17 processes  {'passed': 17}
+VERDICT  : SPLIT AND COMBINED AGREE, all green
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev112\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 53673d5c4aa661bb3654b5be1308a11f5d99d1f5  [git, worktree dirty=False]
+label                   : rev112-route-split
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c109_focused_split.py C:/t/rev112 C:/t/btrev112
+cwd                     : C:/t/rev112
+root PID / process group: 564524 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 12.91 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 57  562372:python.exe, 564332:python.exe, 563276:python.exe, 559448:python.exe, 565068:python.exe, 563652:git.exe, 555608:git.exe, 564052:git.exe, 517624:git.exe, 560636:git.exe, 563164:git.exe, 554828:git.exe, 562036:git.exe, 556892:python.exe, 564812:python.exe, 564140:python.exe, 564360:python.exe, 564484:python.exe, 565072:python.exe, 544464:python.exe, 564904:python.exe, 564252:python.exe, 565168:python.exe, 535632:python.exe, 552352:python.exe, 543924:python.exe, 564380:python.exe, 556556:python.exe, 559224:python.exe, 564456:python.exe, 564496:python.exe, 562644:python.exe, 564880:python.exe, 561340:git.exe, 564892:git.exe, 564900:git.exe, 558500:git.exe, 562364:git.exe, 563976:git.exe, 551152:git.exe, 564128:python.exe, 564932:python.exe, 560468:git.exe, 563444:python.exe, 564616:python.exe, 554276:python.exe, 564872:python.exe, 562648:python.exe, 562920:python.exe, 563768:python.exe, 565008:python.exe, 562368:python.exe, 564688:python.exe, 562168:python.exe, 526312:python.exe, 560616:python.exe, 563292:python.exe
+descendants terminated  : 57  517624, 526312, 535632, 543924, 544464, 551152, 552352, 554276, 554828, 555608, 556556, 556892, 558500, 559224, 559448, 560468, 560616, 560636, 561340, 562036, 562168, 562364, 562368, 562372, 562644, 562648, 562920, 563164, 563276, 563292, 563444, 563652, 563768, 563976, 564052, 564128, 564140, 564252, 564332, 564360, 564380, 564456, 564484, 564496, 564616, 564688, 564812, 564872, 564880, 564892, 564900, 564904, 564932, 565008, 565068, 565072, 565168
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rev112/docs/pwml_recovery_sprint/evidence/g11/REV-112/06-rev112-route-split.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-112  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
