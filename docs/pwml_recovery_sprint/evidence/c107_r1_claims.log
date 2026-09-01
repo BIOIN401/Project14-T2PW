@@ -1,0 +1,159 @@
+==============================================================================
+1a. INHIBITION NEAR-SYNONYMS
+==============================================================================
+  word             contra fires  also catalysis cue  
+  blockade         True          False               
+  impairment       True          False               
+  disruption       False         False               
+  reduction        False         False               
+  loss             False         False               
+  silencing        True          False               
+  sequestration    True          False               
+  depletion        False         False               
+  ablation         True          False               
+  interference     True          False               
+  quenching        False         False               
+  inhibition       True          False               
+  5 of 12 defeat the contra-cue at word level
+
+  Through the REAL seam, F-146 paraphrase shape 'the <word> of NDM-1 activity by PSA' -- True == the defect is admitted:
+      blockade         licensed as CATALYST: False
+      impairment       licensed as CATALYST: False
+      disruption       licensed as CATALYST: False
+      reduction        licensed as CATALYST: False
+      loss             licensed as CATALYST: False
+      silencing        licensed as CATALYST: False
+      sequestration    licensed as CATALYST: False
+      depletion        licensed as CATALYST: False
+      ablation         licensed as CATALYST: False
+      interference     licensed as CATALYST: False
+      quenching        licensed as CATALYST: False
+
+  The three sentences the Lead measured:
+      _span_licenses_actor -> False  seam -> False  'the reduction of NDM-1 activity by PSA'
+      _span_licenses_actor -> False  seam -> False  'PSA significantly inhibited NDM-1 enzyme activity'
+      _span_licenses_actor -> True   seam -> True   'NDM-1 catalyses the hydrolysis of meropenem'
+
+  REDOX, which must KEEP licensing (C-107 1a trap / REV-107 B2):
+      licensed=True   'NADH-dependent reduction of the substrate by P'
+      licensed=True   'ferrochelatase reduces the substrate in this step'
+      licensed=True   'P catalyses the reduction of the quinone to the quinol'
+      licensed=True   'the reduction of A to B is carried out by P'
+
+==============================================================================
+1b. PASSIVE-WITH-AGENT FIRES WHEN THE AGENT IS SOMEBODY ELSE
+==============================================================================
+  licensed=False  actor='P'
+      span='A is converted to B by Q, and P was also detected in the assay'
+  licensed=False  actor='NDM-1'
+      span='the beta-lactam is produced by decomposition, and NDM-1 is an inhibitor target'
+  licensed=True   actor='P'
+      span='A is converted to B by P in the intestine'
+  licensed=True   actor='Serine hydroxymethyltransferase, mitochondrial'
+      span='the reaction is catalyzed by serine hydroxymethyltransferase'
+
+==============================================================================
+1c. THE -ase STOPLIST
+==============================================================================
+  stoplist entries              : 50
+  entries with NO plural listed : 30
+      appease bookcase briefcase ceased chase crease debase decease decreased displease encase erase grease increased lease lowercase nutcase paraphrase pillowcase please purchase rebase released rephrase showcase staircase suitcase surcease uppercase vase
+  plurals that BYPASS           : 0  
+
+  ordinary English words probed : 62
+  OVER-ACCEPTING as enzyme noun : 1
+      upstase
+
+  real enzyme nouns that must KEEP licensing:
+      hydrolase          cue=True
+      hydrolases         cue=True
+      lipase             cue=True
+      lipases            cue=True
+      kinase             cue=True
+      kinases            cue=True
+      transferase        cue=True
+      transferases       cue=True
+      isochorismatase    cue=True
+      flippase           cue=True
+      lyase              cue=True
+      dnase              cue=True
+      rnase              cue=True
+      polymerases        cue=True
+
+==============================================================================
+1d. TRANSPORT FAMILY HAS NO ENZYME-NOUN RULE
+==============================================================================
+  licensed=True   a real transporter, named by its family noun
+      'MsbA is the flippase for lipid A'
+  licensed=True   control: the verb form
+      'MsbA transports lipid A across the membrane'
+  licensed=True   the one-off stem that IS listed
+      'P is the permease for this substrate'
+  licensed=False  NON-transporter, must refuse
+      'P was detected in the membrane fraction'
+
+==============================================================================
+1e. ROLE 'cofactor'
+==============================================================================
+  _actor_role_family('modifiers', {role: 'cofactor'}) -> 'cofactor'
+  is there a 'cofactor' key in _ROLE_FAMILY_BY_ROLE? True
+  fallback _ANY_ROLE_CUE_RE hit in span? True   _span_licenses_actor(fam=cofactor)=True   seam=True   'P is a required cofactor for the step'
+  fallback _ANY_ROLE_CUE_RE hit in span? False  _span_licenses_actor(fam=cofactor)=True   seam=True   'the reaction requires P as a cofactor'
+  fallback _ANY_ROLE_CUE_RE hit in span? False  _span_licenses_actor(fam=cofactor)=True   seam=True   'the enzyme is dependent on P'
+  fallback _ANY_ROLE_CUE_RE hit in span? False  _span_licenses_actor(fam=cofactor)=True   seam=True   'the conversion proceeds only in the presence of P'
+  does ANY family's vocabulary contain a cofactor-predicating word?
+      catalysis    -> []
+      activation   -> []
+      inhibition   -> []
+      transport    -> []
+      cofactor     -> ['prosthetic group']
+
+==============================================================================
+1f. 'mediat' INSIDE 'intermediate'
+==============================================================================
+  catalysis cue on 'intermediate'       -> False
+  catalysis cue on 'intermediates'      -> False
+  catalysis cue on 'mediates'           -> True
+  catalysis cue on 'p mediated'         -> True
+  seam licenses EntB as CATALYST: False  <- 'EntB is an intermediate carrier in this pathway'
+  seam licenses ALAS2 complex  : True  <- the legitimate repair that must survive
+
+==============================================================================
+1g. EVIDENCE-SPAN LENGTH CENSUS  (registered, NOT fixed)
+==============================================================================
+  distinct evidence-bearing actor rows : 692
+  spans longer than 5,000 characters   : 62
+  longest span                         : 176375
+       176375  pmrCAB operon complex         PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict
+       176375  pmrCAB operon complex         PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict
+       176375  mcr genes complex             PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict
+       176375  mcr genes complex             PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict
+       176375  PEtN transferase complex      PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict
+  files contributing an oversized span : 5 of 104
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9890770e565377ddb00179449714a49f4dc2a8c8  [git, worktree dirty=True]
+label                   : r1-claims
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_claims_reproduce.py C:/t/c107
+cwd                     : C:\t\c107
+root PID / process group: 106484 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 380 s
+duration                : 0.41 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  93668:python.exe
+descendants terminated  : 1  93668
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c107\docs\pwml_recovery_sprint\evidence\g11\C-107\42-r1-claims.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,2404 @@
+..FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF...........FFFF [ 60%]
+.....FFFFFFFFFF.......FFF...FFFF.F.........FF...                         [100%]
+================================== FAILURES ===================================
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-blockade] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'blockade'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the blockade of P activity is mediated by Q')
+E        +    where 'the blockade of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='blockade')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-impairment] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'impairment'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the impairment of P activity is mediated by Q')
+E        +    where 'the impairment of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='impairment')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-disruption] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'disruption'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the disruption of P activity is mediated by Q')
+E        +    where 'the disruption of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='disruption')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-reduction] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'reduction'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the reduction of P activity is mediated by Q')
+E        +    where 'the reduction of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='reduction')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-loss] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'loss'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the loss of P activity is mediated by Q')
+E        +    where 'the loss of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='loss')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-silencing] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'silencing'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the silencing of P activity is mediated by Q')
+E        +    where 'the silencing of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='silencing')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-sequestration] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'sequestration'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the sequestration of P activity is mediated by Q')
+E        +    where 'the sequestration of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='sequestration')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-depletion] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'depletion'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the depletion of P activity is mediated by Q')
+E        +    where 'the depletion of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='depletion')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-ablation] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'ablation'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the ablation of P activity is mediated by Q')
+E        +    where 'the ablation of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='ablation')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-interference] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'interference'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the interference of P activity is mediated by Q')
+E        +    where 'the interference of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='interference')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-quenching] _
+
+frame = 'A object present', template = 'the {w} of P activity is mediated by Q'
+word = 'quenching'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the quenching of P activity is mediated by Q')
+E        +    where 'the quenching of P activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE20>(w='quenching')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE20> = 'the {w} of P activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-blockade] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'blockade'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the blockade of P is mediated by Q')
+E        +    where 'the blockade of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='blockade')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-impairment] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'impairment'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the impairment of P is mediated by Q')
+E        +    where 'the impairment of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='impairment')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-disruption] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'disruption'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the disruption of P is mediated by Q')
+E        +    where 'the disruption of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='disruption')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-reduction] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'reduction'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the reduction of P is mediated by Q')
+E        +    where 'the reduction of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='reduction')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-loss] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'loss'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the loss of P is mediated by Q')
+E        +    where 'the loss of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='loss')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-silencing] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'silencing'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the silencing of P is mediated by Q')
+E        +    where 'the silencing of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='silencing')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-sequestration] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'sequestration'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the sequestration of P is mediated by Q')
+E        +    where 'the sequestration of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='sequestration')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-depletion] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'depletion'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the depletion of P is mediated by Q')
+E        +    where 'the depletion of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='depletion')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-ablation] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'ablation'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the ablation of P is mediated by Q')
+E        +    where 'the ablation of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='ablation')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-interference] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'interference'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the interference of P is mediated by Q')
+E        +    where 'the interference of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='interference')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-quenching] _
+
+frame = 'B object absent', template = 'the {w} of P is mediated by Q'
+word = 'quenching'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the quenching of P is mediated by Q')
+E        +    where 'the quenching of P is mediated by Q' = <built-in method format of str object at 0x000001AE4F17AE70>(w='quenching')
+E        +      where <built-in method format of str object at 0x000001AE4F17AE70> = 'the {w} of P is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-blockade] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay', word = 'blockade'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed blockade in the Q-mediated assay')
+E        +    where 'P activity showed blockade in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='blockade')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-impairment] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay', word = 'impairment'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed impairment in the Q-mediated assay')
+E        +    where 'P activity showed impairment in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='impairment')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-disruption] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay', word = 'disruption'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed disruption in the Q-mediated assay')
+E        +    where 'P activity showed disruption in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='disruption')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-reduction] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay', word = 'reduction'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed reduction in the Q-mediated assay')
+E        +    where 'P activity showed reduction in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='reduction')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-loss] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay', word = 'loss'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed loss in the Q-mediated assay')
+E        +    where 'P activity showed loss in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='loss')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-silencing] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay', word = 'silencing'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed silencing in the Q-mediated assay')
+E        +    where 'P activity showed silencing in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='silencing')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-sequestration] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay'
+word = 'sequestration'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed sequestration in the Q-mediated assay')
+E        +    where 'P activity showed sequestration in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='sequestration')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-depletion] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay', word = 'depletion'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed depletion in the Q-mediated assay')
+E        +    where 'P activity showed depletion in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='depletion')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-ablation] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay', word = 'ablation'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed ablation in the Q-mediated assay')
+E        +    where 'P activity showed ablation in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='ablation')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-interference] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay'
+word = 'interference'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed interference in the Q-mediated assay')
+E        +    where 'P activity showed interference in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='interference')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-quenching] _
+
+frame = 'C object before the stem'
+template = 'P activity showed {w} in the Q-mediated assay', word = 'quenching'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P activity showed quenching in the Q-mediated assay')
+E        +    where 'P activity showed quenching in the Q-mediated assay' = <built-in method format of str object at 0x000001AE4F18A2B0>(w='quenching')
+E        +      where <built-in method format of str object at 0x000001AE4F18A2B0> = 'P activity showed {w} in the Q-mediated assay'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-blockade] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'blockade'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the blockade of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the blockade of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='blockade')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-impairment] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'impairment'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the impairment of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the impairment of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='impairment')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-disruption] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'disruption'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the disruption of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the disruption of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='disruption')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-reduction] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'reduction'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the reduction of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the reduction of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='reduction')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-loss] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'loss'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the loss of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the loss of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='loss')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-silencing] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'silencing'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the silencing of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the silencing of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='silencing')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-sequestration] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'sequestration'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the sequestration of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the sequestration of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='sequestration')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-depletion] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'depletion'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the depletion of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the depletion of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='depletion')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-ablation] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'ablation'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the ablation of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the ablation of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='ablation')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-interference] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'interference'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the interference of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the interference of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='interference')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-quenching] _
+
+frame = 'D object beyond 40 chars'
+template = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'
+word = 'quenching'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    @pytest.mark.parametrize(
+        "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+    )
+    def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+        frame: str, template: str, word: str
+    ) -> None:
+        """Each near-synonym, INDIVIDUALLY, in each of four frames.
+    
+        The shape matters and a word-level probe gets it wrong in both directions. In
+        the bare frame "the <word> of P activity by Q" only "reduction" admits the
+        defect, because the other ten carry no catalysis cue at all and the span is
+        refused for having no cue rather than for having a contra. Put an actual
+        catalysis cue in the window -- "is mediated by" -- and at the C-106 base all
+        ELEVEN license the protein as the reaction's CATALYST off a sentence that
+        says its activity was shut down. That is F-146 by paraphrase, and closing it
+        is this card's `product_contract_violation`.
+    
+        What makes all four frames close together is that the contra is bound to THE
+        ACTOR rather than to an adjacent activity noun: once the question is "is this
+        protein what is being reduced", deleting the object, moving it in front of the
+        stem, or pushing it past any character budget all stop mattering.
+        """
+    
+>       assert not accepted("P", template.format(w=word))
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the quenching of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q')
+E        +    where 'the quenching of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q' = <built-in method format of str object at 0x000001AE4F3236C0>(w='quenching')
+E        +      where <built-in method format of str object at 0x000001AE4F3236C0> = 'the {w} of P xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx enzymatic activity is mediated by Q'.format
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:209: AssertionError
+_ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[blockade] _
+
+word = 'blockade'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+_ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[impairment] _
+
+word = 'impairment'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+_ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[disruption] _
+
+word = 'disruption'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+_ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[reduction] _
+
+word = 'reduction'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+__ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[loss] __
+
+word = 'loss'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+_ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[silencing] _
+
+word = 'silencing'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+_ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[sequestration] _
+
+word = 'sequestration'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+_ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[depletion] _
+
+word = 'depletion'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+_ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[ablation] _
+
+word = 'ablation'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+_ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[interference] _
+
+word = 'interference'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+_ test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[quenching] _
+
+word = 'quenching'
+
+    @pytest.mark.parametrize("word", NEAR_SYNONYMS)
+    def test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests(word: str) -> None:
+        """The same span DOES license what it actually says, for six of the eleven.
+    
+        Merge rule 7's direction: the six stems added to the inhibition family are
+        there so an evidenced inhibitor row stops being refused, not only so a
+        catalysis window is refused. The other five are matched only in the
+        activity-directed phrase form, which is why this test asserts a floor rather
+        than all eleven -- and the floor is what stops the "accept more" half of 1a
+        being quietly dropped.
+        """
+    
+        licensed = [
+            w for w in NEAR_SYNONYMS
+            if accepted("P", f"the {w} of P activity is mediated by Q",
+                        container="modifiers", role="inhibitor")
+        ]
+>       assert len(licensed) >= 6, licensed
+E       AssertionError: []
+E       assert 0 >= 6
+E        +  where 0 = len([])
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:229: AssertionError
+_______________ test_the_distinction_is_the_object_not_the_word _______________
+
+    def test_the_distinction_is_the_object_not_the_word() -> None:
+        """One word, two objects, two verdicts -- stated as a single assertion.
+    
+        "reduction of the substrate" is chemistry; "reduction of P activity" is
+        inhibition. The fix is a phrase rule, not a deletion, and this is the pair
+        that says so.
+        """
+    
+        assert accepted("P", "the reduction of the substrate is mediated by P")
+>       assert not accepted("P", "the reduction of P activity is mediated by Q")
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'the reduction of P activity is mediated by Q')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:280: AssertionError
+_ test_passive_with_agent_does_not_license_a_bystander[A is converted to B by Q, and P was also detected in the assay] _
+
+span = 'A is converted to B by Q, and P was also detected in the assay'
+
+    @pytest.mark.parametrize("span", AGENT_IS_SOMEBODY_ELSE)
+    def test_passive_with_agent_does_not_license_a_bystander(span: str) -> None:
+        """The construction is evidence only when the agent after "by" IS the actor.
+    
+        At base the cue was "<passive verb> [^.]{0,80} by", which fired regardless of
+        who followed "by" -- so any protein named anywhere in the 80-character window
+        inherited somebody else's agency.
+        """
+    
+>       assert not accepted("P", span), span
+E       AssertionError: A is converted to B by Q, and P was also detected in the assay
+E       assert not True
+E        +  where True = accepted('P', 'A is converted to B by Q, and P was also detected in the assay')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:310: AssertionError
+_ test_passive_with_agent_does_not_license_a_bystander[A is produced by Q while P remained bound to the membrane] _
+
+span = 'A is produced by Q while P remained bound to the membrane'
+
+    @pytest.mark.parametrize("span", AGENT_IS_SOMEBODY_ELSE)
+    def test_passive_with_agent_does_not_license_a_bystander(span: str) -> None:
+        """The construction is evidence only when the agent after "by" IS the actor.
+    
+        At base the cue was "<passive verb> [^.]{0,80} by", which fired regardless of
+        who followed "by" -- so any protein named anywhere in the 80-character window
+        inherited somebody else's agency.
+        """
+    
+>       assert not accepted("P", span), span
+E       AssertionError: A is produced by Q while P remained bound to the membrane
+E       assert not True
+E        +  where True = accepted('P', 'A is produced by Q while P remained bound to the membrane')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:310: AssertionError
+_ test_passive_with_agent_does_not_license_a_bystander[B is formed by Q; P is unrelated to this step] _
+
+span = 'B is formed by Q; P is unrelated to this step'
+
+    @pytest.mark.parametrize("span", AGENT_IS_SOMEBODY_ELSE)
+    def test_passive_with_agent_does_not_license_a_bystander(span: str) -> None:
+        """The construction is evidence only when the agent after "by" IS the actor.
+    
+        At base the cue was "<passive verb> [^.]{0,80} by", which fired regardless of
+        who followed "by" -- so any protein named anywhere in the 80-character window
+        inherited somebody else's agency.
+        """
+    
+>       assert not accepted("P", span), span
+E       AssertionError: B is formed by Q; P is unrelated to this step
+E       assert not True
+E        +  where True = accepted('P', 'B is formed by Q; P is unrelated to this step')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:310: AssertionError
+_ test_ordinary_english_ase_words_do_not_license_an_enzyme[P appears in three purchases recorded in the supplement] _
+
+span = 'P appears in three purchases recorded in the supplement'
+
+    @pytest.mark.parametrize("span", PLURAL_BYPASSES + NEWLY_LISTED_ENGLISH)
+    def test_ordinary_english_ase_words_do_not_license_an_enzyme(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P appears in three purchases recorded in the supplement
+E       assert not True
+E        +  where True = accepted('P', 'P appears in three purchases recorded in the supplement')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:369: AssertionError
+_ test_ordinary_english_ase_words_do_not_license_an_enzyme[P appears beside two showcases in the exhibition] _
+
+span = 'P appears beside two showcases in the exhibition'
+
+    @pytest.mark.parametrize("span", PLURAL_BYPASSES + NEWLY_LISTED_ENGLISH)
+    def test_ordinary_english_ase_words_do_not_license_an_enzyme(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P appears beside two showcases in the exhibition
+E       assert not True
+E        +  where True = accepted('P', 'P appears beside two showcases in the exhibition')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:369: AssertionError
+_ test_ordinary_english_ase_words_do_not_license_an_enzyme[P was photographed on the staircases of the institute] _
+
+span = 'P was photographed on the staircases of the institute'
+
+    @pytest.mark.parametrize("span", PLURAL_BYPASSES + NEWLY_LISTED_ENGLISH)
+    def test_ordinary_english_ase_words_do_not_license_an_enzyme(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P was photographed on the staircases of the institute
+E       assert not True
+E        +  where True = accepted('P', 'P was photographed on the staircases of the institute')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:369: AssertionError
+_ test_ordinary_english_ase_words_do_not_license_an_enzyme[P was left in one of the briefcases] _
+
+span = 'P was left in one of the briefcases'
+
+    @pytest.mark.parametrize("span", PLURAL_BYPASSES + NEWLY_LISTED_ENGLISH)
+    def test_ordinary_english_ase_words_do_not_license_an_enzyme(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P was left in one of the briefcases
+E       assert not True
+E        +  where True = accepted('P', 'P was left in one of the briefcases')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:369: AssertionError
+_ test_ordinary_english_ase_words_do_not_license_an_enzyme[P pleases the reviewers of this manuscript] _
+
+span = 'P pleases the reviewers of this manuscript'
+
+    @pytest.mark.parametrize("span", PLURAL_BYPASSES + NEWLY_LISTED_ENGLISH)
+    def test_ordinary_english_ase_words_do_not_license_an_enzyme(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P pleases the reviewers of this manuscript
+E       assert not True
+E        +  where True = accepted('P', 'P pleases the reviewers of this manuscript')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:369: AssertionError
+_ test_ordinary_english_ase_words_do_not_license_an_enzyme[P was found in the suitcases of the courier] _
+
+span = 'P was found in the suitcases of the courier'
+
+    @pytest.mark.parametrize("span", PLURAL_BYPASSES + NEWLY_LISTED_ENGLISH)
+    def test_ordinary_english_ase_words_do_not_license_an_enzyme(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P was found in the suitcases of the courier
+E       assert not True
+E        +  where True = accepted('P', 'P was found in the suitcases of the courier')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:369: AssertionError
+_ test_ordinary_english_ase_words_do_not_license_an_enzyme[P was noted beside the grease on the bench] _
+
+span = 'P was noted beside the grease on the bench'
+
+    @pytest.mark.parametrize("span", PLURAL_BYPASSES + NEWLY_LISTED_ENGLISH)
+    def test_ordinary_english_ase_words_do_not_license_an_enzyme(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P was noted beside the grease on the bench
+E       assert not True
+E        +  where True = accepted('P', 'P was noted beside the grease on the bench')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:369: AssertionError
+_ test_ordinary_english_ase_words_do_not_license_an_enzyme[P paraphrases the earlier report] _
+
+span = 'P paraphrases the earlier report'
+
+    @pytest.mark.parametrize("span", PLURAL_BYPASSES + NEWLY_LISTED_ENGLISH)
+    def test_ordinary_english_ase_words_do_not_license_an_enzyme(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P paraphrases the earlier report
+E       assert not True
+E        +  where True = accepted('P', 'P paraphrases the earlier report')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:369: AssertionError
+_ test_ordinary_english_ase_words_do_not_license_an_enzyme[P creases the filter paper] _
+
+span = 'P creases the filter paper'
+
+    @pytest.mark.parametrize("span", PLURAL_BYPASSES + NEWLY_LISTED_ENGLISH)
+    def test_ordinary_english_ase_words_do_not_license_an_enzyme(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P creases the filter paper
+E       assert not True
+E        +  where True = accepted('P', 'P creases the filter paper')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:369: AssertionError
+_ test_ordinary_english_ase_words_do_not_license_an_enzyme[P appeases the reviewers] _
+
+span = 'P appeases the reviewers'
+
+    @pytest.mark.parametrize("span", PLURAL_BYPASSES + NEWLY_LISTED_ENGLISH)
+    def test_ordinary_english_ase_words_do_not_license_an_enzyme(span: str) -> None:
+>       assert not accepted("P", span), span
+E       AssertionError: P appeases the reviewers
+E       assert not True
+E        +  where True = accepted('P', 'P appeases the reviewers')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:369: AssertionError
+_____ test_no_singular_only_stoplist_entry_can_be_bypassed_by_its_plural ______
+
+    def test_no_singular_only_stoplist_entry_can_be_bypassed_by_its_plural() -> None:
+        """The GENERAL property, not the five measured instances.
+    
+        REV-105 named three plural bypasses and the Lead measured five. Listing five
+        words would have fixed five words: the defect is that the exclusion matched
+        the singular and then failed on the trailing "s", letting the plural through
+        the generic ``[a-z]{3,}ases?`` shape. This walks EVERY entry that has no
+        plural of its own listed and asserts none of them bypasses -- so the next
+        entry someone adds cannot reintroduce it.
+    
+        It imports a private symbol on purpose. That makes it an INVARIANT pin, not
+        part of the G9 base proof; the behavioural base failure for 1c is the
+        parametrized case above.
+        """
+    
+        from t2pw.curation.apply_audit_patch import _NON_ENZYME_ASE_WORDS
+    
+        listed = set(_NON_ENZYME_ASE_WORDS)
+        singular_only = [
+            w for w in sorted(listed)
+            if not w.endswith("s") and w + "s" not in listed and w + "es" not in listed
+        ]
+        assert singular_only, "fixture precondition: the list still has singular-only entries"
+    
+        bypassed = [
+            w + "s" for w in singular_only
+            if accepted("P", f"P was mentioned near the word {w}s in the discussion")
+        ]
+>       assert bypassed == [], bypassed
+E       AssertionError: ['briefcases', 'pleases', 'purchases', 'showcases', 'staircases']
+E       assert ['briefcases'... 'staircases'] == []
+E         
+E         Left contains 5 more items, first extra item: 'briefcases'
+E         Use -v to get more diff
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:412: AssertionError
+_ test_a_transporter_named_by_its_family_noun_licenses[P is the flippase for lipid A] _
+
+span = 'P is the flippase for lipid A'
+
+    @pytest.mark.parametrize("span", TRANSPORTER_SPANS)
+    def test_a_transporter_named_by_its_family_noun_licenses(span: str) -> None:
+        """"permease" was in the list as a one-off; the general rule was missing."""
+    
+>       assert accepted("P", span, container="transporters", bucket="transports"), span
+E       AssertionError: P is the flippase for lipid A
+E       assert False
+E        +  where False = accepted('P', 'P is the flippase for lipid A', container='transporters', bucket='transports')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:431: AssertionError
+_ test_a_transporter_named_by_its_family_noun_licenses[P is the translocase of the inner membrane] _
+
+span = 'P is the translocase of the inner membrane'
+
+    @pytest.mark.parametrize("span", TRANSPORTER_SPANS)
+    def test_a_transporter_named_by_its_family_noun_licenses(span: str) -> None:
+        """"permease" was in the list as a one-off; the general rule was missing."""
+    
+>       assert accepted("P", span, container="transporters", bucket="transports"), span
+E       AssertionError: P is the translocase of the inner membrane
+E       assert False
+E        +  where False = accepted('P', 'P is the translocase of the inner membrane', container='transporters', bucket='transports')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:431: AssertionError
+_ test_an_evidenced_cofactor_row_is_licensed[P is a required cofactor for the step] _
+
+span = 'P is a required cofactor for the step'
+
+    @pytest.mark.parametrize("span", COFACTOR_SPANS)
+    def test_an_evidenced_cofactor_row_is_licensed(span: str) -> None:
+        """At base ``cofactor`` fell to the "other" family and refused every one.
+    
+        The documented fallback is "strictly more permissive than the four families",
+        and it still refused -- because it is built from those four patterns and not
+        one of them contains a cofactor-predicating word. A permissive fallback with
+        no vocabulary for the role has nothing to be permissive with.
+        """
+    
+>       assert accepted("P", span, container="modifiers", role="cofactor"), span
+E       AssertionError: P is a required cofactor for the step
+E       assert False
+E        +  where False = accepted('P', 'P is a required cofactor for the step', container='modifiers', role='cofactor')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:471: AssertionError
+_ test_an_evidenced_cofactor_row_is_licensed[the reaction requires P as a cofactor] _
+
+span = 'the reaction requires P as a cofactor'
+
+    @pytest.mark.parametrize("span", COFACTOR_SPANS)
+    def test_an_evidenced_cofactor_row_is_licensed(span: str) -> None:
+        """At base ``cofactor`` fell to the "other" family and refused every one.
+    
+        The documented fallback is "strictly more permissive than the four families",
+        and it still refused -- because it is built from those four patterns and not
+        one of them contains a cofactor-predicating word. A permissive fallback with
+        no vocabulary for the role has nothing to be permissive with.
+        """
+    
+>       assert accepted("P", span, container="modifiers", role="cofactor"), span
+E       AssertionError: the reaction requires P as a cofactor
+E       assert False
+E        +  where False = accepted('P', 'the reaction requires P as a cofactor', container='modifiers', role='cofactor')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:471: AssertionError
+_ test_an_evidenced_cofactor_row_is_licensed[the enzyme is dependent on P for activity] _
+
+span = 'the enzyme is dependent on P for activity'
+
+    @pytest.mark.parametrize("span", COFACTOR_SPANS)
+    def test_an_evidenced_cofactor_row_is_licensed(span: str) -> None:
+        """At base ``cofactor`` fell to the "other" family and refused every one.
+    
+        The documented fallback is "strictly more permissive than the four families",
+        and it still refused -- because it is built from those four patterns and not
+        one of them contains a cofactor-predicating word. A permissive fallback with
+        no vocabulary for the role has nothing to be permissive with.
+        """
+    
+>       assert accepted("P", span, container="modifiers", role="cofactor"), span
+E       AssertionError: the enzyme is dependent on P for activity
+E       assert False
+E        +  where False = accepted('P', 'the enzyme is dependent on P for activity', container='modifiers', role='cofactor')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:471: AssertionError
+_ test_an_evidenced_cofactor_row_is_licensed[the conversion proceeds only in the presence of P] _
+
+span = 'the conversion proceeds only in the presence of P'
+
+    @pytest.mark.parametrize("span", COFACTOR_SPANS)
+    def test_an_evidenced_cofactor_row_is_licensed(span: str) -> None:
+        """At base ``cofactor`` fell to the "other" family and refused every one.
+    
+        The documented fallback is "strictly more permissive than the four families",
+        and it still refused -- because it is built from those four patterns and not
+        one of them contains a cofactor-predicating word. A permissive fallback with
+        no vocabulary for the role has nothing to be permissive with.
+        """
+    
+>       assert accepted("P", span, container="modifiers", role="cofactor"), span
+E       AssertionError: the conversion proceeds only in the presence of P
+E       assert False
+E        +  where False = accepted('P', 'the conversion proceeds only in the presence of P', container='modifiers', role='cofactor')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:471: AssertionError
+_ test_an_evidenced_cofactor_row_is_licensed[P is the prosthetic group of the enzyme] _
+
+span = 'P is the prosthetic group of the enzyme'
+
+    @pytest.mark.parametrize("span", COFACTOR_SPANS)
+    def test_an_evidenced_cofactor_row_is_licensed(span: str) -> None:
+        """At base ``cofactor`` fell to the "other" family and refused every one.
+    
+        The documented fallback is "strictly more permissive than the four families",
+        and it still refused -- because it is built from those four patterns and not
+        one of them contains a cofactor-predicating word. A permissive fallback with
+        no vocabulary for the role has nothing to be permissive with.
+        """
+    
+>       assert accepted("P", span, container="modifiers", role="cofactor"), span
+E       AssertionError: P is the prosthetic group of the enzyme
+E       assert False
+E        +  where False = accepted('P', 'P is the prosthetic group of the enzyme', container='modifiers', role='cofactor')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:471: AssertionError
+_____ test_a_refused_cofactor_row_is_reported_against_the_cofactor_family _____
+
+    def test_a_refused_cofactor_row_is_reported_against_the_cofactor_family() -> None:
+        """The rejection names the family, and that makes the ROLE MAP load-bearing.
+    
+        Found by mutation, not by design. Deleting the ``cofactor`` entry from
+        _ROLE_FAMILY_BY_ROLE left the whole suite GREEN (mutation M6, preserved in
+        evidence/c107_mutation_attack.attempt1-m6-survivor.log), because
+        _ANY_ROLE_CUE_RE is rebuilt from every _ROLE_CUE_RES value -- so once the
+        cofactor VOCABULARY exists, the "other" fallback licenses the same spans and
+        the map entry changes nothing a licensing test can see. What it does change
+        is the reason string, which is what batch tooling greps: without the entry the
+        row is refused as the "other" role rather than the "cofactor" role. Pinning
+        that here is what makes M6 bite; M6b attacks the vocabulary itself.
+        """
+    
+        payload = _payload("P", "modifiers")
+        _result, report = apply_patch_with_policy(
+            payload,
+            [{"op": "add", "path": "/processes/reactions/0/modifiers/-",
+              "value": {"entity": "P", "role": "cofactor"},
+              "confidence": 1.0,
+              "evidence": "P was purchased from a commercial supplier"}],
+            stage="audit",
+        )
+        reason = report["rejected"][0]["reason"]
+        assert reason.startswith(REASON_PREFIX), reason
+>       assert "the cofactor role" in reason, reason
+E       AssertionError: unevidenced_actor_role: no evidence span names 'P' performing the other role of modifiers; an actor role may not be added to satisfy payload structure.
+E       assert 'the cofactor role' in "unevidenced_actor_role: no evidence span names 'P' performing the other role of modifiers; an actor role may not be added to satisfy payload structure."
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:564: AssertionError
+_________ test_mediat_inside_intermediate_does_not_license_catalysis __________
+
+    def test_mediat_inside_intermediate_does_not_license_catalysis() -> None:
+>       assert not accepted("P", "P is an intermediate carrier in this pathway")
+E       AssertionError: assert not True
+E        +  where True = accepted('P', 'P is an intermediate carrier in this pathway')
+
+..\c107base\tests\test_c107_actor_cue_calibration.py:572: AssertionError
+=========================== short test summary info ===========================
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-blockade]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-impairment]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-disruption]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-reduction]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-loss]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-silencing]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-sequestration]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-depletion]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-ablation]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-interference]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[A object present-quenching]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-blockade]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-impairment]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-disruption]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-reduction]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-loss]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-silencing]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-sequestration]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-depletion]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-ablation]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-interference]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[B object absent-quenching]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-blockade]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-impairment]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-disruption]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-reduction]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-loss]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-silencing]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-sequestration]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-depletion]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-ablation]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-interference]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[C object before the stem-quenching]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-blockade]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-impairment]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-disruption]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-reduction]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-loss]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-silencing]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-sequestration]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-depletion]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-ablation]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-interference]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_inhibition_near_synonym_refuses_a_catalysis_promotion[D object beyond 40 chars-quenching]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[blockade]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[impairment]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[disruption]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[reduction]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[loss]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[silencing]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[sequestration]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[depletion]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[ablation]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[interference]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_each_near_synonym_still_licenses_the_inhibitor_role_it_attests[quenching]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_the_distinction_is_the_object_not_the_word
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_passive_with_agent_does_not_license_a_bystander[A is converted to B by Q, and P was also detected in the assay]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_passive_with_agent_does_not_license_a_bystander[A is produced by Q while P remained bound to the membrane]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_passive_with_agent_does_not_license_a_bystander[B is formed by Q; P is unrelated to this step]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_ordinary_english_ase_words_do_not_license_an_enzyme[P appears in three purchases recorded in the supplement]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_ordinary_english_ase_words_do_not_license_an_enzyme[P appears beside two showcases in the exhibition]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_ordinary_english_ase_words_do_not_license_an_enzyme[P was photographed on the staircases of the institute]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_ordinary_english_ase_words_do_not_license_an_enzyme[P was left in one of the briefcases]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_ordinary_english_ase_words_do_not_license_an_enzyme[P pleases the reviewers of this manuscript]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_ordinary_english_ase_words_do_not_license_an_enzyme[P was found in the suitcases of the courier]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_ordinary_english_ase_words_do_not_license_an_enzyme[P was noted beside the grease on the bench]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_ordinary_english_ase_words_do_not_license_an_enzyme[P paraphrases the earlier report]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_ordinary_english_ase_words_do_not_license_an_enzyme[P creases the filter paper]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_ordinary_english_ase_words_do_not_license_an_enzyme[P appeases the reviewers]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_no_singular_only_stoplist_entry_can_be_bypassed_by_its_plural
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_a_transporter_named_by_its_family_noun_licenses[P is the flippase for lipid A]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_a_transporter_named_by_its_family_noun_licenses[P is the translocase of the inner membrane]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_an_evidenced_cofactor_row_is_licensed[P is a required cofactor for the step]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_an_evidenced_cofactor_row_is_licensed[the reaction requires P as a cofactor]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_an_evidenced_cofactor_row_is_licensed[the enzyme is dependent on P for activity]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_an_evidenced_cofactor_row_is_licensed[the conversion proceeds only in the presence of P]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_an_evidenced_cofactor_row_is_licensed[P is the prosthetic group of the enzyme]
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_a_refused_cofactor_row_is_reported_against_the_cofactor_family
+FAILED ..\c107base\tests\test_c107_actor_cue_calibration.py::test_mediat_inside_intermediate_does_not_license_catalysis
+79 failed, 41 passed in 0.59s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9890770e565377ddb00179449714a49f4dc2a8c8  [git, worktree dirty=True]
+label                   : r1-base-g9-red
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest C:/t/c107base/tests/test_c107_actor_cue_calibration.py -q --no-header -rf --basetemp=C:/t/bt/c107base
+cwd                     : C:\t\c107
+root PID / process group: 100648 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 380 s
+duration                : 1.19 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  25792:python.exe
+descendants terminated  : 1  25792
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c107\docs\pwml_recovery_sprint\evidence\g11\C-107\37-r1-base-g9-red.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1609,13 +1609,27 @@ _ROLE_CUE_RES = {
     # evidenced cofactor modifier row survive this guard; whether the thing named
     # is a protein at all is decided elsewhere and is untouched here -- see the
     # note under _ROLE_FAMILY_BY_ROLE's "cofactor" entry and F-100.
+    # CORRECTION ROUND 1. Only phrases that NAME A COFACTOR are family-wide cues.
+    # The first version also listed bare "requires", "required for", "depends on",
+    # "dependent on" and "in the presence of", and REV-107 measured what that
+    # bought: "the reaction requires a cofactor, so <protein> is added to resolve
+    # the structural inconsistency" and "<protein> depends on the payload
+    # structure being consistent" went from REFUSED at base to ACCEPTED. Drawing
+    # the line at the bare schema noun and then admitting the vocabulary a
+    # structural rationale is actually WRITTEN IN is the F-146 class reopened in a
+    # fifth family, and C-107 section 5's explicit stop condition.
+    #
+    # It was also wider than this role. _ANY_ROLE_CUE_RE is rebuilt from every
+    # value of this dict, so those five terms widened the "other" fallback for
+    # EVERY unmapped role: role "chaperone" with "<protein> is required for the
+    # reaction to proceed" was refused at base and accepted at that tip. That is
+    # the corollary of this card's own M6 mutation finding -- the vocabulary is
+    # what leaks -- and it is why the dependence terms are now actor-anchored in
+    # _span_licenses_actor and reach the cofactor family ONLY.
     "cofactor": re.compile(
         r"is a cofactor|is the cofactor|cofactor for|cofactor of|cofactor in this"
         r"|is a coenzyme|is the coenzyme|coenzyme for|coenzyme of"
         r"|prosthetic group"
-        r"|requires|required for|requirement for"
-        r"|depends on|dependent on|dependence on"
-        r"|in the presence of"
     ),
 }
 
@@ -1647,6 +1661,39 @@ _PASSIVE_AGENT_MODIFIERS_SRC = (
 #: How many such modifiers may stand between "by" and the actor's token.
 _PASSIVE_AGENT_MAX_MODIFIERS = 4
 
+# CORRECTION ROUND 1. The dependence vocabulary that USED to sit in the cofactor
+# family as bare terms. It is inhibitory of nothing and predicating of nothing on
+# its own -- "requires", "dependent on" and "in the presence of" are exactly the
+# words a structural rationale is written in -- so it is only evidence when the
+# thing required IS THE ACTOR. Anchored that way in _span_licenses_actor:
+#
+#     "the reaction requires <NEEDLE> as a cofactor"        licenses
+#     "the enzyme is dependent on <NEEDLE> for activity"    licenses
+#     "proceeds only in the presence of <NEEDLE>"           licenses
+#     "the reaction requires a cofactor, so <NEEDLE> is     refuses -- "so" is not
+#      added to resolve the structural inconsistency"        a modifier, and the
+#                                                            actor is not what is
+#                                                            required
+#     "<NEEDLE> depends on the payload structure"           refuses -- the actor
+#                                                            is the SUBJECT here,
+#                                                            not the object
+_COFACTOR_DEPENDENCE_SRC = (
+    r"(?:requires|requiring|required|requirement"
+    r"|depends|depend|dependent|dependence"
+    r"|in the presence)"
+)
+
+# The modifiers that may stand between the dependence term and the actor's token.
+# The passive-agent list plus the nouns a paper puts in front of a cofactor name.
+_COFACTOR_MODIFIERS_SRC = (
+    _PASSIVE_AGENT_MODIFIERS_SRC[:-1]
+    + r"|cofactor|cofactors|coenzyme|coenzymes|metal|divalent|ion|ions"
+    + r"|essential|catalytic|added|exogenous|free)"
+)
+
+#: How many such modifiers may stand between the dependence term and the actor.
+_COFACTOR_MAX_MODIFIERS = 4
+
 # Used only for a declared role outside the exported vocabulary above (a "cofactor"
 # modifier, say). The actor must still be NAMED in a span that says something
 # role-predicating about it; this guard simply cannot narrow WHICH role, so it does
@@ -1667,26 +1714,58 @@ _ANY_ROLE_CUE_RE = re.compile(
 # activity by <inhibitor>" read as a catalysis cue WITH NO CONTRA, which is F-146
 # one rephrase away, and the audit stage regenerates its rationale every round.
 #
-# So the attenuation words are matched as a PHRASE -- an attenuation stem, then an
-# activity/level/expression noun within 40 characters -- and never as bare words.
-# "reduction of <protein> activity" carries the object; "reduction of the
-# substrate" does not, and only the first refuses.
+# So the attenuation words are matched as a PHRASE and never as bare words. WHAT
+# BINDS THE PHRASE IS THE ACTOR, NOT AN ADJACENT NOUN -- and that is correction
+# round 1's repair. The first version bound the stem to an
+# activity/level/expression noun within 40 characters, which closed exactly the
+# frame the card quoted and nothing else: REV-107 measured 15 of 44 still open,
+# because five of the eleven stems went in conditionally and every one of them
+# survived
+#
+#     "the reduction of <protein> is mediated by ..."        object ABSENT
+#     "<protein> activity showed reduction in the ... assay"  object BEFORE the stem
+#     "the reduction of <protein> <45 chars> activity ..."    object BEYOND 40 chars
+#
+# A fix that is itself one rephrase from defeat has not closed a route whose whole
+# thesis is that the audit stage regenerates its rationale every round.
+#
+# The discriminator that survives rephrasing is GRAMMATICAL, not lexical: chemical
+# reduction acts on A SUBSTRATE, inhibition acts on THE ACTOR. So the contra now
+# asks whether the attenuation stem's object IS the actor under judgement, which
+# is a question only _span_licenses_actor can ask, because only it knows the
+# needle. Two frames, built per needle:
+#
+#   F1  stem [of|in] <modifiers> NEEDLE     "the reduction of P", "reduction of
+#                                            P activity", "quenching of the P signal"
+#   F2  NEEDLE ... <object> ... stem        "P activity showed reduction"
+#
+# F1 makes the object IRRELEVANT, which is what closes the absent and beyond-40
+# frames at once; F2 covers the object-first ordering. Redox survives both because
+# its object is a substrate, not the actor: "reduction of the substrate by P" puts
+# "substrate" -- not a modifier -- between "of" and the needle, and
+# "ferrochelatase reduces the cellular level of protoporphyrin" names the level
+# AFTER the stem, which F2 does not match.
+#
+# Making it actor-bound also retired the B2 residual REV-107 raised: "level" and
+# "function" no longer fire on the substrate's level or the enzyme's function,
+# because those are not the actor's.
 _ATTENUATION_STEM_SRC = (
     r"(?:reduc|loss|deplet|disrupt|quench|blockade|block|impair|silenc"
     r"|sequestr|ablat|interfer)"
 )
 _ATTENUATION_OBJECT_SRC = r"(?:activit|express|level|abundance|function)"
-_ACTIVITY_ATTENUATION_SRC = (
-    _ATTENUATION_STEM_SRC + r"[a-z]*\b[^.]{0,40}?\b" + _ATTENUATION_OBJECT_SRC
-)
+
+#: How far F2 may look from the actor to its object, and from the object to the stem.
+_ATTENUATION_GAP = 40
 
 # What refuses a catalysis window that also says the protein is being shut down.
 # Separate from _ROLE_CUE_RES["inhibition"] because the two do different jobs:
 # that one licenses an INHIBITOR row, this one refuses a CATALYST row, and 1a's
 # near-synonyms belong in the second without all of them belonging in the first.
-_CATALYSIS_CONTRA_RE = re.compile(
-    _ROLE_CUE_RES["inhibition"].pattern + r"|" + _ACTIVITY_ATTENUATION_SRC
-)
+# This half carries the six stems that are inhibitory whatever their object; the
+# five that are not are built per-needle inside _span_licenses_actor, the same
+# way the passive-agent route is, because both are questions about the actor.
+_CATALYSIS_CONTRA_RE = _ROLE_CUE_RES["inhibition"]
 
 # The +/-80 character window enzyme_cues.cue_near_name scans around a name,
 # measured here from the MATCHED TOKEN rather than from the whole name, since the
@@ -1841,13 +1920,49 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
     contra = _CATALYSIS_CONTRA_RE if family == "catalysis" else None
     for needle in needles:
         escaped = re.escape(needle)
+        # CORRECTION ROUND 1. The other half of the catalysis contra: an
+        # attenuation stem whose OBJECT IS THIS ACTOR. F1 makes the
+        # activity/level/expression noun irrelevant, which is what closes the
+        # object-absent and object-beyond-40-characters rephrasings together; F2
+        # covers the object-first ordering. Redox is untouched by both, because
+        # its object is a substrate and never the actor.
+        actor_contra = None
+        if family == "catalysis":
+            actor_contra = re.compile(
+                # F1: "<stem> [of|in] <modifiers> <actor>"
+                _ATTENUATION_STEM_SRC + r"[a-z]*\b(?:\s+(?:of|in))?"
+                r"(?:\s+" + _PASSIVE_AGENT_MODIFIERS_SRC + r"){0,4}\s+"
+                + escaped + r"(?![a-z0-9])"
+                # F2: "<actor> ... <activity noun> ... <stem>"
+                r"|(?<![a-z0-9])" + escaped + r"(?![a-z0-9])"
+                r"[^.]{0," + str(_ATTENUATION_GAP) + r"}?\b"
+                + _ATTENUATION_OBJECT_SRC + r"[a-z]*\b"
+                r"[^.]{0," + str(_ATTENUATION_GAP) + r"}?\b"
+                + _ATTENUATION_STEM_SRC
+            )
+        # CORRECTION ROUND 1. The cofactor dependence route, anchored the same way
+        # and reaching the cofactor family ONLY, so it can never widen the "other"
+        # fallback the way the bare terms did.
+        dependence = None
+        if family == "cofactor":
+            dependence = re.compile(
+                _COFACTOR_DEPENDENCE_SRC + r"\b(?:\s+(?:on|of|upon|for))?"
+                r"(?:\s+" + _COFACTOR_MODIFIERS_SRC + r"){0,"
+                + str(_COFACTOR_MAX_MODIFIERS) + r"}\s+"
+                + escaped + r"(?![a-z0-9])"
+            )
         for match in re.finditer(rf"(?<![a-z0-9]){escaped}(?![a-z0-9])", haystack):
             start = max(0, match.start() - _ACTOR_CUE_WINDOW)
             end = min(len(haystack), match.end() + _ACTOR_CUE_WINDOW)
             window = haystack[start:end]
-            if not cue.search(window):
+            licensed = cue.search(window) or (
+                dependence is not None and dependence.search(window)
+            )
+            if not licensed:
                 continue
             if contra is not None and contra.search(window):
+                continue
+            if actor_contra is not None and actor_contra.search(window):
                 continue
             return True
         if family != "catalysis":
@@ -1866,7 +1981,10 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
         for match in re.finditer(passive, haystack):
             start = max(0, match.end() - len(needle) - _ACTOR_CUE_WINDOW)
             end = min(len(haystack), match.end() + _ACTOR_CUE_WINDOW)
-            if contra is not None and contra.search(haystack[start:end]):
+            window = haystack[start:end]
+            if contra is not None and contra.search(window):
+                continue
+            if actor_contra is not None and actor_contra.search(window):
                 continue
             return True
     return False

@@ -165,9 +165,31 @@ NEAR_SYNONYMS = [
 ]
 
 
+#: The FOUR frames, not one. Correction round 1: the first version of this test
+#: used frame A alone -- the frame C-107 section 1a quoted -- and a fix measured
+#: against one frame closed one frame. REV-107 ran the other three and found 15
+#: of 44 still open, all five of them stems that had gone in conditionally.
+#: A route whose thesis is "one rephrase away" is not closed by a rule that is
+#: itself one rephrase from defeat, so every synonym is now tested in all four.
+_PAD_BEYOND_THE_OLD_GAP = "x" * 45
+
+ATTENUATION_FRAMES = [
+    ("A object present", "the {w} of P activity is mediated by Q"),
+    ("B object absent", "the {w} of P is mediated by Q"),
+    ("C object before the stem", "P activity showed {w} in the Q-mediated assay"),
+    ("D object beyond 40 chars",
+     "the {w} of P " + _PAD_BEYOND_THE_OLD_GAP + " enzymatic activity is mediated by Q"),
+]
+
+
 @pytest.mark.parametrize("word", NEAR_SYNONYMS)
-def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(word: str) -> None:
-    """Each near-synonym, INDIVIDUALLY, in a window that carries a real cue.
+@pytest.mark.parametrize(
+    "frame,template", ATTENUATION_FRAMES, ids=[f[0] for f in ATTENUATION_FRAMES]
+)
+def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(
+    frame: str, template: str, word: str
+) -> None:
+    """Each near-synonym, INDIVIDUALLY, in each of four frames.
 
     The shape matters and a word-level probe gets it wrong in both directions. In
     the bare frame "the <word> of P activity by Q" only "reduction" admits the
@@ -177,9 +199,14 @@ def test_each_inhibition_near_synonym_refuses_a_catalysis_promotion(word: str) -
     ELEVEN license the protein as the reaction's CATALYST off a sentence that
     says its activity was shut down. That is F-146 by paraphrase, and closing it
     is this card's `product_contract_violation`.
+
+    What makes all four frames close together is that the contra is bound to THE
+    ACTOR rather than to an adjacent activity noun: once the question is "is this
+    protein what is being reduced", deleting the object, moving it in front of the
+    stem, or pushing it past any character budget all stop mattering.
     """
 
-    assert not accepted("P", f"the {word} of P activity is mediated by Q")
+    assert not accepted("P", template.format(w=word))
 
 
 @pytest.mark.parametrize("word", NEAR_SYNONYMS)
@@ -214,12 +241,31 @@ REDOX_SPANS = [
     "P reduces nitrite to nitric oxide",
     "reducing equivalents are transferred by P during the reduction of the disulfide",
     "P is the reductase for this step",
+    "P catalyses the reduction of the disulfide bond of the substrate protein",
+    "the two-electron reduction of the flavin is catalysed by P",
+    # REV-107's B2 residual, correction round 1. The first version bound the
+    # attenuation stem to an activity/level/expression noun ANYWHERE within 40
+    # characters, and "level" and "function" then collided with real chemistry:
+    # all three of these licensed at the C-106 base and were REFUSED at that tip.
+    # Binding the stem to the ACTOR instead retires the collision, because a
+    # substrate's level and an enzyme's function are not the actor's.
+    "P catalyses the reduction of the substrate level in vitro",
+    "P-dependent reduction of flavin is required for enzyme function",
 ]
 
 
 @pytest.mark.parametrize("span", REDOX_SPANS)
 def test_redox_catalysis_still_licenses(span: str) -> None:
     assert accepted("P", span), span
+
+
+def test_redox_still_licenses_when_the_actor_is_not_the_thing_reduced() -> None:
+    """The third B2-residual span, which needs an actor named in the span itself."""
+
+    assert accepted(
+        "ferrochelatase", "ferrochelatase reduces the cellular level of protoporphyrin"
+    )
+    assert accepted("ferrochelatase", "ferrochelatase reduces the substrate in this step")
 
 
 def test_the_distinction_is_the_object_not_the_word() -> None:
@@ -447,6 +493,47 @@ def test_licensing_the_cofactor_role_is_not_a_route_for_a_rationale() -> None:
         "P", "P was purchased from a commercial supplier",
         container="modifiers", role="cofactor",
     )
+
+
+#: Correction round 1. The first version of the cofactor family excluded the bare
+#: schema noun and then admitted bare "requires", "required for", "depends on",
+#: "dependent on" and "in the presence of" -- which is the vocabulary a structural
+#: rationale is actually WRITTEN IN. These two went from refused at the C-106 base
+#: to ACCEPTED at that tip, which is F-146 reopened in a fifth family and C-107
+#: section 5's stop condition ("if you find yourself relaxing a check so that an
+#: UNEVIDENCED patch passes, stop"). The dependence terms are now anchored to the
+#: actor, so what is REQUIRED has to be the protein being added.
+COFACTOR_RATIONALES = [
+    "the reaction requires a cofactor, so P is added to resolve the structural inconsistency",
+    "P depends on the payload structure being consistent",
+    "the reaction is required to be structurally consistent, so P is added",
+    "add P as a cofactor to resolve the structural inconsistency",
+]
+
+
+@pytest.mark.parametrize("span", COFACTOR_RATIONALES)
+def test_a_structural_rationale_cannot_license_the_cofactor_role(span: str) -> None:
+    assert not accepted("P", span, container="modifiers", role="cofactor"), span
+
+
+#: The corollary, and it is wider than the cofactor role. _ANY_ROLE_CUE_RE is
+#: rebuilt from every _ROLE_CUE_RES value, so anything added to the cofactor
+#: family widens the "other" fallback for EVERY unmapped role. That is the
+#: consequence of this card's own M6 mutation finding -- the vocabulary is what
+#: leaks -- and the first version did not draw it: role "chaperone" with "P is
+#: required for the reaction to proceed" was refused at base and accepted at that
+#: tip. The dependence route now reaches the cofactor family only.
+UNMAPPED_ROLE_SPANS = [
+    ("chaperone", "P is required for the reaction to proceed"),
+    ("chaperone", "the reaction requires a chaperone, so P is added"),
+    ("scaffold", "the assembly is dependent on the payload being consistent, so P is added"),
+    ("adaptor", "P is present in the complex"),
+]
+
+
+@pytest.mark.parametrize("role,span", UNMAPPED_ROLE_SPANS)
+def test_the_other_fallback_did_not_widen_for_an_unmapped_role(role: str, span: str) -> None:
+    assert not accepted("P", span, container="modifiers", role=role), (role, span)
 
 
 def test_a_refused_cofactor_row_is_reported_against_the_cofactor_family() -> None:

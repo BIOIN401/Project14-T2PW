@@ -1,0 +1,106 @@
+================================================================================================
+BLOCKING 1 -- eleven near-synonyms x four frames. True == the defect is ADMITTED.
+================================================================================================
+  word                   A       B       C       D   open frames
+  blockade           False   False   False   False   0
+  impairment         False   False   False   False   0
+  disruption         False   False   False   False   0
+  reduction          False   False   False   False   0
+  loss               False   False   False   False   0
+  silencing          False   False   False   False   0
+  sequestration      False   False   False   False   0
+  depletion          False   False   False   False   0
+  ablation           False   False   False   False   0
+  interference       False   False   False   False   0
+  quenching          False   False   False   False   0
+
+  TOTAL OPEN (want 0): 0 / 44
+
+================================================================================================
+BLOCKING 1 -- PRESERVATION. Redox chemistry, which must all license.
+================================================================================================
+  licensed     actor='P'                'NADH-dependent reduction of the substrate by P'
+  licensed     actor='ferrochelatase'   'ferrochelatase reduces the substrate in this step'
+  licensed     actor='P'                'P catalyses the reduction of the quinone to the quinol'
+  licensed     actor='P'                'the reduction of A to B is carried out by P'
+  licensed     actor='P'                'P reduces nitrite to nitric oxide'
+  licensed     actor='P'                'reducing equivalents are transferred by P during the reduction of the disulfide'
+  licensed     actor='P'                'P is the reductase for this step'
+  licensed     actor='P'                'P catalyses the reduction of the disulfide bond of the substrate protein'
+  licensed     actor='P'                'the two-electron reduction of the flavin is catalysed by P'
+
+  REFUSED (want 0): 0 / 9
+
+================================================================================================
+ITEM 3 -- the B2 residual: 'level' and 'function' colliding with real chemistry
+================================================================================================
+  licensed     actor='P'                'P catalyses the reduction of the substrate level in vitro'
+  licensed     actor='ferrochelatase'   'ferrochelatase reduces the cellular level of protoporphyrin'
+  licensed     actor='P'                'P-dependent reduction of flavin is required for enzyme function'
+
+  REFUSED (want 0): 0 / 3
+
+================================================================================================
+BLOCKING 2 -- the cofactor family. True == an UNEVIDENCED patch passes.
+================================================================================================
+  refused       'the reaction requires a cofactor, so P is added to resolve the structural inconsistency'
+  refused       'P depends on the payload structure being consistent'
+  refused       'add P as a cofactor to resolve the structural inconsistency'
+  refused       'P was purchased from a commercial supplier'
+  refused       'the reaction is required to be structurally consistent, so P is added'
+
+  ADMITTED (want 0): 0 / 5
+
+  PRESERVATION -- real cofactor evidence, which must all license:
+  licensed      'P is a required cofactor for the step'
+  licensed      'the reaction requires P as a cofactor'
+  licensed      'the enzyme is dependent on P for activity'
+  licensed      'the conversion proceeds only in the presence of P'
+  licensed      'P is the coenzyme of this reaction'
+  licensed      'P is the prosthetic group of the enzyme'
+  licensed      'the reaction requires the cofactor P'
+
+  REFUSED (want 0): 0 / 7
+
+================================================================================================
+BLOCKING 2 COROLLARY -- did the 'other' fallback widen for an UNMAPPED role?
+================================================================================================
+  role=chaperone  refused       'P is required for the reaction to proceed'
+  role=chaperone  refused       'the reaction requires a chaperone, so P is added'
+  role=scaffold   refused       'the assembly is dependent on the payload being consistent, so P is added'
+  role=adaptor    refused       'P is present in the complex'
+
+  ADMITTED (want 0 -- base behaviour): 0 / 4
+
+================================================================================================
+REGISTERED, NOT FIXED -- an actor whose own NAME carries an enzyme noun
+================================================================================================
+  licensed=True   actor='LpxC hydrolase'   'LpxC hydrolase was quantified in the lysate'
+  licensed=False  actor='P'                'P was quantified in the lysate'
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9890770e565377ddb00179449714a49f4dc2a8c8  [git, worktree dirty=True]
+label                   : r1-frames-after
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_r1_frames.py C:/t/c107
+cwd                     : C:\t\c107
+root PID / process group: 103444 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.17 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  104316:python.exe
+descendants terminated  : 1  104316
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c107\docs\pwml_recovery_sprint\evidence\g11\C-107\32-r1-frames-after.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

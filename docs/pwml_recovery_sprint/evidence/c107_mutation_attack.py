@@ -68,11 +68,9 @@ MUTATIONS = [
         '    contra = None  # MUTATION M2\n',
     ),
     (
-        "M3", "1a: only the ACTIVITY-DIRECTED half of the contra is removed",
-        '_CATALYSIS_CONTRA_RE = re.compile(\n'
-        '    _ROLE_CUE_RES["inhibition"].pattern + r"|" + _ACTIVITY_ATTENUATION_SRC\n'
-        ')\n',
-        '_CATALYSIS_CONTRA_RE = _ROLE_CUE_RES["inhibition"]  # MUTATION M3\n',
+        "M3", "1a F1: the attenuation stem stops being bound to the actor",
+        '                _ATTENUATION_STEM_SRC + r"[a-z]*\\b(?:\\s+(?:of|in))?"\n',
+        '                r"(?!)" + r"[a-z]*\\b(?:\\s+(?:of|in))?"  # MUTATION M3\n',
     ),
     (
         "M4", "1c: the stoplist exclusion loses its optional plural, reopening the bypass",
@@ -93,17 +91,8 @@ MUTATIONS = [
     ),
     (
         "M6b", "1e: the cofactor VOCABULARY is emptied -- the guard M6 turned out not to be",
-        '    "cofactor": re.compile(\n'
-        '        r"is a cofactor|is the cofactor|cofactor for|cofactor of|cofactor in this"\n'
-        '        r"|is a coenzyme|is the coenzyme|coenzyme for|coenzyme of"\n'
-        '        r"|prosthetic group"\n'
-        '        r"|requires|required for|requirement for"\n'
-        '        r"|depends on|dependent on|dependence on"\n'
-        '        r"|in the presence of"\n'
-        '    ),\n',
-        '    "cofactor": re.compile(  # MUTATION M6b\n'
-        '        r"(?!)"\n'
-        '    ),\n',
+        '        r"is a cofactor|is the cofactor|cofactor for|cofactor of|cofactor in this"\n',
+        '        r"(?!)"  # MUTATION M6b\n',
     ),
     (
         "M7", "1b: the passive-agent gap accepts ANY token, so a bystander inherits agency",
@@ -121,6 +110,27 @@ MUTATIONS = [
         "M9", "1a: 'reduction of' is deleted from catalysis -- the trap the card names",
         '        r"|reduces|reducing|reduction of"\n',
         '        r"|(?!)"  # MUTATION M9\n',
+    ),
+    (
+        "M10", "1a F2: the object-before-stem ordering stops being matched",
+        '                r"|(?<![a-z0-9])" + escaped + r"(?![a-z0-9])"\n',
+        '                r"|(?!)" + escaped + r"(?![a-z0-9])"  # MUTATION M10\n',
+    ),
+    (
+        "M11", "1a: the whole actor-anchored contra is switched off",
+        '        if family == "catalysis":\n            actor_contra = re.compile(\n',
+        '        if False:  # MUTATION M11\n            actor_contra = re.compile(\n',
+    ),
+    (
+        "M12", "1e: the cofactor dependence gap accepts ANY token, reopening the rationale route",
+        '                r"(?:\\s+" + _COFACTOR_MODIFIERS_SRC + r"){0,"\n',
+        '                r"(?:\\s+[a-z0-9]+){0,"  # MUTATION M12\n',
+    ),
+    (
+        "M13", "1e: the loose dependence terms go back into the FAMILY, widening the fallback",
+        '        r"|prosthetic group"\n',
+        '        r"|prosthetic group"  # MUTATION M13\n'
+        '        r"|requires|required for|depends on|dependent on|in the presence of"\n',
     ),
 ]
 
