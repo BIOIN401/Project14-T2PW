@@ -1,0 +1,104 @@
+{
+  "label": "rev111-newtests",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_c111_timeout_observability.py",
+    "-q",
+    "--basetemp=C:/t/btrev111/newtests"
+  ],
+  "cwd": "C:\\t\\rev111",
+  "started_at": "2026-09-01T21:13:26+00:00",
+  "finished_at": "2026-09-01T21:13:34+00:00",
+  "duration_seconds": 7.090773700008867,
+  "timeout_seconds": 900.0,
+  "root_pid": 556920,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 557876,
+      "name": "python.exe",
+      "ppid": 556920
+    },
+    {
+      "pid": 557832,
+      "name": "python.exe",
+      "ppid": 557980
+    },
+    {
+      "pid": 557980,
+      "name": "python.exe",
+      "ppid": 557876
+    },
+    {
+      "pid": 558288,
+      "name": "taskkill.exe",
+      "ppid": 557876
+    }
+  ],
+  "descendants_terminated": [
+    557832,
+    557876,
+    557980,
+    558288
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 439056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 455056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 554116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 557360,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rev111/docs/pwml_recovery_sprint/evidence/g11/REV-111/01-rev111-newtests.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev111\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev111",
+    "repo_head": "ae9c1570ea77e7fea4cd9dccc9803ea4a516bbd3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-111",
+    "token": "REV-111:554116:415ba35c879b3343",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

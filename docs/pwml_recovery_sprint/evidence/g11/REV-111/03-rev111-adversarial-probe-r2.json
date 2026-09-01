@@ -1,0 +1,173 @@
+{
+  "label": "rev111-adversarial-probe-r2",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/rev111/docs/pwml_recovery_sprint/evidence/rev111_reviewer_probe.py"
+  ],
+  "cwd": "C:\\t\\rev111",
+  "started_at": "2026-09-01T21:17:40+00:00",
+  "finished_at": "2026-09-01T21:17:59+00:00",
+  "duration_seconds": 18.696235899988096,
+  "timeout_seconds": 900.0,
+  "root_pid": 557116,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 560800,
+      "name": "git.exe",
+      "ppid": 561748
+    },
+    {
+      "pid": 561748,
+      "name": "python.exe",
+      "ppid": 557116
+    },
+    {
+      "pid": 562340,
+      "name": "git.exe",
+      "ppid": 561748
+    },
+    {
+      "pid": 562476,
+      "name": "python.exe",
+      "ppid": 562480
+    },
+    {
+      "pid": 562480,
+      "name": "python.exe",
+      "ppid": 561748
+    },
+    {
+      "pid": 562708,
+      "name": "taskkill.exe",
+      "ppid": 561748
+    },
+    {
+      "pid": 562848,
+      "name": "python.exe",
+      "ppid": 561748
+    },
+    {
+      "pid": 562864,
+      "name": "python.exe",
+      "ppid": 562848
+    },
+    {
+      "pid": 562440,
+      "name": "taskkill.exe",
+      "ppid": 561748
+    },
+    {
+      "pid": 557100,
+      "name": "python.exe",
+      "ppid": 561748
+    },
+    {
+      "pid": 559920,
+      "name": "python.exe",
+      "ppid": 557100
+    },
+    {
+      "pid": 562868,
+      "name": "taskkill.exe",
+      "ppid": 561748
+    },
+    {
+      "pid": 561592,
+      "name": "python.exe",
+      "ppid": 561748
+    },
+    {
+      "pid": 561852,
+      "name": "python.exe",
+      "ppid": 561592
+    },
+    {
+      "pid": 562500,
+      "name": "python.exe",
+      "ppid": 561748
+    },
+    {
+      "pid": 555772,
+      "name": "python.exe",
+      "ppid": 562500
+    }
+  ],
+  "descendants_terminated": [
+    555772,
+    557100,
+    559920,
+    560800,
+    561592,
+    561748,
+    561852,
+    562340,
+    562440,
+    562476,
+    562480,
+    562500,
+    562708,
+    562848,
+    562864,
+    562868
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 439056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 455056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 541296,
+      "name": "python.exe"
+    },
+    {
+      "pid": 562204,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rev111/docs/pwml_recovery_sprint/evidence/g11/REV-111/03-rev111-adversarial-probe-r2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev111\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev111",
+    "repo_head": "ae9c1570ea77e7fea4cd9dccc9803ea4a516bbd3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-111",
+    "token": "REV-111:562204:a21eea4d365f072d",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
