@@ -1,0 +1,70 @@
+==============================================================================
+1. driver._classify -- BRANCH ORDER: issue codes outrank the provider markers
+==============================================================================
+  signature: (*, text: 'str', issue_codes: 'List[str]', contract_signal: 'bool', ambiguous: 'bool', no_reactions: 'bool', crashed: 'bool') -> 'str'
+  _NETWORK_MARKERS matched by 'connection reset by peer': ['connection']
+  _LLM_MARKERS matched by 'the model returned an empty completion': ['completion']
+  ok network text  + no issue codes  -> failure_kind='network'  C-110 reads this as: CASUALTY
+  ok llm text      + no issue codes  -> failure_kind='llm'  C-110 reads this as: CASUALTY
+  !! network text  + ONE issue code  -> failure_kind='contract'  C-110 reads this as: DECLINE
+  !! llm text      + ONE issue code  -> failure_kind='contract'  C-110 reads this as: DECLINE
+
+  => A PROVIDER casualty carrying ANY issue code is written to the manifest
+     as failure_kind='contract', which C-110 lists as a DECLARED DECLINE.
+
+==============================================================================
+2. KIND_UNKNOWN -- the shipped call site's status, message and codes
+==============================================================================
+_fail(
+                outcome,
+                status=_STATUS_FAIL,
+                kind=KIND_UNKNOWN,
+                message="no research report was produced and no reason was given",
+                detail=joined,
+                codes=codes,
+            )
+  KIND_UNKNOWN literal              : 'unknown'
+  in C-110 _NC_INDETERMINATE_KINDS  : True
+  in C-110 _NC_CASUALTY_KINDS       : False
+
+==============================================================================
+3. THE GUARD THAT LETS BOTH THROUGH
+==============================================================================
+    declared = (
+    kind in _NC_DECLINE_KINDS
+    or termination == SCIENTIFICALLY_UNRECOVERABLE
+    or bool(codes)
+    stated = bool(message) and declared
+    if not declared and kind in _NC_INDETERMINATE_KINDS and not codes:
+
+  `bool(codes)` alone satisfies `declared`, and the INDETERMINATE branch
+  is guarded by `not codes` -- so one issue code both supplies the
+  'stated reason' AND suppresses the indeterminate refusal.
+==============================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ db8caf16abe58fcd7f0a60380ec88144e45c6ffb  [git, worktree dirty=False]
+label                   : reachability-r2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev110/docs/pwml_recovery_sprint/evidence/rev110_reachability.py C:/t/rev110/src
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 210916 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.20 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  210928:python.exe
+descendants terminated  : 1  210928
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev110\docs\pwml_recovery_sprint\evidence\g11\REV-110\03-reachability-r2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,51 @@
+manifests read    : 27
+EXCLUDED BY RULE  : ['runs_verify\\2026-08-28_1816\\manifest.jsonl']   <- T-107, never opened
+
+failure_kind distribution across the corpus (T-107 excluded):
+    (empty)                     102
+    crash                        58
+    contract                     55
+    no_reactions                  8
+    timeout                       8
+    ambiguous_review_scope        6
+    unknown                       3
+    llm                           1
+
+no_reactions legs total                       : 8
+  ... with >=1 preserved file                 : 8
+  ... with ZERO issue codes                   : 8
+
+SUSPICIOUS (no codes + provider wording + status!=error) : 0
+
+ACQUISITION-shaped ('no full text' / 'nothing to extract') : 0
+
+A leg only reaches PASS_NEGATIVE_CONTROL if it is ALSO on a negative-control
+or context_only gold case with zero released rows -- so these counts are an
+UPPER BOUND on the exposure, not the exposure itself.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 71915163b30449bf8ebeb5e9f70e96f52ae38145  [git, worktree dirty=False]
+label                   : r1-corpus
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev110/docs/pwml_recovery_sprint/evidence/rev110_r1_no_reactions_corpus.py C:/t/c110/src C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 229032 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.23 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  229120:python.exe
+descendants terminated  : 1  229120
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev110\docs\pwml_recovery_sprint\evidence\g11\REV-110\11-r1-corpus.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

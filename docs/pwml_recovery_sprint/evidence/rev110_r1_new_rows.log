@@ -1,0 +1,100 @@
+==============================================================================
+0. HARNESS SELF-CHECK
+==============================================================================
+  known-POSITIVE -> PASS_NEGATIVE_CONTROL
+  known-NEGATIVE -> NOT_AWARDED
+  REACHES THE GUARD BOTH WAYS : True
+
+==============================================================================
+1. THE SECOND ROUTE -- termination == scientifically_unrecoverable
+==============================================================================
+  ok scientifically_unrecoverable, kind unknown, clean      MUST PASS   -> PASS_NEGATIVE_CONTROL
+      D-005 scientific statement -- the ruling's own condition 2. Legitimate.
+  ok scientifically_unrecoverable BUT it timed out          MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure']
+      condition 3 must still veto a scientific-sounding label
+  ok scientifically_unrecoverable BUT operational_failure=True MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure']
+  ok scientifically_unrecoverable BUT no artifacts          MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_artifacts_preserved']
+
+==============================================================================
+2. THE `classified` OR -- can the RIGHT arm readmit what the LEFT excludes?
+   classified = kind not in ('','unknown') or termination in TERMINATION_REASONS
+==============================================================================
+  ok kind=unknown + termination=retrieval_exhausted         MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason']
+  ok kind=unknown + termination=no_new_claims               MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason']
+  ok kind=unknown + termination=budget_exhausted            MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_stated_reason']
+  ok kind=unknown + termination=operation_timeout           MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_stated_reason']
+  ok kind=unknown + termination=identical_empty_response    MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason']
+  ok kind=unknown + termination=scientifically_unrecoverable MUST PASS   -> PASS_NEGATIVE_CONTROL
+      only the scientific reason is a decline
+  ok kind=unknown + termination=attempt_cap_reached         MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason']
+
+==============================================================================
+3. driver._classify -- is `no_reactions` relabellable the way `contract` was?
+==============================================================================
+  network+no-reaction wording, no codes  -> failure_kind='no_reactions'
+  network+no-reaction wording, one code  -> failure_kind='contract'
+  !! provider text that ALSO says 'no reactions', no codes  MUST REFUSE -> PASS_NEGATIVE_CONTROL
+      _NO_REACTION_MARKERS are tested BEFORE _NETWORK_MARKERS -- F-159's shape
+
+==============================================================================
+4. THE ACQUISITION FAILURE -- driver.py:2217 labels it no_reactions
+==============================================================================
+  ok no full text, artifacts NOT preserved (the shipped shape) MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_artifacts_preserved']
+      refused -- but by the ARTIFACT guard, not by understanding it
+  !! no full text, artifacts preserved (counterfactual)     MUST REFUSE -> PASS_NEGATIVE_CONTROL
+      if that path ever preserved a file, would it earn the status?
+
+==============================================================================
+5. LABEL HYGIENE -- case, whitespace, and codes as mere evidence
+==============================================================================
+  ok failure_kind='No_Reactions' (mixed case)               MUST PASS   -> PASS_NEGATIVE_CONTROL
+  ok termination='  scientifically_unrecoverable  '         MUST PASS   -> PASS_NEGATIVE_CONTROL
+  ok legitimate decline that ALSO carries issue codes       MUST PASS   -> PASS_NEGATIVE_CONTROL
+      codes must now be evidence only -- neither granting nor blocking
+  ok kind='' with a message and files                       MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason', 'indeterminate_classification']
+
+==============================================================================
+CASES: 18   UNEXPECTED: 2
+  !! provider text that ALSO says 'no reactions', no codes (MUST REFUSE) -> PASS_NEGATIVE_CONTROL blocked=[]
+     _NO_REACTION_MARKERS are tested BEFORE _NETWORK_MARKERS -- F-159's shape
+  !! no full text, artifacts preserved (counterfactual) (MUST REFUSE) -> PASS_NEGATIVE_CONTROL blocked=[]
+     if that path ever preserved a file, would it earn the status?
+==============================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 71915163b30449bf8ebeb5e9f70e96f52ae38145  [git, worktree dirty=False]
+label                   : r1-new-rows
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev110/docs/pwml_recovery_sprint/evidence/rev110_r1_new_rows.py C:/t/c110/src
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 228208 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.33 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  228200:python.exe
+descendants terminated  : 1  228200
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev110\docs\pwml_recovery_sprint\evidence\g11\REV-110\10-r1-new-rows.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

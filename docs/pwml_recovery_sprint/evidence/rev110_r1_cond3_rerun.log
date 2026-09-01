@@ -1,0 +1,141 @@
+==============================================================================
+0. HARNESS SELF-CHECK  (a probe that cannot reach the guard proves nothing)
+==============================================================================
+  known-POSITIVE (clean decline)   -> PASS_NEGATIVE_CONTROL   blocked=[]
+  known-NEGATIVE (outer-kill row)  -> NOT_AWARDED   blocked=['execution_failure', 'no_artifacts_preserved', 'no_stated_reason']
+  HARNESS REACHES THE GUARD IN BOTH DIRECTIONS : True
+
+==============================================================================
+1. CONDITION-3 ISOLATION -- exactly ONE reading says casualty
+   (all others clean, >=1 artifact preserved, reason stated)
+==============================================================================
+  ok only operational_failure=True                        MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure']
+  ok only termination_reason=budget_exhausted             MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure']
+  ok only termination_reason=operation_timeout            MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure']
+  ok only status=timeout                                  MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure']
+  ok only status=error                                    MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure']
+  ok only failure_kind=timeout                            MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_stated_reason']
+  ok only failure_kind=crash                              MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_stated_reason']
+  ok only failure_kind=network                            MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_stated_reason']
+  ok only failure_kind=llm                                MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_stated_reason']
+
+==============================================================================
+2. CASUALTIES THAT PRESERVED ARTIFACTS AND STATED A REASON
+==============================================================================
+  ok timeout, files preserved, reason stated              MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_stated_reason']
+      the Lead's #2: >=1 artifact is NOT what discriminates here
+  ok crash, files preserved, reason stated                MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_stated_reason']
+  ok B15: empty + reason string + timed out               MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_stated_reason']
+      re-derived independently of the author's B15 test
+  ok F-148 outer kill: budget_exhausted only, stage=unknown MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure']
+      F-148's real shape, but with the runner's status/kind stripped off
+
+==============================================================================
+3. OLD ROW SHAPE -- operational_failure / termination_reason ABSENT
+==============================================================================
+  ok old-shape TIMEOUT (no termination/operational keys)  MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_artifacts_preserved', 'no_stated_reason']
+      caught by status/kind/boundary, not by the two absent keys
+  ok old-shape DECLINE (no termination/operational keys)  MUST PASS   -> PASS_NEGATIVE_CONTROL
+      TESTS THE AUTHOR'S CLAIM that absent keys => indeterminate
+  ok bare row: no kind, no message, no files              MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_artifacts_preserved', 'no_stated_reason', 'indeterminate_classification']
+
+==============================================================================
+4. ATTACK -- driver._kind:1265  `if contract_signal or issue_codes:
+   return KIND_CONTRACT`  is tested BEFORE the network/llm markers
+==============================================================================
+  ok provider failure relabelled contract by issue codes  MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason']
+      a NETWORK casualty that driver._kind files as `contract`
+  ok failure_kind=unknown WITH an issue code              MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason', 'indeterminate_classification']
+      driver KIND_UNKNOWN == 'we could not tell'; card says default to FAIL
+  ok failure_kind=unknown, NO issue code                  MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason', 'indeterminate_classification']
+  ok failure_kind=ambiguous_review_scope with codes       MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason']
+      a scope conflict is a declared stop -- but is it a DECLINE?
+
+==============================================================================
+5. CONDITIONS 1 AND 2, AND THE POPULATIONS THAT MUST NOT PASS
+==============================================================================
+  ok B4: empty, artifacts preserved, NO message           MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason']
+  ok empty, message stated, NO classification at all      MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_stated_reason', 'indeterminate_classification']
+  ok missing artifact: clean decline but files=[]         MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['no_artifacts_preserved']
+  ok not attempted: no manifest row at all                MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['not_attempted', 'execution_failure', 'no_artifacts_preserved', 'no_stated_reason', 'indeterminate_classification']
+  ok reactions in the row's own counts                    MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['reactions_released']
+  ok transports in the row's own counts                   MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['reactions_released']
+  ok a PWML artifact was produced                         MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['deliverable_produced']
+
+==============================================================================
+6. B16 over-retention, B17 both arms, and the positive control
+==============================================================================
+  ok B16: negative control that EXTRACTED reactions anyway MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['reactions_released', 'no_stated_reason', 'indeterminate_classification']
+      over-retention must not be absolved by the new status
+  ok B17 arm 2: context_only min_connected==0 declines    MUST PASS   -> PASS_NEGATIVE_CONTROL
+  ok B17 arm 2: context_only that timed out               MUST REFUSE -> NOT_AWARDED
+      blocked_by = ['execution_failure', 'no_artifacts_preserved', 'no_stated_reason']
+  ok positive control gets NO record at all               MUST BE NONE -> NONE (rule does not apply)
+
+==============================================================================
+7. B5 -- RAW PRESERVED BESIDE THE ADJUSTED VIEW
+==============================================================================
+  leg.status (raw, untouched)         : 'timeout'
+  serialized top-level 'status'       : 'timeout'
+  serialized negative_control.status  : 'NOT_AWARDED'
+  serialized negative_control.raw     : {"status": "timeout", "failure_kind": "timeout", "boundary": "timeout", "termination_reason": "budget_exhausted", "operational_failure": true, "artifacts_recorded": 0, "counts": {}, "released_rows": 0}
+  rejection_reason preserved verbatim : True
+  leg.passed (the scored verdict)     : False
+
+==============================================================================
+CASES: 31   UNEXPECTED: 0
+==============================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 71915163b30449bf8ebeb5e9f70e96f52ae38145  [git, worktree dirty=False]
+label                   : r1-cond3-rerun
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev110/docs/pwml_recovery_sprint/evidence/rev110_condition3_adversarial.py C:/t/c110/src
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 227656 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 1.42 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  227668:python.exe
+descendants terminated  : 1  227668
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev110\docs\pwml_recovery_sprint\evidence\g11\REV-110\09-r1-cond3-rerun.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
