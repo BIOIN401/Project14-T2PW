@@ -1,0 +1,72 @@
+........................................................................ [ 34%]
+........................................................................ [ 68%]
+.....................................................FF..F.........      [100%]
+================================== FAILURES ===================================
+_ test_r1_the_predication_modifier_gap_is_load_bearing[P is a high affinity transporter] _
+
+span = 'P is a high affinity transporter'
+
+    @pytest.mark.parametrize("span", PREDICATION_GAP_SPANS)
+    def test_r1_the_predication_modifier_gap_is_load_bearing(span: str) -> None:
+>       assert transports("P", span), span
+E       AssertionError: P is a high affinity transporter
+E       assert False
+E        +  where False = transports('P', 'P is a high affinity transporter')
+
+tests\test_c108_f155_class.py:973: AssertionError
+_ test_r1_the_predication_modifier_gap_is_load_bearing[P is an inner membrane transporter] _
+
+span = 'P is an inner membrane transporter'
+
+    @pytest.mark.parametrize("span", PREDICATION_GAP_SPANS)
+    def test_r1_the_predication_modifier_gap_is_load_bearing(span: str) -> None:
+>       assert transports("P", span), span
+E       AssertionError: P is an inner membrane transporter
+E       assert False
+E        +  where False = transports('P', 'P is an inner membrane transporter')
+
+tests\test_c108_f155_class.py:973: AssertionError
+_ test_r1_the_predication_modifier_gap_is_load_bearing[P was a well characterised sodium carrier] _
+
+span = 'P was a well characterised sodium carrier'
+
+    @pytest.mark.parametrize("span", PREDICATION_GAP_SPANS)
+    def test_r1_the_predication_modifier_gap_is_load_bearing(span: str) -> None:
+>       assert transports("P", span), span
+E       AssertionError: P was a well characterised sodium carrier
+E       assert False
+E        +  where False = transports('P', 'P was a well characterised sodium carrier')
+
+tests\test_c108_f155_class.py:973: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c108_f155_class.py::test_r1_the_predication_modifier_gap_is_load_bearing[P is a high affinity transporter]
+FAILED tests/test_c108_f155_class.py::test_r1_the_predication_modifier_gap_is_load_bearing[P is an inner membrane transporter]
+FAILED tests/test_c108_f155_class.py::test_r1_the_predication_modifier_gap_is_load_bearing[P was a well characterised sodium carrier]
+3 failed, 208 passed in 0.49s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bc6485e87d20b8372eaf112d3fb5003450d09348  [git, worktree dirty=False]
+label                   : rev108-r1-split-c108
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q --no-header -rf --basetemp=C:/t/bt108/r1f1 tests/test_c108_f155_class.py
+cwd                     : C:\t\c108r1
+root PID / process group: 217756 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.05 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  218236:python.exe
+descendants terminated  : 1  218236
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev108\docs\pwml_recovery_sprint\evidence\g11\REV-108\37-rev108-r1-split-c108.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

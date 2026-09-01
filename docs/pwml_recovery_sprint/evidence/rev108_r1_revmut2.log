@@ -1,0 +1,55 @@
+target sha256 at start : 44b308a469c3cbb0dba65a0f6e55806943fb5c72f8c28ed5b056532b5c9b3dff
+BASELINE (unmutated): exit=0  396 passed in 0.69s
+
+============================================================================================
+R2r1 [expect RED]  (a) R2 re-run at round 1: the predication modifier gap closes to zero. SURVIVED at round 0.
+============================================================================================
+  result: GREEN  exit=0  396 passed in 0.69s   << NOT AS EXPECTED
+
+============================================================================================
+R3r1 [expect RED]  (a) R3 re-run at round 1, my spelling not the author's: the transport verb inflections collapse to channels|pumps. SURVIVED at round 0 and is the hole that hid the missing 'channeled'.
+============================================================================================
+  result: RED  exit=1  6 failed, 390 passed in 0.76s   OK
+    RED: tests/test_c108_f155_class.py::test_r1_the_transport_verb_inflections_are_load_bearing[P
+    RED: tests/test_c108_f155_class.py::test_r1_the_transport_verb_inflections_are_load_bearing[P
+    RED: tests/test_c108_f155_class.py::test_r1_the_transport_verb_inflections_are_load_bearing[P
+    RED: tests/test_c108_f155_class.py::test_r1_the_transport_verb_inflections_are_load_bearing[P
+    RED: tests/test_c108_f155_class.py::test_r1_the_transport_verb_inflections_are_load_bearing[P
+    RED: tests/test_c108_f155_class.py::test_r1_the_transport_verb_inflections_are_load_bearing[P
+
+============================================================================================
+R5r1 [expect GREEN]  (d) round 1, NEW: the appositive determiner set loses its possessive and deictic members. Narrowing an exemption can only refuse more, so GREEN is correct here; RED would mean a test pins the hole open.
+============================================================================================
+  result: GREEN  exit=0  396 passed in 0.70s   OK
+
+target sha256 after    : 44b308a469c3cbb0dba65a0f6e55806943fb5c72f8c28ed5b056532b5c9b3dff
+byte-identical         : True
+CRLF preserved         : True
+REV108 R1 OWN MUTATIONS: 3 run, 1 not as expected ['R2r1']
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bc6485e87d20b8372eaf112d3fb5003450d09348  [git, worktree dirty=False]
+label                   : rev108-r1-revmut2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev108/docs/pwml_recovery_sprint/evidence/rev108_r1_own_mutations.py C:/t/c108r1
+cwd                     : C:\t\c108r1
+root PID / process group: 216604 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 2400 s
+duration                : 4.78 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 9  216576:python.exe, 177988:python.exe, 216692:python.exe, 216852:python.exe, 216896:python.exe, 217016:python.exe, 217068:python.exe, 213196:python.exe, 216420:python.exe
+descendants terminated  : 9  177988, 213196, 216420, 216576, 216692, 216852, 216896, 217016, 217068
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev108\docs\pwml_recovery_sprint\evidence\g11\REV-108\33-rev108-r1-revmut2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
