@@ -1,0 +1,175 @@
+{
+  "label": "smoke22",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/btc113/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\c113",
+  "started_at": "2026-09-01T21:00:48+00:00",
+  "finished_at": "2026-09-01T21:01:33+00:00",
+  "duration_seconds": 45.325893400004134,
+  "timeout_seconds": 360.0,
+  "root_pid": 539872,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 538468,
+      "name": "python.exe",
+      "ppid": 539872
+    },
+    {
+      "pid": 543004,
+      "name": "python.exe",
+      "ppid": 538468
+    },
+    {
+      "pid": 543024,
+      "name": "python.exe",
+      "ppid": 543004
+    },
+    {
+      "pid": 543112,
+      "name": "python.exe",
+      "ppid": 538468
+    },
+    {
+      "pid": 543132,
+      "name": "python.exe",
+      "ppid": 543112
+    },
+    {
+      "pid": 543180,
+      "name": "python.exe",
+      "ppid": 538468
+    },
+    {
+      "pid": 543200,
+      "name": "python.exe",
+      "ppid": 543180
+    },
+    {
+      "pid": 543368,
+      "name": "python.exe",
+      "ppid": 538468
+    },
+    {
+      "pid": 543388,
+      "name": "python.exe",
+      "ppid": 543368
+    },
+    {
+      "pid": 543716,
+      "name": "git.exe",
+      "ppid": 538468
+    },
+    {
+      "pid": 543544,
+      "name": "git.exe",
+      "ppid": 538468
+    }
+  ],
+  "descendants_terminated": [
+    538468,
+    543004,
+    543024,
+    543112,
+    543132,
+    543180,
+    543200,
+    543368,
+    543388,
+    543544,
+    543716
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 439056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 455056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 526764,
+      "name": "python.exe"
+    },
+    {
+      "pid": 530552,
+      "name": "python.exe"
+    },
+    {
+      "pid": 541896,
+      "name": "python.exe"
+    },
+    {
+      "pid": 541976,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c113/docs/pwml_recovery_sprint/evidence/g11/C-113/04-smoke22.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c113\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c113",
+    "repo_head": "6dc93ba72226e02d441f01b17442caa717985e05",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-113",
+    "token": "C-113:526764:a779577a872a7c6e",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
