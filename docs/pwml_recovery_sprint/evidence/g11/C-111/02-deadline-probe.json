@@ -1,0 +1,143 @@
+{
+  "label": "deadline-probe",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/c111_deadline_probe.py"
+  ],
+  "cwd": "C:\\t\\c111",
+  "started_at": "2026-09-01T20:29:06+00:00",
+  "finished_at": "2026-09-01T20:29:41+00:00",
+  "duration_seconds": 34.78174269999727,
+  "timeout_seconds": 600.0,
+  "root_pid": 480044,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 478104,
+      "name": "python.exe",
+      "ppid": 480044
+    },
+    {
+      "pid": 478376,
+      "name": "python.exe",
+      "ppid": 478104
+    },
+    {
+      "pid": 478432,
+      "name": "python.exe",
+      "ppid": 478376
+    },
+    {
+      "pid": 480168,
+      "name": "taskkill.exe",
+      "ppid": 478104
+    },
+    {
+      "pid": 471084,
+      "name": "python.exe",
+      "ppid": 478104
+    },
+    {
+      "pid": 479616,
+      "name": "python.exe",
+      "ppid": 471084
+    },
+    {
+      "pid": 480308,
+      "name": "python.exe",
+      "ppid": 478104
+    },
+    {
+      "pid": 480328,
+      "name": "python.exe",
+      "ppid": 480308
+    },
+    {
+      "pid": 478384,
+      "name": "taskkill.exe",
+      "ppid": 478104
+    },
+    {
+      "pid": 480284,
+      "name": "python.exe",
+      "ppid": 478104
+    },
+    {
+      "pid": 480500,
+      "name": "python.exe",
+      "ppid": 480284
+    }
+  ],
+  "descendants_terminated": [
+    471084,
+    478104,
+    478376,
+    478384,
+    478432,
+    479616,
+    480168,
+    480284,
+    480308,
+    480328,
+    480500
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 439056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 455056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 478700,
+      "name": "python.exe"
+    },
+    {
+      "pid": 480116,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-111/02-deadline-probe.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c111\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c111",
+    "repo_head": "4fde91b3c67e5e30b1a7c5586806326ebf285c0b",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-111",
+    "token": "C-111:480116:6591888e7a8aca5c",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
