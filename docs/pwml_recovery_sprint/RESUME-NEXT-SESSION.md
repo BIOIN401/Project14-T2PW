@@ -1,5 +1,9 @@
 # RESUME — next session handoff
 
+**Updated in place by the Lead Orchestrator, 2026-09-01, at the close of `ORCH-718`. § 0 is the
+current state; § 0-prev and everything after it are the previous wave and are superseded where they
+disagree.** The paragraph below describes the 2026-08-31 rewrite and is kept as that wave's record.
+
 **Rewritten in place by the Lead Orchestrator, 2026-08-31, at the close of the post-triage wave
 (`ORCH-717`).** Supersedes the 2026-08-29 record, which was written at the close of the T-107
 triage wave and is stale in two sections: it says the instruments are the next job (they are now
@@ -12,7 +16,51 @@ state.**
 
 ---
 
-## 0. LIVE WAVE — ORCH-717 continuation, updated in place
+## 0. CURRENT — `ORCH-718` closed, 2026-09-01. Read this section and nothing below it first.
+
+**Integration `8f696945`, pushed and remotely verified. `main` untouched: local `7531692`,
+remote `03f1af5`.** Everything below § 0 is older; § 0-prev is the previous wave and is superseded.
+
+**Three cards merged, each independently reviewed against criteria fixed before its diff existed,
+each gated at its own merged tip, then all three gated together.**
+
+| Card | Merge | Reviewer verdict |
+|---|---|---|
+| **C-113** F-150 half 1 + census re-pin | `db119f53` | REV-113 **APPROVE w/ residuals** |
+| **C-111** F-148 timeout observability | `2a0ccdbd` | REV-111 **APPROVE w/ residuals** |
+| **C-112** residual sweep | `c942f774` | REV-112 **APPROVE w/ residuals** |
+
+**Gates at the combined tip:** SMOKE **503 / exit 0** · gold-readers **456 / 0 / 8 / 0 / exit 0**
+against gold `36f4b7b6` · `acceptance.py` `4bd893ac410d16d3…` unchanged · **`battery=0/29`,
+`F146=REJECTED`, C1–C6 all 0** · whole-tree G11 **5032 artifacts, 0 non-compliant**.
+
+**The one thing to read before anything else: F-150 half 1 was merged, GATED RED, and REVERTED
+before it landed for real.** SMOKE came back **501/2** at `b05a7281`; merge rule 10 required the
+merge not to stand; integration was re-proved green at **503**; and the edit re-landed at C-113
+**with the census movement it causes**, measured and attributed per leg. **The gold edit was never
+wrong. Landing it without its full footprint was.**
+
+**T-108 is NO-GO on exactly one row — row 19, run ownership.** Eighteen of nineteen are green.
+See `T108-READINESS.md` § 5, which is rebuilt at the current tip and tells you what to re-derive.
+
+**Open product-owner question, preserved unanswered:** should `supported_reactions_complete` be set
+on any gold case? `DECISION-PACKET-F150-HALF2.md`. **It is NOT a T-108 blocker.**
+
+**New findings this wave: F-161** (neither gate selection is a superset of the other — a gold edit
+needs BOTH; **ratified as a standing obligation**), **F-162** (a mistyped task id returned *another
+task's* evidence, not nothing), **F-163** (`HeavyLock.release` is non-atomic and can create a lock
+nobody may clear), **F-164** (C-112's recursion fix opened a false FAIL via the allocator's
+`.staging`).
+
+**Two tooling repairs are chartered and deliberately NOT taken:** F-163's `bounded_run.py` and
+F-164's `reviewer_evidence_route.py`. Both are instruments this wave's own certifications were
+produced through — `bounded_run.py`'s build hash is recorded in **every** G11 report — so changing
+either mid-wave breaks comparability, and changing a just-reviewed instrument without a new review
+is the move this sprint refuses.
+
+---
+
+## 0-prev. ORCH-717 continuation — **SUPERSEDED by § 0 above**
 
 **Read this section first. It is newer than everything below it**, and sections 5 and 6 are partly
 superseded: four more cards were chartered, one is merged, and two of the three held questions are
