@@ -1,0 +1,214 @@
+==============================================================================
+THE NEW SECTION
+==============================================================================
+====================================================================================================
+NEGATIVE CONTROLS -- where producing NOTHING is the right outcome
+====================================================================================================
+A leg here earns PASS_NEGATIVE_CONTROL only when it released nothing, STATED why,
+and was not stopped by a timeout, crash, missing artifact or infrastructure fault.
+An empty result that cannot be shown to be a DECISION is never awarded it.
+
+These legs sit in NO denominator -- context_only papers are already excluded --
+so this status moves no rate. It is a reported verdict and nothing else.
+
+    2  PASS_NEGATIVE_CONTROL
+         PMC12180156:strict
+         PMC13231680:strict
+    2  NOT_AWARDED
+         PMC12180156:research
+         PMC13231680:research
+
+
+==============================================================================
+THE PER-LEG LINES -- raw verdict ABOVE, new status BESIDE it
+==============================================================================
+PMC13231680 [NEGATIVE CONTROL]  --  Mechanistic insights into phthalylsulfacetamide-induced restoration of mer
+   requested : lipid A biosynthesis | Escherichia coli   (paper is actually: Escherichia coli (NDM-1-positive clinical isolate) and Mus musculus)
+   gold      : relevance=context_only  export=partial_only  min_connected=0  unknown_ok=False
+   strict   : FAIL  boundary=stage1_extraction
+              extraction produced no reactions: nothing lipid-a-related is present in this paper
+              at any level of partiality, so no pathway was exported
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+     neg control : PASS_NEGATIVE_CONTROL
+                   arm=is_negative_control  raw_status=fail  raw_failure_kind=no_reactions
+                   reason: extraction produced no reactions: nothing lipid-A-related is present
+                           in this paper at any level of partiality, so no pathway was exported
+              semantic: not evaluated -- the run produced no payload to score
+   research : TIMEOUT  boundary=timeout  cause=timeout
+              the child process was still running after 1800s and was killed, so this paper+mode
+              produced nothing (budget_exhausted)
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+     neg control : NOT_AWARDED  (execution_failure, no_artifacts_preserved, no_stated_reason)
+                   arm=is_negative_control  raw_status=timeout  raw_failure_kind=timeout
+                   reason: the child process was still running after 1800s and was killed, so
+                           this paper+mode produced nothing (budget_exhausted)
+              semantic: not evaluated -- the run produced no payload to score
+
+PMC12180156  --  Update of the sideroflexin (SLC56) gene family
+   requested : heme biosynthesis | Homo sapiens   (paper is actually: Homo sapiens (comparative review across fourteen species))
+   gold      : relevance=context_only  export=partial_only  min_connected=0  unknown_ok=False
+   strict   : FAIL  boundary=stage1_extraction
+              no heme biosynthesis chemistry was extractable from this paper
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+     neg control : PASS_NEGATIVE_CONTROL
+                   arm=context_only_no_minimum_core  raw_status=fail  raw_failure_kind=no_reactions
+                   reason: no heme biosynthesis chemistry was extractable from this paper
+              semantic: not evaluated -- the run produced no payload to score
+   research : NOT ATTEMPTED (no manifest row)
+
+==============================================================================
+SERIALIZED, per leg -- the raw record travels inside the new one
+==============================================================================
+PMC13231680:strict
+  leg status (RAW, untouched) : 'fail'
+  negative_control            : {
+    "applies": true,
+    "arm": "is_negative_control",
+    "status": "PASS_NEGATIVE_CONTROL",
+    "conditions": {
+        "no_reactions_released": true,
+        "declared_decline_reason": true,
+        "no_execution_failure": true
+    },
+    "blocked_by": [],
+    "raw": {
+        "status": "fail",
+        "failure_kind": "no_reactions",
+        "boundary": "stage1_extraction",
+        "termination_reason": "",
+        "operational_failure": false,
+        "artifacts_recorded": 1,
+        "counts": {
+            "reactions": 0,
+            "transports": 0,
+            "entities": 0
+        },
+        "released_rows": 0
+    },
+    "rejection_reason": "extraction produced no reactions: nothing lipid-A-related is present in this paper at any level of partiality, so no pathway was exported",
+    "issue_codes": []
+}
+
+PMC13231680:research
+  leg status (RAW, untouched) : 'timeout'
+  negative_control            : {
+    "applies": true,
+    "arm": "is_negative_control",
+    "status": "NOT_AWARDED",
+    "conditions": {
+        "no_reactions_released": true,
+        "declared_decline_reason": false,
+        "no_execution_failure": false
+    },
+    "blocked_by": [
+        "execution_failure",
+        "no_artifacts_preserved",
+        "no_stated_reason"
+    ],
+    "raw": {
+        "status": "timeout",
+        "failure_kind": "timeout",
+        "boundary": "timeout",
+        "termination_reason": "budget_exhausted",
+        "operational_failure": true,
+        "artifacts_recorded": 0,
+        "counts": {},
+        "released_rows": 0
+    },
+    "rejection_reason": "the child process was still running after 1800s and was killed, so this paper+mode produced nothing (budget_exhausted)",
+    "issue_codes": []
+}
+
+PMC12180156:strict
+  leg status (RAW, untouched) : 'fail'
+  negative_control            : {
+    "applies": true,
+    "arm": "context_only_no_minimum_core",
+    "status": "PASS_NEGATIVE_CONTROL",
+    "conditions": {
+        "no_reactions_released": true,
+        "declared_decline_reason": true,
+        "no_execution_failure": true
+    },
+    "blocked_by": [],
+    "raw": {
+        "status": "fail",
+        "failure_kind": "no_reactions",
+        "boundary": "stage1_extraction",
+        "termination_reason": "",
+        "operational_failure": false,
+        "artifacts_recorded": 1,
+        "counts": {
+            "reactions": 0,
+            "transports": 0,
+            "entities": 0
+        },
+        "released_rows": 0
+    },
+    "rejection_reason": "no heme biosynthesis chemistry was extractable from this paper",
+    "issue_codes": []
+}
+
+PMC12180156:research
+  leg status (RAW, untouched) : ''
+  negative_control            : {
+    "applies": true,
+    "arm": "context_only_no_minimum_core",
+    "status": "NOT_AWARDED",
+    "conditions": {
+        "no_reactions_released": true,
+        "declared_decline_reason": false,
+        "no_execution_failure": false
+    },
+    "blocked_by": [
+        "not_attempted",
+        "execution_failure",
+        "no_artifacts_preserved",
+        "no_stated_reason",
+        "indeterminate_classification"
+    ],
+    "raw": {
+        "status": "",
+        "failure_kind": "",
+        "boundary": "not_attempted",
+        "termination_reason": "",
+        "operational_failure": false,
+        "artifacts_recorded": 0,
+        "counts": {},
+        "released_rows": 0
+    },
+    "rejection_reason": "",
+    "issue_codes": []
+}
+
+report-level roll-up: {'NOT_AWARDED': ['PMC12180156:research', 'PMC13231680:research'], 'PASS_NEGATIVE_CONTROL': ['PMC12180156:strict', 'PMC13231680:strict']}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5071715182a6c5ff8a9ec35008d7bf993ed65ad1  [git, worktree dirty=True]
+label                   : c110-rendered-r2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c110_rendered_sample.py C:/t/c110
+cwd                     : C:\t\c110
+root PID / process group: 197688 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.20 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  200196:python.exe
+descendants terminated  : 1  200196
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\12-c110-rendered-r2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

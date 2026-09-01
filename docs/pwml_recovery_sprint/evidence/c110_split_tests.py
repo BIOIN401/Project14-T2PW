@@ -48,12 +48,21 @@ def _run(args):
 
 
 def main() -> int:
-    collected = _run(["--collect-only", "-q", TARGET, f"--basetemp={BASETEMP / 'collect'}"])
+    # NOT a second `-q`: `_run` already passes one, and `-qq` makes pytest print
+    # a per-file COUNT ("<file>: 22") instead of the node ids. That line starts
+    # with the target path, so it survives the filter below and is then handed
+    # back to pytest as a node id that does not exist -- exit 4, zero tests run,
+    # and a RED that says nothing about the tests. Measured; the log of that run
+    # is kept beside this fix.
+    collected = _run(["--collect-only", TARGET, f"--basetemp={BASETEMP / 'collect'}"])
     nodes = [
         line.strip()
         for line in collected.stdout.splitlines()
-        if line.strip().startswith(TARGET.replace("/", "\\"))
-        or line.strip().startswith(TARGET)
+        if "::" in line
+        and (
+            line.strip().startswith(TARGET.replace("/", "\\"))
+            or line.strip().startswith(TARGET)
+        )
     ]
     if not nodes:
         print("COLLECTION FAILED -- no node ids")

@@ -1,0 +1,42 @@
+collected 1 node id(s) from tests/test_c110_negative_control_status.py
+==============================================================================
+FAIL exit=4 passed=0   tests/test_c110_negative_control_status.py: 22
+==============================================================================
+nodes run           : 1
+passed (summed)     : 0
+failing nodes       : 1
+------------------------------------------------------------------------------
+tests/test_c110_negative_control_status.py: 22
+
+no tests ran in 0.00s
+ERROR: file or directory not found: tests/test_c110_negative_control_status.py: 22
+
+
+SPLIT RESULT        : RED
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5071715182a6c5ff8a9ec35008d7bf993ed65ad1  [git, worktree dirty=False]
+label                   : c110-split
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c110_split_tests.py C:/t/c110 C:/t/tb110/sp
+cwd                     : C:\t\c110
+root PID / process group: 196232 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.04 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 5  197484:python.exe, 193032:python.exe, 193340:python.exe, 194968:python.exe, 197304:python.exe
+descendants terminated  : 5  193032, 193340, 194968, 197304, 197484
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\05-c110-split.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

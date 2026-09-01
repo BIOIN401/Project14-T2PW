@@ -1,0 +1,56 @@
+collected 22 node id(s) from tests/test_c110_negative_control_status.py
+==============================================================================
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_population_1_a_positive_control_still_requires_reaction_production
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_population_2_a_true_negative_control_earns_the_status
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_population_3_a_timeout_does_not_earn_the_status
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_population_4_a_missing_artifact_does_not_earn_the_status
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_population_5_an_accidental_empty_output_does_not_earn_the_status
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_a_crash_does_not_earn_the_status
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_a_leg_with_no_manifest_row_does_not_earn_the_status
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_an_indeterminate_empty_leg_defaults_to_not_awarded[]
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_an_indeterminate_empty_leg_defaults_to_not_awarded[unknown]
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_empty_with_a_stated_reason_that_ALSO_timed_out_does_not_pass
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_over_retention_on_a_negative_control_is_not_absolved
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_a_pwml_deliverable_blocks_the_status_even_with_zero_scored_reactions
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_arm_two_context_only_with_no_minimum_core_also_earns_the_status
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_the_rule_applies_exactly_where_the_existing_predicate_says_so
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_the_raw_outcome_and_the_rejection_reason_are_preserved
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_the_status_moves_no_denominator_priority_blocker_or_band
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_the_record_reaches_the_rendered_report
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_every_guard_is_load_bearing
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_every_withholding_code_is_in_the_closed_vocabulary
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_the_decline_and_casualty_kinds_match_the_drivers_own_constants
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_the_operational_set_is_d005s_own_and_not_a_copy
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_negative_control_outcome_returns_none_for_a_relevant_case
+==============================================================================
+nodes run           : 22
+passed (summed)     : 22
+failing nodes       : 0
+SPLIT RESULT        : GREEN
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5071715182a6c5ff8a9ec35008d7bf993ed65ad1  [git, worktree dirty=True]
+label                   : c110-split-r2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c110_split_tests.py C:/t/c110 C:/t/tb110/sp2
+cwd                     : C:\t\c110
+root PID / process group: 198492 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1200 s
+duration                : 12.55 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 47  198520:python.exe, 198508:python.exe, 198540:python.exe, 198612:python.exe, 198628:python.exe, 197700:python.exe, 197704:python.exe, 197656:python.exe, 197816:python.exe, 197828:python.exe, 197836:python.exe, 196348:python.exe, 197744:python.exe, 196260:python.exe, 197944:python.exe, 198040:python.exe, 198084:python.exe, 198216:python.exe, 198268:python.exe, 198308:python.exe, 198360:python.exe, 198380:python.exe, 198408:python.exe, 198448:python.exe, 198452:python.exe, 198572:python.exe, 198632:python.exe, 197648:python.exe, 198056:python.exe, 197232:python.exe, 197956:python.exe, 197780:python.exe, 197992:python.exe, 195660:python.exe, 198096:python.exe, 198368:python.exe, 198424:python.exe, 198292:python.exe, 198332:python.exe, 198264:python.exe, 198340:python.exe, 198404:python.exe, 198644:python.exe, 198444:python.exe, 198552:python.exe, 197972:python.exe, 198624:python.exe
+descendants terminated  : 47  195660, 196260, 196348, 197232, 197648, 197656, 197700, 197704, 197744, 197780, 197816, 197828, 197836, 197944, 197956, 197972, 197992, 198040, 198056, 198084, 198096, 198216, 198264, 198268, 198292, 198308, 198332, 198340, 198360, 198368, 198380, 198404, 198408, 198424, 198444, 198448, 198452, 198508, 198520, 198540, 198552, 198572, 198612, 198624, 198628, 198632, 198644
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\06-c110-split-r2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
