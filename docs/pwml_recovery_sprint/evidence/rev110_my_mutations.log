@@ -1,0 +1,60 @@
+target            : C:\t\rev110\src\t2pw\bench\acceptance.py
+sha256 BEFORE all : c499c3e0f8b0e10055b6f53c9eef8d7638d67a2cafb8e9cdc90ba0d09ae13771
+
+BASELINE (unmutated): exit=0  22 passed in 1.25s
+
+  CAUGHT  control_artifacts          removes the >=1-preserved-artifact condition
+          -> exit=1  3 failed, 19 passed in 1.13s
+  GREEN   only_operational_failure   removes the row's own operational_failure boolean
+          -> exit=0  22 passed in 1.03s
+  GREEN   only_termination_reason    removes D-005's OPERATIONAL_TERMINATION_REASONS reading
+          -> exit=0  22 passed in 1.02s
+  GREEN   only_status                removes the row status timeout/error reading
+          -> exit=0  22 passed in 1.01s
+  GREEN   only_failure_kind          removes the failure_kind timeout/crash/network/llm reading
+          -> exit=0  22 passed in 1.03s
+  GREEN   only_boundary              removes classify_strict_boundary's reading
+          -> exit=0  22 passed in 1.02s
+
+sha256 AFTER  all : c499c3e0f8b0e10055b6f53c9eef8d7638d67a2cafb8e9cdc90ba0d09ae13771
+byte-identical restore : True
+
+==============================================================================
+VERDICT
+==============================================================================
+  control mutation caught (harness works) : True
+  condition-3 readings deleted one at a time : 5
+  of those, NOT caught by the author's suite : 5
+      GREEN after deleting the row's own operational_failure boolean
+      GREEN after deleting D-005's OPERATIONAL_TERMINATION_REASONS reading
+      GREEN after deleting the row status timeout/error reading
+      GREEN after deleting the failure_kind timeout/crash/network/llm reading
+      GREEN after deleting classify_strict_boundary's reading
+==============================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ db8caf16abe58fcd7f0a60380ec88144e45c6ffb  [git, worktree dirty=False]
+label                   : my-mutations
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev110/docs/pwml_recovery_sprint/evidence/rev110_my_mutations.py C:/t/rev110 C:/t/bt110
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 210920 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 12.48 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 15  206112:python.exe, 198768:python.exe, 202008:python.exe, 201592:python.exe, 210852:python.exe, 186640:python.exe, 196036:python.exe, 210096:python.exe, 210536:python.exe, 207876:python.exe, 209936:python.exe, 205424:python.exe, 210156:python.exe, 205204:python.exe, 206904:python.exe
+descendants terminated  : 15  186640, 196036, 198768, 201592, 202008, 205204, 205424, 206112, 206904, 207876, 209936, 210096, 210156, 210536, 210852
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev110\docs\pwml_recovery_sprint\evidence\g11\REV-110\06-my-mutations.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
