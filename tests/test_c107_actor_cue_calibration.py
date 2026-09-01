@@ -449,6 +449,34 @@ def test_licensing_the_cofactor_role_is_not_a_route_for_a_rationale() -> None:
     )
 
 
+def test_a_refused_cofactor_row_is_reported_against_the_cofactor_family() -> None:
+    """The rejection names the family, and that makes the ROLE MAP load-bearing.
+
+    Found by mutation, not by design. Deleting the ``cofactor`` entry from
+    _ROLE_FAMILY_BY_ROLE left the whole suite GREEN (mutation M6, preserved in
+    evidence/c107_mutation_attack.attempt1-m6-survivor.log), because
+    _ANY_ROLE_CUE_RE is rebuilt from every _ROLE_CUE_RES value -- so once the
+    cofactor VOCABULARY exists, the "other" fallback licenses the same spans and
+    the map entry changes nothing a licensing test can see. What it does change
+    is the reason string, which is what batch tooling greps: without the entry the
+    row is refused as the "other" role rather than the "cofactor" role. Pinning
+    that here is what makes M6 bite; M6b attacks the vocabulary itself.
+    """
+
+    payload = _payload("P", "modifiers")
+    _result, report = apply_patch_with_policy(
+        payload,
+        [{"op": "add", "path": "/processes/reactions/0/modifiers/-",
+          "value": {"entity": "P", "role": "cofactor"},
+          "confidence": 1.0,
+          "evidence": "P was purchased from a commercial supplier"}],
+        stage="audit",
+    )
+    reason = report["rejected"][0]["reason"]
+    assert reason.startswith(REASON_PREFIX), reason
+    assert "the cofactor role" in reason, reason
+
+
 # ---------------------------------------------------------------------------
 # 1f. "mediat" inside "intermediate". BASE FAILURE: 2 of 5.
 # ---------------------------------------------------------------------------

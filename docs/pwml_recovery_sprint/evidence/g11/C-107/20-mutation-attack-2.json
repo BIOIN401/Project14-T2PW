@@ -1,0 +1,216 @@
+{
+  "label": "mutation-attack-2",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/c107_mutation_attack.py",
+    "C:/t/c107"
+  ],
+  "cwd": "C:\\t\\c107",
+  "started_at": "2026-09-01T00:23:51+00:00",
+  "finished_at": "2026-09-01T00:23:58+00:00",
+  "duration_seconds": 7.168005200001062,
+  "timeout_seconds": 400.0,
+  "root_pid": 85604,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 78528,
+      "name": "python.exe",
+      "ppid": 85604
+    },
+    {
+      "pid": 81064,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 85112,
+      "name": "python.exe",
+      "ppid": 81064
+    },
+    {
+      "pid": 87160,
+      "name": "python.exe",
+      "ppid": 87496
+    },
+    {
+      "pid": 87496,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 86120,
+      "name": "python.exe",
+      "ppid": 87816
+    },
+    {
+      "pid": 87816,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 85520,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 87384,
+      "name": "python.exe",
+      "ppid": 85520
+    },
+    {
+      "pid": 84916,
+      "name": "python.exe",
+      "ppid": 87436
+    },
+    {
+      "pid": 87436,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 27472,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 87568,
+      "name": "python.exe",
+      "ppid": 27472
+    },
+    {
+      "pid": 69864,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 83860,
+      "name": "python.exe",
+      "ppid": 69864
+    },
+    {
+      "pid": 71844,
+      "name": "python.exe",
+      "ppid": 87504
+    },
+    {
+      "pid": 87504,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 84076,
+      "name": "python.exe",
+      "ppid": 88052
+    },
+    {
+      "pid": 88052,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 83168,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 85476,
+      "name": "python.exe",
+      "ppid": 83168
+    },
+    {
+      "pid": 87052,
+      "name": "python.exe",
+      "ppid": 78528
+    },
+    {
+      "pid": 87652,
+      "name": "python.exe",
+      "ppid": 87052
+    }
+  ],
+  "descendants_terminated": [
+    27472,
+    69864,
+    71844,
+    78528,
+    81064,
+    83168,
+    83860,
+    84076,
+    84916,
+    85112,
+    85476,
+    85520,
+    86120,
+    87052,
+    87160,
+    87384,
+    87436,
+    87496,
+    87504,
+    87568,
+    87652,
+    87816,
+    88052
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 74376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74532,
+      "name": "python.exe"
+    },
+    {
+      "pid": 81460,
+      "name": "python.exe"
+    },
+    {
+      "pid": 86856,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c107\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-107\\20-mutation-attack-2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c107\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c107",
+    "repo_head": "5db928f56f1b15e654a558b3bc948b8c68c3e8e6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-107",
+    "token": "C-107:81460:4806147b87115124",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

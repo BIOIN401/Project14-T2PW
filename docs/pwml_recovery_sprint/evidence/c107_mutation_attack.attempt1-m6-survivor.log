@@ -1,0 +1,102 @@
+=== BASELINE (unmutated tip) === exit=0
+    108 passed in 0.18s
+
+=== M1: 1f: the 'mediat' anchor is reverted, so it matches inside 'intermediate'
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        1 failed, 107 passed in 0.24s
+        RED: test_mediat_inside_intermediate_does_not_license_catalysis
+
+=== M2: 1a: the contra-cue is switched off entirely for the catalysis family
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        15 failed, 93 passed in 0.28s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_inhibition_cue_in_the_same_window_cannot_license_catalysis
+        RED: test_the_distinction_is_the_object_not_the_word
+        RED: test_unlicensed_actor_adds_are_still_refused
+
+=== M3: 1a: only the ACTIVITY-DIRECTED half of the contra is removed
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        6 failed, 102 passed in 0.25s
+        RED: test_each_inhibition_near_synonym_refuses_a_catalysis_promotion
+        RED: test_the_distinction_is_the_object_not_the_word
+
+=== M4: 1c: the stoplist exclusion loses its optional plural, reopening the bypass
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        10 failed, 98 passed in 0.26s
+        RED: test_no_singular_only_stoplist_entry_can_be_bypassed_by_its_plural
+        RED: test_ordinary_english_ase_words_do_not_license_an_enzyme
+
+=== M5: 1d: the transport family loses the enzyme-family noun rule again
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        2 failed, 106 passed in 0.24s
+        RED: test_a_transporter_named_by_its_family_noun_licenses
+
+=== M6: 1e: the cofactor role loses its family entry and falls back to 'other'
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=0  GREEN  <<< SURVIVOR
+        108 passed in 0.20s
+
+=== M7: 1b: the passive-agent gap accepts ANY token, so a bystander inherits agency
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        3 failed, 105 passed in 0.24s
+        RED: test_passive_with_agent_does_not_license_a_bystander
+
+=== M8: 1b: the passive-agent route is removed outright -- a PRESERVATION attack
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        3 failed, 105 passed in 0.22s
+        RED: test_passive_with_agent_does_not_license_a_bystander
+
+=== M9: 1a: 'reduction of' is deleted from catalysis -- the trap the card names
+    before: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    after : bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d
+    suite : exit=1  RED (guard is tested)
+        4 failed, 104 passed in 0.24s
+        RED: test_redox_catalysis_still_licenses
+
+==============================================================================
+MUTATIONS: 9   SURVIVORS: 1 ['M6']
+==============================================================================
+final target: bytes=108719 crlf=2268 sha256=c74c3d3216c90d0d49083001d72df0817f8f3bcb3bf42e7b3b91f6b2f284ac2e
+git status --porcelain -- src/t2pw/curation/apply_audit_patch.py: '' (additional signal only -- sha256 and CRLF above are the check)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c107\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5db928f56f1b15e654a558b3bc948b8c68c3e8e6  [git, worktree dirty=False]
+label                   : mutation-attack
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_mutation_attack.py C:/t/c107
+cwd                     : C:\t\c107
+root PID / process group: 83916 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 6.51 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 22  86380:python.exe, 84272:python.exe, 85708:python.exe, 34040:python.exe, 86444:python.exe, 84600:python.exe, 86420:python.exe, 76200:python.exe, 85876:python.exe, 73512:python.exe, 80936:python.exe, 82428:python.exe, 85212:python.exe, 84740:python.exe, 86416:python.exe, 87060:python.exe, 87080:python.exe, 87108:python.exe, 87128:python.exe, 87148:python.exe, 87168:python.exe, 87260:git.exe
+descendants terminated  : 22  34040, 73512, 76200, 80936, 82428, 84272, 84600, 84740, 85212, 85708, 85876, 86380, 86416, 86420, 86444, 87060, 87080, 87108, 87128, 87148, 87168, 87260
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c107\docs\pwml_recovery_sprint\evidence\g11\C-107\19-mutation-attack.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-107  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
