@@ -286,20 +286,68 @@ def unshifted_boundary(b: list[str], t: list[str]) -> int:
     return boundary
 
 
+def citations_in_ref(root: Path, ref: str, basenames: list[str]) -> list[tuple[str, int, str]]:
+    """Every ``<basename>:<n>`` citation in the whole committed tree, in ONE git call.
+
+    ``git grep`` over the ref, not a per-file ``git show`` loop: the loop spawned one
+    subprocess per tracked file and did not finish inside the wrapper's timeout, which
+    stranded a heavy lock. That failed run is preserved as
+    ``c112_citation_proof.attempt1-timeout.log``.
+    """
+    pat = "(" + "|".join(re.escape(b) for b in sorted(set(basenames))) + "):[0-9]+"
+    proc = subprocess.run([GIT, "-C", str(root), "grep", "-I", "-n", "-E", pat, ref],
+                          capture_output=True, text=True, encoding="utf-8", errors="replace")
+    out: list[tuple[str, int, str]] = []
+    for ln in proc.stdout.split("\n"):
+        if not ln.startswith(ref + ":"):
+            continue
+        path, _, tail = ln[len(ref) + 1:].partition(":")
+        num, _, content = tail.partition(":")
+        if num.isdigit():
+            out.append((path, int(num), content))
+    return out
+
+
+def scan(citations, rel: str, boundary: int) -> list[str]:
+    """Committed citations of ``rel`` addressing a line BELOW the unshifted boundary."""
+    name = Path(rel).name
+    stale = []
+    for src, num, content in citations:
+        for m in CITE_RE.finditer(content):
+            cited, target = m.group(1), int(m.group(2))
+            if (cited == name or cited.endswith("/" + name) or cited == rel) and target > boundary:
+                stale.append(f"{src}:{num} cites {m.group(0)}")
+    return stale
+
+
 def section3(root: Path, base: str, tip: str) -> None:
     print("\n=== 3. THE DRIFT **THIS** DIFF CREATES (W10) ===")
     changed = [c for c in subprocess.run(
         [GIT, "-C", str(root), "diff", "--name-only", base, tip],
         capture_output=True, text=True, encoding="utf-8").stdout.split("\n") if c]
+    citations = citations_in_ref(root, tip, [Path(c).name for c in changed] + ["MASTER_PLAN.md"])
+    print(f"  corpus: {len(citations)} committed lines carrying a <file>:<line> citation "
+          f"of a file this diff touches")
 
-    all_files = tracked(root, tip)
-    corpus = {}
-    for rel in all_files:
-        if rel.endswith((".md", ".py", ".json", ".log", ".txt")):
-            try:
-                corpus[rel] = blob(root, tip, rel)
-            except SystemExit:
-                continue
+    # ---- KNOWN-POSITIVE for the scanner itself. Before any zero is believed, the
+    # scanner must be shown capable of reporting non-zero. A synthetic ONE-LINE
+    # insertion at MASTER_PLAN.md:160 -- exactly where C-109's +16 landed -- must
+    # produce the same class of result REV-109 measured.
+    mp = f"{SPRINT}/MASTER_PLAN.md"
+    t_mp = blob(root, tip, mp)
+    synthetic = t_mp[:159] + ["A SYNTHETIC INSERTED LINE"] + t_mp[159:]
+    syn_boundary = unshifted_boundary(t_mp, synthetic)
+    syn_stale = scan(citations, mp, syn_boundary)
+    check("SCANNER KNOWN-POSITIVE: a synthetic 1-line insertion at MASTER_PLAN.md:160 "
+          "IS reported as creating stale citations",
+          syn_boundary == 159 and len(syn_stale) > 0,
+          f"boundary={syn_boundary} stale={len(syn_stale)}")
+    print(f"    (the synthetic insertion strands {len(syn_stale)} committed citations -- "
+          f"this is the shape of the defect C-112 exists to not repeat)")
+
+    # ---- KNOWN-NEGATIVE: an unchanged file must report nothing.
+    check("SCANNER KNOWN-NEGATIVE: an unmodified file reports zero",
+          scan(citations, mp, len(t_mp)) == [])
 
     total_stale = 0
     for rel in changed:
@@ -311,26 +359,16 @@ def section3(root: Path, base: str, tip: str) -> None:
         net = len(t) - len(b)
         print(f"\n  {rel}")
         print(f"    base {len(b)} lines -> tip {len(t)} lines (net {net:+d})")
-        print(f"    line numbers are IDENTICAL up to and including base line {boundary}"
+        print(f"    line numbers IDENTICAL up to and including base line {boundary}"
               f"{'  (= the whole file: NOTHING SHIFTED)' if boundary >= len(b) else ''}")
-        if boundary >= len(b):
-            print("    -> creates ZERO stale citations by construction")
-            continue
-        names = {rel, Path(rel).name, rel.replace("/", "\\")}
-        stale = []
-        for src, lines in corpus.items():
-            for i, s in enumerate(lines):
-                for m in CITE_RE.finditer(s):
-                    if m.group(1) in names or m.group(1).endswith("/" + Path(rel).name):
-                        if int(m.group(2)) > boundary:
-                            stale.append(f"{src}:{i + 1} cites {m.group(0)}")
+        stale = scan(citations, rel, boundary)
         total_stale += len(stale)
-        print(f"    citations below the boundary: {len(stale)}")
+        print(f"    committed citations below that boundary: {len(stale)}")
         for s in stale:
             print(f"      STALE: {s}")
 
     print("\n" + "-" * 74)
-    check("C-112 creates ZERO newly-stale committed citations", total_stale == 0,
+    check("C-112 creates ZERO newly-stale committed citations (W10)", total_stale == 0,
           f"{total_stale} found")
 
 
