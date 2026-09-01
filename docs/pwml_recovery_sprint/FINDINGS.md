@@ -6756,3 +6756,106 @@ enough that nobody noticed, because a citation that points somewhere plausible f
 Prefer an anchor that cannot drift -- a heading, a unique string, a named table -- and where a line
 address is unavoidable, **verify it at declaration time and re-verify whenever the file is edited
 above it**.
+
+---
+
+## F-155 — three pre-existing routes past the actor-evidence guard, all needing one follow-on card
+
+- **Severity** MEDIUM–HIGH · **Class `product_contract_violation`** (F-146's class: an actor role
+  admitted without evidence for it) · **Registered 2026-08-31 (ORCH-717)**
+- **(a) and (b) surfaced by the C-107 implementer, (c) by REV-107 while correcting its own fixture
+  error. All three independently confirmed by REV-107 against base `33a99e7` and tip `9890770`.**
+- **None is introduced by C-107.** All three reproduce identically at base and tip.
+
+### (a) The transport family's bare schema noun self-licenses
+
+`_ROLE_CUE_RES["transport"]` opens with the bare stem `transport`, and `transport` **matches inside
+"transporter"**. So a rationale that argues purely from payload shape licenses the role it is
+asking for:
+
+```
+op: add … /transporters/-   actor MsbA
+evidence: "add MsbA as a transporter to resolve the structural inconsistency"
+   ->  ACCEPTED at base 33a99e7 AND at tip 9890770
+```
+
+**This is exactly F-146, in a family the pinned safety property does not name.** The catalysis
+control refuses the same sentence — *"add NDM-1 as an enzyme to resolve the structural
+inconsistency"* — because C-105 deliberately excluded the bare schema nouns `enzyme`, `enzymatic`
+and `activity` for this precise reason, recorded in its own comment:
+
+> *"The bare schema nouns 'enzyme', 'enzymatic' and 'activity' are not cues either … a promoted
+> rationale is written in exactly those words."*
+
+**That reasoning was applied to catalysis and never carried across to transport.**
+
+### (b) `[^.]` is a no-op in every cue pattern — there is no sentence bound
+
+Several catalysis alternatives are written as `…\b[^.]{0,80}\bby\b` and read as *"within one
+sentence"*. They are not. `_match_fold` replaces every run of non-alphanumerics with a single space
+**before** the pattern is applied, so **no `.` ever survives into the haystack**. `[^.]` therefore
+excludes nothing and the construct is a **length bound only**.
+
+Consequence: a contra-cue one sentence away still fires, and a passive agent one sentence away was
+matchable until C-107's 1b closed that particular case by a different route. The comment's stated
+intent and the code's actual behaviour differ, which is the kind of gap that survives review because
+the pattern *looks* like it does what the prose says.
+
+Fixing it means changing `_match_fold`, which is shared, calibrated and outside any current card.
+
+### (c) An actor whose own NAME contains an enzyme noun licenses with no cue in the span
+
+The enzyme-noun rule is part of the catalysis vocabulary, and the cue is sought in a window around
+the **matched name token** — so a name that *is* an enzyme noun supplies its own cue:
+
+```
+actor "LpxC hydrolase"
+evidence: "LpxC hydrolase was quantified in the lysate"
+   ->  ACCEPTED at base AND tip, with no role-predicating claim anywhere in the span
+```
+
+The span says the protein was **measured**, not that it catalysed anything. Any actor named
+`… synthase`, `… transferase`, `… hydrolase` clears the guard on its name alone.
+
+**How it was found is worth recording.** REV-107 used `"LpxC hydrolase"` as a multi-token battery
+name, got a false mismatch, and traced it to the name supplying its own cue. **It corrected its
+fixture and registered the property rather than discarding the anomaly** — the same discipline that
+caught C-105's original preservation control passing only because it used a one-character protein
+name.
+
+### Why one card and not three
+
+All three are **the same shape**: something that is not evidence about *this actor performing this
+role* is nevertheless accepted as that evidence — a schema noun, a length bound mistaken for a
+sentence bound, and a name mistaken for a claim. A card fixing one and not the others leaves the
+class open, and each fix touches the same two functions.
+
+### Why NOT chartered inside C-107
+
+C-107 owns a declared calibration of six routed findings. **Widening it mid-card to chase three
+newly-found routes is precisely how C-105's first round reached four production callers instead of
+the one its card named** and refused 12 of 29 legitimate cases. REV-107's judgement, which the Lead
+accepts:
+
+> *"My judgement: it should not have blocked this card — it is unchanged by the diff, it is
+> registered, and the catalysis control refuses. But it is the same failure mode the author then
+> reproduced in the new cofactor family, and both belong on one follow-on card."*
+
+### The one that is NOT pre-existing, and is therefore C-107's to fix
+
+C-107's own `cofactor` family admits bare `requires | required for | requirement for | depends on |
+dependent on | dependence on | in the presence of`, so *"the reaction requires a cofactor, so P is
+added to resolve the structural inconsistency"* goes **refused at base → ACCEPTED at tip**. Because
+`_ANY_ROLE_CUE_RE` is rebuilt from every family's vocabulary, it also widens the `"other"` fallback
+for **every unmapped role**.
+
+**That one is a blocking correction-round item on C-107, not part of F-155** — it is the same
+failure mode as (a), which is exactly why (a) must be fixed before it is reproduced a third time.
+
+### Standing lesson
+
+**A bare schema noun is not evidence, and C-105 knew that — for one family.** The exclusion of
+`enzyme` / `enzymatic` / `activity` from the catalysis cues is correct and reasoned, and it was
+never generalised. When a guard is built family by family, **the reasoning behind each exclusion is
+the thing to carry across, not the word list** — a later family written from the word list alone
+inherits the vocabulary and loses the principle.
