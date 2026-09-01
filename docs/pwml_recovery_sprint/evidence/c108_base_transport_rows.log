@@ -1,0 +1,115 @@
+code loaded from: C:\t\c108base\src\t2pw\curation\apply_audit_patch.py
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='MsbA'
+      span: 'flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA'
+      LICENSED: True
+        needle='msba' route=window cue='flippase' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='TolC'
+      span: 'secreted to the extracellular environment by a TolC-dependent process'
+      LICENSED: True
+        needle='tolc' route=window cue='secret' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='SFXN1'
+      span: 'SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix'
+      LICENSED: True
+        needle='sfxn1' route=window cue='transport' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='MsbA'
+      span: 'flippase MsbA'
+      LICENSED: True
+        needle='msba' route=window cue='flippase' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='FepA'
+      span: 'outer membrane receptors (e.g. FepA in E. coli), which transport it'
+      LICENSED: True
+        needle='fepa' route=window cue='transport' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='TonB'
+      span: 'imported via TonB-dependent uptake'
+      LICENSED: True
+        needle='tonb' route=window cue='import' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='FepA'
+      span: 'outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell'
+      LICENSED: True
+        needle='fepa' route=window cue='transport' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='TolC'
+      span: 'TolC is involved in enterobactin efflux across the outer membrane'
+      LICENSED: True
+        needle='tolc' route=window cue='efflux' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='FepA'
+      span: 'recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell'
+      LICENSED: True
+        needle='fepa' route=window cue='transport' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='FepA'
+      span: 'specific outer membrane receptors (e.g. FepA in E. coli) which transport it into the bacterial cell'
+      LICENSED: True
+        needle='fepa' route=window cue='transport' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='TonB'
+      span: 'TonB-dependent uptake'
+      LICENSED: True
+        needle='tonb' route=window cue='uptake' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='FepA'
+      span: 'recognized by outer membrane receptor FepA which transports it into the bacterial cell'
+      LICENSED: True
+        needle='fepa' route=window cue='transport' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='FepA'
+      span: 'recognized by specific outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell'
+      LICENSED: True
+        needle='fepa' route=window cue='transport' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='TonB'
+      span: 'the ferric-enterobactin complex is then imported via TonB-dependent uptake'
+      LICENSED: True
+        needle='tonb' route=window cue='import' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='MsbA'
+      span: 'core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA'
+      LICENSED: True
+        needle='msba' route=window cue='flippase' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='MsbA'
+      span: 'MsbA: an ABC transporter paradigm'
+      LICENSED: True
+        needle='msba' route=window cue='transport' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+------------------------------------------------------------------------------------------
+  [transporters/transports role='None' family=transport] actor='FepA'
+      span: 'fepA gene, encoding the outer membrane transporter for ferric enterobactin'
+      LICENSED: True
+        needle='fepa' route=window cue='transport' contra=None actor_contra=None dependence=None passive=None -> True (licensed on the window route)
+
+ACCEPTED transport rows: 17
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6c20879d6b286d42c8c822bcd09d323623fd1bd8  [git, worktree dirty=False]
+label                   : base-transport
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c108_guard_attribution.py C:/t/c108base family C:/t/c108scratch/flat_base.json transport
+cwd                     : C:\t\c108
+root PID / process group: 146904 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.19 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  147048:python.exe
+descendants terminated  : 1  147048
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\06-base-transport.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

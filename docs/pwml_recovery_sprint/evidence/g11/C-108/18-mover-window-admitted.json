@@ -1,0 +1,86 @@
+{
+  "label": "mover-window-admitted",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/c108_mover_windows.py",
+    "C:/t/c108",
+    "C:/t/c108scratch/flat_tip_r1.json",
+    "C:/t/c108scratch/movers_admitted_1.txt"
+  ],
+  "cwd": "C:\\t\\c108",
+  "started_at": "2026-09-01T02:47:58+00:00",
+  "finished_at": "2026-09-01T02:47:59+00:00",
+  "duration_seconds": 0.19272510000155307,
+  "timeout_seconds": 300.0,
+  "root_pid": 151672,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 158008,
+      "name": "python.exe",
+      "ppid": 151672
+    }
+  ],
+  "descendants_terminated": [
+    158008
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 126840,
+      "name": "python.exe"
+    },
+    {
+      "pid": 128852,
+      "name": "python.exe"
+    },
+    {
+      "pid": 158508,
+      "name": "python.exe"
+    },
+    {
+      "pid": 158992,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c108\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-108\\18-mover-window-admitted.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c108\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c108",
+    "repo_head": "6c20879d6b286d42c8c822bcd09d323623fd1bd8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-108",
+    "token": "C-108:158508:fdc3abb6b6f9b404",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

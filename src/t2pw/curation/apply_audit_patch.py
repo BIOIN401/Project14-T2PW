@@ -1507,6 +1507,199 @@ _ENZYME_NOUN_RE_SRC = (
     r"|(?:(?<![a-z])(?:" + "|".join(_SHORT_ENZYME_NOUNS) + r")(?![a-z]))"
 )
 
+# C-108 (b). THE GAP CONSTRUCTS BELOW ARE LENGTH BOUNDS AND NOTHING ELSE, AND
+# THIS IS THE SPELLING THAT SAYS SO.
+#
+# They used to be written "[^.]{0,N}", which reads as "within one sentence" and
+# is not: every pattern in this module is applied to the output of _match_fold,
+# and _match_fold substitutes a single space for every run of characters outside
+# [a-z0-9] BEFORE any pattern runs. NO "." EVER REACHES THE HAYSTACK, so "[^.]"
+# excluded nothing. The alphabet of a folded string is exactly {a-z, 0-9, " "},
+# which is what this class spells, so substituting it for "[^.]" cannot change a
+# single verdict -- and the reader is no longer told a sentence bound exists.
+#
+# Two properties this rests on, both PROVEN rather than asserted, in
+# evidence/c108_fold_equivalence.py and pinned in tests/test_c108_f155_class.py:
+#
+#   1. casefold() + NFKC + re.sub(r"[^a-z0-9]+", " ") admits no other character,
+#      so "[^.]" and "[a-z0-9 ]" match the same set ON THIS INPUT.
+#   2. "[^.]" also matches a newline, where an unflagged "." does not -- a real
+#      difference between the two spellings on arbitrary text. Fold collapses
+#      every newline to a space, so the difference is unreachable here.
+#
+# THIS MEMBER MOVES NO BEHAVIOUR. _match_fold is shared and calibrated and is
+# NOT touched; no real sentence bound is introduced, which would be a behaviour
+# change in the over-refusal direction and is not chartered.
+_FOLDED_CHAR_SRC = r"[a-z0-9 ]"
+
+# ---------------------------------------------------------------------------
+# C-108 (d). THE INHIBITION VOCABULARY, SPELLED ONCE AND USED FOR TWO OPPOSITE
+# JOBS.
+#
+# _CATALYSIS_CONTRA_RE was a bare alias of _ROLE_CUE_RES["inhibition"], so one
+# object licensed an INHIBITOR row and refused a CATALYST row at the same time,
+# while the comment above the alias already claimed the two were separate. C-105
+# wrote these stems bare, and bare they match inside their own AGENT NOUNS:
+# "inhibit" inside "inhibitor", "suppress" inside "suppressor", "repress" inside
+# "repressor". In a CUE that costs nothing (it over-accepts, and the actor name
+# must still match independently). In a CONTRA it is the opposite failure -- it
+# over-REFUSES -- and F-155 (d) is its three measured instances:
+#
+#     REFUSED  "the repressor complex P4X catalyses the conversion of A to B"
+#     REFUSED  "the suppressor protein P4X catalyses ..."
+#     REFUSED  "the inhibitor protein P4X catalyses ..."
+#
+# In all three P4X IS the attenuator. That is not evidence P4X is being shut
+# down, and the span says in so many words that it catalyses.
+#
+# MERGE RULE 6 BINDS HERE AND IT IS WHY THE FIX IS A SPLIT, NOT A DELETION. What
+# is removed to stop "inhibit" matching inside "inhibitor" would be removed from
+# the contra as well, and the contra is a biological gate. So the CUE below is
+# unchanged -- byte for byte, which is what leaves _ANY_ROLE_CUE_RE and the
+# "other" fallback for every unmapped role exactly where C-107 left them -- and
+# only the CONTRA is anchored, with the agent nouns returned to it in the
+# TARGET-DIRECTED frames built per needle in _span_licenses_actor.
+#
+# The grammatical distinction is WHO THE ATTENUATION IS AIMED AT, and English
+# marks it by word order and by the preposition:
+#
+#     "the inhibitor P4X catalyses ..."   appositive  -- P4X IS the inhibitor
+#     "the inhibitor of P4X was added"    PP complement -- P4X is the TARGET
+#     "the P4X inhibitor was added"       head-final compound -- P4X is the TARGET
+#
+# which is the same question, and the same actor-anchored machinery, C-107
+# correction round 1 built for the attenuation stems in F1/F2 below.
+_C105_INHIBITION_STEMS_SRC = (
+    r"inhibit|suppress|repress|downregulat|down regulat|blocks|blocked|blocking"
+    r"|antagonis|inactivat|abolish|attenuat"
+)
+
+# The same stems, stopped from COMPLETING as their agent noun. The lookahead is
+# deliberately "(?!ors?(?![a-z]))" and not a word anchor: a word anchor would
+# also stop "inhibitory", "attenuating" and "repression", every one of which is
+# inhibitory whatever its object and must keep firing the contra. Only the exact
+# agent noun and its plural are withheld.
+_C105_INHIBITION_STEMS_CONTRA_SRC = (
+    r"inhibit(?!ors?(?![a-z]))|suppress(?!ors?(?![a-z]))|repress(?!ors?(?![a-z]))"
+    r"|downregulat(?!ors?(?![a-z]))|down regulat(?!ors?(?![a-z]))"
+    r"|blocks|blocked|blocking"
+    r"|antagonis(?!ts?(?![a-z]))|inactivat(?!ors?(?![a-z]))"
+    r"|abolish(?!ers?(?![a-z]))|attenuat(?!ors?(?![a-z]))"
+)
+
+# C-107 correction round 2's six additions, already anchored and completed on
+# both sides. They are shared VERBATIM by the cue and the contra: nothing in this
+# card touches them, and member (e) below pins the anchors that make them safe.
+# "silencer" and "blocker" are deliberately NOT reachable through them, which is
+# exactly what the right anchor buys, so neither appears in the agent-noun set.
+_C107_INHIBITION_WORDS_SRC = (
+    r"(?<![a-z])(?:blockades?|impair(?:s|ed|ing|ment|ments)?"
+    r"|silenc(?:e|es|ed|ing)"
+    r"|sequestr(?:ation|ations|ate|ates|ated|ating)"
+    r"|ablat(?:e|es|ed|ing|ion|ions)"
+    r"|interfer(?:e|es|ed|ing|ence))(?![a-z])"
+)
+
+# The agent nouns the contra above now withholds, returned to it ONLY in a frame
+# that says the actor is what is being attenuated. Exactly the eight C-105 stems
+# have one; "silencer" and "blocker" are absent for the reason stated above.
+_ATTENUATION_AGENT_NOUN_SRC = (
+    r"(?:inhibitors?|suppressors?|repressors?|downregulators?|antagonists?"
+    r"|inactivators?|abolishers?|attenuators?)"
+)
+
+# What may stand between the actor and a head-final agent noun and still leave the
+# actor the noun's TARGET. A CLOSED list of ADJECTIVES ONLY, and the omission of
+# determiners is the whole point: "P4X specific inhibitor" is an inhibitor OF
+# P4X, whereas "P4X, the inhibitor, catalyses ..." is an apposition saying P4X IS
+# the inhibitor, and a determiner is what marks the difference.
+_ATTENUATION_AGENT_ADJ_SRC = (
+    r"(?:specific|selective|targeted|directed|potent|competitive|noncompetitive"
+    r"|uncompetitive|reversible|irreversible|allosteric|small|molecule|peptide"
+    r"|protein|antibody|chemical|synthetic|natural|classical|dependent|mediated"
+    r"|activity|enzyme)"
+)
+
+#: How many such adjectives may stand between the actor and a head-final agent noun.
+_ATTENUATION_AGENT_MAX_ADJ = 2
+
+# What may head the phrase that names an agent noun's TARGET. The bare
+# preposition is the core case ("the inhibitor OF P4X"), and the participial
+# heads beside it are the paraphrases that survive dropping it -- "the inhibitor
+# TARGETING P4X", "the inhibitor DIRECTED AGAINST P4X", "an inhibitor SELECTIVE
+# FOR P4X". Every one was found by attacking this card's own fix rather than by
+# design, and each was firing the contra at f67e00a through the unanchored stem,
+# so omitting it would WEAKEN the gate: see evidence/c108_paraphrase_attack.log.
+# A bare modifier is deliberately NOT a target head. "the inhibitor protein P4X"
+# has no head at all, and that absence is what marks it as the appositive
+# reading in which P4X IS the inhibitor.
+_ATTENUATION_TARGET_HEAD_SRC = (
+    r"(?:of|for|against|on|upon|to|toward|towards"
+    r"|targeting|targeted at|inhibiting|blocking|suppressing|repressing"
+    r"|acting on|acting against|directed against|directed at|aimed at"
+    r"|specific for|selective for|specific to)"
+)
+
+# ---------------------------------------------------------------------------
+# C-108 (a). THE TRANSPORT FAMILY'S AGENT NOUNS, AND THE ONLY CONSTRUCTIONS THAT
+# MAKE ONE A CUE.
+#
+# The grammatical line, and the one the card asks for: the VERB and its EVENT
+# nominalisation predicate something of the actor ("P transports A", "the
+# transport of A is carried out by P"); the AGENT NOUN names the slot the patch
+# is asking to fill. `_ACTOR_ROLE_PATH_RE` protects containers literally called
+# `transporters`, `cargo` and `cargo_complex` and `_ROLE_FAMILY_BY_ROLE` spells
+# the role `transporter`, so a rationale arguing from payload shape is written in
+# exactly these words -- and `transport` matched inside `transporter`, so it
+# licensed the row it was asking for. Measured at f67e00a, every one of
+# transporter, importer, exporter, translocator, symporter, antiporter,
+# uniporter, extruder, channel, carrier and pump did
+# (evidence/c108_base_frames.log, section A).
+#
+# They come back only in a PREDICATION. "P is the transporter for A" licenses;
+# "add P as a transporter" does not -- the same single line C-105 drew for
+# "enzyme" and C-107 1e drew for "cofactor", generated here from the noun list
+# rather than hand-written per noun, so a noun added later cannot arrive without
+# its predicating forms.
+_TRANSPORT_AGENT_NOUNS = (
+    "transporter", "importer", "exporter", "translocator", "symporter",
+    "antiporter", "uniporter", "extruder", "channel", "carrier", "pump",
+)
+
+
+def _agent_noun_predication_src(nouns: Sequence[str]) -> str:
+    """The constructions in which a role-naming AGENT NOUN is role evidence.
+
+    Two, and both are predications of the actor rather than namings of it:
+
+        "<actor> is a|an|the <up to three modifiers> <noun>"
+        "<noun>[s] for|of|through which|responsible for ..."
+
+    "as a <noun>" is deliberately absent, and that absence is the whole fix:
+    a promoted rationale says "add P as a transporter to resolve the structural
+    inconsistency", never "P is the transporter for A".
+    """
+
+    alternatives: List[str] = []
+    for noun in nouns:
+        alternatives.append(
+            r"(?:is|are|was|were|remains|remain) (?:a|an|the) "
+            r"(?:[a-z0-9]+ ){0,3}" + noun + r"s?(?![a-z])"
+        )
+        # The copular-equivalent verbs. "P acts as a transporter" is the same
+        # predication as "P is a transporter" and a paper writes both; "add P as
+        # a transporter" is neither, and no payload-editing verb appears here.
+        # Found by attacking this fix with paraphrases rather than by design --
+        # see evidence/c108_paraphrase_attack.log.
+        alternatives.append(
+            r"(?:acts?|acted|acting|functions?|functioned|functioning"
+            r"|serves?|served|serving|operates?|operated|operating"
+            r"|works?|worked|working) as (?:a|an|the) "
+            r"(?:[a-z0-9]+ ){0,3}" + noun + r"s?(?![a-z])"
+        )
+        alternatives.append(noun + r"s? (?:for|of|through which|responsible for)")
+    return "|".join(alternatives)
+
 # Role-predicating vocabulary, matched against the folded span (lower case, every
 # separator run collapsed to a single space), so every pattern here is written in
 # that spelling: "NDM-1-catalyzed" reaches this regex as "ndm 1 catalyzed" and
@@ -1521,9 +1714,37 @@ _ENZYME_NOUN_RE_SRC = (
 # it, and a reaction's own name is full of them. The bare schema nouns "enzyme",
 # "enzymatic" and "activity" are not cues either, for the reason in the comment
 # above -- a promoted rationale is written in exactly those words.
+#
+# C-108 (a). THE SCHEMA NOUN IS NOT A CUE, AND THAT RULE IS NOW ENFORCED RATHER
+# THAN INTENDED. The paragraph above states it for "enzyme", "enzymatic" and
+# "activity" -- and the pattern below then let "catalyst" through anyway, because
+# the VERB stem "catalys" is a prefix of the schema NOUN "catalyst". C-105 wrote
+# "is the catalyst", "catalyst responsible", "catalyst for" and "catalyst of this"
+# as the periphrastic re-admissions of that noun, which is only sensible if the
+# bare noun was meant to be excluded; those four alternatives have been DEAD CODE
+# since they were written, because "catalys" matched "catalyst" first.
+#
+# The distinction is grammatical, not lexical: the verb and its event
+# nominalisation predicate ("P catalyses", "the catalysis of A by P"); the AGENT
+# NOUN names the slot the patch is asking to fill, and a rationale promoted out
+# of `reason` by _normalize_patch_op is written in exactly the schema's words.
+# So each stem is stopped from COMPLETING as its family's agent noun -- the same
+# device C-107 correction round 2 used on the attenuation words, and narrower
+# than a word anchor, which would also kill "inhibitory"-shaped inflections.
+#
+# Measured at f67e00a through the real seam, "add P as a <word> to resolve the
+# structural inconsistency" was ACCEPTED for catalyst, catalysts and biocatalyst
+# (evidence/c108_base_frames.log section A2) and for transporter (section A, and
+# the battery's own C5 case). It is the words the CONTAINERS and the ROLE MAP are
+# spelled in that a shape-argument rationale can be written in, which is why the
+# fix covers exactly those and not the whole vocabulary -- see the report for the
+# transport words measured and deliberately left.
 _ROLE_CUE_RES = {
     "catalysis": re.compile(
-        r"catalys|catalyz|catalytic|biocatalys"
+        # C-108 (a): "catalys" may not complete as "catalyst"/"catalysts". It
+        # still matches catalyse, catalysed, catalysing and catalysis, and the
+        # noun returns below in the four predicating phrases C-105 already wrote.
+        r"catalys(?!ts?(?![a-z]))|catalyz|catalytic|biocatalys(?!ts?(?![a-z]))"
         r"|hydroly|cleav|degrad|metabolis|metaboliz"
         # C-107 1f. "mediat" is a REQUIRED catalysis cue -- "<enzyme> mediates
         # the condensation ..." is _actor_named_in_span's own docstring example
@@ -1547,9 +1768,14 @@ _ROLE_CUE_RES = {
         r"|acts on|act on|acting on|acts upon"
         r"|is the enzyme|is the catalyst|enzyme responsible|catalyst responsible"
         r"|enzyme for|catalyst for|enzyme of this|catalyst of this"
-        r"|(?:removes|adds|attaches|transfers|incorporates)\b[^.]{0,40}"
+        # C-108 (a). The predicating re-admissions of the agent nouns the anchor
+        # above now withholds. "is a catalyst" licenses; "as a catalyst" does
+        # not, which is the single line C-105 drew for "enzyme" and C-107 1e drew
+        # for "cofactor", carried across a third time.
+        r"|is a catalyst|is a biocatalyst|is the biocatalyst|biocatalyst for"
+        r"|(?:removes|adds|attaches|transfers|incorporates)\b" + _FOLDED_CHAR_SRC + r"{0,40}"
         r"\b(?:group|residue|moiety|molecule|atom|phosphate|acyl|methyl|sugar)"
-        r"|(?:removal|addition|transfer|incorporation) of\b[^.]{0,40}"
+        r"|(?:removal|addition|transfer|incorporation) of\b" + _FOLDED_CHAR_SRC + r"{0,40}"
         r"\b(?:group|residue|moiety|molecule|atom|phosphate|acyl|methyl|sugar)"
         # C-107 1b. The passive-with-agent construction USED to live here, as
         # "<passive verb> [^.]{0,80} by", and it is gone from this pattern on
@@ -1567,8 +1793,14 @@ _ROLE_CUE_RES = {
         r"activat|stimulat|upregulat|up regulat|enhanc|induc|potentiat|agonis|promot"
     ),
     "inhibition": re.compile(
-        r"inhibit|suppress|repress|downregulat|down regulat|blocks|blocked|blocking"
-        r"|antagonis|inactivat|abolish|attenuat"
+        # C-108 (d). The stems are spelled once, in _C105_INHIBITION_STEMS_SRC
+        # above, and reach TWO patterns that do opposite jobs: this CUE, which
+        # licenses an inhibitor row and is UNCHANGED at this card's tip, and the
+        # catalysis CONTRA below, which refuses a catalyst row and is where the
+        # agent-noun anchoring lives. Keeping the cue byte-identical is what
+        # keeps _ANY_ROLE_CUE_RE -- and therefore the "other" fallback for every
+        # unmapped role -- exactly where C-107 left it.
+        _C105_INHIBITION_STEMS_SRC +
         # C-107 1a, the half of the near-synonyms that is inhibitory whatever its
         # object. These are safe as BARE stems: none of them describes a
         # transformation an enzyme performs, so adding them costs no catalysis
@@ -1582,15 +1814,31 @@ _ROLE_CUE_RES = {
         # catalyses ...". Only these six are touched -- they are this card's
         # additions. The stems above them are C-105's and are left exactly as they
         # were merged.
-        r"|(?<![a-z])(?:blockades?|impair(?:s|ed|ing|ment|ments)?"
-        r"|silenc(?:e|es|ed|ing)"
-        r"|sequestr(?:ation|ations|ate|ates|ated|ating)"
-        r"|ablat(?:e|es|ed|ing|ion|ions)"
-        r"|interfer(?:e|es|ed|ing|ence))(?![a-z])"
+        r"|" + _C107_INHIBITION_WORDS_SRC
     ),
     "transport": re.compile(
-        r"transport|translocat|import|export|efflux|influx|uptake|secret"
-        r"|shuttl|permeas|symport|antiport|uniport|extrud|channel|carrier|pump"
+        # C-108 (a), F-155's own reproduction. "transport" may not complete as
+        # "transporter"/"transporters" -- the ROLE the map spells and the
+        # CONTAINER the guard protects are both called exactly that, so
+        # "add P as a transporter to resolve the structural inconsistency" was a
+        # rationale licensing the row it was asking for.
+        # Each -er/-or stem is stopped from COMPLETING as its agent noun and
+        # keeps every other inflection: transports, transported, transporting and
+        # "the transport of A" all still match, which is why no stem is deleted.
+        r"transport(?!ers?(?![a-z]))|translocat(?!ors?(?![a-z]))"
+        r"|import(?!ers?(?![a-z]))|export(?!ers?(?![a-z]))"
+        r"|symport(?!ers?(?![a-z]))|antiport(?!ers?(?![a-z]))"
+        r"|uniport(?!ers?(?![a-z]))|extrud(?!ers?(?![a-z]))"
+        r"|efflux|influx|uptake|secret|shuttl|permeas"
+        # "channel", "carrier" and "pump" are agent nouns with no separate stem to
+        # anchor -- the noun IS the string. The VERB readings that matched at
+        # f67e00a are kept explicitly and the bare noun is dropped; "carries" is
+        # NOT added, because it did not match at base and adding it would be a
+        # widening this card is not chartered for.
+        r"|channels|channelled|channeling|channelling|pumps|pumped|pumping"
+        # C-108 (a). The predicating re-admissions, generated from
+        # _TRANSPORT_AGENT_NOUNS so no noun can be listed without them.
+        r"|" + _agent_noun_predication_src(_TRANSPORT_AGENT_NOUNS) +
         # C-107 1d. The enzyme-family noun rule was appended to the catalysis
         # pattern only, so a transporter named the way papers actually name one
         # -- "<protein> is the translocase of the inner membrane" -- refused,
@@ -1805,7 +2053,17 @@ _ATTENUATION_GAP = 40
 # This half carries the six stems that are inhibitory whatever their object; the
 # five that are not are built per-needle inside _span_licenses_actor, the same
 # way the passive-agent route is, because both are questions about the actor.
-_CATALYSIS_CONTRA_RE = _ROLE_CUE_RES["inhibition"]
+# C-108 (d). NO LONGER AN ALIAS. The comment above has claimed since C-105 that
+# the cue and the contra do different jobs; until this card they were the same
+# object, and the sentence was aspiration rather than description. They are now
+# two patterns, composed from the same sources, differing in exactly one respect:
+# the contra will not let a C-105 stem complete as its own AGENT NOUN. The agent
+# nouns come back to the contra, target-directed and actor-anchored, as frames F3
+# and F4 in _span_licenses_actor -- so nothing the contra refused with the actor
+# as the TARGET is admitted here, and only the appositive reading moves.
+_CATALYSIS_CONTRA_RE = re.compile(
+    _C105_INHIBITION_STEMS_CONTRA_SRC + r"|" + _C107_INHIBITION_WORDS_SRC
+)
 
 # The +/-80 character window enzyme_cues.cue_near_name scans around a name,
 # measured here from the MATCHED TOKEN rather than from the whole name, since the
@@ -1852,6 +2110,100 @@ def _identifying_match_tokens(name: str) -> List[str]:
         token for token in _match_fold(name).split(" ")
         if len(token) >= _MIN_IDENTIFYING_TOKEN and not token.isdigit()
     ]
+
+
+_FOLDED_TOKEN_RE = re.compile(r"[a-z0-9]+")
+
+#: How many tokens before a name occurrence may hold the agentive "by" and still
+#: mark that occurrence as an AGENT rather than a naming. Three, which reaches
+#: "by <symbol> <name>" and "by the <symbol> <name>" and stops well short of the
+#: next clause.
+_AGENTIVE_BY_LOOKBACK = 3
+
+
+def _mask_actor_name(window: str, actor: str) -> str:
+    """Blank out the actor's OWN NAME where it stands in ``window``, for C-108 (c).
+
+    A NAME IS NOT A CLAIM. The cue is sought in a window around the matched name
+    token, so an actor whose name IS an enzyme noun supplied its own cue and
+    cleared the guard on nothing else:
+
+        actor "LpxC hydrolase" · "LpxC hydrolase was quantified in the lysate"
+
+    which says the protein was MEASURED. Any actor named "... synthase",
+    "... transferase" or "... hydrolase" walked through the same door, and the
+    name is written by the same patch the guard is judging -- so the patch was
+    supplying both halves of its own evidence.
+
+    WHAT IS MASKED, AND WHY IT IS NOT THE NAME'S TOKENS. Only a run of ADJACENT
+    tokens that are ALL tokens of this actor's name is blanked, and only when the
+    run is at least two tokens long or is the whole of a single-token name. That
+    is the difference between APPOSITION and PREDICATION, and it is what saves the
+    over-refusal trap the card names explicitly:
+
+        actor "inner membrane translocase"
+        span  "P is the translocase of the inner membrane"
+
+    Masking the name's TOKENS would delete "translocase" and kill the only cue in
+    the span. Masking contiguous RUNS deletes "inner membrane" -- which is
+    naming -- and leaves "translocase", which is the predication. Measured, not
+    reasoned: see evidence/c108_tip_frames.log section C2.
+
+    Replacement is space-for-character, so every offset and every word boundary
+    in the window survives and no pattern can match across a masked region.
+
+    THE AGENTIVE "BY" IS AN EXEMPTION, AND IT WAS FOUND BY MEASUREMENT. An
+    occurrence standing inside an agent phrase -- "... is converted to 2,3-diDHB
+    and pyruvate BY EntB isochorismatase activity" -- is not a naming: "by" marks
+    the phrase it heads as the AGENT, which is a predication of exactly the role
+    under judgement. Three corpus rows said so before this exemption existed
+    (evidence/c108_corpus_diff_r1.log, the `isochorismatase` rows), and they are
+    legitimate catalysis spans, so refusing them would have broken pinned
+    property P3 to close member (c). The exemption can never admit anything the
+    base refused: it only declines to mask, and an unmasked window is exactly the
+    base's window.
+
+    THE CONTRA NEVER SEES THIS. Only the positive cue search is masked. Refusing
+    is a biological gate and a masked window would be a weaker one, so the contra,
+    the actor-anchored attenuation frames and the passive-agent route are all
+    judged on the untouched text.
+    """
+
+    folded = _match_fold(actor)
+    if not folded:
+        return window
+    name_tokens = set(folded.split(" "))
+    single = folded if " " not in folded else None
+    spans = [(m.start(), m.end(), m.group(0))
+             for m in _FOLDED_TOKEN_RE.finditer(window)]
+    out = list(window)
+    run: List[Tuple[int, int, str]] = []
+
+    tokens_only = [tok for _s, _e, tok in spans]
+    index_of = {start: i for i, (start, _e, _t) in enumerate(spans)}
+
+    def flush(run: List[Tuple[int, int, str]]) -> None:
+        if not run:
+            return
+        if len(run) < 2 and not (single is not None and run[0][2] == single):
+            return
+        first = index_of[run[0][0]]
+        if "by" in tokens_only[max(0, first - _AGENTIVE_BY_LOOKBACK):first]:
+            return
+        for start, end, _tok in run:
+            for i in range(start, end):
+                out[i] = " "
+
+    previous_end = -1
+    for start, end, token in spans:
+        if token in name_tokens and (not run or start == previous_end + 1):
+            run.append((start, end, token))
+        else:
+            flush(run)
+            run = [(start, end, token)] if token in name_tokens else []
+        previous_end = end
+    flush(run)
+    return "".join(out)
 
 
 def _actor_role_target(path: str) -> str:
@@ -1975,10 +2327,28 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
                 + escaped + r"(?![a-z0-9])"
                 # F2: "<actor> ... <activity noun> ... <stem>"
                 r"|(?<![a-z0-9])" + escaped + r"(?![a-z0-9])"
-                r"[^.]{0," + str(_ATTENUATION_GAP) + r"}?\b"
+                + _FOLDED_CHAR_SRC + r"{0," + str(_ATTENUATION_GAP) + r"}?\b"
                 + _ATTENUATION_OBJECT_SRC + r"[a-z]*\b"
-                r"[^.]{0," + str(_ATTENUATION_GAP) + r"}?\b"
-                + _ATTENUATION_WORD_SRC
+                + _FOLDED_CHAR_SRC + r"{0," + str(_ATTENUATION_GAP) + r"}?\b"
+                + _ATTENUATION_WORD_SRC +
+                # C-108 (d), F3: "<agent noun> of|for|against|... <modifiers>
+                # <actor>". The attenuation is aimed AT the actor, so the contra
+                # fires -- "the inhibitor of P4X was added", "an inhibitor of the
+                # enzyme P4X". This is the half of the agent noun the anchored
+                # contra above withholds, given back target-directed.
+                r"|" + _ATTENUATION_AGENT_NOUN_SRC
+                + r"\s+" + _ATTENUATION_TARGET_HEAD_SRC
+                + r"(?:\s+" + _PASSIVE_AGENT_MODIFIERS_SRC + r"){0,4}\s+"
+                + escaped + r"(?![a-z0-9])"
+                # C-108 (d), F4: "<actor> <adjectives> <agent noun>". The
+                # head-final compound -- "the P4X inhibitor", "the P4X specific
+                # inhibitor" -- where the actor is again the TARGET. No
+                # determiner may intervene, which is what keeps the apposition
+                # "P4X, the inhibitor, catalyses ..." out of this frame.
+                r"|(?<![a-z0-9])" + escaped + r"(?![a-z0-9])"
+                r"(?:\s+" + _ATTENUATION_AGENT_ADJ_SRC + r"){0,"
+                + str(_ATTENUATION_AGENT_MAX_ADJ) + r"}\s+"
+                + _ATTENUATION_AGENT_NOUN_SRC + r"(?![a-z])"
             )
         # CORRECTION ROUND 1. The cofactor dependence route, anchored the same way
         # and reaching the cofactor family ONLY, so it can never widen the "other"
@@ -1995,7 +2365,21 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
             start = max(0, match.start() - _ACTOR_CUE_WINDOW)
             end = min(len(haystack), match.end() + _ACTOR_CUE_WINDOW)
             window = haystack[start:end]
-            licensed = cue.search(window) or (
+            # C-108 (c). The POSITIVE search runs on a window with the actor's
+            # own name blanked out, because a name is not a claim: an actor
+            # called "LpxC hydrolase" was clearing this guard on its own
+            # spelling. The contra searches below deliberately keep the
+            # UNMASKED window -- masking a refusal would weaken a biological
+            # gate, and merge rule 6 forbids that.
+            cue_window = _mask_actor_name(window, actor)
+            # The cofactor dependence route is ALREADY actor-anchored -- its
+            # pattern ends on the needle -- so it can never be satisfied by the
+            # actor's own name and it reads the UNMASKED window. Masking it would
+            # delete the needle the frame is built around and refuse every
+            # evidenced cofactor row: measured, 3 of 7 in the battery's C5
+            # section (evidence/c108_tip_battery_r1.log), which is how this was
+            # caught rather than reasoned about.
+            licensed = cue.search(cue_window) or (
                 dependence is not None and dependence.search(window)
             )
             if not licensed:
@@ -2014,7 +2398,7 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
         # route 1a closes is not reopened through this door.
         passive = (
             _PASSIVE_AGENT_VERBS_SRC
-            + r"\b[^.]{0,80}\bby(?:\s+" + _PASSIVE_AGENT_MODIFIERS_SRC
+            + r"\b" + _FOLDED_CHAR_SRC + r"{0,80}\bby(?:\s+" + _PASSIVE_AGENT_MODIFIERS_SRC
             + r"){0," + str(_PASSIVE_AGENT_MAX_MODIFIERS) + r"}\s+"
             + escaped + r"(?![a-z0-9])"
         )

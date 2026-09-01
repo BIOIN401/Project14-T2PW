@@ -1,0 +1,51 @@
+code loaded from: C:\t\c108base\src\t2pw\curation\apply_audit_patch.py
+attributing 2 rows
+------------------------------------------------------------------------------------------
+  [enzymes/reactions role='catalyst' family=catalysis] actor='Pgp phosphatase complex'
+      span: 'Discussion The outer membrane of Gram-negative bacteria is primarily composed of lipopolysaccharides and phospholipids. In E . coli , FASII generates two products, acyl-ACP and β-hydroxyacyl-ACP, which are components of LPS and PLs biosynthesis. Acyl-ACPs are used by PlsB and PlsC enzymes to generat' ...(140214 chars)
+      LICENSED: False
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        ... and 81 more needle/occurrence records
+------------------------------------------------------------------------------------------
+  [modifiers/reactions role='catalyst' family=catalysis] actor='Pgp phosphatase complex'
+      span: 'Discussion The outer membrane of Gram-negative bacteria is primarily composed of lipopolysaccharides and phospholipids. In E . coli , FASII generates two products, acyl-ACP and β-hydroxyacyl-ACP, which are components of LPS and PLs biosynthesis. Acyl-ACPs are used by PlsB and PlsC enzymes to generat' ...(140214 chars)
+      LICENSED: False
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        needle='pgp' route=window cue='phosphorylat' contra='suppress' actor_contra=None dependence=None passive=None -> False (family contra fired)
+        ... and 81 more needle/occurrence records
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6c20879d6b286d42c8c822bcd09d323623fd1bd8  [git, worktree dirty=True]
+label                   : movers-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c108_guard_attribution.py C:/t/c108base corpus C:/t/c108scratch/flat_base.json C:/t/c108scratch/movers_admitted.txt
+cwd                     : C:\t\c108
+root PID / process group: 158100 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.31 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  152004:python.exe
+descendants terminated  : 1  152004
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\16-movers-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
