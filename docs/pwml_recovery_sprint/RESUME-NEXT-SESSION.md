@@ -14,85 +14,96 @@ state.**
 
 ## 0. LIVE WAVE — ORCH-717 continuation, updated in place
 
-**Read this section first. It is newer than everything below it**, and sections 5 and 6 are now
-partly superseded: two more cards were chartered and two of the three held questions have been ruled.
+**Read this section first. It is newer than everything below it**, and sections 5 and 6 are partly
+superseded: four more cards were chartered, one is merged, and two of the three held questions are
+ruled.
 
-**This is the THIRD Lead Orchestrator on this branch inside about an hour** (`-b1`, then `-ab`, now
-this one). Both predecessors vanished mid-wave without writing a handoff. **That is why this section
-is checkpointed early rather than at the usual context threshold** — assume the same could happen
-again and leave the record recoverable at all times.
+**This is the THIRD Lead Orchestrator on this branch inside about an hour** (`-b1`, `-ab`, now this
+one). Both predecessors vanished mid-wave without writing a handoff. **That is why this section is
+checkpointed continuously rather than at a context threshold.**
 
-### Cards in flight
+### Card state
 
 | Card | Scope | Worktree | State |
 |---|---|---|---|
-| **C-108** | F-155, all five members, `curation/apply_audit_patch.py` + `tests/test_c108_f155_class.py` | `C:/t/c108`, base `C:/t/c108base` | **implementer dispatched** |
-| **C-109** | F-153 remainder, F-154, reviewer-evidence route | `C:/t/c109` | **implementer dispatched** |
-| **C-110** | Q1 negative-control status (acceptance instrument) | — | **chartered, NOT dispatched** |
-| **C-111** | F-148 observability — instruments, fixes nothing | — | **chartered, NOT dispatched** |
+| **C-109** | F-153 remainder, F-154, reviewer-evidence route | `C:/t/c109`, `C:/t/rev109`, `C:/t/rev109base` | **MERGED `efb2edc2`, gates pinned `887395dc`** |
+| **C-108** | F-155, all five members | `C:/t/c108`, `C:/t/c108base`, `C:/t/rev108`, `C:/t/rev108base` | **REV-108 REJECTED · correction round 1 dispatched** |
+| **C-110** | Q1 negative-control status | `C:/t/c110` | implementer running, first commit landed |
+| **C-111** | F-148 observability | — | chartered, **not dispatched** |
+| **C-112** | residual sweep (incl. drift C-109 created) | — | chartered, **not dispatched. Item 5 requires C-108 merged first** |
+| **F-150** | Wave 4 gold correction | — | `REV-F150.md` criteria fixed; **no reviewer dispatched; gold still unmodified** |
 
-`REV-108.md` criteria were **fixed and committed before the C-108 diff existed**. There is no
-REV-109/110/111 yet — write each before its diff exists, not after.
+**Review criteria for every card were fixed and committed BEFORE their diffs existed** — `REV-108`,
+`REV-109`, `REV-110`, `REV-111`, `REV-F150`.
 
-**Both dispatched agents were observed mid-work, not idle.** C-108 had eleven probe artifacts and no
-commit; C-109 had nothing on disk yet because it was still reading. **A subagent reading leaves no
-process and no artifact — check the worktree before concluding anything.**
+**Reviewer evidence preserved as refs even before merge:** `refs/remotes/rev109/evidence` (merged in),
+`refs/remotes/rev108/evidence` (51 files, held pending C-108's correction round).
 
-### Baselines I measured MYSELF at `f67e00a` — reuse these, do not re-derive
+### C-108 — where it actually stands
+
+**Everything except one thing passed, and the reviewer re-measured all of it.** Battery tip
+`0/29 F146=REJECTED`, `C5: 1 → 0`; corpus 692 rows, drift 0, **19 newly REFUSED / 2 newly ADMITTED**,
+never netted, all 19 defensible and the 1 admitted row correct; G9 base red **53 failed / 120
+passed**; M1–M15 + M6b RED; SMOKE 503 with `acceptance.py` byte-identical.
+
+**The blocking finding, which I verified myself at 4 of 4 before spending a round** —
+`evidence/orch717_rev108_blocking_verify.py`:
 
 ```
-TOTALS  battery=0/29  F146=REJECTED  C1=0 C2=0 C3=0 C4=0 C5=1 C6=0
-ROWS: 692  ACCEPTED: 401  REFUSED: 291
+base  blocking_admitted=0  appositive_refused=3  pinned_leaked=0
+tip   blocking_admitted=4  appositive_refused=0  pinned_leaked=0
 ```
 
-**`C5=1` IS F-155 member (a).** The 29-case battery already encodes
-`'add P as a transporter to resolve the structural inconsistency'` as **want REFUSE**, and the
-shipped code **ACCEPTs** it — a committed, behavioural, already-executing **G9 base failure**. C-108
-succeeds on (a) when `C5` goes `1 → 0` with `battery=0/29` and `F146=REJECTED` unmoved.
+Member (d) genuinely works; **the contra genuinely weakened.** Four spans where the actor IS the
+thing being shut down go REFUSE → ACCEPT. **Merge rule 6.** The pinned C5 case is clean at both SHAs,
+which is exactly why the battery did not catch it.
 
-Evidence: `evidence/orch717_baseline_battery_f67e00a.log`, `orch717_baseline_corpus_f67e00a.log`,
-G11 `ORCH-717/13`, `ORCH-717/14`.
+**Cause, in one line: F3/F4 are a bounded closed list of target-directed frames with ACCEPT as the
+default outside them** — handoff lesson 3, which the card quotes and the diff's own comment quotes.
+The list is not wrong; **its polarity is.** The reviewer's proposed inversion (fire on the agent noun
+by default, exempt only appositive frames) was passed to the author as a **hypothesis to measure, not
+a design instruction.**
 
-### Rulings made this wave — `RULINGS-ORCH717.md`
+**My first verification probe was WRONG and is preserved** — it built a `reactions` envelope and
+addressed `/reactions/0/...`, which does not match the actor-role path pattern, so the guard was
+never reached and everything came back ACCEPTed at base. **Two independent records contradicting it
+are what exposed it.** Mirror `c107_battery.py`'s `run()` exactly: `processes` envelope,
+`/processes/<bucket>/0/<container>/-`, `stage="probe"`, verdict from `summary.accepted_count`.
 
-- **Q1 RULED (product owner).** A gold-designated negative control **passes** when it releases no
-  reactions, gives the required rejection reason, and the emptiness is **not** from timeout, crash,
-  missing artifact or infrastructure failure → **`PASS_NEGATIVE_CONTROL`**. The scorer **cannot**
-  represent this today, so **C-110 exists**. The predicate already does:
-  **`_empty_is_correct(case)` at `acceptance.py:1530`**. The misleading token is emitted at
-  **`batch/runner.py:717`, which has no `GoldCase` in scope at all.**
-- **Q3 RULED (Lead): a `pathbank_compound_id` is NOT a real accession. No code change.**
-  `_external_ids` recognises only `uniprot, drugbank, hmdb, kegg, chebi, pubchem`. **Q3 could never
-  have moved Q2's arithmetic** — the affected row carries **five** recognised accessions with the
-  PathBank id removed entirely, and the Priority-1 branch only asks `if ids:`. The conditional policy
-  the guardrails describe is **not implementable**: the whole local id space is bare small integers
-  over a 55-row table, produced by an offline **name-index** match with
-  `chosen_rule = legacy_pathwhiz_id_unverified`.
-- **Q2 half 1 is unblocked** and goes to Wave 4's conditional authority (independent reviewer + the
-  four-step A/B). **Half 2 — whether `supported_reactions_complete` should be set on any case — is
-  the ONE open product-owner question.** It changes what Priority 2 *means* on every future run.
+### Rulings — `RULINGS-ORCH717.md`
+
+- **Q1 RULED (product owner)** → `PASS_NEGATIVE_CONTROL`, implemented by **C-110**. The predicate
+  already exists: **`_empty_is_correct` at `acceptance.py:1530`**. The misleading token is emitted at
+  **`batch/runner.py:717`, which has no `GoldCase` in scope at all** — C-110 carries a stop condition
+  forbidding it to give the runner gold access.
+- **Q3 RULED (Lead): a `pathbank_compound_id` is NOT an accession. No code change.** It could never
+  have moved Q2's arithmetic — the affected row carries **five** recognised accessions without it,
+  and the Priority-1 branch only asks `if ids:`.
+- **Q2 half 1 unblocked**, goes to Wave 4. **Half 2 (`supported_reactions_complete`) is the ONE open
+  product-owner question.**
+
+### Findings registered this wave
+
+**F-156** — `MASTER_PLAN` § 2's third claim is false too; the graph-delta enforcement is implemented,
+wired, reached in production **and load-bearing**, proved by mutation. Refuted on the code by peer
+session `project14-t2pw-93`, **certified behaviourally by me** — the provenance is split on purpose.
+**F-157** — a citation pinned to bytes that exist in no commit: `streamlit_app.py:5669` was read off
+the **uncommitted** working copy of the never-commit file; committed value is **`:5636`**, the `+33`
+being exactly the protected diff. It propagated F-153 → `MASTER_PLAN` → my own charter.
 
 ### T-108 — `NO-GO`. See `T108-READINESS.md`
 
-**The row most likely to sink a green table is operational, not code:** T-107's ceiling was halved
-`3600 → 1800` with `leg_timeout_override_reason` and `_source` **both empty**, and the slowest leg
-that finished used **92.1%** of it. At that budget three timeouts is the expected outcome.
-`PMC12096016` is **one of only two strict-denominator papers** and was **lost to the clock, not to
-biology** — so Priority 5 can read `0/2` again for a reason that is not a pipeline defect.
-**Choose the ceiling deliberately and record the reason in the manifest BEFORE launch.**
-
-**T-108 must run from the PRIMARY checkout.** `.env` is untracked, so a worktree silently gets
-`LLM_PROVIDER=local` — calls 400, exception swallowed, curator a no-op **by accident** — while the
-primary issues real billed calls. **A green cohort obtained in a worktree does not certify the
-primary.** Confirmed present: `LLM_PROVIDER=openrouter`, `LLM_TEMPERATURE=0`, full `OPENROUTER_*`
-model set, `LLM_MAX_RETRIES=3`.
+**The blocker most likely to be missed is operational, not code:** the ceiling was halved
+`3600 → 1800` with `leg_timeout_override_reason` **empty**, the slowest finishing leg used **92.1%**,
+and `PMC12096016` — one of only two strict-denominator papers — was **lost to the clock, not
+biology**. **Choose the ceiling deliberately and record why BEFORE launch.** T-108 runs from the
+**primary checkout**: `.env` is untracked, so a worktree silently gets `LLM_PROVIDER=local` and the
+curator becomes a no-op **by accident**.
 
 ### Peer
 
-`project14-t2pw-93` is live, read-only, and replied **"no claims"** — no branch, worktree, lock, job
-or edit. It warned that one of its own earlier reports to a predecessor was a **torn `git status`**
-read taken mid-commit by another session. **Re-derive anything you intend to act on.** I did: the
-ancestry from `c7fb5c5` to the tip is fully accounted for.
+`project14-t2pw-93` closed out read-only with **no claims**. It found F-153 and F-156 by reading the
+map in order to use it — twice in one wave.
 
 ---
 
