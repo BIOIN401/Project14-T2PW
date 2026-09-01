@@ -1,0 +1,43 @@
+collected 13 node ids
+  [OK ] rc=0  test_enumerates_g11_reports_and_probes_and_nothing_else  |  1 passed in 0.06s
+  [OK ] rc=0  test_task_stem  |  1 passed in 0.05s
+  [OK ] rc=0  test_reachable_evidence_passes  |  1 passed in 0.08s
+  [OK ] rc=0  test_reachable_under_a_different_path_still_counts  |  1 passed in 0.08s
+  [OK ] rc=0  test_missing_evidence_fails  |  1 passed in 0.08s
+  [OK ] rc=0  test_all_evidence_missing_fails_and_lists_every_item  |  1 passed in 0.07s
+  [OK ] rc=0  test_same_name_different_bytes_is_not_reachable  |  1 passed in 0.08s
+  [OK ] rc=0  test_nothing_enumerated_does_not_pass_silently  |  1 passed in 0.08s
+  [OK ] rc=0  test_bad_worktree_is_a_usage_error_not_a_verdict  |  1 passed in 0.06s
+  [OK ] rc=0  test_git_ref_mode_passes_and_fails  |  1 passed in 0.57s
+  [OK ] rc=0  test_bad_ref_is_a_usage_error  |  1 passed in 0.12s
+  [OK ] rc=0  test_runs_as_a_subprocess_with_a_nonzero_exit  |  1 passed in 0.15s
+  [OK ] rc=0  test_scope_discipline_it_does_not_judge_evidence_quality  |  1 passed in 0.09s
+
+split: 13 nodes, 13 passed, 0 failed
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev109\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3f4422857c3f585085b4632f15b8abccf8dce399  [git, worktree dirty=False]
+label                   : rev109-newtest-split
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev109/docs/pwml_recovery_sprint/evidence/rev109_split_newtest.py C:/t/rev109 C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/btr109/split
+cwd                     : C:\t\rev109
+root PID / process group: 166272 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 8.12 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 35  172556:python.exe, 174600:python.exe, 174888:python.exe, 175068:python.exe, 175084:python.exe, 172480:python.exe, 175036:python.exe, 173796:python.exe, 174336:python.exe, 171496:python.exe, 173808:python.exe, 172036:python.exe, 174168:python.exe, 173616:python.exe, 174940:python.exe, 175004:python.exe, 175056:python.exe, 170712:python.exe, 174004:python.exe, 174440:python.exe, 175072:python.exe, 167112:python.exe, 174260:python.exe, 173960:git.exe, 174356:git.exe, 173916:git.exe, 174980:git.exe, 169712:git.exe, 174444:git.exe, 174408:python.exe, 174884:python.exe, 174088:python.exe, 174276:python.exe, 168796:python.exe, 172424:python.exe
+descendants terminated  : 35  167112, 168796, 169712, 170712, 171496, 172036, 172424, 172480, 172556, 173616, 173796, 173808, 173916, 173960, 174004, 174088, 174168, 174260, 174276, 174336, 174356, 174408, 174440, 174444, 174600, 174884, 174888, 174940, 174980, 175004, 175036, 175056, 175068, 175072, 175084
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev109\docs\pwml_recovery_sprint\evidence\g11\REV-109\11-rev109-newtest-split.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-109  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

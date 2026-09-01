@@ -1,0 +1,40 @@
+mutation applied: reachability decided by FILENAME, not content
+
+--- baseline: the REAL script ---
+S3 observed exit against the real script  : 1
+
+--- mutant ---
+S3 observed exit against the mutant       : 0
+   NOTE          : verdict class is unreachable_content_differs: NO -- decorative filename check
+   FAIL  exp=1        obs=0         S3 same NAME, different BYTES (B9 crux)
+   FAIL  exp=1        obs=2         S13 real C-109 evidence vs sprint/pwml-recovery (NOT yet merged)
+   FAIL  exp=0        obs=2         S13b real C-109 evidence vs its own card branch
+
+VERDICT: S3 IS LOAD-BEARING -- it passes on the real script and fails on a filename-keyed mutant
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev109\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3f4422857c3f585085b4632f15b8abccf8dce399  [git, worktree dirty=False]
+label                   : rev109-route-mutation
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rev109/docs/pwml_recovery_sprint/evidence/rev109_route_mutation.py C:/t/rev109 C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/rev109probe/mut
+cwd                     : C:\t\rev109
+root PID / process group: 169856 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 10.64 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 132  174556:python.exe, 163040:python.exe, 174736:python.exe, 175152:git.exe, 161492:git.exe, 176316:git.exe, 162848:python.exe, 165736:python.exe, 160128:git.exe, 176628:git.exe, 175544:python.exe, 177108:python.exe, 178212:git.exe, 178324:git.exe, 178516:git.exe, 178564:python.exe, 178584:python.exe, 178632:git.exe, 178744:git.exe, 178876:git.exe, 178980:git.exe, 179028:python.exe, 179048:python.exe, 179068:git.exe, 178232:git.exe, 178332:git.exe, 178460:python.exe, 178484:python.exe, 178608:git.exe, 178736:git.exe, 178760:git.exe, 178860:python.exe, 178908:python.exe, 179032:git.exe, 179140:git.exe, 179188:git.exe, 178252:python.exe, 178396:git.exe, 179152:python.exe, 178700:git.exe, 178728:python.exe, 178780:python.exe, 178868:git.exe, 179096:git.exe, 175020:git.exe, 178272:python.exe, 178336:git.exe, 179148:python.exe, 178256:python.exe, 178508:python.exe, 178592:git.exe, 179168:git.exe, 179052:python.exe, 179180:python.exe, 178424:git.exe, 178292:git.exe, 178808:python.exe, 178960:python.exe, 178384:git.exe, 178548:git.exe, 178624:git.exe, 178500:python.exe, 178740:python.exe, 178768:git.exe, 178776:python.exe, 178940:git.exe, 179164:python.exe, 178864:git.exe, 178196:python.exe, 178220:python.exe, 179040:git.exe, 178304:python.exe, 178680:git.exe, 179156:python.exe, 178812:git.exe, 178420:python.exe, 179172:python.exe, 178580:git.exe, 178732:git.exe, 177252:python.exe, 178188:python.exe, 176440:git.exe, 178264:git.exe, 178360:git.exe, 178568:python.exe, 178692:git.exe, 179044:python.exe, 178696:git.exe, 178192:git.exe, 178892:git.exe, 165716:git.exe, 178964:python.exe, 179176:python.exe, 178988:git.exe, 178404:git.exe, 178200:python.exe, 178844:python.exe, 179292:git.exe, 179424:git.exe, 179500:python.exe, 179520:python.exe, 179624:git.exe, 179736:git.exe, 179860:python.exe, 179880:python.exe, 179956:git.exe, 180128:git.exe, 179228:git.exe, 178724:python.exe, 178900:python.exe, 179304:git.exe, 179436:git.exe, 179524:git.exe, 179672:python.exe, 179704:python.exe, 179744:python.exe, 179800:python.exe, 179980:git.exe, 180068:git.exe, 179024:python.exe, 179232:python.exe, 179328:git.exe, 179432:git.exe, 179608:python.exe, 179676:python.exe, 179952:git.exe, 180024:python.exe, 180144:git.exe, 180172:python.exe, 179248:python.exe, 180096:git.exe, 180104:python.exe
+descendants terminated  : 132  160128, 161492, 162848, 163040, 165716, 165736, 174556, 174736, 175020, 175152, 175544, 176316, 176440, 176628, 177108, 177252, 178188, 178192, 178196, 178200, 178212, 178220, 178232, 178252, 178256, 178264, 178272, 178292, 178304, 178324, 178332, 178336, 178360, 178384, 178396, 178404, 178420, 178424, 178460, 178484, 178500, 178508, 178516, 178548, 178564, 178568, 178580, 178584, 178592, 178608, 178624, 178632, 178680, 178692, 178696, 178700, 178724, 178728, 178732, 178736, 178740, 178744, 178760, 178768, 178776, 178780, 178808, 178812, 178844, 178860, 178864, 178868, 178876, 178892, 178900, 178908, 178940, 178960, 178964, 178980, 178988, 179024, 179028, 179032, 179040, 179044, 179048, 179052, 179068, 179096, 179140, 179148, 179152, 179156, 179164, 179168, 179172, 179176, 179180, 179188, 179228, 179232, 179248, 179292, 179304, 179328, 179424, 179432, 179436, 179500, 179520, 179524, 179608, 179624, 179672, 179676, 179704, 179736, 179744, 179800, 179860, 179880, 179952, 179956, 179980, 180024, 180068, 180096, 180104, 180128, 180144, 180172
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\rev109\docs\pwml_recovery_sprint\evidence\g11\REV-109\13-rev109-route-mutation.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-109  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

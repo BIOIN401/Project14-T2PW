@@ -1,0 +1,102 @@
+{
+  "label": "rev109-drift-created",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rev109/docs/pwml_recovery_sprint/evidence/rev109_drift_created.py",
+    "C:/t/rev109",
+    "2ac8404"
+  ],
+  "cwd": "C:\\t\\rev109",
+  "started_at": "2026-09-01T03:10:02+00:00",
+  "finished_at": "2026-09-01T03:10:03+00:00",
+  "duration_seconds": 0.9152550000144402,
+  "timeout_seconds": 300.0,
+  "root_pid": 174492,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 173544,
+      "name": "python.exe",
+      "ppid": 174492
+    },
+    {
+      "pid": 173512,
+      "name": "git.exe",
+      "ppid": 173544
+    },
+    {
+      "pid": 176724,
+      "name": "git.exe",
+      "ppid": 173544
+    },
+    {
+      "pid": 177004,
+      "name": "git.exe",
+      "ppid": 173544
+    }
+  ],
+  "descendants_terminated": [
+    173512,
+    173544,
+    176724,
+    177004
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 126840,
+      "name": "python.exe"
+    },
+    {
+      "pid": 128852,
+      "name": "python.exe"
+    },
+    {
+      "pid": 175100,
+      "name": "python.exe"
+    },
+    {
+      "pid": 176404,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev109\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-109\\12-rev109-drift-created.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev109\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev109",
+    "repo_head": "3f4422857c3f585085b4632f15b8abccf8dce399",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-109",
+    "token": "REV-109:176404:af64dd411e22a3ee",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
