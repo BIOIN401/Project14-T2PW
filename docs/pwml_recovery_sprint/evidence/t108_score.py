@@ -135,10 +135,25 @@ def main() -> int:
     print("  either (T108-READINESS 2.1). Every timed-out leg is CENSORED: it proves the")
     print("  work needed MORE than 3600 s and never how much more.")
 
-    rule("2b. LEG-CEILING OVERRIDE AUDIT (must be empty)")
+    rule("2b. LEG-CEILING OVERRIDE AUDIT (must be empty) — and what it can actually see")
+    with_budget = [r for r in rows if (r.get("budget") or {}).get("leg_timeout_seconds") is not None]
     print(f"  legs with leg_timeout_overridden=true : {len(overridden_legs)} {overridden_legs}")
     print("  Expected 0 -- T-108 runs at the 3600 s DEFAULT, so there is no override and no")
     print("  empty leg_timeout_override_reason for PRODUCT_CONTRACT 9 to catch.")
+    print()
+    print(f"  EVIDENCE LIMIT, stated rather than glossed: only {len(with_budget)} of {len(rows)} manifest")
+    print("  row(s) carry a budget block at all. The runner writes it on the TIMEOUT path; a")
+    print("  leg that finished normally records no ceiling, so for those legs the absence of")
+    print("  leg_timeout_overridden is NOT positive proof of 'false' -- it is no observation.")
+    print("  The run-wide claim rests on the pre-launch resolution (_ceiling(3600.0) ->")
+    print("  overridden False, evidence/g11/T-108/07) plus these timeout rows confirming it")
+    print("  in a PRODUCED artifact. An audit that counted silent legs as confirmations")
+    print("  would be reporting its own blind spot as a pass.")
+    for r in with_budget:
+        b = r["budget"]
+        print(f"    {r.get('slug')}/{r.get('mode')}: leg_timeout_overridden="
+              f"{b.get('leg_timeout_overridden')} ceiling={b.get('leg_timeout_seconds')} "
+              f"default={b.get('leg_timeout_default_seconds')}")
 
     rule("2c. MISSING OR PARTIAL PAYLOADS")
     print(f"  legs with an EMPTY files list : {len(missing_payload)}")

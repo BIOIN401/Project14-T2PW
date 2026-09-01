@@ -83,6 +83,9 @@ reserve · partial-payload preservation.
 |---|---|---|---|---|
 | 0 | 2026-09-01T22:11Z | not launched | - | ownership claimed; pre-launch gates green |
 | 1 | 2026-09-01T22:14:52Z | **LAUNCHED** | 0/20 | lock acquired. `CONTINUING the incomplete run 2026-09-01_1612 (no --fresh given)` - `already recorded : 0`, `still to do : 20`. Leg `[1/20] PMC12444477 / strict -> starting (timeout 3600s)`. Deadline 18.0h |
+| 2 | 2026-09-01T22:22Z | alive | 0/20 | leg 1 in flight. Lock held, run dir 44 MB / 28 files, 9 owned python procs. Quiet log is expected mid-leg, not a stall |
+| 3 | 2026-09-01T23:15Z | alive | **1/20** | `[1/20] PMC12444477 / strict -> TIMEOUT (timeout) in 3600.8s (60m00s)`. **Timed out at the FULL 3600 s ceiling** - on T-107 the same leg timed out at 1798.3 s against 1800 s. `budget.leg_timeout_overridden: false` confirmed **in the produced manifest**. C-111 preserved `LEG_TERMINAL.json` 1131 B + `LEG_TRACE.jsonl` 24564 B + `RESULT.txt` 5157 B - where T-107's timed-out legs preserved nothing. `[2/20] PMC12444477 / research -> starting`. Projection revised: T-107's finished legs are unaffected by the higher ceiling, so the estimate is T-107's 5.63 h plus up to 3x1800 s of extra timeout budget = **~7.1 h**, landing ~05:20Z. Well inside the 18 h deadline and 20 h wrapper |
+| 4 | 2026-09-01T23:56Z | alive | **2/20** | `[2/20] PMC12444477 / research -> PASS WITH WARNINGS in 2446.5s (40m46s)`, **18 files**. **This is the 3600 s ruling vindicated by measurement.** The same leg on T-107 was `TIMEOUT 1800.5s, 0 files`; 2446.5 s is **136% of T-107's ceiling**, so it could never have finished on that budget. A leg lost to the clock, not to biology - exactly F-148's diagnosis - recovered by restoring the default. Consequence to measure at scoring: **LpxH may become measurable on T-108**, where T-107 had no payload on either `PMC12444477` leg. Not claimed yet. `[3/20] PMC13231680 / strict -> starting` |
 
 ## 5. Closure
 
