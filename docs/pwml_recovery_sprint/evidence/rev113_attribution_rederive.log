@@ -1,0 +1,140 @@
+REV-113 INDEPENDENT RE-DERIVATION
+repo                         : C:\t\rev113
+tracked quarantine_report.json (the population both tests walk) : 72
+arm PRE   requested sha      : aee8cb4f1da3d417f36206407867585622b741c0
+          materialised blob  : aee8cb4f1da3d417f36206407867585622b741c0   MATCH=True
+arm POST  requested sha      : 36f4b7b690b577f72882c3045ca6728d1ec8d9d1
+          materialised blob  : 36f4b7b690b577f72882c3045ca6728d1ec8d9d1   MATCH=True
+top-level dirs contributing legs : ['runs_verify']
+
+==============================================================================
+THE SCALARS, EACH ACCUMULATED BY A COMPLETE LOOP IN ITS OWN ARM
+==============================================================================
+  legs                      PRE    72   POST    72   unmoved
+  withheld                  PRE    97   POST   100   MOVED
+  with_matched_forbidden    PRE    26   POST    29   MOVED
+  cleared                   PRE []   POST []
+  affected outside F132  PRE  ['PMC13231680']
+  affected outside F132  POST ['PMC12180156', 'PMC13231680']
+
+  withheld decomposition (measured per arm, not assumed):
+    the 69 other legs        PRE   97   POST   97
+    the 3 named legs         PRE    0   POST    3
+    total                    PRE   97   POST  100
+
+==============================================================================
+THE THREE LEGS THE DIFF NAMES -- do they exist and do they move?
+==============================================================================
+
+  runs_verify/2026-08-21_2239/papers/PMC12180156/research/quarantine_report.json
+      file on disk / git-tracked : True / True
+      paper : mode               : PMC12180156 : research
+      excluded_count             : PRE 0 -> POST 1
+      excluded_terms             : PRE [] -> POST ['δ-aminolevulinic acid']
+      matched forbidden in raw   : PRE False -> POST True
+
+  runs_verify/2026-08-21_2239/papers/PMC12180156/strict/quarantine_report.json
+      file on disk / git-tracked : True / True
+      paper : mode               : PMC12180156 : strict
+      excluded_count             : PRE 0 -> POST 1
+      excluded_terms             : PRE [] -> POST ['δ-aminolevulinic acid']
+      matched forbidden in raw   : PRE False -> POST True
+
+  runs_verify/2026-08-28_1816/papers/PMC12180156/research/quarantine_report.json
+      file on disk / git-tracked : True / True
+      paper : mode               : PMC12180156 : research
+      excluded_count             : PRE 0 -> POST 1
+      excluded_terms             : PRE [] -> POST ['δ-aminolevulinic acid']
+      matched forbidden in raw   : PRE False -> POST True
+
+  every OTHER leg, both arms compared field by field:
+      legs differing between arms and NOT among the three named : 0
+
+==============================================================================
+THE FOURTH LEG -- the enzyme, volunteered by the author as a NON-mover
+==============================================================================
+  runs_verify/2026-08-24_1402/papers/PMC12180156/research/quarantine_report.json
+      git-tracked                : True
+      PRE  : {'paper': 'PMC12180156', 'mode': 'research', 'excluded_count': 0, 'excluded_terms': [], 'matched': False}
+      POST : {'paper': 'PMC12180156', 'mode': 'research', 'excluded_count': 0, 'excluded_terms': [], 'matched': False}
+      classification changed     : False
+
+      requested_core_terms on this leg, and what the gate says about each:
+        'heme'
+            PRE-edit  forbidden_coverage_match : None
+            POST-edit forbidden_coverage_match : None
+        'glycine'
+            PRE-edit  forbidden_coverage_match : None
+            POST-edit forbidden_coverage_match : None
+        'iron'
+            PRE-edit  forbidden_coverage_match : None
+            POST-edit forbidden_coverage_match : None
+        'ferrochelatase'
+            PRE-edit  forbidden_coverage_match : None
+            POST-edit forbidden_coverage_match : None
+        'δ-aminolevulinic acid synthase (ALAS2)'
+            PRE-edit  forbidden_coverage_match : None
+            POST-edit forbidden_coverage_match : None
+        'SFXN4'
+            PRE-edit  forbidden_coverage_match : None
+            POST-edit forbidden_coverage_match : None
+        'ALAS2'
+            PRE-edit  forbidden_coverage_match : None
+            POST-edit forbidden_coverage_match : None
+
+      the separation, asked of the gate directly under the POST-edit gold:
+        'delta-aminolevulinic acid'                          PRE None                         POST '5-aminolevulinic acid'
+        'δ-aminolevulinic acid'                              PRE None                         POST '5-aminolevulinic acid'
+        'δ-aminolevulinic acid synthase'                     PRE None                         POST None
+        'δ-aminolevulinic acid synthase (ALAS2)'             PRE None                         POST None
+        'erythroid delta-aminolevulinic acid synthase'       PRE None                         POST None
+        'aminolevulinic acid'                                PRE None                         POST None
+        '5-aminolevulinic acid'                              PRE '5-aminolevulinic acid'      POST '5-aminolevulinic acid'
+
+      the same case's acceptable_enzymes, for the internal-consistency claim:
+        name='ferrochelatase' aliases=()
+        name='ALAS2' aliases=('erythroid delta-aminolevulinic acid synthase',)
+        name='SHMT2' aliases=('serine hydroxymethyltransferase',)
+        name='SFXN1' aliases=()
+        name='SFXN4' aliases=()
+
+==============================================================================
+WHAT THE PINS WOULD HAVE TO BE, DERIVED HERE AND NOWHERE ELSE
+==============================================================================
+  assert legs == 72
+  assert withheld == 100
+  assert with_matched_forbidden == 29
+  assert set(affected_papers) - set(F132_PAPERS) == ['PMC12180156', 'PMC13231680']
+  assert cleared == []
+
+  under the PRE-edit gold the same pins would be:
+  assert withheld == 97
+  assert with_matched_forbidden == 26
+  assert set(affected_papers) - set(F132_PAPERS) == ['PMC13231680']
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev113\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba4bde3be0a3e8853ec4d40855853bab42fae26f  [git, worktree dirty=False]
+label                   : attribution-rederive
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/rev113_attribution_rederive.py C:/t/rev113 aee8cb4f1da3d417f36206407867585622b741c0 36f4b7b690b577f72882c3045ca6728d1ec8d9d1 C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/1600a781-cef0-4585-a0e2-eb4510b0663f/scratchpad/rev113
+cwd                     : C:\t\rev113
+root PID / process group: 555272 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.24 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 2  555044:python.exe, 553540:git.exe
+descendants terminated  : 2  553540, 555044
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rev113/docs/pwml_recovery_sprint/evidence/g11/REV-113/01-attribution-rederive.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=REV-113  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
