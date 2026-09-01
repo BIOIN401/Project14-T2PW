@@ -7033,3 +7033,84 @@ All three stale claims in that paragraph shared one root: they were written agai
 architecture, and the two that named a *module* were falsified by the wiring moving, not by the
 functionality being absent. **When a card moves a responsibility between modules, the claim that the
 old module lacks it becomes true and misleading in the same commit.**
+
+---
+
+## F-157 — a citation pinned to bytes that exist in no commit, in the file nobody may commit
+
+- **Severity** MEDIUM · **Class `product_contract_violation`** (of the sprint's citation discipline —
+  F-154's class, in its worst available form) · **Registered 2026-08-31 (ORCH-717)**
+- **Surfaced by the C-109 implementer** while executing its charter, and **reported rather than
+  silently corrected**. Re-verified by the Lead against the committed tree before registration.
+
+### The measurement
+
+F-153, the merged `MASTER_PLAN.md` § 2 correction, and **the Lead's own C-109 charter** all cite
+`streamlit_app.py:5669` as the production call site for `run_rag_rounds`. Measured at `2ac8404`:
+
+```
+git show 2ac8404:src/t2pw/app/streamlit_app.py
+  :5636  ->      rag_loop_record = run_rag_rounds(          <- the actual call
+  :5669  ->  st.session_state["pathway_context"] = pathway_context
+
+working copy (UNCOMMITTED) src/t2pw/app/streamlit_app.py
+  :5669  ->      rag_loop_record = run_rag_rounds(          <- where the citation came from
+```
+
+`:1270` and `:1426` are correct in both. `run_rag_rounds` is defined at `:1239`.
+
+### Why this is F-154's defect in its worst form
+
+A drifted line address at least points at *something in the repository*. **This one points at nothing
+any reader can obtain.**
+
+`src/t2pw/app/streamlit_app.py` is on the sprint's **never-commit list** — a protected product-owner
+diff of **35 insertions / 2 deletions** that is deliberately never committed. So the citation was
+taken from a working tree whose bytes exist in **no commit and no branch**, and **no reader,
+reviewer or future agent can reproduce it from git**. It is not stale; it is unreachable.
+
+The `+33`-line offset between the two is exactly the protected diff.
+
+### What makes it worth its own finding rather than an F-154 instance
+
+F-154's mechanism is *insertion above a pin*, and its cure is a stable anchor. **This mechanism is
+different: the address was never right in the artifact a reader has access to.** An anchor fixes it
+too, but the lesson is separate and sharper:
+
+> **When you cite a line in a file that is uncommitted — or that carries an uncommitted diff — you
+> are citing your own working tree, not the repository.** Every measurement offered as evidence must
+> be taken through `git show <sha>:<path>`, not by reading the file in place, whenever the file can
+> differ from HEAD.
+
+**And `streamlit_app.py` is the file in this repository most certain to differ from HEAD**, because
+the contract requires it to.
+
+### How it propagated, recorded honestly
+
+The bad citation went **F-153 → the merged `MASTER_PLAN.md` correction → the Lead's C-109 charter**,
+picked up unexamined at each step because the previous document was trusted. **The Lead had also
+verified `:5636` independently earlier in the same wave** — while checking a peer session's
+graph-delta claims, where the peer cited `:5636` and F-153 cited `:5669` — **and did not reconcile
+the discrepancy.** The implementer did.
+
+**That is the third time this wave a dispatched agent has corrected the Lead**, and the second time
+the correction was to a number the Lead had the evidence to catch. *Reading the report is not
+verification, and that applies to your own reports* — including to a discrepancy you have already
+seen and not chased.
+
+### Disposition
+
+* **Corrected in `controller.py` and the `MASTER_PLAN.md` note by C-109**, which cites `:5636`,
+  explains the discrepancy, and whose probe asserts **both halves** — that `:5636` resolves and that
+  `:5669` does not.
+* **`FINDINGS.md` § F-153's own text still carries `:5669`.** It is **outside C-109's boundary**
+  (which permits `FINDINGS.md:1120-1124` only) and is **deliberately not fixed there**. Handed
+  forward with the correct value above, so nobody re-derives it.
+* **No change to `streamlit_app.py`.** It is protected and stays exactly as it is at 35/2.
+
+### Standing lesson
+
+**A protected uncommitted file is a citation hazard, not just a merge hazard.** The sprint already
+knows never to *commit* `streamlit_app.py`; what it did not have written down is that you must never
+*cite line numbers in it* either. Cite a **symbol** — `run_rag_rounds`, `run_rag_loop` — which is
+identical in both trees and cannot drift by 33 lines.
