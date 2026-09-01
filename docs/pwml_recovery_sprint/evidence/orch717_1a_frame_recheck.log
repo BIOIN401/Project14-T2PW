@@ -1,0 +1,75 @@
+tree under measurement: C:\t\rev107base
+
+==========================================================================
+FRAME 1 -- the bare frame my probe implied (no independent catalysis cue)
+==========================================================================
+  word             contra?  catalysis?  licenses NDM-1 as CATALYST
+  blockade         False    False       False
+  impairment       False    False       False
+  disruption       False    False       False
+  reduction        False    True        True
+  loss             False    False       False
+  silencing        False    False       False
+  sequestration    False    False       False
+  depletion        False    False       False
+  ablation         False    False       False
+  interference     False    False       False
+  quenching        False    False       False
+
+  admits the defect in the BARE frame : 1 of 11
+
+==========================================================================
+FRAME 2 -- with a real catalysis cue in the window ('is mediated by')
+==========================================================================
+  blockade         licenses NDM-1 as CATALYST: True
+  impairment       licenses NDM-1 as CATALYST: True
+  disruption       licenses NDM-1 as CATALYST: True
+  reduction        licenses NDM-1 as CATALYST: True
+  loss             licenses NDM-1 as CATALYST: True
+  silencing        licenses NDM-1 as CATALYST: True
+  sequestration    licenses NDM-1 as CATALYST: True
+  depletion        licenses NDM-1 as CATALYST: True
+  ablation         licenses NDM-1 as CATALYST: True
+  interference     licenses NDM-1 as CATALYST: True
+  quenching        licenses NDM-1 as CATALYST: True
+
+  admits the defect WITH a cue present : 11 of 11
+
+==========================================================================
+CONTROL -- the sentence the paper actually contains must still refuse
+==========================================================================
+  False <- 'PSA significantly inhibited NDM-1 enzyme activity'
+  True  <- 'NDM-1 catalyses the hydrolysis of meropenem'
+
+VERDICT ON MY OWN PROBE:
+  '11 of 12 defeat the contra-cue' -- CORRECT as stated (a word-level fact).
+  But defeating the contra is NECESSARY, NOT SUFFICIENT: a window still
+  needs a catalysis cue. My card's prose ran the two together.
+  Bare frame admits 1; with a cue present, 11.
+  The author's refinement is sharper and it is the one to charter against.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 33a99e7c6a06ca8ee3cffe013f8484bcfb417f27  [git, worktree dirty=True]
+label                   : orch717-1a-frame
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch717_1a_frame_recheck.py C:/t/rev107base
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 29072 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 240 s
+duration                : 0.27 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  30788:python.exe
+descendants terminated  : 1  30788
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-717\09-1a-frame-recheck.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
