@@ -9095,3 +9095,120 @@ noting the flip.
 `suppressor`, `inhibitor`. **The third independent instance of this defect in one file.**
 **(e)** three load-bearing anchors added by round 2 that no test covers; exposure measured at 4/2/4
 spans, all over-refusal, behaviour currently correct.
+
+---
+
+## ORCH-717 — final engineering and release-candidate wave · 2026-08-31
+
+**Takeover verified, not assumed.** Tip `f67e00a`, `local = origin = git ls-remote` all three equal.
+`main` untouched at local `7531692` / remote `03f1af5`. No merge in progress, nothing staged, heavy
+lock absent, **zero** sprint-owned Python, only the two `ms-python.isort` IDE processes.
+`streamlit_app.py` uncommitted at **35 ins / 2 del**, `sha256:47e4fafa789d359d…`. Caches,
+`topics_*.txt`, `cache_snapshot/` and the stray zero-byte `ValueError` untouched.
+
+**Peer coordination.** `ListAgents` showed one live interactive peer in this project,
+`project14-t2pw-93`. Contacted before claiming anything; it replied **"no claims"** — read-only
+assessment work, no branch, no worktree, no lock, no job, no edit. It also relayed that this is the
+**third** Lead Orchestrator on this branch within about an hour (`-b1`, then `-ab`, now this one),
+both predecessors absent from its listing, so the handoffs are sequential rather than concurrent.
+**It flagged that one of its own earlier reports to a predecessor was a torn `git status` read while
+another session was mid-commit, and told me to re-derive rather than trust it.** I did: ancestry
+checked, `c7fb5c5` confirmed an ancestor of the tip, and every commit between it and `f67e00a`
+accounted for as documented sprint history.
+
+### Baselines I measured MYSELF before chartering anything
+
+Not copied from a report. `evidence/orch717_baseline_battery_f67e00a.log`,
+`orch717_baseline_corpus_f67e00a.log`, G11 `ORCH-717/13`, `ORCH-717/14`:
+
+```
+TOTALS  battery=0/29  F146=REJECTED  C1=0 C2=0 C3=0 C4=0 C5=1 C6=0
+ROWS: 692  ACCEPTED: 401  REFUSED: 291
+```
+
+**The `C5=1` is worth the whole run.** It is F-155 member **(a)** itself: the battery already
+encodes `'add P as a transporter to resolve the structural inconsistency'` as **want REFUSE** and the
+shipped code **ACCEPTs** it. So (a) arrives with a committed, behavioural, already-executing **G9
+base failure** — nobody has to construct one, and the success criterion is simply `C5: 1 → 0` with
+`battery=0/29` and `F146=REJECTED` unmoved.
+
+### Cards chartered this wave
+
+| Card | Scope | State |
+|---|---|---|
+| **C-108** | F-155 all five members, `curation/apply_audit_patch.py` + one new test file | **dispatched**, worktree `C:/t/c108`, base tree `C:/t/c108base` |
+| **C-109** | control plane: F-153 remainder, F-154, the reviewer-evidence route | **dispatched**, worktree `C:/t/c109` |
+| **C-110** | Q1 negative-control status, acceptance instrument | chartered, not yet dispatched |
+| **C-111** | F-148 observability — instrument only, fixes nothing | chartered, not yet dispatched |
+
+`REV-108.md` criteria were **fixed and committed before the C-108 diff existed**.
+
+### Rulings — `RULINGS-ORCH717.md`
+
+**Q1 — ruled by the product owner.** A gold-designated negative control passes its semantic
+expectation when it releases no reactions, gives the required rejection reason, and the emptiness is
+**not** caused by timeout, crash, missing artifact or infrastructure failure. Reported as
+**`PASS_NEGATIVE_CONTROL`**. This does **not** conflict with the packet's "never `PASS`": the packet
+objected to a *bare* `PASS` being indistinguishable from a correct positive, and an explicit token is
+distinguishable.
+
+**Can the scorer represent it? Partly — so C-110 exists.** The predicate is already written:
+`_empty_is_correct(case)` at `acceptance.py:1530` is literally *"whether producing nothing is the
+RIGHT outcome for this gold case"*, and negative controls are already dropped from the
+extraction-blocker ranking with `PMC13231680` named in the comment. What is missing is that the
+scorer says so **only in the blocker ranking and nowhere in the verdict** — and the misleading token
+is emitted at `batch/runner.py:717`, inside `result_text(row, paper=...)`, which receives a manifest
+row and a paper dict and **has no `GoldCase` in scope at all.** C-110 therefore carries a stop
+condition: if fixing `RESULT.txt` requires giving the batch runner gold-set access, the implementer
+**reports rather than builds it**.
+
+**Q3 — ruled: a `pathbank_compound_id` is NOT a real accession for Priority 1. No code change.**
+`evidence/orch717_q3_pathbank.py`, G11 `ORCH-717/18`:
+
+* `_external_ids` recognises exactly `uniprot, drugbank, hmdb, kegg, chebi, pubchem`. **PathBank is
+  not among them**, so the status quo already *is* the conservative policy.
+* **Q3 cannot move Q2's arithmetic, and the packet's coupling dissolves.** The affected row carries
+  **five** recognised accessions with the PathBank id removed **entirely**; the Priority-1 branch is
+  guarded by `if ids:`, which asks whether *any* recognised accession is present. `bool(ids)` is
+  `True` either way.
+* **The conditional-acceptance policy the guardrails describe is not implementable here.** The whole
+  local id space is **bare small integers over a 55-row table**, and the committed exporter record
+  shows these ids are produced with `db_status = matched_offline_name_index` and
+  `chosen_rule = legacy_pathwhiz_id_unverified` — an offline **name-index** match carrying an
+  unverified legacy id, which is exactly the "merely sharing a name fragment" case the guardrails
+  exclude. So the guardrail-satisfying option is the one that costs no code.
+
+**Registered, not fixed:** a row carrying **only** a PathBank id reads as *bare* to `_external_ids`,
+and D-074's sentinel tolerance turns on bareness. **No live exposure** — `acceptance.py` records that
+branch as *"UNREACHABLE TODAY, AND THAT IS THE RULING'S SHAPE, NOT A BUG"*. A property to re-check if
+that condition is ever loosened; loosening it to make it fire stays refused.
+
+**Q2 — half 1 unblocked, half 2 still a product-owner question.** Both halves re-verified by me
+(`evidence/orch717_f150_reverify.log`, G11 `ORCH-717/16`): the `delta` / `δ` spellings are absent
+from the alias list so the run's worst false accession was never counted, and
+`supported_reactions_complete` is `False` on **all ten** cases, leaving Priority 2 evaluable only
+through `max_retained_reactions`, set on exactly two — **both negative controls**. Half 1 goes to the
+Wave-4 conditional authority on its own merits. **Half 2 — whether `supported_reactions_complete`
+should be set on any case — is a decision about what the benchmark MEANS on every future run, not a
+data correction, and remains the one open product-owner question.**
+
+> **Priority 2 = 1 is a real number and it is not a measure of how much invented chemistry T-107
+> produced. Any report quoting it must carry that limit.**
+
+### Preserved failed measurements
+
+Two attempts kept beside their corrections rather than deleted:
+`orch717_f150_reverify.attempt1-missing-argv.log` (probe needs an explicit repo root) and
+`orch717_q3_pathbank.attempt1-glycine-id-framing.log` — the first Q3 run implied the representative
+PathBank id `78` was the δ-ALA row's own when it is **Glycine's**, taken from the committed exporter
+record. The conclusion never depended on the value, only on presence/absence, but the probe now says
+so explicitly rather than letting the record overclaim.
+
+### Unchanged and protected
+
+**T-107** — not rerun, not rescored, not reinterpreted. **`NOT ACCEPTED` stands.** · **F-147** —
+registered, deliberately **not chartered**; the earliest unsafe seam is **Stage-1 extraction**, not
+the driver, and a downstream-only fix would flip two legs to PASS that then export gold-forbidden
+content. **Merge rule 6.** · **`placeholder_backed_proteins` / Unknown-backed export** —
+`PRODUCT_CONTRACT` § 13 standing disagreement, escalate only, untouched. · **The gold file** —
+unmodified.
