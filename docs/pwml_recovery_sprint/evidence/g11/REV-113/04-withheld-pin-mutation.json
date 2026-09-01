@@ -1,0 +1,87 @@
+{
+  "label": "withheld-pin-mutation",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--no-header",
+    "--basetemp=C:/t/btrev113/withheldmut2",
+    "tests/test_c102_coverage_denominator.py::test_10_f132_population_regression_over_the_six_papers"
+  ],
+  "cwd": "C:\\t\\rev113",
+  "started_at": "2026-09-01T21:13:10+00:00",
+  "finished_at": "2026-09-01T21:13:12+00:00",
+  "duration_seconds": 1.0774357999907807,
+  "timeout_seconds": 300.0,
+  "root_pid": 552648,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 543204,
+      "name": "python.exe",
+      "ppid": 552648
+    }
+  ],
+  "descendants_terminated": [
+    543204
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 439056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 455056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 557324,
+      "name": "python.exe"
+    },
+    {
+      "pid": 557480,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\rev113\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-113\\04-withheld-pin-mutation.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev113\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev113",
+    "repo_head": "c0c3e077b4d030ba6202475fe7f37f2697724637",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-113",
+    "token": "REV-113:557480:d148770b1447104e",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
