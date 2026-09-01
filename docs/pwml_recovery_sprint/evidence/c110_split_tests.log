@@ -1,4 +1,4 @@
-collected 22 node id(s) from tests/test_c110_negative_control_status.py
+collected 32 node id(s) from tests/test_c110_negative_control_status.py
 ==============================================================================
 OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_population_1_a_positive_control_still_requires_reaction_production
 OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_population_2_a_true_negative_control_earns_the_status
@@ -21,10 +21,20 @@ OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_every_gu
 OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_every_withholding_code_is_in_the_closed_vocabulary
 OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_the_decline_and_casualty_kinds_match_the_drivers_own_constants
 OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_the_operational_set_is_d005s_own_and_not_a_copy
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_rev110_a_provider_casualty_relabelled_contract_is_refused
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_rev110_an_unknown_kind_with_a_code_is_a_silence_not_a_decline
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_rev110_an_ambiguous_scope_stop_with_codes_is_refused
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_an_issue_code_alone_never_satisfies_condition_two
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_scientifically_unrecoverable_is_the_other_declared_route
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_condition3_reading_1_operational_failure_is_load_bearing
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_condition3_reading_2_termination_reason_is_load_bearing
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_condition3_reading_3_status_is_load_bearing
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_condition3_reading_4_failure_kind_is_load_bearing
+OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_condition3_reading_5_boundary_is_load_bearing
 OK   exit=0 passed=1   tests/test_c110_negative_control_status.py::test_negative_control_outcome_returns_none_for_a_relevant_case
 ==============================================================================
-nodes run           : 22
-passed (summed)     : 22
+nodes run           : 32
+passed (summed)     : 32
 failing nodes       : 0
 SPLIT RESULT        : GREEN
 
@@ -32,24 +42,24 @@ SPLIT RESULT        : GREEN
 report schema version   : 1
 wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
 wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
-wrapper vs HEAD         : clean  @ 5071715182a6c5ff8a9ec35008d7bf993ed65ad1  [git, worktree dirty=True]
-label                   : c110-split-r2
-command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c110_split_tests.py C:/t/c110 C:/t/tb110/sp2
+wrapper vs HEAD         : clean  @ db8caf16abe58fcd7f0a60380ec88144e45c6ffb  [git, worktree dirty=True]
+label                   : c110-r1-split
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c110_split_tests.py C:/t/c110 C:/t/tb110/sp3
 cwd                     : C:\t\c110
-root PID / process group: 198492 / None
+root PID / process group: 219328 / None
 isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
-timeout                 : 1200 s
-duration                : 12.55 s
+timeout                 : 1500 s
+duration                : 17.52 s
 exit reason             : completed
 exit code (real)        : 0
 returned code           : 0
-descendants observed    : 47  198520:python.exe, 198508:python.exe, 198540:python.exe, 198612:python.exe, 198628:python.exe, 197700:python.exe, 197704:python.exe, 197656:python.exe, 197816:python.exe, 197828:python.exe, 197836:python.exe, 196348:python.exe, 197744:python.exe, 196260:python.exe, 197944:python.exe, 198040:python.exe, 198084:python.exe, 198216:python.exe, 198268:python.exe, 198308:python.exe, 198360:python.exe, 198380:python.exe, 198408:python.exe, 198448:python.exe, 198452:python.exe, 198572:python.exe, 198632:python.exe, 197648:python.exe, 198056:python.exe, 197232:python.exe, 197956:python.exe, 197780:python.exe, 197992:python.exe, 195660:python.exe, 198096:python.exe, 198368:python.exe, 198424:python.exe, 198292:python.exe, 198332:python.exe, 198264:python.exe, 198340:python.exe, 198404:python.exe, 198644:python.exe, 198444:python.exe, 198552:python.exe, 197972:python.exe, 198624:python.exe
-descendants terminated  : 47  195660, 196260, 196348, 197232, 197648, 197656, 197700, 197704, 197744, 197780, 197816, 197828, 197836, 197944, 197956, 197972, 197992, 198040, 198056, 198084, 198096, 198216, 198264, 198268, 198292, 198308, 198332, 198340, 198360, 198368, 198380, 198404, 198408, 198424, 198444, 198448, 198452, 198508, 198520, 198540, 198552, 198572, 198612, 198624, 198628, 198632, 198644
+descendants observed    : 67  219340:python.exe, 219360:python.exe, 219380:python.exe, 219400:python.exe, 219420:python.exe, 219452:python.exe, 219472:python.exe, 219492:python.exe, 219512:python.exe, 219604:python.exe, 219624:python.exe, 219652:python.exe, 219676:python.exe, 219704:python.exe, 219724:python.exe, 219748:python.exe, 219768:python.exe, 219864:python.exe, 219884:python.exe, 219908:python.exe, 219928:python.exe, 220124:python.exe, 220144:python.exe, 219556:python.exe, 219588:python.exe, 219772:python.exe, 219808:python.exe, 219792:python.exe, 219824:python.exe, 219816:python.exe, 219892:python.exe, 220072:python.exe, 220100:python.exe, 219188:python.exe, 219208:python.exe, 215204:python.exe, 216240:python.exe, 219152:python.exe, 219268:python.exe, 219388:python.exe, 219488:python.exe, 219408:python.exe, 219552:python.exe, 217936:python.exe, 219536:python.exe, 219244:python.exe, 219320:python.exe, 219324:python.exe, 219396:python.exe, 206792:python.exe, 219668:python.exe, 219596:python.exe, 219756:python.exe, 219832:python.exe, 219848:python.exe, 219920:python.exe, 220060:python.exe, 219164:python.exe, 220020:python.exe, 219484:python.exe, 219464:python.exe, 219508:python.exe, 219576:python.exe, 219860:python.exe, 219924:python.exe, 219304:python.exe, 220132:python.exe
+descendants terminated  : 67  206792, 215204, 216240, 217936, 219152, 219164, 219188, 219208, 219244, 219268, 219304, 219320, 219324, 219340, 219360, 219380, 219388, 219396, 219400, 219408, 219420, 219452, 219464, 219472, 219484, 219488, 219492, 219508, 219512, 219536, 219552, 219556, 219576, 219588, 219596, 219604, 219624, 219652, 219668, 219676, 219704, 219724, 219748, 219756, 219768, 219772, 219792, 219808, 219816, 219824, 219832, 219848, 219860, 219864, 219884, 219892, 219908, 219920, 219924, 219928, 220020, 220060, 220072, 220100, 220124, 220132, 220144
 graceful attempted      : False
 forced                  : False
 FINAL SURVIVING COUNT   : 0
 cleanup                 : success
-json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\06-c110-split-r2.json
+json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\18-c110-r1-split.json
 json report written     : True
 heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
 pre-existing (reported, NEVER killed): 4

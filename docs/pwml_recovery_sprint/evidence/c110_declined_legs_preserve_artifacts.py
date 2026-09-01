@@ -32,7 +32,14 @@ ROOT = Path(sys.argv[1]).resolve()
 #: NOT OPENED. T-107's run directory, excluded by name and by assertion.
 T107 = "2026-08-28_1816"
 
-DECLINE_KINDS = {"no_reactions", "contract"}
+# CORRECTED IN ROUND 1. `contract` was in this bucket and is not a declared
+# decline: `driver._classify` returns KIND_CONTRACT for `contract_signal or
+# issue_codes` BEFORE its network and LLM markers, so it is the catch-all for
+# "there were issue codes" and a provider casualty wears it out. The rule
+# accepts `no_reactions` only, and the survey now groups the same way -- so
+# the table below measures the population the rule actually acts on.
+DECLINE_KINDS = {"no_reactions"}
+GATE_KINDS = {"contract"}
 CASUALTY_KINDS = {"timeout", "crash", "network", "llm"}
 
 
@@ -58,7 +65,8 @@ def main() -> int:
     print()
 
     buckets: dict[str, Counter] = {
-        "declared decline": Counter(),
+        "declared decline (no_reactions)": Counter(),
+        "gate stop (contract) -- NOT a decline": Counter(),
         "casualty": Counter(),
         "other": Counter(),
     }
@@ -83,7 +91,9 @@ def main() -> int:
                 continue
             kind = str(row.get("failure_kind") or "").strip().casefold()
             if kind in DECLINE_KINDS:
-                bucket = "declared decline"
+                bucket = "declared decline (no_reactions)"
+            elif kind in GATE_KINDS:
+                bucket = "gate stop (contract) -- NOT a decline"
             elif kind in CASUALTY_KINDS or status in ("timeout", "error"):
                 bucket = "casualty"
             else:

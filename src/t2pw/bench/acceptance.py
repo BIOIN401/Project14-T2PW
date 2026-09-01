@@ -102,6 +102,7 @@ from t2pw.pipeline.release_status import (
 from t2pw.pipeline.deadline import (
     OPERATIONAL_TERMINATION_REASONS,
     SCIENTIFICALLY_UNRECOVERABLE,
+    TERMINATION_REASONS,
 )
 
 
@@ -176,13 +177,24 @@ NC_BLOCK_CODES: Tuple[str, ...] = (
 )
 
 #: ``failure_kind`` values that are an EXPLICIT declared decline. Mirrors
-#: ``batch.driver.KIND_NO_REACTIONS`` and ``KIND_CONTRACT``; the literals are
-#: repeated rather than imported because ``batch.driver`` pulls in the whole
-#: Streamlit app and ``bench`` must stay importable without it -- exactly as
-#: ``bench/metrics.py`` already repeats ``"no_reactions"``. The pin against
-#: the driver's own constants lives in
-#: ``tests/test_c110_negative_control_status.py`` so the two cannot drift.
-_NC_DECLINE_KINDS: Tuple[str, ...] = ("no_reactions", "contract")
+#: ``batch.driver.KIND_NO_REACTIONS``; the literal is repeated rather than
+#: imported because ``batch.driver`` pulls in the whole Streamlit app and
+#: ``bench`` must stay importable without it -- exactly as ``bench/metrics.py``
+#: already repeats ``"no_reactions"``. The pin against the driver's own
+#: constant lives in ``tests/test_c110_negative_control_status.py``.
+#:
+#: **REV-110: ``contract`` WAS HERE AND WAS REMOVED, and the reason is a fact
+#: about ``batch.driver._classify``, not a matter of taste.** That function
+#: tests ``if contract_signal or issue_codes: return KIND_CONTRACT`` BEFORE it
+#: reaches its network and LLM markers, so ``contract`` is the catch-all for
+#: "there were issue codes" -- and a provider casualty carrying one is
+#: relabelled ``contract`` on the way out. ``_fail`` clears no artifacts, so
+#: such a row also keeps a non-empty ``files``. Accepting ``contract`` here
+#: therefore admitted a killed leg through condition 2 with condition 3's
+#: artifact guard satisfied. It is also the DOMINANT bucket -- 55 legs across
+#: the committed manifests against ``no_reactions``'s 8
+#: (``evidence/c110_declined_legs_preserve_artifacts.log``).
+_NC_DECLINE_KINDS: Tuple[str, ...] = ("no_reactions",)
 #: ``failure_kind`` values that name an EXECUTION failure. A leg carrying one
 #: of these produced nothing because it was stopped, not because it declined.
 _NC_CASUALTY_KINDS: Tuple[str, ...] = ("timeout", "crash", "network", "llm")
@@ -1329,9 +1341,16 @@ def score_run(
                 # `termination_reason` / `operational_failure` are written by
                 # both kill paths under the same key names (driver.to_dict and
                 # runner._timeout_row), so one read covers both sides of the
-                # process boundary. A row from before those keys existed leaves
-                # all four at their falsy defaults, which the negative-control
-                # rule treats as INDETERMINATE, not as clean.
+                # process boundary.
+                #
+                # WHAT AN OLD-SHAPE ROW ACTUALLY DOES, corrected: a row from
+                # before those keys existed leaves all four falsy, and that is
+                # NOT treated as indeterminate. An old-shape DECLINE
+                # (`no_reactions` + a message + files) passes cleanly, which is
+                # correct. What absence buys is only that the two new readings
+                # do not fire; an old-shape TIMEOUT is still caught by `status`,
+                # `failure_kind` and `boundary`, which is why the casualty test
+                # has five independent readings and not two.
                 leg.termination_reason = canonical_text(row.get("termination_reason"))
                 leg.operational_failure = row.get("operational_failure") is True
                 leg.artifacts_recorded = len(
@@ -1775,9 +1794,11 @@ def negative_control_outcome(
        no deliverable;
     2. **a reason was stated** -- a POSITIVE requirement. A leg that produced
        nothing and said nothing is a silence, not a decline. It needs a message
-       AND an explicit classification: a declared decline ``failure_kind``, the
-       ``scientifically_unrecoverable`` termination reason, or at least one
-       issue code naming what stopped it;
+       AND one of exactly two named classifications that say no pathway was
+       releasable: ``failure_kind == no_reactions``, or the
+       ``scientifically_unrecoverable`` termination reason. **An issue code is
+       a label, not a reason, and is not a route** -- see the block comment at
+       the condition itself for the three rows that entered through it;
     3. **it was a decision, not a casualty** -- no operational termination, no
        timeout / crash / provider status, kind or boundary, and at least one
        preserved artifact.
@@ -1844,18 +1865,40 @@ def negative_control_outcome(
         blocked.append(NC_BLOCK_NO_ARTIFACTS)
 
     # -- 2. a reason was stated, affirmatively ---------------------------
-    declared = (
-        kind in _NC_DECLINE_KINDS
-        or termination == SCIENTIFICALLY_UNRECOVERABLE
-        or bool(codes)
-    )
+    #
+    # AN ISSUE CODE IS A LABEL, NOT A REASON, AND IS NO LONGER A ROUTE HERE.
+    # REV-110's blocking finding: `bool(codes)` used to satisfy `declared`
+    # AND, through the `not codes` clause below, cancel the indeterminate
+    # refusal. One code did both jobs, and the two jobs are in tension by
+    # construction -- a label saying a stop was CLASSIFIED cannot also be the
+    # evidence that it was EXPLAINED. Three rows earned the status that way:
+    # a provider failure relabelled `contract` by a code; a
+    # `failure_kind=unknown` row whose message was the driver's own "no
+    # research report was produced and no reason was given" (driver.py:2565)
+    # -- a silence scored as a decline; and an `ambiguous_review_scope` row.
+    #
+    # The route is now exactly two named classifications, both of which say IN
+    # TERMS that no pathway was releasable:
+    #   * `failure_kind == no_reactions` -- the driver's own declared decline;
+    #   * `termination_reason == scientifically_unrecoverable` -- D-005's
+    #     "the source does not support a defensible pathway", a scientific
+    #     statement and the only reason in that closed vocabulary that is one.
+    # Codes still travel on the record as evidence; they decide nothing.
+    declared = kind in _NC_DECLINE_KINDS or termination == SCIENTIFICALLY_UNRECOVERABLE
     stated = bool(message) and declared
     if not stated:
         blocked.append(NC_BLOCK_NO_STATED_REASON)
     # Named separately from the line above so the record can say WHICH of the
     # two silences this is: a leg that stopped for a reason it did not classify
     # is a different finding from one that classified a stop it did not explain.
-    if not declared and kind in _NC_INDETERMINATE_KINDS and not codes:
+    #
+    # CODES NO LONGER SUPPRESS THIS. The question is whether the record carries
+    # any classification this instrument recognises AT ALL -- a `failure_kind`
+    # outside the driver's `unknown`/absent pair, or a reason from D-005's
+    # closed seven. An issue code is neither, and a leg that stopped for a
+    # reason nobody wrote down is indeterminate however many labels it carries.
+    classified = kind not in _NC_INDETERMINATE_KINDS or termination in TERMINATION_REASONS
+    if not classified:
         blocked.append(NC_BLOCK_INDETERMINATE)
 
     return {

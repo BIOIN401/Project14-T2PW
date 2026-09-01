@@ -1,0 +1,57 @@
+==============================================================================
+C-110 round 1 -- is each guard PINNED BY A TEST?
+==============================================================================
+target      : src\t2pw\bench\acceptance.py
+sha256      : 4bd893ac410d16d35b026e7f24fa85edbc39be3d31c519181e6acb3ada57d2b3
+crlf lines  : 2060
+
+BASELINE (unmutated): exit=0
+  32 passed in 1.07s
+
+cond3-1-operational_failure            want=RED    got=RED    OK  killed by: test_condition3_reading_1_operational_failure_is_load_bearing
+cond3-2-termination_reason             want=RED    got=RED    OK  killed by: test_condition3_reading_2_termination_reason_is_load_bearing
+cond3-3-status                         want=RED    got=RED    OK  killed by: test_condition3_reading_3_status_is_load_bearing
+cond3-4-failure_kind                   want=RED    got=RED    OK  killed by: test_condition3_reading_4_failure_kind_is_load_bearing
+cond3-5-boundary                       want=RED    got=RED    OK  killed by: test_condition3_reading_5_boundary_is_load_bearing
+cond3-artifacts                        want=RED    got=RED    OK  killed by: test_a_crash_does_not_earn_the_status, test_every_guard_is_load_bearing, test_population_4_a_missing_artifact_does_not_earn_the_status
+cond2-declared-removed                 want=RED    got=RED    OK  killed by: test_an_indeterminate_empty_leg_defaults_to_not_awarded[], test_an_indeterminate_empty_leg_defaults_to_not_awarded[unknown], test_an_issue_code_alone_never_satisfies_condition_two (+3 more)
+cond2-classified-removed               want=RED    got=RED    OK  killed by: test_an_indeterminate_empty_leg_defaults_to_not_awarded[], test_an_indeterminate_empty_leg_defaults_to_not_awarded[unknown], test_every_guard_is_load_bearing (+1 more)
+regression-contract-back-in            want=RED    got=RED    OK  killed by: test_an_issue_code_alone_never_satisfies_condition_two, test_rev110_a_provider_casualty_relabelled_contract_is_refused, test_the_decline_and_casualty_kinds_match_the_drivers_own_constants
+regression-codes-satisfy-declared      want=RED    got=RED    OK  killed by: test_an_issue_code_alone_never_satisfies_condition_two, test_rev110_a_provider_casualty_relabelled_contract_is_refused, test_rev110_an_ambiguous_scope_stop_with_codes_is_refused (+1 more)
+regression-codes-suppress-indeterminate want=RED    got=RED    OK  killed by: test_rev110_an_unknown_kind_with_a_code_is_a_silence_not_a_decline
+CONTROL-comment-only                   want=GREEN  got=GREEN  OK
+
+==============================================================================
+restored sha256 : 4bd893ac410d16d35b026e7f24fa85edbc39be3d31c519181e6acb3ada57d2b3
+identical       : True
+crlf preserved  : True
+mutations       : 12
+unpinned        : 0  []
+RESULT          : ALL PINNED
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ db8caf16abe58fcd7f0a60380ec88144e45c6ffb  [git, worktree dirty=True]
+label                   : c110-r1-mutations
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c110_r1_guard_mutations.py C:/t/c110 C:/t/tb110/mu
+cwd                     : C:\t\c110
+root PID / process group: 216092 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1500 s
+duration                : 24.42 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 27  215544:python.exe, 212056:python.exe, 217536:python.exe, 216476:python.exe, 217848:python.exe, 216464:python.exe, 217228:python.exe, 217808:python.exe, 217932:python.exe, 213352:python.exe, 217956:python.exe, 212080:python.exe, 216048:python.exe, 216396:python.exe, 217448:python.exe, 216112:python.exe, 217208:python.exe, 213584:python.exe, 216180:python.exe, 212340:python.exe, 216276:python.exe, 214568:python.exe, 217280:python.exe, 214948:python.exe, 217356:python.exe, 208224:python.exe, 215688:python.exe
+descendants terminated  : 27  208224, 212056, 212080, 212340, 213352, 213584, 214568, 214948, 215544, 215688, 216048, 216112, 216180, 216276, 216396, 216464, 216476, 217208, 217228, 217280, 217356, 217448, 217536, 217808, 217848, 217932, 217956
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\14-c110-r1-mutations.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

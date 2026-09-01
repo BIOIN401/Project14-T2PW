@@ -28,7 +28,11 @@ GAPS, NAMED (they belong to F-148, not to this card):
   * `stage` is 'unknown' on the outer-kill path BY DESIGN. A reader treating
     it as a pipeline stage will mis-diagnose. C-110 does not read `stage`.
   * A row written before termination_reason/operational_failure existed has
-    NEITHER key. C-110 treats that as INDETERMINATE, never as clean.
+    NEITHER key. CORRECTED (round 1): that is NOT treated as indeterminate.
+    An old-shape DECLINE (no_reactions + message + files) passes cleanly,
+    which is right. What absence buys is only that those two readings do
+    not fire; an old-shape TIMEOUT is still caught by status, failure_kind
+    and boundary -- which is why the casualty test has FIVE readings.
 
 ==============================================================================
 2. DISCRIMINATION -- the four canonical shapes through the new rule
@@ -45,6 +49,15 @@ empty and silent                 -> NOT_AWARDED
 empty, no artifacts preserved    -> NOT_AWARDED
                                     conditions : {'no_reactions_released': True, 'declared_decline_reason': True, 'no_execution_failure': False}
                                     blocked_by : ['no_artifacts_preserved']
+REV-110 #1 provider-as-contract  -> NOT_AWARDED
+                                    conditions : {'no_reactions_released': True, 'declared_decline_reason': False, 'no_execution_failure': True}
+                                    blocked_by : ['no_stated_reason']
+REV-110 #2 unknown + one code    -> NOT_AWARDED
+                                    conditions : {'no_reactions_released': True, 'declared_decline_reason': False, 'no_execution_failure': True}
+                                    blocked_by : ['no_stated_reason', 'indeterminate_classification']
+REV-110 #3 ambiguous + codes     -> NOT_AWARDED
+                                    conditions : {'no_reactions_released': True, 'declared_decline_reason': False, 'no_execution_failure': True}
+                                    blocked_by : ['no_stated_reason']
 
 BOTH ARMS of _empty_is_correct, on the pinned gold:
   PMC13231680  is_negative_control=True  relevance=context_only  min_connected=0  -> arm=is_negative_control  status=PASS_NEGATIVE_CONTROL
@@ -146,24 +159,24 @@ WHAT THIS SHOWS
 report schema version   : 1
 wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
 wrapper path (executed) : C:\t\c110\docs\pwml_recovery_sprint\evidence\bounded_run.py
-wrapper vs HEAD         : clean  @ ff4219bc53987cb5ae3a6dae0628a09204a85dc8  [git, worktree dirty=True]
-label                   : c110-inventory-r2
+wrapper vs HEAD         : clean  @ db8caf16abe58fcd7f0a60380ec88144e45c6ffb  [git, worktree dirty=True]
+label                   : c110-r1-inventory
 command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c110_leg_record_inventory.py
 cwd                     : C:\t\c110
-root PID / process group: 196400 / None
+root PID / process group: 214404 / None
 isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
 timeout                 : 300 s
-duration                : 0.33 s
+duration                : 0.32 s
 exit reason             : completed
 exit code (real)        : 0
 returned code           : 0
-descendants observed    : 1  190076:python.exe
-descendants terminated  : 1  190076
+descendants observed    : 1  218652:python.exe
+descendants terminated  : 1  218652
 graceful attempted      : False
 forced                  : False
 FINAL SURVIVING COUNT   : 0
 cleanup                 : success
-json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\04-c110-inventory-r2.json
+json report             : C:\t\c110\docs\pwml_recovery_sprint\evidence\g11\C-110\15-c110-r1-inventory.json
 json report written     : True
 heavy lock              : C:\t\heavylock  holder=C-110  acquired=True  released=True
 pre-existing (reported, NEVER killed): 4

@@ -85,6 +85,30 @@ TIMED_OUT = {
 SILENT = dict(DECLINED, failure_kind="", message="", detail="")
 NO_ARTIFACTS = dict(DECLINED, files=[], counts={})
 
+# REV-110 round 1's three rows. Each EARNED the status before the correction,
+# through an issue code that both satisfied condition 2 and cancelled the
+# indeterminate refusal. Kept here so the shapes stay measurable.
+CONTRACT_RELABELLED = dict(
+    DECLINED,
+    failure_kind="contract",
+    issue_codes=["gate.protein_x_is_missing_a_unipro"],
+    message="the model call failed and the gate could not be evaluated",
+)
+UNKNOWN_WITH_CODE = dict(
+    DECLINED,
+    failure_kind="unknown",
+    issue_codes=["processes_required"],
+    # driver.py:2565, verbatim. A message whose CONTENT is that no reason was
+    # given was being scored as a stated reason.
+    message="no research report was produced and no reason was given",
+)
+AMBIGUOUS_WITH_CODES = dict(
+    DECLINED,
+    failure_kind="ambiguous_review_scope",
+    issue_codes=["scope.ambiguous"],
+    message="the requested scope was ambiguous and the run stopped",
+)
+
 
 def _leg(row):
     """Build the ModeResult exactly as ``score_run`` does, without a run dir."""
@@ -147,7 +171,11 @@ def main() -> int:
     print("  * `stage` is 'unknown' on the outer-kill path BY DESIGN. A reader treating")
     print("    it as a pipeline stage will mis-diagnose. C-110 does not read `stage`.")
     print("  * A row written before termination_reason/operational_failure existed has")
-    print("    NEITHER key. C-110 treats that as INDETERMINATE, never as clean.")
+    print("    NEITHER key. CORRECTED (round 1): that is NOT treated as indeterminate.")
+    print("    An old-shape DECLINE (no_reactions + message + files) passes cleanly,")
+    print("    which is right. What absence buys is only that those two readings do")
+    print("    not fire; an old-shape TIMEOUT is still caught by status, failure_kind")
+    print("    and boundary -- which is why the casualty test has FIVE readings.")
     print()
 
     print(RULE)
@@ -158,6 +186,9 @@ def main() -> int:
         ("timed out (outer kill)", TIMED_OUT),
         ("empty and silent", SILENT),
         ("empty, no artifacts preserved", NO_ARTIFACTS),
+        ("REV-110 #1 provider-as-contract", CONTRACT_RELABELLED),
+        ("REV-110 #2 unknown + one code", UNKNOWN_WITH_CODE),
+        ("REV-110 #3 ambiguous + codes", AMBIGUOUS_WITH_CODES),
     ):
         record = acceptance.negative_control_outcome(case, _leg(row))
         print(f"{name:<32} -> {record['status']}")

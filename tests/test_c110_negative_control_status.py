@@ -76,13 +76,20 @@ from t2pw.bench.acceptance import (  # noqa: E402
     score_run,
 )
 from t2pw.bench.goldset import RELEVANCE_CONTEXT_ONLY, load_gold_set  # noqa: E402
-from t2pw.bench.metrics import BLOCKER_SCOPES  # noqa: E402
+from t2pw.bench.acceptance import ModeResult  # noqa: E402
+from t2pw.bench.metrics import (  # noqa: E402
+    BLOCKER_SCOPES,
+    BOUNDARY_CRASH,
+    BOUNDARY_PROVIDER,
+    BOUNDARY_TIMEOUT,
+)
 from t2pw.bench.render import render_text  # noqa: E402
 from t2pw.bench.semantic import ERR_UNSUPPORTED_REACTIONS  # noqa: E402
 from t2pw.pipeline.deadline import (  # noqa: E402
     BUDGET_EXHAUSTED,
     OPERATION_TIMEOUT,
     OPERATIONAL_TERMINATION_REASONS,
+    SCIENTIFICALLY_UNRECOVERABLE,
 )
 
 GOLD = load_gold_set()
@@ -395,14 +402,15 @@ def test_empty_with_a_stated_reason_that_ALSO_timed_out_does_not_pass(tmp_path):
     is independent of it.
     """
 
-    row = _timeout_row(
-        NEG_CONTROL,
-        message="no lipid A chemistry is present in this paper, so nothing was exported",
-    )
-    row["issue_codes"] = ["processes_required"]
-    row["counts"] = {"reactions": 0, "transports": 0}
-    row["files"] = [{"name": "extraction_diagnostics.json", "bytes": 12}]
+    # REV-110 round 1: this fixture used to satisfy condition 2 through an
+    # ISSUE CODE, which is no longer a route -- and a fixture that fails the
+    # condition it is meant to hold constant proves nothing about condition 3.
+    # It now satisfies condition 2 the only way that is left, by carrying the
+    # driver's own declared decline, and is a SHARPER adversarial row for it:
+    # everything a clean decline has, plus an operational kill on top.
+    row = _declined_row(NEG_CONTROL)
     row["termination_reason"] = OPERATION_TIMEOUT
+    row["operational_failure"] = True
     record = _record(tmp_path, row)
 
     assert record["conditions"]["declared_decline_reason"] is True, (
@@ -677,7 +685,13 @@ def test_the_decline_and_casualty_kinds_match_the_drivers_own_constants():
     from t2pw.bench import acceptance
 
     assert driver.KIND_NO_REACTIONS in acceptance._NC_DECLINE_KINDS
-    assert driver.KIND_CONTRACT in acceptance._NC_DECLINE_KINDS
+    # REV-110 round 1. `contract` is NOT a declared decline, and this asserts
+    # it stays out. `driver._classify` returns KIND_CONTRACT for
+    # `contract_signal or issue_codes` BEFORE it reaches its network and LLM
+    # markers, so `contract` is the catch-all for "there were issue codes" and
+    # a provider casualty carrying one arrives here wearing it.
+    assert driver.KIND_CONTRACT not in acceptance._NC_DECLINE_KINDS
+    assert acceptance._NC_DECLINE_KINDS == (driver.KIND_NO_REACTIONS,)
     for kind in (driver.KIND_TIMEOUT, driver.KIND_CRASH, driver.KIND_NETWORK, driver.KIND_LLM):
         assert kind in acceptance._NC_CASUALTY_KINDS
     assert driver.KIND_UNKNOWN in acceptance._NC_INDETERMINATE_KINDS
@@ -692,6 +706,259 @@ def test_the_operational_set_is_d005s_own_and_not_a_copy():
 
     assert acceptance.OPERATIONAL_TERMINATION_REASONS is OPERATIONAL_TERMINATION_REASONS
     assert OPERATIONAL_TERMINATION_REASONS == {BUDGET_EXHAUSTED, OPERATION_TIMEOUT}
+
+
+# ===========================================================================
+# REV-110 round 1 -- the three rows that earned the status and must not.
+# Each is a REGRESSION PIN on the blocking finding, not a new population.
+# ===========================================================================
+def test_rev110_a_provider_casualty_relabelled_contract_is_refused(tmp_path):
+    """Row 1. `driver._classify` returns KIND_CONTRACT for any row with issue
+    codes -- the test sits BEFORE the network and LLM markers -- so a provider
+    failure arrives at the scorer wearing `failure_kind="contract"`. `_fail`
+    clears no artifacts, so it keeps a non-empty `files` and condition 3's
+    artifact guard does not catch it. `contract` is no longer a declared
+    decline, so condition 2 does.
+    """
+
+    row = _declined_row(NEG_CONTROL)
+    row["failure_kind"] = "contract"
+    row["issue_codes"] = ["gate.protein_x_is_missing_a_unipro"]
+    row["message"] = "the model call failed and the gate could not be evaluated"
+    record = _record(tmp_path, row)
+
+    assert record["status"] == NEGATIVE_CONTROL_NOT_AWARDED
+    assert NC_BLOCK_NO_STATED_REASON in record["blocked_by"]
+    assert record["conditions"]["declared_decline_reason"] is False
+    # Condition 3 did NOT catch this one, which is exactly why condition 2 has to.
+    assert record["conditions"]["no_execution_failure"] is True
+
+
+def test_rev110_an_unknown_kind_with_a_code_is_a_silence_not_a_decline(tmp_path):
+    """Row 2, and the sharpest of the three: B3 and B4 violated in one row.
+
+    The message is the driver's own, verbatim from `driver.py:2565` --
+    *"no research report was produced and no reason was given"*. It was being
+    scored as a STATED REASON while an issue code cancelled the indeterminate
+    refusal. A message whose content is that no reason was given is the
+    definition of a silence.
+    """
+
+    row = _declined_row(NEG_CONTROL)
+    row["failure_kind"] = "unknown"
+    row["message"] = "no research report was produced and no reason was given"
+    row["issue_codes"] = ["processes_required"]
+    record = _record(tmp_path, row)
+
+    assert record["status"] == NEGATIVE_CONTROL_NOT_AWARDED
+    # B4: the silence is refused.
+    assert NC_BLOCK_NO_STATED_REASON in record["blocked_by"]
+    # B3: and the code no longer suppresses the indeterminate default.
+    assert NC_BLOCK_INDETERMINATE in record["blocked_by"]
+    assert record["issue_codes"] == ["processes_required"], (
+        "codes still travel on the record as evidence -- they just decide nothing"
+    )
+
+
+def test_rev110_an_ambiguous_scope_stop_with_codes_is_refused(tmp_path):
+    """Row 3. A deliberate scope stop is a stop, but it is not a statement that
+    the paper contains no releasable chemistry, and only that statement earns
+    this status.
+    """
+
+    row = _declined_row(NEG_CONTROL)
+    row["failure_kind"] = "ambiguous_review_scope"
+    row["message"] = "the requested scope was ambiguous and the run stopped"
+    row["issue_codes"] = ["scope.ambiguous"]
+    record = _record(tmp_path, row)
+
+    assert record["status"] == NEGATIVE_CONTROL_NOT_AWARDED
+    assert NC_BLOCK_NO_STATED_REASON in record["blocked_by"]
+    # Not indeterminate: the stop WAS classified, it just was not a decline.
+    assert NC_BLOCK_INDETERMINATE not in record["blocked_by"]
+
+
+def test_an_issue_code_alone_never_satisfies_condition_two(tmp_path):
+    """The general form of all three rows: a label is not a reason.
+
+    Every `failure_kind` the driver can emit, carrying a message AND an issue
+    code AND a preserved artifact AND zero reactions -- only the one that names
+    an empty pathway earns the status.
+    """
+
+    earned = {}
+    for kind in (
+        "no_reactions",
+        "contract",
+        "ambiguous_review_scope",
+        "unknown",
+        "",
+        "crash",
+        "timeout",
+        "network",
+        "llm",
+    ):
+        row = _declined_row(NEG_CONTROL)
+        row["failure_kind"] = kind
+        row["issue_codes"] = ["some.code"]
+        row["message"] = "a message that says something"
+        earned[kind] = _record(tmp_path / f"k{kind or 'blank'}", row)["status"]
+
+    assert earned["no_reactions"] == NEGATIVE_CONTROL_PASS
+    assert set(v for k, v in earned.items() if k != "no_reactions") == {
+        NEGATIVE_CONTROL_NOT_AWARDED
+    }, earned
+
+
+def test_scientifically_unrecoverable_is_the_other_declared_route(tmp_path):
+    """D-005's one SCIENTIFIC termination reason must not be a dead branch.
+
+    *"The source does not support a defensible pathway"* is a statement that no
+    pathway was releasable, which is what condition 2 asks for -- so it earns
+    the status even where `failure_kind` says nothing.
+    """
+
+    row = _declined_row(NEG_CONTROL)
+    row["failure_kind"] = "unknown"
+    row["termination_reason"] = SCIENTIFICALLY_UNRECOVERABLE
+    record = _record(tmp_path, row)
+
+    assert record["status"] == NEGATIVE_CONTROL_PASS
+    assert record["conditions"]["declared_decline_reason"] is True
+    # It is a classification, so the indeterminate branch does not fire either.
+    assert NC_BLOCK_INDETERMINATE not in record["blocked_by"]
+    # And it is NOT operational, so condition 3 stays clear.
+    assert SCIENTIFICALLY_UNRECOVERABLE not in OPERATIONAL_TERMINATION_REASONS
+
+
+# ===========================================================================
+# REV-110 round 1, second finding -- condition 3, ONE READING PER TEST.
+#
+# The nine mutations in `test_every_guard_is_load_bearing` flip TWO row fields
+# at once (`timed_out` sets status and kind; `operational` sets
+# termination_reason and operational_failure), so the redundancy between the
+# five casualty readings hid each one individually: deleting any single reading
+# left the whole suite green. These five isolate each reading exactly.
+#
+# The isolation is done at `negative_control_outcome`'s own interface, mutating
+# ONE attribute of a leg that `score_run` has already scored green. That is
+# exact where a row is not: reading 5 (`boundary`) is NOT independently
+# reachable from a row at all -- every casualty boundary is derived by
+# `classify_strict_boundary` from `status` or `failure_kind`, which readings 3
+# and 4 already catch. It is kept as a guard against that function drifting,
+# and this is where that is stated rather than implied.
+# ===========================================================================
+def _green_leg(tmp_path):
+    """A leg `score_run` has scored PASS_NEGATIVE_CONTROL, plus its gold case."""
+
+    report = _run(tmp_path, [_declined_row(NEG_CONTROL)])
+    leg = _leg(report, NEG_CONTROL)
+    case = next(c for c in GOLD if c.paper_id == NEG_CONTROL)
+    assert leg.negative_control["status"] == NEGATIVE_CONTROL_PASS, (
+        "the baseline must be green or every isolation below is vacuous"
+    )
+    return case, leg
+
+
+def test_condition3_reading_1_operational_failure_is_load_bearing(tmp_path):
+    """The row's own boolean, alone. No termination reason, no timeout status."""
+
+    case, leg = _green_leg(tmp_path)
+    leg.operational_failure = True
+    assert negative_control_outcome(case, leg)["blocked_by"] == [
+        NC_BLOCK_EXECUTION_FAILURE
+    ]
+
+    # Row-reachable too: `operational_failure` without `termination_reason`.
+    row = _declined_row(NEG_CONTROL)
+    row["operational_failure"] = True
+    assert _record(tmp_path / "row", row)["blocked_by"] == [NC_BLOCK_EXECUTION_FAILURE]
+
+
+def test_condition3_reading_2_termination_reason_is_load_bearing(tmp_path):
+    """D-005's closed operational set, alone. The row's boolean stays False."""
+
+    case, leg = _green_leg(tmp_path)
+    leg.termination_reason = BUDGET_EXHAUSTED
+    assert leg.operational_failure is False
+    assert negative_control_outcome(case, leg)["blocked_by"] == [
+        NC_BLOCK_EXECUTION_FAILURE
+    ]
+
+    row = _declined_row(NEG_CONTROL)
+    row["termination_reason"] = BUDGET_EXHAUSTED
+    record = _record(tmp_path / "row", row)
+    assert record["raw"]["operational_failure"] is False
+    assert record["blocked_by"] == [NC_BLOCK_EXECUTION_FAILURE]
+
+
+def test_condition3_reading_3_status_is_load_bearing(tmp_path):
+    """`status`, alone. `error` is the runner's infrastructure-fault status and
+    it leaves `failure_kind` and `boundary` clean when the kind is a decline.
+    """
+
+    case, leg = _green_leg(tmp_path)
+    leg.status = "error"
+    assert negative_control_outcome(case, leg)["blocked_by"] == [
+        NC_BLOCK_EXECUTION_FAILURE
+    ]
+
+    row = _declined_row(NEG_CONTROL)
+    row["status"] = "error"
+    record = _record(tmp_path / "row", row)
+    # Only the status reading fired: kind is still the declared decline and the
+    # boundary is still stage-1 extraction.
+    assert record["raw"]["failure_kind"] == "no_reactions"
+    assert record["raw"]["boundary"] not in (
+        BOUNDARY_TIMEOUT,
+        BOUNDARY_CRASH,
+        BOUNDARY_PROVIDER,
+    )
+    assert record["blocked_by"] == [NC_BLOCK_EXECUTION_FAILURE]
+
+
+def test_condition3_reading_4_failure_kind_is_load_bearing(tmp_path):
+    """`failure_kind`, alone. `crash` with `stage=stage1` keeps the boundary at
+    extraction, because `classify_strict_boundary` tests `stage == "stage1"`
+    before it reaches its crash branch.
+    """
+
+    case, leg = _green_leg(tmp_path)
+    leg.failure_kind = "crash"
+    assert NC_BLOCK_EXECUTION_FAILURE in negative_control_outcome(case, leg)["blocked_by"]
+
+    row = _declined_row(NEG_CONTROL)
+    row["failure_kind"] = "crash"
+    record = _record(tmp_path / "row", row)
+    assert record["raw"]["status"] == "fail"
+    assert record["raw"]["boundary"] not in (
+        BOUNDARY_TIMEOUT,
+        BOUNDARY_CRASH,
+        BOUNDARY_PROVIDER,
+    )
+    # `no_stated_reason` co-occurs because `crash` is not a declared decline --
+    # that is a second, unrelated code. `execution_failure` comes from THIS
+    # reading and from no other, so deleting the reading turns this red.
+    assert NC_BLOCK_EXECUTION_FAILURE in record["blocked_by"]
+
+
+def test_condition3_reading_5_boundary_is_load_bearing(tmp_path):
+    """`boundary`, alone -- and it is NOT reachable from a row.
+
+    Every casualty boundary is derived by `classify_strict_boundary` from
+    `status` or `failure_kind`, so readings 3 and 4 already catch each one. This
+    reading is therefore strictly redundant against the shipped classifier and
+    is kept as a guard against it drifting. Isolating it needs the function's
+    own interface, which is what this does -- and saying so here is better than
+    a row-shaped test that quietly proved reading 3 instead.
+    """
+
+    case, leg = _green_leg(tmp_path)
+    for boundary in (BOUNDARY_TIMEOUT, BOUNDARY_CRASH, BOUNDARY_PROVIDER):
+        leg.boundary = boundary
+        assert negative_control_outcome(case, leg)["blocked_by"] == [
+            NC_BLOCK_EXECUTION_FAILURE
+        ], boundary
 
 
 def test_negative_control_outcome_returns_none_for_a_relevant_case():
