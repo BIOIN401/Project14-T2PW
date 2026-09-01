@@ -9212,3 +9212,100 @@ the driver, and a downstream-only fix would flip two legs to PASS that then expo
 content. **Merge rule 6.** · **`placeholder_backed_proteins` / Unknown-backed export** —
 `PRODUCT_CONTRACT` § 13 standing disagreement, escalate only, untouched. · **The gold file** —
 unmodified.
+
+---
+
+## C-109 MERGED — `efb2edc2`, gates pinned at `887395dc` · 2026-08-31
+
+**APPROVE WITH REGISTERED FINDINGS.** All blocking criteria B1–B15 passed, every one reproduced by
+the reviewer rather than read.
+
+**The merge took REV-109's branch, not the card's**, because the reviewer cut its evidence on top of
+the card tip. Diff + 6 probe sources + 13 logs + 15 G11 reports became reachable from integration in
+one commit — **the property this card exists to guarantee, satisfied by the card's own merge.**
+
+Gates re-taken at the merged tip, not inherited: **SMOKE 503** · `acceptance.py`
+`70a642cac41f3624` **byte-identical before and after** · **gold-readers 456 / 8 / exit 0**.
+
+**Then the card's own check was pointed at the review that approved it:**
+
+```
+task REV-109   enumerated 28   reachable 28   unreachable 0   exit 0
+```
+
+**This is the first review in the sprint whose evidence is machine-verified reachable rather than
+assumed so.** 72 reviewer reports and 94 probes were nearly lost because evidence lived only in a
+worktree.
+
+### The author corrected the Lead, and was right — F-157
+
+F-153, the merged `MASTER_PLAN.md` correction **and the Lead's own charter** all cited
+`streamlit_app.py:5669` for the `run_rag_rounds` call. The committed value is **`:5636`**; the `+33`
+offset is exactly the protected product-owner diff, so the citation had been read off **the
+uncommitted working copy of the one file nobody may commit** — bytes reproducible by no reader.
+
+**The Lead had the evidence to catch this and did not.** Both numbers were seen earlier in the same
+wave, while checking a peer's graph-delta claims, and the discrepancy went unreconciled. *Reading the
+report is not verification — including a discrepancy you have already seen.*
+
+### What the review did that mattered
+
+**B9 was proved non-vacuous rather than merely observed.** The reviewer confirmed a right-name /
+different-bytes file reports `unreachable_content_differs`, **then mutated the script to let a
+matching filename count and watched that same case flip to exit 0**. That is the difference between a
+check that passes and a check that *discriminates*.
+
+**B2 held under a constraint that had become wrong.** The graph-delta partiality claim is reproduced
+verbatim under `STILL INCOMPLETE, and deliberately NOT certified`. **F-156 has since refuted it on the
+code and certified it by mutation** — but C-109 was instructed not to certify it, and preserving it
+uncertified was correct. **The card obeyed a boundary that had quietly gone stale, which is exactly
+what a boundary is for.**
+
+**The reviewer's own failed measurement is the best artifact in the set.** Its first inertness check
+reported one FAIL and a byte count disagreeing with the author's — both artifacts of reading the
+**worktree** (CRLF) rather than the **blob**. Preserved as
+`rev109_independent_checks_round1_anomaly.log`, because it **independently vindicates the design
+under review**: `reviewer_evidence_route.py` hashes through `git hash-object` precisely so checkout
+filters cannot cause a false red, and the reviewer walked into that exact failure using raw bytes.
+
+### Ruling on the scope question the author raised
+
+**The `465 → 503` correction on `pwml-test-runner.md:52` STANDS.** Inside the declared boundary
+(`FINDINGS.md` and `MASTER_PLAN.md` were restricted, that file deliberately was not);
+`TEST_MATRIX.md:531-533` names that exact line as a SMOKE-count site C-054 undertook to keep in sync;
+it mis-instructs **the same agent, in the same file, twelve lines above** the instruction the card
+ordered fixed; struck rather than deleted. **Reviewer reached the same conclusion independently.**
+
+### Registered, not blocking — routed to C-112
+
+* **R1. The diff creates 26 newly-stale citations** — 16 into `MASTER_PLAN.md` (+16 lines at `:160`),
+  10 into `pwml-test-runner.md` (+19 from `:52`). **F-154's own defect class, unmeasured by the
+  author.** Not a boundary violation: the card *required* the note edit and set no line-neutrality
+  rule there. **The contrast is to the author's credit** — `TEST_MATRIX.md` (append-only) and
+  `FINDINGS.md` (line-neutral, 6919 → 6919) create **zero** drift. Only the two unconstrained files did.
+* **R2. Three false-PASS vectors in the route check.** The one that matters: **probes in a
+  subdirectory are never enumerated** — the glob is non-recursive and `is_file()` drops the directory
+  silently, so the check exits 0 with a green G11 while missing evidence entirely. Also: a zero-byte
+  file is always `reachable` (the empty blob oid is a universal constant), and `--allow-empty` plus a
+  mistyped task id disarms the exit-3 protection it sits beside.
+* **R3.** The `acceptance.py` before/after hash was claimed in the report but carried by no committed
+  artifact — **on the card that exists because unrecorded evidence gets lost.** Now in
+  `rev109_smoke.log`.
+* **R4.** Four of the author's eleven probes ran without `--heavy-lock`. All sub-second git/AST
+  probes, zero survivors, no measurement affected.
+* **R5.** The `TEST_MATRIX.md` append calls `chunk_d_gate.py:70` a drifted address; it is **correct
+  today** — fragile, not drifted.
+
+### The four routed items, adjudicated by the reviewer
+
+1. **`FINDINGS.md:1125-1126`** — split verdict. Row D-qb's `chunk_d_gate.py:70` is **correct**; row
+   E's `TEST_MATRIX.md:218` is **genuinely broken** (Chunk E is at `:237`). Outside the literal
+   `:1120-1124` boundary, which the author honoured exactly — 5 lines in, 5 out. **Correctly routed.**
+2. **`TEST_MATRIX.md:568`** — *"§ Chunks begins at line 209"*; it begins at `:228`. **This one WAS in
+   boundary**, below the `:477` pin, fixable for free — **and it is missing from the author's routed
+   list.** The real gap.
+3. **`TEST_MATRIX.md:726-727`** — C-106's note that those addresses *"all still address what they
+   addressed"* is **false**, but it is another card's signed record. **Correctly routed.**
+4. **The check's self-reference** — its own log and G11 report are written during the run they report
+   on. The reviewer observed it live: **24 enumerated, then 25**, the difference being the report of
+   the run itself. **Genuinely unfixable in-card.**
