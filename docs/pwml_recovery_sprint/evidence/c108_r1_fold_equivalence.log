@@ -1,0 +1,78 @@
+====================================================================================================
+1. CONSUMER ENUMERATION -- every application of the four pattern objects
+====================================================================================================
+  line 2491  for match in re.finditer(rf"(?<![a-z0-9]){escaped}(?![a-z0-9])", haystack):
+  line 2509  licensed = cue.search(cue_window) or (
+  line 2510  dependence is not None and dependence.search(window)
+  line 2514  if contra is not None and contra.search(window):
+  line 2516  if actor_contra is not None and actor_contra.search(window):
+  line 2536  for match in re.finditer(passive, haystack):
+  line 2540  if contra is not None and contra.search(window):
+  line 2542  if actor_contra is not None and actor_contra.search(window):
+
+  strings the patterns are applied to: ['cue_window', 'haystack', 'window']
+  OK: every consumer reads `haystack` (= _match_fold(span)), a slice of it (`window`), or that slice with the actor name blanked (`cue_window`). No consumer sees unfolded text.
+
+  repo-wide: the four objects are referenced nowhere outside this module except in test comments -- see evidence/c108_consumer_grep.log
+
+====================================================================================================
+2. THE FOLDED ALPHABET over every corpus span and actor name
+====================================================================================================
+  folded 1384 strings; alphabet size 37
+  characters outside [a-z0-9 ]: []
+  OK: no '.' can reach any pattern, so `[^.]` excluded NOTHING.
+
+====================================================================================================
+3. THE NEWLINE CASE -- a real difference between the spellings, unreachable here
+====================================================================================================
+  re.search(r'a[^.]b', 'a\nb') -> True
+  re.search(r'a.b',    'a\nb') -> False
+  re.search(r'a[a-z0-9 ]b', 'a\nb') -> False
+  _match_fold('a\nb') -> 'a b'  (newline is gone)
+  OK: `[^.]` and `.` differ on a newline, and folding removes every newline, so the difference is unreachable. `[a-z0-9 ]` matches the space the newline became, exactly as `[^.]` did.
+
+====================================================================================================
+4. VERDICT EQUIVALENCE -- both spellings, every corpus row
+====================================================================================================
+  compared 2076 pattern/row pairs; disagreements: 0
+  OK: the two spellings produce identical match sets on every corpus row.
+
+====================================================================================================
+5. (d) THE INHIBITION CUE IS BYTE-IDENTICAL BETWEEN BASE AND TIP
+====================================================================================================
+  base len 301  tip len 301  identical: True
+  OK: only the CONTRA was anchored.
+  base contra is the cue object: True
+  tip  contra is the cue object: False
+  tip  contra pattern: inhibit(?!ors?(?![a-z]))|suppress(?!ors?(?![a-z]))|repress(?!ors?(?![a-z]))|downregulat(?!ors?(?![a-z]))|down regulat(?!ors?(?![a-z]))|blocks|blocked|blocking|antagonis(?!ts?(?![a-z]))|inactivat(?!ors?(?![a-z]))|abolish(?!ers?(?![a-z]))|attenuat(?!ors?(?![a-z]))|(?<![a-z])(?:blockades?|impair(?:s|ed|ing|ment|ments)?|silenc(?:e|es|ed|ing)|sequestr(?:ation|ations|ate|ates|ated|ating)|ablat(?:e|es|ed|ing|ion|ions)|interfer(?:e|es|ed|ing|ence))(?![a-z])
+
+====================================================================================================
+C108 FOLD/EQUIVALENCE FAILURES: 0  (must be 0)
+====================================================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fbf2047e69fa0464c7c128978f12c636a1455431  [git, worktree dirty=True]
+label                   : r1-fold-equiv
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c108_fold_equivalence.py C:/t/c108base C:/t/c108 C:/t/c108scratch/flat_base.json
+cwd                     : C:\t\c108
+root PID / process group: 205972 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.81 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  205984:python.exe
+descendants terminated  : 1  205984
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\68-r1-fold-equiv.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

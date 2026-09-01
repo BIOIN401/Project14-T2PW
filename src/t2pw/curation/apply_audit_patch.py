@@ -1555,10 +1555,20 @@ _FOLDED_CHAR_SRC = r"[a-z0-9 ]"
 # MERGE RULE 6 BINDS HERE AND IT IS WHY THE FIX IS A SPLIT, NOT A DELETION. What
 # is removed to stop "inhibit" matching inside "inhibitor" would be removed from
 # the contra as well, and the contra is a biological gate. So the CUE below is
-# unchanged -- byte for byte, which is what leaves _ANY_ROLE_CUE_RE and the
-# "other" fallback for every unmapped role exactly where C-107 left them -- and
-# only the CONTRA is anchored, with the agent nouns returned to it in the
-# TARGET-DIRECTED frames built per needle in _span_licenses_actor.
+# unchanged -- BYTE FOR BYTE -- and only the CONTRA is anchored, with the agent
+# nouns returned to it per needle in _span_licenses_actor.
+#
+# CORRECTION ROUND 1 -- REV-108 R-d. THE PRECISE CLAIM, because the earlier
+# wording here overstated it. What member (d) guarantees is that IT contributes
+# nothing to _ANY_ROLE_CUE_RE: the inhibition cue is byte-identical, so the
+# "other" fallback is exactly as (d) found it. The fallback DOES move in this
+# card -- 2,584 -> 6,461 characters -- but every one of those characters comes
+# from member (a), which rewrote the catalysis and transport vocabularies.
+# Whether that move WIDENS the fallback behaviourally is a separate question and
+# it is measured rather than argued: C-107's
+# test_the_other_fallback_did_not_widen_for_an_unmapped_role is green, and
+# tests/test_c108_f155_class.py adds its own unmapped-role arms over the
+# vocabulary (a) actually changed.
 #
 # The grammatical distinction is WHO THE ATTENUATION IS AIMED AT, and English
 # marks it by word order and by the preposition:
@@ -1608,37 +1618,78 @@ _ATTENUATION_AGENT_NOUN_SRC = (
     r"|inactivators?|abolishers?|attenuators?)"
 )
 
-# What may stand between the actor and a head-final agent noun and still leave the
-# actor the noun's TARGET. A CLOSED list of ADJECTIVES ONLY, and the omission of
-# determiners is the whole point: "P4X specific inhibitor" is an inhibitor OF
-# P4X, whereas "P4X, the inhibitor, catalyses ..." is an apposition saying P4X IS
-# the inhibitor, and a determiner is what marks the difference.
-_ATTENUATION_AGENT_ADJ_SRC = (
-    r"(?:specific|selective|targeted|directed|potent|competitive|noncompetitive"
-    r"|uncompetitive|reversible|irreversible|allosteric|small|molecule|peptide"
-    r"|protein|antibody|chemical|synthetic|natural|classical|dependent|mediated"
-    r"|activity|enzyme)"
+# CORRECTION ROUND 1. THE POLARITY, WHICH ROUND 0 GOT BACKWARDS.
+#
+# Round 0 gave the agent nouns back to the contra as a BOUNDED CLOSED LIST OF
+# TARGET-DIRECTED FRAMES -- "inhibitor OF P4X", "P4X inhibitor" -- with ACCEPT as
+# the default outside them. REV-108 measured what that bought and it is this
+# card's own quoted lesson, turned on its author:
+#
+#     BASE REFUSE -> ROUND-0 TIP ACCEPT
+#       "P4X is a target of the inhibitor and catalyses the conversion of A to B"
+#       "P4X was subject to inhibitors during the assay, yet catalyses A to B"
+#       "P4X, whose inhibitor was characterised, catalyses the conversion of A to B"
+#       "the repressor bound P4X and the catalysis of A to B stopped"
+#
+# and this round measured NINE MORE of the same grammar before repairing it
+# (evidence/c108_r1_blocking_repro.log: blocking 4/4, paraphrase 9/10).
+#
+# HANDOFF LESSON 3: a bounded closed list flips polarity between a cue and a
+# contra. In a CUE it under-accepts, which is safe because the actor name must
+# still match independently. In a CONTRA it under-REFUSES, which is a weakened
+# biological gate and merge rule 6 forbids it. THE LIST WAS NOT WRONG. ITS
+# DEFAULT WAS.
+#
+# So the default is inverted. An agent noun in the window FIRES THE CONTRA, and
+# the only exemption is that this occurrence stands in an APPOSITION WITH THIS
+# ACTOR -- which is the one reading in which the actor IS the attenuator rather
+# than its target. Two shapes, both actor-anchored:
+#
+#   A1  "<agent noun> <modifiers> <ACTOR>"     the inhibitor P4X
+#                                              the repressor complex P4X
+#   A2  "<ACTOR> <determiner> <modifiers> <agent noun>"    P4X, the inhibitor,
+#
+# Inverting it also makes the whole path SAFE BY CONSTRUCTION against the
+# direction that matters: base fired on every occurrence of the stem inside an
+# agent noun, and this fires on a SUBSET of those, so relative to base the tip
+# can only refuse LESS. No over-refusal against base is reachable through here.
+
+# What may stand BETWEEN an agent noun and the actor and still leave the phrase
+# an apposition. A CLOSED list of NOMINAL AND ADJECTIVAL modifiers, and what it
+# leaves out is the load-bearing part:
+#
+#   * no preposition. "the inhibitor OF P4X" is the target reading.
+#   * no participle or finite verb. "the repressor BOUND P4X" is subject-verb-
+#     object, not a noun phrase -- it says the repressor bound the actor. That is
+#     REV-108's fourth span and the sharpest of the four, because the span goes
+#     on to say the catalysis STOPPED. "bound", "blocked" and "targeted" are
+#     therefore absent, even though round 0 had them in its adjective list.
+#   * no "and", "whose", "which", "was", "is".
+#
+# Every entry below is a noun or adjective that cannot be read as a finite verb
+# taking the actor as its object.
+_APPOSITIVE_MODIFIER_SRC = (
+    r"(?:complex|complexes|protein|proteins|subunit|subunits|enzyme|enzymes"
+    r"|factor|factors|peptide|peptides|molecule|molecules|homolog|homologue"
+    r"|isoform|isoforms|variant|variants|potent|selective|specific|small"
+    r"|natural|synthetic|endogenous|exogenous|putative|classical|novel"
+    r"|bacterial|microbial|human|recombinant)"
 )
 
-#: How many such adjectives may stand between the actor and a head-final agent noun.
-_ATTENUATION_AGENT_MAX_ADJ = 2
+#: How many such modifiers may stand between an agent noun and the actor.
+_APPOSITIVE_MAX_MODIFIERS = 3
 
-# What may head the phrase that names an agent noun's TARGET. The bare
-# preposition is the core case ("the inhibitor OF P4X"), and the participial
-# heads beside it are the paraphrases that survive dropping it -- "the inhibitor
-# TARGETING P4X", "the inhibitor DIRECTED AGAINST P4X", "an inhibitor SELECTIVE
-# FOR P4X". Every one was found by attacking this card's own fix rather than by
-# design, and each was firing the contra at f67e00a through the unanchored stem,
-# so omitting it would WEAKEN the gate: see evidence/c108_paraphrase_attack.log.
-# A bare modifier is deliberately NOT a target head. "the inhibitor protein P4X"
-# has no head at all, and that absence is what marks it as the appositive
-# reading in which P4X IS the inhibitor.
-_ATTENUATION_TARGET_HEAD_SRC = (
-    r"(?:of|for|against|on|upon|to|toward|towards"
-    r"|targeting|targeted at|inhibiting|blocking|suppressing|repressing"
-    r"|acting on|acting against|directed against|directed at|aimed at"
-    r"|specific for|selective for|specific to)"
-)
+# The determiner that must follow the actor for a TRAILING agent noun to be an
+# apposition rather than a head-final compound. This is the single token that
+# separates the two readings and it is why the list is determiners only:
+#
+#     "P4X, the inhibitor, catalyses ..."   apposition -- P4X IS the inhibitor
+#     "the P4X inhibitor was added"         compound   -- P4X is the TARGET
+#
+# "whose" is deliberately ABSENT. "P4X, whose inhibitor was characterised" is a
+# relative clause about a DIFFERENT molecule, and admitting it here is exactly
+# REV-108's third span.
+_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an|this|that|its|their)"
 
 # ---------------------------------------------------------------------------
 # C-108 (a). THE TRANSPORT FAMILY'S AGENT NOUNS, AND THE ONLY CONSTRUCTIONS THAT
@@ -1667,6 +1718,23 @@ _TRANSPORT_AGENT_NOUNS = (
 )
 
 
+# CORRECTION ROUND 1 -- REV-108 R-c. What may stand between the determiner and
+# the agent noun in a predication, and the ONE token that may not.
+#
+# The gap exists so "P is a high affinity transporter" and "P acts as an inner
+# membrane channel" license: a paper writes the modifiers, not the bare noun. But
+# an unrestricted gap crosses a GENITIVE, and then the noun stops being predicated
+# of the actor at all:
+#
+#     "P is a substrate of the transporter TonB"   -- P is the SUBSTRATE
+#
+# which licensed P as a transporter at f67e00a through the bare stem and again at
+# this card's round-0 tip through this gap. "of" is the token that turns the
+# predicate nominal into somebody else's, so the gap does not cross it. Measured
+# cost on the 692-row corpus: see the round-1 corpus diff.
+_PREDICATION_GAP_SRC = r"(?:(?!of )[a-z0-9]+ )"
+
+
 def _agent_noun_predication_src(nouns: Sequence[str]) -> str:
     """The constructions in which a role-naming AGENT NOUN is role evidence.
 
@@ -1684,7 +1752,7 @@ def _agent_noun_predication_src(nouns: Sequence[str]) -> str:
     for noun in nouns:
         alternatives.append(
             r"(?:is|are|was|were|remains|remain) (?:a|an|the) "
-            r"(?:[a-z0-9]+ ){0,3}" + noun + r"s?(?![a-z])"
+            + _PREDICATION_GAP_SRC + r"{0,3}" + noun + r"s?(?![a-z])"
         )
         # The copular-equivalent verbs. "P acts as a transporter" is the same
         # predication as "P is a transporter" and a paper writes both; "add P as
@@ -1695,7 +1763,7 @@ def _agent_noun_predication_src(nouns: Sequence[str]) -> str:
             r"(?:acts?|acted|acting|functions?|functioned|functioning"
             r"|serves?|served|serving|operates?|operated|operating"
             r"|works?|worked|working) as (?:a|an|the) "
-            r"(?:[a-z0-9]+ ){0,3}" + noun + r"s?(?![a-z])"
+            + _PREDICATION_GAP_SRC + r"{0,3}" + noun + r"s?(?![a-z])"
         )
         alternatives.append(noun + r"s? (?:for|of|through which|responsible for)")
     return "|".join(alternatives)
@@ -1721,8 +1789,18 @@ def _agent_noun_predication_src(nouns: Sequence[str]) -> str:
 # the VERB stem "catalys" is a prefix of the schema NOUN "catalyst". C-105 wrote
 # "is the catalyst", "catalyst responsible", "catalyst for" and "catalyst of this"
 # as the periphrastic re-admissions of that noun, which is only sensible if the
-# bare noun was meant to be excluded; those four alternatives have been DEAD CODE
-# since they were written, because "catalys" matched "catalyst" first.
+# bare noun was meant to be excluded.
+#
+# CORRECTION ROUND 1 -- REV-108 R-e. The earlier wording here called those four
+# alternatives DEAD CODE and that is not the mechanism. Python alternation is
+# leftmost-first at each scan position, and the scan runs left to right, so in
+# "P is the catalyst for this step" the alternative "is the catalyst" DOES match,
+# at an earlier position than "catalys" inside "catalyst". What is true is
+# weaker and is the point: the four alternatives were REDUNDANT AND NEVER
+# LOAD-BEARING, because any span containing one of them also contains the bare
+# noun, and "catalys" matched that. Removing all four changed no verdict. The
+# conclusion stands -- the schema noun was licensing on its own -- but by
+# redundancy, not by dead code.
 #
 # The distinction is grammatical, not lexical: the verb and its event
 # nominalisation predicate ("P catalyses", "the catalysis of A by P"); the AGENT
@@ -1835,7 +1913,8 @@ _ROLE_CUE_RES = {
         # f67e00a are kept explicitly and the bare noun is dropped; "carries" is
         # NOT added, because it did not match at base and adding it would be a
         # widening this card is not chartered for.
-        r"|channels|channelled|channeling|channelling|pumps|pumped|pumping"
+        r"|channels|channeled|channelled|channeling|channelling"
+        r"|pumps|pumped|pumping"
         # C-108 (a). The predicating re-admissions, generated from
         # _TRANSPORT_AGENT_NOUNS so no noun can be listed without them.
         r"|" + _agent_noun_predication_src(_TRANSPORT_AGENT_NOUNS) +
@@ -2065,6 +2144,14 @@ _CATALYSIS_CONTRA_RE = re.compile(
     _C105_INHIBITION_STEMS_CONTRA_SRC + r"|" + _C107_INHIBITION_WORDS_SRC
 )
 
+# CORRECTION ROUND 1. The agent nouns as a window-wide contra in their own right.
+# Anchored on both sides for the reason C-107 correction round 2 anchored the
+# attenuation words: an unanchored "inhibitor" would match inside a longer word,
+# which is the very defect class this card exists to close.
+_ATTENUATION_AGENT_NOUN_RE = re.compile(
+    r"(?<![a-z])" + _ATTENUATION_AGENT_NOUN_SRC + r"(?![a-z])"
+)
+
 # The +/-80 character window enzyme_cues.cue_near_name scans around a name,
 # measured here from the MATCHED TOKEN rather than from the whole name, since the
 # rule above matches on one shared token.
@@ -2270,6 +2357,33 @@ def _patch_evidence_spans(op: Dict[str, Any], value: Any) -> List[str]:
     return spans
 
 
+def _agent_noun_contra_fires(window: str, appositive: "re.Pattern[str]") -> bool:
+    """Does an attenuation AGENT NOUN in ``window`` say this actor is a TARGET?
+
+    CORRECTION ROUND 1, and the polarity is the whole point. Every agent-noun
+    occurrence fires the contra UNLESS that occurrence is inside an apposition
+    with the actor under judgement. Round 0 had this the other way round -- a
+    closed list of target-directed frames with ACCEPT outside them -- and
+    REV-108 measured four spans, and this round nine more, in which the actor is
+    plainly the thing being shut down and the guard admitted it anyway:
+
+        "P4X is a target of the inhibitor and catalyses the conversion of A to B"
+        "the repressor bound P4X and the catalysis of A to B stopped"
+
+    EVERY occurrence is checked, not the first. A window that carries an
+    appositive agent noun AND a target-directed one is a window that says the
+    actor is being shut down, so it must refuse: "the inhibitor P4X was itself
+    inhibited by the inhibitor of P4X" may not license on its first clause.
+    """
+
+    exempt = [match.span() for match in appositive.finditer(window)]
+    for match in _ATTENUATION_AGENT_NOUN_RE.finditer(window):
+        start, end = match.span()
+        if not any(lo <= start and end <= hi for lo, hi in exempt):
+            return True
+    return False
+
+
 def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
     """Does this span name ``actor`` performing a ``family`` role?
 
@@ -2330,30 +2444,37 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
                 + _FOLDED_CHAR_SRC + r"{0," + str(_ATTENUATION_GAP) + r"}?\b"
                 + _ATTENUATION_OBJECT_SRC + r"[a-z]*\b"
                 + _FOLDED_CHAR_SRC + r"{0," + str(_ATTENUATION_GAP) + r"}?\b"
-                + _ATTENUATION_WORD_SRC +
-                # C-108 (d), F3: "<agent noun> of|for|against|... <modifiers>
-                # <actor>". The attenuation is aimed AT the actor, so the contra
-                # fires -- "the inhibitor of P4X was added", "an inhibitor of the
-                # enzyme P4X". This is the half of the agent noun the anchored
-                # contra above withholds, given back target-directed.
-                r"|" + _ATTENUATION_AGENT_NOUN_SRC
-                + r"\s+" + _ATTENUATION_TARGET_HEAD_SRC
-                + r"(?:\s+" + _PASSIVE_AGENT_MODIFIERS_SRC + r"){0,4}\s+"
+                + _ATTENUATION_WORD_SRC
+            )
+        # CORRECTION ROUND 1. THE APPOSITIVE EXEMPTION, WHICH REPLACES ROUND 0
+        # F3/F4 AND INVERTS THEIR DEFAULT.
+        #
+        # Round 0 asked "is this agent noun aimed at the actor?" and accepted
+        # when it could not tell. This asks "is this agent noun IN APPOSITION
+        # WITH the actor?" and refuses when it cannot tell, which is the only
+        # safe default for a contra. What the two frames below MATCH is exempt
+        # from the agent-noun contra; everything else fires it.
+        #
+        #   A1  "<agent noun> <modifiers> <ACTOR>"
+        #   A2  "<ACTOR> <determiner> <modifiers> <agent noun>"
+        #
+        # Neither admits a preposition, a participle or "whose", and that is
+        # what separates "the inhibitor P4X" and "P4X, the inhibitor," from
+        # "the inhibitor OF P4X", "the repressor BOUND P4X", "the P4X
+        # inhibitor" and "P4X, WHOSE inhibitor was characterised".
+        appositive = None
+        if family == "catalysis":
+            appositive = re.compile(
+                # A1: "<agent noun> <modifiers> <actor>"
+                _ATTENUATION_AGENT_NOUN_SRC
+                + r"(?:\s+" + _APPOSITIVE_MODIFIER_SRC + r"){0,"
+                + str(_APPOSITIVE_MAX_MODIFIERS) + r"}\s+"
                 + escaped + r"(?![a-z0-9])"
-                # C-108 (d), F4: "<actor> <adjectives> <agent noun>". The
-                # head-final compound -- "the P4X inhibitor", "the P4X specific
-                # inhibitor" -- where the actor is again the TARGET. No
-                # determiner may intervene, which is what keeps the apposition
-                # "P4X, the inhibitor, catalyses ..." out of this frame.
-                # NOTE the spelling: written on two lines so the single-line
-                # form of C-107's F2 opening stays UNIQUE in this file, which is
-                # what evidence/c107_mutation_attack.py's M10 substitution keys
-                # on. A committed instrument should not stop working because a
-                # later card reused a line verbatim.
-                r"|(?<![a-z0-9])" + escaped
-                + r"(?![a-z0-9])"
-                r"(?:\s+" + _ATTENUATION_AGENT_ADJ_SRC + r"){0,"
-                + str(_ATTENUATION_AGENT_MAX_ADJ) + r"}\s+"
+                # A2: "<actor> <determiner> <modifiers> <agent noun>"
+                r"|(?<![a-z0-9])" + escaped + r"(?![a-z0-9])\s+"
+                + _APPOSITIVE_DETERMINER_SRC
+                + r"(?:\s+" + _APPOSITIVE_MODIFIER_SRC + r"){0,"
+                + str(_APPOSITIVE_MAX_MODIFIERS) + r"}\s+"
                 + _ATTENUATION_AGENT_NOUN_SRC + r"(?![a-z])"
             )
         # CORRECTION ROUND 1. The cofactor dependence route, anchored the same way
@@ -2394,6 +2515,10 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
                 continue
             if actor_contra is not None and actor_contra.search(window):
                 continue
+            # CORRECTION ROUND 1. The agent-noun contra, on the UNMASKED window
+            # like every other refusal in this function.
+            if appositive is not None and _agent_noun_contra_fires(window, appositive):
+                continue
             return True
         if family != "catalysis":
             continue
@@ -2415,6 +2540,11 @@ def _span_licenses_actor(span: str, actor: str, family: str) -> bool:
             if contra is not None and contra.search(window):
                 continue
             if actor_contra is not None and actor_contra.search(window):
+                continue
+            # CORRECTION ROUND 1. The passive-agent route is judged by the same
+            # contra as the window route -- it was at base too, and leaving it
+            # out would be a second door into the defect REV-108 found.
+            if appositive is not None and _agent_noun_contra_fires(window, appositive):
                 continue
             return True
     return False

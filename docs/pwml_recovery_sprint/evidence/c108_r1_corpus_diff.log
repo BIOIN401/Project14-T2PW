@@ -1,0 +1,80 @@
+rows at base : 692    rows at tip : 692
+population drift: keys only at base = 0, only at tip = 0
+
+BASE accepted : 401 of 692
+TIP  accepted : 382 of 692
+
+==========================================================================================
+DIRECTION 1 -- NEWLY REFUSED (accepted at base, refused at tip): 19
+==========================================================================================
+  [enzymes/reactions role='catalyst'] 'Isochorismate synthase'
+      'EntC (isochorismate synthase; EC 5.4.4.2)'
+  [enzymes/reactions role='catalyst'] 'UDP-3-O-acyl-N-acetylglucosamine deacetylase'
+      'UDP-3-O-[R-3-hydroxymyristoyl]-N-acetylglucosamine deacetylase in Escherichia coli'
+  [enzymes/reactions role='catalyst'] 'enterobactin synthase complex'
+      'enterobactin synthase complex, which includes EntD, EntE, and EntF'
+  [enzymes/reactions role='catalyst'] 'enterobactin synthase'
+      'EntF (enterobactin synthase)'
+  [enzymes/reactions role='catalyst'] 'ferrochelatase'
+      'modulating ferrochelatase levels'
+  [enzymes/reactions role='catalyst'] 'isochorismatase'
+      'EntB (isochorismatase/aryl carrier protein)'
+  [enzymes/reactions role='catalyst'] 'isochorismatase'
+      'EntB isochorismatase activity'
+  [enzymes/reactions role='catalyst'] 'isochorismatase'
+      'N-terminal isochorismatase (IC) domain of EntB (EC 3.3.2.1)'
+  [enzymes/reactions role='catalyst'] "tetraacyldisaccharide 4'-kinase"
+      "gene encoding the Escherichia coli lipid A 4'-kinase"
+  [modifiers/reactions role='catalyst'] 'Isochorismate synthase'
+      'EntC (isochorismate synthase; EC 5.4.4.2)'
+  [modifiers/reactions role='catalyst'] 'UDP-3-O-acyl-N-acetylglucosamine deacetylase'
+      'UDP-3-O-[R-3-hydroxymyristoyl]-N-acetylglucosamine deacetylase in Escherichia coli'
+  [modifiers/reactions role='catalyst'] 'enterobactin synthase complex'
+      'enterobactin synthase complex, which includes EntD, EntE, and EntF'
+  [modifiers/reactions role='catalyst'] 'enterobactin synthase'
+      'EntF (enterobactin synthase)'
+  [modifiers/reactions role='catalyst'] 'ferrochelatase'
+      'modulating ferrochelatase levels'
+  [modifiers/reactions role='catalyst'] 'isochorismatase'
+      'EntB (isochorismatase/aryl carrier protein)'
+  [modifiers/reactions role='catalyst'] 'isochorismatase'
+      'EntB isochorismatase activity'
+  [modifiers/reactions role='catalyst'] 'isochorismatase'
+      'N-terminal isochorismatase (IC) domain of EntB (EC 3.3.2.1)'
+  [modifiers/reactions role='catalyst'] "tetraacyldisaccharide 4'-kinase"
+      "gene encoding the Escherichia coli lipid A 4'-kinase"
+  [transporters/transports role='None'] 'MsbA'
+      'MsbA: an ABC transporter paradigm'
+
+==========================================================================================
+DIRECTION 2 -- NEWLY ADMITTED (refused at base, accepted at tip): 0
+==========================================================================================
+
+SUMMARY  newly_refused=19  newly_admitted=0  (reported separately, by C-107 section 3 / REV-107 B5)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c108\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fbf2047e69fa0464c7c128978f12c636a1455431  [git, worktree dirty=True]
+label                   : r1-corpusdiff
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/c107_corpus_diff.py C:/t/c108scratch/flat_base.json C:/t/c108scratch/flat_r1.json 40
+cwd                     : C:\t\c108
+root PID / process group: 202092 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.19 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  195816:python.exe
+descendants terminated  : 1  195816
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c108\docs\pwml_recovery_sprint\evidence\g11\C-108\61-r1-corpusdiff.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-108  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -43,6 +43,19 @@ import t2pw.curation.apply_audit_patch as M  # noqa: E402
 print("code loaded from:", M.__file__, file=sys.stderr)
 
 
+def _agent_noun_hit(window, appositive):
+    """The first agent-noun occurrence NOT exempted by an apposition, or None."""
+
+    if appositive is None or not hasattr(M, "_ATTENUATION_AGENT_NOUN_RE"):
+        return None
+    exempt = [m.span() for m in appositive.finditer(window)]
+    for m in M._ATTENUATION_AGENT_NOUN_RE.finditer(window):
+        lo, hi = m.span()
+        if not any(a <= lo and hi <= b for a, b in exempt):
+            return m.group(0)
+    return None
+
+
 def attribute(span, actor, family):
     """Mirror of _span_licenses_actor, reporting what matched at each step."""
     out = []
@@ -70,17 +83,23 @@ def attribute(span, actor, family):
                 + M._ATTENUATION_OBJECT_SRC + r"[a-z]*\b"
                 r"[^.]{0," + str(M._ATTENUATION_GAP) + r"}?\b"
                 + M._ATTENUATION_WORD_SRC
-                + (
-                    (r"|" + M._ATTENUATION_AGENT_NOUN_SRC
-                     + r"\s+(?:of|for|against|on|upon|toward|towards|to)"
-                     r"(?:\s+" + M._PASSIVE_AGENT_MODIFIERS_SRC + r"){0,4}\s+"
-                     + escaped + r"(?![a-z0-9])"
-                     r"|(?<![a-z0-9])" + escaped + r"(?![a-z0-9])"
-                     r"(?:\s+" + M._ATTENUATION_AGENT_ADJ_SRC + r"){0,"
-                     + str(M._ATTENUATION_AGENT_MAX_ADJ) + r"}\s+"
-                     + M._ATTENUATION_AGENT_NOUN_SRC + r"(?![a-z])")
-                    if hasattr(M, "_ATTENUATION_AGENT_NOUN_SRC") else ""
-                )
+            )
+        # CORRECTION ROUND 1. The appositive exemption, mirrored. Absent at base,
+        # so the base arm of this instrument simply carries no agent-noun contra
+        # -- at base the bare stem inside "inhibitor" did that job and it is
+        # already covered by `contra` above.
+        appositive = None
+        if family == "catalysis" and hasattr(M, "_APPOSITIVE_MODIFIER_SRC"):
+            appositive = re.compile(
+                M._ATTENUATION_AGENT_NOUN_SRC
+                + r"(?:\s+" + M._APPOSITIVE_MODIFIER_SRC + r"){0,"
+                + str(M._APPOSITIVE_MAX_MODIFIERS) + r"}\s+"
+                + escaped + r"(?![a-z0-9])"
+                r"|(?<![a-z0-9])" + escaped + r"(?![a-z0-9])\s+"
+                + M._APPOSITIVE_DETERMINER_SRC
+                + r"(?:\s+" + M._APPOSITIVE_MODIFIER_SRC + r"){0,"
+                + str(M._APPOSITIVE_MAX_MODIFIERS) + r"}\s+"
+                + M._ATTENUATION_AGENT_NOUN_SRC + r"(?![a-z])"
             )
         dependence = None
         if family == "cofactor":
@@ -127,6 +146,13 @@ def attribute(span, actor, family):
                 rec["why"] = "actor-anchored attenuation frame fired"
                 out.append(rec)
                 continue
+            gn = _agent_noun_hit(window, appositive)
+            if gn:
+                rec["agent_noun"] = gn
+                rec["verdict"] = False
+                rec["why"] = "agent-noun contra fired (actor is the TARGET)"
+                out.append(rec)
+                continue
             rec["verdict"] = True
             rec["why"] = "licensed on the window route"
             out.append(rec)
@@ -158,6 +184,13 @@ def attribute(span, actor, family):
                 rec["actor_contra"] = am.group(0)
                 rec["verdict"] = False
                 rec["why"] = "actor attenuation frame fired on the passive window"
+                out.append(rec)
+                continue
+            gn = _agent_noun_hit(window, appositive)
+            if gn:
+                rec["agent_noun"] = gn
+                rec["verdict"] = False
+                rec["why"] = "agent-noun contra fired on the passive window"
                 out.append(rec)
                 continue
             rec["verdict"] = True
@@ -203,9 +236,9 @@ def report(key):
     print("      LICENSED: %s" % licensed)
     for r in recs[:6]:
         print("        needle=%r route=%s cue=%r contra=%r actor_contra=%r "
-              "dependence=%r passive=%r -> %s (%s)"
+              "agent_noun=%r dependence=%r passive=%r -> %s (%s)"
               % (r.get("needle"), r.get("route"), r.get("cue"), r.get("contra"),
-                 r.get("actor_contra"), r.get("dependence"),
+                 r.get("actor_contra"), r.get("agent_noun"), r.get("dependence"),
                  (r.get("passive") or "")[:60] or None,
                  r.get("verdict"), r.get("why")))
     if len(recs) > 6:

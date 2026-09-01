@@ -170,11 +170,27 @@ def test_p1_the_inhibitor_span_f146_argued_from_is_still_rejected() -> None:
 def test_p2_the_inhibition_cue_is_untouched_so_the_other_fallback_cannot_move() -> None:
     """The (d) split anchors the CONTRA and leaves the CUE exactly as it was.
 
+    **THIS ARM IS STRUCTURAL AND FAILS AT BASE ON SYMBOL ABSENCE.** It imports
+    _C105_INHIBITION_STEMS_SRC and _C107_INHIBITION_WORDS_SRC, which this card
+    creates, so at ``f67e00a`` it raises ImportError rather than giving a wrong
+    answer. **That failure is NOT offered as a base failure and G9 explicitly
+    refuses symbol absence as proof.** It is labelled here, at the arm, as well
+    as in the file header -- REV-108 R-f. The behavioural pins for member (d)
+    are the appositive and preservation blocks far below, which RUN at base.
+
     _ANY_ROLE_CUE_RE is rebuilt from every _ROLE_CUE_RES value, so a change to
     the inhibition CUE would widen or narrow the ``other`` fallback for every
     unmapped role -- C-107's own M6 mutation finding. This asserts the two
     objects are no longer the same object AND that the cue's source is unchanged,
-    which is the only combination that closes (d) without moving the fallback.
+    which is the only combination that closes (d) without MEMBER (d) moving the
+    fallback.
+
+    CORRECTION ROUND 1 -- REV-108 R-d. The claim is exactly that and no more.
+    _ANY_ROLE_CUE_RE DOES move in this card, 2,584 -> 6,461 characters, and every
+    one of those characters comes from MEMBER (a), which rewrote the catalysis
+    and transport vocabularies. Whether it widens BEHAVIOURALLY is measured
+    below, over the vocabulary (a) actually changed, rather than argued from a
+    length.
     """
 
     from t2pw.curation.apply_audit_patch import (  # noqa: PLC0415
@@ -828,3 +844,181 @@ def test_e_new_coverage_the_restore_is_byte_exact_and_proves_it() -> None:
     after = GUARD_PATH.read_bytes()
     assert harness.sha256_of(after) == harness.sha256_of(before)
     assert harness.crlf_count(after) == harness.crlf_count(before)
+
+
+# ---------------------------------------------------------------------------
+# CORRECTION ROUND 1 -- REV-108's BLOCKING FINDING.
+#
+# *** THESE ARE PRESERVATION CONTROLS AND THEY ARE GREEN AT BASE. NO BASE
+# FAILURE IS CLAIMED FOR THEM AND NONE EXISTS. ***
+#
+# Every span below is REFUSED at ``f67e00a``. Round 0 of this card ADMITTED
+# fourteen of them, and that was a weakened biological gate: in every one the
+# actor is the thing being shut down, and the last four say so twice over -- the
+# span goes on to state that the catalysis STOPPED. Round 1 restores the base
+# verdict while KEEPING member (d), which is the whole difficulty: the same
+# agent noun must refuse here and license in the appositive block above.
+#
+# WHY ROUND 0 GOT IT WRONG, because the mechanism matters more than the fix:
+# round 0 gave the agent nouns back to the contra as a bounded closed list of
+# TARGET-DIRECTED frames with ACCEPT as the default outside them. Handoff lesson
+# 3 -- a bounded closed list flips polarity between a cue and a contra; in a cue
+# it under-accepts and is safe, in a contra it under-REFUSES and is not. The
+# default is now inverted: an agent noun REFUSES unless it stands in an
+# apposition with this actor.
+#
+# Ten of the fourteen were found by this round attacking its own repair rather
+# than fitting it to the four spans it was handed
+# (evidence/c108_r1_blocking_repro.log).
+# ---------------------------------------------------------------------------
+
+ACTOR_IS_THE_TARGET = [
+    # REV-108's four, verbatim
+    "P4X is a target of the inhibitor and catalyses the conversion of A to B",
+    "P4X was subject to inhibitors during the assay, yet catalyses A to B",
+    "P4X, whose inhibitor was characterised, catalyses the conversion of A to B",
+    "the repressor bound P4X and the catalysis of A to B stopped",
+    # the same grammar, this round's own attack on its own repair
+    "P4X is the target of a suppressor and catalyses the conversion of A to B",
+    "P4X remained a target of the antagonist while catalysing A to B",
+    "the inhibitor was raised against P4X, which catalyses A to B",
+    "an inhibitor was co-crystallised with P4X, which catalyses A to B",
+    "P4X, for which an inhibitor exists, catalyses the conversion of A to B",
+    "the suppressor bound P4X and the catalysis of A to B stopped",
+    "the antagonist blocked P4X and the conversion of A to B stopped",
+    "the repressor acts on P4X, which catalyses the conversion of A to B",
+    "inhibitors were screened against P4X, which catalyses A to B",
+    "P4X sensitivity to the inhibitor was measured while it catalyses A to B",
+]
+
+
+@pytest.mark.parametrize("span", ACTOR_IS_THE_TARGET)
+def test_r1_an_agent_noun_refuses_unless_it_is_in_apposition_with_the_actor(
+    span: str,
+) -> None:
+    """PRESERVATION, green at base. Round 0 admitted these; round 1 does not."""
+
+    assert not accepted("P4X", span), span
+
+
+def test_r1_the_appositive_exemption_is_not_a_target_frame_list() -> None:
+    """The polarity itself, asserted rather than described.
+
+    An agent noun with NOTHING around it -- no target head, no compound, no
+    apposition -- must still refuse. Round 0 accepted this, because it was not
+    on the closed list of target frames. That is the defect in one line.
+    """
+
+    assert not accepted(
+        "P4X", "an inhibitor was mentioned and P4X catalyses the conversion of A to B"
+    )
+
+
+def test_r1_every_agent_noun_in_the_window_is_checked_not_the_first() -> None:
+    """An appositive agent noun does not license past a target-directed one."""
+
+    assert not accepted(
+        "P4X",
+        "the inhibitor P4X catalyses the conversion of A to B, and the inhibitor "
+        "of P4X abolished it",
+    )
+
+
+# ---------------------------------------------------------------------------
+# CORRECTION ROUND 1 -- REV-108's SURVIVING MUTATIONS R2 and R3, and R-a.
+#
+# The reviewer mutated two of member (a)'s constructs and the suite stayed green:
+# the predication modifier gap, and the transport verb inflections. A guard with
+# no test is not evidence, and R-a is the same gap seen from the other side --
+# the missing inflection and the missing test are one hole.
+# ---------------------------------------------------------------------------
+
+#: R-a. "channeled" is the US past tense and it was MISSING from round 0's verb
+#: list, which had channelled/channeling/channelling only. That is a real
+#: over-refusal this card introduced -- base ACCEPTS it through the bare
+#: "channel" stem -- and it is fixed rather than registered.
+TRANSPORT_VERB_INFLECTIONS = [
+    "P channels calcium into the cytosol",
+    "P channeled calcium into the cytosol",
+    "P channelled calcium into the cytosol",
+    "P is channeling calcium into the cytosol",
+    "P is channelling calcium into the cytosol",
+    "P pumps protons across the membrane",
+    "P pumped protons across the membrane",
+    "P is pumping protons across the membrane",
+]
+
+
+@pytest.mark.parametrize("span", TRANSPORT_VERB_INFLECTIONS)
+def test_r1_the_transport_verb_inflections_are_load_bearing(span: str) -> None:
+    """R3. Dropping "channel" and "pump" as bare nouns kept these as VERBS, and
+    until now nothing said so."""
+
+    assert transports("P", span), span
+
+
+#: R2. The gap between the determiner and the agent noun. Without it a paper's
+#: ordinary modifiers break the predication.
+PREDICATION_GAP_SPANS = [
+    "P is a high affinity transporter",
+    "P is an inner membrane transporter",
+    "P acts as an inner membrane channel",
+    "P is the outer membrane transporter for A",
+    "P was a well characterised sodium carrier",
+]
+
+
+@pytest.mark.parametrize("span", PREDICATION_GAP_SPANS)
+def test_r1_the_predication_modifier_gap_is_load_bearing(span: str) -> None:
+    assert transports("P", span), span
+
+
+#: R-c. The one token the gap may not cross. "P is a substrate of the
+#: transporter TonB" says P is the SUBSTRATE, and it licensed P as a transporter
+#: at base and at round 0.
+GENITIVE_NOT_A_PREDICATION = [
+    "P is a substrate of the transporter TonB",
+    "P is a product of the transporter TonB",
+    "P is a substrate of the channel TonB",
+]
+
+
+@pytest.mark.parametrize("span", GENITIVE_NOT_A_PREDICATION)
+def test_r1_the_predication_gap_may_not_cross_a_genitive(span: str) -> None:
+    assert not transports("P", span), span
+
+
+# ---------------------------------------------------------------------------
+# CORRECTION ROUND 1 -- REV-108's R-d, measured rather than argued.
+#
+# Member (a) rewrote the catalysis and transport vocabularies, and
+# _ANY_ROLE_CUE_RE is rebuilt from every one of them, so the ``other`` fallback
+# for every unmapped role is rebuilt too. C-107's pin covers the spans ITS card
+# moved; these cover the vocabulary THIS card moved.
+# ---------------------------------------------------------------------------
+
+FALLBACK_SPANS_OVER_THIS_CARDS_VOCABULARY = [
+    ("chaperone", "add P as a transporter to resolve the structural inconsistency"),
+    ("chaperone", "add P as a catalyst to resolve the structural inconsistency"),
+    ("scaffold", "add P as a channel to resolve the structural inconsistency"),
+    ("adaptor", "P is a substrate of the transporter TonB"),
+    ("chaperone", "P was detected in the membrane fraction"),
+]
+
+
+@pytest.mark.parametrize("role,span", FALLBACK_SPANS_OVER_THIS_CARDS_VOCABULARY)
+def test_r1_the_other_fallback_did_not_widen_over_this_cards_vocabulary(
+    role: str, span: str
+) -> None:
+    """The fallback grew in CHARACTERS. This asks whether it grew in BEHAVIOUR."""
+
+    assert not accepted("P", span, container="modifiers", role=role), (role, span)
+
+
+def test_r1_the_fallback_still_licenses_what_it_licensed_before() -> None:
+    """The other direction: narrowing the fallback would be a regression too."""
+
+    assert accepted(
+        "P", "P is a required cofactor for the step",
+        container="modifiers", role="cofactor",
+    )

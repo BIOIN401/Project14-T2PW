@@ -123,17 +123,70 @@ MUTATIONS = [
     ),
     (
         "N9", "red",
-        "(d) MERGE RULE 6: the F3 target frame is removed, so 'the inhibitor of P' "
-        "no longer refuses",
-        '                + r"\\s+" + _ATTENUATION_TARGET_HEAD_SRC\n',
-        '                + r"(?!)" + _ATTENUATION_TARGET_HEAD_SRC  # MUTATION N9\n',
+        "(d) ROUND 1, THE POLARITY ITSELF: the agent-noun contra is switched off "
+        "on the window route, which is exactly round 0 and exactly REV-108 "
+        "blocking finding",
+        "            if appositive is not None and _agent_noun_contra_fires(window, appositive):\n"
+        "                continue\n"
+        "            return True\n"
+        "        if family != \"catalysis\":\n",
+        "            if False:  # MUTATION N9\n"
+        "                continue\n"
+        "            return True\n"
+        "        if family != \"catalysis\":\n",
     ),
     (
         "N10", "red",
-        "(d) MERGE RULE 6: the F4 head-final frame is removed, so 'the P inhibitor' "
-        "no longer refuses",
-        '                r"(?:\\s+" + _ATTENUATION_AGENT_ADJ_SRC + r"){0,"\n',
-        '                r"(?!)(?:\\s+" + _ATTENUATION_AGENT_ADJ_SRC + r"){0,"  # MUTATION N10\n',
+        "(d) ROUND 1: the APPOSITIVE EXEMPTION is removed, so every agent noun "
+        "refuses and member (d) itself is lost -- an OVER-REFUSAL attack on the "
+        "same repair",
+        '                _ATTENUATION_AGENT_NOUN_SRC\n'
+        '                + r"(?:\\s+" + _APPOSITIVE_MODIFIER_SRC + r"){0,"\n',
+        '                r"(?!)" + _ATTENUATION_AGENT_NOUN_SRC  # MUTATION N10\n'
+        '                + r"(?:\\s+" + _APPOSITIVE_MODIFIER_SRC + r"){0,"\n',
+    ),
+    (
+        "N14", "red",
+        "(d) ROUND 1: the appositive determiner set gains \"whose\", which is "
+        "REV-108 third span -- a relative clause about a DIFFERENT molecule read "
+        "as an apposition",
+        '_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an|this|that|its|their)"\n',
+        '_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an|this|that|its|their|whose)"  # MUTATION N14\n',
+    ),
+    (
+        "N15", "red",
+        "(d) ROUND 1: the appositive modifier set gains \"bound\", which is "
+        "REV-108 fourth and sharpest span -- subject-verb-object read as a noun "
+        "phrase, on a span that says the catalysis STOPPED",
+        '    r"|bacterial|microbial|human|recombinant)"\n',
+        '    r"|bacterial|microbial|human|recombinant|bound)"  # MUTATION N15\n',
+    ),
+    (
+        "N16", "red",
+        "(a) R3: the transport VERB inflections are dropped, so dropping the bare "
+        "nouns silently drops the verbs too -- the mutation REV-108 found "
+        "surviving",
+        '        r"|channels|channeled|channelled|channeling|channelling"\n',
+        '        r"|(?!)"  # MUTATION N16\n',
+    ),
+    (
+        "N17", "red",
+        "(a) R2: the predication modifier gap is closed to zero, so an ordinary "
+        "paper modifier breaks the predication -- the other mutation REV-108 "
+        "found surviving",
+        '            + _PREDICATION_GAP_SRC + r"{0,3}" + noun + r"s?(?![a-z])"\n'
+        '        )\n'
+        '        # The copular-equivalent verbs.',
+        '            + _PREDICATION_GAP_SRC + r"{0,0}" + noun + r"s?(?![a-z])"  # MUTATION N17\n'
+        '        )\n'
+        '        # The copular-equivalent verbs.',
+    ),
+    (
+        "N18", "red",
+        "(a) R-c: the predication gap may cross a genitive again, so "
+        "\"P is a substrate of the transporter TonB\" licenses P as a transporter",
+        '_PREDICATION_GAP_SRC = r"(?:(?!of )[a-z0-9]+ )"\n',
+        '_PREDICATION_GAP_SRC = r"(?:[a-z0-9]+ )"  # MUTATION N18\n',
     ),
     (
         "N11", "red",

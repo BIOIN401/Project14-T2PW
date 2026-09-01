@@ -108,6 +108,14 @@ SECTIONS = [
         E("LpxC hydrolase", "LpxC hydrolase, LpxD and LpxA were all detected", False),
         E("LpxC hydrolase", "LpxC hydrolase is present in the complex", False),
         E("LpxC hydrolase", "purified LpxC hydrolase was stored at minus 80", False),
+        # CORRECTION ROUND 1 -- REV-108 R-b. BOTH of these are want=REFUSE and
+        # both have measured ACCEPT at BOTH SHAs since round 0, so both are
+        # counted in `still_open` and neither understates the residual. They fold
+        # identically -- "lpxc a hydrolase was quantified in the lysate" -- and a
+        # determiner between the name and the enzyme noun breaks the contiguous
+        # name run member (c) masks on. Registered, not closed: closing it would
+        # mean masking a token the PAPER wrote rather than one the patch
+        # supplied, which is the opposite of what (c) is for.
         E("LpxC hydrolase", "LpxC (a hydrolase) was quantified in the lysate", False),
         E("LpxC hydrolase", "LpxC, a hydrolase, was quantified in the lysate", False),
         # and the predications it must not break
@@ -170,6 +178,10 @@ SECTIONS = [
         E("P", "abolishing P activity is mediated by Q", False),
         # and "transport" must not have lost its verb or its event noun
         T("P", "P transports A across the inner membrane", True),
+        # CORRECTION ROUND 1 -- REV-108 R-a and R-c, attacked here as well as
+        # pinned in the focused file.
+        T("P", "P channeled calcium into the cytosol", True),
+        T("P", "P is a substrate of the transporter TonB", False),
         T("P", "the transport of A is carried out by P", True),
         T("P", "P translocates A across the bilayer", True),
         T("P", "the translocation of A is driven by P", True),
