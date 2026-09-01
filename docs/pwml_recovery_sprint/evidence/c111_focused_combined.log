@@ -1,0 +1,34 @@
+T2PW: C:\t\c111\src\t2pw\__init__.py
+........................................................................ [ 22%]
+........................................................................ [ 45%]
+........................................................................ [ 68%]
+........................................................................ [ 91%]
+............................                                             [100%]
+316 passed in 50.91s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c111\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f454f51cd3e8498ab1c27fc76aba77be68717d18  [git, worktree dirty=False]
+label                   : c111-focused-combined
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c111 --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/C-111/06-c111-focused-combined.pin.json -q --basetemp=C:/t/btc111/combined tests/test_c111_timeout_observability.py tests/test_batch_run.py tests/test_batch_driver.py tests/test_batch_driver_seam_golden.py tests/test_batch_driver_quarantine_artifacts.py tests/test_c083_inner_timeout_row.py tests/test_deadline_budget.py tests/test_deadline_leg_timeout.py tests/test_early_failure_replay.py tests/test_llm_client_request_timeout.py tests/test_extraction_diagnostics.py tests/test_stage_one_boundary.py tests/test_batch_report.py tests/test_c110_negative_control_status.py
+cwd                     : C:\t\c111
+root PID / process group: 537940 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 420 s
+duration                : 52.53 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 23  538212:python.exe, 527764:python.exe, 537956:python.exe, 538464:taskkill.exe, 536836:python.exe, 537344:python.exe, 537972:python.exe, 538168:python.exe, 537748:taskkill.exe, 538072:python.exe, 538344:python.exe, 538452:python.exe, 538508:python.exe, 536252:python.exe, 537948:python.exe, 527272:python.exe, 531700:python.exe, 533680:python.exe, 537996:python.exe, 538124:python.exe, 537904:python.exe, 538152:python.exe, 538480:python.exe
+descendants terminated  : 23  527272, 527764, 531700, 533680, 536252, 536836, 537344, 537748, 537904, 537948, 537956, 537972, 537996, 538072, 538124, 538152, 538168, 538212, 538344, 538452, 538464, 538480, 538508
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/C-111/06-c111-focused-combined.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-111  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
