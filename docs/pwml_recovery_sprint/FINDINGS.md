@@ -7445,3 +7445,183 @@ The original lesson was *distrust a green mutation*. **The stronger form: a gree
 statement about the bytecode that executed, and only a statement about your source if you can show
 the two agree.** Every mechanism this sprint uses to check its own work — pytest, the mutation
 harnesses, the split runs — reads through that same cache.
+
+---
+
+## F-161 — the gold-readers selection is not a superset of SMOKE, so a gold edit's mandated gate was structurally blind
+
+- **Severity** HIGH for the sprint's own instruments · **Class: defect in the REVIEW INSTRUMENT** —
+  the criteria were incomplete; **the reviewer is not at fault** · **Registered 2026-09-01**
+- **Written by C-113, held rather than committed** because `card/C-112-residual-sweep` also edited
+  this file and was unmerged at the time. **Sequenced in by the Lead after C-112 merged.** That hold
+  was correct behaviour and is recorded as such.
+- **Found by** the failed merge of F-150 half 1 at `b05a7281`, measured by the Lead's A/B:
+  `evidence/orch718_smoke22_postf150.log` / `orch718_smoke22_postrevert.log`, G11 `ORCH-718/04`
+  and `/05`.
+
+### The measurement
+
+REV-F150's mandated gate for the gold edit was the **22-file gold-readers selection**. It ran the
+four-step A/B honestly and got a **byte-identical `456 passed / 8 skipped / exit 0` in both arms**,
+per-file delta zero on all 22 files, and returned **VERIFIED — APPLY HALF 1**.
+
+`tests/test_c102_coverage_denominator.py` **reads the gold** — it builds
+`{case.paper_id: case for case in load_gold_set(pinned_gold_set_path()).cases}` at module scope —
+and it **is in SMOKE**. It is **not in the gold-readers selection.** So the gate mandated for a gold
+edit could not see the only two tests that edit actually moved:
+
+```
+WITH the gold edit     b05a7281   501 passed / 2 failed   exit 1
+WITHOUT the gold edit  700c9434   503 passed / 0 failed   exit 0
+```
+
+Both failures were in that one file. **A real consequence sat exactly one selection away from the
+gate written to find it,** and the arms agreed to the test because neither arm ran the file.
+
+### Why this is a defect in the instrument, not in the reviewer
+
+**The reviewer did precisely what its criteria asked, and did it correctly.** Its A/B was sound:
+same tree, same interpreter, predictions written first, one failed measurement kept. Its verdict is
+still correct — REV-F150 is not reopened, and the gold edit re-landed unchanged at C-113 with the
+byte-identical blob `36f4b7b6…`. What failed is the **choice of population** the criteria named as
+sufficient.
+
+**This is the exact mirror of the standing lesson that SMOKE does not cover the gold readers.** The
+sprint already knew one direction of that gap. The other direction is just as real:
+
+> **Neither selection is a superset of the other. A gold edit needs BOTH.**
+
+### The consequence, stated plainly
+
+A gate that is *mandated* rather than *chosen* carries the authority of the process. When such a
+gate is blind by construction, a green result from it is read as a licence to merge — and it was:
+the merge went in, SMOKE caught it, and merge rule 10 required the merge not to stand. **Merge rule
+10 was the only thing between an instrument gap and a landed regression-shaped tip.**
+
+### Disposition — RATIFIED BY THE LEAD, 2026-09-01
+
+**Effective immediately, for any change to `src/t2pw/bench/gold/pinned_v1.json`:** run **BOTH** the
+22-file gold-readers selection **and** SMOKE, and report both, each with the gold SHA it was
+measured against. **Neither alone certifies a gold edit.**
+
+**On the authority of this clause.** REV-113 registered, correctly, that a card had declared a
+sprint-wide process obligation on its own authority (its R13), and asked the Lead to ratify or
+reword it. **The Lead ratifies it as written and adopts it as a standing obligation.** The
+distinction matters and is preserved rather than smoothed over: C-113 was right on the merits and
+out of its authority to bind the sprint, and a card proposing a rule it cannot itself enact is the
+correct behaviour — the reviewer catching that it had not been ratified is what closes the loop.
+
+**Also adopted, from REV-113's R12:** whenever a census pin in
+`tests/test_c102_coverage_denominator.py` moves, close the mutation gap with a **same-length**
+mutation of the moved literal. `assert withheld == 100` is unreachable in either red arm — the
+set-equality above it aborts the test first — so the natural revert gives that pin **no mutation
+coverage at all**, and only a deliberate same-length mutation (the F-160 trap, walked into on
+purpose) proves the assert executes.
+
+**RAISED, NOT ANSWERED — still open for the product owner / a future card:** should the
+gold-readers selection be *extended* to include every SMOKE file that reads the gold, starting with
+`tests/test_c102_coverage_denominator.py`? That is a **`TEST_MATRIX` change with its own cost** —
+runtime, per-branch obligations, and a moved `456 / 8` baseline that every future A/B is measured
+against. **It was not C-113's to make and it is not settled by this ratification.** The standing
+obligation above makes the gap safe without deciding it.
+
+---
+
+## F-162 — a mistyped task id did not return nothing; it returned ANOTHER task's evidence
+
+- **Severity** HIGH at base, **FIXED by C-112** as a side effect of the same guard ·
+  **Class** false-PASS in the evidence-reachability instrument · **Registered 2026-09-01 by the Lead**
+- **Found by** the C-112 author's own **failed assertion**, and preserved as
+  `evidence/c112_r2_false_pass_vectors.attempt1-typo-assertion.log`. **Given a finding id at
+  REV-112's request (its R3), which observed it was documented only in a probe source and a test
+  docstring.**
+
+### The measurement
+
+C-112's charter described the third R2 vector as *"`--allow-empty` plus a mistyped task id is a
+silent pass"* — i.e. exit 0 on nothing. **The truth at base is worse.** `rev109` and `REV_109` did
+**not** enumerate zero artifacts and exit 0. They enumerated **REV-109's actual evidence** and
+returned **1**, because the filesystem is case-insensitive and `task_stem` strips non-alphanumeric
+characters, so three distinct spellings collapse onto one real task directory.
+
+**A typo did not fail loudly, and it did not fail quietly either — it silently certified one task's
+work using another task's evidence.**
+
+### Why the charter understated it
+
+The charter reasoned from `--allow-empty` disarming the exit-3 protection, which is a real and
+separate vector. It did not anticipate that the id would *resolve* rather than *miss*. **The author
+found it only because it asserted the charter's version and the assertion failed** — the failed
+measurement was the finding.
+
+### Blast radius — verified nil
+
+REV-112 checked every committed G11 report in the tree: **no report anywhere carries a
+non-conforming task id**, so no past certification was mis-attributed. The defect was reachable but
+never taken.
+
+### Disposition
+
+**Fixed in C-112**, in the same hunk as the vector it was found under: the grammar guard now refuses
+both spellings at exit 2, before enumeration. **No further action.** Registered because a defect
+found, fixed and blast-radius-checked should be findable by id and not only by reading a probe.
+
+---
+
+## F-163 — `HeavyLock.release` is not atomic, and its window creates a lock nobody is permitted to clear
+
+- **Severity** HIGH for wave throughput · **Class** orchestration-tooling defect ·
+  **NOT REPAIRED — deliberately. Chartered for the next wave.** · **Registered 2026-09-01 by the Lead**
+- Full incident record: `evidence/orch718_anonymous_heavy_lock_incident.md`. First reported by the
+  C-111 agent as its R-C111-4.
+
+### The defect
+
+`HeavyLock.release` **unlinks `holder.json`, then `rmdir`s the directory**
+(`bounded_run.py:828-860`). `acquire` is `os.mkdir`. A kill landing **between those two statements**
+leaves an **empty directory with no holder file**, so every subsequent job gets
+`BOUNDED_RUN_HEAVY_LOCK_HELD` (exit 95) **forever**.
+
+**The standing clearing checklist is then unsatisfiable by construction**, because its first
+condition is *multiple byte-identical holder samples* and there is no holder. **An anonymous lock is
+unclearable even by its own owner.**
+
+### The diagnosis is provable, not inferred
+
+If the wrapper's `finally` had simply never run, **`holder.json` would still be there.** It was gone
+*and* the directory remained. That state is reachable only by a kill inside `release`, between the
+two statements.
+
+### How it was recovered, and the technique worth keeping
+
+**The holder sample survived in a `BOUNDED_RUN_HEAVY_LOCK_HELD` diagnostic**: a failed acquire
+prints the holder file verbatim, so an earlier exit-95 in a transcript or committed log **is** the
+byte-exact sample the checklist demands. The *source* was stripped; the evidence was not. That plus
+a dead PID (473280), three stable empty samples, zero sprint-owned Python processes and confirmed
+peer non-ownership satisfied the checklist honestly. **Cleared with `rmdir`, never `rm -rf`** —
+`rmdir` refuses on a non-empty directory, so a race that wrote a holder between the last sample and
+the call fails the clear instead of being silently overwritten.
+
+**A subagent must not clear an anonymous lock.** *"There is no holder, so nothing owns it, so I may
+delete it"* is right by luck and wrong by method — the same reasoning deletes a lock during another
+job's acquisition window. The C-111 agent declined and escalated, which is why this was a clean
+recovery rather than a guess.
+
+### Why it was not fixed this wave
+
+`bounded_run.py` is the instrument every job in flight is measured through, and **its build hash is
+recorded in every G11 report** (`sha256:83d1395…`). **Changing the instrument mid-wave would break
+comparability across reports already written.**
+
+### The related cost, same wave, different statement
+
+Three further strands came from the **sibling** failure mode: a shell clock shorter than the
+wrapper's `--timeout`, which kills the wrapper so its `finally` never runs at all. **The Bash tool
+caps a single call at 600 s**, so a `--timeout 900` wrapper can *never* be covered by a foreground
+shell — and a lock-wait retry loop wrapped around a long job blows the cap on **waiting alone**.
+Under this wave's contention, acquiring took **19, 15, 120 and 330 attempts** on different jobs.
+
+**Standing rule, adopted:** keep the wrapper `--timeout` comfortably **under** the shell cap, and
+never let a lock-wait retry loop share the job's budget. A gate that must queue behind other agents
+belongs in **tracked background under D-026**, which is precisely the judgement the C-111 agent made
+for its gold-readers gate and which REV-111 endorsed.
