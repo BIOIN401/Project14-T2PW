@@ -93,6 +93,24 @@ BLOCKING_PARAPHRASE = [
     ("P4X", "P4X sensitivity to the inhibitor was measured while it catalyses A to B"),
 ]
 
+# CORRECTION ROUND 2 -- REV-108 R8(i). A POSSESSIVE marks the agent noun as
+# BELONGING TO the actor, which is the TARGET reading and the exact opposite of
+# an apposition; the demonstratives sit beside them because no paper writes
+# "P4X, that inhibitor, ..." and leaving them in the A2 determiner set cost
+# escapes for nothing. Every one of these must REFUSE, and every one REFUSES at
+# base too -- so like the round-1 block above, this is a PRESERVATION control,
+# not a base failure.
+POSSESSIVE_AND_DEMONSTRATIVE = [
+    ("P4X", "P4X, its inhibitor bound at the active site, converts A to B slowly"),
+    ("P4X", "P4X, its inhibitor characterised earlier, catalyses the conversion of A to B"),
+    ("P4X", "P4X, their inhibitor bound at the active site, catalyses A to B"),
+    ("P4X", "P4X, their suppressor identified, catalyses the conversion of A to B"),
+    ("P4X", "P4X, this inhibitor aside, catalyses the conversion of A to B"),
+    ("P4X", "P4X, that antagonist notwithstanding, catalyses the conversion of A to B"),
+    ("P4X", "P4X, its repressor deleted, catalyses the conversion of A to B"),
+    ("P4X", "P4X, their antagonist co-purified, catalyses the conversion of A to B"),
+]
+
 # MEMBER (d) ITSELF. These must ACCEPT at the tip. Fixing the blocking finding by
 # refusing these would be a regression of the very finding this card closes.
 APPOSITIVE = [
@@ -164,14 +182,18 @@ b1, t1 = block("BLOCKING -- the four REV-108 spans, actor is the TARGET",
                BLOCKING, False)
 b2, t2 = block("BLOCKING PARAPHRASE -- same grammar, this round own attack",
                BLOCKING_PARAPHRASE, False)
+b5, t5 = block("POSSESSIVE / DEMONSTRATIVE -- round 2, R8(i): belonging is not "
+               "apposition", POSSESSIVE_AND_DEMONSTRATIVE, False)
 b3, t3 = block("APPOSITIVE -- member (d) itself, actor IS the attenuator",
                APPOSITIVE, True)
 b4, t4 = block("PINNED -- target readings round 0 already refused", PINNED, False)
 
 print()
 print("=" * 100)
-print("C108-R1 BASE  blocking_admitted=%d paraphrase_admitted=%d "
-      "appositive_refused=%d pinned_leaked=%d" % (b1, b2, b3, b4))
-print("C108-R1 TIP   blocking_admitted=%d paraphrase_admitted=%d "
-      "appositive_refused=%d pinned_leaked=%d" % (t1, t2, t3, t4))
+print("C108 LEFT   blocking_admitted=%d paraphrase_admitted=%d "
+      "possessive_admitted=%d appositive_refused=%d pinned_leaked=%d"
+      % (b1, b2, b5, b3, b4))
+print("C108 RIGHT  blocking_admitted=%d paraphrase_admitted=%d "
+      "possessive_admitted=%d appositive_refused=%d pinned_leaked=%d"
+      % (t1, t2, t5, t3, t4))
 print("=" * 100)

@@ -25,6 +25,14 @@ pin that asserts the spelling itself, and that arm is named explicitly below. If
 any other arm went red, member (b) would have moved behaviour and would be
 mislabelled as code honesty; measured, none does.
 
+BYTECODE DISCIPLINE -- F-160, ADDED IN CORRECTION ROUND 2. Every suite run here
+purges __pycache__ first. Without that, a same-length mutation landing in the
+same whole second as the previous write leaves the .pyc cache valid, the OLD
+bytecode runs, and the harness reports MUTATION SURVIVED for a mutant that never
+executed. A false green from this harness is an instruction to delete a guard, so
+it is guarded against by construction rather than by hoping every mutation
+happens to change the file size.
+
 RESTORE DISCIPLINE -- D-084. Nothing here hand-rolls a restore. It imports
 ``apply_mutation`` and ``restore_saved_bytes`` from C-106's repaired
 ``c102_mutation_attack``, which write bytes throughout, translate the pattern to
@@ -150,8 +158,8 @@ MUTATIONS = [
         "(d) ROUND 1: the appositive determiner set gains \"whose\", which is "
         "REV-108 third span -- a relative clause about a DIFFERENT molecule read "
         "as an apposition",
-        '_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an|this|that|its|their)"\n',
-        '_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an|this|that|its|their|whose)"  # MUTATION N14\n',
+        '_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an)"\n',
+        '_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an|whose)"  # MUTATION N14\n',
     ),
     (
         "N15", "red",
@@ -213,6 +221,25 @@ MUTATIONS = [
         '    r"blockade|impair|silenc|sequestr|ablat|interfer(?:e|i)"\n',
     ),
     (
+        "N19", "red",
+        "(d) ROUND 2 R8(i): the A2 determiner set takes the possessives and "
+        "demonstratives back, so \"P4X, its inhibitor bound at the active site\" "
+        "is read as a naming again",
+        '_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an)"\n',
+        '_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an|this|that|its|their)"  # MUTATION N19\n',
+    ),
+    (
+        "N20", "red",
+        "F-160 CONTROL, AND IT IS A SAME-LENGTH MUTATION ON PURPOSE. It breaks "
+        "\"the\" inside the A2 determiner set without changing the file size, so "
+        "if __pycache__ were not purged between the write and the run, CPython "
+        "would serve the OLD bytecode and this would print SURVIVED for a mutant "
+        "that never executed. A RED here proves the purge works; a GREEN would "
+        "mean the whole harness is reporting stale results.",
+        '_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an)"\n',
+        '_APPOSITIVE_DETERMINER_SRC = r"(?:xhe|a|an)"\n',
+    ),
+    (
         "N12", "behaviourally-green",
         "(b) EXPECTED SURVIVOR: the folded character class reverts to '[^.]'. "
         "Every BEHAVIOURAL arm must stay green; only the structural pin on the "
@@ -224,7 +251,53 @@ MUTATIONS = [
 ]
 
 
+def purge_bytecode(root: Path) -> int:
+    """F-160. Delete every __pycache__ under the tree, and say how many.
+
+    CPython keys a .pyc on (source mtime TRUNCATED TO WHOLE SECONDS, source
+    size). A mutation that does not change the file size and lands in the same
+    second as the write before it therefore leaves the cache VALID: the old
+    bytecode runs, the mutant never executes, and the harness prints MUTATION
+    SURVIVED. That reads as "this guard has no test", and the natural response to
+    it is to weaken or delete the guard -- so a false green here is more
+    dangerous than a false red.
+
+    REV-108 hit this re-running the R2 fix and the Lead reproduced the cause
+    independently. N17 escaped it only because its marker comment changes the
+    file size, which is luck rather than design. This removes the luck: caches
+    are purged between applying a mutation and running the suite, on every arm,
+    including the unmutated baseline and the post-restore re-run.
+
+    SCOPED TO src/t2pw AND tests, AND THE SCOPE IS LOAD-BEARING. This repo TRACKS
+    __pycache__ at four paths -- __pycache__/, scripts/__pycache__/,
+    src/__pycache__/ and src/tools/__pycache__/ -- so an unscoped rglob deletes
+    56 TRACKED FILES. It did, once, before this docstring existed. Neither
+    directory below is tracked, which is checkable rather than asserted:
+
+        git ls-files | grep -E "^(src/t2pw|tests)/.*__pycache__"   ->   0
+    """
+
+    removed = 0
+    for scope in ("src/t2pw", "tests"):
+        base = root / scope
+        if not base.is_dir():
+            continue
+        for cache in base.rglob("__pycache__"):
+            for item in sorted(cache.glob("*"), reverse=True):
+                try:
+                    item.unlink()
+                except OSError:
+                    pass
+            try:
+                cache.rmdir()
+                removed += 1
+            except OSError:
+                pass
+    return removed
+
+
 def run_suite(root: Path):
+    purge_bytecode(root)
     proc = subprocess.run(
         [PY, "-m", "pytest", *TESTS, "-q", "--no-header", "-rf",
          "--basetemp=" + BASETEMP],
@@ -270,6 +343,7 @@ def main() -> int:
             code, summary, failed = run_suite(root)
         finally:
             restore_saved_bytes(target, saved)
+            purge_bytecode(root)
         got = "green" if code == 0 else "red"
         if expect == "behaviourally-green":
             ok = set(failed) <= STRUCTURAL_ONLY

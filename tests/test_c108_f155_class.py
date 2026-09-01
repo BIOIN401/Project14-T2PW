@@ -901,6 +901,47 @@ def test_r1_an_agent_noun_refuses_unless_it_is_in_apposition_with_the_actor(
     assert not accepted("P4X", span), span
 
 
+#: CORRECTION ROUND 2 -- REV-108 R8(i). A POSSESSIVE marks the agent noun as
+#: BELONGING TO the actor, which is the TARGET reading, not an apposition. The
+#: demonstratives go with them: no paper writes "P4X, that inhibitor, ...", and
+#: leaving them in the A2 determiner set cost escapes for nothing.
+#:
+#: PRESERVATION CONTROLS, GREEN AT BASE -- all eight REFUSE at ``f67e00a`` and
+#: round 1 of this card admitted all eight
+#: (evidence/c108_r2_r8i_vs_round1.log). No base failure is claimed.
+POSSESSIVE_IS_NOT_APPOSITION = [
+    "P4X, its inhibitor bound at the active site, converts A to B slowly",
+    "P4X, its inhibitor characterised earlier, catalyses the conversion of A to B",
+    "P4X, their inhibitor bound at the active site, catalyses A to B",
+    "P4X, their suppressor identified, catalyses the conversion of A to B",
+    "P4X, this inhibitor aside, catalyses the conversion of A to B",
+    "P4X, that antagonist notwithstanding, catalyses the conversion of A to B",
+    "P4X, its repressor deleted, catalyses the conversion of A to B",
+    "P4X, their antagonist co-purified, catalyses the conversion of A to B",
+]
+
+
+@pytest.mark.parametrize("span", POSSESSIVE_IS_NOT_APPOSITION)
+def test_r2_a_possessive_is_belonging_not_apposition(span: str) -> None:
+    """R8(i). Narrowing an exemption can only refuse more, so this cannot
+    over-refuse against base -- and that is confirmed by measurement, not by the
+    argument: the round-2 corpus is unchanged at 19 newly refused / 0 admitted.
+    """
+
+    assert not accepted("P4X", span), span
+
+
+def test_r2_the_apposition_a_determiner_still_marks_is_untouched() -> None:
+    """The other direction. R8(i) removes four determiners and must keep three."""
+
+    for span in (
+        "P4X, the inhibitor, catalyses the conversion of A to B",
+        "P4X, a suppressor, catalyses the conversion of A to B",
+        "P4X, an antagonist, catalyses the conversion of A to B",
+    ):
+        assert accepted("P4X", span), span
+
+
 def test_r1_the_appositive_exemption_is_not_a_target_frame_list() -> None:
     """The polarity itself, asserted rather than described.
 

@@ -1689,7 +1689,23 @@ _APPOSITIVE_MAX_MODIFIERS = 3
 # "whose" is deliberately ABSENT. "P4X, whose inhibitor was characterised" is a
 # relative clause about a DIFFERENT molecule, and admitting it here is exactly
 # REV-108's third span.
-_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an|this|that|its|their)"
+#
+# CORRECTION ROUND 2 -- REV-108 R8(i). "this", "that", "its" and "their" are gone
+# too, and the reason is grammatical rather than a tightening for its own sake: a
+# POSSESSIVE marks the agent noun as BELONGING TO the actor, which is the TARGET
+# reading and the exact opposite of an apposition.
+#
+#     "P4X, its inhibitor bound at the active site, converts A to B slowly"
+#
+# says P4X is the thing being inhibited, and A2 read it as a naming. The
+# demonstratives go with them: "P4X, that inhibitor ..." is not a construction a
+# paper writes, and leaving them in costs escapes for nothing. Measured, this
+# takes escapes 5 -> 2 with the appositive preservations untouched.
+#
+# Narrowing an EXEMPTION can only refuse more, so it cannot over-refuse against
+# base -- but that is confirmed empirically rather than argued: see the round-2
+# corpus, which stays at 19 newly refused / 0 newly admitted.
+_APPOSITIVE_DETERMINER_SRC = r"(?:the|a|an)"
 
 # ---------------------------------------------------------------------------
 # C-108 (a). THE TRANSPORT FAMILY'S AGENT NOUNS, AND THE ONLY CONSTRUCTIONS THAT
