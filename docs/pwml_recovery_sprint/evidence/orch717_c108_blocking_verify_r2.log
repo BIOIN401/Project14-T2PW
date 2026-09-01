@@ -1,0 +1,65 @@
+code loaded from: C:\t\c108r2\src\t2pw\curation\apply_audit_patch.py
+
+==============================================================================
+BLOCKING CANDIDATES -- actor IS shut down; a CATALYST row must be REFUSED
+==============================================================================
+  REFUSE
+     'P4X is a target of the inhibitor and catalyses the conversion of A to B'
+  REFUSE
+     'P4X was subject to inhibitors during the assay, yet catalyses A to B'
+  REFUSE
+     'P4X, whose inhibitor was characterised, catalyses the conversion of A to B'
+  REFUSE
+     'the repressor bound P4X and the catalysis of A to B stopped'
+
+  ADMITTED (want 0): 0 / 4
+
+==============================================================================
+APPOSITIVE NAMINGS -- member (d)'s purpose; these SHOULD be ACCEPTed
+==============================================================================
+  ACCEPT
+     'the repressor complex P4X catalyses the conversion of A to B'
+  ACCEPT
+     'the suppressor protein P4X catalyses the conversion of A to B'
+  ACCEPT
+     'the inhibitor protein P4X catalyses the conversion of A to B'
+
+  REFUSED (want 0): 0 / 3
+
+==============================================================================
+PINNED -- attenuation of the actor's activity must stay REFUSED
+==============================================================================
+  REFUSE
+     'A significantly inhibited P4X activity in the assay'
+
+  ADMITTED (want 0): 0 / 1
+
+==============================================================================
+SUMMARY  blocking_admitted=0  appositive_refused=0  pinned_leaked=0
+==============================================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9a79b321edaed9c850252ac10f123bc5c84c0a6c  [git, worktree dirty=True]
+label                   : c108-verify-r2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/orch717_rev108_blocking_verify.py C:/t/c108r2
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 241116 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.34 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  241128:python.exe
+descendants terminated  : 1  241128
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-717\34-c108.verify.r2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
