@@ -1,0 +1,62 @@
+==============================================================================
+Q3.1  the namespaces _external_ids actually recognises
+==============================================================================
+  row carries 9 identifiers in mapped_ids
+  _external_ids WITH    pathbank_compound_id -> {'drugbank': 'DB00855', 'hmdb': 'HMDB0001149', 'kegg': 'C00430', 'chebi': '17549', 'pubchem': '137'}
+  _external_ids WITHOUT pathbank_compound_id -> {'drugbank': 'DB00855', 'hmdb': 'HMDB0001149', 'kegg': 'C00430', 'chebi': '17549', 'pubchem': '137'}
+
+  recognised namespaces      : ['chebi', 'drugbank', 'hmdb', 'kegg', 'pubchem']
+  pathbank recognised?       : False
+  identical with vs without? : True
+
+==============================================================================
+Q3.2  does Q3 change the Priority-1 predicate for the affected row?
+==============================================================================
+  bool(ids) WITH    pathbank : True
+  bool(ids) WITHOUT pathbank : True
+  -> the predicate is UNCHANGED by the PathBank question
+  -> the row carries 5 recognised accessions even with
+     the PathBank id removed entirely, so Q3 CANNOT move Q2's arithmetic
+
+==============================================================================
+Q3.3  could a conditional-acceptance policy resolve one?
+==============================================================================
+  data/pathwhiz_id_db.json compounds.by_id rows : 55
+  id space sample                               : ['4', '5', '6', '7', '8', '9', '10', '414']
+  every id is a bare integer                    : True
+  longest id                                    : 5 chars
+  resolve pathbank_compound_id='78'            : {'name': 'Glycine', 'hmdb': 'HMDB0000123', 'kegg': 'C00037', 'chebi': '15428', 'pubchem': '5257127', 'drugbank': 'DB00145'}
+
+  The guardrail says 'arbitrary numeric IDs are never accepted'. Every id
+  in this space IS a bare small integer, and the committed exporter record
+  shows these are produced with
+      db_status   = matched_offline_name_index
+      chosen_rule = legacy_pathwhiz_id_unverified
+  -- an offline NAME-index match carrying an unverified legacy id, which is
+  exactly the 'merely sharing a name fragment' case the guardrail excludes.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6c20879d6b286d42c8c822bcd09d323623fd1bd8  [git, worktree dirty=True]
+label                   : q3-pathbank
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/orch717_q3_pathbank.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 144472 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 180 s
+duration                : 0.18 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  145344:python.exe
+descendants terminated  : 1  145344
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-717\17-q3.pathbank.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
