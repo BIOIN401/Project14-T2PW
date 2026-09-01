@@ -1117,11 +1117,11 @@ magnitude.
 
 | Chunk | Files | Source |
 |---|---|---|
-| A | 6 | `TEST_MATRIX.md:213` |
-| B | 6 | `:214` |
-| C | 8 | `:215` |
-| D-core | 5 | `chunk_d_gate.py:63-67` |
-| D-s8 | 1 | `:69` |
+| A | 6 | `TEST_MATRIX.md` `## Chunks` table, row `**A**` — ~~`:213`~~ drifted, see F-154 |
+| B | 6 | same table, row `**B**` — ~~`:214`~~ |
+| C | 8 | same table, row `**C**` — ~~`:215`~~ |
+| D-core | 5 | `chunk_d_gate.py` symbol `CORE` — ~~`:63-67`~~ |
+| D-s8 | 1 | `chunk_d_gate.py` symbol `S8` — ~~`:69`~~ |
 | D-qb | 1 | `:70` |
 | E | 1 | `TEST_MATRIX.md:218` |
 

@@ -725,3 +725,84 @@ C-054's end-of-file note records that this file's line addresses are pinned by c
 by construction** — each rewrites or extends a line in place, none inserts or deletes one — and
 this record is appended at end-of-file for the same reason C-054's was. `:213-218`, `:242-252`,
 `:265` and `:268-273` all still address what they addressed.
+
+---
+
+## Reviewer-evidence reachability (C-109) — appended 2026-08-31, end-of-file by rule
+
+**⚠ Why this sits at the end of the file and not in § 0, where a reader would look for it.**
+The standing constraint pins this file's citations through **line 477**. § 0 is far above
+that, so inserting there would shift every pinned address and break them — the same class of
+defect F-154 registered. C-109 therefore made **zero edits at or above `:477`**: base and tip
+have the identical 476 lines above the pin, `:477` is byte-identical, and the first differing
+line in the whole file is below it. Proof: `evidence/c109_citation_probe.py` § 3 and
+`evidence/c109_citation_probe.log`.
+
+### G11-R — reviewer evidence must be reachable from integration before the merge
+
+**New capability, added by C-109.** `evidence/reviewer_evidence_route.py`, acceptance test
+`tests/test_c109_reviewer_evidence_route.py`.
+
+**72 reviewer G11 reports and 94 probes were nearly lost this sprint**, because a reviewer's
+evidence lived only in a worktree and the merge that accepted the review did not carry it.
+Nothing detected it, because nothing was looking. This is the check.
+
+| The obligation | Who it binds |
+|---|---|
+| **The orchestrator may not merge a reviewed card until this check passes for the reviewing task.** | Lead Orchestrator |
+| **The orchestrator may not release or clean a reviewer worktree until this check passes for that worktree.** | Lead Orchestrator |
+| **No worktree is ever pruned regardless.** That rule is unchanged and absolute — this gate is a *precondition* on release and cleaning, never a licence to prune. | everyone |
+
+```bash
+<venv-python> docs/pwml_recovery_sprint/evidence/reviewer_evidence_route.py \
+  --task REV-1xx --worktree C:/t/rev1xx \
+  --integration-repo <primary checkout> --integration-ref sprint/pwml-recovery
+```
+
+Exit codes: `0` all reachable · `1` **one or more items exist only in the worktree**, each
+listed · `2` usage or infrastructure error · `3` **nothing was enumerated at all** — a
+mistyped task id must not read as a clean gate, which is the F-154 silent-failure class
+again. `--allow-empty` asserts, out loud, that a task genuinely produced no evidence.
+
+**Reachability is decided BY CONTENT, never by filename.** Each worktree file is hashed to
+its git blob id and that id is looked for in the integration ref's tree. Consequences, both
+deliberate:
+
+* **a same-named file with different bytes is NOT reachable** — reported as its own class,
+  `unreachable_content_differs`, because it is the failure mode that looks green to a human
+  eye and to any filename-based check;
+* **byte-identical content under a different path IS reachable** — the bytes survived, which
+  is what the sprint needs, and the report names where they were found.
+
+**Scope discipline.** It answers exactly one question: *if this worktree vanished right now,
+would the evidence still exist?* It is **not** a linter and **must not** judge whether the
+evidence is good, whether a report says PASS, or whether a probe proves anything.
+
+### Citing addresses in sprint documents — the F-154 rule
+
+**Prefer an anchor that cannot drift: a heading, a unique string, a named table, a symbol, a
+test name.** A line address is frozen by a pin the moment it is declared, *including a
+mistake* — `.claude/agents/pwml-test-runner.md:59` cited `TEST_MATRIX.md:213-218` for the
+chunk table and `:242-252` for the SMOKE block, and both had drifted +17 to +19 into content
+containing **no test-file stems at all**, so the stem-exact match it ordered silently matched
+nothing. **Correcting the numbers is not the fix; it drifts again.** The anchors now in force:
+
+| Purpose | Anchor |
+|---|---|
+| chunk membership | the first markdown table under the **`## Chunks`** heading; rows `**A**` `**B**` `**C**` `**D-core**` `**D-apptest**` `**E**` |
+| the SMOKE selection | the `bash` block under **`## Commands`** beginning `# SMOKE (every merge) — expect 503 passed` |
+| Chunk D's file list | `evidence/chunk_d_gate.py`'s **`CORE`** / **`S8`** / **`QB`** / **`MONOLITHIC`** symbols |
+
+**An anchor replaces a *locator*, not a *provenance pin*.** Keep the commit SHA or evidence
+artifact that says *when a thing was measured*; replace only the *where to look*. **Where a
+line address is genuinely unavoidable, state in the same breath how it is to be re-verified**
+— by which symbol or string — so the next reader can tell a drifted number from a broken
+claim. `controller.py`'s docstring is the worked example: it names three `streamlit_app.py`
+line numbers and, immediately after, says to re-verify them by grepping `run_rag_loop` and
+`run_rag_rounds`.
+
+**Still carrying drifted addresses, out of C-109's boundary and routed rather than changed:**
+`FINDINGS.md:1125-1126` (`chunk_d_gate.py:70` for Chunk D-qb, `TEST_MATRIX.md:218` for
+Chunk E — Chunk E's row is at `:237`). C-109's boundary was `FINDINGS.md:1120-1124` only;
+the two rows below it were left rather than silently exceeding a merge-gate boundary. The
+same file's `:1129` is a **historical record** and correctly stays as it fell.

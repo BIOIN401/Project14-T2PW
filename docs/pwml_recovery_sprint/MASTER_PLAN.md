@@ -157,12 +157,28 @@ agent rebuilding what exists, and on these two items it said the opposite.**
 ~~*Genuinely missing in RAG: a stopping policy and a loop controller.*~~ **Both exist and both
 are WIRED.** `rag/loop_policy.py` and `rag/controller.py` are present, and
 `streamlit_app.py:1270` imports `run_rag_loop`, `:1426` calls it inside `run_rag_rounds`, and
-`:5669` calls `run_rag_rounds` from the production pass. `tests/test_c055_rag_loop_wiring.py`
-covers the wiring. `rag/graph_delta.py` exists as well.
+~~`:5669`~~ **`:5636`** calls `run_rag_rounds` from the production pass (`run_rag_rounds` is
+defined at `:1239`). `tests/test_c055_rag_loop_wiring.py` covers the wiring.
+`rag/graph_delta.py` exists as well.
 
-**`rag/controller.py:11` still carries `UNWIRED: nothing in production calls it; wiring is
+**⚠ `:5669` corrected to `:5636` by C-109, measured at `2ac8404`.** `:5669` is where that call
+sits in the **uncommitted working copy** of `streamlit_app.py` in the primary checkout — a file
+the sprint's never-commit list forbids committing. The committed blob has it at `:5636`. F-153
+and the C-109 charter both carry `:5669`; **a citation that resolves only against uncommitted
+bytes is F-154's defect in its worst form, because no reader can reproduce it.** Verify wiring
+claims against `git show <ref>:<path>`, never against a dirty working tree. Measured in
+`evidence/c109_citation_probe.log`.
+
+~~**`rag/controller.py:11` still carries `UNWIRED: nothing in production calls it; wiring is
 C-055's` in its own module docstring.** That line is false at this tip and is registered under
-F-153. It is a `src/` change and is **not** fixed here -- no card in this wave owns that file.
+F-153. It is a `src/` change and is **not** fixed here -- no card in this wave owns that file.~~
+**HANDED FORWARD AND NOW FIXED by C-109** (`card/C-109-control-plane`, F-153 remainder). The
+module docstring of `src/t2pw/rag/controller.py` now retracts the `UNWIRED` sentence in place --
+struck, not deleted -- and names the three `streamlit_app.py` call sites plus
+`tests/test_c055_rag_loop_wiring.py`. The diff is docstring-only and provably inert: the
+docstring-stripped AST is byte-identical to the base blob's. Proof:
+`evidence/c109_controller_inertness.py` / `.log`. The `is not fixed here` clause above is struck
+because it is no longer true, not because it was wrong when written.
 
 Graph-delta validation being partial (`conform.py` conforms and merges but does not validate the
 delta against a policy) is **not** re-verified by this correction and stands as written.
