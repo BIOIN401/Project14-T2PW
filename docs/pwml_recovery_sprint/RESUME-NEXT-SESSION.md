@@ -12,6 +12,90 @@ state.**
 
 ---
 
+## 0. LIVE WAVE — ORCH-717 continuation, updated in place
+
+**Read this section first. It is newer than everything below it**, and sections 5 and 6 are now
+partly superseded: two more cards were chartered and two of the three held questions have been ruled.
+
+**This is the THIRD Lead Orchestrator on this branch inside about an hour** (`-b1`, then `-ab`, now
+this one). Both predecessors vanished mid-wave without writing a handoff. **That is why this section
+is checkpointed early rather than at the usual context threshold** — assume the same could happen
+again and leave the record recoverable at all times.
+
+### Cards in flight
+
+| Card | Scope | Worktree | State |
+|---|---|---|---|
+| **C-108** | F-155, all five members, `curation/apply_audit_patch.py` + `tests/test_c108_f155_class.py` | `C:/t/c108`, base `C:/t/c108base` | **implementer dispatched** |
+| **C-109** | F-153 remainder, F-154, reviewer-evidence route | `C:/t/c109` | **implementer dispatched** |
+| **C-110** | Q1 negative-control status (acceptance instrument) | — | **chartered, NOT dispatched** |
+| **C-111** | F-148 observability — instruments, fixes nothing | — | **chartered, NOT dispatched** |
+
+`REV-108.md` criteria were **fixed and committed before the C-108 diff existed**. There is no
+REV-109/110/111 yet — write each before its diff exists, not after.
+
+**Both dispatched agents were observed mid-work, not idle.** C-108 had eleven probe artifacts and no
+commit; C-109 had nothing on disk yet because it was still reading. **A subagent reading leaves no
+process and no artifact — check the worktree before concluding anything.**
+
+### Baselines I measured MYSELF at `f67e00a` — reuse these, do not re-derive
+
+```
+TOTALS  battery=0/29  F146=REJECTED  C1=0 C2=0 C3=0 C4=0 C5=1 C6=0
+ROWS: 692  ACCEPTED: 401  REFUSED: 291
+```
+
+**`C5=1` IS F-155 member (a).** The 29-case battery already encodes
+`'add P as a transporter to resolve the structural inconsistency'` as **want REFUSE**, and the
+shipped code **ACCEPTs** it — a committed, behavioural, already-executing **G9 base failure**. C-108
+succeeds on (a) when `C5` goes `1 → 0` with `battery=0/29` and `F146=REJECTED` unmoved.
+
+Evidence: `evidence/orch717_baseline_battery_f67e00a.log`, `orch717_baseline_corpus_f67e00a.log`,
+G11 `ORCH-717/13`, `ORCH-717/14`.
+
+### Rulings made this wave — `RULINGS-ORCH717.md`
+
+- **Q1 RULED (product owner).** A gold-designated negative control **passes** when it releases no
+  reactions, gives the required rejection reason, and the emptiness is **not** from timeout, crash,
+  missing artifact or infrastructure failure → **`PASS_NEGATIVE_CONTROL`**. The scorer **cannot**
+  represent this today, so **C-110 exists**. The predicate already does:
+  **`_empty_is_correct(case)` at `acceptance.py:1530`**. The misleading token is emitted at
+  **`batch/runner.py:717`, which has no `GoldCase` in scope at all.**
+- **Q3 RULED (Lead): a `pathbank_compound_id` is NOT a real accession. No code change.**
+  `_external_ids` recognises only `uniprot, drugbank, hmdb, kegg, chebi, pubchem`. **Q3 could never
+  have moved Q2's arithmetic** — the affected row carries **five** recognised accessions with the
+  PathBank id removed entirely, and the Priority-1 branch only asks `if ids:`. The conditional policy
+  the guardrails describe is **not implementable**: the whole local id space is bare small integers
+  over a 55-row table, produced by an offline **name-index** match with
+  `chosen_rule = legacy_pathwhiz_id_unverified`.
+- **Q2 half 1 is unblocked** and goes to Wave 4's conditional authority (independent reviewer + the
+  four-step A/B). **Half 2 — whether `supported_reactions_complete` should be set on any case — is
+  the ONE open product-owner question.** It changes what Priority 2 *means* on every future run.
+
+### T-108 — `NO-GO`. See `T108-READINESS.md`
+
+**The row most likely to sink a green table is operational, not code:** T-107's ceiling was halved
+`3600 → 1800` with `leg_timeout_override_reason` and `_source` **both empty**, and the slowest leg
+that finished used **92.1%** of it. At that budget three timeouts is the expected outcome.
+`PMC12096016` is **one of only two strict-denominator papers** and was **lost to the clock, not to
+biology** — so Priority 5 can read `0/2` again for a reason that is not a pipeline defect.
+**Choose the ceiling deliberately and record the reason in the manifest BEFORE launch.**
+
+**T-108 must run from the PRIMARY checkout.** `.env` is untracked, so a worktree silently gets
+`LLM_PROVIDER=local` — calls 400, exception swallowed, curator a no-op **by accident** — while the
+primary issues real billed calls. **A green cohort obtained in a worktree does not certify the
+primary.** Confirmed present: `LLM_PROVIDER=openrouter`, `LLM_TEMPERATURE=0`, full `OPENROUTER_*`
+model set, `LLM_MAX_RETRIES=3`.
+
+### Peer
+
+`project14-t2pw-93` is live, read-only, and replied **"no claims"** — no branch, worktree, lock, job
+or edit. It warned that one of its own earlier reports to a predecessor was a **torn `git status`**
+read taken mid-commit by another session. **Re-derive anything you intend to act on.** I did: the
+ancestry from `c7fb5c5` to the tip is fully accounted for.
+
+---
+
 ## 1. Integration state
 
 | | |
