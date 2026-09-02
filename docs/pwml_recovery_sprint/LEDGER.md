@@ -9525,3 +9525,55 @@ trusting it, and both named the nine.
 - **Systemic, not this card:** `bounded_run` JSON reports carry an exit code but **no pass/fail
   counts**, so a committed report cannot by itself substantiate *"503 passed"* — only *"exit 0"*. The
   count must be read from the piped output or re-measured. Both reviewer and I re-measured.
+
+## ORCH-719 — state after the C-114 ruling, 2026-09-02
+
+**Integration tip `dfd51fd6`.** `main` untouched. Gate state **measured today, not inherited**:
+SMOKE **503 / exit 0 at a merge commit** (G11 `/15`), Chunk D **187/187, partition proved,
+`failed=none`** (G11 `/14`).
+
+| card | state |
+|---|---|
+| **C-115** | **MERGED `9d106fa7`.** Closed F-171; made rule 10 satisfiable for every other card |
+| **C-114** | **NOT MERGED, superseded in shape.** `REV-114` returned CORRECTION; ruling at `RULING-C114-DISPOSITION.md`. Branch preserved as the record |
+| **C-116** | in flight — diagnostics become their own artifact, verdict byte-identical. `REV-116` chartered and ready |
+| **C-117** | in flight — the four stale guidance texts, R-C115-1…4 |
+
+### What the ruling turned on, so nobody re-derives it
+
+**Not the collision count.** `test_c074_strict_core_floor.py:462` fired because the verdict acquired
+**request-derived content outside `requested_context`** — the one key set aside for it. That is a
+change in what the document *means*, and amending the test would permanently silence the only thing
+that noticed.
+
+**It was measured before it was ruled**, which was the whole point: `REV-114` warned a **third**
+collision would change the answer. The widened sweep (34 deterministic files, G11 `/12`) plus the
+AppTest surface via the authoritative gate (G11 `/14`) prove the enumeration **complete** —
+**exactly two files, no third.** Two other sweep failures reproduce at base (G11 `/13`).
+
+**The ruling REVERSES** if D-088 clause 9 ever makes these fields a gate **input**. Recorded in the
+ruling rather than left to inference.
+
+### Two operational failures of mine, both mechanism now
+
+1. **Foreground retry loop killed by a 120 s tool cap while holding the heavy lock.** Cleared it
+   myself after verifying the pid was dead — `bounded_run.py:202` makes that the orchestrator's call
+   for an **attributable** lock. **Fix: background any lock-waiting job; branch on exit 95 rather
+   than pre-checking, because pre-checking races any peer.**
+2. **40 minutes lost to a stalled sweep** — four Streamlit AppTest files in one pytest process, which
+   `TEST_MATRIX` forbids in terms. Re-scoped, the same 34 files took **78 seconds**. **The failure
+   mode is silence, not error.**
+
+**Both hazards were already written down before I hit them.** That is the transferable part, and it
+is why both are now written into the C-116, C-117 and REV-116 cards as environment warnings rather
+than left for the next agent to rediscover.
+
+### Still blocking steps 8, 9 and 10 — product owner
+
+**D-088 clause 2 vs clause 10.** No permissible reaction-level replacement exists in production this
+wave, and the acceptance instrument cannot route around it (Priority 5's numerator requires
+`strict_acceptance_eligible` = `status == RELEASE_READY`; `acceptance.py:1146` refuses to reclassify
+a frozen record under merge rule 8). **Lead recommendation: clause 2 yields. `Priority 5` stays
+`0/2` and the headline number does not move.**
+
+**Step 9 remains NO-GO.** No milestone launched, none scheduled.
