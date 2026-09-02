@@ -1,0 +1,97 @@
+strict_exportable papers (Priority 5's whole denominator): ['PMC12096016', 'PMC12782028']
+
+==============================================================================
+PMC12096016/strict
+==============================================================================
+  coverage_ratio          : 0.75   min_core_coverage: 0.5
+  core_accepted_processes : 9
+  requested_core_source   : pathway_context
+  Stage-0 key_compounds   : ['2,3-dihydroxybenzoic acid (2,3-DHB)', 'chorismate', 'isochorismate', '2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)', 'enterobactin', 'L-serine', 'NADH', 'pyruvate', 'ATP']
+  Stage-0 key_proteins    : ['EntB', 'EntC', 'EntA', 'EntE', 'EntF', 'EntD', 'Fur']
+  Stage-0 main_subprocesses (5):
+      - chorismate isomerization to isochorismate (EntC)
+      - isochorismate hydrolysis to 2,3-diDHB and pyruvate (EntB isochorismatase)
+      - 2,3-diDHB reduction to 2,3-DHB (EntA)
+      - 2,3-DHB adenylation and loading onto EntB (EntE)
+      - enterobactin assembly via NRPS cycles (EntF)
+
+  UNMATCHED ANCHORS (4):
+    anchor            in source  in payload  in Stage-0 subprocesses
+    ------------------------------------------------------------------
+    NADH                   True       False                    False
+    ATP                    True       False                    False
+    EntD                   True        True                    False
+    Fur                    True       False                    False
+
+==============================================================================
+PMC12782028/strict
+==============================================================================
+  coverage_ratio          : 0.538462   min_core_coverage: 0.5
+  core_accepted_processes : 3
+  requested_core_source   : pathway_context
+  Stage-0 key_compounds   : ['cholesterol', 'lanosterol', 'desmosterol', '2,3-oxidosqualene', 'oxysterols']
+  Stage-0 key_proteins    : ['CYP51A1', 'DHCR24', 'LSS', 'MSMO1', 'SQLE', 'FDFT1', 'HMGCR', 'HMGCS1']
+  Stage-0 main_subprocesses (5):
+      - mevalonate pathway
+      - lanosterol synthesis from 2,3-oxidosqualene
+      - lanosterol 14α-demethylation
+      - methylsterol demethylation
+      - desmosterol reduction to cholesterol
+
+  UNMATCHED ANCHORS (6):
+    anchor            in source  in payload  in Stage-0 subprocesses
+    ------------------------------------------------------------------
+    oxysterols             True       False                    False
+    MSMO1                  True       False                    False
+    SQLE                   True       False                    False
+    FDFT1                  True       False                    False
+    HMGCR                  True       False                    False
+    HMGCS1                 True       False                    False
+
+==============================================================================
+VERDICT
+==============================================================================
+  unmatched anchors examined            : 10
+  present in the paper's source text    : 10
+  present in the extracted payload      : 1
+  named in Stage-0's OWN subprocesses   : 0
+
+  EVERY unmatched anchor is absent from Stage-0's own main_subprocesses.
+  The anchors are Stage-0's key_compounds + key_proteins; the pipeline is
+  graded on matching each of them to an ADMITTED PROCESS's core_terms
+  (strict_quarantine.py:989-996), and ONE unmatched anchor is enough to
+  cap release_ready at review_required (the INCOMPLETE-CORE CAP, F-094,
+  release_status.py:921-930).
+
+  So Stage 0 nominates anchors it does not itself list as pathway steps,
+  and the cap then requires every one of them. This is a LOCALISATION,
+  not a classification: whether a cofactor or a regulator BELONGS in a
+  requested core is a biological judgement and belongs to the auditor.
+
+  T108_ANCHOR_PROBE: anchors=10 in_source=10 in_payload=1 in_subprocesses=0
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7edf0063736bfb585f2cd4a99bcfe35ad928fb15  [git, worktree dirty=True]
+label                   : anchor-blocker-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/t108_anchor_blocker_probe.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW runs_verify/2026-09-01_1612
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 1035552 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 0.76 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1035568:python.exe
+descendants terminated  : 1  1035568
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\T-108\12-anchor-blocker-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

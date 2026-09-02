@@ -7823,3 +7823,113 @@ timed-out legs preserved nothing.
 ceiling is the experiment that tests it — not a confirmation of it.** The restoration was right and
 it was still not sufficient for every leg. Those are compatible, and reporting only the half that
 flatters the decision would have been the easy error.
+
+---
+
+## F-167 — the requested-core anchors are Stage-0's `key_*` lists, and NONE of the unmatched ones appears in Stage-0's own `main_subprocesses`
+
+- **Severity** HIGH — it is what holds Priorities 4 and 5 at zero · **Class: NOT YET CLASSIFIED, on
+  purpose** — see disposition · **Registered 2026-09-02 (T-108)**
+- **Found by** the Lead, localising T-108's Priority-5 result. Probe and log committed:
+  `evidence/t108_anchor_blocker_probe.py` / `.log`, G11 `T-108/12`.
+
+### The measurement
+
+T-108 established that Priority 5's `0/2` is now **entirely** a coverage matter: both
+`strict_exportable` legs executed, cleared the strict technical gates, **passed semantic
+evaluation**, produced valid PWML, and were capped at `review_required` by unmatched
+requested-core anchors. This probe asks where those anchors come from.
+
+Across **both** strict-denominator papers, all ten unmatched anchors:
+
+```
+unmatched anchors examined          : 10
+present in the paper's source text  : 10   <- the papers DO say these words
+present in the extracted payload    :  1
+named in Stage-0's OWN subprocesses :  0   <- none is a step Stage 0 itself listed
+```
+
+| Paper | unmatched | in source | in payload | in Stage-0 subprocesses |
+|---|---|---|---|---|
+| `PMC12096016` | `NADH`, `ATP`, `EntD`, `Fur` | 4/4 | 1/4 (`EntD`) | **0/4** |
+| `PMC12782028` | `oxysterols`, `MSMO1`, `SQLE`, `FDFT1`, `HMGCR`, `HMGCS1` | 6/6 | 0/6 | **0/6** |
+
+### The mechanism, named to the line
+
+1. **Stage 0 emits two different things and only one of them is graded.**
+   `key_compounds` + `key_proteins` become the **requested-core anchors**;
+   `main_subprocesses` is Stage 0's own account of what the pathway *does*. Nothing constrains the
+   first to be consistent with the second.
+2. **`strict_quarantine.py:989-996` matches each anchor against the `core_terms` of ADMITTED
+   PROCESSES** — not against the entity list. So an entity can be extracted and still be unmatched:
+   `EntD` is in the payload and is still reported unmatched, because it participates in no admitted
+   process.
+3. **`release_status.py:921-930` — the INCOMPLETE-CORE CAP (F-094, `PRODUCT_CONTRACT` § 13) — makes
+   ONE unmatched anchor sufficient** to remove `release_ready`, *"whatever the semantic verdict
+   says."*
+
+**Composed, those three give the observed result.** `PMC12096016/strict` has coverage **0.75**
+against a **0.5** minimum, **9** core accepted processes, semantics **passed**, every structural gate
+green — and is capped at `review_required` because four anchors matched no process. **The coverage
+threshold is not what blocks it. The all-anchors rule is.**
+
+### The two papers fail differently and must not be merged into one story
+
+**`PMC12096016` — anchor derivation.** Stage 0 listed five subprocesses and the pipeline covered them
+with nine core processes. The four unmatched anchors are `NADH` and `ATP` (cofactors), `Fur` (a
+transcriptional regulator) and `EntD` (a phosphopantetheinyl transferase that activates EntB/EntF
+rather than occupying a step). **None appears in Stage 0's own five subprocesses.** A cofactor or a
+regulator structurally cannot be the `core_terms` of a biosynthetic step, so this anchor set contains
+members the matcher can never satisfy.
+
+**`PMC12782028` — extraction recall, and this one IS a real gap.** Stage 0 named
+*"mevalonate pathway"* as a subprocess and `HMGCS1`/`HMGCR`/`FDFT1`/`SQLE` are its enzymes. The paper
+names them **4 to 14 times each**. The payload contains **none of them**, and the leg produced only
+**3** core processes for a five-subprocess pathway — the entire upstream mevalonate/squalene arm is
+missing. That is not an anchor-derivation artefact; the pipeline was asked for a subprocess Stage 0
+did name and did not extract it.
+
+### Disposition — LOCALISED, DELIBERATELY NOT CLASSIFIED, NOT CHARTERED
+
+**`PRODUCT_CONTRACT` § 14 requires classification before any code change, and this finding does not
+supply one.** It narrows the question and hands it over; it does not answer it.
+
+**The question that remains is biological and is the auditor's:** *does a requested core for
+"enterobactin biosynthesis" legitimately include `Fur` and `NADH`?* A defensible yes and a defensible
+no both exist — `Fur` genuinely regulates the pathway, and `NADH` genuinely participates as a
+cofactor — and the answer decides whether this is:
+
+- **`product_contract_violation`** — anchors are correct and extraction/wiring should have matched
+  them;
+- **`gold_data_defect`** — no gold change is implicated here, since the anchors come from **Stage 0,
+  not gold** (`requested_core_source: "pathway_context"`), so this class is probably *not* available;
+- **`policy_disagreement`** — the all-anchors cap, or Stage-0's anchor derivation, is set where it
+  should not be.
+
+**Route to `pwml-bio-auditor` against the committed T-108 artifacts.** Do not charter a card first.
+
+### Three traps for whoever picks this up
+
+**1. The obvious fix is the forbidden one.** Relaxing the INCOMPLETE-CORE CAP, or filtering cofactors
+out of the anchor list, would immediately move Priority 5 off zero. **That is the merge-rule-6
+direction** — weakening a gate to increase PWML output — and F-094 created that cap deliberately.
+**A change that improves a score is the case that most needs an independent reviewer.**
+
+**2. The two papers need different answers.** `PMC12782028`'s missing mevalonate arm is a real recall
+gap whatever the auditor decides about cofactors. Fixing only the anchor derivation would leave that
+untouched while making the number look solved — the worst available outcome, because it retires the
+symptom that would otherwise have kept the real gap visible.
+
+**3. `EntD` is the instructive row.** It is **in the payload and still unmatched**, which is the one
+case that proves the matcher is not simply reading the entity list. Anyone who "fixes" this by
+matching anchors against entities instead of admitted processes will turn every extracted-but-unwired
+name into a satisfied anchor, and the cap will stop meaning anything.
+
+### Standing lesson
+
+**An LLM stage that emits both a specification and an answer will be graded against the
+specification, and nothing checks that its own answer satisfies it.** Stage 0 nominated the anchors
+*and* described the pathway, and the two disagree on ten out of ten unmatched terms. **The
+disagreement is invisible from any single artifact** — the coverage verdict shows unmatched anchors,
+the payload shows the extraction, and only putting `main_subprocesses` beside `unmatched_terms` shows
+that the grader and the graded came from the same model call and did not agree.
