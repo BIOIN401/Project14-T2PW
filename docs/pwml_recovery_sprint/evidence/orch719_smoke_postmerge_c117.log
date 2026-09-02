@@ -1,0 +1,36 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 57%]
+........................................................................ [ 71%]
+........................................................................ [ 85%]
+.......................................................................  [100%]
+503 passed in 46.81s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 162755fc8825778589532d3167edfc8d827f4e5a  [git, worktree dirty=True]
+label                   : smoke-postmerge-c117
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\pin\ORCH-719\16-smoke-postmerge-c117.pin.json -q --basetemp=C:/t/orch719/smokepm2 tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 93648 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 47.86 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 8  93660:python.exe, 93496:python.exe, 93520:python.exe, 93572:python.exe, 93596:python.exe, 91460:python.exe, 93712:python.exe, 89944:git.exe
+descendants terminated  : 8  89944, 91460, 93496, 93520, 93572, 93596, 93660, 93712
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-719\16-smoke-postmerge-c117.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-719  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
