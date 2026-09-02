@@ -8379,3 +8379,116 @@ and left for an owner.**
 2. **`holo-EntB` is a separate protein entry** in `final_mapped.json`, which this case's own gold
    clause says none of these cofactor-loading states should be. It carries **no accession**, so the
    fabricated-identity concern does not attach. **Unclassified, outside the questions asked.**
+
+---
+
+## F-170 — a named-but-undetailed pathway branch cannot be tested by its NAME, and the failure looks like success twice before it looks like a bug
+
+- **Severity** MEDIUM as a defect, HIGH as a method finding · **Class: instrument design, no production
+  code implicated** · **Registered 2026-09-02 (ORCH-719)**
+- **Found by** the Lead, building the D-088 step-6 discrimination against the curated expectation set.
+  Four passes, all four committed side by side: `evidence/d088_curated_recall_ab{,_v2,_v3,_v4}.py` /
+  `.log`, G11 `ORCH-719/06` through `/09`.
+
+### What was being measured
+
+`HANDOFF.md` § 5.2a step 6: prove a correction makes `PMC12096016` lose **only** the false
+entity-anchor cap while `PMC12782028` **remains** a reaction-recall failure. **A change clearing both
+has removed the measurement rather than improved recall and is a reject.**
+
+D-088 clause 5 makes *"missing an entire named pathway branch or subprocess"* the hard case. So the
+instrument has to answer one question: **is this named branch present in what was extracted?**
+
+### The four passes, and what each one got wrong
+
+| pass | `PMC12096016` | `PMC12782028` | what broke |
+|---|---|---|---|
+| **v1** phrase tokens | HOLDS 8/8 | **VIOLATED 1/7** | the undetailed upstream arm scored COVERED on the token **`cholesterol`** |
+| **v2** minus pathway tokens | **VIOLATED 8/8** | HOLDS 7/7 | a **regulatory** stage counted as a recall failure |
+| **v3** regulatory excluded (clause 2) | HOLDS 8/8 | **VIOLATED 1/7** | the same arm scored COVERED on the token **`lanosterol`** |
+| **v4** members, not names | **HOLDS 8/8** | **HOLDS 7/7** | — |
+
+### The defect, stated once
+
+**Subprocess names are relative descriptors.** They locate a branch against the chemistry beside it:
+*"the upstream, **pre-lanosterol** segment of **cholesterol** biosynthesis"*, *"**mid-stage** sterol
+C-4 demethylation"*. So a name-token test **necessarily** finds tokens of exactly the neighbouring
+chemistry that was recovered, and reports the missing branch as present.
+
+**v2's fix — remove the requested pathway's own tokens — was correct and insufficient**, which is the
+part worth remembering. It killed `cholesterol` and left `lanosterol`, because `lanosterol` is not the
+pathway's name; it is the name of the boundary the branch is defined *against*. **Every further
+exclusion patches an approach that cannot work**, and each patch would have looked like progress.
+
+### The fix, and the second trap inside it
+
+Branches are tested by **`member_entities`** — the concrete enzymes and metabolites **the paper itself
+assigns to the branch**, curated blind, with a source string, and with an empty list explicitly
+correct for a branch a paper names but never populates.
+
+**The trap on the other side:** one member of the sterol arm is `2,3-oxidosqualene`, which is *also
+the substrate of an already-covered stage*. Credit the branch for it and **every branch adjoining a
+recovered stage scores covered through the metabolite they share** — the identical failure as a shared
+name token, reached from the opposite direction. So members shared with a covered stage are excluded
+first, and coverage needs a member belonging to **that branch alone**. This is the rule already used
+for detailed reactions, where a shared cofactor cannot carry a reaction and the test demands an
+enzyme, or a substrate **and** a product.
+
+### Why the iteration is not tuning, and how a reader can check that rather than take my word
+
+**Four passes on the same measurement, with the verdict moving each time, is the exact shape of a rule
+being adjusted until the answer is pleasing.** D-088 clause 10 forbids that, and asserting good faith
+is worth nothing. Three things are offered instead:
+
+1. **Every pass is committed** — script, log and G11 report. The sequence is inspectable, including
+   the two passes whose verdicts were wrong.
+2. **Each change is justified in a direction-independent way, stated in the header before the
+   result.** A name test that accepts the pathway's own tokens can never fail for any subprocess
+   containing them; a branch is not evidenced by an entity belonging equally to something already
+   counted. Both are true whichever way the number moves, and both would have been made anyway.
+3. **The input was curated blind.** The curators were not told which legs pass, what a gate does with
+   their output, or that two papers must land on opposite sides. **They were never asked to re-judge
+   a specific entry**; the two schema additions asked for a *classification of every entry* by a rule
+   given in advance, and one of them split the pair that shares a shape (`S5` chemical, `S6`
+   regulatory) **against** the structural similarity the old schema had imposed.
+
+**The falsification condition was written into v4 before it ran:** if `PMC12782028` had cleared, the
+correction had removed the measurement and the whole line of work was a reject. It did not clear on
+any of seven draws.
+
+### The result that matters most, and why it is the T-108 tree that matters least
+
+`PMC12782028/strict` is capped on **`runs_verify/2026-08-21_2239`** — the draw that defeated candidate
+B (F-168), v1 and v3. That draw **genuinely recovered MSMO1**, reaching 4/4 curated core reactions,
+and is still correctly held, because `ACAT2, HMGCS1, HMGCR, MVK, MVD, IDI1, FDPS, FDFT1, SQLE` are
+absent from it as from every other draw.
+
+**A rule that holds only on the tree it was designed against is the rule F-168 already disqualified
+once.** The across-every-draw rows, not the T-108 row, are the evidence.
+
+### Honest limits, recorded rather than buried
+
+- **Raised by a curator about its own work, and it is the sharpest caveat here:** for
+  `PMC12657337` S2 and S4 the only listed member is a branch **output that is also the next stage's
+  substrate**, because neither branch has a single named enzyme in that paper. **For those two rows
+  absence is strong evidence against recovery and presence is weak evidence for it.** Neither is one
+  of the two named legs, so the verdict does not rest on them — but they must never be read as
+  discriminating.
+- **Five undetailed chemical branches exist across ten papers.** That is a small population, and the
+  member rule is well tested on one of them and lightly tested on the rest.
+- **Nothing here is adopted.** These are measurements of a candidate acceptance rule. No production
+  code, scorer, test or gold file was changed, and the runtime cap this would eventually inform is
+  itself blocked pending a product-owner ruling.
+
+### Standing lesson
+
+**A test that passes on the case you built it for, fails on one archived case, and passes again after
+a plausible fix, has taught you nothing about the approach — only about the two cases.** The signal
+that mattered was not that v1 failed once; it was that **v3 failed the same way v1 did, on the same
+leg, after a fix that was genuinely correct.** A defect that survives a correct fix is a defect in the
+*approach*, and the second occurrence is the cheapest one you will ever get to notice it at.
+
+**The corollary, which is the reason this is registered at all:** if the archived corpus had held only
+the T-108 tree, v1 would have shipped. It gave the required discrimination there, perfectly, at three
+independent stoplist strengths. **Seven draws of one paper are what stood between a wrong rule and a
+merged one**, and they cost nothing because they were already committed.
