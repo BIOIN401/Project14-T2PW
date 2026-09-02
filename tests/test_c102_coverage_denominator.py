@@ -377,7 +377,15 @@ def test_10_f132_population_regression_over_the_six_papers(gold):
     # C-106: commit `e77ad3d` ("T-107 official result") committed
     # `runs_verify/2026-08-28_1816`, which carries 10 quarantine_report.json
     # files. Raising the floor keeps it catching a shrink against current truth.
-    assert len(paths) >= 72, "the committed artifact population shrank; re-pin before reading on"
+    # 72 -> 83 at C-115. `runs_verify/2026-09-01_1612` -- T-108's run, 10 papers,
+    # 20 legs, `complete: true` -- was committed at `479128b3` ("T-108 RESULT: NOT
+    # ACCEPTED. Ran once, 20/20 legs, 6.37h, scored honestly and preserved") and
+    # contributes EXACTLY 11 quarantine_report.json files; its other nine legs
+    # never reached quarantine and emit none. The other fourteen runs still sum
+    # to 72. That tree is preserved deliberately as the record of a failed
+    # release candidate, so the CORPUS is correct and the floor was stale.
+    # Measured, not hand-counted: `evidence/orch717_census_probe.py`, P1 = 83.
+    assert len(paths) >= 83, "the committed artifact population shrank; re-pin before reading on"
 
     legs = 0
     affected_papers: dict[str, int] = {}
@@ -412,7 +420,14 @@ def test_10_f132_population_regression_over_the_six_papers(gold):
     # vacuity of exactly the F-144 shape. Moving it by hand whenever a run is
     # committed is the correct cost: that is the moment someone confirms the new
     # legs were meant to be there.
-    assert legs == 72
+    # 72 -> 83 at C-115, and this is the confirmation the paragraph above asks
+    # for: all 11 quarantine-carrying legs `runs_verify/2026-09-01_1612` added
+    # are gold-set papers with readable coverage, so every one of them is a leg
+    # this loop MUST visit -- none is skipped. Per-run attribution (the probe's
+    # ATTRIBUTION table): that run contributes 11 legs and the other fourteen
+    # runs still sum to exactly 72, unmoved. T-108 ran 20/20 legs once, was
+    # scored NOT ACCEPTED, and its tree was kept on purpose. Stays `==`.
+    assert legs == 83
     # Every one of the six ORCH-702 papers is still in the population.
     assert set(F132_PAPERS) <= set(affected_papers), sorted(affected_papers)
     # And TWO papers outside it.
@@ -470,7 +485,14 @@ def test_10_f132_population_regression_over_the_six_papers(gold):
     # sum to 97 under the pre-edit gold. Deliberate pinned-baseline move under
     # merge rule 4's second clause; NOT a new capability. Measured, not read off
     # a failure message: `evidence/c113_census_attribution.log`.
-    assert withheld == 100
+    # 100 -> 109 at C-115: `runs_verify/2026-09-01_1612` withholds 9 forbidden
+    # terms across those 11 legs, and the other fourteen runs still sum to
+    # exactly 100. DERIVED from the census above, so it moves with it. The
+    # affected-paper SET is unchanged -- the same eight papers, PMC12180156 and
+    # PMC13231680 still the only two outside F132_PAPERS -- so the set equality
+    # above did not move; only this count did. Measured, not read off a failure
+    # message: `evidence/orch717_census_probe.py` P4 = 109 and its per-run table.
+    assert withheld == 109
     # Measured, not predicted: no leg in the corpus clears the unchanged
     # threshold on the accepted ratio. Reported as it fell.
     assert cleared == []
@@ -580,7 +602,11 @@ def test_13_the_accepted_rate_is_a_rate_on_every_committed_leg(gold):
     # `legs`: `e77ad3d` committed `runs_verify/2026-08-28_1816` and its 10 legs.
     # Stays `==`; see the note beside test 10 for why a `>=` here would make this
     # loop vacuous rather than tolerant.
-    assert checked == 72
+    # 72 -> 83 at C-115. Same delta, same run, same commit as test 10's `legs`:
+    # `479128b3` committed `runs_verify/2026-09-01_1612` (T-108) and its 11
+    # quarantine-carrying legs. Stays `==`; a `>=` here would let a leg join the
+    # corpus and go unvisited, which is what the note beside test 10 refuses.
+    assert checked == 83
     # Non-vacuity, and the reason this test is not an empty loop: the corpus
     # really does contain matched forbidden terms. Twenty-three legs when
     # c102_numerator_verify.log measured it independently; TWENTY-NINE now.
@@ -605,7 +631,14 @@ def test_13_the_accepted_rate_is_a_rate_on_every_committed_leg(gold):
     # Deliberate pinned-baseline move under merge rule 4's second clause, NOT a
     # new capability. Measured independently of this assert:
     # `evidence/c113_census_attribution.py` / `.log`. Stays `==`.
-    assert with_matched_forbidden == 29, with_matched_forbidden
+    # 29 -> 33 at C-115 is the 4 legs of `runs_verify/2026-09-01_1612` that
+    # carry a MATCHED forbidden term; no leg anywhere stops carrying one, and
+    # the other fourteen run trees still sum to exactly 29. Like `withheld`
+    # this pin is DERIVED and sat behind the census assert, so C-115 is the
+    # first time it has executed against the T-108-grown corpus. Deliberate
+    # pinned-baseline move under merge rule 4's second clause, NOT a new
+    # capability. Measured: `evidence/orch717_census_probe.py` P5 = 33. `==`.
+    assert with_matched_forbidden == 33, with_matched_forbidden
 
 
 # ---------------------------------------------------------------------------
