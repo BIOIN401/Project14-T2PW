@@ -20,6 +20,11 @@
       "detailed_in_paper": false,
       "kind": "chemical_transformation",
       "kind_rationale": "The stage the paper points at is a constituent chemical step of heme biosynthesis whose enzyme it identifies as ALAS2 and whose precursor it identifies as glycine; the paper withholds the chemistry, which is why detailed_in_paper is false, but the stage is still a conversion of matter.",
+      "member_entities": [
+        "ALAS2",
+        "glycine"
+      ],
+      "member_entities_source": "Body prose in the SFXN4 section, which names the enzyme as erythroid delta-aminolevulinic acid synthase (ALAS2), plus the Fig. 4 legend sentence: Glycine is also required for the rate-limiting step in heme biosynthesis. These two are the ONLY members this paper names for this step: succinyl-CoA occurs 0 times in the file and no free form of aminolevulinic acid is named, so the product side of the step is unpopulated.",
       "quote": "Glycine is also required for the rate-limiting step in heme biosynthesis.",
       "confidence": "medium",
       "rationale": "The paper refers to a constituent step of heme biosynthesis and separately names ALAS2 as its enzyme, but supplies no substrate pair, no product and no transformation, so the stage exists in the paper's text without its chemistry."
@@ -34,6 +39,10 @@
       "detailed_in_paper": false,
       "kind": "chemical_transformation",
       "kind_rationale": "Ferrochelatase catalyses a conversion of matter, so the stage is chemical, even though the only thing this paper says about it is regulatory in form (SFXN4 modulating ferrochelatase levels); that regulation is a property of SFXN4 and is recorded on SFXN4, not a property of this stage.",
+      "member_entities": [
+        "ferrochelatase"
+      ],
+      "member_entities_source": "Body prose in the SFXN4 section: SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels. The enzyme is the ONLY member named. This paper names no substrate and no product for the step: protoporphyrin occurs 0 times in the file, and iron is never linked to ferrochelatase anywhere.",
       "quote": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
       "confidence": "low",
       "rationale": "The paper places ferrochelatase inside heme biosynthesis by naming it as the target of SFXN4 regulation, but it never names this as a stage, never says what ferrochelatase does, and never names its substrate or product; recorded at low confidence for exactly that reason."

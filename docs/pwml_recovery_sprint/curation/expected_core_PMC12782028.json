@@ -177,6 +177,19 @@
       "detailed_in_paper": false,
       "kind": "chemical_transformation",
       "kind_rationale": "Every member of this stage as I defined it (ACAT2, HMGCS1, HMGCR, MVK, MVD, IDI1, FDPS, FDFT1, SQLE) is a metabolic enzyme carrying out a conversion of matter on the route to 2,3-oxidosqualene, so this is a named-but-undetailed CHEMICAL arm: it is chemical_transformation because of what the stage consists of, and detailed_in_paper is false because the paper supplies only gene names and expression data for it. The non-enzymatic members of the quoted enrichment list (SREBF1, SREBF2, LBR) are not part of this stage and are recorded separately.",
+      "member_entities": [
+        "ACAT2",
+        "HMGCS1",
+        "HMGCR",
+        "MVK",
+        "MVD",
+        "IDI1",
+        "FDPS",
+        "FDFT1",
+        "SQLE",
+        "2,3-oxidosqualene"
+      ],
+      "member_entities_source": "The Reactome enrichment gene lists for the cholesterol biosynthesis pathway (R-HSA-191273), which appear three times (Saos-2, MG-63, and the common-DEG intersection) and spell out full protein names for these symbols; plus the Discussion sentence naming 2,3-oxidosqualene, which is the product of the SQLE step and the substrate of S1, and is the only metabolite of this branch the paper names. No free upstream metabolite is named anywhere in the paper: acetyl-CoA, mevalonate, isopentenyl and farnesyl occur ONLY inside enzyme names, and free squalene and HMG-CoA are never named as compounds.",
       "quote": "Reactome enrichment analysis of the differentially expressed genes showed that the cholesterol biosynthesis pathway (R-HSA-191273, P -adjust < 0.0001, Fig. 2E ) had the highest degree of enrichment, the enriched genes including FDPS (farnesyl diphosphate synthase, FDPS) , LBR , SREBF1 (sterol regulatory element binding transcription factor 1, SREBF1) , HSD17B7 , MSMO1 , SQLE , MVD (mevalonate diphosphate decarboxylase, MVD) , LSS , EBP , DHCR24 , CYP51A1 , SREBF2(sterol regulatory element binding transcription factor 2 , SREBF2) , FDFT1 , HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase , HMGCR) , HMGCS1 (3-hydroxy-3-methylglutaryl-CoA synthase 1 , HMGCS1) , MVK (mevalonate kinase , MVK) , IDI1 (isopentenyl-diphosphate delta isomerase 1, IDI1) , and ACAT2 (acetyl-CoA acetyltransferase 2, ACAT2)",
       "confidence": "medium",
       "rationale": "THIS IS THE NAMED-BUT-NOT-DETAILED STAGE. The paper explicitly assigns ACAT2, HMGCS1, HMGCR, MVK, MVD, IDI1, FDPS, FDFT1 and SQLE to the cholesterol biosynthesis pathway, and separately calls the pathway the mevalonate pathway and singles out HMG-CoA reductase as a key enzyme of it, but it states NO reaction for any of them: no acetyl-CoA, no HMG-CoA, no mevalonate, no isopentenyl diphosphate, no farnesyl diphosphate, no squalene, no substrate and no product anywhere for these enzymes. Recorded with no reaction ids for exactly that reason."
