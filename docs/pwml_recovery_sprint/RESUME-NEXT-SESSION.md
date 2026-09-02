@@ -1,8 +1,8 @@
 # RESUME — next session handoff
 
-**Updated in place by the Lead Orchestrator, 2026-09-01, at the close of `ORCH-718`. § 0 is the
-current state; § 0-prev and everything after it are the previous wave and are superseded where they
-disagree.** The paragraph below describes the 2026-08-31 rewrite and is kept as that wave's record.
+**Updated in place by the Lead Orchestrator, 2026-09-02, at the close of the T-108 execution wave.
+§ 0 is the current state — T-108 RAN and is NOT ACCEPTED; § 0-prev and everything after it are
+earlier waves and are superseded where they disagree.** The paragraph below describes the 2026-08-31 rewrite and is kept as that wave's record.
 
 **Rewritten in place by the Lead Orchestrator, 2026-08-31, at the close of the post-triage wave
 (`ORCH-717`).** Supersedes the 2026-08-29 record, which was written at the close of the T-107
@@ -16,7 +16,105 @@ state.**
 
 ---
 
-## 0. CURRENT — `ORCH-718` closed, 2026-09-01. Read this section and nothing below it first.
+## 0. CURRENT — **T-108 RAN and is `NOT ACCEPTED`**, 2026-09-02. Read this section and nothing below it first.
+
+**Integration `479128b3`+, pushed and remotely verified. `main` untouched: local `7531692`, remote
+`03f1af5`.** Everything below this section is older and superseded where it disagrees.
+
+**T-108 ran ONCE into `runs_verify/2026-09-01_1612`, 20/20 legs, 6.37 h, and is scored, triaged and
+committed. Its verdict is `NOT ACCEPTED`. Do not re-run it, do not re-score it, do not reinterpret
+it.** Full result: **`T108-RESULT.md`**. Run ownership record: **`T108-RUN-OWNERSHIP.md`**.
+
+**The recovery sprint's release-candidate question is answered for this candidate. T-108 is preserved
+as a failed official release candidate.** A later candidate needs a **new milestone identity** and a
+separately recorded readiness decision.
+
+### The verdict in one table
+
+| # | Priority | T-108 | `ok` |
+|---|---|---|---|
+| 1 | zero known false real identifiers | raw **2** · accepted **2** · `accepted_status: PASS` (target 6) | **false** |
+| 2 | zero unsupported retained reactions | **`NOT EVALUATED`** — verdict never reached on 12 of 19 scored legs, 8 papers | `null` |
+| 3 | zero referential-integrity violations | **0** | **true** |
+| 4 | meaningful requested-pathway coverage | **0/8** | **false** |
+| 5 | strict PWML pass rate among eligible papers | **0/2** | **false** |
+
+### The three things a successor most needs to know
+
+**1. Priority 5 is `0/2` in both T-107 and T-108 and the two zeros mean completely different
+things.** T-107's was one operational loss (a timeout) plus one coverage shortfall. **T-108's is two
+coverage shortfalls and zero operational losses.** Both `strict_exportable` legs executed fully,
+cleared the strict technical gates, **passed semantic evaluation**, produced valid PWML, and are held
+at `review_required` for incomplete requested-core coverage (completeness **0.75** and **0.538**).
+**That is merge rule 7 working as written.** The number did not move; **the denominator became
+honest.** A runner `pass` is not a Priority-5 point.
+
+**2. The 3600 s restoration worked, and did not solve everything — F-166.** Timeouts **3 → 1**,
+scorable denominator **17 → 19**. `PMC12096016/strict` — a core `strict_exportable` paper — went from
+TIMEOUT/0 files to **PASS with a 74367-byte PWML, 0 gate errors**, needing only **152.9 s** beyond
+T-107's ceiling. But `PMC12444477/strict` consumed the **full** 3600 s and still timed out, so the
+census maximum of 3421.4 s **was not an upper bound**. Per § 2.1's own ruling that is **not
+automatically a defect and must not be waved away either**. **No ceiling change is proposed on one
+observation** — that would be choosing a budget from censored data a second time.
+
+**3. F-165 — never compare a Priority-1 count across milestones without checking the gold blob.**
+C-113 merged **three days after T-107 ran** and added the `delta`/`δ` spellings to `PMC12180156`'s
+forbidden aliases. **One of T-108's two Priority-1 rows is that exact spelling** — invisible under
+T-107's gold. So T-107's and T-108's Priority-1 numbers were **taken with different instruments**,
+and the two facts pull in opposite directions: the instrument got **stricter** and the count still
+**fell**. Do not fuse that into one improvement claim.
+
+### What is NOT claimed, and must not be quietly upgraded
+
+- **F-146 is NOT fixed.** `PMC13231680/research` produced an empty pathway where T-107 passed. That
+  is **one draw**. The standing trap forbids calling a single leg a regression at temperature 0; **the
+  symmetric rule binds and forbids calling it an improvement.** The artifacts also cannot separate
+  *"declined"* from *"this draw extracted nothing"* — zero reactions is not a recorded refusal.
+- **`LpxH` remains UNVERIFIED.** `PMC12444477/strict` timed out again; the research leg carries **0
+  findings**. Verified only on `runs/2026-08-02_2130`.
+- **Priority 2 = 0 counted is the absence of a measurement**, reported as an acceptance-instrument
+  limitation under **D-087** clause 6. It is not a measure of invented chemistry.
+- **`PMC12856317/strict` `PASS → FAIL` is NOT a regression.** T-107's export held only `ALAS1`/`ALAS2`
+  — **no ClpXP** — so the gate had nothing to fire on. T-108's draw extracted ClpXP without an
+  accession and the § 8 identity gate refused it. **The gate did not change; its input did.**
+- **`PMC12452463/strict` blocking issues went 7 → 3 → 6 across T-106/107/108.** This **retires the
+  previous wave's "improved at T-107, 7 to 3"** as draw variance.
+
+### No code change is chartered from T-108
+
+The only genuine `product_contract_violation`s are **F-147** (`PMC12180156/strict` +
+`PMC12452463/strict`, one shared seam), which is **registered and deliberately UNCHARTERED** because
+a downstream-only fix would export gold-forbidden content. **Merge rule 6.**
+
+### The product-owner ruling recorded this wave — D-087
+
+**`supported_reactions_complete` stays unset by default.** It may be set only on a case with an
+explicitly bounded, exhaustive reaction scope, certified by an **independent biological reviewer**;
+**several supported reactions are not evidence of completeness**; a missing assertion stays
+`NOT EVALUATED` rather than becoming a confident accusation of invented chemistry; and **if no case
+meets the standard, all ten unset is correct and is reported as an acceptance-instrument
+limitation.** **Recorded, deliberately NOT implemented — the gated tree is untouched.**
+
+### Findings registered this wave
+
+**F-165** — T-107/T-108 Priority-1 counts measured against different gold sets; a benchmark number is
+a reading and a reading has an instrument. **F-166** — one leg needs more than 3600 s; the ceiling
+restoration was right *and* insufficient for that leg, and both halves must travel together.
+
+### Run hygiene, verified at close
+
+`FINAL SURVIVING COUNT : 0` · `cleanup : success` · heavy lock **released**, `C:/t/heavylock` absent ·
+**zero sprint-owned Python**, matched on **command line** · G11 `check --task T-108` **0
+non-compliant** · gold `36f4b7b6`, `acceptance.py` `4bd893ac…` and `streamlit_app.py` `47e4fafa…` all
+**unchanged before and after** · **no gold or scorer change after seeing the result.**
+
+**One honest deviation:** the expected IDE baseline is **two** `ms-python.isort` processes; **three**
+are present after the run, one under system `c:\python313\python.exe`. All match on command line,
+none is a sprint job, none is a cleanup target. Recorded because the baseline said two.
+
+---
+
+## 0-prev. `ORCH-718` closed, 2026-09-01 — **SUPERSEDED by § 0 above**
 
 **Integration `8f696945`, pushed and remotely verified. `main` untouched: local `7531692`,
 remote `03f1af5`.** Everything below § 0 is older; § 0-prev is the previous wave and is superseded.
@@ -60,7 +158,7 @@ is the move this sprint refuses.
 
 ---
 
-## 0-prev. ORCH-717 continuation — **SUPERSEDED by § 0 above**
+## 0-prev2. ORCH-717 continuation — **SUPERSEDED**
 
 **Read this section first. It is newer than everything below it**, and sections 5 and 6 are partly
 superseded: four more cards were chartered, one is merged, and two of the three held questions are

@@ -7717,3 +7717,109 @@ review — is precisely the move this sprint refuses.
 **Until it lands:** a `unreachable_evidence` verdict naming only `.staging/` paths is **this defect,
 not missing evidence**. Confirm by checking that the task's final reports are present on integration
 — and do not let that shortcut become a habit of dismissing red route checks.
+
+---
+
+## F-165 — T-107 and T-108 Priority-1 counts were measured against DIFFERENT gold sets, so the two numbers are not comparable
+
+- **Severity** HIGH for *reporting*, none for the product · **Class: comparability defect in the
+  benchmark record**, not a pipeline defect · **Registered 2026-09-02 (T-108)**
+- **Found by** the Lead while composing T-108's Priority-1 rows and noticing that one of them is a
+  spelling that C-113 had only just made matchable.
+
+### The measurement
+
+C-113 merged at `db119f53` on **2026-09-01**, three days **after** T-107 ran (2026-08-28), moving the
+gold blob `aee8cb4f -> 36f4b7b6`. Read directly out of both blobs for `PMC12180156`:
+
+```
+BEFORE C-113 : ['ALA','porphobilinogen','protoporphyrin IX','succinyl-CoA',
+                'coproporphyrinogen III','uroporphyrinogen III']
+AFTER  C-113 : [... , 'delta-aminolevulinic acid', 'δ-aminolevulinic acid']
+```
+
+**One of T-108's two Priority-1 rows is `δ-aminolevulinic acid` on `PMC12180156/strict`.** Under
+T-107's gold, `forbidden_match` returned `None` for that spelling — this is F-150 half 1, whose whole
+point was that *"the run's worst false accession was never counted."*
+
+### Why it matters, and the direction it cuts
+
+**A Priority-1 count from T-107 and a Priority-1 count from T-108 are readings taken with different
+instruments.** Any `8 -> 2` style comparison is not apples to apples, and the two facts pull in
+**opposite** directions: C-113 made the instrument **stricter**, and T-108's count is nonetheless
+**lower**. Combining them into a single "improvement" claim silently credits the pipeline with a
+change that partly belongs to the gold, while hiding that the stricter instrument found something the
+old one structurally could not see.
+
+**This is not an argument against C-113.** The gold edit was correct and its footprint was measured
+and landed deliberately. The defect is in the **benchmark record**: nothing in the run artifacts
+records which gold blob scored them, so a later reader comparing two milestone numbers has no way to
+discover that the instrument moved between them.
+
+### Disposition
+
+**Registered, not chartered.** The cheap durable fix is to stamp the **gold blob SHA into every
+scored run's artifacts**, so a milestone number carries the instrument that produced it. Until that
+exists, the rule is:
+
+> **Never compare a Priority-1 count across milestones without first checking whether the gold blob
+> changed between them.** T-108's report states its gold blob explicitly for exactly this reason.
+
+### Standing lesson
+
+**A benchmark number is a reading, and a reading has an instrument.** This sprint already knows to
+distrust a green test and a green mutation. The harder habit is asking, of any two numbers being
+compared, **whether the same thing measured both** — because the instrument changing is invisible in
+the numbers themselves, and the comparison looks perfectly ordinary right up until it is wrong.
+
+---
+
+## F-166 — one leg needs MORE than 3600 s, so the restored ceiling is sufficient for the corpus but not for every leg in it
+
+- **Severity** MEDIUM · **Class: operational, censored measurement** · **Registered 2026-09-02 (T-108)**
+- **Found by** T-108 itself, the first run at the restored default.
+
+### The measurement
+
+`PMC12444477/strict` on T-108: **`timeout` at 3600.79 s, 100.0% of the ceiling, 0 files**,
+`budget.leg_timeout_overridden: false`, `termination_reason: budget_exhausted`. The same leg timed
+out on T-107 at 1798.3 s against an 1800 s ceiling.
+
+**Doubling the budget did not let it finish.**
+
+### What this does and does not establish
+
+**Establishes:** the leg-duration census's observed maximum of **3421.4 s was not an upper bound for
+this leg.** `T108-READINESS.md` § 2.1 recorded exactly this risk — *"every timed-out leg is CENSORED
+... the true requirement is at least 3421.4 s and may be larger"* — and T-108 is the observation that
+confirms it. The 179 s of headroom the census computed over the slowest observed finisher was, for
+this leg, not headroom at all.
+
+**Does NOT establish:** that 3600 s is the wrong ceiling. The restoration cut timeouts **3 -> 1** and
+grew the scorable denominator **17 -> 19**, recovering `PMC12096016/strict` — a core
+`strict_exportable` paper — which needed only **152.9 s** beyond T-107's budget. The ceiling did the
+work it was restored to do.
+
+**Does NOT establish that this is a defect.** § 2.1's own ruling binds: *"a timeout at 3600 s is
+therefore NOT automatically a defect, and must not be waved away either."* It is still censored — it
+proves the leg needs *more* than 3600 s and never how much more. **Both halves of that sentence are
+load-bearing and this finding exists to keep them together.**
+
+### Disposition
+
+**Registered, not chartered. No ceiling change is proposed on one observation.** Raising the ceiling
+again to chase this single leg would be choosing a budget on censored data a second time, which is
+the error § 2.1 documented while making the first choice.
+
+**What would settle it** is an instrumented profile of that leg — where inside the 3600 s the time
+actually goes — rather than another guess at a number. **C-111's `LEG_TRACE.jsonl` for this leg
+survives on disk (24564 bytes) and is committed**, which is the first time in this sprint that a
+timed-out leg left enough behind to ask the question at all. F-148 records that T-107's three
+timed-out legs preserved nothing.
+
+### Standing lesson
+
+**A ceiling chosen from observed maxima is chosen from censored data, and the first run at the new
+ceiling is the experiment that tests it — not a confirmation of it.** The restoration was right and
+it was still not sufficient for every leg. Those are compatible, and reporting only the half that
+flatters the decision would have been the easy error.
