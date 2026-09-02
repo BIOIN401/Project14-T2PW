@@ -443,8 +443,15 @@ def test_10_f132_population_regression_over_the_six_papers(gold):
     # 5-aminolevulinic acid to that case's EXISTING forbidden entry, so the
     # spelling three committed legs actually emitted stops escaping the gate.
     #
-    # NO LEG JOINED THE CORPUS -- `legs` above is unmoved at 72. Three legs
-    # already in it changed classification, and it is exactly these three:
+    # C-113'S RECORD, KEPT AS HISTORY AND TO BE READ IN C-113'S TENSE (C-117 /
+    # F-171 relabelled it; nothing about the attribution changed). AT C-113 NO
+    # LEG JOINED THE CORPUS -- `legs` was unmoved at 72 then. `legs` has since
+    # moved to the value the assert above now pins, when T-108's run tree joined
+    # the corpus, which C-115 then re-pinned to. F-171 measured that tree at 83
+    # already at `479128b3`, T-108's own result commit, so C-115 moved the PINS
+    # and not the corpus; either way it is a LATER and SEPARATE move and it did
+    # not disturb the three-leg attribution below. Three legs already in the
+    # corpus at C-113 changed classification, and it is exactly these three:
     #   runs_verify/2026-08-21_2239/papers/PMC12180156/research  excluded 0 -> 1
     #   runs_verify/2026-08-21_2239/papers/PMC12180156/strict    excluded 0 -> 1
     #   runs_verify/2026-08-28_1816/papers/PMC12180156/research  excluded 0 -> 1

@@ -20,8 +20,10 @@ Usage::
 
 from __future__ import annotations
 
+import ast
 import io
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -38,6 +40,54 @@ F132_PAPERS = (
 )
 
 GOLD = {case.paper_id: case for case in load_gold_set(pinned_gold_set_path()).cases}
+
+# ---------------------------------------------------------------------------
+# C-117 / F-171: every `(pinned == N)` this probe printed used to be a NUMBER
+# TYPED HERE, frozen at ORCH-717 -- `62`, `92`, `23`, `{'PMC13231680'}` -- and by
+# F-171 all four were three re-pins stale while the MEASUREMENTS beside them
+# stayed live and correct. This is the instrument `test_c106`'s own failure
+# message sends an agent to for correct reference values, so a stale reminder
+# here misdirects the exact traffic the sprint routes down this path. Each
+# reminder is therefore READ FROM THE ASSERTION IT CLAIMS TO MIRROR: a pin moved
+# in the suite moves here in the same commit, and cannot go stale again.
+# ---------------------------------------------------------------------------
+C102_TESTS = REPO / "tests" / "test_c102_coverage_denominator.py"
+C102_SOURCE = C102_TESTS.read_text(encoding="utf-8")
+
+
+def pinned(pattern: str, literal: bool = False) -> str:
+    """The value the c102 suite pins RIGHT NOW, read from its own assertion.
+
+    UNIQUE-OR-LOUD, then PARSE-OR-LOUD (REV-117). `re` reads raw file text and
+    cannot tell code from prose: a `#` comment is immune to these patterns but a
+    DOCSTRING is not, and a first-wins `search` would read an assert-shaped line
+    of narrative as the pin -- silently, and in this sprint the likeliest such
+    line quotes a HISTORICAL value, which is the exact failure C-117 exists to
+    end. So two matches is a refusal, not a first-wins. And a structured pin must
+    parse as a Python literal IN FULL, which is what refuses a literal split
+    across lines, a union of two literals, or a nesting the pattern captured only
+    half of. Every refusal names the file and none of them guesses.
+    """
+    found = re.findall(pattern, C102_SOURCE, re.MULTILINE)
+    if len(found) != 1:
+        return f"PIN AMBIGUOUS ({len(found)} matches) -- read tests/test_c102_coverage_denominator.py"
+    text = found[0].strip()
+    if literal:
+        try:
+            ast.literal_eval(text)
+        except (SyntaxError, ValueError):
+            return "PIN UNREADABLE -- read tests/test_c102_coverage_denominator.py"
+    return text
+
+
+PIN_LEGS = pinned(r"^\s*assert legs == (\d+)")
+PIN_CHECKED = pinned(r"^\s*assert checked == (\d+)")
+PIN_WITHHELD = pinned(r"^\s*assert withheld == (\d+)")
+PIN_MATCHED = pinned(r"^\s*assert with_matched_forbidden == (\d+)")
+# The two structured pins capture to END OF LINE, not a brace class: half a
+# literal is what parses cleanly while meaning something else.
+PIN_CLEARED = pinned(r"^\s*assert cleared == (.+)$", literal=True)
+PIN_OUTSIDE = pinned(r"^\s*assert set\(affected_papers\) - set\(F132_PAPERS\) == (.+)$", literal=True)
 
 listed = subprocess.run(
     ["git", "ls-files", "*quarantine_report.json"],
@@ -89,15 +139,16 @@ for rel in paths:
         with_matched_forbidden += 1
         per_run_matched[run] = per_run_matched.get(run, 0) + 1
 
-print(f"\nP2  test 10  legs                   : {legs}      (pinned == 62)")
-print(f"P3  test 13  checked                : {checked}      (pinned == 62)")
-print(f"P4  test 10  withheld               : {withheld}      (pinned == 92)")
-print(f"P5  test 13  with_matched_forbidden : {with_matched_forbidden}      (pinned == 23)")
-print(f"P7  test 10  cleared                : {cleared}   (pinned == [])")
+print("\n(every `pinned ==` below is read live from tests/test_c102_coverage_denominator.py)")
+print(f"P2  test 10  legs                   : {legs}      (pinned == {PIN_LEGS})")
+print(f"P3  test 13  checked                : {checked}      (pinned == {PIN_CHECKED})")
+print(f"P4  test 10  withheld               : {withheld}      (pinned == {PIN_WITHHELD})")
+print(f"P5  test 13  with_matched_forbidden : {with_matched_forbidden}      (pinned == {PIN_MATCHED})")
+print(f"P7  test 10  cleared                : {cleared}   (pinned == {PIN_CLEARED})")
 
 outside = set(affected_papers) - set(F132_PAPERS)
 print(f"\nP6  affected_papers OUTSIDE F132_PAPERS : {sorted(outside)}")
-print(f"    (pinned == {{'PMC13231680'}})")
+print(f"    (pinned == {PIN_OUTSIDE})")
 print(f"    F132_PAPERS all present : {set(F132_PAPERS) <= set(affected_papers)}")
 print(f"    affected_papers         : {dict(sorted(affected_papers.items()))}")
 
