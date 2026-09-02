@@ -1,0 +1,180 @@
+{
+  "label": "c011-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/rev114/basetree",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/pin/REV-114/02-c011-base.pin.json",
+    "-q",
+    "--basetemp=C:/t/rev114/c011base",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\rev114\\basetree",
+  "started_at": "2026-09-02T18:06:11+00:00",
+  "finished_at": "2026-09-02T18:06:29+00:00",
+  "duration_seconds": 17.91171320000001,
+  "timeout_seconds": 900.0,
+  "root_pid": 23696,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 24336,
+      "name": "python.exe",
+      "ppid": 23696
+    },
+    {
+      "pid": 34548,
+      "name": "git.exe",
+      "ppid": 24336
+    },
+    {
+      "pid": 33896,
+      "name": "git.exe",
+      "ppid": 24336
+    },
+    {
+      "pid": 32156,
+      "name": "python.exe",
+      "ppid": 24336
+    },
+    {
+      "pid": 32272,
+      "name": "python.exe",
+      "ppid": 32156
+    },
+    {
+      "pid": 30192,
+      "name": "python.exe",
+      "ppid": 32260
+    },
+    {
+      "pid": 32260,
+      "name": "python.exe",
+      "ppid": 24336
+    },
+    {
+      "pid": 34528,
+      "name": "git.exe",
+      "ppid": 30192
+    },
+    {
+      "pid": 29432,
+      "name": "python.exe",
+      "ppid": 34752
+    },
+    {
+      "pid": 34752,
+      "name": "python.exe",
+      "ppid": 24336
+    },
+    {
+      "pid": 31836,
+      "name": "python.exe",
+      "ppid": 33748
+    },
+    {
+      "pid": 33748,
+      "name": "python.exe",
+      "ppid": 24336
+    },
+    {
+      "pid": 32356,
+      "name": "python.exe",
+      "ppid": 33604
+    },
+    {
+      "pid": 33604,
+      "name": "python.exe",
+      "ppid": 24336
+    },
+    {
+      "pid": 34096,
+      "name": "python.exe",
+      "ppid": 34100
+    },
+    {
+      "pid": 34100,
+      "name": "python.exe",
+      "ppid": 24336
+    }
+  ],
+  "descendants_terminated": [
+    24336,
+    29432,
+    30192,
+    31836,
+    32156,
+    32260,
+    32272,
+    32356,
+    33604,
+    33748,
+    33896,
+    34096,
+    34100,
+    34528,
+    34548,
+    34752
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 10752,
+      "name": "python.exe"
+    },
+    {
+      "pid": 14616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 17356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 33436,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/REV-114/02-c011-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev114\\basetree\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev114\\basetree",
+    "repo_head": "88b11c9c410344435f8c03e1c2428b219c4a5087",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-114",
+    "token": "REV-114:33436:3addb754e23cedd4",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

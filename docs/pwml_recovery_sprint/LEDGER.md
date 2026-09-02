@@ -9418,3 +9418,62 @@ taken first.
 - **C-114 is blocked** on the `test_c011_freeze_seam_golden_equivalence.py` byte-pin. Disposition —
   invertible `_DELTAS` entry versus a separate diagnostics artifact — is with `REV-114`.
 - **Step 9 stays NO-GO.** No milestone launched, none scheduled.
+
+---
+
+## INFRASTRUCTURE INCIDENT — 2026-09-02, `ORCH-719`: I stranded the heavy lock, and the note warning me about it was already in front of me
+
+**Recorded because a G11 report certifies a job was clean and preserves nothing about a job that was
+not.** No measurement is affected: the killed job **never produced a result**, and nothing was
+reported from it.
+
+### What happened
+
+Running a widened consumer sweep at the C-114 tip, I wrote a **foreground** retry loop to wait out a
+contended heavy lock:
+
+```
+for i in $(seq 1 60); do bounded_run.py ... ; if grep -q HEAVY_LOCK_HELD ...; then sleep 20; fi; done
+```
+
+Two things went wrong together:
+
+1. **The check-then-run guard is a race.** I checked `C:/t/heavylock` was free, then launched. `REV-115`
+   acquired it in the gap. That is not a flaw in the lock — `bounded_run` returned **exit 95**, the
+   child was **never started**, and **nothing was removed**, exactly as designed.
+2. **The retry loop is what got killed.** The tool's default cap is **120 s, not 600 s**. It fired
+   while the wrapper held the lock, and left `holder=ORCH-719, pid=41468` with that pid **dead**.
+
+### The disposition, and why it was mine to make
+
+`bounded_run.py:755-765` states that a wrapper killed outright leaves the lock held, that this is
+**usually attributable**, and `:202` that *"clearing another holder's lock is the orchestrator's
+decision alone."* The holder file named **my own task** and I verified `pid 41468` was dead before
+touching anything. **A lock whose holder is alive is never cleared**, and the attributable case is
+the one the design says is worth having — this is F-163's window landing on the good side of itself.
+
+### What was NOT affected
+
+- **No test result.** The killed job produced none; its `evidence/g11/ORCH-719/.staging/11-*.json`
+  placeholder survived **uncommitted**, which is what a placeholder is for. The job was re-run into
+  **the same `--json` path**, not a fresh sequence, so the placeholder is promoted rather than
+  orphaned and no sequence is burned.
+- **No peer's work.** `REV-115` had released before my acquire; its own jobs are unaffected.
+- **No orphaned process.** Verified after clearing: the only surviving `python.exe` are the
+  `ms-python.isort` language servers, matched on **command line**.
+
+### The correction, and it is a change of mechanism rather than of care
+
+**Knowing about this hazard did not prevent it** — the note describing it was already written, from a
+previous occurrence. Care is not the control; mechanism is:
+
+1. **Any bounded run that may wait on a lock goes to TRACKED BACKGROUND**, not a longer foreground
+   timeout. A backgrounded job is not subject to the tool cap at all.
+2. **Never put a sleep/retry loop in a foreground call.** The loop is the thing that dies, and it
+   dies holding whatever the last iteration acquired.
+3. **Branch on exit 95; do not pre-check the lock.** Pre-checking is a race with any peer agent.
+   Exit 95 is free and safe by construction, which is precisely why it exists.
+
+**Standing lesson.** *A hazard you have written down is not a hazard you have controlled.* The
+mitigation that works is the one that removes the failure mode from the mechanism — running in
+background — not the one that asks the operator to remember.
