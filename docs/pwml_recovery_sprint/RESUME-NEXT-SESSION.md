@@ -1,8 +1,8 @@
 # RESUME — next session handoff
 
-**Updated in place by the Lead Orchestrator, 2026-09-02, at the close of the T-108 execution wave.
-§ 0 is the current state — T-108 RAN and is NOT ACCEPTED; § 0-prev and everything after it are
-earlier waves and are superseded where they disagree.** The paragraph below describes the 2026-08-31 rewrite and is kept as that wave's record.
+**Updated in place by the Lead Orchestrator, 2026-09-02, during `ORCH-719` (the D-088 correction wave).
+§ 0 is the current state; § 0-prev0 is the T-108 execution wave it supersedes, and § 0-prev and
+everything after are earlier waves, superseded where they disagree.** The paragraph below describes the 2026-08-31 rewrite and is kept as that wave's record.
 
 **Rewritten in place by the Lead Orchestrator, 2026-08-31, at the close of the post-triage wave
 (`ORCH-717`).** Supersedes the 2026-08-29 record, which was written at the close of the T-107
@@ -16,7 +16,108 @@ state.**
 
 ---
 
-## 0. CURRENT — **T-108 RAN and is `NOT ACCEPTED`; D-088 charters the correction**, 2026-09-02. Read this section and nothing below it first.
+## 0. CURRENT — **`ORCH-719`: D-088's correction is DESIGNED and MEASURED, not merged. Merge gate 10 is RED and that is not this wave's doing.** 2026-09-02. Read this section and nothing below it first.
+
+**Integration tip `458a93f1`, pushed and remotely verified: local = `origin/` = `git ls-remote`.
+`main` untouched — local `7531692`, remote `03f1af5`.** Everything below § 0 is older and superseded
+where it disagrees.
+
+> **A machine crash occurred mid-wave.** Nothing was lost: the crash stranded **no** heavy lock and
+> **no** orphaned process (verified after reboot — the only `python.exe` alive are the
+> `ms-python.isort` language servers, and **the count is now TWO, not three; match on COMMAND LINE,
+> never on count or PID**). Every commit had been pushed. The one casualty was a running reviewer
+> agent, restarted.
+
+### The one thing to check before anything else
+
+**SMOKE IS RED ON THE INTEGRATION BRANCH ITSELF — 3 failed / 500 passed — AND HAS BEEN SINCE
+`479128b3`.** See **F-171**. The previous handoff's takeover table certified *"SMOKE (22 files) 503
+passed, exit 0"*; that row was **already false when it was written**. Measured at tip `9873d064` with
+no card's work present, G11 `ORCH-719/10`.
+
+**No merge can satisfy merge rule 10 until this is fixed.** `C-115` is chartered to fix it and is
+**not yet dispatched**.
+
+### Wave state — `HANDOFF.md` § 5.2a, step by step
+
+| # | Step | State |
+|---|---|---|
+| 1 | Charter ONE narrow acceptance/release-policy card | **SPLIT.** Release-policy half is **BLOCKED** with the product owner (`DECISION-PACKET-D088-RUNTIME-CAP.md`); diagnostics half is **C-114**, implemented, **blocked for merge** |
+| 2 | Preserve raw anchor diagnostics | **C-114 @ `47b9c517`**, in review (`REV-114`) |
+| 3 | No Stage-0 redesign | **Held.** Nothing under `src/t2pw/pipeline/` merged this wave |
+| 4 | Curate expected core reactions / subprocesses for the ten papers | **DONE.** 41 reactions, 35 subprocesses, 174 verbatim quotes, independently re-verified |
+| 5 | Archived-artifact A/B across all 83 legs, both roots named | **DONE** |
+| 6 | Prove the discrimination on the two named legs | **DONE, and it took four passes** — see F-170 |
+| 7 | 60 and 90 populations stay separately visible | **C-114 acceptance criterion**, reproduced exactly |
+| 8 | Rebuild T-108 readiness | **NOT STARTED** — blocked behind step 1 |
+| 9 | Launch a new milestone | **NO-GO. Not launched, not scheduled.** |
+| 10 | RAG / LLM evaluation framework | **NOT STARTED** |
+
+### What is established — do not re-litigate
+
+**F-168 — the obvious D-088 implementation is disqualified.** Keying the hard cap to Stage-0's own
+`main_subprocesses` gives the required discrimination *perfectly* on the T-108 tree at three stoplist
+strengths, and fails the corpus: **0 of 14 paper/mode pairs named a stable subprocess set**, and on
+`runs_verify/2026-08-21_2239` it **releases** `PMC12782028/strict`. **The specification is itself an
+LLM draw; a gate keyed to it has a random denominator.**
+
+**F-169 — `PMC12096016`'s four unmatched anchors are four different defects.** `ATP` is present as
+`Adenosine triphosphate`, **wired into an admitted core reaction**, and reported missing because the
+matcher is substring-only and `BIOCHEMICAL_ALIAS_MAP` lacks the spelled-out form. Adjudicated
+`product_contract_violation` **against the diagnostic record, not the release status**. The auditor
+**corrected two of my four rows**: `NADH` is on that case's own `forbidden_identifiers` as an LDH
+assay reporter (dropping it is contract-obeying), `Fur` is preserved in `quarantined_proteins`, and
+`EntD`'s quarantine trigger is `apo-EntB`. Census: **12 of 374 anchors are wired-but-falsely-reported,
+all ATP on one paper across 8 run trees — chronic, and 3.2%.** The other **362 are genuine**, so this
+is **not** an argument against D-088's cofactor ruling.
+
+**F-170 — a named-but-undetailed branch cannot be tested by its NAME.** Four passes; the signal was
+not that v1 failed, but that **v3 failed the same way on the same leg after a genuinely correct fix**.
+Now tested by curated `member_entities`. **Both required consequences hold on EVERY archived draw:**
+`PMC12096016` released 8/8, `PMC12782028` capped 7/7.
+
+**F-171 — merge gate 10 red since `479128b3`.** Above.
+
+### The open product-owner question — nothing proceeds past it
+
+**No permissible reaction-level replacement for the runtime cap exists this wave.** Four candidates,
+each rejected for an independent, documented reason; and the acceptance instrument **cannot** route
+around it, because Priority 5's numerator requires `strict_acceptance_eligible`, which is
+`status == RELEASE_READY` (`release_status.py:1261`), and `acceptance.py:1146` already refuses to
+reclassify a frozen record under merge rule 8.
+
+> **Does D-088 clause 2 yield to clause 10 (cap unchanged, `Priority 5` stays `0/2`, diagnostics
+> added, curated set built), or clause 10 to clause 2 (cap relaxed on a cofactor vocabulary,
+> `PMC12782028` released at runtime)?**
+
+**Lead recommendation: the first**, and it means **the headline number does not move.**
+
+### Immediate next actions, in order
+
+1. **`REV-114` reports** → rule on the C-011 disposition: register an invertible `_DELTAS` entry
+   (a card owning that file), **or** re-shape C-114 to emit a separate artifact.
+2. **Dispatch `C-115`** (chartered, `prompts/C-115.md`) → re-pin the five census pins → **SMOKE green
+   for the first time since `479128b3`**.
+3. **Merge C-115, then C-114** once its disposition lands. Both need an independent reviewer on the
+   actual diff.
+4. **Only then** rebuild T-108 readiness (step 8). **Step 9 stays NO-GO until the instrument is
+   merged, gated and remotely verified.**
+
+### Protected, unchanged
+
+**F-147 registered and deliberately UNCHARTERED.** `placeholder_backed_proteins` — escalate only.
+**T-107 and T-108 immutable.** `main` untouched. `streamlit_app.py` never committed. Gold blob still
+**`36f4b7b690b577f72882c3045ca6728d1ec8d9d1`**. Caches, `topics_*.txt`, the stray `ValueError`,
+`out/`, `outputs/`, `tmp/` — never committed.
+
+**Every job this wave ran through `bounded_run.py` with the venv interpreter and `--heavy-lock`.
+Eleven G11 reports, `check --task ORCH-719` clean, `FINAL SURVIVING COUNT : 0` and
+`cleanup : success` on every one.** `pinned_pytest.py` **exits 98 without `PYTHONPATH`** — hit once,
+guarded thereafter.
+
+---
+
+## 0-prev0. The T-108 execution wave, 2026-09-02 — **SUPERSEDED by § 0 above, which is the same day and later.** Its T-108 verdict, its D-088 summary and its three "things a successor most needs to know" all STAND; what is superseded is its status as current.
 
 **Integration `479128b3`+, pushed and remotely verified. `main` untouched: local `7531692`, remote
 `03f1af5`.** Everything below this section is older and superseded where it disagrees.
