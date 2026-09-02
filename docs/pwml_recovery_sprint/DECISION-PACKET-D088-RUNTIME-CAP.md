@@ -152,3 +152,86 @@ wave, not smuggled into this one.**
 - **Not** to relitigate T-107 or T-108. Both remain immutable and T-108 remains NO-GO.
 - **Not** a licence for anyone to set `supported_reactions_complete`. D-087 governs that and is
   untouched.
+
+---
+
+## 6. AMENDMENT, same day — § 4's proposed split does NOT work, and the ask is narrower than I wrote it
+
+**Preserved rather than rewritten, per the sprint rule that a failed proposal is kept beside its
+correction.** § 4 proposed proceeding with an *"acceptance instrument moves to reaction-level
+completeness"* arm while holding the runtime arm for a ruling. **That arm cannot deliver D-088's
+expected consequences, and I should have checked the scorer before proposing it.**
+
+### What I checked, and what it says
+
+**Priority 5 reads the frozen RUNTIME release status, directly.**
+
+```
+release_status.py:1261     strict_acceptance_eligible = (status == RELEASE_READY)
+acceptance.py:1560         if strict_leg.passed and strict_leg.deliverable
+                              and strict_leg.strict_acceptance_eligible:
+                                  strict_ok.append(pid)
+```
+
+`strict_ok` is Priority 5's numerator. So a leg the INCOMPLETE-CORE CAP held at `review_required` is
+outside the numerator **by construction**, and no computation the acceptance instrument performs can
+put it back.
+
+**And the scorer already refuses to try, in terms.** `acceptance.py:1146-1152`, on Priority 5:
+
+> *"UNCHANGED, and DELIBERATELY so. A leg the runtime froze as `review_required` for a coverage block
+> stays out of the strict numerator even when that block clears under D-072: this module scores runs,
+> it does not reclassify them, and promoting a frozen record on a rescored ratio is exactly the
+> post-freeze repair merge rule 8 forbids."*
+
+**That is the answer to my own proposal, written down before I made it.** D-072 already faced this
+exact question and settled it: the reconciliation reports whether a coverage block *would* survive;
+**it never re-issues the release decision.** An acceptance-instrument arm that moved Priority 5 would
+be merge rule 8 post-freeze repair with a new name.
+
+### What this corrects
+
+| § 4 said | Correct |
+|---|---|
+| The acceptance arm delivers D-088's hard-completeness move | **It cannot.** It can add a reading beside Priority 5, exactly as D-072's `requested_core_coverage` already does. It cannot change Priority 5 |
+| The runtime arm is one of two arms, held for a ruling | **It is the ONLY arm.** The runtime cap is the sole lever on D-088's expected consequences |
+| The ruling chooses between two deliverable paths | **The ruling chooses between a runtime cap change with no permissible implementation, and accepting that D-088's runtime consequences are not delivered this wave** |
+
+### What survives § 4 unchanged
+
+- **The four rejected candidates in § 2 stand.** Nothing here rehabilitates A, B, C or D; the
+  amendment concerns what to do *given* that they all fail.
+- **Deliverable arm 2 stands** — production records the typed diagnostics D-088 clauses 6, 7 and 8
+  require, recorded and never read by a gate. That is real, it is unblocked, it satisfies clause 7's
+  *"preserve all current raw requested anchors and unmatched-anchor diagnostics"*, and it is what
+  makes the 60 and 90 populations separately visible per `HANDOFF.md` § 5.2a step 7.
+- **The curated ten-paper dataset stands** and is still the long pole. It is clause 9's required
+  replacement input, F-168 proved it is the only non-draw-dependent one, and it is what any future
+  runtime rule — or the general pathway-shape specification of § 4's third option — must be validated
+  against. **Building it is not wasted by this amendment; it is the prerequisite either way.**
+- **The recommendation is unchanged and is now better supported.** Clause 2 yields to clause 10, the
+  cap stays, and the shortfall is recorded. The scorer's own D-072 comment is independent authority
+  for it.
+
+### The ask, restated in its corrected form
+
+> **D-088's expected consequences for `PMC12096016` cannot be delivered this wave by any permissible
+> means. Do you accept that outcome — cap unchanged, diagnostics added, curated dataset built,
+> Priority 5 remaining `0/2` — or do you direct that the cap be relaxed on a cofactor vocabulary
+> despite clause 10, accepting that `PMC12782028` would be released at runtime and would remain a
+> failure only in a reading beside the score?**
+
+**I recommend the first, and I want to be explicit that it means the headline number does not move.**
+`HANDOFF.md` § 8's first transferable lesson is that *an unchanged number can hide a completely
+changed result*; this is the converse and it needs saying just as plainly. **A wave that correctly
+declines to move a number is not a wave that achieved nothing, and a wave that moved it by any of
+candidates A through D would have achieved less than nothing** — it would have removed the
+measurement that keeps `PMC12782028`'s missing mevalonate arm visible.
+
+### Standing lesson
+
+**I proposed a workaround without reading the consumer it was supposed to satisfy.** The refutation
+was a comment in the function I was proposing to change, written by D-072 for the same reason, and
+finding it cost one grep. **Before proposing that instrument X compensates for gate Y, read what X
+actually reads** — the seam between them is where the assumption lives, and it is usually already
+documented by whoever hit it first.
