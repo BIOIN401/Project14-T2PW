@@ -1,0 +1,94 @@
+{
+  "label": "census-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rev115base/docs/pwml_recovery_sprint/evidence/c045_pinned_pytest.py",
+    "-q",
+    "--no-header",
+    "-rf",
+    "--basetemp=C:/t/bt/rev115/base",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:/t/rev115base",
+  "started_at": "2026-09-02T18:20:53+00:00",
+  "finished_at": "2026-09-02T18:20:59+00:00",
+  "duration_seconds": 5.672637699999996,
+  "timeout_seconds": 900.0,
+  "root_pid": 41640,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 45520,
+      "name": "python.exe",
+      "ppid": 41640
+    },
+    {
+      "pid": 45772,
+      "name": "git.exe",
+      "ppid": 45520
+    }
+  ],
+  "descendants_terminated": [
+    45520,
+    45772
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 14616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 17356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 42256,
+      "name": "python.exe"
+    },
+    {
+      "pid": 45060,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-115\\02-census-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "ae4c9987a4c546cd84013ba6b2d644ed33a86bc4",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-115",
+    "token": "REV-115:42256:de91d6b0e3ddbb64",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

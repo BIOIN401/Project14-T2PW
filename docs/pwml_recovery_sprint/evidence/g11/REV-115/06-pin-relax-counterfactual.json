@@ -1,0 +1,94 @@
+{
+  "label": "pin-relax-counterfactual",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rev115mut/docs/pwml_recovery_sprint/evidence/c045_pinned_pytest.py",
+    "-q",
+    "--no-header",
+    "-rf",
+    "--basetemp=C:/t/bt/rev115/mut",
+    "tests/test_c106_mutation_harness_executable.py",
+    "tests/test_c102_coverage_denominator.py"
+  ],
+  "cwd": "C:/t/rev115mut",
+  "started_at": "2026-09-02T18:26:48+00:00",
+  "finished_at": "2026-09-02T18:26:55+00:00",
+  "duration_seconds": 6.563591199999792,
+  "timeout_seconds": 600.0,
+  "root_pid": 48036,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 38080,
+      "name": "python.exe",
+      "ppid": 48036
+    },
+    {
+      "pid": 13848,
+      "name": "git.exe",
+      "ppid": 38080
+    }
+  ],
+  "descendants_terminated": [
+    13848,
+    38080
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 14616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 17356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 36444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 41480,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-115\\06-pin-relax-counterfactual.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "ae4c9987a4c546cd84013ba6b2d644ed33a86bc4",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-115",
+    "token": "REV-115:36444:c5f4e2303e709cc4",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
