@@ -205,6 +205,8 @@
         "R3"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "Three sequential enzymatic conversions carry chorismate through isochorismate and 2,3-diDHB to 2,3-DHB, all of them substrate-to-product transformations.",
       "quote": "In Escherichia coli , enterobactin is synthesized in the cytoplasm in two stages. In the first stage (Figure 1 ), the biosynthetic intermediate 2,3‐DHB is produced from chorismate by sequential reactions catalyzed by three enzymes",
       "confidence": "high",
       "rationale": "The paper explicitly divides enterobactin biosynthesis into two stages and names this one, giving all three of its reactions with EC numbers."
@@ -224,6 +226,8 @@
         "R8"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "ATP-dependent activation, covalent loading onto the carrier protein, transfer to EntF and three condensation cycles with L-serine are all conversions of matter ending in enterobactin.",
       "quote": "In the second stage of the pathway, 2,3‐DHB is adenylated by EntE",
       "confidence": "high",
       "rationale": "The paper's own second named stage, running from ATP-dependent activation of 2,3-DHB through carrier-protein loading to EntF-catalysed condensation and cyclization."
@@ -239,6 +243,8 @@
         "R4"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "EntD covalently attaches a phosphopantetheine arm to Ser 245 of EntB, so apo-EntB becomes holo-EntB: a chemical modification of matter and a maturation step, not a control on how much flux passes through the pathway.",
       "quote": "In order to deliver 2,3‐DHB to holo ‐EntF, the ArCP domain of apo ‐EntB itself must be phosphopantetheinylated at Ser 245 by the accessory enzyme EntD to form holo ‐EntB.",
       "confidence": "medium",
       "rationale": "The paper treats this as a required constituent step of the pathway (EntD is one of the ent gene products it lists), but it primes a protein rather than transforming a pathway metabolite."
@@ -252,6 +258,8 @@
       ],
       "reaction_ids": [],
       "detailed_in_paper": true,
+      "kind": "regulatory",
+      "kind_rationale": "The paper is explicit that 2,3-DHB is neither a substrate nor a product of EntB here; the stage is competitive inhibition that lowers flux through the committed step, so its whole content is control rather than chemistry.",
       "quote": "these in vitro observations suggest that 2,3‐DHB may play a biological role as a negative feedback regulator of enterobactin biosynthesis via direct inhibition of EntB following accumulation of sufficient intracellular iron",
       "confidence": "low",
       "rationale": "This is the paper's actual finding and it is explicitly framed as regulation OF enterobactin biosynthesis, but it is a regulatory mechanism and groups no chemical transformation of its own; recorded with no reaction ids and low confidence for that reason."

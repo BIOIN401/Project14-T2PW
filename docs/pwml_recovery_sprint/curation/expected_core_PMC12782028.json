@@ -108,6 +108,8 @@
         "R1"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "2,3-oxidosqualene becomes lanosterol under LSS, a named substrate-to-product cyclisation.",
       "quote": "LSS (Lanosterol synthase) catalyzes one of the earliest steps in sterol biosynthesis",
       "confidence": "high",
       "rationale": "The paper names this stage by position (earliest steps in sterol biosynthesis) and gives its chemistry, its enzyme and its mechanistic description."
@@ -124,6 +126,8 @@
         "R2"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "Lanosterol becomes 4,4-dimethylcholesta-8(9),14,24-trien-3-beta-ol by removal of the C-14-alpha-methyl group; the paper additionally calls this demethylation the initial control point for cholesterol biosynthesis, but it is a chemical step first and its control role is a property of that step.",
       "quote": "CYP51A1 (Lanosterol 14α-demethylase) functions downstream of LSS in the early-to-mid stage of cholesterol biosynthesis.",
       "confidence": "high",
       "rationale": "Named as a positioned stage of the requested pathway and detailed with substrate, product, chemistry (C-14alpha-methyl removal) and regulatory significance."
@@ -139,6 +143,8 @@
         "R3"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "A three-step monooxygenation demethylates 4,4-dimethyl and 4-alpha-methylsterols, which is a conversion of matter even though the substrate is given only as a compound class and no product is named.",
       "quote": "MSMO1 (methylsterol monooxygenase 1) acts at the mid-stage of cholesterol biosynthesis and serves as a key enzyme in this pathway.",
       "confidence": "high",
       "rationale": "Explicitly named as a stage of the requested pathway and given its chemistry, even though the substrate is a class and no product compound is named."
@@ -154,6 +160,8 @@
         "R4"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "Desmosterol becomes cholesterol under DHCR24, the terminal named substrate-to-product reduction of the pathway.",
       "quote": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol",
       "confidence": "high",
       "rationale": "Explicitly named as the final stage of the requested pathway and given with both metabolites."
@@ -167,6 +175,8 @@
       ],
       "reaction_ids": [],
       "detailed_in_paper": false,
+      "kind": "chemical_transformation",
+      "kind_rationale": "Every member of this stage as I defined it (ACAT2, HMGCS1, HMGCR, MVK, MVD, IDI1, FDPS, FDFT1, SQLE) is a metabolic enzyme carrying out a conversion of matter on the route to 2,3-oxidosqualene, so this is a named-but-undetailed CHEMICAL arm: it is chemical_transformation because of what the stage consists of, and detailed_in_paper is false because the paper supplies only gene names and expression data for it. The non-enzymatic members of the quoted enrichment list (SREBF1, SREBF2, LBR) are not part of this stage and are recorded separately.",
       "quote": "Reactome enrichment analysis of the differentially expressed genes showed that the cholesterol biosynthesis pathway (R-HSA-191273, P -adjust < 0.0001, Fig. 2E ) had the highest degree of enrichment, the enriched genes including FDPS (farnesyl diphosphate synthase, FDPS) , LBR , SREBF1 (sterol regulatory element binding transcription factor 1, SREBF1) , HSD17B7 , MSMO1 , SQLE , MVD (mevalonate diphosphate decarboxylase, MVD) , LSS , EBP , DHCR24 , CYP51A1 , SREBF2(sterol regulatory element binding transcription factor 2 , SREBF2) , FDFT1 , HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase , HMGCR) , HMGCS1 (3-hydroxy-3-methylglutaryl-CoA synthase 1 , HMGCS1) , MVK (mevalonate kinase , MVK) , IDI1 (isopentenyl-diphosphate delta isomerase 1, IDI1) , and ACAT2 (acetyl-CoA acetyltransferase 2, ACAT2)",
       "confidence": "medium",
       "rationale": "THIS IS THE NAMED-BUT-NOT-DETAILED STAGE. The paper explicitly assigns ACAT2, HMGCS1, HMGCR, MVK, MVD, IDI1, FDPS, FDFT1 and SQLE to the cholesterol biosynthesis pathway, and separately calls the pathway the mevalonate pathway and singles out HMG-CoA reductase as a key enzyme of it, but it states NO reaction for any of them: no acetyl-CoA, no HMG-CoA, no mevalonate, no isopentenyl diphosphate, no farnesyl diphosphate, no squalene, no substrate and no product anywhere for these enzymes. Recorded with no reaction ids for exactly that reason."
@@ -180,6 +190,8 @@
       ],
       "reaction_ids": [],
       "detailed_in_paper": false,
+      "kind": "regulatory",
+      "kind_rationale": "SREBF1 and SREBF2 are transcription factors that set how much cholesterogenic enzyme is expressed; the stage contains no conversion of matter at all, and the paper describes it purely as a control layer over the pathway.",
       "quote": "Calcium availability also influences cholesterol biosynthesis by modulating SREBP transcription factors and key enzymes such as β-Hydroxy β-methylglutaryl-CoA (HMG-CoA) reductase",
       "confidence": "low",
       "rationale": "Named as a control layer over the requested pathway and both SREBF genes appear in the pathway gene list, but it is transcriptional regulation, groups no chemical transformation, and is given no mechanism here."

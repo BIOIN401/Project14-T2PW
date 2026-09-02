@@ -126,6 +126,8 @@
       "aliases": ["MK biosynthesis", "quinone biosynthesis pathway"],
       "reaction_ids": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The stage groups all nine conversions the paper gives, from chorismate through to menaquinone.",
       "quote": "Schematic showing the menaquinone biosynthesis pathway. DHNA is the precursor of menaquinone.",
       "confidence": "high",
       "rationale": "The paper names the requested pathway and enumerates all nine of its reactions from chorismate to MK."
@@ -136,6 +138,8 @@
       "aliases": ["DHNA biosynthesis pathway", "DHNA biosynthesis operon", "DHNA operon", "men operon"],
       "reaction_ids": ["R1", "R2", "R3", "R4", "R5", "R6", "R7"],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "Seven enzymes each converting one named intermediate into the next, from chorismate to DHNA; the fact that this chain is also the paper's regulatory subject does not make the chain itself regulation.",
       "quote": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
       "confidence": "high",
       "rationale": "The paper explicitly names this seven-enzyme segment as a stage of MK biosynthesis, and the entire study is scoped to its regulation."
@@ -146,6 +150,8 @@
       "aliases": ["DHNA-utilizing pathways", "DMK and MK biosynthesis"],
       "reaction_ids": ["R8", "R9"],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The prenylation of DHNA by MenA and the terminal methyl transfer by MenG are both conversions of matter.",
       "quote": "We knocked out menA (encodes for DHNA prenyltransferase) to prevent DHNA from being utilized for DMK and MK biosynthesis",
       "confidence": "high",
       "rationale": "The paper groups the two post-DHNA steps as the DHNA-utilizing segment and gives an enzyme, a substrate and a product for each."
@@ -156,6 +162,8 @@
       "aliases": ["end-product feedback mechanism", "allosteric feedback inhibition"],
       "reaction_ids": ["R2"],
       "detailed_in_paper": true,
+      "kind": "regulatory",
+      "kind_rationale": "The stage's entire content is DHNA acting as a non-competitive inhibitor of MenD; it yields no product of its own, the paper represents it as an inhibition constant rather than a reaction, and it changes only how much flux passes through R2.",
       "quote": "the allosteric inhibition of MenD by DHNA also contributes to quinone homeostasis",
       "confidence": "medium",
       "rationale": "Recorded because the paper treats it as a constituent mechanism of the pathway with its own kinetic term (Ki) in the model, not merely as external regulation; a reviewer preferring to exclude regulation from subprocesses would drop it."

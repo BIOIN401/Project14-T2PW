@@ -126,6 +126,8 @@
       "aliases": ["lipid A biosynthetic pathway", "lipid A biosynthesis pathway", "Kdo-lipid A biosynthesis pathway"],
       "reaction_ids": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The paper defines the Raetz pathway as 'a series of catalytic reactions' running from UDP-GlcNAc to Kdo-lipid A, so every member of the stage is a conversion of matter.",
       "quote": "Kdo-lipid A is synthesized in the bacterial cytoplasm from a series of catalytic reactions that make up the Raetz pathway, named after Christian Raetz whose group pioneered the identification and characterization of the nine enzymes that make up the pathway",
       "confidence": "high",
       "rationale": "The paper names the requested pathway as the Raetz pathway and enumerates its nine enzymes in catalytic order."
@@ -136,6 +138,8 @@
       "aliases": ["early steps of lipid A biosynthesis"],
       "reaction_ids": ["R1", "R2"],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The stage groups the LpxA acylation and the LpxC deacetylation, both substrate-to-product conversions; LpxC is simultaneously the pathway's regulated node, but the stage is a set of steps, so it is chemistry.",
       "quote": "detergent-like LPS intermediates that accumulate upon hyperactivation of early stages in the Raetz pathway can be toxic, as depletion of the later-stage enzymes LpxH and LpxK resulted in growth defects that could be suppressed by inhibition of LpxA or LpxC",
       "confidence": "medium",
       "rationale": "The paper draws an explicit early/late division within the pathway and places LpxA and LpxC on the early side of it."
@@ -146,6 +150,8 @@
       "aliases": ["late steps of lipid A biosynthesis"],
       "reaction_ids": ["R4", "R6"],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The paper groups LpxH and LpxK as the pathway's later-stage catalysts, and the two reactions it covers, UMP removal and phosphorylation to lipid IVA, are both chemical conversions.",
       "quote": "depletion of the later-stage enzymes LpxH and LpxK resulted in growth defects",
       "confidence": "medium",
       "rationale": "The same sentence names LpxH and LpxK as the later-stage enzymes, so the paper itself groups them as a stage of the pathway."
@@ -156,6 +162,8 @@
       "aliases": ["Kdo addition", "addition of the first sugar(s) of the core"],
       "reaction_ids": ["R7"],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "Kdo residues are transferred onto lipid IVA to give Kdo-lipid IVA, an explicit substrate-to-product conversion.",
       "quote": "The nine steps in the Raetz pathway as well as the subsequent addition of the core sugars are catalyzed in the cytoplasm or the cytoplasmic leaflet of the IM",
       "confidence": "high",
       "rationale": "The paper treats core-sugar addition as a named stage adjoining the Raetz steps and includes WaaA in the Kdo-lipid A biosynthesis pathway of Figure 1B."
@@ -166,6 +174,8 @@
       "aliases": ["late acylation", "secondary acylation of Kdo-lipid IVA"],
       "reaction_ids": ["R8", "R9"],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The stage is two successive acyl-transfer conversions of Kdo-lipid IVA that end at Kdo-lipid A.",
       "quote": "resulting in Kdo-lipid IV A which is sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
       "confidence": "high",
       "rationale": "The paper explicitly groups the two terminal acylations as one sequential stage that completes Kdo-lipid A."

@@ -128,6 +128,8 @@
         "R1"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "Chorismate becomes isochorismate under EntC, a single named substrate-to-product conversion.",
       "quote": "Chorismate to Isochorismate : The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) . This step is the first committed step in enterobactin biosynthesis.",
       "confidence": "high",
       "rationale": "The paper's own first named step of its declared four-step scheme."
@@ -142,6 +144,8 @@
         "R2"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "Isochorismate becomes 2,3-dihydro-2,3-dihydroxybenzoate under EntB, a named substrate-to-product conversion.",
       "quote": "Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB) : Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB), a key intermediate in the pathway.",
       "confidence": "high",
       "rationale": "The paper's own second named step, given as a section heading with its chemistry."
@@ -157,6 +161,8 @@
         "R3"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "DHB becomes DHB-AMP by adenylation, a conversion of matter, notwithstanding that this paper leaves the identity of DHB ambiguous and never names the adenyl donor.",
       "quote": "Activation of DHB : 2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP. This activated intermediate is essential for the assembly of enterobactin.",
       "confidence": "high",
       "rationale": "The paper's own third named step; the stage is detailed even though its substrate token is ambiguous."
@@ -173,6 +179,8 @@
         "R5"
       ],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The stage covers the EntD modification of the carrier proteins and the EntF condensation and cyclization of three DHB into enterobactin, both of which are conversions of matter.",
       "quote": "Assembly of Enterobactin : The final steps involve the assembly of three DHB molecules into the cyclic trilactone structure of enterobactin.",
       "confidence": "high",
       "rationale": "The paper's own fourth and final named step, covering both the EntD priming of the carrier proteins and the EntF-catalysed condensation and cyclization."
@@ -185,6 +193,8 @@
       ],
       "reaction_ids": [],
       "detailed_in_paper": true,
+      "kind": "regulatory",
+      "kind_rationale": "Fur, RyhB and Fnr act on transcription of the ent operon and on the stability or translation of its message; they set how much enzyme exists rather than performing or altering any step of the chemistry.",
       "quote": "The production of enterobactin is tightly regulated to ensure that bacteria synthesize siderophores only when iron is scarce",
       "confidence": "low",
       "rationale": "Given a whole section of the paper and explicitly about enterobactin biosynthesis, but it is gene regulation and groups no chemical transformation; recorded with no reaction ids for that reason."

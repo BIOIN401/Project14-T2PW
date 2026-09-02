@@ -1,0 +1,116 @@
+D-088 STEP 6 (v3) — CURATED SET; REGULATORY STAGES ARE WARNINGS (clause 2)
+================================================================================================
+repo                       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+roots scanned              : runs/ AND runs_verify/, both named
+coverage_summary.json      : 83
+curated papers             : 10
+curated core reactions     : 41
+curated major subprocesses : 35
+the curation was produced BLIND to the cap and to which legs pass
+
+================================================================================================
+CORPUS TOTALS
+================================================================================================
+  legs_examined                     : 83
+  legs_without_report               : 0
+  legs_old_capped                   : 73
+  legs_new_capped                   : 17
+  curated_reactions_examined        : 327
+  curated_reactions_missing         : 30
+  curated_subprocesses_examined     : 249
+  curated_subprocesses_missing      : 23
+  undetailed_subprocess_missing     : 5
+  regulatory_stages_examined        : 65
+  regulatory_stages_missing_WARNING_ONLY: 64
+
+  capped OLD, released NEW : 57
+  capped OLD, still capped : 16
+  capped NEW, not OLD      : 1   <- the rule is STRICTER here
+
+================================================================================================
+THE TWO REQUIRED CONSEQUENCES — every archived strict leg of each paper
+================================================================================================
+
+--- PMC12096016/strict  (want new_capped=False) ---
+  ok  runs_verify/2026-08-18_1328  old=True  new=False rxn=8/8    sub=3/3   
+        warning only (regulatory): ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  ok  runs_verify/2026-08-21_2057  old=True  new=False rxn=8/8    sub=3/3   
+        warning only (regulatory): ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  ok  runs_verify/2026-08-21_2239  old=True  new=False rxn=8/8    sub=3/3   
+        warning only (regulatory): ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  ok  runs_verify/2026-08-22_2147  old=True  new=False rxn=8/8    sub=3/3   
+        warning only (regulatory): ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  ok  runs_verify/2026-08-24_1203  old=True  new=False rxn=8/8    sub=3/3   
+        warning only (regulatory): ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  ok  runs_verify/2026-08-24_1428  old=True  new=False rxn=8/8    sub=3/3   
+        warning only (regulatory): ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  ok  runs_verify/2026-08-27_1341  old=True  new=False rxn=8/8    sub=3/3   
+        warning only (regulatory): ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  ok  runs_verify/2026-09-01_1612  old=True  new=False rxn=8/8    sub=3/3     <== T-108
+        warning only (regulatory): ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+
+--- PMC12782028/strict  (want new_capped=True) ---
+  ok  runs_verify/2026-08-21_1822  old=True  new=True  rxn=3/4    sub=4/5   
+        HARD missing (chemical): ['mid-stage sterol C-4 demethylation']
+        warning only (regulatory): ['SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  BAD runs_verify/2026-08-21_2239  old=True  new=False rxn=4/4    sub=5/5   
+        warning only (regulatory): ['SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-08-22_2147  old=True  new=True  rxn=3/4    sub=4/5   
+        HARD missing (chemical): ['mid-stage sterol C-4 demethylation']
+        warning only (regulatory): ['SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-08-24_1428  old=True  new=True  rxn=2/4    sub=3/5   
+        HARD missing (chemical): ['mid-stage sterol C-4 demethylation', 'terminal step of cholesterol biosynthesis: desmosterol to cholesterol']
+        warning only (regulatory): ['SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-08-27_1341  old=True  new=True  rxn=3/4    sub=4/5   
+        HARD missing (chemical): ['mid-stage sterol C-4 demethylation']
+        warning only (regulatory): ['SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-08-28_1816  old=True  new=True  rxn=3/4    sub=4/5   
+        HARD missing (chemical): ['mid-stage sterol C-4 demethylation']
+        warning only (regulatory): ['SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-09-01_1612  old=True  new=True  rxn=3/4    sub=4/5     <== T-108
+        HARD missing (chemical): ['mid-stage sterol C-4 demethylation']
+        warning only (regulatory): ['SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+
+================================================================================================
+VERDICT
+================================================================================================
+  ACROSS EVERY ARCHIVED DRAW  PMC12096016: HOLDS
+  ACROSS EVERY ARCHIVED DRAW  PMC12782028: VIOLATED on 1/7
+
+  ON THE T-108 TREE ITSELF:
+    PMC12096016/strict  new_capped=False  (want False)  reactions 8/8  subprocesses 3/3
+    PMC12782028/strict  new_capped=True  (want True )  reactions 3/4  subprocesses 4/5
+
+    BOTH REQUIRED CONSEQUENCES HOLD SIMULTANEOUSLY: True
+
+  Unlike candidate B, this input is FIXED: it does not vary with the draw being
+  judged. The across-every-draw rows above are the check F-168 was registered
+  for, and they are the ones that matter -- a rule that holds only on the tree it
+  was designed against is the rule F-168 already disqualified once.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a4aacb9361fe018b01430c870fafc7fad2a2d957  [git, worktree dirty=True]
+label                   : curated-recall-ab-v3
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/d088_curated_recall_ab_v3.py .
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 1084348 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 0.77 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1082448:python.exe
+descendants terminated  : 1  1082448
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-719\08-curated-recall-ab-v3.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-719  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

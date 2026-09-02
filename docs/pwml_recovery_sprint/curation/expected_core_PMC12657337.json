@@ -66,6 +66,8 @@
       "aliases": ["MK-7 module", "terminal menaquinone-7 steps"],
       "reaction_ids": ["R2", "R3", "R4"],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The three reactions it groups, FPP to HepPP, HepPP plus DHNA to DMK-7, and DMK-7 to MK-7, are each a substrate-to-product conversion.",
       "quote": "The metabolic pathway responsible for MK-7 biosynthesis is primarily divided into three modules (the MVA pathway, DHNA pathway, and MK-7 pathway).",
       "confidence": "high",
       "rationale": "The paper explicitly names this as one of three modules of MK-7 biosynthesis and gives all three of its reactions with substrate and product."
@@ -76,6 +78,8 @@
       "aliases": ["1,4-dihydroxy-2-naphthoate pathway"],
       "reaction_ids": [],
       "detailed_in_paper": false,
+      "kind": "chemical_transformation",
+      "kind_rationale": "It is the chemical arm that produces the DHNA substrate of R3; the paper names it as a module of MK-7 biosynthesis and supplies none of its steps, which leaves it a named-but-undetailed CHEMICAL branch rather than a regulatory one.",
       "quote": "we focused on the MVA pathway to provide isopentenyl pyrophosphate (IPP) and the DHNA pathway to provide DHNA",
       "confidence": "high",
       "rationale": "Named twice as a constituent module of MK-7 biosynthesis and as the source of the DHNA substrate of R3, but NOT ONE of its enzymes or steps appears anywhere in this paper."
@@ -86,6 +90,8 @@
       "aliases": ["mevalonate pathway", "mevalonate (MVA) pathway"],
       "reaction_ids": ["R1"],
       "detailed_in_paper": false,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The mevalonate route converts acetyl-CoA-derived precursors through to IPP, a chain of chemical conversions, even though this paper gives only an enzyme roster and no individual step.",
       "quote": "The MVA pathway, incorporating EfmvaE , EfmvaS , MmmvK , ScpmK , and ScmvD , was assembled into a single expression cassette and integrated into the genome at the msbB site.",
       "confidence": "medium",
       "rationale": "Named as one of the three modules of MK-7 biosynthesis and given an enzyme roster, but no substrate-to-product step of it is stated in prose; only the Figure 1 legend expands the abbreviations."
@@ -96,6 +102,8 @@
       "aliases": ["methylerythritol phosphate pathway"],
       "reaction_ids": [],
       "detailed_in_paper": false,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The paper names MEP as a route that produces isopentenyl pyrophosphate, i.e. a chemical arm supplying a precursor, and attributes no control function to it.",
       "quote": "The biosynthesis of MK-7 requires two main metabolic pathways: the methylerythritol phosphate (MEP) pathway to produce isopentenyl pyrophosphate (IPP), and the 1,4-dihydroxy-2-naphthoate (DHNA) pathway to produce DHNA",
       "confidence": "medium",
       "rationale": "The introduction names MEP as one of the two pathways MK-7 biosynthesis requires. It is recorded because the paper asserts it, but the paper then builds a heterologous MVA route instead; see uncertainties."

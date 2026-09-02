@@ -30,6 +30,8 @@
       "aliases": ["bacterial classical menaquinone biosynthesis", "menaquinone-biosynthesis pathway"],
       "reaction_ids": ["R1"],
       "detailed_in_paper": false,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The paper places MenD's substrate-to-product conversion inside this pathway as its first irreversible step, so the stage is a chain of chemical conversions even though only one of them is delivered here.",
       "quote": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD) catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent ThDP-bound intermediates.",
       "confidence": "high",
       "rationale": "The requested pathway is named repeatedly and MenD is located within it as its first irreversible step, but NO other step of the pathway is given an enzyme, a substrate or a product anywhere in the paper. detailed_in_paper is false for exactly that reason."
@@ -40,6 +42,8 @@
       "aliases": ["intermediate I formation", "intermediate II formation and breakdown", "ThDP ylide formation"],
       "reaction_ids": ["R1"],
       "detailed_in_paper": true,
+      "kind": "chemical_transformation",
+      "kind_rationale": "The cycle IS the chemistry of R1, decarboxylation of 2-oxoglutarate, addition of isochorismate and breakdown to release SEPHCHC, so it converts matter and is in no sense control of flux; the separate doubt already recorded about this entry, that it is a mechanism inside one reaction rather than a stage grouping several, is orthogonal to this field.",
       "quote": "The reaction cycle for ThDP-dependent decarboxylase enzymes such as MenD is through a series of ThDP-linked intermediates",
       "confidence": "medium",
       "rationale": "This is the paper's substantive content and it is fully detailed, but it is the internal MECHANISM of R1 rather than a stage of the pathway that groups additional reactions; see uncertainties."
@@ -50,6 +54,8 @@
       "aliases": ["DHNA inhibition", "allosteric regulation"],
       "reaction_ids": ["R1"],
       "detailed_in_paper": true,
+      "kind": "regulatory",
+      "kind_rationale": "DHNA is a downstream metabolite that binds the TH3 domain and lowers MenD activity; the stage produces nothing and only modulates how much flux passes through R1.",
       "quote": "To explore whether Lmo MenD enzyme activity is sensitive to inhibition by DHNA, activity assays were performed with and without this downstream metabolite",
       "confidence": "medium",
       "rationale": "The paper devotes a results section and an assay to it and locates the allosteric site structurally, but the measured effect in the organism studied is weak and no IC50 could be obtained."
