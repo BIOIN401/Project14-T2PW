@@ -1,0 +1,174 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 57%]
+........................................................................ [ 71%]
+........................................................................ [ 85%]
+..................................................F..F...............F.  [100%]
+================================== FAILURES ===================================
+___________ test_10_f132_population_regression_over_the_six_papers ____________
+
+gold = {'PMC12096016': GoldCase(paper_id='PMC12096016', title='The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoi...ontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure."), ...}
+
+    def test_10_f132_population_regression_over_the_six_papers(gold):
+        """Offline, over every committed quarantine_report.json. No leg is re-run."""
+    
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
+        # FLOOR, not a census. This one catches the population SHRINKING, which is
+        # why it is `>=` while the two derived pins below are `==`. Moved 62 -> 72 by
+        # C-106: commit `e77ad3d` ("T-107 official result") committed
+        # `runs_verify/2026-08-28_1816`, which carries 10 quarantine_report.json
+        # files. Raising the floor keeps it catching a shrink against current truth.
+        assert len(paths) >= 72, "the committed artifact population shrank; re-pin before reading on"
+    
+        legs = 0
+        affected_papers: dict[str, int] = {}
+        withheld = 0
+        cleared: list[str] = []
+        for rel in paths:
+            leg_dir = (REPO / rel).parent
+            case = gold.get(leg_dir.parent.name)
+            if case is None:
+                continue
+            coverage = json.load(io.open(REPO / rel, encoding="utf-8")).get("coverage") or {}
+            out = contract_accepted_coverage(case, coverage)
+            if out is None:
+                continue
+            legs += 1
+            if out["excluded_count"]:
+                affected_papers[case.paper_id] = affected_papers.get(case.paper_id, 0) + 1
+                withheld += out["excluded_count"]
+            if out["cleared_by_reconciliation"]:
+                cleared.append(f"{case.paper_id}:{leg_dir.name}")
+    
+        # CENSUS PIN -- 62 -> 72, moved deliberately by C-106 under merge rule 4.
+        # Commit `e77ad3d` ("T-107 official result") committed
+        # `runs_verify/2026-08-28_1816`, which contributes EXACTLY 10 legs; every
+        # other run's contribution is unchanged, and 62 is precisely the sum over the
+        # other thirteen runs. Per-run attribution: `evidence/c106_census_probe.log`.
+        #
+        # This stays `==` and must NOT be relaxed to `>=`. The floor above uses `>=`
+        # to catch the corpus SHRINKING. This one asserts the loop above VISITED
+        # every leg it should have, and the census is how it knows how many that is.
+        # A `>=` here would let a leg join the corpus and go unvisited -- a quiet
+        # vacuity of exactly the F-144 shape. Moving it by hand whenever a run is
+        # committed is the correct cost: that is the moment someone confirms the new
+        # legs were meant to be there.
+>       assert legs == 72
+E       assert 83 == 72
+
+tests\test_c102_coverage_denominator.py:415: AssertionError
+_________ test_13_the_accepted_rate_is_a_rate_on_every_committed_leg __________
+
+gold = {'PMC12096016': GoldCase(paper_id='PMC12096016', title='The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoi...ontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure."), ...}
+
+    def test_13_the_accepted_rate_is_a_rate_on_every_committed_leg(gold):
+        """A numerator can never exceed its denominator, on any committed leg."""
+    
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
+    
+        checked = with_matched_forbidden = 0
+        for rel in paths:
+            leg_dir = (REPO / rel).parent
+            case = gold.get(leg_dir.parent.name)
+            if case is None:
+                continue
+            coverage = json.load(io.open(REPO / rel, encoding="utf-8")).get("coverage") or {}
+            out = contract_accepted_coverage(case, coverage)
+            if out is None:
+                continue
+            checked += 1
+            assert out["accepted_matched"] <= out["accepted_denominator"], rel
+            if out["accepted_ratio"] is not None:
+                assert 0.0 <= out["accepted_ratio"] <= 1.0, f"{rel}: {out['accepted_ratio']}"
+            if any(e["matched_in_raw"] for e in out["excluded_terms"]):
+                with_matched_forbidden += 1
+                # Withheld from the numerator, so the accepted count MUST drop.
+                assert out["accepted_matched"] < out["raw_matched"], rel
+    
+        # CENSUS PIN -- 62 -> 72. Same delta, same run, same commit as test 10's
+        # `legs`: `e77ad3d` committed `runs_verify/2026-08-28_1816` and its 10 legs.
+        # Stays `==`; see the note beside test 10 for why a `>=` here would make this
+        # loop vacuous rather than tolerant.
+>       assert checked == 72
+E       assert 83 == 72
+
+tests\test_c102_coverage_denominator.py:583: AssertionError
+__________ test_08_the_census_pins_still_match_the_committed_corpus ___________
+
+    def test_08_the_census_pins_still_match_the_committed_corpus():
+        """The root cause of F-151, guarded at its source.
+    
+        Committing a benchmark run grows the tracked `quarantine_report.json`
+        population and turns the c102 census pins red -- which is what made the
+        harness's baseline unsatisfiable for a whole card. This asserts the floor
+        pin still equals the live census, so the drift is reported HERE, with an
+        actionable message, rather than as an unexplained red in a file nobody runs.
+        """
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        live = len([ln for ln in listed.stdout.splitlines() if ln.strip()])
+    
+        source = C102_TESTS.read_text(encoding="utf-8")
+        floor = re.search(r"assert len\(paths\) >= (\d+)", source)
+        assert floor, "the census floor assertion vanished from the c102 suite"
+        pinned = int(floor.group(1))
+    
+>       assert live == pinned, (
+            f"the committed quarantine_report.json population is {live} but the c102 "
+            f"suite pins {pinned}. A run was committed and the census pins are now "
+            f"stale -- this is F-151 recurring. FOUR pins move together, not one: the "
+            f"floor, test 10 `legs`, test 10 `withheld`, test 13 `checked` and test 13 "
+            f"`with_matched_forbidden`. Re-measure with "
+            f"evidence/orch717_census_probe.py, move each pin to its measured value "
+            f"WITH the per-run attribution recorded beside it, and re-run "
+            f"evidence/c102_mutation_attack.py. Do NOT relax a pin to >= and do NOT "
+            f"delete the harness's baseline precondition to route around it."
+        )
+E       AssertionError: the committed quarantine_report.json population is 83 but the c102 suite pins 72. A run was committed and the census pins are now stale -- this is F-151 recurring. FOUR pins move together, not one: the floor, test 10 `legs`, test 10 `withheld`, test 13 `checked` and test 13 `with_matched_forbidden`. Re-measure with evidence/orch717_census_probe.py, move each pin to its measured value WITH the per-run attribution recorded beside it, and re-run evidence/c102_mutation_attack.py. Do NOT relax a pin to >= and do NOT delete the harness's baseline precondition to route around it.
+E       assert 83 == 72
+
+tests\test_c106_mutation_harness_executable.py:301: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c102_coverage_denominator.py::test_10_f132_population_regression_over_the_six_papers
+FAILED tests/test_c102_coverage_denominator.py::test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+FAILED tests/test_c106_mutation_harness_executable.py::test_08_the_census_pins_still_match_the_committed_corpus
+3 failed, 500 passed in 51.41s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9873d064ec0f37b2d36345d801ea1f1cdeafe9db  [git, worktree dirty=True]
+label                   : smoke-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\pin\ORCH-719\10-smoke-tip.pin.json -q --basetemp=C:/t/orch719/smoke tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 7136 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 52.83 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 9  12328:python.exe, 9668:python.exe, 14884:python.exe, 4848:python.exe, 12052:python.exe, 2288:python.exe, 18576:python.exe, 3124:python.exe, 3204:python.exe
+descendants terminated  : 9  2288, 3124, 3204, 4848, 9668, 12052, 12328, 14884, 18576
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-719\10-smoke-tip.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-719  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

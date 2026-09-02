@@ -8492,3 +8492,111 @@ leg, after a fix that was genuinely correct.** A defect that survives a correct 
 the T-108 tree, v1 would have shipped. It gave the required discrimination there, perfectly, at three
 independent stoplist strengths. **Seven draws of one paper are what stood between a wrong rule and a
 merged one**, and they cost nothing because they were already committed.
+
+---
+
+## F-171 — merge gate 10 has been RED on the integration branch since T-108's own result commit, and the handoff certified it green
+
+- **Severity** HIGH — **it blocks every merge in this sprint, including C-114** · **Class:
+  `product_contract_violation` of the sprint's own process, not of the pipeline** · **Registered
+  2026-09-02 (ORCH-719)**
+- **Found by** the Lead, running SMOKE at the integration tip as Integration Authority before ruling
+  on a merge. Report committed: G11 `ORCH-719/10`, log `evidence/orch719_smoke_tip.log`.
+
+### The measurement
+
+SMOKE at integration tip **`9873d064`**, which contains **no part of C-114**:
+
+```
+3 failed, 500 passed in 51.41s     FINAL SURVIVING COUNT : 0     cleanup : success
+```
+
+```
+FAILED tests/test_c102_coverage_denominator.py::test_10_f132_population_regression_over_the_six_papers
+FAILED tests/test_c102_coverage_denominator.py::test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+FAILED tests/test_c106_mutation_harness_executable.py::test_08_the_census_pins_still_match_the_committed_corpus
+E       assert 83 == 72
+```
+
+**Merge rule 10 requires the integration smoke suite to pass after a merge. It cannot pass today,
+and it could not have passed at any point in this wave.**
+
+### It is not this wave's doing, and that is established, not assumed
+
+The failing assertion compares the live count of committed `quarantine_report.json` files against a
+floor pinned in the c102 suite (`tests/test_c102_coverage_denominator.py:380`,
+`assert len(paths) >= 72`). Counted straight out of the object database, no checkout involved:
+
+| SHA | committed `quarantine_report.json` |
+|---|---|
+| **`7a1bb338`** — this wave's takeover anchor | **83** |
+| `479128b3` — the T-108 result commit | **83** |
+| `9873d064` — integration tip now | **83** |
+
+**The population was already 83 before this wave began.** `479128b3` — *"T-108 RESULT: NOT ACCEPTED.
+Ran once, 20/20 legs, 6.37h, scored honestly and preserved."* — committed T-108's run tree and left
+the four census pins at 72. **This wave committed no run tree at all.**
+
+### What that means about the handoff I was given
+
+`HANDOFF.md` § 1's takeover table lists, as a verified expected value:
+
+> | **SMOKE** (22 files) | **503 passed, exit 0** |
+
+**That row was already false when it was written.** The same document's § 1 says *"verify once, do not
+trust these numbers"*, and this is precisely the row that needed it. **I did not verify it at
+takeover** — I verified the git invariant, the lock, the processes and the gold blob, and took the
+test rows on trust because they were presented as measured. **That was the mistake, and it cost the
+whole wave's merge gate.**
+
+### The failure is a tripwire working exactly as designed
+
+`test_c106_mutation_harness_executable.py:301` is not incidentally red. It exists to catch this, and
+its own message says so:
+
+> *"the committed `quarantine_report.json` population is {live} but the c102 suite pins {pinned}. A
+> run was committed and the census pins are now stale — **this is F-151 recurring**. FOUR pins move
+> together, not one: the floor, test 10 `legs`, test 10 `withheld`, test 13 `checked` and test 13
+> …"*
+
+**A previous card anticipated this exact recurrence and built the detector that is now reporting it.**
+The detector is right; nothing about the pipeline is broken. What is broken is that the report was
+allowed to stand red across a wave boundary and was certified green in the handover.
+
+### Consequences, stated so no one has to rediscover them
+
+1. **No merge can satisfy merge rule 10 as written until the pins move.** That includes C-114, whose
+   own blocker (the C-011 golden) is a *separate* issue.
+2. **Every "SMOKE green" claim made against this branch since `479128b3` is suspect** and should be
+   re-read as "SMOKE green apart from three census pins nobody re-measured."
+3. **The re-pin is legitimate maintenance, not a weakening.** Merge rule 4 and S3 item 6 permit a
+   pinned baseline to move *"deliberately, with an exact documented delta"*. The corpus legitimately
+   grew when T-108's tree was committed; re-pinning 72 → 83 records that. **Making these tests pass
+   by deleting the committed run tree, or by loosening the assertion to `>=`-anything, would be the
+   forbidden direction.**
+4. **Four pins move together.** The test says so explicitly. A card that moves one and greens the
+   file has broken the tripwire while appearing to fix it.
+
+### Also established, and it closes someone else's open question
+
+C-114's implementer measured SMOKE at **499 passed / 4 failed** and could not determine whether the
+fourth — `test_stage3_gate_report_lifecycle::test_the_driver_fails_closed_when_a_current_run_has_no_final_report`
+— was attributable to its diff. It reported the gap rather than closing it, and said the
+machine-evidence budget was exhausted.
+
+**It passed in this run.** So that failure is an intermittent co-run flake involving a real Streamlit
+subprocess, not a C-114 regression, and **C-114's attributable failure set is the same three
+pre-existing ones.** The implementer's caution was correct and its conclusion is now measured rather
+than argued.
+
+### Standing lesson
+
+**A handover's test rows are the ones most likely to be stale, because they are the only rows that
+can rot without anybody touching the repository.** The git invariant, the lock state, the process
+list and the gold blob were all correct in the handoff I received — every one of them describes
+something that changes only when someone acts. **The SMOKE row described something that changes when
+someone commits an artifact somewhere else in the tree**, and it went stale the moment the previous
+wave committed its own run.
+
+**"Verify once, do not trust these numbers" has to mean the expensive rows too, or it means the rows
+that were never going to be wrong.**
