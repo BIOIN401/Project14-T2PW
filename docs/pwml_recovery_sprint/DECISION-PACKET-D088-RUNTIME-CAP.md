@@ -1,0 +1,154 @@
+# Decision packet — D-088 clause 2 cannot be implemented at RUNTIME this wave, and the reason is structural
+
+**Raised by the Lead Orchestrator, 2026-09-02, `ORCH-719`, integration tip `36570a37`.**
+**For the product owner. Nothing is implemented. No production, scorer, test or gold file is changed
+by this packet.**
+
+> **This is not a request to reopen D-088.** D-088 is LOCKED and its ruling is not in question. It is
+> a report that **two of its own clauses point in opposite directions given what production can
+> actually compute**, and a request for a ruling on which one yields.
+
+---
+
+## 1. The conflict in one paragraph
+
+**D-088 clause 2** says missing cofactors, currency metabolites, regulators and ancillary proteins
+*"should normally produce completeness WARNINGS or secondary-score deductions — not automatically
+remove `release_ready`."* `release_ready` is a **runtime** status, set in
+`release_status.classify_release_status`. **D-088 clause 10** says *"do NOT simply filter cofactors,
+match against the entity list, or relax the cap without replacing it with reaction-level coverage."*
+
+**Every reaction-level replacement available to production this wave is disqualified**, each for a
+different and independently established reason. So clause 2 asks for a runtime change that clause 10
+forbids making, and the wave cannot satisfy both.
+
+---
+
+## 2. The four candidate replacements, and why each fails
+
+I evaluated these against the archived corpus before chartering anything. **The required
+discrimination is D-088's own:** `PMC12096016/strict` must lose the cap and `PMC12782028/strict` must
+keep it. **A change that clears both has removed the measurement rather than improved recall and is a
+reject** — `HANDOFF.md` § 5.2a step 6.
+
+### Candidate A — rely on the reaction-level thresholds production ALREADY has
+
+Drop the all-anchors cap and let the existing floors decide: `min_core_coverage` 0.5, the core
+process minimum, the CONNECTED-PATHWAY FLOOR. Arguably clause 10 is satisfied because reaction-level
+coverage already exists and stays.
+
+| leg | coverage | core processes | outcome |
+|---|---|---|---|
+| `PMC12096016/strict` | 0.750 ≥ 0.5 | 9 ≥ 1 | **released** ✔ |
+| `PMC12782028/strict` | **0.538 ≥ 0.5** | 3 ≥ 1 | **released** ✘ |
+
+**REJECTED — it clears both.** `PMC12782028` is a known reaction-recall failure whose upstream
+mevalonate arm is absent, and this releases it. It is the exact outcome step 6 exists to catch.
+
+### Candidate B — key the hard cap to Stage-0's own `main_subprocesses`
+
+The one process-level specification production already holds at the coverage seam, carried in
+`requested_context`, needing no gold and no Stage-0 redesign. **On the T-108 tree it gives the
+required discrimination exactly** — `PMC12096016` 0 uncovered, `PMC12782028` 2 uncovered
+(`mevalonate pathway`, `methylsterol demethylation`) — identically at three stoplist strengths.
+
+**REJECTED by F-168**, measured over all 83 committed legs before it was chartered:
+
+```
+paper/mode pairs with >= 2 archived draws            : 14
+Stage-0 named an IDENTICAL subprocess set every time :  0
+archived PMC12782028/strict draws                    :  7
+  draws naming a mevalonate stage                    :  4
+  draws NOT naming one                               :  3
+```
+
+On `runs_verify/2026-08-21_2239` this rule **releases `PMC12782028/strict`** — not because recall
+improved but because that draw did not name the arm the pipeline was missing. **The specification is
+itself an LLM draw. A gate keyed to it has a random denominator**, and removes measurements
+stochastically with no diff to review.
+
+### Candidate C — filter cofactors and currency metabolites by a static vocabulary
+
+**REJECTED by clause 10 in terms** — *"do NOT simply filter cofactors"* — unless paired with a
+reaction-level replacement, and A and B are the only ones available. **F-169 makes this strictly
+worse than it looks:** the `ATP` row on `PMC12096016` is not a completeness gap at all but a matcher
+gap, and it sits inside the population this candidate downgrades. Filtering cofactors would hide a
+real defect permanently, which is the failure mode clause 10 was written to prevent.
+
+### Candidate D — read the curated expected-reaction set in production
+
+The curated ten-paper dataset (`HANDOFF.md` § 5.2a step 4, this wave's long pole) **is** a
+non-draw-dependent reaction-level input, and it discriminates the two legs correctly by construction.
+
+**REJECTED by `PRODUCT_CONTRACT` § 12** — *"do not embed gold-set-only policy into the general
+production pipeline."* A per-`paper_id` curated expectation is gold-set-only by definition. It would
+also make production unable to classify any paper outside the benchmark, which is the whole product.
+
+---
+
+## 3. What this leaves, stated plainly
+
+**Production cannot distinguish `PMC12096016/strict` from `PMC12782028/strict` without a per-paper
+curated input it is not allowed to have.** Both legs pass every structural gate, both pass semantics,
+both clear the coverage ratio, both clear the core-process minimum. The **only** thing that separates
+them is knowledge of what the paper's pathway should contain — and that knowledge is either curated
+(forbidden in production) or drawn from Stage 0 (unstable, F-168).
+
+**This is not a defect in D-088 and not a defect in the pipeline.** It is the boundary between what an
+acceptance instrument can know and what a general-purpose production classifier can know, and the two
+named consequences happen to straddle it.
+
+---
+
+## 4. What I propose to do, and what I am asking
+
+**Chartered and proceeding — C-114, the unblocked arms:**
+
+1. **The acceptance instrument moves to reaction-level completeness.** Priorities 4 and 5 are scored
+   on curated core-reaction and major-subprocess recall against the new dataset. **This is where
+   D-088's hard-completeness decision genuinely moves**, it satisfies clauses 4, 5 and 9 in full, it
+   is legitimate for a scorer to read curated expectations, and it delivers the required
+   discrimination without touching a production gate.
+2. **Production records the typed diagnostics** D-088 clauses 6, 7 and 8 require — subprocess
+   alignment, payload-present-but-unwired, per-subprocess coverage — **recorded and never read by any
+   gate**, on the C-056c `semantic_check_evaluability` precedent (*"a carrier that could move a
+   verdict would be a second gate wearing a record's name"*). F-168 is exactly why these must be
+   diagnostics and not inputs.
+
+**Held, pending your ruling — the runtime arm:**
+
+3. **The INCOMPLETE-CORE CAP in `release_status.py` is UNCHANGED this wave.** `PMC12096016/strict`
+   therefore **remains `review_required` at runtime**, which is a visible shortfall against D-088's
+   expected-consequences table, and I am flagging it rather than quietly delivering around it.
+
+**The question I need answered:**
+
+> **Given that no permissible reaction-level replacement exists in production this wave, does clause 2
+> yield to clause 10 (cap unchanged, runtime shortfall accepted, acceptance instrument corrected), or
+> does clause 10 yield to clause 2 (cap relaxed on a cofactor vocabulary, accepting that `PMC12782028`
+> would be released at runtime and kept failing only in the benchmark)?**
+
+**My recommendation is the first**, for three reasons: a cap is monotone and can only ever remove a
+strict success, so leaving it in place cannot manufacture one; merge rule 7 is already satisfied
+because the pathway is preserved and exported as `review_required` rather than dropped; and the
+second option makes the runtime status and the benchmark disagree about the same leg, which is the
+condition `PRODUCT_CONTRACT` § 11 was written to prevent.
+
+**A third option exists and I am not recommending it yet:** give production a *general*, non-paper-keyed
+reaction-level requirement — a typed pathway-shape specification that any paper could be scored
+against. That is real work, it is a Stage-0-adjacent redesign, and `HANDOFF.md` § 5.2a step 3 forbids
+it in this finishing wave. **It is the right long-term answer and it should be chartered as its own
+wave, not smuggled into this one.**
+
+---
+
+## 5. What is NOT being asked
+
+- **Not** to reopen D-088. Its ruling on the biology stands and this packet assumes it.
+- **Not** to change gold. `pinned_v1.json` stays byte-identical at
+  `36f4b7b690b577f72882c3045ca6728d1ec8d9d1`; the curated dataset is a **separate new file**, which
+  is deliberate — F-165's lesson is that moving the gold blob makes milestone counts incomparable,
+  and the Priority-1 instrument must not move while Priorities 4 and 5 are being rebuilt.
+- **Not** to relitigate T-107 or T-108. Both remain immutable and T-108 remains NO-GO.
+- **Not** a licence for anyone to set `supported_reactions_complete`. D-087 governs that and is
+  untouched.

@@ -8163,3 +8163,99 @@ was perfect. The disqualifying row is in a run tree from eleven days earlier, on
 supposed to keep failing. **F-167's own amendment says a finding that explains the case in front of
 you is the one least likely to have been tested against the cases that are not** — this is that rule
 applied prospectively, to a fix rather than to a finding, and it cost one probe.
+
+---
+
+## F-169 — `PMC12096016`'s four unmatched anchors are FOUR DIFFERENT DEFECTS, and one of them is a matcher gap a cofactor policy would hide permanently
+
+- **Severity** HIGH · **Class: NOT YET CLASSIFIED — routed to `pwml-bio-auditor`, adjudication
+  pending** · **Registered 2026-09-02 (ORCH-719)**
+- **Found by** the Lead, reading the leg's own artifacts while designing the D-088 card. **No probe
+  was needed and none was run: every fact below is a direct read of committed T-108 artifacts and of
+  two production source lines.**
+
+### The setting
+
+`runs_verify/2026-09-01_1612/papers/PMC12096016/strict` passed semantic evaluation, cleared every
+structural gate, produced a valid **74367-byte** PWML, and was held at `review_required` by the
+INCOMPLETE-CORE CAP because four requested-core anchors matched no admitted process:
+**`NADH`, `ATP`, `EntD`, `Fur`.**
+
+Every prior treatment of this leg — F-167's table, D-088's expected-consequences row, the T-108
+result — describes those four as one population: *cofactors and regulators the matcher can never
+satisfy.* **They are not one population. They are four, and they need four different answers.**
+
+### The four, each verified from the artifacts
+
+| anchor | in payload? | wired to an admitted core process? | what it actually is |
+|---|---|---|---|
+| **`ATP`** | **YES** — `final_mapped.json` compound **`Adenosine triphosphate`** | **YES** — `core_accepted` reaction *"EntE adenylation of 2,3-DHB"*, `core_terms` include **`adenosine triphosphate`** | **a MATCHER gap, not a completeness gap** |
+| `NADH` | **no** — absent from the compound list entirely | n/a | genuinely absent ordinary cofactor |
+| `Fur` | **no** — absent from the protein list entirely | n/a | genuinely absent regulator |
+| `EntD` | **YES** — protein list | **NO** — its process *"EntD-catalyzed phosphopantetheinylation of EntB"* was extracted, then **`quarantined_unmapped_entity`** | extracted-but-unwired (D-088 clause 6) |
+
+Full payload compound list, for the record — nine entries, and note what is and is not in it:
+
+```
+chorismate · isochorismate · 2,3-dihydro-2,3-dihydroxybenzoate · 2,3-dihydroxybenzoic acid ·
+enterobactin · L-serine · pyruvate · Adenosine triphosphate · 2,3-dihydroxybenzoyl-AMP
+```
+
+### The ATP mechanism, named to the line
+
+Three facts compose, and each is checkable in one read:
+
+1. **`strict_quarantine._term_matches` (`:909-919`)** matches substring-either-way on a normalised
+   string — punctuation and case stripped, nothing else. `"atp"` is not a substring of
+   `"adenosinetriphosphate"`, and the reverse is false too. **No match is possible.**
+2. **`process_normalizer.BIOCHEMICAL_ALIAS_MAP` (`:49`)** contains `"atp": "ATP"` — it canonicalises
+   the *abbreviation to itself* — and contains **no entry mapping `"adenosine triphosphate"` to
+   `"ATP"`.** So the payload's spelling is never canonicalised toward the anchor's.
+3. The anchor is spelled `ATP` because that is what Stage 0 wrote in `key_compounds`.
+
+**So a participant that IS present, IS wired into an admitted `core_accepted` reaction, and IS listed
+in the gold case's own `expected_substrates`, is reported as a missing requested-core anchor and
+contributes to a cap that removed `release_ready`.** The pipeline found ATP, used it correctly, and
+then failed to recognise its own work because two spellings never met.
+
+### Why this is registered as its own finding rather than folded into the D-088 card
+
+**Because the obvious D-088 implementation would delete it.** Downgrade cofactors and currency
+metabolites to warnings — the treatment D-088 clause 2 authorises and that `NADH` and `Fur` genuinely
+need — and `ATP` is downgraded with them. The cap lifts, Priority 5 moves, the leg reads as fixed,
+and **the matcher gap is never seen again**, because the only symptom it produced has been
+reclassified as an acceptable warning.
+
+That is precisely the shape D-088 clause 10 exists to prevent, and it is precisely what the ruling's
+own *"Why this ruling and not the obvious alternative"* section describes: a change that *"would close
+84% of the observed failures and retire the symptom that keeps the other 16% visible."* **This is a
+third case the 84/16 split does not name** — a defect that is neither an anchor-derivation artefact
+nor a recall gap, hiding inside the population about to be downgraded.
+
+### What is NOT established, and must not be assumed
+
+- **The classification is open.** `PRODUCT_CONTRACT` § 14 requires `product_contract_violation` /
+  `gold_data_defect` / `policy_disagreement` before any code change, and **this finding does not
+  supply one.** Routed to `pwml-bio-auditor` with the counter-argument asked for explicitly.
+- **Whether `ATP` is an IMPORTANT participant under D-088 clause 3 is a biological question, not
+  mine.** The case for it is that adenylation is not identifiable as adenylation without it — clause
+  3's *"necessary to distinguish the reaction's identity or direction"*. The case against it is that
+  ATP is the textbook currency metabolite clause 2 names. **Both readings are available and the
+  auditor decides.** The gold case lists ATP under `expected_substrates`, which is evidence and not a
+  ruling.
+- **No fix is proposed here.** Adding an alias entry would move Priority 5 off zero, which makes it
+  the case that most needs an independent reviewer — merge rule 6's reasoning, and it applies to a
+  correction just as it applies to a weakening.
+- **`NADH` and `Fur` are untouched by this finding.** They are genuinely absent and D-088 clause 2
+  disposes of them. Nothing here argues otherwise.
+
+### Standing lesson
+
+**Four symptoms with one presentation are not one defect, and the population about to be reclassified
+is the last place anyone will look again.** The four anchors were grouped by their *effect* — each
+removed `release_ready` — and every document so far, including the ruling that governs the fix,
+carried that grouping forward. Reading the payload took one command and split them four ways.
+
+**A reclassification is a one-way door for everything inside it.** Before downgrading a population
+from hard failure to warning, read the individual members, because after the downgrade nobody will:
+the warning will be expected, and an expected warning is invisible.
