@@ -1,0 +1,553 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\c114-d088-diagnostics\src\t2pw\__init__.py
+........................................................................ [  8%]
+.........................FF.F........................................... [ 16%]
+........................................................................ [ 24%]
+...................................F..................F................. [ 32%]
+............F........................................................... [ 40%]
+.........................F..F...............F........................... [ 48%]
+.....................................................................sF. [ 57%]
+........................................................................ [ 65%]
+..................ss...s..sss.ss........................................ [ 73%]
+........................................................................ [ 81%]
+........................................................................ [ 89%]
+........................................................................ [ 97%]
+..................                                                       [100%]
+================================== FAILURES ===================================
+_____ test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte _____
+
+    def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> None:
+        after = _document(None)
+        before = json.loads(_fixture_bytes())
+        assert _serialize(before) == _fixture_bytes(), "the fixture is no longer its own bytes"
+        expected = _serialize(_with_c052_path_keys(
+>           _with_c030_hash_keys(_with_c057_lineage_hashes(before, after), after), after))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c011_freeze_seam_golden_equivalence.py:657: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+before = {'base_sha': '72ee20f54b713c8477dc28d38f8053141f239307', 'cohort_id': 'pre-implementation-baseline-2026-08-05', 'comma...ts/test_c011_freeze_seam_golden_equivalence.py', 'generator': 'tests/test_c011_freeze_seam_golden_equivalence.py', ...}
+after = {'base_sha': '72ee20f54b713c8477dc28d38f8053141f239307', 'cohort_id': 'pre-implementation-baseline-2026-08-05', 'comma...ts/test_c011_freeze_seam_golden_equivalence.py', 'generator': 'tests/test_c011_freeze_seam_golden_equivalence.py', ...}
+
+    def _with_c057_lineage_hashes(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+        """``before`` plus exactly C-057's payload-digest delta, leg by leg.
+    
+        Runs INNERMOST, before :func:`_with_c030_hash_keys`, deliberately. C-030's
+        ``produced["canonical_payload_sha256"] == report["payload_sha256"]`` is what
+        proves schema 2's payload projection agrees with the digest the seam already
+        published; moving the stored digest first keeps that assertion running
+        against a live value rather than weakening it to accommodate this delta.
+        """
+    
+        document = copy.deepcopy(before)
+        moved = 0
+        for name, leg in document["legs"].items():
+            produced = after["legs"][name]
+            report = leg["final_stage3_gate_report"]
+            # Everything this delta does NOT touch, checked on EVERY leg and not only
+            # on the ones that move. A comparison of the digests alone would absorb a
+            # lineage write that had also changed the graph; these are where such a
+            # change would land.
+            for field in leg:
+                if field not in _C057_KEYS:
+>                   assert leg[field] == produced[field], f"{name}: {field}"
+E                   AssertionError: runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research: quarantine_coverage
+E                   assert {'auxiliary_a...rms': [], ...} == {'schema_vers...lared': False}
+E                     
+E                     Omitting 15 identical items, use -vv to show
+E                     Right contains 5 more items:
+E                     {'d088_diagnostics_version': 1,
+E                      'subprocess_coverage': [],
+E                      'subprocess_coverage_ratio': 0.0,
+E                      'subprocess_source_declared': False,
+E                      'unmatched_anchor_diagnostics': []}
+E                     Use -v to get more diff
+
+tests\test_c011_freeze_seam_golden_equivalence.py:391: AssertionError
+______ test_the_fixture_regenerates_byte_identically_from_the_base_blob _______
+
+    def test_the_fixture_regenerates_byte_identically_from_the_base_blob() -> None:
+        base = _document(BASE_SHA)
+        # The base blob's own document IS the fixture plus exactly C-052's projection
+        # delta and C-057's digest delta -- both proved through the same helpers the
+        # tip goes through, so the two sides cannot drift apart -- and the fixture
+        # bytes themselves never move.
+>       before = _with_c057_lineage_hashes(json.loads(_fixture_bytes()), base)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c011_freeze_seam_golden_equivalence.py:679: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+before = {'base_sha': '72ee20f54b713c8477dc28d38f8053141f239307', 'cohort_id': 'pre-implementation-baseline-2026-08-05', 'comma...ts/test_c011_freeze_seam_golden_equivalence.py', 'generator': 'tests/test_c011_freeze_seam_golden_equivalence.py', ...}
+after = {'base_sha': '72ee20f54b713c8477dc28d38f8053141f239307', 'cohort_id': 'pre-implementation-baseline-2026-08-05', 'comma...ts/test_c011_freeze_seam_golden_equivalence.py', 'generator': 'tests/test_c011_freeze_seam_golden_equivalence.py', ...}
+
+    def _with_c057_lineage_hashes(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+        """``before`` plus exactly C-057's payload-digest delta, leg by leg.
+    
+        Runs INNERMOST, before :func:`_with_c030_hash_keys`, deliberately. C-030's
+        ``produced["canonical_payload_sha256"] == report["payload_sha256"]`` is what
+        proves schema 2's payload projection agrees with the digest the seam already
+        published; moving the stored digest first keeps that assertion running
+        against a live value rather than weakening it to accommodate this delta.
+        """
+    
+        document = copy.deepcopy(before)
+        moved = 0
+        for name, leg in document["legs"].items():
+            produced = after["legs"][name]
+            report = leg["final_stage3_gate_report"]
+            # Everything this delta does NOT touch, checked on EVERY leg and not only
+            # on the ones that move. A comparison of the digests alone would absorb a
+            # lineage write that had also changed the graph; these are where such a
+            # change would land.
+            for field in leg:
+                if field not in _C057_KEYS:
+>                   assert leg[field] == produced[field], f"{name}: {field}"
+E                   AssertionError: runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research: quarantine_coverage
+E                   assert {'auxiliary_a...rms': [], ...} == {'schema_vers...lared': False}
+E                     
+E                     Omitting 15 identical items, use -vv to show
+E                     Right contains 5 more items:
+E                     {'d088_diagnostics_version': 1,
+E                      'subprocess_coverage': [],
+E                      'subprocess_coverage_ratio': 0.0,
+E                      'subprocess_source_declared': False,
+E                      'unmatched_anchor_diagnostics': []}
+E                     Use -v to get more diff
+
+tests\test_c011_freeze_seam_golden_equivalence.py:391: AssertionError
+_____ test_the_override_regenerates_and_absorbs_exactly_the_one_way_delta _____
+
+tmp_path = WindowsPath('C:/t/orch719/sweepdet/test_the_override_regenerates_0')
+
+    def test_the_override_regenerates_and_absorbs_exactly_the_one_way_delta(
+            tmp_path: Any) -> None:
+        """The escape hatch is real, and what it destroys is exactly what was stated.
+    
+        The rebuilt document must be the fixture plus C-057's delta and NOTHING else:
+        ``_with_c057_lineage_hashes`` asserts every untouched field on every leg and
+        that the digest moved on exactly ``_C057_LEGS``, so a rebuild that had also
+        moved the biology fails here instead of being absorbed.
+        """
+    
+        target = tmp_path / "retired.json"
+        before = FIXTURE.read_bytes()
+        done = _run_main(f"{WRITE_TO}={target}", f"{OVERRIDE}=C-057")
+        assert done.returncode == 0, done.stdout + done.stderr
+        assert FIXTURE.read_bytes() == before, "the override wrote to the TRACKED fixture"
+        for required in ("RETIRING THE BEFORE BASELINE", "what is being destroyed",
+                         "C-057", "sha256", str(target)):
+            assert required in done.stdout, (required, done.stdout)
+        rebuilt = json.loads(target.read_bytes())
+>       assert _serialize(_with_c057_lineage_hashes(
+            json.loads(_fixture_bytes()), rebuilt)) == _serialize(rebuilt)
+
+tests\test_c011_freeze_seam_golden_equivalence.py:765: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+before = {'base_sha': '72ee20f54b713c8477dc28d38f8053141f239307', 'cohort_id': 'pre-implementation-baseline-2026-08-05', 'comma...ts/test_c011_freeze_seam_golden_equivalence.py', 'generator': 'tests/test_c011_freeze_seam_golden_equivalence.py', ...}
+after = {'base_sha': '72ee20f54b713c8477dc28d38f8053141f239307', 'cohort_id': 'pre-implementation-baseline-2026-08-05', 'comma...ts/test_c011_freeze_seam_golden_equivalence.py', 'generator': 'tests/test_c011_freeze_seam_golden_equivalence.py', ...}
+
+    def _with_c057_lineage_hashes(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+        """``before`` plus exactly C-057's payload-digest delta, leg by leg.
+    
+        Runs INNERMOST, before :func:`_with_c030_hash_keys`, deliberately. C-030's
+        ``produced["canonical_payload_sha256"] == report["payload_sha256"]`` is what
+        proves schema 2's payload projection agrees with the digest the seam already
+        published; moving the stored digest first keeps that assertion running
+        against a live value rather than weakening it to accommodate this delta.
+        """
+    
+        document = copy.deepcopy(before)
+        moved = 0
+        for name, leg in document["legs"].items():
+            produced = after["legs"][name]
+            report = leg["final_stage3_gate_report"]
+            # Everything this delta does NOT touch, checked on EVERY leg and not only
+            # on the ones that move. A comparison of the digests alone would absorb a
+            # lineage write that had also changed the graph; these are where such a
+            # change would land.
+            for field in leg:
+                if field not in _C057_KEYS:
+>                   assert leg[field] == produced[field], f"{name}: {field}"
+E                   AssertionError: runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research: quarantine_coverage
+E                   assert {'auxiliary_a...rms': [], ...} == {'auxiliary_a...sion': 1, ...}
+E                     
+E                     Omitting 15 identical items, use -vv to show
+E                     Right contains 5 more items:
+E                     {'d088_diagnostics_version': 1,
+E                      'subprocess_coverage': [],
+E                      'subprocess_coverage_ratio': 0.0,
+E                      'subprocess_source_declared': False,
+E                      'unmatched_anchor_diagnostics': []}
+E                     Use -v to get more diff
+
+tests\test_c011_freeze_seam_golden_equivalence.py:391: AssertionError
+_____ test_the_demoted_leg_keeps_everything_and_is_never_diagnostic_only ______
+
+    def test_the_demoted_leg_keeps_everything_and_is_never_diagnostic_only() -> None:
+        """**PRESERVATION.** A cap is one step down, not a deletion.
+    
+        The demoted leg is compared against the SAME payload run without the request
+        that demotes it: same surviving processes, same resulting payload hash, same
+        coverage record. The only differences are the status, the eligibility and the
+        added reason. ``diagnostic_only`` is asserted against by name, and ``ok``
+        stays True so the graph is still frozen and still exported.
+        """
+    
+        payload = one_reaction_payload(interactions=2)
+        demoted = run(payload, STATED_REQUEST)
+        exempt = run(payload, SINGLE_STEP_REQUEST)
+    
+        assert release(demoted)["status"] == REVIEW_REQUIRED
+        assert release(demoted)["status"] != DIAGNOSTIC_ONLY
+        assert demoted.ok is True, "a cap does not refuse the freeze"
+    
+        assert demoted.payload == exempt.payload
+        assert (
+            demoted.quarantine_report["resulting_payload_hash"]
+            == exempt.quarantine_report["resulting_payload_hash"]
+        )
+        # Everything the coverage verdict MEASURED is identical; only the request it
+        # was measured against differs, which is the one input that differs.
+        measured = lambda verdict: {k: v for k, v in verdict.items() if k != "requested_context"}
+>       assert measured(demoted.coverage) == measured(exempt.coverage), (
+            "the coverage RECORD is untouched by the cap"
+        )
+E       AssertionError: the coverage RECORD is untouched by the cap
+E       assert {'auxiliary_a...sion': 1, ...} == {'auxiliary_a...sion': 1, ...}
+E         
+E         Omitting 17 identical items, use -vv to show
+E         Differing items:
+E         {'subprocess_coverage_ratio': 0.666667} != {'subprocess_coverage_ratio': 0.0}
+E         {'subprocess_coverage': [{'covered': False, 'covering_processes': [], 'subprocess': 'gamma-glutamylcysteine formation'... formation'}, {'covered': True, 'covering_processes': ['regulatory contact 1'], 'subprocess': 'glutathione turnover'}]} != {'subprocess_coverage': [{'covered': False, 'covering_processes': [], 'subprocess': 'gamma-glutamylcysteine formation'}]}
+E         Use -v to get more diff
+
+tests\test_c074_strict_core_floor.py:462: AssertionError
+____ test_this_diff_puts_no_benchmark_paper_or_gold_pathway_name_into_src _____
+
+    def test_this_diff_puts_no_benchmark_paper_or_gold_pathway_name_into_src() -> None:
+        """**THE PRODUCT OWNER'S EXPLICIT RULE.** No benchmark paper, PMC id, gold
+        value or gold-specific pathway name may be hardcoded into ``src/``.
+    
+        Asserted over the DIFF rather than over the files, because both files this
+        card touches already cite measured legs by id in comments that predate it.
+        What must hold is that C-074 added none.
+    
+        Scoped to :data:`OWNED_SOURCE_FILES`, which is where every production line of
+        this card lives; see that constant for why the scope is not a weakening.
+        """
+    
+        try:
+            diff = subprocess.run(
+                ["git", "diff", BASE_SHA, "--", *OWNED_SOURCE_FILES],
+                cwd=str(ROOT),
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=120,
+            )
+        except (OSError, subprocess.SubprocessError):  # pragma: no cover - no git here
+            pytest.skip("git is not available to read the diff")
+        if diff.returncode != 0:
+            pytest.skip(f"cannot diff against {BASE_SHA[:7]}: {diff.stderr.strip()[:200]}")
+    
+        added = [
+            line[1:]
+            for line in diff.stdout.splitlines()
+            if line.startswith("+") and not line.startswith("+++")
+        ]
+        # An ASSERT, not a skip: the base SHA is an ancestor of every branch this
+        # runs on, so the diff is never empty, and a guard that silently skips is a
+        # guard that has stopped guarding.
+        assert added, f"no added lines in {OWNED_SOURCE_FILES} against {BASE_SHA[:7]}"
+    
+        papers, pathways = _gold_identity()
+        offenders: List[str] = []
+        for line in added:
+            lowered = line.casefold()
+            if re.search(r"PMC\d{4,}", line):
+                offenders.append(f"PMC id: {line.strip()}")
+            for paper in papers:
+                if paper.casefold() in lowered:
+                    offenders.append(f"gold paper {paper}: {line.strip()}")
+            for pathway in pathways:
+                if pathway.casefold() in lowered:
+                    offenders.append(f"gold pathway {pathway!r}: {line.strip()}")
+>       assert not offenders, "benchmark identity entered src/:\n" + "\n".join(offenders)
+E       AssertionError: benchmark identity entered src/:
+E         PMC id: ``PMC12782028/strict`` draws Stage 0 did not name the mevalonate arm the
+E         gold paper PMC12782028: ``PMC12782028/strict`` draws Stage 0 did not name the mevalonate arm the
+E       assert not ['PMC id: ``PMC12782028/strict`` draws Stage 0 did not name the mevalonate arm the', 'gold paper PMC12782028: ``PMC12782028/strict`` draws Stage 0 did not name the mevalonate arm the']
+
+tests\test_c074_strict_core_floor.py:1728: AssertionError
+_ test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper __
+
+    def test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper() -> None:
+        """THE LOAD-BEARING EVIDENCE (card section 6.5).
+    
+        ``test_c073_identity_admission.py::test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral``
+        replays the same corpus with NO source index, which exercises pass B alone.
+        This is the other half and the one arming makes real: every committed
+        ``final_mapped.json`` replayed against its OWN ``01_source_text.txt``.
+    
+        Measured at this tip: 70 artifacts, 678 eligible rows, 3 refusals, all three
+        of them hallucinations, 0 collateral. Measured with the ruling's two routes
+        removed -- which is what the C-073 predicate does on its own -- 39 refusals,
+        36 of them legitimate rows. That difference is this card's whole argument.
+    
+        If a newly committed run artifact moves these numbers, TRIAGE the new row as
+        a catch or as collateral before moving the pin. Do not regenerate it.
+        """
+        from t2pw.mapping import identity_admission
+    
+        artifacts = _committed_artifacts()
+        if not artifacts:
+            pytest.skip("no committed final_mapped.json artifacts")
+    
+        examined = 0
+        catches: set = set()
+        for path in artifacts:
+            source = path.parent.parent / "01_source_text.txt"
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            entities = payload.get("entities") or {}
+            if source.exists():
+                payload[identity_admission.SOURCE_INDEX_KEY] = identity_admission.build_source_index(
+                    source.read_text(encoding="utf-8", errors="replace")
+                )
+            report = map_ids._admit_identities(payload, entities)
+            examined += report["counts"]["rows_examined"]
+            for entry in report["withheld"]:
+                if entry["rule"] == identity_admission.RULE_NOT_SUPPORTED:
+                    catches.add((path.parent.parent.name.split("__")[0], path.parent.name,
+                                 entry["name"]))
+    
+        assert len(artifacts) >= 70
+        assert examined >= 678
+>       assert catches == EXPECTED_CATCHES, (
+            f"the armed pass changed over the corpus ({len(artifacts)} artifacts). "
+            f"unexpected: {sorted(catches - EXPECTED_CATCHES)}; "
+            f"no longer caught: {sorted(EXPECTED_CATCHES - catches)}"
+        )
+E       AssertionError: the armed pass changed over the corpus (115 artifacts). unexpected: [('PMC12096016', 'strict', "Pantetheine 4'-phosphate")]; no longer caught: []
+E       assert {('PMC1209601...uccinyl-CoA')} == {('PMC1218015...uccinyl-CoA')}
+E         
+E         Extra items in the left set:
+E         ('PMC12096016', 'strict', "Pantetheine 4'-phosphate")
+E         Use -v to get more diff
+
+tests\test_c075_source_support_armed.py:879: AssertionError
+___________ test_10_f132_population_regression_over_the_six_papers ____________
+
+gold = {'PMC12096016': GoldCase(paper_id='PMC12096016', title='The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoi...ontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure."), ...}
+
+    def test_10_f132_population_regression_over_the_six_papers(gold):
+        """Offline, over every committed quarantine_report.json. No leg is re-run."""
+    
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
+        # FLOOR, not a census. This one catches the population SHRINKING, which is
+        # why it is `>=` while the two derived pins below are `==`. Moved 62 -> 72 by
+        # C-106: commit `e77ad3d` ("T-107 official result") committed
+        # `runs_verify/2026-08-28_1816`, which carries 10 quarantine_report.json
+        # files. Raising the floor keeps it catching a shrink against current truth.
+        assert len(paths) >= 72, "the committed artifact population shrank; re-pin before reading on"
+    
+        legs = 0
+        affected_papers: dict[str, int] = {}
+        withheld = 0
+        cleared: list[str] = []
+        for rel in paths:
+            leg_dir = (REPO / rel).parent
+            case = gold.get(leg_dir.parent.name)
+            if case is None:
+                continue
+            coverage = json.load(io.open(REPO / rel, encoding="utf-8")).get("coverage") or {}
+            out = contract_accepted_coverage(case, coverage)
+            if out is None:
+                continue
+            legs += 1
+            if out["excluded_count"]:
+                affected_papers[case.paper_id] = affected_papers.get(case.paper_id, 0) + 1
+                withheld += out["excluded_count"]
+            if out["cleared_by_reconciliation"]:
+                cleared.append(f"{case.paper_id}:{leg_dir.name}")
+    
+        # CENSUS PIN -- 62 -> 72, moved deliberately by C-106 under merge rule 4.
+        # Commit `e77ad3d` ("T-107 official result") committed
+        # `runs_verify/2026-08-28_1816`, which contributes EXACTLY 10 legs; every
+        # other run's contribution is unchanged, and 62 is precisely the sum over the
+        # other thirteen runs. Per-run attribution: `evidence/c106_census_probe.log`.
+        #
+        # This stays `==` and must NOT be relaxed to `>=`. The floor above uses `>=`
+        # to catch the corpus SHRINKING. This one asserts the loop above VISITED
+        # every leg it should have, and the census is how it knows how many that is.
+        # A `>=` here would let a leg join the corpus and go unvisited -- a quiet
+        # vacuity of exactly the F-144 shape. Moving it by hand whenever a run is
+        # committed is the correct cost: that is the moment someone confirms the new
+        # legs were meant to be there.
+>       assert legs == 72
+E       assert 83 == 72
+
+tests\test_c102_coverage_denominator.py:415: AssertionError
+_________ test_13_the_accepted_rate_is_a_rate_on_every_committed_leg __________
+
+gold = {'PMC12096016': GoldCase(paper_id='PMC12096016', title='The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoi...ontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure."), ...}
+
+    def test_13_the_accepted_rate_is_a_rate_on_every_committed_leg(gold):
+        """A numerator can never exceed its denominator, on any committed leg."""
+    
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        paths = sorted(line.strip() for line in listed.stdout.splitlines() if line.strip())
+    
+        checked = with_matched_forbidden = 0
+        for rel in paths:
+            leg_dir = (REPO / rel).parent
+            case = gold.get(leg_dir.parent.name)
+            if case is None:
+                continue
+            coverage = json.load(io.open(REPO / rel, encoding="utf-8")).get("coverage") or {}
+            out = contract_accepted_coverage(case, coverage)
+            if out is None:
+                continue
+            checked += 1
+            assert out["accepted_matched"] <= out["accepted_denominator"], rel
+            if out["accepted_ratio"] is not None:
+                assert 0.0 <= out["accepted_ratio"] <= 1.0, f"{rel}: {out['accepted_ratio']}"
+            if any(e["matched_in_raw"] for e in out["excluded_terms"]):
+                with_matched_forbidden += 1
+                # Withheld from the numerator, so the accepted count MUST drop.
+                assert out["accepted_matched"] < out["raw_matched"], rel
+    
+        # CENSUS PIN -- 62 -> 72. Same delta, same run, same commit as test 10's
+        # `legs`: `e77ad3d` committed `runs_verify/2026-08-28_1816` and its 10 legs.
+        # Stays `==`; see the note beside test 10 for why a `>=` here would make this
+        # loop vacuous rather than tolerant.
+>       assert checked == 72
+E       assert 83 == 72
+
+tests\test_c102_coverage_denominator.py:583: AssertionError
+__________ test_08_the_census_pins_still_match_the_committed_corpus ___________
+
+    def test_08_the_census_pins_still_match_the_committed_corpus():
+        """The root cause of F-151, guarded at its source.
+    
+        Committing a benchmark run grows the tracked `quarantine_report.json`
+        population and turns the c102 census pins red -- which is what made the
+        harness's baseline unsatisfiable for a whole card. This asserts the floor
+        pin still equals the live census, so the drift is reported HERE, with an
+        actionable message, rather than as an unexplained red in a file nobody runs.
+        """
+        listed = subprocess.run(
+            ["git", "ls-files", "*quarantine_report.json"],
+            cwd=str(REPO), capture_output=True, text=True, encoding="utf-8", check=True,
+        )
+        live = len([ln for ln in listed.stdout.splitlines() if ln.strip()])
+    
+        source = C102_TESTS.read_text(encoding="utf-8")
+        floor = re.search(r"assert len\(paths\) >= (\d+)", source)
+        assert floor, "the census floor assertion vanished from the c102 suite"
+        pinned = int(floor.group(1))
+    
+>       assert live == pinned, (
+            f"the committed quarantine_report.json population is {live} but the c102 "
+            f"suite pins {pinned}. A run was committed and the census pins are now "
+            f"stale -- this is F-151 recurring. FOUR pins move together, not one: the "
+            f"floor, test 10 `legs`, test 10 `withheld`, test 13 `checked` and test 13 "
+            f"`with_matched_forbidden`. Re-measure with "
+            f"evidence/orch717_census_probe.py, move each pin to its measured value "
+            f"WITH the per-run attribution recorded beside it, and re-run "
+            f"evidence/c102_mutation_attack.py. Do NOT relax a pin to >= and do NOT "
+            f"delete the harness's baseline precondition to route around it."
+        )
+E       AssertionError: the committed quarantine_report.json population is 83 but the c102 suite pins 72. A run was committed and the census pins are now stale -- this is F-151 recurring. FOUR pins move together, not one: the floor, test 10 `legs`, test 10 `withheld`, test 13 `checked` and test 13 `with_matched_forbidden`. Re-measure with evidence/orch717_census_probe.py, move each pin to its measured value WITH the per-run attribution recorded beside it, and re-run evidence/c102_mutation_attack.py. Do NOT relax a pin to >= and do NOT delete the harness's baseline precondition to route around it.
+E       assert 83 == 72
+
+tests\test_c106_mutation_harness_executable.py:301: AssertionError
+________ test_missing_or_wrong_pythonpath_is_refused_before_collection ________
+
+tmp_path = WindowsPath('C:/t/orch719/sweepdet/test_missing_or_wrong_pythonpa0')
+
+    def test_missing_or_wrong_pythonpath_is_refused_before_collection(tmp_path: Path) -> None:
+        tree = _make_tree(tmp_path / "measured", "MEASURED")
+        decoy = _make_tree(tmp_path / "decoy", "DECOY", launcher=False)
+        launcher = tree / "ev" / "pinned_pytest.py"
+        bt = tmp_path / "bt"
+        bt.mkdir()
+    
+        # (a) PYTHONPATH absent: the real editable .pth supplies the PRIMARY checkout's t2pw.
+        #     F-003 itself, live -- and refused.
+        v1 = tmp_path / "v1.json"
+        proc = _run(launcher, [f"--pin-verdict={v1}", "-q", f"--basetemp={bt / 'a'}",
+                               "tests/test_plain.py"], cwd=tree)
+>       data = _assert_refused(proc, v1, ["T2PW_FROM_WRONG_TREE"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_measurement_tree_pin.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+proc = CompletedProcess(args=['C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe', '-u', 'C:...\\orch719\\sweepdet\\test_missing_or_wrong_pythonpa0\\v1.json\nREFUSED before collection. No test was run. Exit 98.\n")
+verdict = WindowsPath('C:/t/orch719/sweepdet/test_missing_or_wrong_pythonpa0/v1.json')
+codes = ['T2PW_FROM_WRONG_TREE']
+
+    def _assert_refused(proc: subprocess.CompletedProcess, verdict: Path,
+                        codes: Sequence[str]) -> Dict:
+        text = _out(proc)
+        assert proc.returncode == 98, f"expected exit 98, got {proc.returncode}\n{text}"
+        assert MARKER in text, text
+        assert "passed" not in text and "collected" not in text, text  # nothing was counted
+        assert verdict.is_file(), f"no verdict artifact at {verdict}\n{text}"
+        data = _verdict(verdict)
+        assert data["refused"] is True
+        for code in codes:
+>           assert code in data["violations"], f"{code} not in {data['violations']}"
+E           AssertionError: T2PW_FROM_WRONG_TREE not in ['T2PW_UNIMPORTABLE']
+E           assert 'T2PW_FROM_WRONG_TREE' in ['T2PW_UNIMPORTABLE']
+
+tests\test_measurement_tree_pin.py:141: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c011_freeze_seam_golden_equivalence.py::test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte
+FAILED tests/test_c011_freeze_seam_golden_equivalence.py::test_the_fixture_regenerates_byte_identically_from_the_base_blob
+FAILED tests/test_c011_freeze_seam_golden_equivalence.py::test_the_override_regenerates_and_absorbs_exactly_the_one_way_delta
+FAILED tests/test_c074_strict_core_floor.py::test_the_demoted_leg_keeps_everything_and_is_never_diagnostic_only
+FAILED tests/test_c074_strict_core_floor.py::test_this_diff_puts_no_benchmark_paper_or_gold_pathway_name_into_src
+FAILED tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper
+FAILED tests/test_c102_coverage_denominator.py::test_10_f132_population_regression_over_the_six_papers
+FAILED tests/test_c102_coverage_denominator.py::test_13_the_accepted_rate_is_a_rate_on_every_committed_leg
+FAILED tests/test_c106_mutation_harness_executable.py::test_08_the_census_pins_still_match_the_committed_corpus
+FAILED tests/test_measurement_tree_pin.py::test_missing_or_wrong_pythonpath_is_refused_before_collection
+10 failed, 863 passed, 9 skipped in 78.52s (0:01:18)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1c8f67267ed8ae8b3709e6a10cb0321d51b7a8f8  [git, worktree dirty=True]
+label                   : consumer-sweep-det
+command                 : .venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\pin\ORCH-719\12-consumer-sweep-det.pin.json -q -p no:randomly --basetemp=C:/t/orch719/sweepdet tests/test_batch_driver_quarantine_artifacts.py tests/test_batch_run.py tests/test_bench_controls.py tests/test_c011_freeze_seam_golden_equivalence.py tests/test_c030_canonical_identity_fallback.py tests/test_c056b_semantic_denominators.py tests/test_c056c_semantic_evaluability.py tests/test_c071_actor_evidence_gate.py tests/test_c072_incomplete_core_demotion.py tests/test_c073_identity_admission.py tests/test_c074_strict_core_floor.py tests/test_c075_source_support_armed.py tests/test_c080_production_gate_kind_aware.py tests/test_c087_prefreeze_declination_demotes_release_status.py tests/test_c088_extracted_not_serialized_disposition.py tests/test_c090_wrapper_identity_actor_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py tests/test_c109_reviewer_evidence_route.py tests/test_c111_timeout_observability.py tests/test_curator_offline_mode.py tests/test_deadline_budget.py tests/test_deadline_leg_timeout.py tests/test_isolated_collection.py tests/test_measurement_tree_pin.py tests/test_rag_select.py tests/test_release_status_classification.py tests/test_semantic_production_no_gold.py tests/test_semantic_release_gating.py tests/test_strict_failure_replay.py tests/test_strict_quarantine.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_real_artifact_replay.py tests/test_strict_quarantine_release_seam.py
+cwd                     : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/c114-d088-diagnostics
+root PID / process group: 60112 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 2700 s
+duration                : 80.05 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 84  60196:python.exe, 55632:python.exe, 47552:python.exe, 54284:taskkill.exe, 60032:python.exe, 60316:python.exe, 58776:python.exe, 59232:python.exe, 56376:python.exe, 57360:python.exe, 59496:python.exe, 60096:python.exe, 56652:python.exe, 59988:python.exe, 60056:python.exe, 60300:python.exe, 59260:python.exe, 59596:python.exe, 58752:python.exe, 59612:python.exe, 59056:python.exe, 59100:python.exe, 59680:python.exe, 60172:python.exe, 59532:git.exe, 57516:python.exe, 59568:python.exe, 48144:python.exe, 57680:python.exe, 56892:python.exe, 58636:python.exe, 29164:python.exe, 57884:python.exe, 58516:python.exe, 58584:python.exe, 59980:python.exe, 59944:python.exe, 59488:git.exe, 59472:git.exe, 58952:git.exe, 58592:git.exe, 60412:git.exe, 60060:git.exe, 47680:git.exe, 60392:git.exe, 60644:git.exe, 60724:git.exe, 60868:git.exe, 61012:git.exe, 61084:python.exe, 61104:python.exe, 61300:taskkill.exe, 61392:python.exe, 61412:python.exe, 59792:python.exe, 61432:python.exe, 59764:python.exe, 60424:python.exe, 60448:python.exe, 60468:python.exe, 60568:python.exe, 60648:python.exe, 60728:python.exe, 60752:python.exe, 60776:python.exe, 60800:python.exe, 60836:python.exe, 60860:python.exe, 60872:python.exe, 60896:python.exe, 60980:python.exe, 61004:python.exe, 61028:python.exe, 61072:python.exe, 61172:python.exe, 61208:python.exe, 61356:python.exe, 61380:python.exe, 54052:python.exe, 60428:python.exe, 58520:python.exe, 60452:python.exe, 59688:python.exe, 60700:python.exe
+descendants terminated  : 84  29164, 47552, 47680, 48144, 54052, 54284, 55632, 56376, 56652, 56892, 57360, 57516, 57680, 57884, 58516, 58520, 58584, 58592, 58636, 58752, 58776, 58952, 59056, 59100, 59232, 59260, 59472, 59488, 59496, 59532, 59568, 59596, 59612, 59680, 59688, 59764, 59792, 59944, 59980, 59988, 60032, 60056, 60060, 60096, 60172, 60196, 60300, 60316, 60392, 60412, 60424, 60428, 60448, 60452, 60468, 60568, 60644, 60648, 60700, 60724, 60728, 60752, 60776, 60800, 60836, 60860, 60868, 60872, 60896, 60980, 61004, 61012, 61028, 61072, 61084, 61104, 61172, 61208, 61300, 61356, 61380, 61392, 61412, 61432
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-719\12-consumer-sweep-det.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-719  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

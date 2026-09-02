@@ -1,0 +1,131 @@
+T2PW: C:\t\rev114\basetree\src\t2pw\__init__.py
+............................F............F......                         [100%]
+================================== FAILURES ===================================
+_ test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper __
+
+    def test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper() -> None:
+        """THE LOAD-BEARING EVIDENCE (card section 6.5).
+    
+        ``test_c073_identity_admission.py::test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral``
+        replays the same corpus with NO source index, which exercises pass B alone.
+        This is the other half and the one arming makes real: every committed
+        ``final_mapped.json`` replayed against its OWN ``01_source_text.txt``.
+    
+        Measured at this tip: 70 artifacts, 678 eligible rows, 3 refusals, all three
+        of them hallucinations, 0 collateral. Measured with the ruling's two routes
+        removed -- which is what the C-073 predicate does on its own -- 39 refusals,
+        36 of them legitimate rows. That difference is this card's whole argument.
+    
+        If a newly committed run artifact moves these numbers, TRIAGE the new row as
+        a catch or as collateral before moving the pin. Do not regenerate it.
+        """
+        from t2pw.mapping import identity_admission
+    
+        artifacts = _committed_artifacts()
+        if not artifacts:
+            pytest.skip("no committed final_mapped.json artifacts")
+    
+        examined = 0
+        catches: set = set()
+        for path in artifacts:
+            source = path.parent.parent / "01_source_text.txt"
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            entities = payload.get("entities") or {}
+            if source.exists():
+                payload[identity_admission.SOURCE_INDEX_KEY] = identity_admission.build_source_index(
+                    source.read_text(encoding="utf-8", errors="replace")
+                )
+            report = map_ids._admit_identities(payload, entities)
+            examined += report["counts"]["rows_examined"]
+            for entry in report["withheld"]:
+                if entry["rule"] == identity_admission.RULE_NOT_SUPPORTED:
+                    catches.add((path.parent.parent.name.split("__")[0], path.parent.name,
+                                 entry["name"]))
+    
+        assert len(artifacts) >= 70
+        assert examined >= 678
+>       assert catches == EXPECTED_CATCHES, (
+            f"the armed pass changed over the corpus ({len(artifacts)} artifacts). "
+            f"unexpected: {sorted(catches - EXPECTED_CATCHES)}; "
+            f"no longer caught: {sorted(EXPECTED_CATCHES - catches)}"
+        )
+E       AssertionError: the armed pass changed over the corpus (115 artifacts). unexpected: [('PMC12096016', 'strict', "Pantetheine 4'-phosphate")]; no longer caught: []
+E       assert {('PMC1209601...uccinyl-CoA')} == {('PMC1218015...uccinyl-CoA')}
+E         
+E         Extra items in the left set:
+E         ('PMC12096016', 'strict', "Pantetheine 4'-phosphate")
+E         Use -v to get more diff
+
+tests\test_c075_source_support_armed.py:879: AssertionError
+________ test_missing_or_wrong_pythonpath_is_refused_before_collection ________
+
+tmp_path = WindowsPath('C:/t/orch719/newfailsbase/test_missing_or_wrong_pythonpa0')
+
+    def test_missing_or_wrong_pythonpath_is_refused_before_collection(tmp_path: Path) -> None:
+        tree = _make_tree(tmp_path / "measured", "MEASURED")
+        decoy = _make_tree(tmp_path / "decoy", "DECOY", launcher=False)
+        launcher = tree / "ev" / "pinned_pytest.py"
+        bt = tmp_path / "bt"
+        bt.mkdir()
+    
+        # (a) PYTHONPATH absent: the real editable .pth supplies the PRIMARY checkout's t2pw.
+        #     F-003 itself, live -- and refused.
+        v1 = tmp_path / "v1.json"
+        proc = _run(launcher, [f"--pin-verdict={v1}", "-q", f"--basetemp={bt / 'a'}",
+                               "tests/test_plain.py"], cwd=tree)
+>       data = _assert_refused(proc, v1, ["T2PW_FROM_WRONG_TREE"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_measurement_tree_pin.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+proc = CompletedProcess(args=['C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe', '-u', 'C:...ch719\\newfailsbase\\test_missing_or_wrong_pythonpa0\\v1.json\nREFUSED before collection. No test was run. Exit 98.\n")
+verdict = WindowsPath('C:/t/orch719/newfailsbase/test_missing_or_wrong_pythonpa0/v1.json')
+codes = ['T2PW_FROM_WRONG_TREE']
+
+    def _assert_refused(proc: subprocess.CompletedProcess, verdict: Path,
+                        codes: Sequence[str]) -> Dict:
+        text = _out(proc)
+        assert proc.returncode == 98, f"expected exit 98, got {proc.returncode}\n{text}"
+        assert MARKER in text, text
+        assert "passed" not in text and "collected" not in text, text  # nothing was counted
+        assert verdict.is_file(), f"no verdict artifact at {verdict}\n{text}"
+        data = _verdict(verdict)
+        assert data["refused"] is True
+        for code in codes:
+>           assert code in data["violations"], f"{code} not in {data['violations']}"
+E           AssertionError: T2PW_FROM_WRONG_TREE not in ['T2PW_UNIMPORTABLE']
+E           assert 'T2PW_FROM_WRONG_TREE' in ['T2PW_UNIMPORTABLE']
+
+tests\test_measurement_tree_pin.py:141: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper
+FAILED tests/test_measurement_tree_pin.py::test_missing_or_wrong_pythonpath_is_refused_before_collection
+2 failed, 46 passed in 8.86s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1c8f67267ed8ae8b3709e6a10cb0321d51b7a8f8  [git, worktree dirty=True]
+label                   : sweep-newfails-base
+command                 : .venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\pin\ORCH-719\13-sweep-newfails-base.pin.json -q --basetemp=C:/t/orch719/newfailsbase tests/test_c075_source_support_armed.py tests/test_measurement_tree_pin.py
+cwd                     : C:/t/rev114/basetree
+root PID / process group: 61888 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 9.53 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 31  61900:python.exe, 62384:python.exe, 62404:python.exe, 62424:python.exe, 62444:python.exe, 54616:python.exe, 58212:python.exe, 61504:python.exe, 61636:python.exe, 61676:python.exe, 61752:python.exe, 61772:python.exe, 61656:python.exe, 61812:python.exe, 61788:python.exe, 61880:python.exe, 62088:python.exe, 62124:python.exe, 62104:python.exe, 62168:python.exe, 62204:python.exe, 62236:python.exe, 62272:python.exe, 62300:python.exe, 61096:python.exe, 61312:python.exe, 62412:python.exe, 59164:python.exe, 62460:python.exe, 59384:python.exe, 61456:python.exe
+descendants terminated  : 31  54616, 58212, 59164, 59384, 61096, 61312, 61456, 61504, 61636, 61656, 61676, 61752, 61772, 61788, 61812, 61880, 61900, 62088, 62104, 62124, 62168, 62204, 62236, 62272, 62300, 62384, 62404, 62412, 62424, 62444, 62460
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-719\13-sweep-newfails-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-719  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

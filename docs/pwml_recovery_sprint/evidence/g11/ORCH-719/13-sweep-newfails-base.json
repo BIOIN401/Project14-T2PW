@@ -1,0 +1,269 @@
+{
+  "label": "sweep-newfails-base",
+  "command": [
+    ".venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\pin\\ORCH-719\\13-sweep-newfails-base.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch719/newfailsbase",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_measurement_tree_pin.py"
+  ],
+  "cwd": "C:/t/rev114/basetree",
+  "started_at": "2026-09-02T19:10:19+00:00",
+  "finished_at": "2026-09-02T19:10:29+00:00",
+  "duration_seconds": 9.528479000000516,
+  "timeout_seconds": 900.0,
+  "root_pid": 61888,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 61900,
+      "name": "python.exe",
+      "ppid": 61888
+    },
+    {
+      "pid": 62384,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 62404,
+      "name": "python.exe",
+      "ppid": 62384
+    },
+    {
+      "pid": 62424,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 62444,
+      "name": "python.exe",
+      "ppid": 62424
+    },
+    {
+      "pid": 54616,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 58212,
+      "name": "python.exe",
+      "ppid": 54616
+    },
+    {
+      "pid": 61504,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 61636,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 61676,
+      "name": "python.exe",
+      "ppid": 61636
+    },
+    {
+      "pid": 61752,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 61772,
+      "name": "python.exe",
+      "ppid": 61752
+    },
+    {
+      "pid": 61656,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 61812,
+      "name": "python.exe",
+      "ppid": 61656
+    },
+    {
+      "pid": 61788,
+      "name": "python.exe",
+      "ppid": 61880
+    },
+    {
+      "pid": 61880,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 62088,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 62124,
+      "name": "python.exe",
+      "ppid": 62088
+    },
+    {
+      "pid": 62104,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 62168,
+      "name": "python.exe",
+      "ppid": 62104
+    },
+    {
+      "pid": 62204,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 62236,
+      "name": "python.exe",
+      "ppid": 62204
+    },
+    {
+      "pid": 62272,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 62300,
+      "name": "python.exe",
+      "ppid": 62272
+    },
+    {
+      "pid": 61096,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 61312,
+      "name": "python.exe",
+      "ppid": 61096
+    },
+    {
+      "pid": 62412,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 59164,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 62460,
+      "name": "python.exe",
+      "ppid": 59164
+    },
+    {
+      "pid": 59384,
+      "name": "python.exe",
+      "ppid": 61900
+    },
+    {
+      "pid": 61456,
+      "name": "python.exe",
+      "ppid": 59384
+    }
+  ],
+  "descendants_terminated": [
+    54616,
+    58212,
+    59164,
+    59384,
+    61096,
+    61312,
+    61456,
+    61504,
+    61636,
+    61656,
+    61676,
+    61752,
+    61772,
+    61788,
+    61812,
+    61880,
+    61900,
+    62088,
+    62104,
+    62124,
+    62168,
+    62204,
+    62236,
+    62272,
+    62300,
+    62384,
+    62404,
+    62412,
+    62424,
+    62444,
+    62460
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 14616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 17356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 61492,
+      "name": "python.exe"
+    },
+    {
+      "pid": 61532,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-719\\13-sweep-newfails-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "1c8f67267ed8ae8b3709e6a10cb0321d51b7a8f8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-719",
+    "token": "ORCH-719:61532:cf4685f8f95df284",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
