@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "paper_id": "PMC12312563",
+  "requested_pathway": "menaquinone biosynthesis",
+  "requested_organism": "Bacillus subtilis",
+  "source_cache_file": "08a2f791273034853db7224f8bb3fb67.json",
+  "source_chars": 47406,
+  "curated_by": "curation-agent-setA (D-088 curation brief)",
+  "curation_date": "2026-09-02",
+
+  "expected_core_reactions": [
+    {
+      "id": "R1",
+      "description": "MenD (SEPHCHC synthase), a thiamine-diphosphate-dependent decarboxylase, condenses 2-oxoglutarate with isochorismate to release SEPHCHC. Decarboxylation of 2-oxoglutarate gives the covalent ThDP adduct intermediate I; addition of isochorismate gives intermediate II, whose breakdown releases the product. This is the first irreversible step of the classical menaquinone-biosynthesis pathway.",
+      "substrates": ["2-oxoglutarate", "isochorismate"],
+      "products": ["SEPHCHC"],
+      "enzymes": ["MenD"],
+      "important_participants": ["2-oxoglutarate", "isochorismate", "SEPHCHC", "thiamine diphosphate (ThDP)"],
+      "secondary_participants": ["Mg2+"],
+      "quote": "MenD catalyses the first irreversible step of the classical menaquinone-biosynthesis pathway (Supplementary Fig. S1) via two covalent ThDP intermediates; decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC",
+      "confidence": "high",
+      "rationale": "Both substrates, the product, the catalyst, the cofactor dependence and the irreversibility are all asserted in one sentence, and the enzyme was kinetically characterised with respect to exactly these two substrates. It is the ONLY reaction this paper delivers."
+    }
+  ],
+
+  "expected_major_subprocesses": [
+    {
+      "id": "S1",
+      "name": "classical menaquinone-biosynthesis pathway",
+      "aliases": ["bacterial classical menaquinone biosynthesis", "menaquinone-biosynthesis pathway"],
+      "reaction_ids": ["R1"],
+      "detailed_in_paper": false,
+      "quote": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD) catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent ThDP-bound intermediates.",
+      "confidence": "high",
+      "rationale": "The requested pathway is named repeatedly and MenD is located within it as its first irreversible step, but NO other step of the pathway is given an enzyme, a substrate or a product anywhere in the paper. detailed_in_paper is false for exactly that reason."
+    },
+    {
+      "id": "S2",
+      "name": "MenD catalytic cycle via covalent ThDP-linked intermediates",
+      "aliases": ["intermediate I formation", "intermediate II formation and breakdown", "ThDP ylide formation"],
+      "reaction_ids": ["R1"],
+      "detailed_in_paper": true,
+      "quote": "The reaction cycle for ThDP-dependent decarboxylase enzymes such as MenD is through a series of ThDP-linked intermediates",
+      "confidence": "medium",
+      "rationale": "This is the paper's substantive content and it is fully detailed, but it is the internal MECHANISM of R1 rather than a stage of the pathway that groups additional reactions; see uncertainties."
+    },
+    {
+      "id": "S3",
+      "name": "allosteric feedback inhibition of MenD by DHNA",
+      "aliases": ["DHNA inhibition", "allosteric regulation"],
+      "reaction_ids": ["R1"],
+      "detailed_in_paper": true,
+      "quote": "To explore whether Lmo MenD enzyme activity is sensitive to inhibition by DHNA, activity assays were performed with and without this downstream metabolite",
+      "confidence": "medium",
+      "rationale": "The paper devotes a results section and an assay to it and locates the allosteric site structurally, but the measured effect in the organism studied is weak and no IC50 could be obtained."
+    }
+  ],
+
+  "important_participants": [
+    {
+      "name": "2-oxoglutarate",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "the first (α-ketoacid) substrate (for MenD this is 2-oxoglutarate)",
+      "note": "The first (alpha-ketoacid) substrate, decarboxylated to form intermediate I. R1 is not the MenD reaction without it."
+    },
+    {
+      "name": "isochorismate",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "the consumption of the second MenD substrate, isochorismate",
+      "note": "The second substrate, added to intermediate I. Its consumption is what the paper's UV/Vis kinetic assay actually measures."
+    },
+    {
+      "name": "SEPHCHC",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD) catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent ThDP-bound intermediates.",
+      "note": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate, the sole free product. It occurs in no pathway other than menaquinone biosynthesis, so it anchors the pathway on its own, which matters here because only one reaction is extractable."
+    },
+    {
+      "name": "thiamine diphosphate (ThDP)",
+      "reason": "distinguishes_identity_or_direction",
+      "reaction_ids": ["R1"],
+      "quote": "An important player in menaquinone production is the thiamine diphosphate (ThDP)-dependent decarboxylase MenD",
+      "note": "RECORDED AS IMPORTANT, WITH A CAVEAT. ThDP is a cofactor, but it is not an ordinary one here: both catalytic intermediates are covalent ThDP adducts, the reaction cannot be identified as the ThDP-dependent decarboxylation the paper describes without it, and one of the two crystal structures is defined by it. It must NEVER be emitted as a protein or as a free substrate/product. See uncertainties."
+    }
+  ],
+
+  "secondary_participants": [
+    {
+      "name": "Mg2+",
+      "class": "cofactor",
+      "reaction_ids": ["R1"],
+      "quote": "The ThDP diphosphate group tethers the cofactor to the enzyme via interactions with a divalent magnesium cation and the PP domain",
+      "note": "A divalent magnesium cation that tethers the ThDP diphosphate group to the PP domain. Structural, not chemically transformed."
+    },
+    {
+      "name": "DHNA",
+      "class": "regulator",
+      "reaction_ids": ["R1"],
+      "quote": "1,4-dihydroxy-2-naphthoic acid (DHNA), the last cytosolic metabolite of the pathway, can bind to the TH3 domain and inhibit activity",
+      "note": "CRITICAL: DHNA is a DOWNSTREAM metabolite and an ALLOSTERIC INHIBITOR here. It is NEVER a substrate or a product of MenD. Placing it on either side of R1 inverts what the paper says. Its inhibition of the Listeria enzyme is measured as weak: 66% residual activity at 12.5 uM, with no attainable IC50."
+    }
+  ],
+
+  "out_of_scope": [
+    {"name": "intermediate I", "reason": "a transient covalent enzyme-bound ThDP adduct, not a free metabolite with a distinct identity. It is captured crystallographically but it is a state of the enzyme-cofactor complex, not a product of the pathway"},
+    {"name": "intermediate II", "reason": "same: a covalent ThDP adduct formed after isochorismate addition, whose breakdown releases SEPHCHC. Not a free metabolite. This paper did not capture it structurally"},
+    {"name": "ThDP ylide", "reason": "the activated form of the ThDP cofactor, not a separate chemical entity of the pathway"},
+    {"name": "PYR domain / PP domain / TH3 domain", "reason": "protein domains of MenD, not proteins in their own right. TH3 is the transhydrogenase III domain that carries the putative allosteric site"},
+    {"name": "arginine cage", "reason": "a nickname for a structural motif in the Mtb MenD allosteric site; not an entity"},
+    {"name": "MtbMenD / SauMenD / BsuMenD / EcoMenD / LmoMenD", "reason": "author organism-prefix labels for MenD orthologs used as structural comparators. They must resolve to MenD plus an organism, never to distinct novel proteins. Note the source also contains the typesetting split artifact 'Ec oMenD'"},
+    {"name": "9e9b / 9mnn / 3lq1 / 5ery / 3flm / 6o0j", "reason": "PDB structure depositions, not protein or gene identities"},
+    {"name": "pET-30a / BL21 (DE3) / 10403s", "reason": "expression vector and strain designations"},
+    {"name": "rTEV protease", "reason": "a reagent used to cleave the purification tag; laboratory tooling"},
+    {"name": "HEPES / NaCl / imidazole / glycerol / TCEP / MgCl2", "reason": "buffer and crystallisation components; not pathway participants. Note MgCl2 is the source of the Mg2+ that IS recorded as a secondary participant of R1"},
+    {"name": "menaquinone-4", "reason": "named once, as the compound that rescued DHNA-inhibited growth of Staphylococcus aureus in a cited study; a different organism and a different experiment"},
+    {"name": "chorismate, SHCHC, OSB, OSB-CoA, DHNA-CoA", "reason": "HALLUCINATION GUARD: none of these occurs anywhere in this paper. Free 'chorismate' has zero occurrences; all nine apparent matches are inside the word 'isochorismate'. Emitting any of them from this paper means importing the ortholog literature"},
+    {"name": "MenF, MenH, MenC, MenE, MenB, MenI, MenA, MenG", "reason": "HALLUCINATION GUARD: every one of these has ZERO occurrences in this paper. MenD is the only Men enzyme it names"}
+  ],
+
+  "uncertainties": [
+    "ONE REACTION ONLY, AND THAT IS THE FINDING. This paper gives deep structural and kinetic mechanism for exactly one menaquinone reaction and no other. Case-sensitive counts I ran over full_text: MenD 133, but MenF 0, MenH 0, MenC 0, MenE 0, MenB 0, MenI 0, MenA 0, MenG 0; SHCHC 0, OSB 0; free chorismate 0 (all nine 'chorismate' matches lie inside 'isochorismate'). Nothing upstream or downstream of MenD is given with an enzyme, a substrate and a product. A multi-step Men chain attributed to this paper is imported from outside.",
+    "ORGANISM MISMATCH, recorded not resolved, and it is the cleanest in the set. The requested organism is Bacillus subtilis (topics_t104.txt and the pinned gold case). This is a LISTERIA MONOCYTOGENES study, strain 10403s, with the protein expressed in E. coli BL21 (DE3). 'Bacillus subtilis' occurs EXACTLY ONCE in the whole text, in a comparative clause about which orthologs show DHNA inhibition. No reaction here occurs in B. subtilis.",
+    "ThDP CLASSIFICATION IS THE JUDGEMENT CALL I AM LEAST SURE OF. I recorded it as IMPORTANT with reason distinguishes_identity_or_direction, not as a secondary cofactor. Reasons: both catalytic intermediates are covalent ThDP adducts, one of the two reported crystal structures is the ThDP-bound form, ThDP is one of the three species the enzyme was kinetically characterised against, and the paper's own naming is 'the ThDP-dependent enzyme ... MenD'. A consumer whose rule is 'all cofactors are secondary' should move it. Either way it must NEVER be emitted as a protein: 'ThDP' is the highest-frequency non-protein token in this paper (66 occurrences) and sits grammatically adjacent to the enzyme name, which is the prototypical failure this paper surfaces. My placing it in important_participants does NOT conflict with the gold case, which forbids it only as a cofactor-emitted-as-protein.",
+    "CO2 IS NOT RECORDED because the paper never names it. The reaction is described as a decarboxylation of 2-oxoglutarate, so carbon dioxide is released, but the strings 'CO2' and 'carbon dioxide' have zero occurrences in the text. Adding it would be importing chemistry the paper does not state.",
+    "S2 (the MenD catalytic cycle) is the subprocess entry a reviewer is most likely to challenge. It is the internal MECHANISM of R1, not a stage of the pathway that groups further reactions, and under a strict reading of the brief's definition it might not qualify. I included it at medium confidence because it is unambiguously what this paper is about, and because omitting it would leave the paper's entire scientific content unrepresented in the file. Nothing else depends on it.",
+    "Intermediate I and intermediate II are deliberately NOT recorded as products or as metabolites, despite being the paper's headline result. They are transient covalent enzyme-bound ThDP adducts, and treating them as free species would create a fake three-step chain out of one reaction.",
+    "The DHNA inhibition result is HEDGED BY THE AUTHORS and I have kept it hedged. The abstract says 'There was weak inhibition of enzyme activity'; the results report only 66% residual activity at 12.5 uM with no attainable IC50 because of DHNA solubility limits; attempts to obtain a DHNA-bound structure failed. The comparative IC50 values quoted (53 nM for Mtb MenD, 2.3/3.7 uM for Sau MenD) are from OTHER organisms and other studies, not measurements here.",
+    "DHNA is classed SECONDARY in this file but IMPORTANT in my file for PMC12421875. That is deliberate, not an inconsistency: in PMC12421875 the paper's entire stated scope is DHNA, which satisfies central_to_pathway_scope, whereas here the scope is the MenD structure and DHNA is a peripheral inhibitor with a weak measured effect. In both files DHNA is recorded as an inhibitor and in neither is it a substrate or product of MenD.",
+    "The paper's own text contains the typesetting split artifact 'Ec oMenD' ('For Ec oMenD this strained tetrahedral form...'), and generally renders ortholog prefixes with a space ('Lmo MenD', 'Mtb MenD'). These are one enzyme plus one organism, not new identities.",
+    "No disagreement found between the pinned gold case and the paper. Gold's single expected enzyme is MenD with role '2-oxoglutarate + isochorismate -> SEPHCHC (ThDP-dependent)', matching R1 exactly, and its expected substrates and products match my important participants. Gold's forbidden_identifiers anticipate the same traps I recorded independently.",
+    "Every quote in this file was verified by substring search against full_text before the file was written; all passed."
+  ]
+}

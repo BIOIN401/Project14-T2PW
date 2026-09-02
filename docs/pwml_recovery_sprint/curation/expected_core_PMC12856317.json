@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "paper_id": "PMC12856317",
+  "requested_pathway": "heme biosynthesis",
+  "requested_organism": "Homo sapiens",
+  "source_cache_file": "62b107e1dde8ae3e1f23f854438ac589.json",
+  "source_chars": 54436,
+  "curated_by": "curation-agent-set-B",
+  "curation_date": "2026-09-02",
+
+  "expected_core_reactions": [
+    {
+      "id": "R1",
+      "description": "ALAS2 (aminolevulinic acid synthase 2), a PLP-dependent homodimer, condenses glycine and succinyl-CoA to produce aminolevulinic acid (ALA). This is the first and rate-limiting step of heme biosynthesis and it occurs in the mitochondrial matrix.",
+      "substrates": ["glycine", "succinyl-CoA"],
+      "products": ["aminolevulinic acid"],
+      "enzymes": ["ALAS2"],
+      "important_participants": ["glycine", "succinyl-CoA", "aminolevulinic acid"],
+      "secondary_participants": ["pyridoxal 5-phosphate"],
+      "quote": "a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "confidence": "high",
+      "rationale": "The paper explicitly asserts this transformation with named substrates, product and catalyst, and identifies it as the first and rate-limiting step of the requested pathway."
+    }
+  ],
+
+  "expected_major_subprocesses": [
+    {
+      "id": "S1",
+      "name": "aminolevulinic acid (ALA) synthesis, the first and rate-limiting step of heme biosynthesis",
+      "aliases": [
+        "ALA synthesis",
+        "the ALAS2 condensation",
+        "the rate-limiting step for heme biosynthesis"
+      ],
+      "reaction_ids": ["R1"],
+      "detailed_in_paper": true,
+      "quote": "The heme biosynthetic enzyme ALAS2 serves as a critical node, governing the first and rate-limiting step of this essential metabolic pathway.",
+      "confidence": "high",
+      "rationale": "The paper treats the ALAS2 condensation as a named constituent stage of heme biosynthesis and gives its chemistry in full."
+    },
+    {
+      "id": "S2",
+      "name": "heme-mediated negative feedback inhibition of mitochondrial ALAS2",
+      "aliases": [
+        "reversible mixed inhibition of ALAS2 by heme",
+        "allosteric regulation of ALAS2 by heme"
+      ],
+      "reaction_ids": [],
+      "detailed_in_paper": true,
+      "quote": "our study describes a new form of negative feedback in heme biosynthesis that regulates erythropoiesis",
+      "confidence": "low",
+      "rationale": "The paper's central finding and it is explicitly framed as part of heme biosynthesis, but it is a regulatory mechanism (heme binding, conformational occlusion of the active site) and not a chemical stage that groups transformations, so its status as a 'major subprocess' is genuinely arguable."
+    }
+  ],
+
+  "important_participants": [
+    {
+      "name": "glycine",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "note": "One of the two condensation substrates; R1 is not the ALAS reaction without it."
+    },
+    {
+      "name": "succinyl-CoA",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "We also measured the activity of purified ALAS2 holoenzyme in response to variable heme and succinyl-CoA substrate concentrations",
+      "note": "Explicitly named as the ALAS2 substrate and titrated as such in the kinetics."
+    },
+    {
+      "name": "aminolevulinic acid",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "The in vitro enzyme activity of ALAS2 was measured by monitoring the rate of ALA product release.",
+      "note": "The sole product of the only reaction the paper asserts."
+    },
+    {
+      "name": "heme",
+      "reason": "central_to_pathway_scope",
+      "reaction_ids": ["R1"],
+      "quote": "Proper heme biosynthesis is essential for numerous cellular functions across nearly all life forms.",
+      "note": "The pathway's end product and the paper's stated scope; also the allosteric inhibitor of R1. No reaction producing heme is asserted anywhere in this paper."
+    }
+  ],
+
+  "secondary_participants": [
+    {
+      "name": "pyridoxal 5-phosphate",
+      "class": "cofactor",
+      "reaction_ids": ["R1"],
+      "quote": "These studies were performed using the catalytically active holoenzyme that is covalently bound to the PLP cofactor.",
+      "note": "The ALAS2 cofactor, covalently bound to an active-site lysine and regenerated each cycle; never a substrate or product in this paper."
+    },
+    {
+      "name": "hemin",
+      "class": "other",
+      "reaction_ids": ["R1"],
+      "quote": "Titration of WT ALAS2 into hemin (ferric chloride heme) resulted in robust binding exhibited by an exothermic binding curve",
+      "note": "The ferric reagent form of heme used in the binding and inhibition assays; the same chemical identity as heme, not a separate pathway metabolite."
+    },
+    {
+      "name": "CLPXP",
+      "class": "ancillary_protein",
+      "reaction_ids": [],
+      "quote": "A recent report proposed that heme-bound ALAS2 recruits the CLPXP protease via an adaptor protein to trigger degradation",
+      "note": "A mitochondrial protease acting on ALAS2 protein turnover; it catalyses no step of heme biosynthesis."
+    },
+    {
+      "name": "LONP1",
+      "class": "ancillary_protein",
+      "reaction_ids": [],
+      "quote": "the interaction between heme and mitochondrial ALAS1 results in either LONP1- or CLPXP-mediated degradation",
+      "note": "Cited protease acting on ALAS1 turnover; not a heme biosynthetic catalyst."
+    },
+    {
+      "name": "ALAS1",
+      "class": "other",
+      "reaction_ids": [],
+      "quote": "ALAS1 is a ubiquitously expressed housekeeping enzyme",
+      "note": "The non-erythroid ALAS isoform. It catalyses the same chemistry but the paper attributes no measured reaction to it; listed here rather than as an R1 enzyme so that the erythroid attribution is not blurred."
+    }
+  ],
+
+  "out_of_scope": [
+    {"name": "LONP1", "reason": "mitochondrial protease mediating ALAS protein degradation; protein turnover, not a heme biosynthetic transformation"},
+    {"name": "CLPXP", "reason": "mitochondrial protease/chaperone-protease pair mediating ALAS2 degradation; protein turnover, not a heme biosynthetic transformation"},
+    {"name": "ULP1", "reason": "SUMO protease used to cleave the purification tag; a reagent, never a pathway participant"},
+    {"name": "coproporphyrinogen III oxidase", "reason": "a genuine heme-pathway enzyme, but in this paper it occurs ONLY inside a reference title (Grandchamp et al.) past the end of the body text; the paper asserts nothing about it"},
+    {"name": "protoporphyrinogen oxidase", "reason": "as above: appears only inside a reference title (Ferreira et al.), not in the body; no reaction is asserted"},
+    {"name": "biliverdin", "reason": "heme catabolism, a different pathway; appears only in a reference title"},
+    {"name": "iron homeostasis / lipid metabolism / oxidative stress response", "reason": "named in the Discussion as processes heme participates in; not steps of heme biosynthesis"},
+    {"name": "AlphaFold3, ITC, Ni-NTA, pET28b, BL21", "reason": "methodological tooling and expression host reagents"}
+  ],
+
+  "uncertainties": [
+    "This paper asserts EXACTLY ONE reaction of heme biosynthesis. It names no intermediate between ALA and heme, and no other pathway enzyme in the body text. A short list is the correct outcome here; anything longer would have to be imported from general knowledge.",
+    "The sentence 'the mitochondrial matrix, which is the cellular compartment where heme biosynthesis is initiated and terminated' implies a terminal (ferrochelatase) step, but the paper never names that enzyme, that substrate or that product. I deliberately did NOT create a subprocess for the terminal step, because the paper gives it no name and no chemistry; a reviewer may wish to consider whether an unnamed 'termination in the matrix' deserves a detailed_in_paper:false subprocess entry. I judged that it does not, because a subprocess entry needs a name the paper supplies.",
+    "PLP is classified secondary (cofactor). The argument for calling it important under 'distinguishes_identity_or_direction' is real: ALAS chemistry is PLP-dependent by definition and the paper's whole apo/holo experiment turns on it. I left it secondary because it is regenerated, is never a substrate or product, and the pinned gold explicitly flags it as a cofactor that must never be modelled as a substrate, product or protein.",
+    "S2 (heme feedback inhibition) is marked low confidence because it is regulation rather than pathway chemistry. It carries no reaction ids. If the consumer treats subprocesses as reaction groupings only, S2 should be dropped; I recorded it because it is unambiguously the stage this paper treats as its contribution to heme biosynthesis.",
+    "Heme appears in BOTH senses in this paper: as the pathway's end product (scope) and as the inhibitor of R1. I recorded it once, as important with reason central_to_pathway_scope. Hemin/heme b are the same chemical identity as heme, recorded as secondary to keep them from being modelled as distinct metabolites.",
+    "The Experimental Procedures list twelve UniProt accessions across six species (bovine, rat, mouse, chicken, zebrafish and human). Only P22557 (human ALAS2) and P13196 (human ALAS1) are human. No non-human protein was curated.",
+    "All quotes in this file were verified as verbatim contiguous substrings of full_text by substring search. None failed."
+  ]
+}

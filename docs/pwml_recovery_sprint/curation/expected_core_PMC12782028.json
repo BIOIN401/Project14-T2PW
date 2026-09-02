@@ -1,0 +1,367 @@
+{
+  "schema_version": 1,
+  "paper_id": "PMC12782028",
+  "requested_pathway": "cholesterol biosynthesis",
+  "requested_organism": "Homo sapiens",
+  "source_cache_file": "291f35c3c2149c7c0085d87b35566bc0.json",
+  "source_chars": 43679,
+  "curated_by": "curation-agent-set-B",
+  "curation_date": "2026-09-02",
+  "expected_core_reactions": [
+    {
+      "id": "R1",
+      "description": "LSS (lanosterol synthase) cyclises 2,3-oxidosqualene to lanosterol, described as one of the earliest steps in sterol biosynthesis and as forming the first tetracyclic sterol skeleton. The paper locates the enzyme in the endoplasmic reticulum.",
+      "substrates": [
+        "2,3-oxidosqualene"
+      ],
+      "products": [
+        "lanosterol"
+      ],
+      "enzymes": [
+        "LSS"
+      ],
+      "important_participants": [
+        "2,3-oxidosqualene",
+        "lanosterol"
+      ],
+      "secondary_participants": [],
+      "quote": "LSS (Lanosterol synthase) catalyzes one of the earliest steps in sterol biosynthesis by converting 2,3-oxidosqualene to lanosterol, a key intermediate in the production of cholesterol and other sterol compounds",
+      "confidence": "high",
+      "rationale": "An explicit catalytic statement with named substrate, named product and named enzyme, placed by the paper inside the requested pathway."
+    },
+    {
+      "id": "R2",
+      "description": "CYP51A1 (lanosterol 14alpha-demethylase), a cytochrome P450, converts lanosterol to 4,4-dimethylcholesta-8(9),14,24-trien-3beta-ol by removing the C-14alpha-methyl group. The paper calls this demethylation the initial control point for cholesterol and sterol biosynthesis.",
+      "substrates": [
+        "lanosterol"
+      ],
+      "products": [
+        "4,4-dimethylcholesta-8(9),14,24-trien-3beta-ol"
+      ],
+      "enzymes": [
+        "CYP51A1"
+      ],
+      "important_participants": [
+        "lanosterol",
+        "4,4-dimethylcholesta-8(9),14,24-trien-3beta-ol"
+      ],
+      "secondary_participants": [],
+      "quote": "It is a cytochrome P450 enzyme that catalyzes the conversion of lanosterol to 4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+      "confidence": "high",
+      "rationale": "An explicit catalytic statement with both sides named; it also chains cleanly to R1 through lanosterol, the only string-identical shared metabolite in the paper."
+    },
+    {
+      "id": "R3",
+      "description": "MSMO1 (methylsterol monooxygenase 1) carries out the three-step monooxygenation that demethylates 4,4-dimethylsterols and 4alpha-methylsterols, products of which the paper says can subsequently be metabolised to cholesterol.",
+      "substrates": [
+        "4,4-dimethylsterols",
+        "4alpha-methylsterols"
+      ],
+      "products": [
+        "demethylated sterols (not named as a discrete compound in this paper)"
+      ],
+      "enzymes": [
+        "MSMO1"
+      ],
+      "important_participants": [
+        "4,4-dimethyl and 4alpha-methylsterols"
+      ],
+      "secondary_participants": [
+        "molecular oxygen"
+      ],
+      "quote": "It primarily catalyzes the three-step monooxygenation required for the demethylation of 4,4-dimethyl and 4alpha-methylsterols, which can be subsequently metabolized to cholesterol.",
+      "confidence": "medium",
+      "rationale": "The transformation and its enzyme are stated, but the substrate is given only as a COMPOUND CLASS and no product is named as a discrete molecule, so this reaction cannot be chained to either neighbour on named metabolites."
+    },
+    {
+      "id": "R4",
+      "description": "DHCR24 (delta24-cholesterol reductase, also called 3beta-hydroxysterol delta24-reductase) reduces desmosterol to cholesterol. The paper states this is the final step of the cholesterol biosynthesis pathway.",
+      "substrates": [
+        "desmosterol"
+      ],
+      "products": [
+        "cholesterol"
+      ],
+      "enzymes": [
+        "DHCR24"
+      ],
+      "important_participants": [
+        "desmosterol",
+        "cholesterol"
+      ],
+      "secondary_participants": [],
+      "quote": "DHCR24 (δ24-cholesterol reductase, also known as 3β-hydroxysterol Δ24-reductase) is an enzyme that catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol",
+      "confidence": "high",
+      "rationale": "An explicit catalytic statement with both sides named and identified as the terminal step of the requested pathway. NOTE: topologically orphaned in this paper, because no stated reaction produces desmosterol and no reductant is named."
+    }
+  ],
+  "expected_major_subprocesses": [
+    {
+      "id": "S1",
+      "name": "cyclisation of 2,3-oxidosqualene to lanosterol (earliest sterol step)",
+      "aliases": [
+        "one of the earliest steps in sterol biosynthesis",
+        "lanosterol synthase step",
+        "formation of the tetracyclic steroid skeleton"
+      ],
+      "reaction_ids": [
+        "R1"
+      ],
+      "detailed_in_paper": true,
+      "quote": "LSS (Lanosterol synthase) catalyzes one of the earliest steps in sterol biosynthesis",
+      "confidence": "high",
+      "rationale": "The paper names this stage by position (earliest steps in sterol biosynthesis) and gives its chemistry, its enzyme and its mechanistic description."
+    },
+    {
+      "id": "S2",
+      "name": "lanosterol 14alpha-demethylation (early-to-mid stage)",
+      "aliases": [
+        "the early-to-mid stage of cholesterol biosynthesis",
+        "CYP51A1 step",
+        "the initial control point for the biosynthesis of cholesterol and other sterols"
+      ],
+      "reaction_ids": [
+        "R2"
+      ],
+      "detailed_in_paper": true,
+      "quote": "CYP51A1 (Lanosterol 14α-demethylase) functions downstream of LSS in the early-to-mid stage of cholesterol biosynthesis.",
+      "confidence": "high",
+      "rationale": "Named as a positioned stage of the requested pathway and detailed with substrate, product, chemistry (C-14alpha-methyl removal) and regulatory significance."
+    },
+    {
+      "id": "S3",
+      "name": "mid-stage sterol C-4 demethylation",
+      "aliases": [
+        "the mid-stage of cholesterol biosynthesis",
+        "MSMO1 three-step monooxygenation"
+      ],
+      "reaction_ids": [
+        "R3"
+      ],
+      "detailed_in_paper": true,
+      "quote": "MSMO1 (methylsterol monooxygenase 1) acts at the mid-stage of cholesterol biosynthesis and serves as a key enzyme in this pathway.",
+      "confidence": "high",
+      "rationale": "Explicitly named as a stage of the requested pathway and given its chemistry, even though the substrate is a class and no product compound is named."
+    },
+    {
+      "id": "S4",
+      "name": "terminal step of cholesterol biosynthesis: desmosterol to cholesterol",
+      "aliases": [
+        "the final step in the cholesterol biosynthesis pathway",
+        "DHCR24 step"
+      ],
+      "reaction_ids": [
+        "R4"
+      ],
+      "detailed_in_paper": true,
+      "quote": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol",
+      "confidence": "high",
+      "rationale": "Explicitly named as the final stage of the requested pathway and given with both metabolites."
+    },
+    {
+      "id": "S5",
+      "name": "the upstream, pre-lanosterol segment of cholesterol biosynthesis (mevalonate and squalene arms)",
+      "aliases": [
+        "mevalonate pathway",
+        "ACAT2 / HMGCS1 / HMGCR / MVK / MVD / IDI1 / FDPS / FDFT1 / SQLE steps"
+      ],
+      "reaction_ids": [],
+      "detailed_in_paper": false,
+      "quote": "Reactome enrichment analysis of the differentially expressed genes showed that the cholesterol biosynthesis pathway (R-HSA-191273, P -adjust < 0.0001, Fig. 2E ) had the highest degree of enrichment, the enriched genes including FDPS (farnesyl diphosphate synthase, FDPS) , LBR , SREBF1 (sterol regulatory element binding transcription factor 1, SREBF1) , HSD17B7 , MSMO1 , SQLE , MVD (mevalonate diphosphate decarboxylase, MVD) , LSS , EBP , DHCR24 , CYP51A1 , SREBF2(sterol regulatory element binding transcription factor 2 , SREBF2) , FDFT1 , HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase , HMGCR) , HMGCS1 (3-hydroxy-3-methylglutaryl-CoA synthase 1 , HMGCS1) , MVK (mevalonate kinase , MVK) , IDI1 (isopentenyl-diphosphate delta isomerase 1, IDI1) , and ACAT2 (acetyl-CoA acetyltransferase 2, ACAT2)",
+      "confidence": "medium",
+      "rationale": "THIS IS THE NAMED-BUT-NOT-DETAILED STAGE. The paper explicitly assigns ACAT2, HMGCS1, HMGCR, MVK, MVD, IDI1, FDPS, FDFT1 and SQLE to the cholesterol biosynthesis pathway, and separately calls the pathway the mevalonate pathway and singles out HMG-CoA reductase as a key enzyme of it, but it states NO reaction for any of them: no acetyl-CoA, no HMG-CoA, no mevalonate, no isopentenyl diphosphate, no farnesyl diphosphate, no squalene, no substrate and no product anywhere for these enzymes. Recorded with no reaction ids for exactly that reason."
+    },
+    {
+      "id": "S6",
+      "name": "SREBP-mediated transcriptional regulation of cholesterol biosynthesis",
+      "aliases": [
+        "SREBF1 / SREBF2",
+        "sterol regulatory element binding transcription factors"
+      ],
+      "reaction_ids": [],
+      "detailed_in_paper": false,
+      "quote": "Calcium availability also influences cholesterol biosynthesis by modulating SREBP transcription factors and key enzymes such as β-Hydroxy β-methylglutaryl-CoA (HMG-CoA) reductase",
+      "confidence": "low",
+      "rationale": "Named as a control layer over the requested pathway and both SREBF genes appear in the pathway gene list, but it is transcriptional regulation, groups no chemical transformation, and is given no mechanism here."
+    }
+  ],
+  "important_participants": [
+    {
+      "name": "2,3-oxidosqualene",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [
+        "R1"
+      ],
+      "quote": "converting 2,3-oxidosqualene to lanosterol",
+      "note": "The substrate of the earliest reaction the paper details. Nothing in this paper produces it; SQLE, the enzyme that would, is named without a reaction."
+    },
+    {
+      "name": "lanosterol",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [
+        "R1",
+        "R2"
+      ],
+      "quote": "catalyzes the conversion of lanosterol to 4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+      "note": "The only metabolite that appears on both sides of two curated reactions with a string-identical name, so it is the sole connection point in this paper's route. Beware: the paper elsewhere writes 'lanosterene', which is a typo for lanosterol and not a separate compound."
+    },
+    {
+      "name": "4,4-dimethylcholesta-8(9),14,24-trien-3beta-ol",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [
+        "R2"
+      ],
+      "quote": "the conversion of lanosterol to 4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+      "note": "The named product of the CYP51A1 demethylation. Nothing in this paper consumes it: it is not stated to be the MSMO1 substrate."
+    },
+    {
+      "name": "4,4-dimethyl and 4alpha-methylsterols",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [
+        "R3"
+      ],
+      "quote": "the demethylation of 4,4-dimethyl and 4alpha-methylsterols, which can be subsequently metabolized to cholesterol",
+      "note": "A COMPOUND CLASS, not a named molecule. Recorded as important because R3 is not that reaction without it, but it cannot be resolved to a single metabolite from this paper."
+    },
+    {
+      "name": "desmosterol",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [
+        "R4"
+      ],
+      "quote": "converting desmosterol to cholesterol",
+      "note": "The substrate of the terminal step. No reaction in this paper produces desmosterol, so R4 is topologically orphaned here."
+    },
+    {
+      "name": "cholesterol",
+      "reason": "central_to_pathway_scope",
+      "reaction_ids": [
+        "R4"
+      ],
+      "quote": "These genes encode key enzymes in the cholesterol synthesis pathway, and their upregulation may lead to cholesterol overproduction.",
+      "note": "The end product of the requested pathway and the paper's stated mechanistic subject. Note the paper's direction of interest is cholesterol OVERPRODUCTION as a cytotoxic outcome, not inhibition."
+    },
+    {
+      "name": "HMGCR",
+      "reason": "distinguishes_identity_or_direction",
+      "reaction_ids": [],
+      "quote": "Calcium availability also influences cholesterol biosynthesis by modulating SREBP transcription factors and key enzymes such as β-Hydroxy β-methylglutaryl-CoA (HMG-CoA) reductase",
+      "note": "HMG-CoA reductase is the only upstream enzyme the paper singles out in prose (twice: here and as the target of statins) rather than only inside a gene list. It identifies the undetailed upstream stage S5. NO reaction is stated for it anywhere: mevalonate and HMG-CoA never appear as metabolites."
+    }
+  ],
+  "secondary_participants": [
+    {
+      "name": "molecular oxygen",
+      "class": "cofactor",
+      "reaction_ids": [
+        "R3"
+      ],
+      "quote": "It primarily catalyzes the three-step monooxygenation required for the demethylation of 4,4-dimethyl and 4alpha-methylsterols",
+      "note": "Never named as a species; its participation is implied only by the word monooxygenation. Recorded so it is not mistaken for an omitted important substrate. No NADPH or other reductant is named anywhere in this paper."
+    },
+    {
+      "name": "SREBF1",
+      "class": "regulator",
+      "reaction_ids": [],
+      "quote": "Disruption of calcium homeostasis may aberrantly activate SREBPs and enhance cholesterol synthesis",
+      "note": "A transcription factor that appears inside the Reactome cholesterol-biosynthesis gene list. The list is an enrichment membership set, not a reaction participant set; SREBF1 catalyses nothing."
+    },
+    {
+      "name": "SREBF2",
+      "class": "regulator",
+      "reaction_ids": [],
+      "quote": "Disruption of calcium homeostasis may aberrantly activate SREBPs and enhance cholesterol synthesis",
+      "note": "As SREBF1. Both must not be modelled as pathway enzymes merely because they are in the gene list."
+    },
+    {
+      "name": "AMPK",
+      "class": "regulator",
+      "reaction_ids": [],
+      "quote": "whereas calcium-dependent kinases like AMPK can suppress this process",
+      "note": "Named as a suppressor of cholesterol synthesis; a kinase upstream of the pathway, catalysing no step of it."
+    }
+  ],
+  "out_of_scope": [
+    {
+      "name": "CaSR (calcium-sensing receptor)",
+      "reason": "a G-protein-coupled receptor and the paper's experimental handle; not an enzyme and not a cholesterol pathway component. Its 'R' suffix is a trap for heuristics that read it as a reductase"
+    },
+    {
+      "name": "NPS-2143",
+      "reason": "the CaSR antagonist drug used as the treatment; a small molecule but never a pathway metabolite"
+    },
+    {
+      "name": "steroid biosynthesis pathway (KEGG hsa00100)",
+      "reason": "an adjacent KEGG pathway that the paper analyses in parallel and that shares genes with cholesterol biosynthesis; it is not the requested pathway and the paper gives it no chemistry of its own"
+    },
+    {
+      "name": "R-HSA-191273 / hsa00100",
+      "reason": "pathway-database identifiers, not molecular entities"
+    },
+    {
+      "name": "steroid hormones",
+      "reason": "downstream of cholesterol; a different pathway"
+    },
+    {
+      "name": "oxysterols",
+      "reason": "oxidation products of excess cholesterol; downstream and catabolic"
+    },
+    {
+      "name": "LIPA (lysosomal acid lipase)",
+      "reason": "appears in the steroid-biosynthesis KEGG list but is degradative, directionally the opposite of biosynthesis"
+    },
+    {
+      "name": "LBR (lamin B receptor)",
+      "reason": "nuclear envelope protein in the enrichment list with no catalytic role stated in this paper"
+    },
+    {
+      "name": "HSD17B7, EBP, NSDHL",
+      "reason": "enrichment-list-only gene symbols with no catalytic statement anywhere in this paper. They are genuine sterol-pathway enzymes, which is precisely why an extractor may be tempted to supply reactions the paper does not state"
+    },
+    {
+      "name": "statins / HMG-CoA reductase inhibitors",
+      "reason": "therapeutics discussed as context; not pathway steps"
+    },
+    {
+      "name": "ERK1/2, PI3K/Akt, Wnt/beta-catenin, mTOR, MAPK",
+      "reason": "signalling pathways discussed around CaSR biology"
+    },
+    {
+      "name": "GAPDH",
+      "reason": "qRT-PCR normalisation control"
+    },
+    {
+      "name": "MG-63, Saos-2, TCHu124, TCHu114",
+      "reason": "cell lines and catalogue numbers"
+    },
+    {
+      "name": "DMEM, DMSO, PBS, TRIzol, CCK-8, fetal bovine serum, SYBR Premix Ex Taq II",
+      "reason": "media and assay reagents"
+    },
+    {
+      "name": "Fastp, HiSat2, RSEM, DESeq2, GRCh38, Illumina NovaSeq X Plus",
+      "reason": "bioinformatics tooling"
+    },
+    {
+      "name": "7-dehydrocholesterol / DHCR7",
+      "reason": "ABSENT from this paper entirely; the Kandutsch-Russell branch is unrepresented, so emitting it would import the pathway from memory"
+    },
+    {
+      "name": "reactive oxygen species, autophagy, lipid rafts",
+      "reason": "downstream cellular consequences of cholesterol excess"
+    }
+  ],
+  "uncertainties": [
+    "NAMED VERSUS DETAILED IS THE CENTRAL ISSUE IN THIS PAPER, and S5 is where it is recorded. The paper's own output is transcriptomic: three large enrichment gene lists. Those lists explicitly place ACAT2, HMGCS1, HMGCR, MVK, MVD, IDI1, FDPS, FDFT1, SQLE, NSDHL, EBP, HSD17B7, LBR and LIPA inside the cholesterol biosynthesis or steroid biosynthesis pathway, giving full protein names for many of them, and state NO reaction for any of them. Only four enzymes (LSS, CYP51A1, MSMO1, DHCR24) carry a catalytic statement, and all four of those statements are cited background in the Discussion.",
+    "Consequently NO upstream metabolite is named as a FREE COMPOUND anywhere in this paper. Verified by substring census over full_text: the tokens acetyl-CoA (1), mevalonate (3), isopentenyl (1), farnesyl (4), squalene (2) and HMG-CoA (2) occur ONLY inside enzyme names (acetyl-CoA acetyltransferase 2; mevalonate diphosphate decarboxylase; mevalonate kinase; isopentenyl-diphosphate delta isomerase 1; farnesyl diphosphate synthase; farnesyl-diphosphate farnesyltransferase 1; squalene epoxidase; HMG-CoA reductase), plus the phrase (mevalonate pathway) and the substrate 2,3-oxidosqualene. Free squalene, free mevalonate, free HMG-CoA, free acetyl-CoA, isopentenyl diphosphate and farnesyl diphosphate are never named as metabolites. The pathway therefore starts, as far as this paper is concerned, at 2,3-oxidosqualene.",
+    "The phrase 'mevalonate pathway' appears exactly once, and this paper uses it as a SYNONYM FOR THE WHOLE CHOLESTEROL BIOSYNTHESIS PATHWAY ('the final step in the cholesterol biosynthesis pathway (mevalonate pathway)'), not as the name of the upstream arm. I used it only as an alias on S5 and flag the loose usage here rather than treating it as the paper's own name for the pre-lanosterol segment.",
+    "THE CURATED ROUTE IS NOT CONNECTED END TO END. Only R1 and R2 chain, through the string-identical metabolite lanosterol. R3's substrate is a compound class and its product is unnamed. R4's substrate, desmosterol, is produced by nothing stated in this paper, so it is topologically orphaned. I did not bridge these gaps, and bridging them would require importing the pathway from general knowledge.",
+    "R3 (MSMO1) is medium confidence for that reason: the enzyme and the transformation type are stated, but the substrate is only a class ('4,4-dimethyl and 4alpha-methylsterols') and no product compound is named.",
+    "NO COFACTOR IS NAMED ANYWHERE for any of the four reactions: no NADPH, no NAD(P)H, no molecular oxygen, no reductant for the DHCR24 reduction. Molecular oxygen is recorded as a secondary participant of R3 only because the word 'monooxygenation' implies it; the paper never names it.",
+    "The paper contains a genuine typo, 'lanosterene' (also 'tetra-closterane'), used for lanosterol. It is not a separate compound and must not be minted as one.",
+    "DHCR24 appears under four surface forms in this paper: DHCR24, '24-dehydrocholesterol reductase' (gene list), 'delta24-cholesterol reductase' and '3beta-hydroxysterol delta24-reductase'. All collapse to one protein.",
+    "DIRECTION CAUTION: this paper reports that the CaSR antagonist UP-regulates these genes and that the resulting cholesterol OVERPRODUCTION is what reduces tumour cell viability. That is the opposite of the usual statin narrative, and an extractor that assumes inhibition would invert the paper's claim.",
+    "S6 (SREBP regulation) is transcriptional regulation, carries no reaction ids, and is low confidence, consistent with how I treated the regulatory findings in the other papers of this set. It is marked detailed_in_paper: false because no mechanism is given here.",
+    "All quotes in this file were extracted as exact spans of full_text programmatically and re-verified by substring search. None failed."
+  ]
+}

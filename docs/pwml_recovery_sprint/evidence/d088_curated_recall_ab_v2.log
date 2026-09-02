@@ -1,0 +1,109 @@
+D-088 STEP 6 (v2) — CURATED SET, UNDETAILED-SUBPROCESS RULE CORRECTED
+================================================================================================
+repo                       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+roots scanned              : runs/ AND runs_verify/, both named
+coverage_summary.json      : 83
+curated papers             : 10
+curated core reactions     : 41
+curated major subprocesses : 35
+the curation was produced BLIND to the cap and to which legs pass
+
+================================================================================================
+CORPUS TOTALS
+================================================================================================
+  legs_examined                     : 83
+  legs_without_report               : 0
+  legs_old_capped                   : 73
+  legs_new_capped                   : 51
+  curated_reactions_examined        : 327
+  curated_reactions_missing         : 30
+  curated_subprocesses_examined     : 314
+  curated_subprocesses_missing      : 72
+  undetailed_subprocess_missing     : 19
+
+  capped OLD, released NEW : 24
+  capped OLD, still capped : 49
+  capped NEW, not OLD      : 2   <- the rule is STRICTER here
+
+================================================================================================
+THE TWO REQUIRED CONSEQUENCES — every archived strict leg of each paper
+================================================================================================
+
+--- PMC12096016/strict  (want new_capped=False) ---
+  BAD runs_verify/2026-08-18_1328  old=True  new=True  rxn=8/8    sub=3/4   
+        missing: ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  BAD runs_verify/2026-08-21_2057  old=True  new=True  rxn=8/8    sub=3/4   
+        missing: ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  BAD runs_verify/2026-08-21_2239  old=True  new=True  rxn=8/8    sub=3/4   
+        missing: ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  BAD runs_verify/2026-08-22_2147  old=True  new=True  rxn=8/8    sub=3/4   
+        missing: ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  BAD runs_verify/2026-08-24_1203  old=True  new=True  rxn=8/8    sub=3/4   
+        missing: ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  BAD runs_verify/2026-08-24_1428  old=True  new=True  rxn=8/8    sub=3/4   
+        missing: ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  BAD runs_verify/2026-08-27_1341  old=True  new=True  rxn=8/8    sub=3/4   
+        missing: ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+  BAD runs_verify/2026-09-01_1612  old=True  new=True  rxn=8/8    sub=3/4     <== T-108
+        missing: ['feedback regulation of enterobactin biosynthesis by 2,3-DHB']
+
+--- PMC12782028/strict  (want new_capped=True) ---
+  ok  runs_verify/2026-08-21_1822  old=True  new=True  rxn=3/4    sub=4/6   
+        missing: ['mid-stage sterol C-4 demethylation', 'SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-08-21_2239  old=True  new=True  rxn=4/4    sub=5/6   
+        missing: ['SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-08-22_2147  old=True  new=True  rxn=3/4    sub=4/6   
+        missing: ['mid-stage sterol C-4 demethylation', 'SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-08-24_1428  old=True  new=True  rxn=2/4    sub=3/6   
+        missing: ['mid-stage sterol C-4 demethylation', 'terminal step of cholesterol biosynthesis: desmosterol to cholesterol', 'SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-08-27_1341  old=True  new=True  rxn=3/4    sub=4/6   
+        missing: ['mid-stage sterol C-4 demethylation', 'SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-08-28_1816  old=True  new=True  rxn=3/4    sub=4/6   
+        missing: ['mid-stage sterol C-4 demethylation', 'SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+  ok  runs_verify/2026-09-01_1612  old=True  new=True  rxn=3/4    sub=4/6     <== T-108
+        missing: ['mid-stage sterol C-4 demethylation', 'SREBP-mediated transcriptional regulation of cholesterol biosynthesis']
+
+================================================================================================
+VERDICT
+================================================================================================
+  ACROSS EVERY ARCHIVED DRAW  PMC12096016: VIOLATED on 8/8
+  ACROSS EVERY ARCHIVED DRAW  PMC12782028: HOLDS
+
+  ON THE T-108 TREE ITSELF:
+    PMC12096016/strict  new_capped=True  (want False)  reactions 8/8  subprocesses 3/4
+    PMC12782028/strict  new_capped=True  (want True )  reactions 3/4  subprocesses 4/6
+
+    BOTH REQUIRED CONSEQUENCES HOLD SIMULTANEOUSLY: False
+    *** REJECT. Step 6 is not satisfied and this input must not be adopted.
+
+  Unlike candidate B, this input is FIXED: it does not vary with the draw being
+  judged. The across-every-draw rows above are the check F-168 was registered
+  for, and they are the ones that matter -- a rule that holds only on the tree it
+  was designed against is the rule F-168 already disqualified once.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 719689fc53b4e164863d84caeb8902a58a6cb739  [git, worktree dirty=True]
+label                   : curated-recall-ab-v2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/d088_curated_recall_ab_v2.py .
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 1078936 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 0.67 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1074184:python.exe
+descendants terminated  : 1  1074184
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-719\07-curated-recall-ab-v2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-719  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

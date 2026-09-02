@@ -1,0 +1,392 @@
+{
+  "schema_version": 1,
+  "paper_id": "PMC12452463",
+  "requested_pathway": "enterobactin biosynthesis",
+  "requested_organism": "Escherichia coli",
+  "source_cache_file": "2a1344506577ea51c003230a0a557f49.json",
+  "source_chars": 68085,
+  "curated_by": "curation-agent-set-B",
+  "curation_date": "2026-09-02",
+  "expected_core_reactions": [
+    {
+      "id": "R1",
+      "description": "Isochorismate synthase (EntC) converts chorismate to isochorismate. The paper calls this the first committed step of enterobactin biosynthesis. No cofactor is named (this paper never mentions Mg2+).",
+      "substrates": [
+        "chorismate"
+      ],
+      "products": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "EntC"
+      ],
+      "important_participants": [
+        "chorismate",
+        "isochorismate"
+      ],
+      "secondary_participants": [],
+      "quote": "The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC)",
+      "confidence": "high",
+      "rationale": "Stated as its own numbered step of the requested pathway with substrate, product and catalyst all named."
+    },
+    {
+      "id": "R2",
+      "description": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate, which this paper abbreviates 'DHB'. The paper names NO co-product: pyruvate is absent from the file, and the words hydrolysis and water never appear in connection with this step.",
+      "substrates": [
+        "isochorismate"
+      ],
+      "products": [
+        "2,3-dihydro-2,3-dihydroxybenzoate"
+      ],
+      "enzymes": [
+        "EntB"
+      ],
+      "important_participants": [
+        "isochorismate",
+        "2,3-dihydro-2,3-dihydroxybenzoate"
+      ],
+      "secondary_participants": [],
+      "quote": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB), a key intermediate in the pathway.",
+      "confidence": "high",
+      "rationale": "Stated as its own numbered step with substrate, product and catalyst named; the missing co-product is an omission by this paper, not a reason to doubt the transformation it does assert."
+    },
+    {
+      "id": "R3",
+      "description": "EntE, named here as 2,3-dihydroxybenzoate-AMP ligase, activates 'DHB' by adenylation to form DHB-AMP. NOTE: ATP is never named anywhere in this paper's body, so the adenyl donor is not stated.",
+      "substrates": [
+        "DHB (see uncertainties: this paper's DHB token is internally ambiguous)"
+      ],
+      "products": [
+        "DHB-AMP"
+      ],
+      "enzymes": [
+        "EntE"
+      ],
+      "important_participants": [
+        "DHB-AMP"
+      ],
+      "secondary_participants": [],
+      "quote": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP.",
+      "confidence": "medium",
+      "rationale": "The transformation is stated plainly as its own numbered step, but its substrate is the bare token DHB, which this paper uses for two chemically different molecules, so the reaction cannot be chained to R2 without resolving an ambiguity the paper itself creates. Medium for that reason, not because the assertion is weak."
+    },
+    {
+      "id": "R4",
+      "description": "EntD, a phosphopantetheinyl transferase, modifies EntB and EntF so that they can function as carrier proteins. No modification site, no phosphopantetheine donor (no coenzyme A) and no apo/holo naming is given.",
+      "substrates": [
+        "EntB",
+        "EntF"
+      ],
+      "products": [
+        "phosphopantetheinylated EntB",
+        "phosphopantetheinylated EntF"
+      ],
+      "enzymes": [
+        "EntD"
+      ],
+      "important_participants": [
+        "EntB",
+        "EntF"
+      ],
+      "secondary_participants": [],
+      "quote": "EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins.",
+      "confidence": "medium",
+      "rationale": "An explicitly asserted, enzyme-catalysed modification that the paper places inside its fourth step; medium because it modifies proteins rather than a metabolite and the paper gives neither the modified residue nor the donor."
+    },
+    {
+      "id": "R5",
+      "description": "The enterobactin synthase complex (EntD, EntE, EntF) assembles three DHB molecules into the cyclic trilactone structure of enterobactin; EntF, a non-ribosomal peptide synthetase, carries out the condensation and cyclization. CRITICAL: no serine of any kind is named anywhere in this paper, so the trilactone core has no stated source.",
+      "substrates": [
+        "DHB (three molecules)"
+      ],
+      "products": [
+        "enterobactin"
+      ],
+      "enzymes": [
+        "EntF",
+        "enterobactin synthase complex (EntD, EntE, EntF)"
+      ],
+      "important_participants": [
+        "enterobactin"
+      ],
+      "secondary_participants": [
+        "EntD"
+      ],
+      "quote": "The final steps involve the assembly of three DHB molecules into the cyclic trilactone structure of enterobactin. This process is catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF.",
+      "confidence": "high",
+      "rationale": "The terminal step of the requested pathway, asserted with catalyst, substrate count and named product; the omission of serine is recorded as a finding rather than repaired."
+    }
+  ],
+  "expected_major_subprocesses": [
+    {
+      "id": "S1",
+      "name": "Chorismate to Isochorismate",
+      "aliases": [
+        "the first committed step in enterobactin biosynthesis"
+      ],
+      "reaction_ids": [
+        "R1"
+      ],
+      "detailed_in_paper": true,
+      "quote": "Chorismate to Isochorismate : The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) . This step is the first committed step in enterobactin biosynthesis.",
+      "confidence": "high",
+      "rationale": "The paper's own first named step of its declared four-step scheme."
+    },
+    {
+      "id": "S2",
+      "name": "Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB)",
+      "aliases": [
+        "DHB formation"
+      ],
+      "reaction_ids": [
+        "R2"
+      ],
+      "detailed_in_paper": true,
+      "quote": "Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB) : Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB), a key intermediate in the pathway.",
+      "confidence": "high",
+      "rationale": "The paper's own second named step, given as a section heading with its chemistry."
+    },
+    {
+      "id": "S3",
+      "name": "Activation of DHB",
+      "aliases": [
+        "adenylation of DHB",
+        "DHB to DHB-AMP"
+      ],
+      "reaction_ids": [
+        "R3"
+      ],
+      "detailed_in_paper": true,
+      "quote": "Activation of DHB : 2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP. This activated intermediate is essential for the assembly of enterobactin.",
+      "confidence": "high",
+      "rationale": "The paper's own third named step; the stage is detailed even though its substrate token is ambiguous."
+    },
+    {
+      "id": "S4",
+      "name": "Assembly of Enterobactin",
+      "aliases": [
+        "enterobactin synthase complex step",
+        "NRPS condensation and cyclization"
+      ],
+      "reaction_ids": [
+        "R4",
+        "R5"
+      ],
+      "detailed_in_paper": true,
+      "quote": "Assembly of Enterobactin : The final steps involve the assembly of three DHB molecules into the cyclic trilactone structure of enterobactin.",
+      "confidence": "high",
+      "rationale": "The paper's own fourth and final named step, covering both the EntD priming of the carrier proteins and the EntF-catalysed condensation and cyclization."
+    },
+    {
+      "id": "S5",
+      "name": "regulation of enterobactin production (Fur, RyhB, Fnr)",
+      "aliases": [
+        "transcriptional and post-transcriptional regulation of the ent operon"
+      ],
+      "reaction_ids": [],
+      "detailed_in_paper": true,
+      "quote": "The production of enterobactin is tightly regulated to ensure that bacteria synthesize siderophores only when iron is scarce",
+      "confidence": "low",
+      "rationale": "Given a whole section of the paper and explicitly about enterobactin biosynthesis, but it is gene regulation and groups no chemical transformation; recorded with no reaction ids for that reason."
+    }
+  ],
+  "important_participants": [
+    {
+      "name": "chorismate",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [
+        "R1"
+      ],
+      "quote": "convert chorismate, a common precursor derived from the shikimate pathway, into the mature enterobactin molecule",
+      "note": "The entry metabolite of the pathway; the paper states it comes from the shikimate pathway, which is out of scope here."
+    },
+    {
+      "name": "isochorismate",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [
+        "R1",
+        "R2"
+      ],
+      "quote": "the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC)",
+      "note": "Product of R1 and substrate of R2; the only cleanly chained intermediate in this paper's route."
+    },
+    {
+      "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [
+        "R2"
+      ],
+      "quote": "converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB), a key intermediate in the pathway",
+      "note": "The product this paper's BODY attributes to EntB, and the one it abbreviates DHB. Nothing in this paper converts it onward: the EntA dehydrogenase step is absent."
+    },
+    {
+      "name": "2,3-dihydroxybenzoate",
+      "reason": "distinguishes_identity_or_direction",
+      "reaction_ids": [
+        "R3",
+        "R5"
+      ],
+      "quote": "formation of 2,3-dihydroxybenzoate (DHB) by EntB, activation of DHB to DHB-AMP by EntE",
+      "note": "A DIFFERENT molecule from the one above, but the paper gives it the same abbreviation DHB and, in the Figure 1 caption, attributes its formation to EntB. It is also the substrate implied by EntE's name. Recorded because without it the identity of the EntE substrate cannot be settled. The contradiction is the paper's, and I have not resolved it."
+    },
+    {
+      "name": "DHB-AMP",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [
+        "R3"
+      ],
+      "quote": "activates DHB by adenylation, forming DHB-AMP",
+      "note": "The activated intermediate; the paper says it is essential for enterobactin assembly. Its adenyl donor is never named."
+    },
+    {
+      "name": "enterobactin",
+      "reason": "central_to_pathway_scope",
+      "reaction_ids": [
+        "R5"
+      ],
+      "quote": "Enterobactin, a catechol-type siderophore, is synthesized through a well-characterized biosynthetic pathway involving several key genes and enzymatic steps",
+      "note": "The end product of the requested pathway and the subject of the whole review."
+    },
+    {
+      "name": "EntB",
+      "reason": "distinguishes_identity_or_direction",
+      "reaction_ids": [
+        "R4"
+      ],
+      "quote": "EntB also functions as a carrier protein, binding DHB for subsequent steps.",
+      "note": "EntB is both the R2 catalyst and, once modified by EntD, a carrier protein. The paper says only that it BINDS DHB; unlike the other enterobactin paper in this set it never asserts covalent loading or a transfer reaction."
+    },
+    {
+      "name": "EntF",
+      "reason": "distinguishes_identity_or_direction",
+      "reaction_ids": [
+        "R4",
+        "R5"
+      ],
+      "quote": "EntF is a nonribosomal peptide synthetase (NRPS) that facilitates the condensation and cyclization of DHB molecules to form enterobactin",
+      "note": "Both the substrate of the EntD modification (R4) and the catalyst of the assembly (R5)."
+    }
+  ],
+  "secondary_participants": [
+    {
+      "name": "EntD",
+      "class": "ancillary_protein",
+      "reaction_ids": [
+        "R5"
+      ],
+      "quote": "This process is catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF.",
+      "note": "EntD is the CATALYST of R4 and is listed as a member of the synthase complex for R5, where its role is to have primed the carrier proteins rather than to form bonds. Deliberate dual listing."
+    },
+    {
+      "name": "Fur",
+      "class": "regulator",
+      "reaction_ids": [],
+      "quote": "Under iron-replete conditions, Fur binds ferrous iron (Fe 2 + ) to form a complex that represses the transcription of enterobactin biosynthesis genes ( entA-entF ) by binding to their promoter regions.",
+      "note": "Ferric Uptake Regulator; iron-dependent transcriptional repressor of the ent operon. Catalyses no step."
+    },
+    {
+      "name": "RyhB",
+      "class": "regulator",
+      "reaction_ids": [],
+      "quote": "the sRNA RyhB downregulates siderophore production under certain conditions by modulating the stability or translation of ent mRNA",
+      "note": "A small regulatory RNA, not a protein and never an enzyme."
+    },
+    {
+      "name": "Fnr",
+      "class": "regulator",
+      "reaction_ids": [],
+      "quote": "The anaerobic regulator Fnr, activated under low oxygen conditions, directly represses transcription of the RyhB sRNA.",
+      "note": "Oxygen-responsive regulator acting on RyhB; two levels removed from the chemistry."
+    },
+    {
+      "name": "ferrous iron (Fe2+)",
+      "class": "cofactor",
+      "reaction_ids": [],
+      "quote": "Fur binds ferrous iron (Fe 2 + ) to form a complex",
+      "note": "The Fur co-repressor. Not a biosynthetic participant."
+    },
+    {
+      "name": "ferric iron (Fe3+)",
+      "class": "other",
+      "reaction_ids": [],
+      "quote": "one of the strongest known iron chelators, with an extraordinarily high affinity for ferric iron (Fe 3 + )",
+      "note": "What the finished siderophore chelates, extracellularly and after secretion. Not a biosynthetic participant."
+    }
+  ],
+  "out_of_scope": [
+    {
+      "name": "shikimate pathway",
+      "reason": "named only as the upstream source of chorismate; a different pathway and not detailed"
+    },
+    {
+      "name": "salmochelin",
+      "reason": "a different siderophore. Described as a glycosylated derivative OF enterobactin, which makes it the likeliest thing to be wrongly chained onto the enterobactin route"
+    },
+    {
+      "name": "yersiniabactin",
+      "reason": "a different siderophore (Klebsiella pneumoniae)"
+    },
+    {
+      "name": "aerobactin / iucA",
+      "reason": "a different siderophore and its gene"
+    },
+    {
+      "name": "pyoverdine",
+      "reason": "a different siderophore (Pseudomonas)"
+    },
+    {
+      "name": "FepA",
+      "reason": "outer-membrane receptor for ferric enterobactin; uptake, not biosynthesis"
+    },
+    {
+      "name": "FepABCDG / IroN / FpvA",
+      "reason": "siderophore transport systems; FepABCDG also denotes five gene products at once"
+    },
+    {
+      "name": "lipocalin-2 (siderocalin, Lcn2)",
+      "reason": "host siderophore-binding defence protein"
+    },
+    {
+      "name": "transferrin, lactoferrin, ferritin",
+      "reason": "host iron-sequestering proteins"
+    },
+    {
+      "name": "aryl hydrocarbon receptor (AhR), IL-8, IL-22",
+      "reason": "host immune signalling"
+    },
+    {
+      "name": "Cefiderocol, GT-1.23, sideromycins, siderophore-antibiotic conjugates",
+      "reason": "therapeutics built on the pathway, not steps of it"
+    },
+    {
+      "name": "SchF0 (Serratia plymuthica V4)",
+      "reason": "a non-E. coli siderophore biosynthesis gene"
+    },
+    {
+      "name": "ATP synthase",
+      "reason": "appears ONLY inside a reference title. The token ATP occurs exactly once in this file and it is here, NOT in the EntE adenylation step"
+    },
+    {
+      "name": "Pectobacterium atrosepticum entA mutant",
+      "reason": "a non-E. coli organism; the only place a delta-entA phenotype appears, and it carries no reaction"
+    },
+    {
+      "name": "CFT073, OQ866153, Ty21a, K12",
+      "reason": "strain and accession designations"
+    }
+  ],
+  "uncertainties": [
+    "THE EntA STEP IS ABSENT FROM THIS PAPER'S ROUTE, AND I DID NOT ADD IT. The paper announces 'Here are the 4 steps of enterobactin biosynthesis' and its four steps are EntC, EntB, EntE and the EntD/EntE/EntF assembly. There is no dehydrogenation step and no EntA reaction. Confirmed by substring census over the whole 68,085-character file: 'dehydrogenase' occurs 0 times, 'NAD' occurs 0 times, and the capitalised token 'EntA' occurs exactly ONCE, inside a reference title (Pakarian & Pawelek 2016). Lowercase 'entA' occurs three times: in the operon gene list, in the string 'entA-entF' in the Fur section, and as a Pectobacterium atrosepticum deletion mutant. Emitting an EntA reaction from this paper would be completing the canonical pathway from memory.",
+    "The paper does assert that entA 'encodes an enzyme essential for the production of enterobactin' as part of the six-gene operon list. That is the ONLY thing it says about EntA. I deliberately did not turn this into a detailed_in_paper:false subprocess, because the paper's own four-step scheme explicitly omits the stage and inventing a slot for it would license exactly the fabrication above. A reviewer who wants the gap represented should represent it as a GAP, not as a stage.",
+    "THE PAPER USES 'DHB' FOR TWO DIFFERENT MOLECULES. The numbered body step says EntB 'converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB)'. The Figure 1 caption says the pathway includes 'formation of 2,3-dihydroxybenzoate (DHB) by EntB'. Those are different compounds. The route is therefore chemically BROKEN as written: nothing in this paper converts 2,3-dihydro-2,3-dihydroxybenzoate onward, and R3 chains to R2 only through the abbreviation collision. I recorded both molecules and did not resolve the contradiction.",
+    "L-SERINE IS NEVER MENTIONED. 'serine' occurs 0 times in the entire file, in any case. The paper nonetheless says three DHB molecules are assembled 'into the cyclic trilactone structure of enterobactin'. The source of the trilactone core is therefore unstated. I did not add serine to R5.",
+    "ATP IS NEVER NAMED AS A REACTANT. The token 'ATP' occurs exactly once in the file, inside a reference title about ATP synthase. R3 is an adenylation with no adenyl donor stated, so ATP is NOT listed as an important participant here, even though it is in PMC12096016 where the paper does name it.",
+    "PYRUVATE IS NEVER MENTIONED (0 occurrences), so R2 has one product where the chemistry has two. Likewise 'hydrolysis', 'water' (as a reactant) and 'Mg'/'magnesium' are absent, so R2 has no water and R1 has no metal cofactor. THIS PAPER NAMES NO COFACTOR OF ANY KIND for any biosynthetic step; the secondary_participants list contains regulators and iron species only, and that emptiness is itself the finding.",
+    "EntB is called 'isochorismatase' in the biosynthesis section and 'isochorismate lyase' in the antibiotic section. These are one protein, not two.",
+    "This paper says EntB 'functions as a carrier protein, binding DHB for subsequent steps'. It asserts BINDING only. It never asserts covalent attachment of the aryl group to a carrier domain and never asserts a transfer of the loaded group from EntB to EntF. I therefore created no loading or transfer reaction here, even though PMC12096016 supports both.",
+    "R4 (EntD priming) is a PROTEIN modification, not a metabolite conversion, and the paper gives neither the modified residue nor the phosphopantetheine donor. A consumer expecting only small-molecule conversions should expect to filter it.",
+    "S5 (regulation) is regulation, not chemistry, and carries no reaction ids; low confidence, consistent with how I treated the regulatory findings in the other papers of this set.",
+    "CROSS-PAPER DISCIPLINE, STATED EXPLICITLY: PMC12096016 is the other enterobactin paper in my set and it DOES supply the EntA reaction, pyruvate as the EntB co-product, ATP for the EntE adenylation, L-serine for the EntF condensation, Mg2+ for EntC, the covalent ArCP loading and the EntB-to-EntF transfer. NONE of that was carried into this file. Every entry above rests on a quote from THIS paper's own full_text, and the omissions above are recorded as omissions.",
+    "All quotes in this file were extracted as exact spans of full_text programmatically and re-verified by substring search. None failed."
+  ]
+}

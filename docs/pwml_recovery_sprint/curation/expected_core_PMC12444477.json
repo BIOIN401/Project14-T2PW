@@ -1,0 +1,326 @@
+{
+  "schema_version": 1,
+  "paper_id": "PMC12444477",
+  "requested_pathway": "lipid A biosynthesis",
+  "requested_organism": "Escherichia coli",
+  "source_cache_file": "8ceca97a513c8b864b6a1a7049228197.json",
+  "source_chars": 82306,
+  "curated_by": "curation-agent-setA (D-088 curation brief)",
+  "curation_date": "2026-09-02",
+
+  "expected_core_reactions": [
+    {
+      "id": "R1",
+      "description": "LpxA acylates UDP-GlcNAc using a FAS II-derived beta-hydroxyacyl-ACP donor; the paper states the reaction is reversible and thermodynamically unfavourable",
+      "substrates": ["UDP-GlcNAc", "beta-hydroxyacyl-ACP"],
+      "products": ["acylated UDP-GlcNAc (referred to only as 'the LpxA product'; not chemically named in this paper's body)"],
+      "enzymes": ["LpxA"],
+      "important_participants": ["UDP-GlcNAc", "beta-hydroxyacyl-ACP"],
+      "secondary_participants": ["acyl carrier protein (ACP)"],
+      "quote": "The first enzyme in the Raetz pathway, LpxA, acylates uridine diphosphate- N -acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier protein (ACP) substrate made by the type II fatty acid synthesis pathway (FAS II)",
+      "confidence": "high",
+      "rationale": "The paper names it as the first enzymatic step of the Raetz pathway with an explicit acyl acceptor and an explicit acyl donor."
+    },
+    {
+      "id": "R2",
+      "description": "LpxC deacetylates the LpxA product, removing the acetyl group from the GlcNAc moiety; the first irreversible and committed step of lipid A biosynthesis",
+      "substrates": ["acylated UDP-GlcNAc (the LpxA product)"],
+      "products": ["deacetylated LpxA product (not chemically named for E. coli in this paper)"],
+      "enzymes": ["LpxC"],
+      "important_participants": ["acetyl group"],
+      "secondary_participants": [],
+      "quote": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety to allow for the addition of the next acyl group by LpxD and subsequent removal of UMP by LpxH, LpxI, or LpxG depending on the organism",
+      "confidence": "high",
+      "rationale": "The paper explicitly asserts the chemical transformation (deacetylation of the GlcNAc moiety) and designates it the committed step of the requested pathway."
+    },
+    {
+      "id": "R3",
+      "description": "LpxD adds the next acyl group to the deacetylated LpxC product",
+      "substrates": ["deacetylated LpxC product (not chemically named in this paper)"],
+      "products": ["further acylated UDP-glucosamine species (not chemically named in this paper)"],
+      "enzymes": ["LpxD"],
+      "important_participants": [],
+      "secondary_participants": [],
+      "quote": "to allow for the addition of the next acyl group by LpxD",
+      "confidence": "medium",
+      "rationale": "The paper asserts the transformation type (addition of the next acyl group) and the catalyst, but names neither substrate nor product as a chemical species."
+    },
+    {
+      "id": "R4",
+      "description": "LpxH (or LpxI or LpxG, depending on the organism) removes UMP from the LpxD product",
+      "substrates": ["LpxD product (not chemically named in this paper)"],
+      "products": ["UMP", "de-UMP-ylated monosaccharide lipid A precursor (not chemically named in this paper)"],
+      "enzymes": ["LpxH", "LpxI", "LpxG"],
+      "important_participants": ["UMP"],
+      "secondary_participants": [],
+      "quote": "subsequent removal of UMP by LpxH, LpxI, or LpxG depending on the organism",
+      "confidence": "medium",
+      "rationale": "The paper asserts the transformation and names UMP as the leaving product, but does not pin which of the three paralogues acts in E. coli and does not name the lipid substrate."
+    },
+    {
+      "id": "R5",
+      "description": "LpxB condenses two monosaccharide precursors to form a tetra-acylated disaccharide intermediate",
+      "substrates": ["monosaccharide lipid A precursors (not individually named in this paper)"],
+      "products": ["tetra-acylated disaccharide intermediate"],
+      "enzymes": ["LpxB"],
+      "important_participants": ["tetra-acylated disaccharide intermediate"],
+      "secondary_participants": [],
+      "quote": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate",
+      "confidence": "high",
+      "rationale": "The paper asserts the catalyst and names the product explicitly; this is the disaccharide-forming step of the requested pathway."
+    },
+    {
+      "id": "R6",
+      "description": "LpxK phosphorylates the tetra-acylated disaccharide intermediate to produce lipid IVA",
+      "substrates": ["tetra-acylated disaccharide intermediate"],
+      "products": ["lipid IVA"],
+      "enzymes": ["LpxK"],
+      "important_participants": ["tetra-acylated disaccharide intermediate", "lipid IVA"],
+      "secondary_participants": [],
+      "quote": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate, which is phosphorylated by LpxK to produce lipid IV A",
+      "confidence": "high",
+      "rationale": "Substrate, product and catalyst are all asserted in one clause of the pathway paragraph."
+    },
+    {
+      "id": "R7",
+      "description": "WaaA transfers Kdo residue(s) onto lipid IVA to form Kdo-lipid IVA (the first sugar(s) of the core)",
+      "substrates": ["lipid IVA", "Kdo"],
+      "products": ["Kdo-lipid IVA"],
+      "enzymes": ["WaaA"],
+      "important_participants": ["lipid IVA", "Kdo", "Kdo-lipid IVA"],
+      "secondary_participants": [],
+      "quote": "Next, WaaA adds a number of Kdo residues that depends on the organism to form the first sugar(s) of the core, resulting in Kdo-lipid IV A",
+      "confidence": "high",
+      "rationale": "Explicit substrate-to-product conversion with a named catalyst; the paper places it inside the Kdo-lipid A biosynthesis pathway of Figure 1B."
+    },
+    {
+      "id": "R8",
+      "description": "LpxL performs the first of two sequential acylations of Kdo-lipid IVA",
+      "substrates": ["Kdo-lipid IVA"],
+      "products": ["singly acylated Kdo-lipid IVA intermediate (not named in this paper)"],
+      "enzymes": ["LpxL"],
+      "important_participants": ["Kdo-lipid IVA"],
+      "secondary_participants": [],
+      "quote": "Kdo-lipid IV A which is sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+      "confidence": "medium",
+      "rationale": "The paper asserts two sequential acylations, which entails a distinct LpxL step, but it names no intermediate between LpxL and LpxM."
+    },
+    {
+      "id": "R9",
+      "description": "LpxM performs the second sequential acylation, finally forming Kdo-lipid A",
+      "substrates": ["singly acylated Kdo-lipid IVA intermediate (not named in this paper)"],
+      "products": ["Kdo-lipid A"],
+      "enzymes": ["LpxM"],
+      "important_participants": ["Kdo-lipid A"],
+      "secondary_participants": [],
+      "quote": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+      "confidence": "medium",
+      "rationale": "The paper asserts LpxM as the second of the two sequential acylations that completes Kdo-lipid A; its substrate is only implied by the word 'sequentially'."
+    }
+  ],
+
+  "expected_major_subprocesses": [
+    {
+      "id": "S1",
+      "name": "the Raetz pathway",
+      "aliases": ["lipid A biosynthetic pathway", "lipid A biosynthesis pathway", "Kdo-lipid A biosynthesis pathway"],
+      "reaction_ids": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"],
+      "detailed_in_paper": true,
+      "quote": "Kdo-lipid A is synthesized in the bacterial cytoplasm from a series of catalytic reactions that make up the Raetz pathway, named after Christian Raetz whose group pioneered the identification and characterization of the nine enzymes that make up the pathway",
+      "confidence": "high",
+      "rationale": "The paper names the requested pathway as the Raetz pathway and enumerates its nine enzymes in catalytic order."
+    },
+    {
+      "id": "S2",
+      "name": "early stages in the Raetz pathway",
+      "aliases": ["early steps of lipid A biosynthesis"],
+      "reaction_ids": ["R1", "R2"],
+      "detailed_in_paper": true,
+      "quote": "detergent-like LPS intermediates that accumulate upon hyperactivation of early stages in the Raetz pathway can be toxic, as depletion of the later-stage enzymes LpxH and LpxK resulted in growth defects that could be suppressed by inhibition of LpxA or LpxC",
+      "confidence": "medium",
+      "rationale": "The paper draws an explicit early/late division within the pathway and places LpxA and LpxC on the early side of it."
+    },
+    {
+      "id": "S3",
+      "name": "later-stage Raetz pathway enzymes",
+      "aliases": ["late steps of lipid A biosynthesis"],
+      "reaction_ids": ["R4", "R6"],
+      "detailed_in_paper": true,
+      "quote": "depletion of the later-stage enzymes LpxH and LpxK resulted in growth defects",
+      "confidence": "medium",
+      "rationale": "The same sentence names LpxH and LpxK as the later-stage enzymes, so the paper itself groups them as a stage of the pathway."
+    },
+    {
+      "id": "S4",
+      "name": "addition of the core sugars (Kdo transfer)",
+      "aliases": ["Kdo addition", "addition of the first sugar(s) of the core"],
+      "reaction_ids": ["R7"],
+      "detailed_in_paper": true,
+      "quote": "The nine steps in the Raetz pathway as well as the subsequent addition of the core sugars are catalyzed in the cytoplasm or the cytoplasmic leaflet of the IM",
+      "confidence": "high",
+      "rationale": "The paper treats core-sugar addition as a named stage adjoining the Raetz steps and includes WaaA in the Kdo-lipid A biosynthesis pathway of Figure 1B."
+    },
+    {
+      "id": "S5",
+      "name": "sequential acylation of Kdo-lipid IVA by LpxL and LpxM",
+      "aliases": ["late acylation", "secondary acylation of Kdo-lipid IVA"],
+      "reaction_ids": ["R8", "R9"],
+      "detailed_in_paper": true,
+      "quote": "resulting in Kdo-lipid IV A which is sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+      "confidence": "high",
+      "rationale": "The paper explicitly groups the two terminal acylations as one sequential stage that completes Kdo-lipid A."
+    }
+  ],
+
+  "important_participants": [
+    {
+      "name": "UDP-GlcNAc",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "LpxA, acylates uridine diphosphate- N -acetyl-glucosamine (UDP-GlcNAc)",
+      "note": "The acyl acceptor of the first Raetz step; without it R1 is not the LpxA reaction. The paper also stresses that it is a precursor shared with peptidoglycan biosynthesis."
+    },
+    {
+      "name": "beta-hydroxyacyl-ACP",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "catalyzes the reversible acylation of UDP-GlcNAc using FAS II-derived β-hydroxyacyl-ACP molecules",
+      "note": "The acyl donor for LpxA; the source renders it with a beta character as 'β-hydroxyacyl-ACP'."
+    },
+    {
+      "name": "R-3-hydroxymyristoyl-ACP",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "it is largely responsible for the elongation of saturated long chain substrates, including the Ec LpxA substrate R- 3-hydroxymyristoyl-ACP",
+      "note": "The paper names this as the specific E. coli LpxA substrate, i.e. the E. coli instance of the beta-hydroxyacyl-ACP donor."
+    },
+    {
+      "name": "acetyl group",
+      "reason": "distinguishes_identity_or_direction",
+      "reaction_ids": ["R2"],
+      "quote": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety",
+      "note": "R2 is a deacetylation; the removed acetyl group is what identifies the reaction and its direction."
+    },
+    {
+      "name": "UMP",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R4"],
+      "quote": "subsequent removal of UMP by LpxH, LpxI, or LpxG",
+      "note": "The only chemically named product of the LpxH/I/G step anywhere in this paper."
+    },
+    {
+      "name": "tetra-acylated disaccharide intermediate",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R5", "R6"],
+      "quote": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate",
+      "note": "Product of LpxB and substrate of LpxK; the paper gives it no other name."
+    },
+    {
+      "name": "lipid IVA",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R6", "R7"],
+      "quote": "which is phosphorylated by LpxK to produce lipid IV A",
+      "note": "Rendered in the source as 'lipid IV A', with a space before the roman numeral subscript."
+    },
+    {
+      "name": "Kdo",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R7"],
+      "quote": "the first sugar(s) of the core, 3-deoxy-D- manno -oct-2-ulosonic acid (Kdo)",
+      "note": "3-deoxy-D-manno-oct-2-ulosonic acid; the sugar WaaA transfers onto lipid IVA."
+    },
+    {
+      "name": "Kdo-lipid IVA",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R7", "R8"],
+      "quote": "resulting in Kdo-lipid IV A which is sequentially acylated by LpxL and LpxM",
+      "note": "Product of WaaA and substrate of the LpxL/LpxM acylations. Rendered 'Kdo-lipid IV A' in the source."
+    },
+    {
+      "name": "Kdo-lipid A",
+      "reason": "central_to_pathway_scope",
+      "reaction_ids": ["R9"],
+      "quote": "Lipid A along with the first sugar(s) of the core, 3-deoxy-D- manno -oct-2-ulosonic acid (Kdo), collectively called Kdo-lipid A",
+      "note": "The paper's stated end product of the pathway; the whole review is scoped to its production and regulation."
+    }
+  ],
+
+  "secondary_participants": [
+    {
+      "name": "acyl carrier protein (ACP)",
+      "class": "other",
+      "reaction_ids": ["R1"],
+      "quote": "using a β-hydroxyacyl-acyl carrier protein (ACP) substrate made by the type II fatty acid synthesis pathway",
+      "note": "The carrier moiety of the acyl donor; it is released rather than incorporated and does not by itself identify the reaction."
+    },
+    {
+      "name": "FtsH",
+      "class": "regulator",
+      "reaction_ids": ["R2"],
+      "quote": "FtsH was able to directly degrade LpxC, confirming FtsH as the first example of a direct regulator of lipid A biosynthesis",
+      "note": "A protease that degrades LpxC. It sets the abundance of the R2 catalyst; it is not a chemical participant in R2."
+    },
+    {
+      "name": "LapB",
+      "class": "regulator",
+      "reaction_ids": ["R2"],
+      "quote": "LapB binds to Ec LpxC to immediately reduce its activity and second, it directs Ec LpxC to FtsH for proteolysis",
+      "note": "Adaptor (formerly YciM) that both inhibits LpxC directly and delivers it to FtsH. Regulator of the R2 catalyst, not a participant."
+    },
+    {
+      "name": "YejM",
+      "class": "regulator",
+      "reaction_ids": ["R2"],
+      "quote": "the membrane protein YejM (called PbgA in Salmonella ) is capable of both binding to periplasmic LPS and acting as an antiadaptor of LapB",
+      "note": "Senses periplasmic LPS and gates LapB. Regulator of the R2 catalyst, not a participant."
+    },
+    {
+      "name": "ObgE",
+      "class": "regulator",
+      "reaction_ids": ["R1"],
+      "quote": "LpxA has also been shown to be inhibited by a dominant-negative variant of ObgE",
+      "note": "An essential GTPase reported to inhibit LpxA activity; regulates the R1 catalyst without entering the chemistry."
+    }
+  ],
+
+  "out_of_scope": [
+    {"name": "MsbA", "reason": "LPS transport, not lipid A biosynthesis. The paper separates 'the synthesis of lipid A and its subsequent assembly into the OM'; MsbA flips core-lipid A across the inner membrane, a translocation rather than a biosynthetic transformation"},
+    {"name": "Lpt system", "reason": "lipopolysaccharide transport to the outer membrane; a distinct downstream process the paper names as such"},
+    {"name": "O-antigen ligation", "reason": "LPS core/O-antigen assembly downstream of lipid A biosynthesis; the paper places it after transport across the inner membrane"},
+    {"name": "MurA", "reason": "committed enzyme of peptidoglycan biosynthesis; discussed only as a regulator of P. aeruginosa LpxC and as a competitor for UDP-GlcNAc"},
+    {"name": "FabZ", "reason": "type II fatty acid synthesis (FAS II) enzyme; supplies the acyl-ACP precursor but is not a lipid A biosynthetic enzyme"},
+    {"name": "FabI", "reason": "FAS II enzyme; named only in the context of palmitoyl-CoA inhibition and indirect effects on LpxC"},
+    {"name": "acetyl-CoA carboxylase", "reason": "fatty acid biosynthesis initiation; named only inside an indirect regulatory chain"},
+    {"name": "PldA", "reason": "outer-membrane phospholipase acting on glycerophospholipids; a different pathway"},
+    {"name": "FadD", "reason": "exogenous fatty acid import and activation to acyl-CoA; fatty acid metabolism, not lipid A biosynthesis"},
+    {"name": "PlsY", "reason": "glycerophospholipid biosynthesis enzyme, named only as a YejM copurifying partner"},
+    {"name": "WaaC", "reason": "LPS-core assembly protein, named only as a LapB copurifying partner; core assembly beyond the first Kdo sugars is a different stage"},
+    {"name": "EptA", "reason": "LPS modification enzyme, cited only for its homology to YejM"},
+    {"name": "LtaS", "reason": "lipoteichoic acid synthase, cited only for its homology to YejM"},
+    {"name": "Lon", "reason": "protease implicated in LpxC turnover in alphaproteobacteria; proteolysis, not lipid A chemistry"},
+    {"name": "NtrYX", "reason": "two-component system regulating lpxC transcription in Rhodobacter sphaeroides and Caulobacter crescentus"},
+    {"name": "ChvGI", "reason": "two-component system activating lpxC transcription in Caulobacter crescentus"},
+    {"name": "GcvB", "reason": "a small RNA affecting LpxC levels; gene regulation, not pathway chemistry"},
+    {"name": "(p)ppGpp", "reason": "stringent-response second messenger; an indirect regulatory input, and the paper states its effect on LpxA runs through binding the acyl-ACP substrate"},
+    {"name": "Ght", "reason": "Neisseria meningitidis LapB homolog; regulation, and in a non-requested organism"},
+    {"name": "LabP", "reason": "Cronobacter sakazakii LpxA activator; regulation in a non-requested organism"},
+    {"name": "RipA", "reason": "Francisella tularensis LpxA interactor; regulation in a non-requested organism"},
+    {"name": "RnhA / RnhB", "reason": "RNase H proteins reported to stimulate LpxA activity in vitro; regulators from RNA metabolism, not pathway chemistry"},
+    {"name": "UDP-3-O-(R-3-hydroxydecanoyl)-glucosamine", "reason": "the paper names this as the Pseudomonas aeruginosa LpxC product, not the E. coli one; attaching it to the E. coli chain would be an organism error"},
+    {"name": "cardiolipin", "reason": "a glycerophospholipid; discussed as a possible modulator of LpxK activity and of YejM/PbgA transport, not as a lipid A metabolite"}
+  ],
+
+  "uncertainties": [
+    "The paper delivers the entire chemistry of the requested pathway in ONE paragraph plus the Figure 1 legend. Roughly 85% of the body is about LpxC regulation, and much of that is in organisms other than the requested E. coli.",
+    "R3 (LpxD), R4 (LpxH/I/G), R8 (LpxL) and R9 (LpxM) have NO chemically named substrate or product in this paper; the transformation type and the catalyst are asserted but the species are only positional ('the next acyl group', 'sequentially acylated'). They are recorded as core because the paper asserts the transformations, but at medium confidence; a reviewer may prefer to treat them as enzyme assertions rather than as reactions.",
+    "The LpxA product and the LpxC product are never chemically named for E. coli in the body. The only chemically named LpxC product in the paper, 'UDP-3-O-(R-3-hydroxydecanoyl)-glucosamine', is explicitly the P. aeruginosa product and must not be attached to the E. coli chain. The E. coli LpxA product IS named inside a REFERENCE TITLE in the bibliography (reference 7), but that is a cited work's title, not an assertion of this paper's body, so I did not use it.",
+    "R8 and R9 could legitimately be curated as a SINGLE reaction ('Kdo-lipid IVA is sequentially acylated by LpxL and LpxM to form Kdo-lipid A'). I split them because the paper says the acylations are sequential and counts nine enzymes; a reviewer preferring one entry would not be wrong.",
+    "The sentence 'The nine steps in the Raetz pathway as well as the subsequent addition of the core sugars' can be read as EXCLUDING WaaA from the nine. Counting the enzymes the paper lists in order (LpxA, LpxC, LpxD, LpxH/I/G, LpxB, LpxK, WaaA, LpxL, LpxM) gives exactly nine only if WaaA is included. I included it; this is a genuine internal ambiguity in the source.",
+    "LpxH, LpxI and LpxG are given as organism-dependent alternatives in R4. The paper does not state which one E. coli uses. R4 lists all three; that is not an assertion that E. coli has three.",
+    "beta-hydroxyacyl-ACP is important in R1 but is also treated elsewhere in the paper as a shared FAS II currency species competed for by FabZ. It is recorded as important only for R1.",
+    "The regulators FtsH, LapB, YejM and ObgE are recorded as SECONDARY with reaction_ids pointing at the reaction whose CATALYST they control. They participate in no lipid A chemistry. If the downstream consumer expects secondary participants to be chemical species only, these four should be filtered out.",
+    "I deliberately did NOT record 'regulation of LpxC' or the 'YejM-LapB-FtsH partner switching' module as a major subprocess, even though it is the bulk of the paper. It is a regulatory module governing flux, not a constituent chemical stage of the requested pathway. The pinned gold case is consistent: it lists FtsH, LapB and YejM as acceptable_enzymes, not expected_enzymes.",
+    "No disagreement found between the pinned gold case and the paper.",
+    "Every quote in this file was verified by substring search against full_text before the file was written; all passed."
+  ]
+}

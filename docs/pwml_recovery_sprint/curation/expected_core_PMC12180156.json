@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "paper_id": "PMC12180156",
+  "requested_pathway": "heme biosynthesis",
+  "requested_organism": "Homo sapiens",
+  "source_cache_file": "48a60159cc20f1440483310afe45a6a1.json",
+  "source_chars": 67304,
+  "curated_by": "curation-agent-set-B",
+  "curation_date": "2026-09-02",
+
+  "expected_core_reactions": [],
+
+  "expected_major_subprocesses": [
+    {
+      "id": "S1",
+      "name": "the rate-limiting step of heme biosynthesis (the ALAS2 step)",
+      "aliases": [
+        "the rate-limiting step in heme biosynthesis",
+        "the ALAS2 step"
+      ],
+      "reaction_ids": [],
+      "detailed_in_paper": false,
+      "quote": "Glycine is also required for the rate-limiting step in heme biosynthesis.",
+      "confidence": "medium",
+      "rationale": "The paper refers to a constituent step of heme biosynthesis and separately names ALAS2 as its enzyme, but supplies no substrate pair, no product and no transformation, so the stage exists in the paper's text without its chemistry."
+    },
+    {
+      "id": "S2",
+      "name": "the ferrochelatase step of heme biosynthesis",
+      "aliases": [
+        "ferrochelatase"
+      ],
+      "reaction_ids": [],
+      "detailed_in_paper": false,
+      "quote": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
+      "confidence": "low",
+      "rationale": "The paper places ferrochelatase inside heme biosynthesis by naming it as the target of SFXN4 regulation, but it never names this as a stage, never says what ferrochelatase does, and never names its substrate or product; recorded at low confidence for exactly that reason."
+    }
+  ],
+
+  "important_participants": [
+    {
+      "name": "glycine",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [],
+      "quote": "Glycine is the direct precursor for heme",
+      "note": "The only heme-biosynthesis metabolite the paper names. It is asserted as a precursor relation, not as a substrate of any stated reaction; no reaction consuming it in heme biosynthesis is given."
+    },
+    {
+      "name": "heme",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": [],
+      "quote": "heme levels are decreased in these cells, and this lowering correlates with decreased activity of heme-dependent enzymes",
+      "note": "The end product of the requested pathway, named repeatedly as a quantity that rises or falls. No reaction producing it is stated anywhere in the paper."
+    },
+    {
+      "name": "ALAS2",
+      "reason": "distinguishes_identity_or_direction",
+      "reaction_ids": [],
+      "quote": "inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway",
+      "note": "Named enzyme only. Without ALAS2 named you could not tell which step of heme biosynthesis S1 refers to. Its substrates and product are never given: succinyl-CoA occurs zero times in the file, and neither ALA nor 5-aminolevulinic acid appears anywhere."
+    },
+    {
+      "name": "ferrochelatase",
+      "reason": "distinguishes_identity_or_direction",
+      "reaction_ids": [],
+      "quote": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
+      "note": "Named enzyme only. The paper states no reaction for it; protoporphyrin occurs zero times in the file, so its substrate is absent and its product is never attributed to it."
+    }
+  ],
+
+  "secondary_participants": [
+    {
+      "name": "SFXN4",
+      "class": "regulator",
+      "reaction_ids": [],
+      "quote": "SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis",
+      "note": "A mitochondrial transporter/assembly factor that regulates heme biosynthesis indirectly (ALAS2 translation, ferrochelatase levels); it catalyses no step of the pathway."
+    },
+    {
+      "name": "SFXN2",
+      "class": "regulator",
+      "reaction_ids": [],
+      "quote": "suggesting a selective impact on heme biosynthesis rather than broad disruptions in ISC function",
+      "note": "Loss of SFXN2 lowers heme levels; a phenotypic association, not a catalytic contribution."
+    },
+    {
+      "name": "SFXN1",
+      "class": "regulator",
+      "reaction_ids": [],
+      "quote": "SFXN1 also influences mitochondrial iron homeostasis indirectly by boosting glycine production.",
+      "note": "Supplies glycine indirectly via mitochondrial serine transport and one-carbon metabolism; catalyses no heme biosynthetic step."
+    },
+    {
+      "name": "mitochondrial iron",
+      "class": "other",
+      "reaction_ids": [],
+      "quote": "SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis",
+      "note": "Iron is discussed throughout as a mitochondrial pool, never as a substrate of an iron-insertion reaction. Fe 2+ / Fe 3+ appear in the body only inside an explicit NEGATIVE statement about SFXN transport function."
+    }
+  ],
+
+  "out_of_scope": [
+    {"name": "SHMT2 / serine hydroxymethyltransferase", "reason": "one-carbon metabolism: serine cleaved to glycine with 5,10-methylene-THF. Fully specified in the paper, but it is not a heme biosynthesis reaction. NOTE: the plant SHMT sentence states the reverse direction, so extracting that sentence into a human model inverts it"},
+    {"name": "5,10-methylene-THF", "reason": "one-carbon metabolism metabolite"},
+    {"name": "tetrahydrofolate (THF)", "reason": "one-carbon metabolism coenzyme"},
+    {"name": "formate", "reason": "one-carbon metabolism product exported to the cytosol"},
+    {"name": "NADPH", "reason": "product of folate one-carbon oxidation; not heme biosynthesis"},
+    {"name": "serine", "reason": "the SFXN1/SFXN3 transport substrate; feeds one-carbon metabolism, not heme biosynthesis directly"},
+    {"name": "iron-sulfur cluster (ISC) biogenesis", "reason": "a different pathway; the paper details it (frataxin, NFS1, ISCU, ferredoxin, ISA1-ISA2-IBA57) far more fully than it details heme biosynthesis"},
+    {"name": "NFS1", "reason": "cysteine desulfurase of ISC assembly"},
+    {"name": "ISCU", "reason": "ISC assembly scaffold"},
+    {"name": "frataxin", "reason": "iron delivery for ISC assembly"},
+    {"name": "IRP1 / cytosolic aconitase", "reason": "iron-responsive regulation; not a heme biosynthetic catalyst"},
+    {"name": "citrate / SLC25A1 / TCA cycle", "reason": "central carbon metabolism; the proposed SFXN5 function"},
+    {"name": "mitochondrial complex I / MCIA complex / complex III", "reason": "respiratory chain assembly"},
+    {"name": "PCBP2, TOM20", "reason": "mitochondrial iron entry complex partners of SFXN3"},
+    {"name": "FSF1", "reason": "the yeast S. cerevisiae SFXN family member; non-human, and carries no 'SFXN' string to flag it"}
+  ],
+
+  "uncertainties": [
+    "EXPECTED_CORE_REACTIONS IS DELIBERATELY EMPTY. This is a review of the sideroflexin (SLC56) gene family. It names heme biosynthesis repeatedly but does not state a single heme-biosynthesis transformation: no reaction in the file has both a substrate and a product named on the heme pathway. This is the correct curation, not a failure to look. I read the whole 67,304-character file; the body ends around character 24,000 and everything after the figure legends is references.",
+    "Verified by exhaustive substring search over full_text: 'succinyl' occurs 0 times; 'aminolevulinic' occurs exactly once (in the ALAS2 naming clause); 'protoporphyrin' occurs 0 times; 'porphyr' occurs 0 times. So ALAS2 is named with neither substrate nor product, and ferrochelatase is named with neither substrate nor product. Any reaction attributed to either would be imported from outside this paper.",
+    "S2 (the ferrochelatase step) is the weakest entry in this file and I would not defend it hard. The paper names ferrochelatase and places it inside heme biosynthesis by implication ('regulates heme biosynthesis by modulating ferrochelatase levels'), but it never calls it a stage and never says what it catalyses. A reviewer who deletes S2 is not obviously wrong. I kept it at low confidence because a named-but-undetailed branch is information the schema exists to record.",
+    "S1 is likewise a stage named only by function ('the rate-limiting step in heme biosynthesis'), not by chemistry. detailed_in_paper is false for both subprocesses; there is nothing in this paper that could make either true.",
+    "ALAS2 and ferrochelatase are recorded as important participants with reason 'distinguishes_identity_or_direction' rather than as reaction enzymes, because there is no reaction for them to be enzymes of. This is a slightly unusual use of the reason code and a reviewer should confirm it is the intended one; the alternative was to omit both, which would have lost the paper's only heme-pathway enzyme names.",
+    "CROSS-PAPER LEAKAGE RISK, stated explicitly: PMC12856317 (also assigned to me, also heme biosynthesis) DOES assert the ALAS2 condensation of glycine and succinyl-CoA. Nothing from that paper was carried into this one. The glycine entry here rests solely on this paper's own sentence 'Glycine is the direct precursor for heme'.",
+    "The paper fully specifies two reactions with both sides named — the SHMT2 serine-to-glycine cleavage and SFXN1 serine transport — and neither is heme biosynthesis. Both are in out_of_scope. They are the most plausible thing an extractor would wrongly retain as heme chemistry, because they are the only complete transformations in the file and glycine is their product.",
+    "All quotes in this file were verified as verbatim contiguous substrings of full_text by substring search. None failed."
+  ]
+}

@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "paper_id": "PMC12421875",
+  "requested_pathway": "menaquinone biosynthesis",
+  "requested_organism": "Bacillus subtilis",
+  "source_cache_file": "600dc32d336465b1efd48f241563f6fb.json",
+  "source_chars": 62985,
+  "curated_by": "curation-agent-setA (D-088 curation brief)",
+  "curation_date": "2026-09-02",
+
+  "expected_core_reactions": [
+    {
+      "id": "R1",
+      "description": "MenF (isochorismate synthase) catalyzes the REVERSIBLE conversion of chorismate to isochorismate; the paper stresses the reversibility as central to its regulatory model",
+      "substrates": ["chorismate"],
+      "products": ["isochorismate"],
+      "enzymes": ["MenF"],
+      "important_participants": ["chorismate", "isochorismate"],
+      "secondary_participants": [],
+      "quote": "The enzyme MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)",
+      "confidence": "high",
+      "rationale": "Substrate, product, catalyst and direction are all stated in one clause, and the paper calls MenF the first step of DHNA biosynthesis in L. lactis."
+    },
+    {
+      "id": "R2",
+      "description": "MenD (SEPHCHC synthase) converts isochorismate to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC); non-competitively inhibited by the pathway end product DHNA",
+      "substrates": ["isochorismate"],
+      "products": ["SEPHCHC"],
+      "enzymes": ["MenD"],
+      "important_participants": ["isochorismate", "SEPHCHC"],
+      "secondary_participants": [],
+      "quote": "MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor",
+      "confidence": "high",
+      "rationale": "Substrate, product, catalyst and the regulatory relationship are stated in one clause; this is the reaction the paper identifies as the dominant control point of the pathway."
+    },
+    {
+      "id": "R3",
+      "description": "MenH converts SEPHCHC to SHCHC",
+      "substrates": ["SEPHCHC"],
+      "products": ["SHCHC"],
+      "enzymes": ["MenH"],
+      "important_participants": ["SEPHCHC", "SHCHC"],
+      "secondary_participants": [],
+      "quote": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA.",
+      "confidence": "medium",
+      "rationale": "The paper pins this pair through its kinetic model rather than a prose sentence: the enzyme order is fixed by the seven-enzyme list, and the steady-state ODE system has MenH consuming C (SEPHCHC) and producing D (SHCHC). No single contiguous sentence states it, hence medium."
+    },
+    {
+      "id": "R4",
+      "description": "MenC (o-succinylbenzoate synthase) converts SHCHC to o-succinylbenzoate (OSB)",
+      "substrates": ["SHCHC"],
+      "products": ["OSB"],
+      "enzymes": ["MenC"],
+      "important_participants": ["SHCHC", "OSB"],
+      "secondary_participants": [],
+      "quote": "The o-succinylbenzoate synthase MenC catalyzes one of the intermediate reactions, whereas the isochorismate synthase MenF and the SEPHCHC synthase MenD catalyze the first and the second reactions, respectively",
+      "confidence": "medium",
+      "rationale": "The paper names MenC an o-succinylbenzoate synthase, which fixes its product as OSB, and its ODE system has MenC consuming D (SHCHC) and producing E (OSB). The substrate is pinned by the model, not by prose, hence medium."
+    },
+    {
+      "id": "R5",
+      "description": "MenE converts OSB to OSB-CoA",
+      "substrates": ["OSB"],
+      "products": ["OSB-CoA"],
+      "enzymes": ["MenE"],
+      "important_participants": ["OSB", "OSB-CoA"],
+      "secondary_participants": [],
+      "quote": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA.",
+      "confidence": "medium",
+      "rationale": "Pinned through the kinetic model: MenE consumes E (OSB) and produces F (OSB-CoA) in the ODE system, in the position fixed by the seven-enzyme order. Note the paper never names free CoA or ATP as cosubstrates of this thioesterification."
+    },
+    {
+      "id": "R6",
+      "description": "MenB converts OSB-CoA to DHNA-CoA",
+      "substrates": ["OSB-CoA"],
+      "products": ["DHNA-CoA"],
+      "enzymes": ["MenB"],
+      "important_participants": ["OSB-CoA", "DHNA-CoA"],
+      "secondary_participants": [],
+      "quote": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA.",
+      "confidence": "medium",
+      "rationale": "Pinned through the kinetic model: MenB consumes F (OSB-CoA) and produces G (DHNA-CoA), in the position fixed by the seven-enzyme order."
+    },
+    {
+      "id": "R7",
+      "description": "MenI converts DHNA-CoA to DHNA, the final step of the seven-enzyme chain from chorismate",
+      "substrates": ["DHNA-CoA"],
+      "products": ["DHNA"],
+      "enzymes": ["MenI"],
+      "important_participants": ["DHNA-CoA", "DHNA"],
+      "secondary_participants": [],
+      "quote": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
+      "confidence": "medium",
+      "rationale": "The quoted sentence makes MenI the last of the seven enzymes and DHNA the product of the chain; the ODE system confirms MenI consuming G (DHNA-CoA) and producing intracellular DHNA."
+    },
+    {
+      "id": "R8",
+      "description": "MenA (DHNA prenyltransferase) joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)",
+      "substrates": ["DHNA", "prenyl diphosphate"],
+      "products": ["demethylmenaquinone (DMK)"],
+      "enzymes": ["MenA"],
+      "important_participants": ["DHNA", "prenyl diphosphate", "demethylmenaquinone (DMK)"],
+      "secondary_participants": [],
+      "quote": "Subsequently, MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK), and MenG demethylates DMK to generate MK",
+      "confidence": "high",
+      "rationale": "Both substrates, the product and the catalyst are stated in one clause, and the paper separately identifies MenA as DHNA prenyltransferase when describing the menA knockout."
+    },
+    {
+      "id": "R9",
+      "description": "MenG converts DMK to MK. NOTE: the paper writes that MenG 'demethylates' DMK; see uncertainties, since demethylating DEmethylmenaquinone cannot yield menaquinone. The substrate/product pair is unambiguous; the verb is not.",
+      "substrates": ["demethylmenaquinone (DMK)"],
+      "products": ["menaquinone (MK)"],
+      "enzymes": ["MenG"],
+      "important_participants": ["demethylmenaquinone (DMK)", "menaquinone (MK)"],
+      "secondary_participants": [],
+      "quote": "Subsequently, MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK), and MenG demethylates DMK to generate MK",
+      "confidence": "medium",
+      "rationale": "The substrate, product and catalyst of the terminal step are stated, so the reaction is core; confidence is reduced to medium because the paper's verb for the transformation is internally inconsistent with its own substrate name."
+    }
+  ],
+
+  "expected_major_subprocesses": [
+    {
+      "id": "S1",
+      "name": "menaquinone biosynthesis pathway",
+      "aliases": ["MK biosynthesis", "quinone biosynthesis pathway"],
+      "reaction_ids": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"],
+      "detailed_in_paper": true,
+      "quote": "Schematic showing the menaquinone biosynthesis pathway. DHNA is the precursor of menaquinone.",
+      "confidence": "high",
+      "rationale": "The paper names the requested pathway and enumerates all nine of its reactions from chorismate to MK."
+    },
+    {
+      "id": "S2",
+      "name": "DHNA biosynthesis (the seven-enzyme chain from chorismate to DHNA)",
+      "aliases": ["DHNA biosynthesis pathway", "DHNA biosynthesis operon", "DHNA operon", "men operon"],
+      "reaction_ids": ["R1", "R2", "R3", "R4", "R5", "R6", "R7"],
+      "detailed_in_paper": true,
+      "quote": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
+      "confidence": "high",
+      "rationale": "The paper explicitly names this seven-enzyme segment as a stage of MK biosynthesis, and the entire study is scoped to its regulation."
+    },
+    {
+      "id": "S3",
+      "name": "conversion of DHNA to menaquinone (prenylation and terminal methyl transfer)",
+      "aliases": ["DHNA-utilizing pathways", "DMK and MK biosynthesis"],
+      "reaction_ids": ["R8", "R9"],
+      "detailed_in_paper": true,
+      "quote": "We knocked out menA (encodes for DHNA prenyltransferase) to prevent DHNA from being utilized for DMK and MK biosynthesis",
+      "confidence": "high",
+      "rationale": "The paper groups the two post-DHNA steps as the DHNA-utilizing segment and gives an enzyme, a substrate and a product for each."
+    },
+    {
+      "id": "S4",
+      "name": "allosteric feedback inhibition of MenD by DHNA",
+      "aliases": ["end-product feedback mechanism", "allosteric feedback inhibition"],
+      "reaction_ids": ["R2"],
+      "detailed_in_paper": true,
+      "quote": "the allosteric inhibition of MenD by DHNA also contributes to quinone homeostasis",
+      "confidence": "medium",
+      "rationale": "Recorded because the paper treats it as a constituent mechanism of the pathway with its own kinetic term (Ki) in the model, not merely as external regulation; a reviewer preferring to exclude regulation from subprocesses would drop it."
+    }
+  ],
+
+  "important_participants": [
+    {
+      "name": "chorismate",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
+      "note": "The stated entry substrate of the whole pathway, and the species the paper's Model 2 identifies as flux-limiting."
+    },
+    {
+      "name": "isochorismate",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1", "R2"],
+      "quote": "The enzyme MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)",
+      "note": "Product of R1 and substrate of R2. The paper notes that in E. coli this species is shared with siderophore biosynthesis but that L. lactis lacks that route."
+    },
+    {
+      "name": "SEPHCHC",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R2", "R3"],
+      "quote": "MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C), with DHNA acting as a non-competitive inhibitor",
+      "note": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate. Occurs in no pathway other than menaquinone biosynthesis, so it anchors the pathway on its own."
+    },
+    {
+      "name": "SHCHC",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R3", "R4"],
+      "quote": "C for SEPHCHC, D for SHCHC, E for OSB",
+      "note": "Product of MenH and substrate of MenC. The paper gives only the acronym, never the expanded chemical name."
+    },
+    {
+      "name": "OSB",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R4", "R5"],
+      "quote": "D for SHCHC, E for OSB, F for OSB-CoA",
+      "note": "o-succinylbenzoate; the paper supplies the expansion indirectly by naming MenC the o-succinylbenzoate synthase."
+    },
+    {
+      "name": "OSB-CoA",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R5", "R6"],
+      "quote": "E for OSB, F for OSB-CoA, and G for DHNA-CoA",
+      "note": "A legitimate CoA-thioester metabolite, distinct from free coenzyme A which this paper never names."
+    },
+    {
+      "name": "DHNA-CoA",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R6", "R7"],
+      "quote": "E for OSB, F for OSB-CoA, and G for DHNA-CoA",
+      "note": "The last intermediate before free DHNA; again a genuine metabolite, not the bare cofactor."
+    },
+    {
+      "name": "DHNA",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R7", "R8"],
+      "quote": "Since DHNA is the common precursor for all MK derivatives",
+      "note": "1,4-dihydroxy-2-naphthoic acid: product of R7 and a substrate of R8."
+    },
+    {
+      "name": "DHNA (as allosteric feedback inhibitor of MenD)",
+      "reason": "central_to_pathway_scope",
+      "reaction_ids": ["R2"],
+      "quote": "the allosteric inhibition of MenD by DHNA also contributes to quinone homeostasis",
+      "note": "SECOND ROLE of the same molecule. In R2 DHNA is neither substrate nor product but a non-competitive inhibitor with its own Ki in the paper's kinetic model. This dual role is the paper's central finding, so it is recorded separately rather than merged with the metabolite entry."
+    },
+    {
+      "name": "prenyl diphosphate",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R8"],
+      "quote": "Subsequently, MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK), and MenG demethylates DMK to generate MK",
+      "note": "The isoprenoid cosubstrate of the MenA prenylation. The paper leaves the chain length unspecified: it says 'prenyl diphosphate', never a specific MK-n donor."
+    },
+    {
+      "name": "demethylmenaquinone (DMK)",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R8", "R9"],
+      "quote": "Subsequently, MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK), and MenG demethylates DMK to generate MK",
+      "note": "Product of R8 and substrate of R9."
+    },
+    {
+      "name": "menaquinone (MK)",
+      "reason": "central_to_pathway_scope",
+      "reaction_ids": ["R9"],
+      "quote": "menaquinone (MK, vitamin K2) and its precursor 1,4-dihydroxy-2-naphthoic acid (DHNA)",
+      "note": "The end product of the requested pathway; also written 'vitamin K2'."
+    }
+  ],
+
+  "secondary_participants": [],
+
+  "out_of_scope": [
+    {"name": "chorismate biosynthesis", "reason": "the upstream aromatic-amino-acid route supplying chorismate. The paper treats it as a SEPARATE pathway, contrasting 'chorismate biosynthesis enzymes' with 'Men pathway enzymes', and names none of its enzymes"},
+    {"name": "siderophore biosynthesis", "reason": "named as the competing consumer of isochorismate in E. coli; the paper states L. lactis lacks it"},
+    {"name": "NoxAB", "reason": "NADH:quinone oxidoreductases, knocked out to stop DHNA redox cycling during quantification; respiration, not menaquinone biosynthesis"},
+    {"name": "NADH / NAD+", "reason": "redox currency in the respiratory discussion; never a participant in a Men reaction in this paper"},
+    {"name": "ferrozine / iron(III) oxide / Fe3+ / Fe2+", "reason": "colorimetric biosensor reagents and electron acceptors; assay chemistry, not pathway chemistry"},
+    {"name": "ammonium ferric citrate (AFC)", "reason": "terminal electron acceptor used in the anaerobic growth assays"},
+    {"name": "nisin", "reason": "the antimicrobial peptide used as a plasmid promoter inducer; an experimental tool"},
+    {"name": "mCherry", "reason": "fluorescent tag fused to MenC/MenF/MenD to monitor expression; a reporter, not a pathway protein"},
+    {"name": "riboflavin", "reason": "an alternative redox mediator from yeast extract, offered to explain a residual growth effect"},
+    {"name": "phenazine / flavin", "reason": "other redox-active molecules cited as regulatory analogues in the discussion"},
+    {"name": "MenFD / MenDF", "reason": "labels for the co-expression cassette carrying menF plus menD; a genetic construct used dozens of times as if it were an entity. It is not an enzyme"},
+    {"name": "A, B, C, D, E, F, G", "reason": "single-letter symbols the authors assign to metabolites for the kinetic model. Only the spelled-out names are real identities"},
+    {"name": "1-hydroxy-2-naphthoate (HNA)", "reason": "a DHNA analogue used for resistance selection in cited work; not a pathway intermediate"},
+    {"name": "cAMP receptor protein / CcpA", "reason": "transcriptional regulators speculatively invoked for men promoter activation; gene regulation, not pathway chemistry"},
+    {"name": "KF147 / NCIMB8826 / 5-alpha / 10-beta / pRV300 / pECGMC3", "reason": "strain, plasmid and cloning-vector designations"},
+    {"name": "dmkA / ndh1", "reason": "genes deleted in the L. plantarum biosensor strain to make it quinone-auxotrophic; biosensor engineering"}
+  ],
+
+  "uncertainties": [
+    "ORGANISM MISMATCH, recorded not resolved. The requested organism is Bacillus subtilis (topics_t104.txt and the pinned gold case). This is a LACTOCOCCUS LACTIS study, strain KF147, with Lactiplantibacillus plantarum used as the biosensor. B. subtilis appears only in cited-literature framing about prior metabolic-engineering attempts. No reaction in this file is asserted to occur in B. subtilis.",
+    "SOURCE ERROR, recorded and NOT corrected: the paper states 'MenG demethylates DMK to generate MK'. Demethylating DEmethylmenaquinone cannot yield menaquinone; the transformation as the paper's own nomenclature implies it is a methyl transfer onto DMK. I kept the paper's substrate/product pair (DMK to MK), which is unambiguous, and lowered R9 to medium confidence rather than substituting the verb I believe is correct. A reviewer should NOT read R9 as endorsing 'demethylation'.",
+    "R3, R4, R5, R6 and R7 are marked MEDIUM for one reason only: their substrate-product pairs are asserted through the paper's KINETIC MODEL (the letter assignment 'A for chorismate ... G for DHNA-CoA' plus the steady-state ODE system, equations 5-11) rather than through a prose sentence. No single contiguous quote states, for example, 'MenH converts SEPHCHC to SHCHC', and the brief forbids stitching a quote from two places. The pairings are nonetheless unambiguous: the seven-enzyme order and the letter order agree, and each ODE has enzyme alpha consuming one letter and producing the next.",
+    "COSUBSTRATES ARE MISSING THROUGHOUT. This paper never names ATP, free coenzyme A, thiamine diphosphate, 2-oxoglutarate, SAM or water anywhere. Case-sensitive counts: 'ThDP' 0, 'thiamine' 0, 'coenzyme A' 0; 'CoA' occurs twice and both are inside the metabolite names OSB-CoA and DHNA-CoA. So R5 (MenE, a CoA ligase) and R9 (a methyl transfer) have NO cosubstrate recorded, because the paper supplies none. secondary_participants is therefore EMPTY: there is no ordinary cofactor, currency metabolite, water or proton placed in any reaction in this text. That emptiness is a property of the paper, not an oversight.",
+    "R2 is the only step for which the paper reports a mechanistic regulatory constant; MenD is non-competitively inhibited by DHNA with a Ki taken from Mycobacterium tuberculosis literature. The Ki, KM and kcat values in Tables 1 and 2 are LITERATURE parameters from E. coli and M. tuberculosis, not measurements in L. lactis. No kinetic constant in this paper was measured in the requested organism.",
+    "DHNA appears TWICE in important_participants, once as the metabolite product/substrate of R7 and R8 and once as the allosteric inhibitor of MenD in R2. This is the deliberate dual-role recording the brief describes; it is not a duplicate and should not be deduplicated to a single global verdict.",
+    "MenD is described as 'the first step solely committed to DHNA biosynthesis' in E. coli, but the paper then states 'we consider MenF as the first step in L. lactis for DHNA biosynthesis' because L. lactis lacks siderophore biosynthesis. The committed-step designation is therefore organism-dependent in this paper, and R1 rather than R2 is the first step in the organism actually studied.",
+    "S4 (allosteric feedback inhibition) is the subprocess I was least sure about. It is regulation rather than chemistry, and by the reasoning I applied to PMC12444477 I would have excluded it. I included it here because this paper gives it its own kinetic term inside the pathway model and treats it as a constituent mechanism of DHNA biosynthesis rather than as an external regulator. A reviewer who drops S4 for consistency across the dataset has a fair case; nothing else in the file depends on it.",
+    "The largest structural DIFFERENCE from the neighbouring menaquinone papers in this benchmark, recorded here so nobody imports across them: this paper delivers the full chorismate-to-MK chain but NEVER names a specific isoprenoid chain length. It says only 'prenyl diphosphate' for the MenA cosubstrate and only 'MK' / 'DMK' for the products, never MK-7, HepPP or FPP. Any MK-7, DMK-7, heptaprenyl pyrophosphate or farnesyl pyrophosphate attributed to this paper has been carried in from a different paper.",
+    "No disagreement found between the pinned gold case and the paper. Gold's expected_enzymes are exactly MenF, MenD, MenH, MenC, MenE, MenB, MenI and MenA, matching R1-R8, and it places MenG under acceptable_enzymes; I recorded MenG as a core reaction because the paper gives it a substrate and a product, which is a slightly more inclusive reading of the same text rather than a conflict.",
+    "Every quote in this file was verified by substring search against full_text before the file was written; all passed."
+  ]
+}

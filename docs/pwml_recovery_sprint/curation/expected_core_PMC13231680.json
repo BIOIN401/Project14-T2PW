@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "paper_id": "PMC13231680",
+  "requested_pathway": "lipid A biosynthesis",
+  "requested_organism": "Escherichia coli",
+  "source_cache_file": "8f978b91b332f31f2a01f01cc1d6623f.json",
+  "source_chars": 61997,
+  "curated_by": "curation-agent-setA (D-088 curation brief)",
+  "curation_date": "2026-09-02",
+
+  "expected_core_reactions": [],
+
+  "expected_major_subprocesses": [],
+
+  "important_participants": [],
+
+  "secondary_participants": [],
+
+  "out_of_scope": [
+    {"name": "NDM-1", "reason": "New Delhi metallo-beta-lactamase-1. The paper's actual subject. An antibiotic-resistance hydrolase, not a lipid A biosynthetic enzyme"},
+    {"name": "beta-lactam hydrolysis by NDM-1", "reason": "antibiotic degradation chemistry; a different process entirely from the requested pathway"},
+    {"name": "meropenem", "aliases_note": "abbreviated MEM throughout the paper", "reason": "a carbapenem antibiotic; a drug, not a lipid A metabolite. Note the paper also writes 'MEM-resistant selective medium', and MEM elsewhere means Minimum Essential Medium"},
+    {"name": "phthalylsulfacetamide", "aliases_note": "abbreviated PSA throughout the paper", "reason": "the candidate inhibitor compound; a drug, not a pathway participant. PSA in most biomedical text means prostate-specific antigen"},
+    {"name": "sulfacetamide", "reason": "intestinal breakdown product of PSA; drug metabolism, not lipid A biosynthesis"},
+    {"name": "Zn2+", "reason": "a metal cofactor of both NDM-1 and LpxC and the docking site used in this study. It is neither a protein nor a lipid A metabolite, and the paper never places it in a lipid A reaction"},
+    {"name": "blaNDM-1", "reason": "the gene encoding NDM-1; rendered in this source with a Unicode minus sign. Not a lipid A entity"},
+    {"name": "TNF-alpha / IL-1beta / IFN-gamma", "reason": "murine inflammatory cytokines measured in the infection model; host immunology, not bacterial biosynthesis"},
+    {"name": "clavulanic acid / sulbactam / tazobactam", "reason": "serine beta-lactamase inhibitors named in the introduction; drug pharmacology"},
+    {"name": "aspergillomarasmine A / EDTA", "reason": "comparator metallo-beta-lactamase inhibitors named in the discussion"},
+    {"name": "VIM / IMP", "reason": "other metallo-beta-lactamases named as untested targets"},
+    {"name": "LpxC", "reason": "LpxC IS a lipid A biosynthetic enzyme and IS named here, but the paper asserts no reaction it catalyses. It appears only as a molecular-docking receptor (PDB 3PS2) for the compound PSA. It is recorded here rather than as an expected enzyme because a docking target is not a curated reaction"}
+  ],
+
+  "uncertainties": [
+    "DELIBERATELY EMPTY RESULT. This paper contains NO extractable chemistry of the requested pathway. expected_core_reactions and expected_major_subprocesses are empty because the paper asserts no lipid A transformation, not because curation was abandoned.",
+    "Independent full-text counts I ran on this cache entry: 'lipid A' occurs 1 time; 'LpxC' 9 times; 'lipopolysaccharide' 1 time; and 'UDP' 0, 'GlcNAc' 0, 'Kdo' 0, 'acyl' 0, 'deacetyl' 0, 'LpxA' 0, 'LpxD' 0, 'WaaA' 0, 'lipid IV' 0, 'myristoyl' 0. Not one lipid A substrate, product or intermediate appears anywhere in the text.",
+    "All nine LpxC mentions are in one of three roles and none is a reaction: (a) a docking receptor structure -- 'Based on the LpxC enzyme structure obtained from the Protein Data Bank (PDB ID: 3PS2), the zinc ion site was defined as the active docking site.'; (b) a figure-panel caption -- 'Molecular docking of PSA with the zinc ion active center of the LpxC enzyme'; (c) a hedged speculation about the compound's secondary mechanism.",
+    "The only sentence in the paper that connects LpxC to the requested pathway is: 'Molecular docking analysis suggests that PSA may potentially interact with LpxC, a key enzyme involved in lipid A biosynthesis'. It names the pathway; it delivers none of it. This is the definition of a context-only mention.",
+    "The paper hedges the LpxC claim three separate times, in the abstract, the results and the discussion: 'this observation remains preliminary and requires further experimental validation'; 'However, this proposed mechanism remains hypothetical and requires further experimental validation.'; 'However, this proposed mechanism remains speculative and requires further experimental validation. Therefore, the potential involvement of LpxC should be interpreted with caution.' The authors themselves decline to assert the LpxC interaction, let alone any chemistry downstream of it.",
+    "SOURCE ERROR, recorded and NOT propagated: the paper calls LpxC 'the LPS synthase' -- 'molecular docking analysis suggested that PSA may bind to the catalytic center of the LPS synthase LpxC'. LpxC is a deacetylase, not a synthase. I did not create any entry from this sentence. The paper's own abstract is likewise inconsistent with its own discussion, saying 'a key enzyme involved in lipopolysaccharide synthesis' in one place and 'a key enzyme involved in lipid A biosynthesis' in the other.",
+    "I considered and REJECTED recording 'lipid A biosynthesis' itself as a major subprocess with detailed_in_paper: false. The brief allows a named-but-undetailed BRANCH of the requested pathway to be recorded, but this is the requested pathway's own name, not a constituent stage of it, and recording it would create an entry that a naive consumer could expand back into the Raetz pathway from outside knowledge. Naming a pathway is not delivering a stage of it.",
+    "PADDING RISK, stated explicitly: I know the Raetz pathway well enough to write nine LpxC-adjacent reactions from memory. None of them is in this paper and none was written. Any UDP-GlcNAc, lipid IVA or Kdo-lipid A associated with this paper is imported knowledge.",
+    "This paper is not about E. coli lipid A biosynthesis; it is an NDM-1 inhibitor discovery study in an NDM-1-positive clinical E. coli isolate plus a BALB/c mouse infection model. The requested organism does appear, but not doing the requested biology.",
+    "No gold-vs-paper disagreement. The pinned gold case independently classifies this paper as 'context_only' with empty expected_pathway_anchors, expected_enzymes, expected_substrates and expected_products, and my reading of the full text reached the same place before I compared. Its stated counts also match the counts I measured.",
+    "There were zero quotes to verify by substring search, because there are zero entries. The ten verbatim spans I cite inside these uncertainties and in the accompanying notes file WERE each verified by substring search against full_text, and all ten passed."
+  ]
+}

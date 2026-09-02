@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "paper_id": "PMC12657337",
+  "requested_pathway": "menaquinone biosynthesis",
+  "requested_organism": "Bacillus subtilis",
+  "source_cache_file": "2756073ab2435e6920b580d093c2c54b.json",
+  "source_chars": 57814,
+  "curated_by": "curation-agent-setA (D-088 curation brief)",
+  "curation_date": "2026-09-02",
+
+  "expected_core_reactions": [
+    {
+      "id": "R1",
+      "description": "Idi is asserted by this paper to convert IPP to farnesyl pyrophosphate (FPP). SEE uncertainties: the paper's own figure legend contradicts this by defining Idi as IPP isomerase.",
+      "substrates": ["isopentenyl pyrophosphate (IPP)"],
+      "products": ["farnesyl pyrophosphate (FPP)"],
+      "enzymes": ["Idi"],
+      "important_participants": ["isopentenyl pyrophosphate (IPP)", "farnesyl pyrophosphate (FPP)"],
+      "secondary_participants": [],
+      "quote": "The enzyme Idi , which converts IPP to farnesyl pyrophosphate (FPP), was crucial for further conversion by HepPPS to form heptaprenyl pyrophosphate (HepPP)",
+      "confidence": "low",
+      "rationale": "The paper states substrate, product and catalyst in one clause and frames the MVA/isoprenoid module as one of the three modules of MK-7 biosynthesis; but the assertion is internally contradicted by the paper's own Figure 1 legend and is the weakest entry in this file."
+    },
+    {
+      "id": "R2",
+      "description": "HepPPS (heptaprenyl pyrophosphate synthase, from B. subtilis) converts farnesyl pyrophosphate to heptaprenyl pyrophosphate",
+      "substrates": ["farnesyl pyrophosphate (FPP)"],
+      "products": ["heptaprenyl pyrophosphate (HepPP)"],
+      "enzymes": ["HepPPS"],
+      "important_participants": ["farnesyl pyrophosphate (FPP)", "heptaprenyl pyrophosphate (HepPP)"],
+      "secondary_participants": [],
+      "quote": "BsHepPPS encodes heptaprenyl pyrophosphate synthase, which catalyzes the conversion of farnesyl pyrophosphate to heptaprenyl pyrophosphate",
+      "confidence": "high",
+      "rationale": "Explicit substrate-to-product conversion with a named catalyst, and the step that determines the MK-7 (seven-isoprenoid) chain length that this whole paper is about. Asserted twice, once in the introduction and once in the results."
+    },
+    {
+      "id": "R3",
+      "description": "MenA, a prenyltransferase, conjugates heptaprenyl pyrophosphate with DHNA to form demethylmenaquinone (DMK-7)",
+      "substrates": ["heptaprenyl pyrophosphate (HepPP)", "DHNA"],
+      "products": ["demethylmenaquinone (DMK-7)"],
+      "enzymes": ["MenA"],
+      "important_participants": ["heptaprenyl pyrophosphate (HepPP)", "DHNA", "demethylmenaquinone (DMK-7)"],
+      "secondary_participants": [],
+      "quote": "EcMenA encodes a prenyltransferase that catalyzes the conjugation of heptaprenyl pyrophosphate with DHNA to form demethylmenaquinone",
+      "confidence": "high",
+      "rationale": "Both substrates, the product and the catalyst are named; this is the reaction the paper's entire enzyme-engineering effort targets as the pathway bottleneck."
+    },
+    {
+      "id": "R4",
+      "description": "UbiE, a methyltransferase, methylates demethylmenaquinone (DMK-7) to produce menaquinone-7 (MK-7)",
+      "substrates": ["demethylmenaquinone (DMK-7)"],
+      "products": ["menaquinone-7 (MK-7)"],
+      "enzymes": ["UbiE"],
+      "important_participants": ["demethylmenaquinone (DMK-7)", "menaquinone-7 (MK-7)"],
+      "secondary_participants": ["S-adenosyl-L-methionine (SAM)", "S-adenosyl-L-homocysteine (SAH)"],
+      "quote": "BsUbiE encodes a methyltransferase that catalyzes the methylation of demethylmenaquinone to produce MK-7",
+      "confidence": "high",
+      "rationale": "Explicit substrate-to-product methylation with a named catalyst; the terminal step producing the paper's target molecule. Asserted twice."
+    }
+  ],
+
+  "expected_major_subprocesses": [
+    {
+      "id": "S1",
+      "name": "MK-7 pathway",
+      "aliases": ["MK-7 module", "terminal menaquinone-7 steps"],
+      "reaction_ids": ["R2", "R3", "R4"],
+      "detailed_in_paper": true,
+      "quote": "The metabolic pathway responsible for MK-7 biosynthesis is primarily divided into three modules (the MVA pathway, DHNA pathway, and MK-7 pathway).",
+      "confidence": "high",
+      "rationale": "The paper explicitly names this as one of three modules of MK-7 biosynthesis and gives all three of its reactions with substrate and product."
+    },
+    {
+      "id": "S2",
+      "name": "DHNA pathway",
+      "aliases": ["1,4-dihydroxy-2-naphthoate pathway"],
+      "reaction_ids": [],
+      "detailed_in_paper": false,
+      "quote": "we focused on the MVA pathway to provide isopentenyl pyrophosphate (IPP) and the DHNA pathway to provide DHNA",
+      "confidence": "high",
+      "rationale": "Named twice as a constituent module of MK-7 biosynthesis and as the source of the DHNA substrate of R3, but NOT ONE of its enzymes or steps appears anywhere in this paper."
+    },
+    {
+      "id": "S3",
+      "name": "MVA pathway",
+      "aliases": ["mevalonate pathway", "mevalonate (MVA) pathway"],
+      "reaction_ids": ["R1"],
+      "detailed_in_paper": false,
+      "quote": "The MVA pathway, incorporating EfmvaE , EfmvaS , MmmvK , ScpmK , and ScmvD , was assembled into a single expression cassette and integrated into the genome at the msbB site.",
+      "confidence": "medium",
+      "rationale": "Named as one of the three modules of MK-7 biosynthesis and given an enzyme roster, but no substrate-to-product step of it is stated in prose; only the Figure 1 legend expands the abbreviations."
+    },
+    {
+      "id": "S4",
+      "name": "MEP pathway",
+      "aliases": ["methylerythritol phosphate pathway"],
+      "reaction_ids": [],
+      "detailed_in_paper": false,
+      "quote": "The biosynthesis of MK-7 requires two main metabolic pathways: the methylerythritol phosphate (MEP) pathway to produce isopentenyl pyrophosphate (IPP), and the 1,4-dihydroxy-2-naphthoate (DHNA) pathway to produce DHNA",
+      "confidence": "medium",
+      "rationale": "The introduction names MEP as one of the two pathways MK-7 biosynthesis requires. It is recorded because the paper asserts it, but the paper then builds a heterologous MVA route instead; see uncertainties."
+    }
+  ],
+
+  "important_participants": [
+    {
+      "name": "farnesyl pyrophosphate (FPP)",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1", "R2"],
+      "quote": "In this pathway, HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP), MenA converts HepPP to DMK-7, and UbiE methylates DMK-7 to yield MK-7.",
+      "note": "Product of R1 and substrate of R2; the C15 isoprenoid the chain-elongation step starts from."
+    },
+    {
+      "name": "heptaprenyl pyrophosphate (HepPP)",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R2", "R3"],
+      "quote": "In this pathway, HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP), MenA converts HepPP to DMK-7, and UbiE methylates DMK-7 to yield MK-7.",
+      "note": "Product of R2 and prenyl donor of R3. Its seven-isoprenoid chain is what makes the product MK-7 rather than another MK-n; the paper states E. coli makes MK-8 by default 'due to the lack of heptaprenyl pyrophosphate synthase'."
+    },
+    {
+      "name": "DHNA",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R3"],
+      "quote": "MenA, DHNA heptaprenyltransferase; DHNA, 1,4-dihydroxy-2-naphthoate; Heps, heptaprenyl pyrophosphate synthetase I",
+      "note": "1,4-dihydroxy-2-naphthoate, the naphthoquinone-ring precursor conjugated by MenA. R3 is not the MenA reaction without it."
+    },
+    {
+      "name": "demethylmenaquinone (DMK-7)",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R3", "R4"],
+      "quote": "In this pathway, HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP), MenA converts HepPP to DMK-7, and UbiE methylates DMK-7 to yield MK-7.",
+      "note": "Product of R3 and substrate of R4. The paper uses 'demethylmenaquinone' and 'DMK-7' interchangeably for the same species."
+    },
+    {
+      "name": "menaquinone-7 (MK-7)",
+      "reason": "central_to_pathway_scope",
+      "reaction_ids": ["R4"],
+      "quote": "Menaquinone-7 (MK-7), a key form of vitamin K2 with wide-ranging nutritional and pharmaceutical applications",
+      "note": "The paper's target product; the entire study is scoped to raising its titer. Also written 'vitamin K2'."
+    },
+    {
+      "name": "isopentenyl pyrophosphate (IPP)",
+      "reason": "defining_substrate_or_product",
+      "reaction_ids": ["R1"],
+      "quote": "we focused on the MVA pathway to provide isopentenyl pyrophosphate (IPP) and the DHNA pathway to provide DHNA",
+      "note": "The stated substrate of R1 and the output of the MVA/MEP precursor modules."
+    }
+  ],
+
+  "secondary_participants": [
+    {
+      "name": "S-adenosyl-L-methionine (SAM)",
+      "class": "cofactor",
+      "reaction_ids": ["R4"],
+      "quote": "SAM, S-adenosyl- l -methionine; SAH, S-adenosyl- l -homocysteine; DMK-7, demethylmenaquinone-7; UbiE: ubiquinone/menaquinone biosynthesis methyltransferase",
+      "note": "The methyl donor for the UbiE methylation. It appears ONLY in the Figure 1 abbreviation list and is never placed inside the reaction in prose. See uncertainties: a case exists for classing it as important instead."
+    },
+    {
+      "name": "S-adenosyl-L-homocysteine (SAH)",
+      "class": "currency_metabolite",
+      "reaction_ids": ["R4"],
+      "quote": "SAM, S-adenosyl- l -methionine; SAH, S-adenosyl- l -homocysteine; DMK-7, demethylmenaquinone-7; UbiE: ubiquinone/menaquinone biosynthesis methyltransferase",
+      "note": "The spent methyl donor. Appears only in the Figure 1 abbreviation list; never placed in a reaction in prose."
+    }
+  ],
+
+  "out_of_scope": [
+    {"name": "acetyl-CoA synthetase (acs)", "reason": "acetate assimilation. The paper overexpresses it to feed acetyl-CoA into the MVA module; central carbon metabolism, upstream of and outside the three named MK-7 modules"},
+    {"name": "acetate", "reason": "central carbon metabolite / fermentation byproduct the paper works to reduce"},
+    {"name": "acetyl-CoA", "reason": "central carbon currency metabolite feeding the MVA pathway; not a menaquinone intermediate"},
+    {"name": "PoxB", "reason": "pyruvate oxidase, knocked out to reduce acetate accumulation; central carbon metabolism"},
+    {"name": "NlpI", "reason": "knocked out for membrane/storage-capacity reasons; a cell envelope lipoprotein, not a pathway enzyme"},
+    {"name": "ubiquinone-8 (Q-8)", "reason": "a different quinone the paper names as a native E. coli product; ubiquinone biosynthesis is a competing pathway"},
+    {"name": "menaquinone-8 (MK-8)", "reason": "the native E. coli menaquinone homolog; a competing chain-length product, not the requested MK-7 chain"},
+    {"name": "demethylmenaquinone-8 (DMK-8)", "reason": "the eight-isoprenoid analogue of DMK-7; a competing-product species, not an MK-7 intermediate"},
+    {"name": "ubiC / ubiA / ispB", "reason": "named as competing-pathway genes disrupted in a cited prior study"},
+    {"name": "ispA", "reason": "named only in the Figure 1 abbreviation list ('Isopentenyl pyrophosphate transferase'); isoprenoid chain elongation, and no reaction is given for it in the text"},
+    {"name": "MetK", "reason": "methionine adenosyltransferase, named only in the Figure 1 abbreviation list; SAM regeneration, not menaquinone chemistry"},
+    {"name": "octaprenyl pyrophosphate synthase", "reason": "overexpressed by the co-culture partner Elizabethkingia meningoseptica in a cited study; a different chain length and a different organism"},
+    {"name": "phylloquinone (Vitamin K1)", "reason": "a different vitamin K form named in the introduction; plant naphthoquinone, not bacterial menaquinone biosynthesis"},
+    {"name": "menadione", "reason": "a chemical-synthesis substrate named in the introduction, not a biosynthetic intermediate"},
+    {"name": "osteocalcin (OC) / matrix Gla protein (MGP)", "reason": "human vitamin K-dependent proteins named for clinical motivation; host physiology"},
+    {"name": "3-alpha-HSDH / l-sorbosone dehydrogenase (SNDH)", "reason": "unrelated enzymes cited only as precedents for protein-engineering methodology"},
+    {"name": "pSB1a/mena/ubie, pBAD-MVA, pTarget, pCas9", "reason": "plasmid names, not genes or proteins"},
+    {"name": "BL21(DE3)", "reason": "an E. coli strain designation"},
+    {"name": "G110W, Q57T, G110W-Q57T, T290M", "reason": "point-mutation labels on MenA; they collapse to the parent protein and are not distinct enzymes"}
+  ],
+
+  "uncertainties": [
+    "ORGANISM MISMATCH, recorded not resolved. The requested organism is Bacillus subtilis (topics_t104.txt and the pinned gold case both say so). This paper is an ESCHERICHIA COLI metabolic engineering study. B. subtilis appears only as the gene donor for HepPPS and UbiE (the author labels BsHepPPS and BsUbiE) and as the organism of cited prior work. No menaquinone reaction is asserted to occur in B. subtilis here.",
+    "R1 IS THE WEAKEST ENTRY IN THIS FILE AND I NEARLY OMITTED IT. The paper's body says 'The enzyme Idi , which converts IPP to farnesyl pyrophosphate (FPP)'. The paper's OWN Figure 1 legend says 'Idi, IPP isomerase' and separately lists 'ispA, Isopentenyl pyrophosphate transferase'. Those two statements cannot both be right. I included R1 at LOW confidence because the brief requires curating what the paper asserts rather than what I believe is correct, and the paper does supply substrate, product and catalyst. A reviewer who drops R1 as a source defect would have a strong case. Do not treat R1 as validated biology.",
+    "SAM classification is genuinely ambiguous. A methyltransferase reaction arguably is not identifiable as a methylation without its methyl donor, which would make SAM 'distinguishes_identity_or_direction' and therefore IMPORTANT. I classed it SECONDARY because this paper never places SAM inside the UbiE reaction; SAM and SAH appear only in the Figure 1 abbreviation glossary. If the consumer weights the reaction semantics over the paper's placement, SAM should move to important_participants for R4.",
+    "PRECURSOR-PATHWAY INCONSISTENCY IN THE SOURCE. The introduction says MK-7 biosynthesis requires 'the methylerythritol phosphate (MEP) pathway to produce isopentenyl pyrophosphate (IPP)', but the Figure 1 legend and the whole results section use a heterologous MEVALONATE (MVA) pathway instead. Both are recorded as subprocesses (S3 MVA, S4 MEP) because the paper asserts both; they are alternative routes to the same IPP, not sequential stages.",
+    "POSSIBLE ENZYME-ASSIGNMENT SWAP IN THE FIGURE LEGEND: the legend reads 'MvaE, HMG-CoA synthase; MvaS, HMG-CoA reductase'. In the standard Enterococcus faecalis nomenclature these two assignments are the other way round. I did not build any reaction from either, so nothing in this file depends on it, but a reviewer should not treat the legend as an authority on MVA enzymology.",
+    "THE DHNA PATHWAY IS THE BIG OMISSION. DHNA is a substrate of R3 and the paper names 'the DHNA pathway' twice as a module of MK-7 biosynthesis, but supplies NO enzyme and NO step for it. Case-sensitive full-text counts I ran: MenF 0, MenH 0, MenC 0, MenE 0, MenB 0, MenI 0, MenG 0; chorismate 0, isochorismate 0, SEPHCHC 0, SHCHC 0, OSB 0. S2 is therefore recorded with an EMPTY reaction_ids and detailed_in_paper: false. Any MenF-to-MenI chain attributed to this paper is imported from elsewhere.",
+    "MenD occurs 4 times but never with a substrate, a product or a reaction. Every occurrence is a citation of Huang et al.'s B. subtilis engineering work ('Huang et al. identified MenD and MenA as key enzymes in MK-7 biosynthesis in B. subtilis'). MenD is a genuine menaquinone enzyme, so it is NOT in out_of_scope, but it supports no core reaction here.",
+    "The paper writes MenA as 'EcMenA', HepPPS as 'BsHepPPS' and UbiE as 'BsUbiE'. These are author-coined organism-prefix labels for the same enzymes and must normalise to base symbol plus organism, not become novel proteins. The Figure 1 legend also uses 'Heps' for heptaprenyl pyrophosphate synthetase I, a third spelling of the R2 catalyst.",
+    "R2, R3 and R4 are each asserted TWICE in the paper (once in the introduction as a compact three-clause sentence describing the route, once in the results as three per-gene clauses). I used the results wording for the reaction quotes because it is the paper's own construct rather than a summary of a cited study; the introduction sentence is used for the participant quotes.",
+    "No disagreement found between the pinned gold case and the paper. Gold's expected_enzymes are exactly HepPPS, MenA and UbiE, matching R2-R4, and gold places Idi and acs under acceptable_enzymes, consistent with my low-confidence R1 and my out-of-scope acs.",
+    "Every quote in this file was verified by substring search against full_text before the file was written; all passed."
+  ]
+}
