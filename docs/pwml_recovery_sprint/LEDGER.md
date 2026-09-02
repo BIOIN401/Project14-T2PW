@@ -9378,3 +9378,43 @@ this wave.**
 - **Probes and logs committed, not just the reports** — `d088_subprocess_recall_ab.py` / `.log`,
   `d088_stage0_spec_stability.py` / `.log`.
 - F-147 untouched and still deliberately unchartered. `placeholder_backed_proteins` untouched.
+
+## ORCH-719 continued — C-115 and the residuals it surfaced
+
+**C-115 (`agent/c115-census-repin` @ `cf941778`) implemented, under independent review (`REV-115`).**
+Five census pins moved to the measured corpus; **SMOKE 503 passed / exit 0 at its tip — the first
+green SMOKE on this branch since `479128b3`.** Mutation attack unchanged at **8/8**. Exactly one file
+in the diff, `src/` byte-identical, **zero** run-tree files touched, gold blob unchanged.
+
+**The attribution is verified, not asserted.** The other **fourteen** run trees sum to exactly
+**72 / 100 / 29** — the old pins, to the unit — so `runs_verify/2026-09-01_1612` accounts for 100% of
+every delta. Had any one of those sums been off, "one run accounts for everything" would have been
+arithmetic coincidence rather than attribution.
+
+**+11, not +20, and the distinction is real.** T-108 ran 20 legs; only **11** emit a
+`quarantine_report.json` — the other nine never reached quarantine. **My dispatch prose said "20
+legs" and was imprecise; the implementer measured rather than trusting it.** Recorded because a
+reviewer expecting +20 would read the correct number as an error.
+
+### Residuals registered, NOT chartered — all three are stale TEXT, none is a stale assertion
+
+Surfaced by C-115 and deliberately left outside its one-file boundary:
+
+| # | Where | What is stale |
+|---|---|---|
+| R-C115-1 | `evidence/c102_mutation_attack.py` baseline-precondition diagnostic | still prints C-106-era `withheld == 97`, `matched-forb == 26` and line numbers ~430/~540. **Now doubly wrong.** The next agent to hit this will be told the wrong numbers *by the thing telling it what to fix* |
+| R-C115-2 | `tests/test_c106_mutation_harness_executable.py:301` | its message says *"FOUR pins move together"* and then lists **five**. This is TRAP-B in C-115's own card, and the card had to warn about it precisely because the message under-counts |
+| R-C115-3 | `evidence/orch717_census_probe.py` | prints frozen `(pinned == 62)` / `(pinned == 92)` / `(pinned == 23)` labels from ORCH-717. **Its measurements are live and correct**; only the parenthetical reminders are stale |
+
+**None of these is an assertion and none can fail a gate.** They are all instances of one shape:
+**guidance text that goes stale while the assertion beside it stays correct**, which is more dangerous
+than a stale assertion because nothing turns red. R-C115-1 is the worst of the three and should be
+taken first.
+
+### Open, and blocking everything downstream
+
+- **The D-088 runtime-cap question is with the product owner** — `DECISION-PACKET-D088-RUNTIME-CAP.md`.
+  Nothing past `HANDOFF.md` § 5.2a step 7 proceeds until it is answered.
+- **C-114 is blocked** on the `test_c011_freeze_seam_golden_equivalence.py` byte-pin. Disposition —
+  invertible `_DELTAS` entry versus a separate diagnostics artifact — is with `REV-114`.
+- **Step 9 stays NO-GO.** No milestone launched, none scheduled.
