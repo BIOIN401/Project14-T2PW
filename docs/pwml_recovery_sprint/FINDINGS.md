@@ -8259,3 +8259,123 @@ carried that grouping forward. Reading the payload took one command and split th
 **A reclassification is a one-way door for everything inside it.** Before downgrading a population
 from hard failure to warning, read the individual members, because after the downgrade nobody will:
 the warning will be expected, and an expected warning is invisible.
+
+### AMENDMENT, same day — the auditor CORRECTED two of this finding's four rows and its governing clause; a census sized the fourth
+
+**Preserved rather than rewritten, per the sprint rule that a failed measurement is kept beside its
+correction.** Adjudication by `pwml-bio-auditor` against the committed T-108 artifacts and gold;
+census committed as `evidence/f169_wiring_census.py` / `.log`, G11 `ORCH-719/04`.
+
+**The ATP row survives intact and is classified. Everything I said about the other three was wrong or
+imprecise, and one of the corrections is substantial.**
+
+#### Row-by-row, what the artifacts actually say
+
+| row | this finding said | the artifacts say |
+|---|---|---|
+| **`ATP`** | present, wired, a matcher gap | **CONFIRMED.** `product_contract_violation`, scoped to the coverage/diagnostic record — not to the release status |
+| **`NADH`** | *"genuinely absent ordinary cofactor"* | **WRONG, and importantly so.** `NADH` is on **this case's own `forbidden_identifiers`** — *"Coupled-assay reporter species from the LDH readout, not pathway metabolites"* — and gold's `export_rationale` says *"Export must exclude MenD, LDH and the transport mentions."* It was extracted, then removed as `unreferenced_after_quarantine` and **preserved in `removed_entity_report.json`.** **Dropping it is the contract-obeying outcome**, not a cofactor gap |
+| **`Fur`** | *"genuinely absent regulator"* | **IMPRECISE.** Not absent — it is in `final_mapped.json → quarantined_proteins[0]`, reason `not_referenced_by_any_surviving_process`, with full lineage. The D-088 clause 2 disposition stands; *"absent"* did not |
+| **`EntD`** | extracted, its process quarantined | **CONFIRMED, with a cause I did not state.** The quarantine trigger is **`apo-EntB`**, not EntD — `protein_missing_external_identity` — and **`apo-EntB` is itself on this case's `forbidden_identifiers`**. So *"wire EntD properly"* is **not a free move**: it would require admitting a process whose substrate gold says is not a standalone protein |
+
+**The consequence for this finding's own framing:** I described "present vs absent in the payload" as
+the axis. **It is not.** Neither `NADH` nor `Fur` is absent from the *record* — both are preserved
+with reasons. **The load-bearing axis is WIRED vs UNWIRED into an admitted process, which is D-088
+clause 6 exactly.** That distinction also *vindicates the matcher's design*: matching anchors against
+admitted processes rather than against the entity list is **correct and must not be changed** — F-167's
+trap 3. **The ATP defect is not that the matcher checks processes; it is that the string comparison
+inside that check fails on a synonym. Conflating those is how trap 3 gets walked into.**
+
+#### The clause citation was wrong, and the correct one is stronger
+
+This finding argued a cofactor downgrade would hide `ATP` and cited **D-088 clause 10**. **Clause 10
+does not cover it.** Clause 10 targets *"a change that moves Priority 5 off zero by removing the
+measurement rather than by improving recall"* — and the `ATP` correction **moves no score at all**:
+coverage goes `12/16 = 0.75` to `13/16 = 0.8125`, above a threshold it had already cleared, three
+anchors stay unmatched, the F-094 cap still fires, and Priority 5 stays `0/2`. **There is no score to
+gain, which makes this row the *least* score-suspect of the four, not the most.**
+
+**The governing clauses are 7 and 8.** Clause 7 protects *evidence*, and a downgrade would preserve
+the row's bytes while the assertion those bytes make stays false — **a preserved falsehood is not
+evidence.** Clause 8 is sharper still: its five mandated reporting categories are core reaction /
+subprocess recall · reaction correctness · extracted-but-unwired entities · participant/cofactor
+completeness · Stage-0 specification inconsistency. **None of the five is "the instrument was
+wrong."** So under any faithful D-088 implementation the `ATP` row is misfiled **by construction**
+into participant/cofactor completeness, where it reads as a real cofactor gap that does not exist.
+**D-088 has no bucket for an instrument fault, because when it was written nobody knew there was one.**
+
+#### The defect's LOCATION moves, and the remedy is constrained
+
+**Not the matcher.** `strict_quarantine._term_matches` is deliberately a dumb bidirectional-substring
+rule and its docstring says why. Turning it into a synonym resolver would put chemical knowledge
+inside the instrument that grades chemical output — **F-167's standing lesson in a new costume.** The
+defect is **upstream, in canonicalisation**: `BIOCHEMICAL_ALIAS_MAP`'s documented purpose is that
+downstream passes see consistent names, and it carries `"atp"` while omitting the spelled-out form.
+The codebase **already asserts the two are one compound** — `pwml/compound_templates.py` maps both
+`"adenosine triphosphate"` and `"atp"` to template **42** — but that table lives *downstream of the
+freeze*, and `PRODUCT_CONTRACT` § 5 forbids borrowing an exporter's knowledge to repair the canonical
+graph.
+
+**Merge rule 6 constrains any remedy.** `"atp"` is a three-character token under bidirectional
+substring matching: injected naively, a process named *"ATP-binding cassette transporter"* would
+satisfy an ATP anchor with no ATP participant anywhere. **That is a real weakening and it is why no
+implementation is proposed here.**
+
+#### How big is it? The census the auditor asked for
+
+The auditor established that F-167's `90/374` *"present in the extracted payload"* is a **lower bound
+biased down by exactly this defect** — that census matches entity NAMES by substring and **did not
+count ATP** — and that the corpus held **no measurement of wired-vs-unwired** within the 84%
+population D-088 would downgrade. `evidence/f169_wiring_census.py` supplies it, using **only
+production's own equivalence tables** (`COMPOUND_NAME_TO_TEMPLATE`, 103 names over 36 groups, plus
+`BIOCHEMICAL_ALIAS_MAP`), **authoring no synonyms**:
+
+```
+legs examined                          : 73
+anchors examined                       : 374
+anchors whose replay DISAGREED with the archived verdict :   0
+anchors UNMATCHED but WIRED via a production-declared synonym : 12   (3.2%)
+anchors genuinely not wired            : 362   (96.8%)
+```
+
+**All 12 are `ATP` on `PMC12096016`, across 8 run trees and 12 legs — every archived run of that
+paper since 2026-08-18.**
+
+**Both halves of that number matter and neither may travel alone.**
+
+- **It is not one row on one leg.** It is chronic, reproducible, and present in every run of that
+  paper — which is what makes it a defect rather than a draw artefact.
+- **It is 3.2% of the population.** **362 of 374 unmatched anchors are genuinely unwired**, so
+  D-088's cofactor downgrade is *mostly right*, and this finding is **not** an argument against it.
+  The auditor's Q5 concern is real **and bounded**, and reporting the 12 without the 362 would
+  reproduce precisely the error F-167's amendment was registered for.
+
+**The zero is a result too:** a faithful replay of the archived matcher disagreed with the archived
+verdict on **no anchor at all**, so the committed coverage verdicts are internally sound and this
+probe is measuring what it claims to.
+
+**Both numbers are LOWER BOUNDS.** A synonym absent from both production tables is invisible to this
+census, so the wired count can only be understated — stated here rather than discovered later.
+
+#### Disposition, updated
+
+**`ATP` is classified `product_contract_violation`** — narrowly, against the *diagnostic record*, not
+the release status. `quarantine_report.json`'s `expansion_blocked_reason` asserts that admitting these
+anchors *"would require unsupported biology"*; **for ATP that sentence is false in both halves.**
+`PRODUCT_CONTRACT` § 1, § 3 and § 7 all require that record to be accurate.
+
+**Still NOT chartered.** The remedy is upstream, merge rule 6 constrains it, and the anchor list it
+would correct is itself scheduled for replacement under D-088 clause 9 — which is a real argument for
+**deprioritising** it, and not an argument for leaving the record false. **Recorded, sized, located
+and left for an owner.**
+
+#### Two leads the auditor flagged and did not pursue, recorded so they are not lost
+
+1. **`NADH`'s forbidden entry may be over-broad.** Its stated reason covers only the LDH readout, yet
+   its alias list sweeps in **`NAD+`**, which is genuinely EntA's co-substrate (EC 1.3.1.28). A
+   database-supported `NAD+` addition to the EntA step would be defensible and gold would score it
+   forbidden. **No committed leg has done this**, so it is a hypothesis about future behaviour, not an
+   observed defect. **Gold under-specification, unclassified.**
+2. **`holo-EntB` is a separate protein entry** in `final_mapped.json`, which this case's own gold
+   clause says none of these cofactor-loading states should be. It carries **no accession**, so the
+   fabricated-identity concern does not attach. **Unclassified, outside the questions asked.**

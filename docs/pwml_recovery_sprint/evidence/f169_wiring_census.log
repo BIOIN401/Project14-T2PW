@@ -1,0 +1,112 @@
+F-169 — ARE UNMATCHED ANCHORS ALREADY WIRED INTO AN ADMITTED CORE PROCESS?
+==============================================================================================
+repo                              : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+roots scanned                     : runs/ AND runs_verify/, both named
+coverage_summary.json found       : 83
+equivalence source                : PRODUCTION tables only, nothing authored
+  COMPOUND_NAME_TO_TEMPLATE names : 103
+  BIOCHEMICAL_ALIAS_MAP entries   : 38
+  names with >= 1 equivalent      : 124
+
+==============================================================================================
+RESULT
+==============================================================================================
+  legs_examined                             : 73
+  legs_without_quarantine_report            : 0
+  anchors                                   : 374
+  anchors_direct_match_REPLAY_DISAGREES     : 0
+  anchors_wired_via_synonym                 : 12
+  anchors_not_wired                         : 362
+
+==============================================================================================
+EVERY ANCHOR THAT IS UNMATCHED BUT WIRED, under production's own compound identity
+==============================================================================================
+  runs_verify/2026-08-18_1328  PMC12096016/research        
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-08-18_1328  PMC12096016/strict          
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-08-21_2057  PMC12096016/strict          
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-08-21_2239  PMC12096016/strict          
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-08-22_2147  PMC12096016/research        
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-08-22_2147  PMC12096016/strict          
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-08-24_1203  PMC12096016/research        
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-08-24_1203  PMC12096016/strict          
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-08-24_1428  PMC12096016/strict          
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-08-27_1341  PMC12096016/strict          
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-09-01_1612  PMC12096016/research        
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+  runs_verify/2026-09-01_1612  PMC12096016/strict          
+      anchor    : 'ATP'
+      equivalents used (from production tables): ['adenosinetriphosphate']
+      matched core_terms: ['adenosinetriphosphate']
+
+==============================================================================================
+WHAT THIS DOES AND DOES NOT SAY
+==============================================================================================
+  This is a LOWER BOUND on both sides of the question:
+    * a synonym absent from BOTH production tables is invisible here, so the
+      wired count can only be understated;
+    * F-167's 90/374 'present in the payload' is likewise a lower bound, biased
+      down by the same blindness -- it did not count ATP on PMC12096016/strict.
+
+  It does NOT licence a matcher change. The auditor ruled the matcher's
+  substring rule and its match-against-ADMITTED-PROCESSES design are both
+  correct (D-088 clause 6; F-167 trap 3), and located the defect UPSTREAM in
+  canonicalisation. This probe sizes the problem and proposes nothing.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e8876d06917ace8faaa8dffca221dff729d4645c  [git, worktree dirty=True]
+label                   : f169-wiring-census
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/f169_wiring_census.py .
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 1073144 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 0.69 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1070948:python.exe
+descendants terminated  : 1  1070948
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-719\04-f169-wiring-census.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-719  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
