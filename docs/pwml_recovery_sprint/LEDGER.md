@@ -9477,3 +9477,51 @@ previous occurrence. Care is not the control; mechanism is:
 **Standing lesson.** *A hazard you have written down is not a hazard you have controlled.* The
 mitigation that works is the one that removes the failure mode from the mechanism — running in
 background — not the one that asks the operator to remember.
+
+## C-115 MERGED — `9d106fa7`, 2026-09-02. Merge gate 10 is satisfiable again.
+
+**Approved by `REV-115` on the actual diff; all eleven merge rules pass, none un-evaluable.**
+Integration tip after merge and evidence commit: **`758b72b9`**, pushed, local = `origin/` =
+`ls-remote`. `main` untouched.
+
+**F-171 is closed.** SMOKE goes `3 failed / 500 passed` → **`503 passed, exit 0`**, measured
+independently three times (implementer, reviewer, and my own pre-merge baseline establishing the
+failure).
+
+**What made this review worth more than an approval.** REV-115 did not merely confirm
+`test_09_the_derived_census_pins_are_equality_not_a_floor` passes — it built a scratch worktree,
+relaxed `legs == 83` to `legs >= 83`, and confirmed **test_09 fails while c102's own test 10
+passes**. That is the silent vacuity test_09 exists to catch, caught on demand. **On a card whose
+entire content is moving pinned numbers, "the tripwire is still armed" is the only check that
+matters, and it is not the same check as "the suite is green."**
+
+**The attribution was verified, not accepted.** The other **fourteen** run trees sum to exactly
+**72 / 100 / 29** — the old pins, to the unit — so `runs_verify/2026-09-01_1612` accounts for 100% of
+every delta. Had any one sum been off, "one run explains everything" would have been arithmetic
+coincidence wearing the clothes of an attribution.
+
+**+11, not +20.** T-108 ran 20 legs; **nine never reached quarantine** — six `scope_conflict` at
+stage 1, two `no_reactions`, one 3600.8 s timeout — and emit no `quarantine_report.json`. **My
+dispatch prose said "20 legs" and was imprecise.** Both implementer and reviewer measured instead of
+trusting it, and both named the nine.
+
+### Corrections and residuals from this merge
+
+- **`9d106fa7`'s message is mangled in one sentence.** Backticks were consumed by shell substitution:
+  *"relaxed  to ,"* should read *"relaxed `legs == 83` to `legs >= 83`"*. **`HANDOFF.md` § 7 forbids
+  `amend`, so the commit stands and the correction lives in `758b72b9`'s message.** No claim changed
+  meaning. **Standing fix: write commit messages to a file and use `git commit -F`, never a heredoc
+  containing backticks.**
+- **R-C115-4, new, found by the reviewer and not by the implementer:**
+  `tests/test_c102_coverage_denominator.py:446` still reads *"NO LEG JOINED THE CORPUS -- `legs`
+  above is unmoved at 72."* Accurate as a historical note about C-113; **read in present tense it is
+  now false.** It belongs to the C-113 attribution block, not to any of the five pins, so it was
+  correctly out of C-115's boundary. **Joins R-C115-1..3 on the follow-up card.**
+- **INFO, worth knowing before anyone quotes it:** the phrase `` `complete: true` `` for T-108's run
+  appears in `HANDOFF.md:61` and was reproduced by C-115's card and comment — but **there is no
+  `complete` field anywhere in `runs_verify/2026-09-01_1612`.** The underlying facts are true (10
+  papers, 20 manifest rows, 0 skipped). Backticked, it reads as a field quotation that does not
+  exist.
+- **Systemic, not this card:** `bounded_run` JSON reports carry an exit code but **no pass/fail
+  counts**, so a committed report cannot by itself substantiate *"503 passed"* — only *"exit 0"*. The
+  count must be read from the piped output or re-measured. Both reviewer and I re-measured.
