@@ -301,7 +301,7 @@ def test_08_the_census_pins_still_match_the_committed_corpus():
     assert live == pinned, (
         f"the committed quarantine_report.json population is {live} but the c102 "
         f"suite pins {pinned}. A run was committed and the census pins are now "
-        f"stale -- this is F-151 recurring. FOUR pins move together, not one: the "
+        f"stale -- this is F-151 recurring. FIVE pins move together, not one: the "
         f"floor, test 10 `legs`, test 10 `withheld`, test 13 `checked` and test 13 "
         f"`with_matched_forbidden`. Re-measure with "
         f"evidence/orch717_census_probe.py, move each pin to its measured value "
