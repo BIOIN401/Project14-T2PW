@@ -144,3 +144,30 @@ Two `REV-114` refinements carry forward as requirements, not suggestions:
 - **Not** whether `test_c011` or `test_c074` should ever be amended for some other card. This says
   only that **a diagnostic-only addition is not a good enough reason.**
 - **Not** T-108. Step 9 stays NO-GO.
+
+---
+
+## 7. CONTINGENCY RESOLVED — 2026-09-02, same day: the AppTest gate shows no collision
+
+§ 2 recorded this ruling as contingent on the four AppTest-heavy files, which were excluded from the
+deterministic sweep and had to go through the authoritative split-process gate.
+
+**Chunk D at the C-114 tip, `chunk_d_gate.py run`, G11 `ORCH-719/14` plus the gate's own 28 reports:**
+
+```
+[chunk-d] jobs=28 executed=187/187 omissions=0 additions=0 failed=none
+FINAL SURVIVING COUNT : 0    cleanup : success    on every one of 28 jobs
+```
+
+**All 187 pass, the partition is proved on the invocation, and none of the four AppTest files
+collides with the added keys.** The two that touch the verdict assert membership only
+(`"quarantine_coverage" not in session_state`), exactly as `REV-114` predicted.
+
+**The consumer enumeration is therefore COMPLETE**, across both the deterministic and the AppTest
+surfaces: **C-114's collision set is exactly `test_c011_freeze_seam_golden_equivalence` (3 tests) and
+`test_c074_strict_core_floor` (2 tests). There is no third.**
+
+**The ruling stands as written, and it is no longer contingent.** Note that a green Chunk D does not
+*support* route B — it removes an argument that would have supported it further. **The ruling was
+never resting on the collision count**; it rests on what `test_c074_strict_core_floor.py:462`
+detected, which is unchanged by this result.
