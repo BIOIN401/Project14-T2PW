@@ -1,0 +1,293 @@
+D-088 — STAGE-0 SPECIFICATION STABILITY ACROSS ARCHIVED DRAWS
+==============================================================================================
+repo                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+roots scanned            : runs/ AND runs_verify/, both named
+coverage_summary.json    : 83
+nothing re-run, re-scored or mutated
+
+==============================================================================================
+PER PAPER/MODE — how many subprocesses did Stage 0 name, draw by draw?
+==============================================================================================
+paper/mode                         draws        counts seen  union always  stable?
+----------------------------------------------------------------------------------------------
+PMC12096016/research                   8       [5, 7, 8, 9]     40      0       NO
+PMC12096016/strict                     8       [5, 6, 7, 8]     33      0       NO
+PMC12180156/research                   5             [3, 4]     15      0       NO
+PMC12180156/strict                     5          [2, 3, 4]     13      0       NO
+PMC12444477/research                   2            [5, 10]     13      2       NO
+PMC12444477/strict                     2            [5, 11]     16      0       NO
+PMC12452463/research                   8             [5, 6]     22      0       NO
+PMC12452463/strict                    10       [4, 5, 6, 8]     31      0       NO
+PMC12782028/research                   7       [0, 4, 5, 6]     14      0       NO
+PMC12782028/strict                     7             [4, 5]     17      1       NO
+PMC12856317/research                   7             [4, 5]     23      0       NO
+PMC12856317/strict                     8             [4, 5]     21      0       NO
+PMC13231680/research                   2                [5]      7      3       NO
+PMC13231680/strict                     2                [3]      5      1       NO
+
+paper/mode pairs with >= 2 archived draws : 14
+  Stage-0 named an IDENTICAL subprocess set every time : 0
+  Stage-0 named a DIFFERENT subprocess set across draws: 14
+
+==============================================================================================
+THE TWO NAMED CONSEQUENCE PAPERS, DRAW BY DRAW, IN FULL
+==============================================================================================
+
+--- PMC12096016/strict  (8 archived draws) ---
+  runs_verify/2026-08-18_1328  n=6
+      * isochorismate synthase reaction (EntC)
+      * isochorismatase reaction (EntB N-terminal domain)
+      * 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction (EntA)
+      * 2,3-DHB adenylation and loading onto ArCP domain of EntB (EntE)
+      * Phosphopantetheinylation of EntB (EntD)
+      * Non-ribosomal peptide assembly and cyclization (EntF)
+  runs_verify/2026-08-21_2057  n=7
+      * isochorismate synthesis from chorismate (EntC)
+      * isochorismate hydrolysis to 2,3-dihydro-2,3-dihydroxybenzoate (EntB N-terminal domain)
+      * dehydrogenation to 2,3-DHB (EntA)
+      * adenylation of 2,3-DHB (EntE)
+      * phosphopantetheinylation of EntB (EntD)
+      * non-ribosomal peptide synthesis and cyclization (EntF)
+      * ferric enterobactin uptake (TonB-dependent)
+  runs_verify/2026-08-21_2239  n=5
+      * EntC-catalyzed isomerization of chorismate to isochorismate
+      * EntB isochorismatase-catalyzed conversion of isochorismate to 2,3-diDHB and pyruvate
+      * EntA-catalyzed dehydrogenation to 2,3-DHB
+      * EntE-catalyzed adenylation of 2,3-DHB and transfer to EntB ArCP domain
+      * EntF-catalyzed NRPS assembly, elongation with L-serine, cyclization, and product release
+  runs_verify/2026-08-22_2147  n=6
+      * chorismate isomerization to isochorismate (EntC)
+      * isochorismate hydrolysis to 2,3-dihydro-2,3-dihydroxybenzoate (EntB isochorismatase)
+      * dehydrogenation to 2,3-dihydroxybenzoic acid (EntA)
+      * 2,3-DHB adenylation (EntE)
+      * phosphopantetheinylation of EntB (EntD)
+      * enterobactin assembly via NRPS (EntF)
+  runs_verify/2026-08-24_1203  n=8
+      * isochorismate formation from chorismate (EntC)
+      * isochorismate hydrolysis to 2,3-diDHB and pyruvate (EntB isochorismatase domain)
+      * 2,3-diDHB oxidation to 2,3-DHB (EntA)
+      * 2,3-DHB adenylation and loading onto EntB ArCP domain (EntE)
+      * NRPS condensation with L-serine and cyclization (EntF)
+      * enterobactin secretion (TolC-dependent)
+      * ferric-enterobactin uptake (TonB-dependent)
+      * competitive inhibition of EntB isochorismatase by 2,3-DHB
+  runs_verify/2026-08-24_1428  n=5
+      * isochorismate formation from chorismate (EntC)
+      * isochorismate hydrolysis to 2,3-diDHB and pyruvate (EntB isochorismatase)
+      * 2,3-DHB formation via dehydrogenation (EntA)
+      * 2,3-DHB activation by adenylation (EntE)
+      * enterobactin assembly via non-ribosomal peptide synthesis and cyclization (EntF)
+  runs_verify/2026-08-27_1341  n=7
+      * Chorismate isomerization to isochorismate (EntC)
+      * Isochorismate hydrolysis to 2,3-diDHB and pyruvate (EntB isochorismatase)
+      * Reduction of 2,3-diDHB to 2,3-DHB (EntA)
+      * Adenylation of 2,3-DHB by EntE
+      * Phosphopantetheinylation of EntB ArCP domain by EntD
+      * Loading of 2,3-DHB onto holo-EntB and transfer to EntF
+      * Three cycles of condensation with L-serine and cyclization to form enterobactin (EntF)
+  runs_verify/2026-09-01_1612  n=5  <== T-108
+      * chorismate isomerization to isochorismate (EntC)
+      * isochorismate hydrolysis to 2,3-diDHB and pyruvate (EntB isochorismatase)
+      * 2,3-diDHB reduction to 2,3-DHB (EntA)
+      * 2,3-DHB adenylation and loading onto EntB (EntE)
+      * enterobactin assembly via NRPS cycles (EntF)
+
+--- PMC12096016/research  (8 archived draws) ---
+  runs_verify/2026-08-18_1328  n=5
+      * isochorismate synthase (EntC)
+      * isochorismatase (EntB N-terminal domain)
+      * 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase (EntA)
+      * 2,3-DHB adenylation (EntE)
+      * non-ribosomal peptide synthesis (EntF)
+  runs_verify/2026-08-21_2057  n=8
+      * isochorismate formation (EntC)
+      * isochorismate hydrolysis to 2,3-diDHB and pyruvate (EntB IC domain)
+      * 2,3-diDHB dehydrogenase to 2,3-DHB (EntA)
+      * 2,3-DHB adenylation (EntE)
+      * phosphopantetheinylation of EntB (EntD)
+      * NRPS assembly of enterobactin from activated 2,3-DHB and L-serine (EntF)
+      * competitive inhibition of EntB isochorismatase by 2,3-DHB
+      * EntC-EntB isochorismate channeling
+  runs_verify/2026-08-21_2239  n=8
+      * chorismate isomerization to isochorismate (EntC)
+      * isochorismate hydrolysis to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate (EntB isochorismatase domain)
+      * 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenation to 2,3-dihydroxybenzoic acid (EntA)
+      * 2,3-dihydroxybenzoic acid adenylation (EntE)
+      * phosphopantetheinylation of EntB ArCP domain (EntD)
+      * non-ribosomal peptide synthesis and cyclization (EntF)
+      * enterobactin secretion via TolC-dependent process
+      * ferric-enterobactin import via TonB-dependent uptake
+  runs_verify/2026-08-22_2147  n=7
+      * conversion of chorismate to isochorismate (EntC)
+      * hydrolysis of isochorismate to 2,3-diDHB and pyruvate (EntB isochorismatase)
+      * dehydrogenation of 2,3-diDHB to 2,3-DHB (EntA)
+      * adenylation of 2,3-DHB by EntE
+      * phosphopantetheinylation of EntB ArCP domain by EntD
+      * non-ribosomal peptide synthesis and cyclization (EntF, L-serine)
+      * competitive inhibition of EntB isochorismatase by 2,3-DHB
+  runs_verify/2026-08-24_1203  n=5
+      * biosynthesis of 2,3-DHB from chorismate via EntC, EntB, EntA
+      * adenylation of 2,3-DHB by EntE
+      * non-ribosomal peptide synthesis and cyclization by EntF
+      * substrate channeling between EntC and EntB
+      * regulation by Fur and feedback inhibition by 2,3-DHB
+  runs_verify/2026-08-24_1428  n=9
+      * chorismate isomerization to isochorismate by EntC
+      * isochorismate hydrolysis to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate by EntB isochorismatase domain
+      * 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenation to 2,3-DHB by EntA
+      * 2,3-DHB adenylation by EntE
+      * 2,3-DHB transfer to EntB ArCP domain
+      * non-ribosomal peptide bond formation and cyclization by EntF
+      * phosphopantetheinylation of EntB by EntD
+      * enterobactin secretion via TolC
+      * ferric-enterobactin import via TonB
+  runs_verify/2026-08-28_1816  n=5
+      * isochorismate synthesis (EntC)
+      * isochorismatase activity (EntB)
+      * 2,3-DHB formation (EntA)
+      * adenylation of 2,3-DHB (EntE)
+      * non-ribosomal peptide assembly and cyclization (EntF)
+  runs_verify/2026-09-01_1612  n=7  <== T-108
+      * isochorismate synthase (EntC) conversion of chorismate to isochorismate
+      * isochorismatase (EntB N-terminal domain) hydrolysis of isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate
+      * 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase (EntA) conversion to 2,3-DHB
+      * 2,3-DHB adenylation by EntE and transfer to EntB ArCP domain
+      * non-ribosomal peptide synthesis by EntF (condensation with L-serine, cyclization, release)
+      * phosphopantetheinylation of EntB by EntD
+      * ferric-enterobactin uptake via TonB-dependent transport
+
+--- PMC12782028/strict  (7 archived draws) ---
+  runs_verify/2026-08-21_1822  n=4
+      * conversion of 2,3-oxidosqualene to lanosterol (catalyzed by LSS)
+      * demethylation of lanosterol (catalyzed by CYP51A1)
+      * demethylation of 4,4-dimethyl and 4alpha-methylsterols (catalyzed by MSMO1)
+      * reduction of desmosterol to cholesterol (catalyzed by DHCR24)
+  runs_verify/2026-08-21_2239  n=4
+      * Conversion of 2,3-oxidosqualene to lanosterol (LSS)
+      * Lanosterol 14α-demethylation to 4,4-dimethylcholesta-8(9),14,24-trien-3β-ol (CYP51A1)
+      * Methylsterol monooxygenation for demethylation of 4,4-dimethyl and 4α-methylsterols (MSMO1)
+      * Reduction of desmosterol to cholesterol (DHCR24)
+  runs_verify/2026-08-22_2147  n=5
+      * conversion of 2,3-oxidosqualene to lanosterol
+      * lanosterol 14α-demethylation
+      * demethylation of 4,4-dimethyl and 4alpha-methylsterols
+      * conversion of desmosterol to cholesterol
+      * mevalonate pathway
+  runs_verify/2026-08-24_1428  n=5
+      * conversion of 2,3-oxidosqualene to lanosterol
+      * lanosterol 14α-demethylation
+      * C-4 demethylation of methylsterols
+      * conversion of desmosterol to cholesterol
+      * mevalonate pathway
+  runs_verify/2026-08-27_1341  n=5
+      * conversion of 2,3-oxidosqualene to lanosterol
+      * demethylation of lanosterol (C-14α demethylation)
+      * monooxygenation of 4,4-dimethyl and 4alpha-methylsterols
+      * reduction of desmosterol to cholesterol
+      * mevalonate pathway (upstream isoprenoid biosynthesis)
+  runs_verify/2026-08-28_1816  n=5
+      * Conversion of 2,3-oxidosqualene to lanosterol by LSS
+      * Demethylation of lanosterol by CYP51A1
+      * Demethylation of methylsterols by MSMO1
+      * Reduction of desmosterol to cholesterol by DHCR24
+      * Steroid biosynthesis (KEGG hsa00100)
+  runs_verify/2026-09-01_1612  n=5  <== T-108
+      * mevalonate pathway
+      * lanosterol synthesis from 2,3-oxidosqualene
+      * lanosterol 14α-demethylation
+      * methylsterol demethylation
+      * desmosterol reduction to cholesterol
+
+--- PMC12782028/research  (7 archived draws) ---
+  runs_verify/2026-08-21_1822  n=6
+      * mevalonate pathway
+      * squalene epoxidation
+      * lanosterol formation from 2,3-oxidosqualene
+      * lanosterol 14α-demethylation
+      * methylsterol demethylation
+      * desmosterol reduction to cholesterol
+  runs_verify/2026-08-21_2239  n=4
+      * Conversion of 2,3-oxidosqualene to lanosterol
+      * Lanosterol 14α-demethylation
+      * Methylsterol monooxygenation
+      * Conversion of desmosterol to cholesterol
+  runs_verify/2026-08-22_2147  n=4
+      * Conversion of 2,3-oxidosqualene to lanosterol by LSS
+      * 14α-demethylation of lanosterol by CYP51A1
+      * Demethylation of 4,4-dimethyl and 4alpha-methylsterols by MSMO1
+      * Reduction of desmosterol to cholesterol by DHCR24
+  runs_verify/2026-08-24_1402  n=5
+      * conversion of 2,3-oxidosqualene to lanosterol (LSS)
+      * lanosterol 14α-demethylation (CYP51A1)
+      * methylsterol monooxygenation (MSMO1)
+      * conversion of desmosterol to cholesterol (DHCR24)
+      * mevalonate pathway
+  runs_verify/2026-08-24_1428  n=0
+  runs_verify/2026-08-28_1816  n=4
+      * conversion of 2,3-oxidosqualene to lanosterol
+      * lanosterol 14α-demethylation
+      * methylsterol demethylation
+      * reduction of desmosterol to cholesterol
+  runs_verify/2026-09-01_1612  n=5  <== T-108
+      * mevalonate pathway
+      * squalene epoxidation
+      * lanosterol formation
+      * lanosterol demethylation
+      * desmosterol reduction to cholesterol
+
+==============================================================================================
+THE SPECIFIC ROW THAT FORCED THIS PROBE
+==============================================================================================
+  runs_verify/2026-08-21_1822  n=4  names a mevalonate stage: NO 
+  runs_verify/2026-08-21_2239  n=4  names a mevalonate stage: NO 
+  runs_verify/2026-08-22_2147  n=5  names a mevalonate stage: YES
+  runs_verify/2026-08-24_1428  n=5  names a mevalonate stage: YES
+  runs_verify/2026-08-27_1341  n=5  names a mevalonate stage: YES
+  runs_verify/2026-08-28_1816  n=5  names a mevalonate stage: NO 
+  runs_verify/2026-09-01_1612  n=5  names a mevalonate stage: YES
+
+  archived PMC12782028/strict draws                 : 7
+  draws in which Stage 0 NAMED a mevalonate stage   : 4
+  draws in which it did NOT                         : 3
+
+  F-167 established that this leg's upstream mevalonate arm is absent in EVERY
+  run, and that the leg has never cleared: 0.222 0.280 0.296 0.321 0.571 0.538.
+  The BIOLOGY does not vary across these draws. Only the SPECIFICATION does.
+
+  A hard cap keyed to Stage-0's own subprocess list therefore inherits a
+  variance the underlying failure does not have: on a draw where Stage 0 omits
+  the missing arm, the cap goes quiet and the leg reads as complete. That is a
+  measurement being removed by a draw, which is what D-088 clause 10 forbids
+  being done by a patch. The mechanism differs; the outcome does not.
+
+  CONCLUSION, stated as narrowly as the evidence supports: Stage-0
+  main_subprocesses is a USABLE process-level signal and is NOT a sufficient
+  SOLE hard-failure input. D-088 clause 9's replacement must be anchored to
+  something that does not vary with the draw being judged.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7a1bb338eb934fb348832159bee1ff4ca929cde6  [git, worktree dirty=True]
+label                   : stage0-spec-stability
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/d088_stage0_spec_stability.py .
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 1054808 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 0.79 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 0
+descendants terminated  : 0
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-719\02-stage0-spec-stability.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-719  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

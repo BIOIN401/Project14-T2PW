@@ -1,0 +1,255 @@
+D-088 SUBPROCESS-RECALL A/B — archived artifacts only, nothing re-run
+============================================================================================
+repo                                  : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+roots scanned                         : runs/ AND runs_verify/, both named
+committed coverage_summary.json found : 83
+
+============================================================================================
+STOPLIST = minimal   (20 words)
+============================================================================================
+  legs_with_declared_core               : 83
+  no_declared_core                      : 0
+  unreadable                            : 0
+  legs_without_subprocesses             : 1
+  legs_without_quarantine_report        : 0
+  legs_testable_under_new_cap           : 82
+  old_cap_legs_capped                   : 73
+  new_cap_legs_capped                   : 47
+  subprocesses_examined                 : 415
+  subprocesses_uncovered                : 79
+  subprocesses_untestable               : 0
+  anchors_unmatched                     : 374
+  anchors_subprocess_aligned            : 60
+  anchors_payload_present_unwired       : 90
+  anchors_neither                       : 247
+
+  legs capped OLD and NOT capped NEW (released) : 28
+  legs capped OLD and STILL capped NEW          : 45
+  legs capped NEW but NOT capped OLD (stricter) : 2
+
+  D-088 consequence 1 — PMC12096016 strict loses the cap  : VIOLATED
+      runs_verify/2026-08-18_1328 PMC12096016/strict  old=True new=False subs=6 uncovered=0 []
+      runs_verify/2026-08-21_2057 PMC12096016/strict  old=True new=False subs=7 uncovered=0 []
+      runs_verify/2026-08-21_2239 PMC12096016/strict  old=True new=False subs=5 uncovered=0 []
+      runs_verify/2026-08-22_2147 PMC12096016/strict  old=True new=False subs=6 uncovered=0 []
+      runs_verify/2026-08-24_1203 PMC12096016/strict  old=True new=True subs=8 uncovered=1 ['NRPS condensation with L-serine and cyclization (EntF)']
+      runs_verify/2026-08-24_1428 PMC12096016/strict  old=True new=False subs=5 uncovered=0 []
+      runs_verify/2026-08-27_1341 PMC12096016/strict  old=True new=False subs=7 uncovered=0 []
+      runs_verify/2026-09-01_1612 PMC12096016/strict  old=True new=False subs=5 uncovered=0 []
+  D-088 consequence 2 — PMC12782028 strict stays capped  : VIOLATED
+      runs_verify/2026-08-21_1822 PMC12782028/strict  old=True new=True subs=4 uncovered=1 ['demethylation of 4,4-dimethyl and 4alpha-methylsterols (catalyzed by MSMO1)']
+      runs_verify/2026-08-21_2239 PMC12782028/strict  old=True new=False subs=4 uncovered=0 []
+      runs_verify/2026-08-22_2147 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['demethylation of 4,4-dimethyl and 4alpha-methylsterols', 'mevalonate pathway']
+      runs_verify/2026-08-24_1428 PMC12782028/strict  old=True new=True subs=5 uncovered=3 ['C-4 demethylation of methylsterols', 'conversion of desmosterol to cholesterol', 'mevalonate pathway']
+      runs_verify/2026-08-27_1341 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['monooxygenation of 4,4-dimethyl and 4alpha-methylsterols', 'mevalonate pathway (upstream isoprenoid biosynthesis)']
+      runs_verify/2026-08-28_1816 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['Demethylation of methylsterols by MSMO1', 'Steroid biosynthesis (KEGG hsa00100)']
+      runs_verify/2026-09-01_1612 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['mevalonate pathway', 'methylsterol demethylation']
+
+============================================================================================
+STOPLIST = standard   (48 words)
+============================================================================================
+  legs_with_declared_core               : 83
+  no_declared_core                      : 0
+  unreadable                            : 0
+  legs_without_subprocesses             : 1
+  legs_without_quarantine_report        : 0
+  legs_testable_under_new_cap           : 82
+  old_cap_legs_capped                   : 73
+  new_cap_legs_capped                   : 47
+  subprocesses_examined                 : 415
+  subprocesses_uncovered                : 79
+  subprocesses_untestable               : 0
+  anchors_unmatched                     : 374
+  anchors_subprocess_aligned            : 60
+  anchors_payload_present_unwired       : 90
+  anchors_neither                       : 247
+
+  legs capped OLD and NOT capped NEW (released) : 28
+  legs capped OLD and STILL capped NEW          : 45
+  legs capped NEW but NOT capped OLD (stricter) : 2
+
+  D-088 consequence 1 — PMC12096016 strict loses the cap  : VIOLATED
+      runs_verify/2026-08-18_1328 PMC12096016/strict  old=True new=False subs=6 uncovered=0 []
+      runs_verify/2026-08-21_2057 PMC12096016/strict  old=True new=False subs=7 uncovered=0 []
+      runs_verify/2026-08-21_2239 PMC12096016/strict  old=True new=False subs=5 uncovered=0 []
+      runs_verify/2026-08-22_2147 PMC12096016/strict  old=True new=False subs=6 uncovered=0 []
+      runs_verify/2026-08-24_1203 PMC12096016/strict  old=True new=True subs=8 uncovered=1 ['NRPS condensation with L-serine and cyclization (EntF)']
+      runs_verify/2026-08-24_1428 PMC12096016/strict  old=True new=False subs=5 uncovered=0 []
+      runs_verify/2026-08-27_1341 PMC12096016/strict  old=True new=False subs=7 uncovered=0 []
+      runs_verify/2026-09-01_1612 PMC12096016/strict  old=True new=False subs=5 uncovered=0 []
+  D-088 consequence 2 — PMC12782028 strict stays capped  : VIOLATED
+      runs_verify/2026-08-21_1822 PMC12782028/strict  old=True new=True subs=4 uncovered=1 ['demethylation of 4,4-dimethyl and 4alpha-methylsterols (catalyzed by MSMO1)']
+      runs_verify/2026-08-21_2239 PMC12782028/strict  old=True new=False subs=4 uncovered=0 []
+      runs_verify/2026-08-22_2147 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['demethylation of 4,4-dimethyl and 4alpha-methylsterols', 'mevalonate pathway']
+      runs_verify/2026-08-24_1428 PMC12782028/strict  old=True new=True subs=5 uncovered=3 ['C-4 demethylation of methylsterols', 'conversion of desmosterol to cholesterol', 'mevalonate pathway']
+      runs_verify/2026-08-27_1341 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['monooxygenation of 4,4-dimethyl and 4alpha-methylsterols', 'mevalonate pathway (upstream isoprenoid biosynthesis)']
+      runs_verify/2026-08-28_1816 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['Demethylation of methylsterols by MSMO1', 'Steroid biosynthesis (KEGG hsa00100)']
+      runs_verify/2026-09-01_1612 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['mevalonate pathway', 'methylsterol demethylation']
+
+  ----------------------------------------------------------------------------------------
+  EVERY leg the proposed cap would RELEASE (was capped, no longer is)
+  ----------------------------------------------------------------------------------------
+    runs_verify/2026-08-18_1328  PMC12096016/research               cov=0.631579 subs=5 unmatched=7
+        anchors downgraded to warnings: ['NADH', 'ATP', 'EntD', 'EntH', 'MenD', 'Fur', 'LDH']
+        of those: subprocess-aligned=0 payload-present-unwired=2 neither=5
+    runs_verify/2026-08-18_1328  PMC12096016/strict                 cov=0.823529 subs=6 unmatched=3
+        anchors downgraded to warnings: ['ATP', 'EntD (phosphopantetheinyl transferase)', 'Fur (Ferric Uptake Regulator)']
+        of those: subprocess-aligned=0 payload-present-unwired=1 neither=2
+    runs_verify/2026-08-21_2057  PMC12096016/research               cov=0.8125 subs=8 unmatched=3
+        anchors downgraded to warnings: ['EntD', 'MenD', 'Fur (ferric uptake regulator)']
+        of those: subprocess-aligned=1 payload-present-unwired=2 neither=1
+    runs_verify/2026-08-21_2057  PMC12096016/strict                 cov=0.833333 subs=7 unmatched=3
+        anchors downgraded to warnings: ['ATP', 'Fur (ferric uptake regulator)', 'MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=3
+    runs_verify/2026-08-21_2239  PMC12096016/research               cov=0.666667 subs=8 unmatched=6
+        anchors downgraded to warnings: ['NADH', 'L-serine', 'ATP', 'EntH', 'Fur', 'MenD']
+        of those: subprocess-aligned=0 payload-present-unwired=1 neither=5
+    runs_verify/2026-08-21_2239  PMC12096016/strict                 cov=0.705882 subs=5 unmatched=5
+        anchors downgraded to warnings: ['ATP', 'NADH', 'NAD+', 'EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)', 'Fur (ferric uptake regulator)']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=5
+    runs_verify/2026-08-21_2239  PMC12180156/research               cov=0.857143 subs=3 unmatched=1
+        anchors downgraded to warnings: ['SFXN2']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=1
+    runs_verify/2026-08-21_2239  PMC12782028/strict                 cov=0.692308 subs=4 unmatched=4
+        anchors downgraded to warnings: ['SQLE (squalene epoxidase)', 'FDFT1 (farnesyl-diphosphate farnesyltransferase 1)', 'HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase)', 'HMGCS1 (3-hydroxy-3-methylglutaryl-CoA synthase 1)']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=4
+    runs_verify/2026-08-21_2239  PMC12856317/research               cov=0.857143 subs=4 unmatched=1
+        anchors downgraded to warnings: ['hemin']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=1
+    runs_verify/2026-08-22_2147  PMC12096016/research               cov=0.705882 subs=7 unmatched=5
+        anchors downgraded to warnings: ['NADH', 'ATP', 'ferric iron', 'EntD (phosphopantetheinyl transferase)', 'MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)']
+        of those: subprocess-aligned=0 payload-present-unwired=1 neither=4
+    runs_verify/2026-08-22_2147  PMC12096016/strict                 cov=0.857143 subs=6 unmatched=2
+        anchors downgraded to warnings: ['ATP', 'EntD']
+        of those: subprocess-aligned=1 payload-present-unwired=0 neither=1
+    runs_verify/2026-08-22_2147  PMC12180156/research               cov=0.857143 subs=4 unmatched=1
+        anchors downgraded to warnings: ['glycine']
+        of those: subprocess-aligned=0 payload-present-unwired=1 neither=0
+    runs_verify/2026-08-22_2147  PMC12180156/strict                 cov=0.857143 subs=3 unmatched=1
+        anchors downgraded to warnings: ['SFXN2']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=1
+    runs_verify/2026-08-22_2147  PMC12452463/strict                 cov=0.785714 subs=4 unmatched=3
+        anchors downgraded to warnings: ['2,3-dihydroxybenzoate (DHB)', 'EntA', 'Fur']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=3
+    runs_verify/2026-08-24_1203  PMC12096016/research               cov=0.875 subs=5 unmatched=2
+        anchors downgraded to warnings: ['ATP', 'Fur (ferric uptake regulator)']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=2
+    runs_verify/2026-08-24_1203  PMC12856317/strict                 cov=0.818182 subs=5 unmatched=2
+        anchors downgraded to warnings: ['hemin', 'PLP']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=2
+    runs_verify/2026-08-24_1428  PMC12096016/strict                 cov=0.764706 subs=5 unmatched=4
+        anchors downgraded to warnings: ['NADH', 'ATP', 'MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)', 'Fur (ferric uptake regulator)']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=4
+    runs_verify/2026-08-24_1428  PMC12180156/strict                 cov=0.714286 subs=3 unmatched=2
+        anchors downgraded to warnings: ['iron', 'SFXN2']
+        of those: subprocess-aligned=1 payload-present-unwired=0 neither=1
+    runs_verify/2026-08-24_1428  PMC12452463/strict                 cov=0.615385 subs=4 unmatched=5
+        anchors downgraded to warnings: ['ferric iron (Fe3+)', 'EntD (phosphopantetheinyl transferase)', 'EntF (nonribosomal peptide synthetase)', 'FepA (outer membrane receptor)', 'Fur (ferric uptake regulator)']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=5
+    runs_verify/2026-08-25_1216  PMC12444477/strict                 cov=0.578947 subs=5 unmatched=8
+        anchors downgraded to warnings: ['UDP-GlcNAc', 'R-3-hydroxymyristoyl-ACP', 'palmitoyl-CoA', 'LapB (YciM)', 'YejM (PbgA)', 'LpxA', 'ObgE', 'PldA']
+        of those: subprocess-aligned=2 payload-present-unwired=1 neither=5
+    runs_verify/2026-08-27_1341  PMC12096016/strict                 cov=0.777778 subs=7 unmatched=4
+        anchors downgraded to warnings: ['ATP', 'phosphopantetheine', 'EntD (phosphopantetheinyl transferase)', 'Fur (Ferric Uptake Regulator)']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=4
+    runs_verify/2026-08-28_1816  PMC12096016/research               cov=0.928571 subs=5 unmatched=1
+        anchors downgraded to warnings: ['NADH']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=1
+    runs_verify/2026-08-28_1816  PMC12180156/strict                 cov=0.833333 subs=3 unmatched=1
+        anchors downgraded to warnings: ['glycine']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=1
+    runs_verify/2026-08-28_1816  PMC12452463/strict                 cov=0.933333 subs=6 unmatched=1
+        anchors downgraded to warnings: ['Fur']
+        of those: subprocess-aligned=1 payload-present-unwired=0 neither=0
+    runs_verify/2026-09-01_1612  PMC12096016/research               cov=0.666667 subs=7 unmatched=6
+        anchors downgraded to warnings: ['NADH', 'ATP', 'ferric iron (Fe3+)', 'EntD', 'Fur (Ferric Uptake Regulator)', 'MenD']
+        of those: subprocess-aligned=1 payload-present-unwired=1 neither=5
+    runs_verify/2026-09-01_1612  PMC12096016/strict                 cov=0.75 subs=5 unmatched=4
+        anchors downgraded to warnings: ['NADH', 'ATP', 'EntD', 'Fur']
+        of those: subprocess-aligned=0 payload-present-unwired=1 neither=3
+    runs_verify/2026-09-01_1612  PMC12180156/research               cov=0.857143 subs=3 unmatched=1
+        anchors downgraded to warnings: ['SFXN2']
+        of those: subprocess-aligned=1 payload-present-unwired=0 neither=0
+    runs_verify/2026-09-01_1612  PMC12180156/strict                 cov=0.875 subs=2 unmatched=1
+        anchors downgraded to warnings: ['SFXN2']
+        of those: subprocess-aligned=0 payload-present-unwired=0 neither=1
+
+============================================================================================
+STOPLIST = aggressive   (82 words)
+============================================================================================
+  legs_with_declared_core               : 83
+  no_declared_core                      : 0
+  unreadable                            : 0
+  legs_without_subprocesses             : 1
+  legs_without_quarantine_report        : 0
+  legs_testable_under_new_cap           : 82
+  old_cap_legs_capped                   : 73
+  new_cap_legs_capped                   : 51
+  subprocesses_examined                 : 415
+  subprocesses_uncovered                : 85
+  subprocesses_untestable               : 0
+  anchors_unmatched                     : 374
+  anchors_subprocess_aligned            : 60
+  anchors_payload_present_unwired       : 90
+  anchors_neither                       : 247
+
+  legs capped OLD and NOT capped NEW (released) : 27
+  legs capped OLD and STILL capped NEW          : 46
+  legs capped NEW but NOT capped OLD (stricter) : 5
+
+  D-088 consequence 1 — PMC12096016 strict loses the cap  : VIOLATED
+      runs_verify/2026-08-18_1328 PMC12096016/strict  old=True new=False subs=6 uncovered=0 []
+      runs_verify/2026-08-21_2057 PMC12096016/strict  old=True new=False subs=7 uncovered=0 []
+      runs_verify/2026-08-21_2239 PMC12096016/strict  old=True new=False subs=5 uncovered=0 []
+      runs_verify/2026-08-22_2147 PMC12096016/strict  old=True new=False subs=6 uncovered=0 []
+      runs_verify/2026-08-24_1203 PMC12096016/strict  old=True new=True subs=8 uncovered=1 ['NRPS condensation with L-serine and cyclization (EntF)']
+      runs_verify/2026-08-24_1428 PMC12096016/strict  old=True new=False subs=5 uncovered=0 []
+      runs_verify/2026-08-27_1341 PMC12096016/strict  old=True new=False subs=7 uncovered=0 []
+      runs_verify/2026-09-01_1612 PMC12096016/strict  old=True new=False subs=5 uncovered=0 []
+  D-088 consequence 2 — PMC12782028 strict stays capped  : VIOLATED
+      runs_verify/2026-08-21_1822 PMC12782028/strict  old=True new=True subs=4 uncovered=1 ['demethylation of 4,4-dimethyl and 4alpha-methylsterols (catalyzed by MSMO1)']
+      runs_verify/2026-08-21_2239 PMC12782028/strict  old=True new=False subs=4 uncovered=0 []
+      runs_verify/2026-08-22_2147 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['demethylation of 4,4-dimethyl and 4alpha-methylsterols', 'mevalonate pathway']
+      runs_verify/2026-08-24_1428 PMC12782028/strict  old=True new=True subs=5 uncovered=3 ['C-4 demethylation of methylsterols', 'conversion of desmosterol to cholesterol', 'mevalonate pathway']
+      runs_verify/2026-08-27_1341 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['monooxygenation of 4,4-dimethyl and 4alpha-methylsterols', 'mevalonate pathway (upstream isoprenoid biosynthesis)']
+      runs_verify/2026-08-28_1816 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['Demethylation of methylsterols by MSMO1', 'Steroid biosynthesis (KEGG hsa00100)']
+      runs_verify/2026-09-01_1612 PMC12782028/strict  old=True new=True subs=5 uncovered=2 ['mevalonate pathway', 'methylsterol demethylation']
+
+============================================================================================
+STABILITY OF THE TWO REQUIRED CONSEQUENCES ACROSS STOPLIST STRENGTH
+============================================================================================
+  minimal       PMC12096016=VIOLATED   PMC12782028=VIOLATED
+  standard      PMC12096016=VIOLATED   PMC12782028=VIOLATED
+  aggressive    PMC12096016=VIOLATED   PMC12782028=VIOLATED
+
+  *** THE VERDICT IS NOT STABLE ACROSS STOPLIST STRENGTH. ***
+  The rule is sensitive to a knob rather than to the biology. Under D-088
+  clause 10 that is exactly the shape of a change that moves a score by
+  removing a measurement. Do NOT charter it in this form.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7a1bb338eb934fb348832159bee1ff4ca929cde6  [git, worktree dirty=True]
+label                   : d088-subprocess-ab
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/d088_subprocess_recall_ab.py .
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 1043608 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.10 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1047724:python.exe
+descendants terminated  : 1  1047724
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-719\01-d088-subprocess-ab.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-719  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

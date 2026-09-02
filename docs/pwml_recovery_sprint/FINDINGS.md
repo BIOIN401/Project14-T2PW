@@ -8032,3 +8032,134 @@ would have justified exactly the shortcut clause 10 prohibits.
 **Not implemented.** The correction is chartered in `HANDOFF.md` § 5.2 as one narrow
 acceptance/release-policy card for the next wave. **No production, scorer, test or gold file was
 changed to record this disposition.**
+
+---
+
+## F-168 — Stage-0 `main_subprocesses` is itself a DRAW, so it cannot be the cap's sole hard-failure input either
+
+- **Severity** HIGH — it disqualifies the obvious implementation of D-088 clause 9 · **Class:
+  `policy_disagreement` prevented, not observed** — no code was changed, so nothing regressed; this
+  is a finding about a design that was about to be chartered · **Registered 2026-09-02 (ORCH-719)**
+- **Found by** the Lead, measuring the candidate replacement rule on the archived corpus **before**
+  chartering it. Probes and logs committed: `evidence/d088_subprocess_recall_ab.py` / `.log`
+  (G11 `ORCH-719/01`) and `evidence/d088_stage0_spec_stability.py` / `.log` (G11 `ORCH-719/02`).
+
+### The design this refutes
+
+D-088 clause 9 says the untyped Stage-0 entity-anchor list *"must not remain the sole hard-failure
+input"* of the incomplete-core cap, and clause 10 forbids relaxing the cap *"without replacing it
+with reaction-level coverage."*
+
+The obvious replacement — and the only one production can compute without reading gold or
+redesigning Stage 0 — is **Stage-0's own `main_subprocesses`**, which is already carried into every
+`coverage_summary.json` inside `requested_context`. Swap the hard input from *"every requested-core
+entity anchor matched an admitted process"* to *"every Stage-0-named subprocess is represented among
+the admitted core processes."*
+
+**On the T-108 tree it works, exactly and completely.** Measured offline on the committed artifacts,
+at three independent stoplist strengths, with identical results at all three:
+
+| leg | old cap | new cap | subprocesses | uncovered |
+|---|---|---|---|---|
+| `PMC12096016/strict` | capped | **NOT capped** | 5 | **0** |
+| `PMC12782028/strict` | capped | **capped** | 5 | **2** — `mevalonate pathway`, `methylsterol demethylation` |
+
+That is D-088's required discrimination, both consequences simultaneously, from the one input
+production already holds. It is a genuinely attractive result and it is why this finding exists.
+
+### What the corpus says, and it is disqualifying
+
+The same probe ran over **all 83 committed legs under both `runs/` and `runs_verify/`**. One row
+does not fit:
+
+```
+runs_verify/2026-08-21_2239  PMC12782028/strict   old=True  new=False   subs=4  uncovered=0
+```
+
+**On that archived draw the proposed cap would have RELEASED `PMC12782028/strict`** — a leg F-167
+established has **never once cleared in six runs** (`0.222 · 0.280 · 0.296 · 0.321 · 0.571 · 0.538`)
+and whose upstream mevalonate arm is **absent in every run**. It would have been released not
+because its recall improved but because **that draw of Stage 0 did not name the arm it was
+missing.**
+
+The second probe measured the variance directly, across every paper/mode pair with at least two
+archived draws:
+
+```
+paper/mode pairs with >= 2 archived draws            : 14
+Stage-0 named an IDENTICAL subprocess set every time :  0
+Stage-0 named a DIFFERENT subprocess set across draws: 14
+```
+
+| paper/mode | draws | subprocess counts seen across draws |
+|---|---|---|
+| `PMC12096016/research` | 8 | **5, 7, 8, 9** |
+| `PMC12096016/strict` | 8 | **5, 6, 7, 8** |
+| `PMC12452463/strict` | 10 | **4, 5, 6, 8** |
+| `PMC12444477/strict` | 2 | **5, 11** |
+| `PMC12782028/research` | 7 | **0, 4, 5, 6** |
+| `PMC12782028/strict` | 7 | 4, 5 |
+
+And on the one leg whose missing biology is established and invariant:
+
+```
+archived PMC12782028/strict draws                 : 7
+draws in which Stage 0 NAMED a mevalonate stage   : 4
+draws in which it did NOT                         : 3
+```
+
+**The biology does not vary across those seven draws. Only the specification does.**
+
+### The mechanism, stated once
+
+A hard cap keyed to Stage-0's own subprocess list **inherits a variance the underlying failure does
+not have.** On a draw where Stage 0 omits the stage the pipeline then fails to extract, the cap has
+nothing to fire on and the leg reads as complete. The measurement is removed **by a draw**.
+
+D-088 clause 10 forbids a *patch* that moves a score by removing a measurement. This would move
+scores by removing measurements **stochastically, on 3 legs in 7 for the one paper we can check**,
+with no diff to review and no reviewer able to see it in a single run. **The mechanism differs from
+the one clause 10 names; the outcome is the same and the detectability is worse.**
+
+### The honest limits of this measurement
+
+Stated so the finding is not read as stronger than it is:
+
+- **The `always = 0` column overstates.** Cross-draw subprocess identity is compared on coarse token
+  sets, and Stage 0 rephrases the same step freely (*"isochorismate synthase reaction (EntC)"* vs
+  *"EntC-catalyzed isomerization of chorismate to isochorismate"*). Some of that zero is
+  normalisation, not disagreement. **The load-bearing evidence is the `counts seen` column and the
+  mevalonate YES/NO tally**, and neither depends on the normalisation.
+- **One paper's missing arm is one paper.** The mevalonate check is decisive for `PMC12782028` and is
+  not by itself a corpus-wide claim about how often a cap would go quiet.
+- **This does not show Stage-0 subprocesses are useless.** They are a real process-level signal, they
+  are strictly better than flat entity anchors for D-088 clause 4's purpose, and they are the only
+  such signal production holds without reading gold.
+
+### What it establishes
+
+**Narrowly, and this is the whole finding:** Stage-0 `main_subprocesses` is a **usable process-level
+signal** and is **not a sufficient SOLE hard-failure input**. Replacing one unvalidated Stage-0 list
+with another unvalidated Stage-0 list is a **lateral move**, not the reaction-level replacement
+clause 10 requires.
+
+**D-088 clause 9's replacement must be anchored to something that does not vary with the draw being
+judged.** That is exactly what `HANDOFF.md` § 5.2a step 4 calls for — curated expected core reactions
+and major subprocesses for the ten papers — and this finding upgrades that step from *bookkeeping the
+card needs* to **the load-bearing input without which the card cannot be correct.**
+
+### Standing lesson
+
+**A specification emitted by the same stochastic stage as the answer is not a fixed point, and a gate
+keyed to it is a gate with a random denominator.** F-167's standing lesson was that Stage 0 emits
+both a specification and an answer and nothing checks they agree. This is the sharper form: **the
+specification is not even stable against itself.** Grading an LLM's output against another draw from
+the same LLM measures the disagreement between two draws, and reports it as a property of the
+pipeline.
+
+**Method note, which is the reason this was caught at all.** The rule was measured on 83 archived
+legs **before** being chartered, not after being built. On the two legs it was designed to explain it
+was perfect. The disqualifying row is in a run tree from eleven days earlier, on a paper the rule was
+supposed to keep failing. **F-167's own amendment says a finding that explains the case in front of
+you is the one least likely to have been tested against the cases that are not** — this is that rule
+applied prospectively, to a fix rather than to a finding, and it cost one probe.
