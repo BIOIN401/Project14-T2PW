@@ -9309,3 +9309,72 @@ ordered fixed; struck rather than deleted. **Reviewer reached the same conclusio
 4. **The check's self-reference** — its own log and G11 report are written during the run they report
    on. The reviewer observed it live: **24 enumerated, then 25**, the difference being the report of
    the run itself. **Genuinely unfixable in-card.**
+
+---
+
+# ORCH-719 — the D-088 correction wave (post-T-108)
+
+**Lead Orchestrator, opened 2026-09-02 at integration tip `7a1bb338`.**
+**Executing `HANDOFF.md` § 5.2a. T-108 remains NO-GO and immutable; T-107 likewise.**
+
+## Takeover verification, performed once
+
+| Check | Result |
+|---|---|
+| local = `origin/` = `git ls-remote` | **all three `7a1bb338`** — matched the stated anchor |
+| `main` | local `7531692`, remote `03f1af5` — **untouched, and stays untouched** |
+| merge in progress / staged | none / none |
+| heavy lock `C:/t/heavylock` | **absent** at takeover |
+| live peers contacted | `project14-t2pw-93` — confirmed **no python, no lock, no worktree, no commits**; also reported the three `ms-python.isort` servers and that **two of the three PIDs had rotated** since the last wave, confirming the handoff's match-on-command-line rule |
+
+## Task state
+
+| # | Step (`HANDOFF` § 5.2a) | State |
+|---|---|---|
+| 1 | Charter ONE narrow acceptance/release-policy card | **SPLIT AND PARTIALLY BLOCKED.** The release-policy half is with the product owner (`DECISION-PACKET-D088-RUNTIME-CAP.md`). The diagnostics half is chartered as **C-114** and dispatched |
+| 2 | Preserve raw anchor diagnostics; separate reaction recall from participant completeness | **C-114 dispatched**, branch `agent/c114-d088-diagnostics`, base `88b11c9c` |
+| 3 | No large Stage-0 redesign | **Held.** Nothing under `src/t2pw/pipeline/` is touched by the Lead; C-114 owns one function |
+| 4 | Curate expected core reactions / major subprocesses for the ten papers | **IN PROGRESS**, two curation agents, brief at `CURATION-BRIEF-D088.md` |
+| 5 | Archived-artifact A/B across all 83 committed legs, both roots named | **DONE** — G11 `ORCH-719/01` |
+| 6 | Prove `PMC12096016` loses only the false cap while `PMC12782028` remains a recall failure | **MEASURED, and the result disqualified the candidate rule** — see F-168 |
+| 7 | Verify the 60 and 90 populations stay separately visible | **C-114 acceptance criterion**, with the census triple 374/60/90 as the pin |
+| 8 | Rebuild T-108 readiness, every row re-derived | **NOT STARTED** — blocked behind the step-1 ruling |
+| 9 | Launch a new milestone | **NO-GO**, unchanged. Not launched, not scheduled |
+| 10 | RAG and LLM evaluation framework | **NOT STARTED** — follows step 9 |
+
+## What this wave established
+
+**F-168 — the obvious implementation of D-088 is disqualified, and it was measured before it was
+built.** Keying the hard cap to Stage-0's own `main_subprocesses` gives D-088's required
+discrimination *exactly* on the T-108 tree, at three independent stoplist strengths. Across all 83
+committed legs it fails: **0 of 14 paper/mode pairs named a stable subprocess set**, and on
+`runs_verify/2026-08-21_2239` the rule **releases `PMC12782028/strict`**, a leg that has never
+cleared, because that draw did not name the arm the pipeline was missing. **The specification is
+itself an LLM draw.**
+
+**F-169 — `PMC12096016`'s four unmatched anchors are four different defects.** `ATP` is present as
+`Adenosine triphosphate` and **wired into a `core_accepted` reaction**, unmatched only because
+`_term_matches` is substring-only and `BIOCHEMICAL_ALIAS_MAP` lacks the spelled-out form. `NADH` and
+`Fur` are genuinely absent. `EntD` is extracted and unwired. **A cofactor downgrade would hide the
+`ATP` defect permanently.** Routed to `pwml-bio-auditor`; **not classified, not chartered, no fix
+proposed.**
+
+**The decision packet — and its same-day amendment.** All four production-side replacements for the
+entity-anchor cap fail, each for an independent reason. The amendment records that the
+acceptance-instrument workaround I proposed **also fails**: Priority 5's numerator requires
+`strict_acceptance_eligible`, which is `status == RELEASE_READY` (`release_status.py:1261`), and
+`acceptance.py:1146` already refuses to reclassify a frozen record because merge rule 8 forbids
+post-freeze repair. **The runtime cap is the only lever, and it has no permissible implementation
+this wave.**
+
+## Standing constraints honoured
+
+- **No production, scorer, test or gold file changed by the Lead.** Gold blob still
+  `36f4b7b690b577f72882c3045ca6728d1ec8d9d1`.
+- Every job through `bounded_run.py` with the venv interpreter, a real `--timeout` and
+  `--heavy-lock ORCH-719`. **Both jobs: `FINAL SURVIVING COUNT : 0`, `cleanup : success`, lock
+  acquired and released.** `g11_evidence.py check --task ORCH-719` clean, no surviving `.staging`
+  placeholder.
+- **Probes and logs committed, not just the reports** — `d088_subprocess_recall_ab.py` / `.log`,
+  `d088_stage0_spec_stability.py` / `.log`.
+- F-147 untouched and still deliberately unchartered. `placeholder_backed_proteins` untouched.
