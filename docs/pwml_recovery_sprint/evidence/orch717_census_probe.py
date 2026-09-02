@@ -20,6 +20,7 @@ Usage::
 
 from __future__ import annotations
 
+import ast
 import io
 import json
 import re
@@ -54,18 +55,39 @@ C102_TESTS = REPO / "tests" / "test_c102_coverage_denominator.py"
 C102_SOURCE = C102_TESTS.read_text(encoding="utf-8")
 
 
-def pinned(pattern: str) -> str:
-    """The value the c102 suite pins RIGHT NOW, read from its own assertion."""
-    found = re.search(pattern, C102_SOURCE, re.MULTILINE)
-    return found.group(1) if found else "PIN NOT FOUND -- read tests/test_c102_coverage_denominator.py"
+def pinned(pattern: str, literal: bool = False) -> str:
+    """The value the c102 suite pins RIGHT NOW, read from its own assertion.
+
+    UNIQUE-OR-LOUD, then PARSE-OR-LOUD (REV-117). `re` reads raw file text and
+    cannot tell code from prose: a `#` comment is immune to these patterns but a
+    DOCSTRING is not, and a first-wins `search` would read an assert-shaped line
+    of narrative as the pin -- silently, and in this sprint the likeliest such
+    line quotes a HISTORICAL value, which is the exact failure C-117 exists to
+    end. So two matches is a refusal, not a first-wins. And a structured pin must
+    parse as a Python literal IN FULL, which is what refuses a literal split
+    across lines, a union of two literals, or a nesting the pattern captured only
+    half of. Every refusal names the file and none of them guesses.
+    """
+    found = re.findall(pattern, C102_SOURCE, re.MULTILINE)
+    if len(found) != 1:
+        return f"PIN AMBIGUOUS ({len(found)} matches) -- read tests/test_c102_coverage_denominator.py"
+    text = found[0].strip()
+    if literal:
+        try:
+            ast.literal_eval(text)
+        except (SyntaxError, ValueError):
+            return "PIN UNREADABLE -- read tests/test_c102_coverage_denominator.py"
+    return text
 
 
 PIN_LEGS = pinned(r"^\s*assert legs == (\d+)")
 PIN_CHECKED = pinned(r"^\s*assert checked == (\d+)")
 PIN_WITHHELD = pinned(r"^\s*assert withheld == (\d+)")
 PIN_MATCHED = pinned(r"^\s*assert with_matched_forbidden == (\d+)")
-PIN_CLEARED = pinned(r"^\s*assert cleared == (\[[^\]]*\])")
-PIN_OUTSIDE = pinned(r"^\s*assert set\(affected_papers\) - set\(F132_PAPERS\) == (\{[^}]*\})")
+# The two structured pins capture to END OF LINE, not a brace class: half a
+# literal is what parses cleanly while meaning something else.
+PIN_CLEARED = pinned(r"^\s*assert cleared == (.+)$", literal=True)
+PIN_OUTSIDE = pinned(r"^\s*assert set\(affected_papers\) - set\(F132_PAPERS\) == (.+)$", literal=True)
 
 listed = subprocess.run(
     ["git", "ls-files", "*quarantine_report.json"],
