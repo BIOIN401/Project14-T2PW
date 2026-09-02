@@ -224,6 +224,37 @@ Note that **`gold_data_defect` is probably not even available here** — the anc
    matching anchors against entities instead of admitted processes turns every extracted-but-unwired
    name into a satisfied anchor, and the cap stops meaning anything.
 
+**AMENDED the same day by a corpus census — read this before acting on the table above.**
+`evidence/f167_history_census.py` / `.log`, G11 `T-108/13`, over **every** committed
+`coverage_summary.json` under both roots:
+
+```
+legs with a declared requested core : 83
+legs with >= 1 unmatched anchor     : 73   (88%)   <-- CHRONIC, every run tree since 2026-08-04
+legs that ever fully matched        : 10
+unmatched anchors examined          : 374
+named in Stage-0's OWN subprocesses :  60   (16.0%)  <-- NOT zero. The 0-of-10 above was 2 legs
+present in the extracted payload    :  90   (24.1%)
+```
+
+**The "0 of 10" was measured on the Priority-5 denominator — the two legs whose failure was being
+explained — and is not representative.** The chronic claim survives and strengthens; the *absolute*
+claim does not. **`PMC12782028/strict` has never cleared in six runs: `0.222 · 0.280 · 0.296 · 0.321
+· 0.571 · 0.538`.**
+
+**The correction splits the work into two questions that must not be answered together:**
+
+| population | share | meaning |
+|---|---|---|
+| anchor **not** a Stage-0 subprocess | 314/374 (84%) | anchor derivation — the mechanism in the table above |
+| anchor **IS** a Stage-0 subprocess | **60/374 (16%)** | **the pipeline failed to match something Stage 0 itself called a step.** 29 legs, **3 of them in T-108**; `PMC12444477/research` alone has 4. No cofactor policy ruling disposes of this |
+
+**A third shape, orthogonal to both:** 90/374 (24%) unmatched anchors **are in the payload** —
+extracted, never wired into an admitted process.
+
+**Do not let a ruling on cofactors close this card.** It would dispose of 84% and leave the worse 16%
+unexamined, with the symptom retired.
+
 ### 5.3 Priority 2 stays unevaluable until D-087's standard is met
 
 `supported_reactions_complete` is unset on all ten cases and `max_retained_reactions` is set on

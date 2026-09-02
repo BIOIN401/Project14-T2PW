@@ -7933,3 +7933,69 @@ specification, and nothing checks that its own answer satisfies it.** Stage 0 no
 disagreement is invisible from any single artifact** — the coverage verdict shows unmatched anchors,
 the payload shows the extraction, and only putting `main_subprocesses` beside `unmatched_terms` shows
 that the grader and the graded came from the same model call and did not agree.
+
+### AMENDMENT, 2026-09-02 — the census REFUTES this finding's strongest claim
+
+**Preserved rather than rewritten, per the sprint rule that a failed measurement is kept beside its
+correction.** `evidence/f167_history_census.py` / `.log`, G11 `T-108/13` — every committed
+`coverage_summary.json` under **both** `runs/` and `runs_verify/`, named explicitly.
+
+**What the finding above claimed:** *"EVERY unmatched anchor is absent from Stage-0's own
+main_subprocesses."*
+
+**What the corpus says:**
+
+```
+legs with a declared requested core : 83
+legs with >= 1 unmatched anchor     : 73   (88%)
+legs that ever fully matched        : 10
+unmatched anchors examined          : 374
+named in Stage-0's OWN subprocesses :  60   (16.0%)   <-- NOT ZERO
+present in the extracted payload    :  90   (24.1%)
+```
+
+**The claim was measured on 10 anchors across 2 legs and stated as a property of the pipeline. It is
+a property of those 2 legs.** They were the Priority-5 denominator — the legs whose failure I was
+explaining — which is precisely not a random sample. **The 0-of-10 is real and it is not
+representative.**
+
+### What survives, and it is the more important half
+
+**The CHRONIC claim is confirmed and strengthened.** 88% of all committed legs carry at least one
+unmatched anchor, in every run tree from 2026-08-04 onward. **Only 10 legs of 83 have ever fully
+matched their requested core.** This is not a T-108 artifact and never was.
+
+**`PMC12782028/strict` has never once cleared:** coverage `0.222 · 0.280 · 0.296 · 0.321 · 0.571 ·
+0.538` across six runs. It has improved and it has never approached 1.0.
+
+### The correction splits F-167 into TWO populations, and the smaller one is worse
+
+| | share | meaning |
+|---|---|---|
+| anchor **not** a Stage-0 subprocess | **314/374 (84%)** | anchor-derivation — cofactors, regulators, activating enzymes the matcher can never satisfy. This is the original F-167 mechanism and it is the majority case |
+| anchor **IS** a Stage-0 subprocess | **60/374 (16%)** | **the pipeline failed to match something Stage 0 itself called a step.** No anchor-derivation story explains this one |
+
+**The 16% is the more serious class and the original finding would have hidden it**, because a reader
+persuaded that anchors are simply mis-derived would have stopped looking. **29 legs are affected, and
+3 of them are in T-108 itself** — `PMC12444477/research` alone has 4.
+
+Separately, **90 of 374 (24%) unmatched anchors ARE in the payload** — extracted, then not wired into
+any admitted process. That is a third shape, orthogonal to both.
+
+### Disposition, updated
+
+**Still NOT classified and still not chartered.** The auditor's question is now **two** questions, and
+they must not be answered together:
+
+1. does a requested core legitimately include cofactors and regulators? — the 84% population;
+2. **why does a Stage-0-named subprocess go unmatched?** — the 16% population, which no policy ruling
+   about cofactors can dispose of.
+
+### Standing lesson, which is the reason this amendment exists
+
+**I measured the sample that would explain the result I was looking at, and reported the property as
+general.** The legs I chose were the two whose failure I was investigating; a corpus census over the
+same artifacts, available the whole time and costing one probe, moved the headline number from
+**0%** to **16%** and exposed a defect class the original finding argued nobody needed to look for.
+**A finding that explains the case in front of you is the one least likely to have been tested
+against the cases that are not.**
