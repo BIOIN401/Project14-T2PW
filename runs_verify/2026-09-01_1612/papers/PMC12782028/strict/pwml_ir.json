@@ -1,0 +1,1425 @@
+{
+  "pathway": {
+    "key": "pathway_1",
+    "name": "Generated Pathway",
+    "subject": "Metabolic",
+    "width": 3200,
+    "height": 1400,
+    "description": ""
+  },
+  "species": [
+    {
+      "key": "sp_1",
+      "name": "Homo sapiens",
+      "pathwhiz_id": 1,
+      "taxonomy_id": "9606",
+      "classification": "Eukaryote",
+      "common_name": "Human"
+    }
+  ],
+  "subcellular_locations": [
+    {
+      "key": "scl_1",
+      "name": "endoplasmic reticulum"
+    },
+    {
+      "key": "scl_2",
+      "name": "cell",
+      "aliases": [
+        "cell"
+      ],
+      "ontology_id": "GO:0005623"
+    },
+    {
+      "key": "scl_3",
+      "name": "Endoplasmic Reticulum Membrane"
+    }
+  ],
+  "cell_types": [
+    {
+      "key": "ct_1",
+      "name": "MG-63"
+    },
+    {
+      "key": "ct_2",
+      "name": "Saos-2"
+    }
+  ],
+  "tissues": [],
+  "biological_states": [
+    {
+      "key": "bs_1",
+      "name": "endoplasmic reticulum in human osteosarcoma cells",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_1",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_2",
+      "name": "AutoState_homo_sapiensendoplasmic_reticulum_membrane",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_3",
+      "cell_type_key": null,
+      "tissue_key": null
+    }
+  ],
+  "entities": {
+    "compounds": [
+      {
+        "key": "cmp_1",
+        "name": "2,3-oxidosqualene",
+        "pathwhiz_id": 284941,
+        "pathbank_compound_id": 284941,
+        "mapped_ids": {
+          "pubchem": "5366020",
+          "pathbank_compound_id": "284941"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "2,3-oxidosqualene"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 284941,
+              "name": "2,3-Oxidosqualene",
+              "short_name": "",
+              "score": 1.0,
+              "mapped_ids": {
+                "pubchem": "5366020",
+                "pathbank_compound_id": "284941"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 284941,
+          "resolved_name": "2,3-Oxidosqualene"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 284941,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "pubchem_cid": "5366020",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "endoplasmic reticulum in human osteosarcoma cells"
+          }
+        ]
+      },
+      {
+        "key": "cmp_2",
+        "name": "lanosterol",
+        "pathwhiz_id": 966,
+        "pathbank_compound_id": 966,
+        "mapped_ids": {
+          "hmdb": "HMDB0001251",
+          "kegg": "C01724",
+          "chebi": "16521",
+          "pubchem": "246983",
+          "cas": "79-63-0",
+          "biocyc": "LANOSTEROL",
+          "chemspider": "216175",
+          "pathbank_compound_id": "966"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "lanosterol"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 966,
+              "name": "Lanosterol",
+              "short_name": "Lastrol",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001251",
+                "kegg": "C01724",
+                "chebi": "CHEBI:16521",
+                "pubchem": "246983",
+                "cas": "79-63-0",
+                "biocyc": "LANOSTEROL",
+                "chemspider": "216175",
+                "pathbank_compound_id": "966"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 966,
+          "resolved_name": "Lanosterol"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 966,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0001251",
+        "kegg_id": "C01724",
+        "chebi_id": "16521",
+        "pubchem_cid": "246983",
+        "cas": "79-63-0",
+        "biocyc_id": "LANOSTEROL",
+        "chemspider_id": "216175",
+        "short_name": "Lastrol",
+        "synonyms": [
+          "Lanosterol",
+          "4,4',14alpha-Trimethyl-5alpha-cholesta-8,24-dien-3beta-ol"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "endoplasmic reticulum in human osteosarcoma cells"
+          }
+        ]
+      },
+      {
+        "key": "cmp_3",
+        "name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+        "mapping_meta": {
+          "query": {
+            "name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "extracted",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "endoplasmic reticulum in human osteosarcoma cells"
+          }
+        ]
+      },
+      {
+        "key": "cmp_4",
+        "name": "desmosterol",
+        "pathwhiz_id": 1690,
+        "pathbank_compound_id": 1690,
+        "mapped_ids": {
+          "hmdb": "HMDB0002719",
+          "kegg": "C01802",
+          "chebi": "17737",
+          "pubchem": "439577",
+          "cas": "313-04-2",
+          "biocyc": "CPD-4141",
+          "chemspider": "388662",
+          "pathbank_compound_id": "1690"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "desmosterol"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1690,
+              "name": "Desmosterol",
+              "short_name": "Desmost",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0002719",
+                "kegg": "C01802",
+                "chebi": "CHEBI:17737",
+                "pubchem": "439577",
+                "cas": "313-04-2",
+                "biocyc": "CPD-4141",
+                "chemspider": "388662",
+                "pathbank_compound_id": "1690"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 1690,
+          "resolved_name": "Desmosterol"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 1690,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0002719",
+        "kegg_id": "C01802",
+        "chebi_id": "17737",
+        "pubchem_cid": "439577",
+        "cas": "313-04-2",
+        "biocyc_id": "CPD-4141",
+        "chemspider_id": "388662",
+        "short_name": "Desmost",
+        "synonyms": [
+          "Desmosterol",
+          "24-Dehydrocholesterol",
+          "Cholesta-5,24-dien-3beta-ol"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "endoplasmic reticulum in human osteosarcoma cells"
+          }
+        ]
+      },
+      {
+        "key": "cmp_5",
+        "name": "cholesterol",
+        "pathwhiz_id": 47,
+        "pathbank_compound_id": 47,
+        "mapped_ids": {
+          "hmdb": "HMDB0000067",
+          "kegg": "C00187",
+          "chebi": "16113",
+          "pubchem": "5997",
+          "cas": "57-88-5",
+          "biocyc": "CHOLESTEROL",
+          "chemspider": "5775",
+          "drugbank": "DB04540",
+          "pathbank_compound_id": "47"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "cholesterol"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 47,
+              "name": "Cholesterol",
+              "short_name": "Lanol",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000067",
+                "kegg": "C00187",
+                "chebi": "CHEBI:16113",
+                "pubchem": "5997",
+                "cas": "57-88-5",
+                "biocyc": "CHOLESTEROL",
+                "chemspider": "5775",
+                "drugbank": "DB04540",
+                "pathbank_compound_id": "47"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 47,
+          "resolved_name": "Cholesterol"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 47,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0000067",
+        "kegg_id": "C00187",
+        "chebi_id": "16113",
+        "pubchem_cid": "5997",
+        "cas": "57-88-5",
+        "biocyc_id": "CHOLESTEROL",
+        "chemspider_id": "5775",
+        "short_name": "Lanol",
+        "synonyms": [
+          "Cholesterol",
+          "Cholest-5-en-3beta-ol"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "endoplasmic reticulum in human osteosarcoma cells"
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "key": "prot_1",
+        "name": "CYP51A1",
+        "pathwhiz_id": 259,
+        "pathbank_protein_id": 259,
+        "mapped_ids": {
+          "uniprot": "Q16850",
+          "pathbank_protein_id": "259",
+          "gene_name": "CYP51A1"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "CYP51A1",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 259,
+              "name": "Lanosterol 14-alpha demethylase",
+              "uniprot": "Q16850",
+              "gene_name": "CYP51A1",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "CYP51A1",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:259, uniprot:Q16850",
+            "judged_candidate": {
+              "pathbank_protein_id": 259,
+              "name": "Lanosterol 14-alpha demethylase",
+              "uniprot": "Q16850",
+              "gene_name": "CYP51A1",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 259,
+                "name": "Lanosterol 14-alpha demethylase",
+                "uniprot": "Q16850",
+                "gene_name": "CYP51A1",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "CYP51A1",
+              "kind": "protein",
+              "resolved_name": "Lanosterol 14-alpha demethylase",
+              "identity": "uniprot:Q16850",
+              "compared_names": [
+                "Lanosterol 14-alpha demethylase"
+              ],
+              "matched_symbol": "CYP51A1"
+            }
+          },
+          "pathbank_protein_id": 259,
+          "resolved_name": "Lanosterol 14-alpha demethylase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Homo sapiens",
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Homo sapiens",
+        "species_id": 1,
+        "pathbank_species_id": 1,
+        "synonyms": [
+          "CYPLI",
+          "Cytochrome P450 51A1",
+          "Cytochrome P450-14DM",
+          "Cytochrome P450LI",
+          "Sterol 14-alpha demethylase",
+          "CYP51A1",
+          "CYP51",
+          "Lanosterol 14-alpha demethylase"
+        ],
+        "uniprot": "Q16850",
+        "gene_name": "CYP51A1",
+        "ec_number": "1.14.14.154",
+        "ec_numbers": [
+          "1.14.14.154"
+        ]
+      },
+      {
+        "key": "prot_2",
+        "name": "DHCR24",
+        "pathwhiz_id": 1688,
+        "pathbank_protein_id": 1688,
+        "mapped_ids": {
+          "uniprot": "Q15392",
+          "pathbank_protein_id": "1688",
+          "gene_name": "DHCR24"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "DHCR24",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 1688,
+              "name": "Delta(24)-sterol reductase",
+              "uniprot": "Q15392",
+              "gene_name": "DHCR24",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "DHCR24",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:1688, uniprot:Q15392",
+            "judged_candidate": {
+              "pathbank_protein_id": 1688,
+              "name": "Delta(24)-sterol reductase",
+              "uniprot": "Q15392",
+              "gene_name": "DHCR24",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 1688,
+                "name": "Delta(24)-sterol reductase",
+                "uniprot": "Q15392",
+                "gene_name": "DHCR24",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "DHCR24",
+              "kind": "protein",
+              "resolved_name": "Delta(24)-sterol reductase",
+              "identity": "uniprot:Q15392",
+              "compared_names": [
+                "Delta(24)-sterol reductase"
+              ],
+              "matched_symbol": "DHCR24"
+            }
+          },
+          "pathbank_protein_id": 1688,
+          "resolved_name": "Delta(24)-sterol reductase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Homo sapiens",
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Homo sapiens",
+        "species_id": 1,
+        "pathbank_species_id": 1,
+        "synonyms": [
+          "24-dehydrocholesterol reductase",
+          "3-beta-hydroxysterol Delta-24-reductase",
+          "Diminuto/dwarf1 homolog",
+          "Seladin-1",
+          "DHCR24",
+          "KIAA0018",
+          "Delta(24)-sterol reductase"
+        ],
+        "uniprot": "Q15392",
+        "gene_name": "DHCR24",
+        "ec_number": "1.3.1.72",
+        "ec_numbers": [
+          "1.3.1.72"
+        ]
+      },
+      {
+        "key": "prot_3",
+        "name": "LSS",
+        "pathwhiz_id": 421,
+        "pathbank_protein_id": 421,
+        "mapped_ids": {
+          "uniprot": "P48449",
+          "pathbank_protein_id": "421",
+          "gene_name": "LSS"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LSS",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 421,
+              "name": "Lanosterol synthase",
+              "uniprot": "P48449",
+              "gene_name": "LSS",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "LSS",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:421, uniprot:P48449",
+            "judged_candidate": {
+              "pathbank_protein_id": 421,
+              "name": "Lanosterol synthase",
+              "uniprot": "P48449",
+              "gene_name": "LSS",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 421,
+                "name": "Lanosterol synthase",
+                "uniprot": "P48449",
+                "gene_name": "LSS",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LSS",
+              "kind": "protein",
+              "resolved_name": "Lanosterol synthase",
+              "identity": "uniprot:P48449",
+              "compared_names": [
+                "Lanosterol synthase"
+              ],
+              "matched_symbol": "LSS"
+            }
+          },
+          "pathbank_protein_id": 421,
+          "resolved_name": "Lanosterol synthase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Homo sapiens",
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Homo sapiens",
+        "species_id": 1,
+        "pathbank_species_id": 1,
+        "synonyms": [
+          "2,3-epoxysqualene--lanosterol cyclase",
+          "Oxidosqualene--lanosterol cyclase",
+          "LSS",
+          "OSC",
+          "Lanosterol synthase"
+        ],
+        "uniprot": "P48449",
+        "gene_name": "LSS",
+        "ec_number": "5.4.99.7",
+        "ec_numbers": [
+          "5.4.99.7"
+        ]
+      }
+    ],
+    "nucleic_acids": [],
+    "element_collections": [],
+    "protein_complexes": [
+      {
+        "key": "pc_1",
+        "name": "Lanosterol synthase",
+        "pathwhiz_id": 239,
+        "pathbank_complex_id": 239,
+        "mapping_meta": {
+          "pathbank_complex_id": 239,
+          "pathbank_protein_complex_id": 239,
+          "species_id": 1,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 239,
+              "pathbank_protein_complex_id": 239,
+              "name": "Lanosterol synthase",
+              "species_id": 1,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "Lanosterol synthase",
+            "organism": "Homo sapiens"
+          },
+          "issues": []
+        },
+        "species": "Homo sapiens",
+        "species_id": 1,
+        "components": [
+          {
+            "protein_key": "prot_3",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_2",
+        "name": "Lanosterol 14-alpha demethylase",
+        "pathwhiz_id": 442,
+        "pathbank_complex_id": 442,
+        "mapping_meta": {
+          "pathbank_complex_id": 442,
+          "pathbank_protein_complex_id": 442,
+          "species_id": 1,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 442,
+              "pathbank_protein_complex_id": 442,
+              "name": "Lanosterol 14-alpha demethylase",
+              "species_id": 1,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "Lanosterol 14-alpha demethylase",
+            "organism": "Homo sapiens"
+          },
+          "issues": []
+        },
+        "species": "Homo sapiens",
+        "species_id": 1,
+        "components": [
+          {
+            "protein_key": "prot_1",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_3",
+        "name": "Delta(24)-sterol reductase",
+        "pathwhiz_id": 441,
+        "pathbank_complex_id": 441,
+        "mapping_meta": {
+          "pathbank_complex_id": 441,
+          "pathbank_protein_complex_id": 441,
+          "species_id": 1,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 441,
+              "pathbank_protein_complex_id": 441,
+              "name": "Delta(24)-sterol reductase",
+              "species_id": 1,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "Delta(24)-sterol reductase",
+            "organism": "Homo sapiens"
+          },
+          "issues": []
+        },
+        "species": "Homo sapiens",
+        "species_id": 1,
+        "components": [
+          {
+            "protein_key": "prot_2",
+            "stoichiometry": 1
+          }
+        ]
+      }
+    ],
+    "bounds": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "key": "rxn_1",
+        "type": "reaction",
+        "name": "LSS reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_1_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_1_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_1_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_2",
+        "type": "reaction",
+        "name": "CYP51A1 reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_2_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_2_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_3",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_2_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_3",
+        "type": "reaction",
+        "name": "DHCR24 reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_3_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_4",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_3_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_5",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_3_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [],
+    "interactions": [],
+    "sub_pathways": []
+  },
+  "locations": [
+    {
+      "key": "cl_1",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_2",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_2",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_1",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_3",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_3",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_2",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_4",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_4",
+      "biological_state_key": "bs_1",
+      "x": 1140,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_5",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_5",
+      "biological_state_key": "bs_1",
+      "x": 1620,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "pcl_3",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_1",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_3",
+      "biological_state_key": "bs_1",
+      "x": 240,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_2",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_1",
+      "biological_state_key": "bs_2",
+      "x": 440,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_3",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_2",
+      "biological_state_key": "bs_2",
+      "x": 640,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    }
+  ],
+  "protein_complex_visualizations": [
+    {
+      "key": "pcv_1",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_1",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_2",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_2",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_3",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_3",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    }
+  ],
+  "bound_visualizations": [
+    {
+      "key": "bv_1",
+      "biological_state_key": "bs_1",
+      "x": 0,
+      "y": 0,
+      "width": 3200,
+      "height": 700,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_2",
+      "biological_state_key": "bs_2",
+      "x": 0,
+      "y": 700,
+      "width": 3200,
+      "height": 700,
+      "zindex": 1,
+      "hidden": false
+    }
+  ],
+  "edges": [
+    {
+      "key": "edge_1",
+      "path": "M220 489 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_2",
+      "path": "M380 489 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_3",
+      "path": "M380 369 L380 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_4",
+      "path": "M700 489 L920 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_5",
+      "path": "M920 489 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_6",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_7",
+      "path": "M1300 489 L1460 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_8",
+      "path": "M1460 489 L1620 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_9",
+      "path": "M1460 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    }
+  ],
+  "process_visualizations": [
+    {
+      "key": "rv_1",
+      "type": "reaction_visualization",
+      "process_key": "rxn_1",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_1_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_1"
+        },
+        {
+          "process_member_key": "rxn_1_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_2"
+        },
+        {
+          "process_member_key": "rxn_1_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_3"
+        }
+      ]
+    },
+    {
+      "key": "rv_2",
+      "type": "reaction_visualization",
+      "process_key": "rxn_2",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_2_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_4"
+        },
+        {
+          "process_member_key": "rxn_2_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_5"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_6"
+        }
+      ]
+    },
+    {
+      "key": "rv_3",
+      "type": "reaction_visualization",
+      "process_key": "rxn_3",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_3_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_7"
+        },
+        {
+          "process_member_key": "rxn_3_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_8"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_9"
+        }
+      ]
+    }
+  ]
+}

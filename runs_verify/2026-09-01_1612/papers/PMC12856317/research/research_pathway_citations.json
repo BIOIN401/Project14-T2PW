@@ -1,0 +1,499 @@
+{
+  "citations": {
+    "entities": [
+      {
+        "distinct_paper_count": 0,
+        "equation": "",
+        "flags": [],
+        "identifier": "808",
+        "identifier_source": "pathbank_compound_id",
+        "inputs": [],
+        "is_review_only": false,
+        "kind": "entity",
+        "line": "succinyl-CoA   [Tier A]   sources: heme biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "",
+        "name": "succinyl-CoA",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [],
+        "pointer": "/entities/compounds/0",
+        "rag_confidence": 0.6,
+        "reason": "external identifier 808 (pathbank_compound_id)",
+        "sources": [
+          {
+            "citation": "heme biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A",
+        "tier_label": "DB-grounded"
+      },
+      {
+        "distinct_paper_count": 0,
+        "equation": "",
+        "flags": [],
+        "identifier": "DB00145",
+        "identifier_source": "drugbank",
+        "inputs": [],
+        "is_review_only": false,
+        "kind": "entity",
+        "line": "glycine   [Tier A]   sources: heme biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "",
+        "name": "glycine",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [],
+        "pointer": "/entities/compounds/1",
+        "rag_confidence": 0.6,
+        "reason": "external identifier DB00145 (drugbank)",
+        "sources": [
+          {
+            "citation": "heme biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A",
+        "tier_label": "DB-grounded"
+      },
+      {
+        "distinct_paper_count": 0,
+        "equation": "",
+        "flags": [],
+        "identifier": "DB00855",
+        "identifier_source": "drugbank",
+        "inputs": [],
+        "is_review_only": false,
+        "kind": "entity",
+        "line": "aminolevulinic acid   [Tier A]   sources: heme biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "",
+        "name": "aminolevulinic acid",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [],
+        "pointer": "/entities/compounds/2",
+        "rag_confidence": 0.6,
+        "reason": "external identifier DB00855 (drugbank)",
+        "sources": [
+          {
+            "citation": "heme biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A",
+        "tier_label": "DB-grounded"
+      },
+      {
+        "distinct_paper_count": 0,
+        "equation": "",
+        "flags": [
+          {
+            "category": "BIOLOGY/PROVENANCE",
+            "code": "(no code)",
+            "message": "{'name': 'aminolevulinic acid synthase 2', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}, {'stage': 'identifier_mapping', 'origin': 'unresolved', 'support': 'unsupported', 'paper_explicit': 'not_evaluated', 'reason': 'identifier resolution ended novel (implausible_name_match)', 'review_required': True, 'uncertainty': 'no database record was established for this entity', 'sources': []}], 'organism': 'Homo sapiens', 'species': 'Homo sapiens', 'species_name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'species_ref': {'name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'common_name': 'Human', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution': {'name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'common_name': 'Human', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'query': {'name': 'aminolevulinic acid synthase 2', 'organism': 'Homo sapiens'}, 'provider': 'UniProt', 'source': 'api', 'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False, 'resolution': {'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:\"aminolevulinic acid synthase 2\" OR gene:\"aminolevulinic acid synthase 2\") AND organism_name:\"Homo sapiens\"', '(protein_name:\"aminolevulinic acid synthase 2\" OR gene:\"aminolevulinic acid synthase 2\")'], 'identity_verdict': {'verified': False, 'reason': 'ambiguous_insufficient_margin', 'entity_name': 'aminolevulinic acid synthase 2', 'organism': 'Homo sapiens', 'checks': {'identifier_resolution': 'ok', 'candidate_evidence': 'ok', 'entity_type': 'ok', 'species': 'ok', 'name': 'keep', 'score': 'ok', 'margin': 'insufficient:0.05<0.1'}, 'score': 0.51, 'margin': 0.04999999999999999, 'verification_status': 'rejected', 'identity': 'uniprot:P22557', 'judged_candidate': {'accession': 'P22557', 'protein_name': '5-aminolevulinate synthase, erythroid-specific, mitochondrial', 'gene_names': '3 item(s), 25 chars elided', 'organism': 'Homo sapiens', 'reviewed': True, 'score': 0.51, 'matched_query': 'aminolevulinic acid synthase 2', 'alias_source': 'primary_name'}, 'judged_candidates': ['8 key(s), 289 chars elided', '8 key(s), 278 chars elided', '8 key(s), 267 chars elided', '8 key(s), 282 chars elided', '8 key(s), 287 chars elided', '8 key(s), 273 chars elided', '8 key(s), 271 chars elided', '8 key(s), 272 chars elided'], 'species_compatibility': 'ok', 'name_gate': {'verdict': 'keep', 'reason': 'shared_meaningful_token', 'entity_name': 'aminolevulinic acid synthase 2', 'kind': 'protein', 'resolved_name': '5-aminolevulinate synthase, erythroid-specific, mitochondrial', 'identity': 'uniprot:P22557', 'compared_names': '1 item(s), 65 chars elided'}, 'competing_accessions': ['a0a2r8y6n3', 'q9h366']}}}",
+            "pointer": "/entities/proteins/0",
+            "stage": "post_normalization"
+          }
+        ],
+        "identifier": "P22557",
+        "identifier_source": "uniprot",
+        "inputs": [],
+        "is_review_only": false,
+        "kind": "entity",
+        "line": "aminolevulinic acid synthase 2   [Tier A]   sources: heme biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "",
+        "name": "aminolevulinic acid synthase 2",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [],
+        "pointer": "/entities/proteins/0",
+        "rag_confidence": 0.6,
+        "reason": "external identifier P22557 (uniprot)",
+        "sources": [
+          {
+            "citation": "heme biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A",
+        "tier_label": "DB-grounded"
+      },
+      {
+        "distinct_paper_count": 0,
+        "equation": "",
+        "flags": [],
+        "identifier": "P22557",
+        "identifier_source": "uniprot",
+        "inputs": [],
+        "is_review_only": false,
+        "kind": "entity",
+        "line": "aminolevulinic acid synthase 2   [Tier A]   sources: heme biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "",
+        "name": "aminolevulinic acid synthase 2",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [],
+        "pointer": "/processes/reactions/0/enzymes/0",
+        "rag_confidence": 0.6,
+        "reason": "external identifier P22557 (uniprot)",
+        "sources": [
+          {
+            "citation": "heme biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A",
+        "tier_label": "DB-grounded"
+      }
+    ],
+    "reactions": [
+      {
+        "distinct_paper_count": 0,
+        "equation": "glycine + succinyl-CoA -> aminolevulinic acid",
+        "flags": [],
+        "identifier": "",
+        "identifier_source": "",
+        "inputs": [
+          "glycine",
+          "succinyl-CoA"
+        ],
+        "is_review_only": false,
+        "kind": "reaction",
+        "line": "ALAS2 reaction: glycine + succinyl-CoA -> aminolevulinic acid   [Tier C]   ! SINGLE-SOURCE - REVIEW REQUIRED   sources: heme biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "! SINGLE-SOURCE - REVIEW REQUIRED",
+        "name": "ALAS2 reaction",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [
+          "aminolevulinic acid"
+        ],
+        "pointer": "/processes/reactions/0",
+        "rag_confidence": 0.6,
+        "reason": "stated in a single source",
+        "sources": [
+          {
+            "citation": "heme biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "C",
+        "tier_label": "single-source (review)"
+      }
+    ]
+  },
+  "format_gaps": [],
+  "limitations": [
+    "A review that CITES the seed paper cannot be distinguished from an independent corroboration. Reference sections are discarded at ingest and CandidatePaper carries no DOI, so there is no citation graph to check. When a review corroborates a step, treat it as 'possibly the same claim restated', never as a second independent finding.",
+    "No page numbers exist in this pipeline. Chunk positions are hashed away at ingest, so every citation below gives the section plus the verbatim quoted passage and nothing more. Any page reference you need must be looked up in the source paper by hand.",
+    "rag_confidence is an internal heuristic (the top retrieval score, or 0.5 + 0.1 per provenance pointer when no score exists). It is NOT a probability and NOT a percentage; 0.6 usually just means 'one pointer, no retrieval score'.",
+    "A tier is a claim about EVIDENCE, not about IDENTITY. A Tier B element is corroborated but still has no external identifier, and a Tier A identifier was accepted only when it was a genuine match (best-effort guesses and the PathBank Unknown sentinel are refused).",
+    "Research mode relaxed the PathWhiz FORMAT rules listed above and emitted no PWML. This report is a review artifact, not an import-ready pathway."
+  ],
+  "pathway": {
+    "export_mode": "research",
+    "name": "heme biosynthesis"
+  },
+  "review_flags": [
+    {
+      "category": "BIOLOGY/PROVENANCE",
+      "code": "(no code)",
+      "message": "{'name': 'aminolevulinic acid synthase 2', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}, {'stage': 'identifier_mapping', 'origin': 'unresolved', 'support': 'unsupported', 'paper_explicit': 'not_evaluated', 'reason': 'identifier resolution ended novel (implausible_name_match)', 'review_required': True, 'uncertainty': 'no database record was established for this entity', 'sources': []}], 'organism': 'Homo sapiens', 'species': 'Homo sapiens', 'species_name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'species_ref': {'name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'common_name': 'Human', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution': {'name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'common_name': 'Human', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'query': {'name': 'aminolevulinic acid synthase 2', 'organism': 'Homo sapiens'}, 'provider': 'UniProt', 'source': 'api', 'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False, 'resolution': {'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:\"aminolevulinic acid synthase 2\" OR gene:\"aminolevulinic acid synthase 2\") AND organism_name:\"Homo sapiens\"', '(protein_name:\"aminolevulinic acid synthase 2\" OR gene:\"aminolevulinic acid synthase 2\")'], 'identity_verdict': {'verified': False, 'reason': 'ambiguous_insufficient_margin', 'entity_name': 'aminolevulinic acid synthase 2', 'organism': 'Homo sapiens', 'checks': {'identifier_resolution': 'ok', 'candidate_evidence': 'ok', 'entity_type': 'ok', 'species': 'ok', 'name': 'keep', 'score': 'ok', 'margin': 'insufficient:0.05<0.1'}, 'score': 0.51, 'margin': 0.04999999999999999, 'verification_status': 'rejected', 'identity': 'uniprot:P22557', 'judged_candidate': {'accession': 'P22557', 'protein_name': '5-aminolevulinate synthase, erythroid-specific, mitochondrial', 'gene_names': '3 item(s), 25 chars elided', 'organism': 'Homo sapiens', 'reviewed': True, 'score': 0.51, 'matched_query': 'aminolevulinic acid synthase 2', 'alias_source': 'primary_name'}, 'judged_candidates': ['8 key(s), 289 chars elided', '8 key(s), 278 chars elided', '8 key(s), 267 chars elided', '8 key(s), 282 chars elided', '8 key(s), 287 chars elided', '8 key(s), 273 chars elided', '8 key(s), 271 chars elided', '8 key(s), 272 chars elided'], 'species_compatibility': 'ok', 'name_gate': {'verdict': 'keep', 'reason': 'shared_meaningful_token', 'entity_name': 'aminolevulinic acid synthase 2', 'kind': 'protein', 'resolved_name': '5-aminolevulinate synthase, erythroid-specific, mitochondrial', 'identity': 'uniprot:P22557', 'compared_names': '1 item(s), 65 chars elided'}, 'competing_accessions': ['a0a2r8y6n3', 'q9h366']}}}",
+      "pointer": "/entities/proteins/0",
+      "stage": "post_normalization"
+    }
+  ],
+  "sources": [
+    {
+      "citation": "heme biosynthesis (seed_paper) -- (section unknown)",
+      "document_type": "",
+      "is_review": false,
+      "kind": "seed / unverified pointer",
+      "quote": "",
+      "retrieval_score": null,
+      "retrieved": false,
+      "section": "(section unknown)",
+      "source_id": "seed_paper",
+      "title": "heme biosynthesis",
+      "uri": ""
+    }
+  ],
+  "summary": {
+    "distinct_sources_cited": 1,
+    "element_count": 6,
+    "entity_count": 5,
+    "page_numbers_available": false,
+    "pwml_emitted": false,
+    "reaction_count": 1,
+    "review_flag_count": 1,
+    "review_required_count": 1,
+    "skipped_format_rule_count": 0,
+    "tier_counts": {
+      "A": 5,
+      "B": 0,
+      "C": 1,
+      "D": 0
+    },
+    "tier_labels": {
+      "A": "DB-grounded",
+      "B": "corroborated by a second paper (no identifier)",
+      "C": "single-source (review)",
+      "D": "UNSOURCED (review)"
+    },
+    "unsourced_count": 0
+  },
+  "tiers": {
+    "assignments": [
+      {
+        "distinct_paper_count": 0,
+        "identifier": "808",
+        "identifier_source": "pathbank_compound_id",
+        "is_review_only": false,
+        "kind": "entity",
+        "label": "DB-grounded",
+        "name": "succinyl-CoA",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/entities/compounds/0",
+        "reason": "external identifier 808 (pathbank_compound_id)",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A"
+      },
+      {
+        "distinct_paper_count": 0,
+        "identifier": "DB00145",
+        "identifier_source": "drugbank",
+        "is_review_only": false,
+        "kind": "entity",
+        "label": "DB-grounded",
+        "name": "glycine",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/entities/compounds/1",
+        "reason": "external identifier DB00145 (drugbank)",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A"
+      },
+      {
+        "distinct_paper_count": 0,
+        "identifier": "DB00855",
+        "identifier_source": "drugbank",
+        "is_review_only": false,
+        "kind": "entity",
+        "label": "DB-grounded",
+        "name": "aminolevulinic acid",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/entities/compounds/2",
+        "reason": "external identifier DB00855 (drugbank)",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A"
+      },
+      {
+        "distinct_paper_count": 0,
+        "identifier": "P22557",
+        "identifier_source": "uniprot",
+        "is_review_only": false,
+        "kind": "entity",
+        "label": "DB-grounded",
+        "name": "aminolevulinic acid synthase 2",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/entities/proteins/0",
+        "reason": "external identifier P22557 (uniprot)",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A"
+      },
+      {
+        "distinct_paper_count": 0,
+        "identifier": "",
+        "identifier_source": "",
+        "is_review_only": false,
+        "kind": "reaction",
+        "label": "single-source (review)",
+        "name": "ALAS2 reaction",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/processes/reactions/0",
+        "reason": "stated in a single source",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "C"
+      },
+      {
+        "distinct_paper_count": 0,
+        "identifier": "P22557",
+        "identifier_source": "uniprot",
+        "is_review_only": false,
+        "kind": "entity",
+        "label": "DB-grounded",
+        "name": "aminolevulinic acid synthase 2",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/processes/reactions/0/enzymes/0",
+        "reason": "external identifier P22557 (uniprot)",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A"
+      }
+    ],
+    "counts": {
+      "A": 5,
+      "B": 0,
+      "C": 1,
+      "D": 0
+    },
+    "mode": "research",
+    "notes": [
+      "research mode: Tier C/D elements need human review before this pathway is believed"
+    ],
+    "online": false,
+    "review_required": true,
+    "tier_labels": {
+      "A": "DB-grounded",
+      "B": "corroborated by a second paper (no identifier)",
+      "C": "single-source (review)",
+      "D": "UNSOURCED (review)"
+    }
+  }
+}

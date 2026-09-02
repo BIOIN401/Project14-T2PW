@@ -1,0 +1,40 @@
+RESULT: FAIL
+========================================
+paper      : PMC13231680
+title      : (unknown)
+slug       : PMC13231680
+mode       : strict
+status     : fail
+stage      : stage1
+wall time  : 624.8s (10m24s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : no_reactions
+termination_reason  : (not recorded)
+operational_failure : (not recorded)
+message      : the pipeline produced a pathway with no reactions and no transports
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+Multi-paper RAG produced no additional usable reactions (no evidence retrieved — check that the embeddings endpoint is running and papers were fetched). Keeping the single-paper extraction.
+
+COUNTS
+----------------------------------------
+  compounds = 0
+  entities = 3
+  proteins = 1
+  reactions = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - cleaning_report.json  (1065 B)
+  - extraction_boundary_report.json  (3024 B)
+  - merged_payload.json  (63525 B)
+  - rag_admission_report.json  (28907 B)
+  - stage0_attempts.json  (826 B)
+  - stage1_payload.json  (1725 B)

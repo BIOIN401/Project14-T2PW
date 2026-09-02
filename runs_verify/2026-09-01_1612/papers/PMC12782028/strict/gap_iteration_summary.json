@@ -1,0 +1,337 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 0,
+        "organisms_added": 0,
+        "locations_added": 2,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 3,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": ""
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:cyp51a1",
+            "entity_type": "protein",
+            "name": "CYP51A1",
+            "path": "/entities/proteins/0",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:dhcr24",
+            "entity_type": "protein",
+            "name": "DHCR24",
+            "path": "/entities/proteins/1",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:44dimethylcholesta891424trien3ol",
+            "entity_type": "compound",
+            "name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:2bbff6241aca65e5",
+            "preview": "{\"operations\": [{\"issue_key\": \"protein:cyp51a1\", \"resolve_ids\": {\"strategy\": \"skip\"}, \"resolve_location\": {\"strategy\": \"db_then_default\"}, \"background\": {\"api_lookup\": \"none\", \"hmdb_lookup\": false, \"m… (+300 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:cyp51a1",
+            "resolve_ids": {
+              "strategy": "skip"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "none",
+              "hmdb_lookup": false,
+              "max_results": 1
+            },
+            "rationale": "Protein entity with missing location only; no ID mapping needed. Use database lookup for subcellular location, fallback to default if not found."
+          },
+          {
+            "issue_key": "protein:dhcr24",
+            "resolve_ids": {
+              "strategy": "skip"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "none",
+              "hmdb_lookup": false,
+              "max_results": 1
+            },
+            "rationale": "Protein entity with missing location only; no ID mapping needed. Use database lookup for subcellular location, fallback to default if not found."
+          },
+          {
+            "issue_key": "compound:44dimethylcholesta891424trien3ol",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 5
+            },
+            "rationale": "Compound entity missing mapped IDs after previous DB pass; attempt DB lookup first, then API if needed. HMDB lookup useful for additional ID context."
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:cyp51a1",
+            "entity_type": "protein",
+            "name": "CYP51A1",
+            "status": "ok",
+            "location_candidates": [
+              {
+                "location": "Endoplasmic Reticulum Membrane",
+                "score": 26.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:447284f9728468a9",
+                  "preview": "location_frequency=26"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum",
+                "score": 3.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:7cdf53a16fcf5fa4",
+                  "preview": "location_frequency=3"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Endoplasmic Reticulum Membrane",
+              "confidence": 0.95,
+              "reason": "CYP51A1 is a cytochrome P450 enzyme involved in cholesterol synthesis, known to localize to the endoplasmic reticulum membrane. The candidate 'Endoplasmic Reticulum Membrane' has the highest evidence score (26) from PathBank DB, and is biol… (+51 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 377,
+                "hash": "sha256:1bf060f3588a92c3",
+                "preview": "{ \"choice\": \"Endoplasmic Reticulum Membrane\", \"confidence\": 0.95, \"reason\": \"CYP51A1 is a cytochrome P450 enzyme involved in cholesterol synthesis, known to localize to the endoplasmic reticulum membr… (+171 chars elided)"
+              }
+            },
+            "chosen_location": "Endoplasmic Reticulum Membrane",
+            "chosen_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+          },
+          {
+            "issue_key": "protein:dhcr24",
+            "entity_type": "protein",
+            "name": "DHCR24",
+            "status": "ok",
+            "location_candidates": [
+              {
+                "location": "Endoplasmic Reticulum Membrane",
+                "score": 116.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 22,
+                  "hash": "sha256:e395305e58659792",
+                  "preview": "location_frequency=116"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Endoplasmic Reticulum Membrane",
+              "confidence": 0.95,
+              "reason": "DHCR24 is a known ER membrane protein involved in cholesterol biosynthesis; the candidate 'Endoplasmic Reticulum Membrane' has a much higher evidence score (116) from PathBank, is organism-compatible, and is biologically plausible.",
+              "source": "llm",
+              "raw": {
+                "chars": 317,
+                "hash": "sha256:8ff90e085f7e7d2a",
+                "preview": "{ \"choice\": \"Endoplasmic Reticulum Membrane\", \"confidence\": 0.95, \"reason\": \"DHCR24 is a known ER membrane protein involved in cholesterol biosynthesis; the candidate 'Endoplasmic Reticulum Membrane' … (+111 chars elided)"
+              }
+            },
+            "chosen_location": "Endoplasmic Reticulum Membrane",
+            "chosen_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+          },
+          {
+            "issue_key": "compound:44dimethylcholesta891424trien3ol",
+            "entity_type": "compound",
+            "name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    }
+  ]
+}

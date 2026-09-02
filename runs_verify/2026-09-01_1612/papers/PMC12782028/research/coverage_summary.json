@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "cholesterol",
+    "lanosterol",
+    "2,3-oxidosqualene",
+    "desmosterol",
+    "oxysterols",
+    "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+    "CYP51A1",
+    "DHCR24",
+    "LSS",
+    "MSMO1",
+    "SQLE",
+    "FDFT1",
+    "HMGCR",
+    "HMGCS1",
+    "MVK",
+    "FDPS"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "cholesterol biosynthesis",
+    "likely_organism": "Homo sapiens",
+    "key_compounds": [
+      "cholesterol",
+      "lanosterol",
+      "2,3-oxidosqualene",
+      "desmosterol",
+      "oxysterols",
+      "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol"
+    ],
+    "key_proteins": [
+      "CYP51A1",
+      "DHCR24",
+      "LSS",
+      "MSMO1",
+      "SQLE",
+      "FDFT1",
+      "HMGCR",
+      "HMGCS1",
+      "MVK",
+      "FDPS"
+    ],
+    "likely_compartments": [
+      "endoplasmic reticulum",
+      "cytoplasm"
+    ],
+    "main_subprocesses": [
+      "mevalonate pathway",
+      "squalene epoxidation",
+      "lanosterol formation",
+      "lanosterol demethylation",
+      "desmosterol reduction to cholesterol"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "results",
+      "discussion",
+      "methods"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "primary_research",
+    "context_type": "single_pathway",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:1d4c790eaba99912",
+      "response_hash": "sha256:e3fa89a9922a701a",
+      "raw_chars": 921,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 921,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "cholesterol",
+    "lanosterol",
+    "2,3-oxidosqualene",
+    "desmosterol",
+    "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+    "CYP51A1",
+    "DHCR24",
+    "LSS"
+  ],
+  "unmatched_terms": [
+    "oxysterols",
+    "MSMO1",
+    "SQLE",
+    "FDFT1",
+    "HMGCR",
+    "HMGCS1",
+    "MVK",
+    "FDPS"
+  ],
+  "coverage_ratio": 0.5,
+  "core_accepted_processes": 3,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 3,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

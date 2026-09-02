@@ -1,0 +1,40 @@
+{
+  "timeout_source": "outer_parent_kill",
+  "terminal_state_before_cleanup": {
+    "status": "timeout",
+    "stage_recorded_by_row": "unknown",
+    "termination_reason": "budget_exhausted",
+    "operational_failure": true,
+    "failure_kind": "timeout",
+    "parent_killed_child": true,
+    "child_reported_its_own_row": false,
+    "child_returncode": null,
+    "elapsed_seconds": 3600.79,
+    "leg_timeout_seconds": 3600.0,
+    "child_stdout_chars": 0,
+    "child_stderr_chars": 5524
+  },
+  "finalization_reserve": {
+    "available_seconds": 120.0,
+    "used_seconds": 120.79,
+    "left_seconds": -0.79,
+    "child_deadline_seconds": 3480.0,
+    "leg_timeout_seconds": 3600.0,
+    "elapsed_seconds": 3600.79,
+    "exhausted": true
+  },
+  "payload_before_cleanup": {
+    "existed": false,
+    "leg_dir": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\runs_verify\\2026-09-01_1612\\papers\\PMC12444477\\strict",
+    "files": [
+      {
+        "name": "LEG_TRACE.jsonl",
+        "bytes": 24564,
+        "instrument": true
+      }
+    ],
+    "payload_file_count": 0,
+    "payload_bytes": 0
+  },
+  "cleanup_decisions": []
+}

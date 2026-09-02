@@ -221,21 +221,54 @@ def main() -> int:
                 print(f"        {leg}: {str(why)[:400]}")
 
     # ------------------------------------------------- priority 1 composition
-    rule("5. PRIORITY-1 ROW COMPOSITION (raw) — every finding, named")
-    rows1 = d.get("priority1_rows") or []
-    if rows1:
-        for r in rows1:
-            print(f"  {j(r, 400)}")
-    else:
-        n = 0
-        for pap in d.get("papers", []):
-            for mode, leg in (pap.get("legs") or {}).items():
-                for f in (leg.get("semantic") or {}).get("findings", []) or []:
-                    blob = json.dumps(f, default=str)
-                    if "false_real" in blob:
-                        n += 1
-                        print(f"  {pap.get('paper_id')} {mode} {blob[:300]}")
-        print(f"  (derived from per-leg findings: {n} row(s))")
+    rule("5. PRIORITY-1 ROW COMPOSITION — raw_rows and accepted_rows, every finding named")
+    p1 = next((p for p in prios if p.get("rank") == 1), {})
+    raw_rows = p1.get("raw_rows") or []
+    acc_rows = p1.get("accepted_rows") or []
+    adj_rows = p1.get("contract_adjusted_rows") or []
+    print(f"  raw={p1.get('raw')}  accepted={p1.get('accepted')}  "
+          f"accepted_status={p1.get('accepted_status')!r}  target={p1.get('target')}  "
+          f"absolute ok={p1.get('ok')}")
+    print()
+    print(f"  RAW ROWS ({len(raw_rows)}) -- each is one known false real identifier:")
+    for r in raw_rows:
+        print(f"    {r.get('paper_id')}/{r.get('mode')}  {r.get('pointer')}")
+        print(f"        name        : {r.get('name')!r}")
+        print(f"        kind        : {r.get('kind')}")
+        print(f"        identifiers : {j(r.get('identifiers'), 300)}")
+        print(f"        tolerance   : {r.get('contract_tolerance')!r}   accepted={r.get('accepted')}")
+    print(f"  ACCEPTED ROWS ({len(acc_rows)}) -- after authorized case-scoped tolerances")
+    print(f"  CONTRACT-ADJUSTED ROWS ({len(adj_rows)}): {j(adj_rows, 400)}")
+    if not adj_rows:
+        print("    none. Under D-074 as ruled, no Priority-1 row can be contract-adjusted, so")
+        print("    accepted is identically raw. A zero here means 'no licence can reach this',")
+        print("    NOT 'none was measured'.")
+    note = p1.get("variance_note")
+    if note:
+        print(f"  variance_note: {str(note)[:600]}")
+
+    rule("5a. RELEASE DISPOSITION OF EVERY strict_exportable LEG — why Priority 5 reads as it does")
+    strict_papers = [c for c in gold.cases
+                     if str(getattr(c, "expected_export", "")) == "strict_exportable"]
+    print(f"  Priority 5's denominator is {len(strict_papers)} paper(s): "
+          f"{[getattr(c,'paper_id','?') for c in strict_papers]}")
+    for pap in d.get("papers", []):
+        pid = pap.get("paper_id")
+        if pid not in {getattr(c, "paper_id", None) for c in strict_papers}:
+            continue
+        leg = (pap.get("legs") or {}).get("strict") or {}
+        rel = leg.get("release_status") or {}
+        print(f"  {pid}/strict  runner_status={leg.get('status')!r}")
+        for k in ("status", "strict_acceptance_eligible", "strict_gates_passed",
+                  "semantic_evaluation", "completeness", "missing_anchors", "reasons"):
+            print(f"      {k:28s} = {j(rel.get(k), 400)}")
+    print()
+    print("  A runner 'pass' is NOT a Priority-5 point. A leg that executes, clears the strict")
+    print("  technical gates and passes semantic evaluation can still be held at review_required")
+    print("  for incomplete requested-core coverage -- which is merge rule 7 working as written:")
+    print("  incomplete-but-correct pathways are PRESERVED as review_required, never dropped and")
+    print("  never promoted. Read the reasons above before calling this priority an operational")
+    print("  failure or a biological one.")
 
     # ------------------------------------------------- negative controls
     rule("6. NEGATIVE CONTROLS")

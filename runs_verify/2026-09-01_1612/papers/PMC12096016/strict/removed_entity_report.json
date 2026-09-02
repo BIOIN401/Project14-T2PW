@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [
+    {
+      "bucket": "compounds",
+      "name": "NADH",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "apo-EntB",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "protein_complexes",
+      "name": "EntD complex",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    }
+  ],
+  "removed_locations": [
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "NADH",
+      "reason": "location_entity_removed",
+      "biological_state": "cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "Fur",
+      "reason": "location_entity_removed",
+      "biological_state": "cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "apo-EntB",
+      "reason": "location_entity_removed",
+      "biological_state": "cytoplasmic state",
+      "iteration": 1
+    }
+  ],
+  "removed_biological_states": [],
+  "counts": {
+    "entities": 3,
+    "locations": 3,
+    "biological_states": 0
+  }
+}

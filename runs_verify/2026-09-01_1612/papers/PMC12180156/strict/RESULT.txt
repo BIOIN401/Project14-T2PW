@@ -1,0 +1,60 @@
+RESULT: FAIL
+========================================
+paper      : PMC12180156
+title      : (unknown)
+slug       : PMC12180156
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1377.3s (22m57s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+termination_reason  : (not recorded)
+operational_failure : (not recorded)
+message      : post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_stage3_gates
+issue codes  : gate.protein_ferrochelatase_is_missing_a_uniprot_or_drugbank_identifi
+
+DETAIL / TRACEBACK
+----------------------------------------
+11 QA issues need review.
+[post_normalization_contract_report] gate.protein_ferrochelatase_is_missing_a_uniprot_or_drugbank_identifi @ /entities/proteins/1: Protein 'ferrochelatase' is missing a UniProt or DrugBank identifier.
+
+COUNTS
+----------------------------------------
+  blocking_issues = 1
+  compounds = 5
+  contract_errors = 1
+  entities = 14
+  gate_errors = 0
+  proteins = 3
+  reactions = 2
+  runtime_schema_findings = 4
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (2652 B)
+  - contract_reports.json  (20508 B)
+  - coverage_summary.json  (2915 B)
+  - final_mapped.json  (172819 B)
+  - final_stage3_gate_report.json  (2803 B)
+  - gap_iteration_summary.json  (9132 B)
+  - gate_fail_report.json  (10957 B)
+  - graph_closure_iterations.json  (727 B)
+  - initial_stage3_gate_report.json  (10957 B)
+  - merged_payload.json  (75770 B)
+  - quarantine_report.json  (11314 B)
+  - rag_admission_report.json  (64237 B)
+  - removed_entity_report.json  (401 B)
+  - stage1_payload.json  (8261 B)

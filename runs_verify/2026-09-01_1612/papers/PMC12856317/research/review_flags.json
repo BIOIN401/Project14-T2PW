@@ -1,0 +1,161 @@
+{
+  "export_mode": "research",
+  "biology_provenance_flags": [
+    {
+      "path": "/entities/proteins/0",
+      "reason": "Protein 'aminolevulinic acid synthase 2' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "aminolevulinic acid synthase 2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Homo sapiens",
+        "species": "Homo sapiens",
+        "species_name": "Homo sapiens",
+        "pathbank_species_id": 1,
+        "species_id": 1,
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "aminolevulinic acid synthase 2",
+            "organism": "Homo sapiens"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"aminolevulinic acid synthase 2\" OR gene:\"aminolevulinic acid synthase 2\") AND organism_name:\"Homo sapiens\"",
+            "(protein_name:\"aminolevulinic acid synthase 2\" OR gene:\"aminolevulinic acid synthase 2\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "aminolevulinic acid synthase 2",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.05<0.1"
+            },
+            "score": 0.51,
+            "margin": 0.04999999999999999,
+            "verification_status": "rejected",
+            "identity": "uniprot:P22557",
+            "judged_candidate": {
+              "accession": "P22557",
+              "protein_name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "gene_names": "3 item(s), 25 chars elided",
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.51,
+              "matched_query": "aminolevulinic acid synthase 2",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 289 chars elided",
+              "8 key(s), 278 chars elided",
+              "8 key(s), 267 chars elided",
+              "8 key(s), 282 chars elided",
+              "8 key(s), 287 chars elided",
+              "8 key(s), 273 chars elided",
+              "8 key(s), 271 chars elided",
+              "8 key(s), 272 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "aminolevulinic acid synthase 2",
+              "kind": "protein",
+              "resolved_name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "identity": "uniprot:P22557",
+              "compared_names": "1 item(s), 65 chars elided"
+            },
+            "competing_accessions": [
+              "a0a2r8y6n3",
+              "q9h366"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    }
+  ],
+  "format_rules_skipped": [],
+  "content_preserved": [
+    {
+      "type": "research_mode_destructive_cleanup_skipped",
+      "export_mode": "research",
+      "passes": [
+        "drop_process_orphan_proteins",
+        "prune_disconnected_proteins"
+      ],
+      "reason": "disconnected/orphan proteins are preserved for review instead of deleted"
+    },
+    {
+      "type": "research_mode_connectivity_gate_not_enforced",
+      "export_mode": "research",
+      "gate": "run_strict_post_normalization_gates.enforce_all_proteins_connected",
+      "reason": "the degree-0 protein rule is the rule the two skipped passes exist to satisfy; enforcing it here would fail the run on exactly the rows this mode chose to keep"
+    }
+  ],
+  "strict_gate_errors_not_blocking": []
+}

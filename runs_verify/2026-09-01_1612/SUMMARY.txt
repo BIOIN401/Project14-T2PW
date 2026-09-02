@@ -1,0 +1,1052 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2026-09-01T16:12:09
+finished : 2026-09-01T22:37:00
+papers attempted : 10
+strict PWML      : 2 pass / 5 fail
+research relaxed : 6 pass / 1 fail
+timeouts         : 1
+skipped          : 0
+ineligible       : 6  (screened out, not failures)
+pass, no deliv.  : 8  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 20 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+!! RESEARCH-MODE DEFECT !!
+Research mode is fail-open by design: it relaxes FORMAT rules and records review flags instead of
+stopping. Therefore ANY research failure is a code defect, not a data problem. Fix these before
+anything else.
+papers affected: 1
+
+  PMC13231680 -- (untitled)
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 360.4s (6m00s)
+    failure_kind: no_reactions
+      message: the pipeline produced a pathway with no reactions and no transports
+
+----------------------------------------------------------------------------------------------------
+
+!! PASSED BUT PRODUCED NO DELIVERABLE !!
+These runs did not fail -- the pipeline ran to completion -- but the folder has no deliverable in
+it. This is NOT a clean night. Check whether the missing output was expected before treating it as
+green.
+runs affected: 8
+
+  PMC12444477 [research] -- (untitled)
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/6/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/6/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.entity_ftsh_is_declared_as_both_a_protein_and_a_protein_complex_ @
+      /entities/proteins/21/name: Entity 'FtsH' is declared as both a protein and a protein_complex;
+      entity types must be disjoint (complex declaration: /entities/protein_complexes/0/name).
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein
+      'LpxL' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/8: Protein
+      'LpxM' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lapb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/9: Protein
+      'LapB' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_yejm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/10: Protein
+      'YejM' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_yhcb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/14: Protein
+      'YhcB' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/15: Protein
+      'ObgE' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_rnhb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/17: Protein
+      'RnhB' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_gcvb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/19: Protein
+      'GcvB' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lapa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/20: Protein
+      'LapA' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking): and 3 more gate error(s); all of
+      them are in review_flags.json and the gate report files
+
+  PMC12856317 [research] -- (untitled)
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+
+  PMC12180156 [research] -- (untitled)
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+
+  PMC12452463 [research] -- (untitled)
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @
+      /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @
+      /entities/proteins/7/mapping_meta/resolution: Mapping metadata must include a resolution
+      object.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report]
+      runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a
+      'single_protein_pathwhiz_wrapper'.
+    - runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report]
+      generated_wrapper_reason_invalid @ /entities/protein_complexes/0/generation_reason: Generated
+      wrapper rows must use the supported generation reason.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @
+      /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @
+      /entities/proteins/7/mapping_meta/resolution: Mapping metadata must include a resolution
+      object.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking): and 4 more finding(s); all of them are
+      in contract_reports.json
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein
+      'Fur' is missing a UniProt or DrugBank identifier.
+
+  PMC12096016 [strict] -- (untitled)
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @
+      /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @
+      /entities/proteins/9/mapping_meta/resolution: Mapping metadata must include a resolution
+      object.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report]
+      runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a
+      'single_protein_pathwhiz_wrapper'.
+    - runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report]
+      generated_wrapper_reason_invalid @ /entities/protein_complexes/0/generation_reason: Generated
+      wrapper rows must use the supported generation reason.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @
+      /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @
+      /entities/proteins/9/mapping_meta/resolution: Mapping metadata must include a resolution
+      object.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking): and 4 more finding(s); all of them are
+      in contract_reports.json
+
+  PMC12096016 [research] -- (untitled)
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @
+      /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @
+      /entities/proteins/9/mapping_meta/resolution: Mapping metadata must include a resolution
+      object.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report]
+      runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a
+      'single_protein_pathwhiz_wrapper'.
+    - runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report]
+      generated_wrapper_reason_invalid @ /entities/protein_complexes/0/generation_reason: Generated
+      wrapper rows must use the supported generation reason.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @
+      /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @
+      /entities/proteins/9/mapping_meta/resolution: Mapping metadata must include a resolution
+      object.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking): and 4 more finding(s); all of them are
+      in contract_reports.json
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein
+      'Fur' is missing a UniProt or DrugBank identifier.
+
+  PMC12782028 [strict] -- (untitled)
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+
+  PMC12782028 [research] -- (untitled)
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+
+----------------------------------------------------------------------------------------------------
+research-defect   0  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+broken            1  (strict FAIL + research FAIL -- real bug, also a research defect)
+    PMC13231680
+format-blocked    4  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+    PMC12444477, PMC12856317, PMC12180156, PMC12452463
+incomplete        3  (a mode is missing, skipped or unrecognised)
+    PMC12657337, PMC12421875, PMC12312563
+ok                2  (strict PASS + research PASS)
+    PMC12096016, PMC12782028
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] (untitled) -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC13231680
+    slug   : PMC13231680
+    uri    : (none)
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=624.8s (10m24s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        failure_kind : no_reactions
+        message      : the pipeline produced a pathway with no reactions and no transports
+        issue_codes  : (none reported)
+        counts       : reactions=0 entities=3 proteins=1 compounds=0 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=0
+        files        : 6
+            - papers/PMC13231680/strict/cleaning_report.json (1.0 kB)
+            - papers/PMC13231680/strict/extraction_boundary_report.json (3.0 kB)
+            - papers/PMC13231680/strict/merged_payload.json (62.0 kB)
+            - papers/PMC13231680/strict/rag_admission_report.json (28.2 kB)
+            - papers/PMC13231680/strict/stage0_attempts.json (826 B)
+            - papers/PMC13231680/strict/stage1_payload.json (1.7 kB)
+
+    research : FAIL | stage=stage1 | time=360.4s (6m00s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        failure_kind : no_reactions
+        message      : the pipeline produced a pathway with no reactions and no transports
+        issue_codes  : (none reported)
+        counts       : reactions=0 entities=6 proteins=2 compounds=3 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=0
+        files        : 6
+            - papers/PMC13231680/research/cleaning_report.json (1.1 kB)
+            - papers/PMC13231680/research/extraction_boundary_report.json (2.9 kB)
+            - papers/PMC13231680/research/merged_payload.json (65.6 kB)
+            - papers/PMC13231680/research/rag_admission_report.json (18.2 kB)
+            - papers/PMC13231680/research/stage0_attempts.json (826 B)
+            - papers/PMC13231680/research/stage1_payload.json (4.6 kB)
+
+----------------------------------------------------------------------------------------------------
+[2] (untitled) -> format-blocked
+    id     : PMC12444477
+    slug   : PMC12444477
+    uri    : (none)
+    topic  : lipid A biosynthesis
+
+    strict   : TIMEOUT | stage=unknown | time=3600.8s (60m00s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        failure_kind : timeout
+        message      : the child process was still running after 3600s and was killed, so this
+                       paper+mode produced nothing (budget_exhausted)
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : PASS (no research deliverable) | stage=research_report | time=2446.5s (40m46s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/6/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/6/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.entity_ftsh_is_declared_as_both_a_protein_and_a_protein_complex_ @
+                       /entities/proteins/21/name: Entity 'FtsH' is declared as both a protein and a
+                       protein_complex; entity types must be disjoint (complex declaration:
+                       /entities/protein_complexes/0/name).
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/7: Protein 'LpxL' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/8: Protein 'LpxM' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lapb_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/9: Protein 'LapB' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_yejm_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/10: Protein 'YejM' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_yhcb_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/14: Protein 'YhcB' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/15: Protein 'ObgE' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_rnhb_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/17: Protein 'RnhB' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_gcvb_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/19: Protein 'GcvB' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lapa_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/20: Protein 'LapA' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking): and 3 more gate
+                       error(s); all of them are in review_flags.json and the gate report files
+        counts       : reactions=8 entities=55 proteins=25 compounds=19 tier.a=26 tier.b=0 tier.c=31
+                       tier.d=0 review_flags=20 skipped_format_rules=0 normalization_actions=4
+                       citations=1 blocking_issues=0 gate_errors=13 gate_errors_not_blocking=13
+                       gate_review_flags=13 runtime_schema_findings=2 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=4 unsourced=0
+        files        : 18
+            - papers/PMC12444477/research/audit_iteration_summary.json (1.5 kB)
+            - papers/PMC12444477/research/contract_reports.json (35.6 kB)
+            - papers/PMC12444477/research/coverage_summary.json (9.4 kB)
+            - papers/PMC12444477/research/final_mapped.json (483.7 kB)
+            - papers/PMC12444477/research/final_stage3_gate_report.json (78.2 kB)
+            - papers/PMC12444477/research/gap_iteration_summary.json (210 B)
+            - papers/PMC12444477/research/gate_fail_report.json (76.8 kB)
+            - papers/PMC12444477/research/graph_closure_iterations.json (15.2 kB)
+            - papers/PMC12444477/research/initial_stage3_gate_report.json (76.8 kB)
+            - papers/PMC12444477/research/merged_payload.json (162.1 kB)
+            - papers/PMC12444477/research/quarantine_report.json (115.2 kB)
+            - papers/PMC12444477/research/rag_admission_report.json (331.6 kB)
+            - papers/PMC12444477/research/removed_entity_report.json (241 B)
+            - papers/PMC12444477/research/research_pathway_citations.json (212.8 kB)
+            - papers/PMC12444477/research/research_pathway_elements.csv (16.8 kB)
+            - papers/PMC12444477/research/research_pathway_report.txt (78.6 kB)
+            - papers/PMC12444477/research/review_flags.json (93.8 kB)
+            - papers/PMC12444477/research/stage1_payload.json (81.3 kB)
+
+----------------------------------------------------------------------------------------------------
+[3] (untitled) -> format-blocked
+    id     : PMC12856317
+    slug   : PMC12856317
+    uri    : (none)
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=1122.7s (18m42s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation
+                       passed]
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 1 blocking issue(s) at
+                       final_pre_export_stage3_gates
+        issue_codes  : gate.protein_clpxp_is_missing_a_uniprot_or_drugbank_identifier
+        counts       : reactions=2 entities=15 proteins=4 compounds=5 blocking_issues=1
+                       contract_errors=1 gate_errors=0 runtime_schema_findings=2
+                       stage0_observed_organisms=1 stage0_observed_pathways=1 transports=0
+        files        : 14
+            - papers/PMC12856317/strict/audit_iteration_summary.json (1.1 kB)
+            - papers/PMC12856317/strict/contract_reports.json (17.5 kB)
+            - papers/PMC12856317/strict/coverage_summary.json (2.6 kB)
+            - papers/PMC12856317/strict/final_mapped.json (128.4 kB)
+            - papers/PMC12856317/strict/final_stage3_gate_report.json (2.7 kB)
+            - papers/PMC12856317/strict/gap_iteration_summary.json (210 B)
+            - papers/PMC12856317/strict/gate_fail_report.json (15.4 kB)
+            - papers/PMC12856317/strict/graph_closure_iterations.json (2.0 kB)
+            - papers/PMC12856317/strict/initial_stage3_gate_report.json (15.4 kB)
+            - papers/PMC12856317/strict/merged_payload.json (63.8 kB)
+            - papers/PMC12856317/strict/quarantine_report.json (13.9 kB)
+            - papers/PMC12856317/strict/rag_admission_report.json (216.7 kB)
+            - papers/PMC12856317/strict/removed_entity_report.json (1.7 kB)
+            - papers/PMC12856317/strict/stage1_payload.json (10.0 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=879.2s (14m39s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        counts       : reactions=1 entities=10 proteins=1 compounds=5 tier.a=5 tier.b=0 tier.c=1
+                       tier.d=0 review_flags=1 skipped_format_rules=0 normalization_actions=2
+                       citations=1 blocking_issues=0 gate_errors=0 runtime_schema_findings=2
+                       stage0_observed_organisms=1 stage0_observed_pathways=1 transports=0
+                       unsourced=0
+        files        : 18
+            - papers/PMC12856317/research/audit_iteration_summary.json (2.1 kB)
+            - papers/PMC12856317/research/contract_reports.json (7.3 kB)
+            - papers/PMC12856317/research/coverage_summary.json (2.3 kB)
+            - papers/PMC12856317/research/final_mapped.json (141.2 kB)
+            - papers/PMC12856317/research/final_stage3_gate_report.json (2.7 kB)
+            - papers/PMC12856317/research/gap_iteration_summary.json (20.2 kB)
+            - papers/PMC12856317/research/gate_fail_report.json (7.9 kB)
+            - papers/PMC12856317/research/graph_closure_iterations.json (373 B)
+            - papers/PMC12856317/research/initial_stage3_gate_report.json (7.9 kB)
+            - papers/PMC12856317/research/merged_payload.json (60.6 kB)
+            - papers/PMC12856317/research/quarantine_report.json (8.7 kB)
+            - papers/PMC12856317/research/rag_admission_report.json (72.0 kB)
+            - papers/PMC12856317/research/removed_entity_report.json (241 B)
+            - papers/PMC12856317/research/research_pathway_citations.json (22.4 kB)
+            - papers/PMC12856317/research/research_pathway_elements.csv (1.7 kB)
+            - papers/PMC12856317/research/research_pathway_report.txt (8.4 kB)
+            - papers/PMC12856317/research/review_flags.json (5.8 kB)
+            - papers/PMC12856317/research/stage1_payload.json (7.7 kB)
+
+----------------------------------------------------------------------------------------------------
+[4] (untitled) -> format-blocked
+    id     : PMC12180156
+    slug   : PMC12180156
+    uri    : (none)
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=1377.3s (22m57s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation
+                       failed]
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/4/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/4/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 1 blocking issue(s) at
+                       final_pre_export_stage3_gates
+        issue_codes  : gate.protein_ferrochelatase_is_missing_a_uniprot_or_drugbank_identifi
+        counts       : reactions=2 entities=14 proteins=3 compounds=5 blocking_issues=1
+                       contract_errors=1 gate_errors=0 runtime_schema_findings=4
+                       stage0_observed_organisms=1 stage0_observed_pathways=1 transports=0
+        files        : 14
+            - papers/PMC12180156/strict/audit_iteration_summary.json (2.6 kB)
+            - papers/PMC12180156/strict/contract_reports.json (20.0 kB)
+            - papers/PMC12180156/strict/coverage_summary.json (2.8 kB)
+            - papers/PMC12180156/strict/final_mapped.json (168.8 kB)
+            - papers/PMC12180156/strict/final_stage3_gate_report.json (2.7 kB)
+            - papers/PMC12180156/strict/gap_iteration_summary.json (8.9 kB)
+            - papers/PMC12180156/strict/gate_fail_report.json (10.7 kB)
+            - papers/PMC12180156/strict/graph_closure_iterations.json (727 B)
+            - papers/PMC12180156/strict/initial_stage3_gate_report.json (10.7 kB)
+            - papers/PMC12180156/strict/merged_payload.json (74.0 kB)
+            - papers/PMC12180156/strict/quarantine_report.json (11.0 kB)
+            - papers/PMC12180156/strict/rag_admission_report.json (62.7 kB)
+            - papers/PMC12180156/strict/removed_entity_report.json (401 B)
+            - papers/PMC12180156/strict/stage1_payload.json (8.1 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=633.5s (10m33s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        counts       : reactions=2 entities=10 proteins=3 compounds=3 tier.a=3 tier.b=0 tier.c=2
+                       tier.d=0 review_flags=2 skipped_format_rules=0 normalization_actions=2
+                       citations=1 blocking_issues=0 gate_errors=0 runtime_schema_findings=2
+                       stage0_observed_organisms=1 stage0_observed_pathways=1 transports=0
+                       unsourced=0
+        files        : 18
+            - papers/PMC12180156/research/audit_iteration_summary.json (1.3 kB)
+            - papers/PMC12180156/research/contract_reports.json (7.3 kB)
+            - papers/PMC12180156/research/coverage_summary.json (6.8 kB)
+            - papers/PMC12180156/research/final_mapped.json (131.7 kB)
+            - papers/PMC12180156/research/final_stage3_gate_report.json (2.7 kB)
+            - papers/PMC12180156/research/gap_iteration_summary.json (210 B)
+            - papers/PMC12180156/research/gate_fail_report.json (10.7 kB)
+            - papers/PMC12180156/research/graph_closure_iterations.json (727 B)
+            - papers/PMC12180156/research/initial_stage3_gate_report.json (10.7 kB)
+            - papers/PMC12180156/research/merged_payload.json (72.7 kB)
+            - papers/PMC12180156/research/quarantine_report.json (14.2 kB)
+            - papers/PMC12180156/research/rag_admission_report.json (26.9 kB)
+            - papers/PMC12180156/research/removed_entity_report.json (241 B)
+            - papers/PMC12180156/research/research_pathway_citations.json (19.2 kB)
+            - papers/PMC12180156/research/research_pathway_elements.csv (1.4 kB)
+            - papers/PMC12180156/research/research_pathway_report.txt (10.5 kB)
+            - papers/PMC12180156/research/review_flags.json (9.2 kB)
+            - papers/PMC12180156/research/stage1_payload.json (6.9 kB)
+
+----------------------------------------------------------------------------------------------------
+[5] (untitled) -> format-blocked
+    id     : PMC12452463
+    slug   : PMC12452463
+    uri    : (none)
+    topic  : enterobactin biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=1317.6s (21m57s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation
+                       passed]
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error
+                       @ /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/7/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason:
+                       Expected a 'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/7/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 6 blocking issue(s) at
+                       final_pre_export_stage3_gates
+        issue_codes  : gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_ryhb_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_enterobactin_synthase_is_missing_species_organism,
+                       gate.generated_protein_complex_enterobactin_synthase_complex_is_missi,
+                       gate.generated_protein_complex_enterobactin_synthase_complex_componen,
+                       gate.registry_validation_failed
+        counts       : reactions=4 entities=20 proteins=7 compounds=6 blocking_issues=6
+                       contract_errors=6 gate_errors=0 runtime_schema_findings=8
+                       stage0_observed_organisms=1 stage0_observed_pathways=1 transports=0
+        files        : 14
+            - papers/PMC12452463/strict/audit_iteration_summary.json (1.0 kB)
+            - papers/PMC12452463/strict/contract_reports.json (39.3 kB)
+            - papers/PMC12452463/strict/coverage_summary.json (4.6 kB)
+            - papers/PMC12452463/strict/final_mapped.json (175.8 kB)
+            - papers/PMC12452463/strict/final_stage3_gate_report.json (2.8 kB)
+            - papers/PMC12452463/strict/gap_iteration_summary.json (210 B)
+            - papers/PMC12452463/strict/gate_fail_report.json (14.8 kB)
+            - papers/PMC12452463/strict/graph_closure_iterations.json (2.1 kB)
+            - papers/PMC12452463/strict/initial_stage3_gate_report.json (14.8 kB)
+            - papers/PMC12452463/strict/merged_payload.json (81.4 kB)
+            - papers/PMC12452463/strict/quarantine_report.json (19.6 kB)
+            - papers/PMC12452463/strict/rag_admission_report.json (365.5 kB)
+            - papers/PMC12452463/strict/removed_entity_report.json (1.8 kB)
+            - papers/PMC12452463/strict/stage1_payload.json (13.6 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=1300.5s (21m40s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error
+                       @ /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/proteins/7/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] runtime_schema_value_error @
+                       /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @
+                       /entities/protein_complexes/0/generation_reason: Generated wrapper rows must
+                       use the supported generation reason.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason:
+                       Expected a 'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/proteins/7/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking): and 4 more finding(s);
+                       all of them are in contract_reports.json
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/5: Protein 'Fur' is missing a UniProt or DrugBank
+                       identifier.
+        counts       : reactions=4 entities=20 proteins=8 compounds=6 tier.a=9 tier.b=0 tier.c=8
+                       tier.d=0 review_flags=4 skipped_format_rules=0 normalization_actions=3
+                       citations=1 blocking_issues=0 gate_errors=1 gate_errors_not_blocking=1
+                       gate_review_flags=1 runtime_schema_findings=14 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=2 unsourced=0
+        files        : 18
+            - papers/PMC12452463/research/audit_iteration_summary.json (937 B)
+            - papers/PMC12452463/research/contract_reports.json (14.8 kB)
+            - papers/PMC12452463/research/coverage_summary.json (4.4 kB)
+            - papers/PMC12452463/research/final_mapped.json (210.1 kB)
+            - papers/PMC12452463/research/final_stage3_gate_report.json (11.3 kB)
+            - papers/PMC12452463/research/gap_iteration_summary.json (37.5 kB)
+            - papers/PMC12452463/research/gate_fail_report.json (10.0 kB)
+            - papers/PMC12452463/research/graph_closure_iterations.json (950 B)
+            - papers/PMC12452463/research/initial_stage3_gate_report.json (10.0 kB)
+            - papers/PMC12452463/research/merged_payload.json (84.2 kB)
+            - papers/PMC12452463/research/quarantine_report.json (15.7 kB)
+            - papers/PMC12452463/research/rag_admission_report.json (288.5 kB)
+            - papers/PMC12452463/research/removed_entity_report.json (241 B)
+            - papers/PMC12452463/research/research_pathway_citations.json (45.3 kB)
+            - papers/PMC12452463/research/research_pathway_elements.csv (4.7 kB)
+            - papers/PMC12452463/research/research_pathway_report.txt (12.4 kB)
+            - papers/PMC12452463/research/review_flags.json (8.7 kB)
+            - papers/PMC12452463/research/stage1_payload.json (20.2 kB)
+
+----------------------------------------------------------------------------------------------------
+[6] (untitled) -> incomplete
+    id     : PMC12657337
+    slug   : PMC12657337
+    uri    : (none)
+    topic  : menaquinone biosynthesis
+
+    strict   : INELIGIBLE | stage=stage1 | time=1011.2s (16m51s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation NOT
+                       PERFORMED]
+        counts       : scope_conflicts=1 stage0_observed_organisms=1 stage0_observed_pathways=1
+        files        : 7
+            - papers/PMC12657337/strict/cleaning_report.json (1.1 kB)
+            - papers/PMC12657337/strict/extraction_boundary_report.json (2.9 kB)
+            - papers/PMC12657337/strict/merged_payload.json (73.9 kB)
+            - papers/PMC12657337/strict/rag_admission_report.json (350.2 kB)
+            - papers/PMC12657337/strict/scope_conflict.json (662 B)
+            - papers/PMC12657337/strict/stage0_attempts.json (827 B)
+            - papers/PMC12657337/strict/stage1_payload.json (17.7 kB)
+
+    research : INELIGIBLE | stage=stage1 | time=842.9s (14m02s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation NOT
+                       PERFORMED]
+        counts       : scope_conflicts=1 stage0_observed_organisms=1 stage0_observed_pathways=1
+        files        : 7
+            - papers/PMC12657337/research/cleaning_report.json (1.1 kB)
+            - papers/PMC12657337/research/extraction_boundary_report.json (2.9 kB)
+            - papers/PMC12657337/research/merged_payload.json (76.3 kB)
+            - papers/PMC12657337/research/rag_admission_report.json (339.2 kB)
+            - papers/PMC12657337/research/scope_conflict.json (622 B)
+            - papers/PMC12657337/research/stage0_attempts.json (827 B)
+            - papers/PMC12657337/research/stage1_payload.json (19.6 kB)
+
+----------------------------------------------------------------------------------------------------
+[7] (untitled) -> incomplete
+    id     : PMC12421875
+    slug   : PMC12421875
+    uri    : (none)
+    topic  : menaquinone biosynthesis
+
+    strict   : INELIGIBLE | stage=stage1 | time=842.1s (14m02s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation NOT
+                       PERFORMED]
+        counts       : scope_conflicts=1 stage0_observed_organisms=1 stage0_observed_pathways=1
+        files        : 7
+            - papers/PMC12421875/strict/cleaning_report.json (5.1 kB)
+            - papers/PMC12421875/strict/extraction_boundary_report.json (5.3 kB)
+            - papers/PMC12421875/strict/merged_payload.json (90.6 kB)
+            - papers/PMC12421875/strict/rag_admission_report.json (161.1 kB)
+            - papers/PMC12421875/strict/scope_conflict.json (684 B)
+            - papers/PMC12421875/strict/stage0_attempts.json (827 B)
+            - papers/PMC12421875/strict/stage1_payload.json (30.0 kB)
+
+    research : INELIGIBLE | stage=stage1 | time=949.3s (15m49s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation NOT
+                       PERFORMED]
+        counts       : scope_conflicts=1 stage0_observed_organisms=1 stage0_observed_pathways=1
+        files        : 7
+            - papers/PMC12421875/research/cleaning_report.json (5.0 kB)
+            - papers/PMC12421875/research/extraction_boundary_report.json (6.7 kB)
+            - papers/PMC12421875/research/merged_payload.json (99.6 kB)
+            - papers/PMC12421875/research/rag_admission_report.json (310.9 kB)
+            - papers/PMC12421875/research/scope_conflict.json (624 B)
+            - papers/PMC12421875/research/stage0_attempts.json (826 B)
+            - papers/PMC12421875/research/stage1_payload.json (19.8 kB)
+
+----------------------------------------------------------------------------------------------------
+[8] (untitled) -> incomplete
+    id     : PMC12312563
+    slug   : PMC12312563
+    uri    : (none)
+    topic  : menaquinone biosynthesis
+
+    strict   : INELIGIBLE | stage=stage1 | time=407.5s (6m47s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation NOT
+                       PERFORMED]
+        counts       : scope_conflicts=1 stage0_observed_organisms=1 stage0_observed_pathways=1
+        files        : 7
+            - papers/PMC12312563/strict/cleaning_report.json (1.1 kB)
+            - papers/PMC12312563/strict/extraction_boundary_report.json (3.0 kB)
+            - papers/PMC12312563/strict/merged_payload.json (55.6 kB)
+            - papers/PMC12312563/strict/rag_admission_report.json (131.6 kB)
+            - papers/PMC12312563/strict/scope_conflict.json (666 B)
+            - papers/PMC12312563/strict/stage0_attempts.json (826 B)
+            - papers/PMC12312563/strict/stage1_payload.json (11.9 kB)
+
+    research : INELIGIBLE | stage=stage1 | time=460.6s (7m40s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation NOT
+                       PERFORMED]
+        counts       : scope_conflicts=1 stage0_observed_organisms=1 stage0_observed_pathways=1
+        files        : 7
+            - papers/PMC12312563/research/cleaning_report.json (1.1 kB)
+            - papers/PMC12312563/research/extraction_boundary_report.json (3.0 kB)
+            - papers/PMC12312563/research/merged_payload.json (53.4 kB)
+            - papers/PMC12312563/research/rag_admission_report.json (139.8 kB)
+            - papers/PMC12312563/research/scope_conflict.json (662 B)
+            - papers/PMC12312563/research/stage0_attempts.json (827 B)
+            - papers/PMC12312563/research/stage1_payload.json (9.1 kB)
+
+----------------------------------------------------------------------------------------------------
+[9] (untitled) -> ok
+    id     : PMC12096016
+    slug   : PMC12096016
+    uri    : (none)
+    topic  : enterobactin biosynthesis
+
+    strict   : PASS (no research deliverable) | stage=pwml_export | time=1952.9s (32m32s)
+        release      : review_required [pipeline ran; strict gates passed; semantic evaluation
+                       passed]
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error
+                       @ /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/proteins/9/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] runtime_schema_value_error @
+                       /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @
+                       /entities/protein_complexes/0/generation_reason: Generated wrapper rows must
+                       use the supported generation reason.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason:
+                       Expected a 'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/proteins/9/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking): and 4 more finding(s);
+                       all of them are in contract_reports.json
+        counts       : reactions=6 entities=31 proteins=10 compounds=10 blocking_issues=0
+                       gate_errors=0 pwml.compounds=9 pwml.edges=22 pwml.proteins=9 pwml.reactions=5
+                       pwml_bytes=74367 runtime_schema_findings=14 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=1
+        files        : 21
+            - papers/PMC12096016/strict/audit_iteration_summary.json (937 B)
+            - papers/PMC12096016/strict/contract_reports.json (13.7 kB)
+            - papers/PMC12096016/strict/coverage_summary.json (2.9 kB)
+            - papers/PMC12096016/strict/final_mapped.json (271.0 kB)
+            - papers/PMC12096016/strict/final_stage3_gate_report.json (2.8 kB)
+            - papers/PMC12096016/strict/gap_iteration_summary.json (37.0 kB)
+            - papers/PMC12096016/strict/gate_fail_report.json (9.9 kB)
+            - papers/PMC12096016/strict/graph_closure_iterations.json (1.7 kB)
+            - papers/PMC12096016/strict/initial_stage3_gate_report.json (9.9 kB)
+            - papers/PMC12096016/strict/merged_payload.json (69.8 kB)
+            - papers/PMC12096016/strict/pathway.review_required.pwml (72.6 kB)
+            - papers/PMC12096016/strict/pwml_ir.json (100.5 kB)
+            - papers/PMC12096016/strict/pwml_ir_report.json (4.2 kB)
+            - papers/PMC12096016/strict/pwml_ir_validation.json (234 B)
+            - papers/PMC12096016/strict/pwml_qa.json (574 B)
+            - papers/PMC12096016/strict/pwml_required_field_gate_report.json (5.2 kB)
+            - papers/PMC12096016/strict/pwml_validation_report.json (19.1 kB)
+            - papers/PMC12096016/strict/quarantine_report.json (22.0 kB)
+            - papers/PMC12096016/strict/rag_admission_report.json (369.6 kB)
+            - papers/PMC12096016/strict/removed_entity_report.json (1.4 kB)
+            - papers/PMC12096016/strict/stage1_payload.json (27.1 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=1349.0s (22m28s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error
+                       @ /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/proteins/9/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] runtime_schema_value_error @
+                       /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @
+                       /entities/protein_complexes/0/generation_reason: Generated wrapper rows must
+                       use the supported generation reason.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason:
+                       Expected a 'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/proteins/9/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking): and 4 more finding(s);
+                       all of them are in contract_reports.json
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/6: Protein 'Fur' is missing a UniProt or DrugBank
+                       identifier.
+        counts       : reactions=5 entities=25 proteins=10 compounds=10 tier.a=12 tier.b=0 tier.c=7
+                       tier.d=0 review_flags=4 skipped_format_rules=0 normalization_actions=4
+                       citations=1 blocking_issues=0 gate_errors=1 gate_errors_not_blocking=1
+                       gate_review_flags=1 runtime_schema_findings=14 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=2 unsourced=0
+        files        : 18
+            - papers/PMC12096016/research/audit_iteration_summary.json (1.4 kB)
+            - papers/PMC12096016/research/contract_reports.json (14.8 kB)
+            - papers/PMC12096016/research/coverage_summary.json (3.4 kB)
+            - papers/PMC12096016/research/final_mapped.json (260.9 kB)
+            - papers/PMC12096016/research/final_stage3_gate_report.json (11.9 kB)
+            - papers/PMC12096016/research/gap_iteration_summary.json (47.9 kB)
+            - papers/PMC12096016/research/gate_fail_report.json (10.1 kB)
+            - papers/PMC12096016/research/graph_closure_iterations.json (950 B)
+            - papers/PMC12096016/research/initial_stage3_gate_report.json (10.1 kB)
+            - papers/PMC12096016/research/merged_payload.json (66.1 kB)
+            - papers/PMC12096016/research/quarantine_report.json (15.2 kB)
+            - papers/PMC12096016/research/rag_admission_report.json (368.0 kB)
+            - papers/PMC12096016/research/removed_entity_report.json (241 B)
+            - papers/PMC12096016/research/research_pathway_citations.json (48.7 kB)
+            - papers/PMC12096016/research/research_pathway_elements.csv (5.2 kB)
+            - papers/PMC12096016/research/research_pathway_report.txt (12.5 kB)
+            - papers/PMC12096016/research/review_flags.json (8.9 kB)
+            - papers/PMC12096016/research/stage1_payload.json (22.3 kB)
+
+----------------------------------------------------------------------------------------------------
+[10] (untitled) -> ok
+    id     : PMC12782028
+    slug   : PMC12782028
+    uri    : (none)
+    topic  : cholesterol biosynthesis
+
+    strict   : PASS (no research deliverable) | stage=pwml_export | time=590.6s (9m50s)
+        release      : review_required [pipeline ran; strict gates passed; semantic evaluation
+                       passed]
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        counts       : reactions=3 entities=16 proteins=3 compounds=5 blocking_issues=0
+                       gate_errors=0 pwml.compounds=5 pwml.edges=9 pwml.proteins=3 pwml.reactions=3
+                       pwml_bytes=34931 runtime_schema_findings=2 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=0
+        files        : 19
+            - papers/PMC12782028/strict/audit_iteration_summary.json (1.1 kB)
+            - papers/PMC12782028/strict/contract_reports.json (6.3 kB)
+            - papers/PMC12782028/strict/coverage_summary.json (2.6 kB)
+            - papers/PMC12782028/strict/final_mapped.json (174.6 kB)
+            - papers/PMC12782028/strict/final_stage3_gate_report.json (2.8 kB)
+            - papers/PMC12782028/strict/gap_iteration_summary.json (12.9 kB)
+            - papers/PMC12782028/strict/graph_closure_iterations.json (727 B)
+            - papers/PMC12782028/strict/merged_payload.json (55.2 kB)
+            - papers/PMC12782028/strict/pathway.review_required.pwml (34.1 kB)
+            - papers/PMC12782028/strict/pwml_ir.json (38.8 kB)
+            - papers/PMC12782028/strict/pwml_ir_report.json (5.8 kB)
+            - papers/PMC12782028/strict/pwml_ir_validation.json (232 B)
+            - papers/PMC12782028/strict/pwml_qa.json (406 B)
+            - papers/PMC12782028/strict/pwml_required_field_gate_report.json (2.4 kB)
+            - papers/PMC12782028/strict/pwml_validation_report.json (19.1 kB)
+            - papers/PMC12782028/strict/quarantine_report.json (8.9 kB)
+            - papers/PMC12782028/strict/rag_admission_report.json (47.7 kB)
+            - papers/PMC12782028/strict/removed_entity_report.json (401 B)
+            - papers/PMC12782028/strict/stage1_payload.json (13.1 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=844.8s (14m04s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        counts       : reactions=3 entities=18 proteins=10 compounds=5 tier.a=10 tier.b=0 tier.c=4
+                       tier.d=0 review_flags=7 skipped_format_rules=0 normalization_actions=16
+                       citations=1 blocking_issues=0 gate_errors=0 runtime_schema_findings=2
+                       stage0_observed_organisms=1 stage0_observed_pathways=1 transports=0
+                       unsourced=0
+        files        : 16
+            - papers/PMC12782028/research/audit_iteration_summary.json (1.1 kB)
+            - papers/PMC12782028/research/contract_reports.json (15.7 kB)
+            - papers/PMC12782028/research/coverage_summary.json (2.8 kB)
+            - papers/PMC12782028/research/final_mapped.json (211.8 kB)
+            - papers/PMC12782028/research/final_stage3_gate_report.json (2.7 kB)
+            - papers/PMC12782028/research/gap_iteration_summary.json (210 B)
+            - papers/PMC12782028/research/graph_closure_iterations.json (2.0 kB)
+            - papers/PMC12782028/research/merged_payload.json (57.9 kB)
+            - papers/PMC12782028/research/quarantine_report.json (9.3 kB)
+            - papers/PMC12782028/research/rag_admission_report.json (67.4 kB)
+            - papers/PMC12782028/research/removed_entity_report.json (241 B)
+            - papers/PMC12782028/research/research_pathway_citations.json (34.8 kB)
+            - papers/PMC12782028/research/research_pathway_elements.csv (3.7 kB)
+            - papers/PMC12782028/research/research_pathway_report.txt (7.9 kB)
+            - papers/PMC12782028/research/review_flags.json (6.5 kB)
+            - papers/PMC12782028/research/stage1_payload.json (13.3 kB)
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     - PMC13231680: stage1 -- no codes
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     - PMC13231680: no_reactions
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     - (no code; failure_kind=timeout) (1 paper(s)): PMC12444477
+     - gate.generated_protein_complex_enterobactin_synthase_complex_componen (1 paper(s)):
+       PMC12452463
+     - gate.generated_protein_complex_enterobactin_synthase_complex_is_missi (1 paper(s)):
+       PMC12452463
+     - gate.protein_clpxp_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12856317
+     - gate.protein_enterobactin_synthase_is_missing_species_organism (1 paper(s)): PMC12452463
+     - gate.protein_ferrochelatase_is_missing_a_uniprot_or_drugbank_identifi (1 paper(s)):
+       PMC12180156
+     - gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12452463
+     - gate.protein_ryhb_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12452463
+     - gate.registry_validation_failed (1 paper(s)): PMC12452463
+
+====================================================================================================

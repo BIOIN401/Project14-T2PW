@@ -1,0 +1,111 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "pathway_missing_pw_id",
+      "message": "Pathway has no pw_id / pathbank_pathway_id.",
+      "pointer": "/metadata/pw_id"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntC-catalyzed isomerization of chorismate to isochorismate' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/inputs/0",
+      "reaction_name": "EntC-catalyzed isomerization of chorismate to isochorismate"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntC-catalyzed isomerization of chorismate to isochorismate' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/outputs/0",
+      "reaction_name": "EntC-catalyzed isomerization of chorismate to isochorismate"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/1/inputs/0",
+      "reaction_name": "EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/1/outputs/0",
+      "reaction_name": "EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate' outputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/1/outputs/1",
+      "reaction_name": "EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntA dehydrogenase conversion of 2,3-diDHB to 2,3-DHB' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/2/inputs/0",
+      "reaction_name": "EntA dehydrogenase conversion of 2,3-diDHB to 2,3-DHB"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntA dehydrogenase conversion of 2,3-diDHB to 2,3-DHB' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/2/outputs/0",
+      "reaction_name": "EntA dehydrogenase conversion of 2,3-diDHB to 2,3-DHB"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntE adenylation of 2,3-DHB' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/3/inputs/0",
+      "reaction_name": "EntE adenylation of 2,3-DHB"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntE adenylation of 2,3-DHB' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/3/inputs/1",
+      "reaction_name": "EntE adenylation of 2,3-DHB"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntE adenylation of 2,3-DHB' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/3/outputs/0",
+      "reaction_name": "EntE adenylation of 2,3-DHB"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntF-catalyzed enterobactin synthesis' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/4/inputs/0",
+      "reaction_name": "EntF-catalyzed enterobactin synthesis"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntF-catalyzed enterobactin synthesis' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/4/inputs/1",
+      "reaction_name": "EntF-catalyzed enterobactin synthesis"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'EntF-catalyzed enterobactin synthesis' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/4/outputs/0",
+      "reaction_name": "EntF-catalyzed enterobactin synthesis"
+    }
+  ],
+  "summary": {
+    "error_count": 0,
+    "warning_count": 14,
+    "error_codes": [],
+    "warning_codes": [
+      "pathway_missing_pw_id",
+      "reaction_participant_missing_stoichiometry"
+    ],
+    "checked_as": "payload",
+    "strict_db": true
+  },
+  "stage": "required_field_gate",
+  "pipeline_order": [
+    "audit_normalize",
+    "db_hydration",
+    "api_enrichment",
+    "llm_gap_resolver_with_tools",
+    "required_field_gate",
+    "pwml_ir_build",
+    "pwml_writer",
+    "pwml_qa"
+  ]
+}

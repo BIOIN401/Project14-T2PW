@@ -1,0 +1,507 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:9c8f29a734bcbbef",
+  "resulting_payload_hash": "sha256:9c8f29a734bcbbef",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "alas2",
+      "ferrochelatase",
+      "glycine",
+      "heme",
+      "iron",
+      "sfxn2",
+      "sfxn4"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:8a3fa5a7631a612e",
+  "ok": true,
+  "counts": {
+    "core_accepted": 4,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "SFXN4 modulation of heme biosynthesis",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "glycine",
+        "heme",
+        "sfxn4",
+        "sfxn4 modulation of heme biosynthesis"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "ferrochelatase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ferrochelatase",
+        "ferrochelatase reaction",
+        "heme",
+        "iron"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "SFXN4 inhibits ALAS2 translation",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "sfxn4",
+        "sfxn4 inhibits alas2 translation"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "SFXN4 modulates ferrochelatase levels",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ferrochelatase",
+        "sfxn4",
+        "sfxn4 modulates ferrochelatase levels"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "SFXN4 modulation of heme biosynthesis",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "glycine",
+        "heme",
+        "sfxn4",
+        "sfxn4 modulation of heme biosynthesis"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "ferrochelatase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ferrochelatase",
+        "ferrochelatase reaction",
+        "heme",
+        "iron"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "SFXN4 inhibits ALAS2 translation",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "sfxn4",
+        "sfxn4 inhibits alas2 translation"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "SFXN4 modulates ferrochelatase levels",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ferrochelatase",
+        "sfxn4",
+        "sfxn4 modulates ferrochelatase levels"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.857143,
+    "missing_anchors": [
+      "SFXN2"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "1 requested-core anchor(s) matched no admitted process: SFXN2",
+    "coverage_evaluated": true,
+    "reasons": [
+      "requested_core_anchors_unmatched:SFXN2"
+    ],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [],
+    "locked_reactions_found": 2,
+    "exported_locked_reactions": 2,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "glycine",
+      "heme",
+      "iron",
+      "SFXN2",
+      "SFXN4",
+      "ALAS2",
+      "ferrochelatase"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "heme biosynthesis in Homo sapiens",
+      "likely_organism": "Homo sapiens",
+      "key_compounds": [
+        "glycine",
+        "heme",
+        "iron"
+      ],
+      "key_proteins": [
+        "SFXN2",
+        "SFXN4",
+        "ALAS2",
+        "ferrochelatase"
+      ],
+      "likely_compartments": [
+        "mitochondria",
+        "mitochondrial matrix",
+        "inner mitochondrial membrane"
+      ],
+      "main_subprocesses": [
+        "Condensation of glycine and succinyl-CoA to form 5-aminolevulinic acid (catalyzed by ALAS2)",
+        "Insertion of iron into protoporphyrin IX to form heme (catalyzed by ferrochelatase)",
+        "Regulation of iron homeostasis by SFXN2 and SFXN4"
+      ],
+      "relevant_sections": [
+        "background",
+        "biological functions",
+        "clinical importance"
+      ],
+      "pathway_relevance_score": 0.3,
+      "document_type": "multi_example_review",
+      "context_type": "multi_example_review",
+      "scope_status": "targeted",
+      "scope_clarity_score": 0.7,
+      "selected_example": "heme biosynthesis in Homo sapiens",
+      "candidate_examples": [
+        {
+          "name": "serine transport (SFXN1)",
+          "organism": "Homo sapiens",
+          "key_compounds": [
+            "serine"
+          ],
+          "key_proteins": [
+            "SFXN1"
+          ],
+          "main_subprocesses": [
+            "Serine transport from cytosol to mitochondrial matrix"
+          ],
+          "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix"
+        },
+        {
+          "name": "one-carbon metabolism (SFXN1)",
+          "organism": "Homo sapiens",
+          "key_compounds": [
+            "serine",
+            "glycine",
+            "formate",
+            "tetrahydrofolate"
+          ],
+          "key_proteins": [
+            "SFXN1",
+            "SHMT2"
+          ],
+          "main_subprocesses": [
+            "Conversion of serine to glycine by SHMT2",
+            "Generation of 5,10-methylene-THF",
+            "Formate production"
+          ],
+          "evidence": "One-carbon metabolism is an interconnected set of mitochondrial and cytosolic reactions that convey single-carbon units"
+        },
+        {
+          "name": "iron homeostasis (SFXN2)",
+          "organism": "Homo sapiens",
+          "key_compounds": [
+            "iron",
+            "heme"
+          ],
+          "key_proteins": [
+            "SFXN2"
+          ],
+          "main_subprocesses": [
+            "Regulation of mitochondrial iron content",
+            "Support of heme synthesis"
+          ],
+          "evidence": "SFXN2 is hypothesized to contribute to mitochondrial iron homeostasis"
+        },
+        {
+          "name": "heme biosynthesis (SFXN4)",
+          "organism": "Homo sapiens",
+          "key_compounds": [
+            "glycine",
+            "heme",
+            "iron"
+          ],
+          "key_proteins": [
+            "SFXN4",
+            "ALAS2",
+            "ferrochelatase"
+          ],
+          "main_subprocesses": [
+            "Regulation of ALAS2 translation",
+            "Modulation of ferrochelatase levels",
+            "Iron insertion"
+          ],
+          "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels and inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2)"
+        },
+        {
+          "name": "iron-sulfur cluster biogenesis (SFXN4)",
+          "organism": "Homo sapiens",
+          "key_compounds": [
+            "iron",
+            "sulfur",
+            "iron-sulfur cluster"
+          ],
+          "key_proteins": [
+            "SFXN4",
+            "IRP1"
+          ],
+          "main_subprocesses": [
+            "Regulation of cytosolic aconitase/IRP1 switch",
+            "Iron redistribution to mitochondria"
+          ],
+          "evidence": "SFXN4 influences ISC biosynthesis by regulating the cytosolic aconitase-iron-responsive element-binding protein 1 (IRP1) switch"
+        },
+        {
+          "name": "complex I assembly (SFXN4)",
+          "organism": "Homo sapiens",
+          "key_compounds": [],
+          "key_proteins": [
+            "SFXN4",
+            "MCIA complex"
+          ],
+          "main_subprocesses": [
+            "Interaction with MCIA complex",
+            "Assembly of ND2 module of complex I"
+          ],
+          "evidence": "SFXN4 is a complex I assembly factor that interacts with the MCIA complex"
+        },
+        {
+          "name": "citrate transport (SFXN5)",
+          "organism": "Homo sapiens",
+          "key_compounds": [
+            "citrate"
+          ],
+          "key_proteins": [
+            "SFXN5"
+          ],
+          "main_subprocesses": [
+            "Export of citrate from mitochondria",
+            "Regulation of cytosolic citrate levels"
+          ],
+          "evidence": "SFXN5 has been proposed to modulate cytosolic citrate, possibly by exporting citrate from the mitochondrion"
+        },
+        {
+          "name": "serine transport and iron homeostasis (SFXN3)",
+          "organism": "Homo sapiens",
+          "key_compounds": [
+            "serine",
+            "iron"
+          ],
+          "key_proteins": [
+            "SFXN3",
+            "PCBP2",
+            "TOM20"
+          ],
+          "main_subprocesses": [
+            "Serine transport",
+            "Iron entry into mitochondria via PCBP2/TOM20 complex"
+          ],
+          "evidence": "SFXN3 is thought to be involved in serine transport (similar to that of SFXN1)... SFXN3 can form a complex with poly(rC)-binding protein 2 (PCBP2) via TOM20"
+        }
+      ],
+      "excluded_examples": [
+        "serine transport (SFXN1)",
+        "one-carbon metabolism (SFXN1)",
+        "iron homeostasis (SFXN2)",
+        "iron-sulfur cluster biogenesis (SFXN4)",
+        "complex I assembly (SFXN4)",
+        "citrate transport (SFXN5)",
+        "serine transport and iron homeostasis (SFXN3)"
+      ],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:5c639fc16ae8943d",
+        "response_hash": "sha256:7faa9f1ddea36427",
+        "raw_chars": 4650,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 4650,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "glycine",
+      "heme",
+      "iron",
+      "SFXN4",
+      "ALAS2",
+      "ferrochelatase"
+    ],
+    "unmatched_terms": [
+      "SFXN2"
+    ],
+    "coverage_ratio": 0.857143,
+    "core_accepted_processes": 4,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 4,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:9c8f29a734bcbbef.sha256:8a3fa5a7631a612e",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [],
+    "would_have_quarantined": 0,
+    "would_have_refused": []
+  }
+}

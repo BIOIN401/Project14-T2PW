@@ -1,0 +1,4602 @@
+{
+  "accepted": [],
+  "rejected": [
+    {
+      "gap_id": "gap-missing_compartment-d9f2b266",
+      "gap_ids": [
+        "gap-missing_compartment-d9f2b266"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.791189,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.791189,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d9f2b266 asks for a compartment/location for 'isochorismate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d9f2b266",
+      "gap_ids": [
+        "gap-missing_compartment-d9f2b266"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.791189,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.791189,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d9f2b266 asks for a compartment/location for 'isochorismate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d9f2b266",
+      "gap_ids": [
+        "gap-missing_compartment-d9f2b266"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.78327,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.78327,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d9f2b266 asks for a compartment/location for 'isochorismate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d9f2b266",
+      "gap_ids": [
+        "gap-missing_compartment-d9f2b266"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.645058,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.645058,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d9f2b266 asks for a compartment/location for 'isochorismate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.807385,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.807385,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.807385,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.807385,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.689058,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.689058,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.683806,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.683806,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-5d1b5f68",
+      "gap_ids": [
+        "gap-missing_compartment-5d1b5f68"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.891175,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.891175,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-5d1b5f68 asks for a compartment/location for 'SHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-5d1b5f68",
+      "gap_ids": [
+        "gap-missing_compartment-5d1b5f68"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.891175,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.891175,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-5d1b5f68 asks for a compartment/location for 'SHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-5d1b5f68",
+      "gap_ids": [
+        "gap-missing_compartment-5d1b5f68"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.726429,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.726429,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-5d1b5f68 asks for a compartment/location for 'SHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-5d1b5f68",
+      "gap_ids": [
+        "gap-missing_compartment-5d1b5f68"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.686098,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.686098,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-5d1b5f68 asks for a compartment/location for 'SHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-7c1bc130",
+      "gap_ids": [
+        "gap-missing_compartment-7c1bc130"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.874688,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.874688,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-7c1bc130 asks for a compartment/location for 'OSB'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-7c1bc130",
+      "gap_ids": [
+        "gap-missing_compartment-7c1bc130"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.874688,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.874688,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-7c1bc130 asks for a compartment/location for 'OSB'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-7c1bc130",
+      "gap_ids": [
+        "gap-missing_compartment-7c1bc130"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.74518,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.74518,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-7c1bc130 asks for a compartment/location for 'OSB'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-7c1bc130",
+      "gap_ids": [
+        "gap-missing_compartment-7c1bc130"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.705682,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.705682,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-7c1bc130 asks for a compartment/location for 'OSB'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-46031bd8",
+      "gap_ids": [
+        "gap-missing_compartment-46031bd8"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.879636,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.879636,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-46031bd8 asks for a compartment/location for 'OSB-CoA'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-46031bd8",
+      "gap_ids": [
+        "gap-missing_compartment-46031bd8"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.879636,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.879636,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-46031bd8 asks for a compartment/location for 'OSB-CoA'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-46031bd8",
+      "gap_ids": [
+        "gap-missing_compartment-46031bd8"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.727637,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.727637,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-46031bd8 asks for a compartment/location for 'OSB-CoA'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-46031bd8",
+      "gap_ids": [
+        "gap-missing_compartment-46031bd8"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.687436,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.687436,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-46031bd8 asks for a compartment/location for 'OSB-CoA'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d5319021",
+      "gap_ids": [
+        "gap-missing_compartment-d5319021"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.883807,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883807,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d5319021 asks for a compartment/location for 'DHNA-CoA'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d5319021",
+      "gap_ids": [
+        "gap-missing_compartment-d5319021"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.883807,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883807,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d5319021 asks for a compartment/location for 'DHNA-CoA'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d5319021",
+      "gap_ids": [
+        "gap-missing_compartment-d5319021"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.650099,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.650099,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d5319021 asks for a compartment/location for 'DHNA-CoA'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-af93794b",
+      "gap_ids": [
+        "gap-missing_compartment-af93794b"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.909357,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.909357,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-af93794b asks for a compartment/location for 'prenyl diphosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-af93794b",
+      "gap_ids": [
+        "gap-missing_compartment-af93794b"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.909357,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.909357,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-af93794b asks for a compartment/location for 'prenyl diphosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-af93794b",
+      "gap_ids": [
+        "gap-missing_compartment-af93794b"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.692603,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.692603,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-af93794b asks for a compartment/location for 'prenyl diphosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-329b9d9a",
+      "gap_ids": [
+        "gap-missing_compartment-329b9d9a"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.921143,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.921143,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-329b9d9a asks for a compartment/location for 'demethylmenaquinone'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-329b9d9a",
+      "gap_ids": [
+        "gap-missing_compartment-329b9d9a"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.921143,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.921143,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-329b9d9a asks for a compartment/location for 'demethylmenaquinone'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-329b9d9a",
+      "gap_ids": [
+        "gap-missing_compartment-329b9d9a"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.726544,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.726544,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-329b9d9a asks for a compartment/location for 'demethylmenaquinone'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-329b9d9a",
+      "gap_ids": [
+        "gap-missing_compartment-329b9d9a"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.628413,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.628413,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-329b9d9a asks for a compartment/location for 'demethylmenaquinone'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-b01f6907",
+      "gap_ids": [
+        "gap-missing_compartment-b01f6907"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.941099,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.941099,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-b01f6907 asks for a compartment/location for 'menaquinone'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-b01f6907",
+      "gap_ids": [
+        "gap-missing_compartment-b01f6907"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.941099,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.941099,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-b01f6907 asks for a compartment/location for 'menaquinone'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-b01f6907",
+      "gap_ids": [
+        "gap-missing_compartment-b01f6907"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.808353,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.808353,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-b01f6907 asks for a compartment/location for 'menaquinone'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-b01f6907",
+      "gap_ids": [
+        "gap-missing_compartment-b01f6907"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.648014,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.648014,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-b01f6907 asks for a compartment/location for 'menaquinone'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.883047,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883047,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.883047,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883047,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.695183,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.695183,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2f7299d"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.684156,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.684156,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2f7299d asks for the identity of 'MenF'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.877554,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.877554,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.877554,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.877554,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.689482,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.689482,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.665637,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.665637,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.953272,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.953272,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.953272,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.953272,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "gap_ids": [
+        "gap-unmapped_enzyme-13565fd6"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.747973,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.747973,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-13565fd6 asks for the identity of 'MenH'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.958405,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.958405,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.958405,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.958405,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.74585,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.74585,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "gap_ids": [
+        "gap-unmapped_enzyme-d370c889"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.693303,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.693303,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-d370c889 asks for the identity of 'MenC'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.95511,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.95511,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.95511,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.95511,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.745464,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.745464,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "gap_ids": [
+        "gap-unmapped_enzyme-1a3f8ea2"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.676207,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.676207,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-1a3f8ea2 asks for the identity of 'MenE'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.934837,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.934837,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.934837,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.934837,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "gap_ids": [
+        "gap-unmapped_enzyme-0dbbfd78"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.686197,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.686197,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-0dbbfd78 asks for the identity of 'MenB'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.927133,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.927133,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.927133,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.927133,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "gap_ids": [
+        "gap-unmapped_enzyme-44e20ba0"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.680776,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.680776,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-44e20ba0 asks for the identity of 'MenI'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.921983,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.921983,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.921983,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.921983,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.65554,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.65554,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-eab0ac8b"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.65199,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.65199,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-eab0ac8b asks for the identity of 'MenA'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.990354,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.990354,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.990354,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.990354,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.795747,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.795747,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "gap_ids": [
+        "gap-unmapped_enzyme-23188b6b"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.704013,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.704013,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-23188b6b asks for the identity of 'MenG'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.868463,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.868463,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.868463,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.868463,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.775862,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.775862,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8c563c22",
+      "gap_ids": [
+        "gap-orphan_metabolite-8c563c22"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.69119,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.69119,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.848799,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.848799,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.848799,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.848799,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.7421,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.7421,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-da59851f",
+      "gap_ids": [
+        "gap-dangling_reaction-da59851f"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.662373,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.662373,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.942534,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.942534,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.942534,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.942534,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.713181,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.713181,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1631c3b",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1631c3b"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.638672,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.638672,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f74c9db7",
+      "gap_ids": [
+        "gap-dangling_reaction-f74c9db7"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.96296,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.96296,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f74c9db7",
+      "gap_ids": [
+        "gap-dangling_reaction-f74c9db7"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.96296,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.96296,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f74c9db7",
+      "gap_ids": [
+        "gap-dangling_reaction-f74c9db7"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.681836,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.681836,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.955464,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.955464,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.955464,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.955464,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a175c01b",
+      "gap_ids": [
+        "gap-orphan_metabolite-a175c01b"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.807162,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.807162,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-aad41547",
+      "gap_ids": [
+        "gap-dangling_reaction-aad41547"
+      ],
+      "name": "chorismate to isochorismate conversion",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [
+        "MenF"
+      ],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.973042,
+        "span": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate"
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.973042,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['reverse conversion of chorismate'] -> ['isochorismate'] but the claim states ['chorismate'] -> ['isochorismate']",
+        "evidence_direction_disagrees_with_claim: the claim states a reversible reaction and the span states a one-way one",
+        "unsupported_catalyst_injection: MenF is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-aad41547",
+      "gap_ids": [
+        "gap-dangling_reaction-aad41547"
+      ],
+      "name": "MenD allosteric inhibition by DHNA",
+      "inputs": [
+        "MenD"
+      ],
+      "outputs": [
+        "inhibited MenD"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.973042,
+        "span": ""
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.973042,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-aad41547",
+      "gap_ids": [
+        "gap-dangling_reaction-aad41547"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoic acid -> 1,4-dihydroxy-2-naphthoic acid",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.79621,
+        "span": "Here, we show that the biosynthesis of the menaquinone precursor 1,4-dihydroxy-2-naphthoic acid (DHNA) in the lactic acid bacterium Lactococcus lactis is regulated by a combined genetic, enzymatic, and metabolic mechanism."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.79621,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-aad41547",
+      "gap_ids": [
+        "gap-dangling_reaction-aad41547"
+      ],
+      "name": "chorismate -> isochorismate",
+      "inputs": [
+        "chorismate"
+      ],
+      "outputs": [
+        "isochorismate"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone (DHNA) biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "43cd5e2dddbc7ec7366cd5295b7307e0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.727814,
+        "span": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA."
+      },
+      "organism": "Lactococcus lactis subsp. lactis KF147",
+      "observed_organisms": [
+        "Lactococcus lactis subsp. lactis KF147"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone (DHNA) biosynthesis",
+      "requested_organism": "Lactococcus lactis subsp. lactis KF147",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.727814,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    }
+  ],
+  "counts": {
+    "accepted": 0,
+    "rejected": 89,
+    "considered": 89
+  },
+  "reason_counts": {
+    "candidate_type_cannot_fill_gap": 67,
+    "evidence_direction_disagrees_with_claim": 24,
+    "evidence_relation_disagrees_with_claim": 24,
+    "evidence_states_no_reaction_relation": 41,
+    "no_local_evidence_span": 24,
+    "unsupported_catalyst_injection": 24
+  },
+  "by_gap": {
+    "gap-dangling_reaction-aad41547": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-dangling_reaction-da59851f": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-dangling_reaction-f74c9db7": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-329b9d9a": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-missing_compartment-46031bd8": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-missing_compartment-5d1b5f68": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-missing_compartment-7c1bc130": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-missing_compartment-af93794b": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-b01f6907": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-missing_compartment-d5319021": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-d9f2b266": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-missing_compartment-e1ef7dfd": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-orphan_metabolite-8c563c22": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-orphan_metabolite-a175c01b": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-c1631c3b": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-0dbbfd78": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-unmapped_enzyme-13565fd6": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-unmapped_enzyme-1a3f8ea2": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-23188b6b": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-44e20ba0": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-unmapped_enzyme-a2f7299d": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-d370c889": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-de91fbb1": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-eab0ac8b": {
+      "accepted": 0,
+      "rejected": 4
+    }
+  },
+  "truncated": {
+    "accepted": 0,
+    "rejected": 0
+  },
+  "policy": {
+    "organism_policy": "allow_unknown",
+    "require_pathway_match": false,
+    "max_report_entries": 200,
+    "evidence_snippet_chars": 320,
+    "max_chain_hops": 2,
+    "max_span_chars": 600
+  },
+  "rules": [
+    {
+      "rule": "named_gap",
+      "requires": "the candidate names a gap_id that was actually detected"
+    },
+    {
+      "rule": "valid_entity_types",
+      "requires": "every participant and catalyst is a plausible species / protein token"
+    },
+    {
+      "rule": "local_evidence_span",
+      "requires": "the candidate points at ONE bounded span of its chunk, which is a single statement (one sentence, or one parsed equation line)"
+    },
+    {
+      "rule": "evidence_supports_participants",
+      "requires": "the span's own parsed substrates and products are the claim's, matched on whole-name boundaries"
+    },
+    {
+      "rule": "relation_agrees",
+      "requires": "the span STATES this reaction — its parsed substrates, products and direction agree with the claim; co-occurrence of names is not a relation and a reversed span refutes a forward claim"
+    },
+    {
+      "rule": "no_unsupported_catalyst",
+      "requires": "every catalyst claimed is the catalyst the span attaches to THIS relation, not merely a protein named nearby"
+    },
+    {
+      "rule": "organism_compatible",
+      "requires": "the organism observed in the span (else the paper's observed metadata) matches the requested one, is a related taxon, or is explicitly unknown and the configured policy allows unknown"
+    },
+    {
+      "rule": "requested_pathway",
+      "requires": "the span / observed metadata does not name a DIFFERENT pathway (strict policy additionally requires a positive pathway match)"
+    },
+    {
+      "rule": "gap_type_compatible",
+      "requires": "the candidate is the KIND of evidence the gap asks for: a reaction can fill a connectivity gap, but a missing_compartment gap needs a location assertion and an unmapped_enzyme gap needs identifier evidence"
+    },
+    {
+      "rule": "connects_to_pathway",
+      "requires": "a SUBSTRATE OR PRODUCT of the candidate is an existing pathway metabolite or the gap's expected anchor — catalysts never connect"
+    },
+    {
+      "rule": "fills_its_named_gap",
+      "requires": "a substrate or product of the candidate is the gap's target, directly or within the configured hop limit through metabolites contributed by reactions already admitted for that same gap"
+    },
+    {
+      "rule": "gap_not_already_covered",
+      "requires": "for a connectivity gap: no existing reaction already has every substrate and product of this candidate, same side, same direction"
+    },
+    {
+      "rule": "not_already_admitted_for_another_gap",
+      "requires": "one canonical claim from one span is admitted once; it carries every gap id it was retrieved for"
+    }
+  ],
+  "acceptance_breakdown": {
+    "direct": 0,
+    "chained": 0,
+    "chained_by_hop": {}
+  },
+  "resolutions": [],
+  "recommended_route": [
+    {
+      "gap_id": "gap-unmapped_enzyme-a2f7299d",
+      "label": "MenF",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "label": "MenD",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-13565fd6",
+      "label": "MenH",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-d370c889",
+      "label": "MenC",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-1a3f8ea2",
+      "label": "MenE",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-0dbbfd78",
+      "label": "MenB",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-44e20ba0",
+      "label": "MenI",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-eab0ac8b",
+      "label": "MenA",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-23188b6b",
+      "label": "MenG",
+      "recommended_route": "identity_resolver"
+    }
+  ],
+  "identity_outcomes": {
+    "proposals": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "targets": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "unresolved_identity_gaps": 9,
+    "unresolved_for_unknown_fallback": 9,
+    "unknown_fallback_present": 0
+  }
+}

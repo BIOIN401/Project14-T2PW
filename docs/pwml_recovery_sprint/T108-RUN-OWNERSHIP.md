@@ -92,10 +92,39 @@ reserve · partial-payload preservation.
 | 8 | 2026-09-02T00:43Z | alive | 6/20 | `PMC12657337/research` SCOPE_CONFLICT 842.9 s. Organism trap 1 of 3 complete, **both** legs aborted at Stage 0 as designed |
 | 9 | 2026-09-02T00:57Z | alive | 7/20 | `PMC12421875/strict` SCOPE_CONFLICT 842.1 s. Organism trap 2 of 3. Expected |
 | 10 | 2026-09-02T01:12Z | alive | 8/20 | `PMC12421875/research` SCOPE_CONFLICT 949.3 s. Organism trap 2 of 3 complete. **Pace:** 5 legs at 8044 s vs T-107's 5622 s for the same five; the entire +2422 s delta is the one leg that finished instead of timing out. Projection **6.30 h**, landing ~04:33Z -- inside the 18 h deadline and 20 h wrapper |
+| 11-16 | 2026-09-02T01:19Z - 02:34Z | alive | 9-14/20 | Organism trap 3 of 3 aborted at Stage 0. `PMC12856317/strict` FAIL(contract) on `gate.protein_clpxp_is_missing_a_uniprot_or_drugbank_identifier` -- **reads as a regression, is not one**: T-107's `final_mapped.json` for that leg holds only `ALAS1`/`ALAS2`, no ClpXP, so the gate had nothing to fire on. `PMC12180156/strict` FAIL(contract) on `ferrochelatase` where T-107 had `ALAS2` -- **F-147 reproducing**, same seam, different protein |
+| 17 | 2026-09-02T03:06Z | alive | 15/20 | **`PMC12096016/strict` PASS 1952.9 s**, PWML **74367 B**, gate_errors 0, blocking_issues 0. T-107: TIMEOUT 1800.2 s, 0 files. Needed **152.9 s = 2.5 min** beyond T-107's ceiling; **108.5%** of the old budget, **54.2%** of the new. The sharpest vindication of the § 2.1 ruling |
+| 18-21 | 2026-09-02T03:29Z - 04:22Z | alive | 16-19/20 | `PMC12452463/strict` FAIL(contract) with **6** blocking issues vs T-107's 3 and T-106's 7 -- **the oscillation retires the previous wave's "improved 7 to 3" claim as draw variance**. `PMC12782028/strict` PASS 590.6 s vs T-107's 596.6 s, PWML 34931 B vs 35295 B -- **near-deterministic control proving the divergences elsewhere are draw-specific, not run-wide instability** |
+| 22 | 2026-09-02T04:37:01Z | **EXITED** | **20/20** | `FAILURES: 12 of 20`. Wrapper exit **1** (`nonzero`) -- the expected code when not every leg passes, not an infrastructure failure. **22929.17 s = 6.37 h** of a 72000 s ceiling. **`FINAL SURVIVING COUNT : 0`**, **`cleanup : success`**, 44 descendants observed and 44 terminated, heavy lock **acquired and released**, 4 pre-existing reported and never killed |
 
-## 5. Closure
+## 5. Closure — CLOSED 2026-09-02T04:45Z
 
-_Closed at the bottom of this file once the wrapper exits, survivors are verified zero, the lock is
-released and the result is committed._
+**T-108 ran exactly once and is complete. Verdict `NOT ACCEPTED` — `T108-RESULT.md`.**
 
-**Status: OPEN - RUN LIVE. This session monitors through wrapper exit and cleanup.**
+| Closure check | Result |
+|---|---|
+| Wrapper exit | **1** (`nonzero`) — expected when not every leg passes; T-107 exited 1 likewise. **Not** an infrastructure failure |
+| Duration | 22929.17 s = **6.37 h** of a 72000 s ceiling (31.8%) |
+| `FINAL SURVIVING COUNT` | **0** |
+| `cleanup` | **success** |
+| survivors | `[]` |
+| Heavy lock | `acquired=true released=true`; `C:/t/heavylock` **absent** after |
+| Sprint-owned Python after | **zero** — verified by **full command line** |
+| G11 | `check --task T-108` → **0 non-compliant** |
+| `acceptance.py` | `4bd893ac…` unchanged |
+| `streamlit_app.py` | `47e4fafa…` unchanged, still uncommitted |
+| Gold | `36f4b7b6…` unchanged before and after |
+
+**One honest deviation from the expected process baseline.** The handoff expects **two**
+`ms-python.isort` IDE processes; **three** are present after the run — PIDs `662052`, `703704`,
+`713836`, and one runs under system `c:\python313\python.exe` rather than the venv. All three match
+`ms-python.isort ... lsp_server.py` **on the command line**, none is a sprint job, and none is a
+cleanup target. The IDE spawned an extra language server during the run. Recorded rather than
+explained away, because the baseline said two and the count is now three. **PIDs change; the command
+line is the identity** — every original PID from launch is gone.
+
+**Ownership held end to end by `project14-t2pw-da` `[237fab]`. No transfer occurred, none was needed,
+and no job was ever unowned.** Monitor task `bwxowap41` stopped at completion; wrapper task
+`b26hpbb2y` exited on its own.
+
+**Status: CLOSED.**

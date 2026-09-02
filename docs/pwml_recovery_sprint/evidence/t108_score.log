@@ -1,0 +1,264 @@
+MEASURED_TREE t2pw = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+RUN = runs_verify\2026-09-01_1612
+
+==============================================================================
+1. COMPLETION AND SCORABLE DENOMINATOR
+==============================================================================
+  planned_gold_cases                   = 10
+  papers_attempted                     = 10
+  strict_legs_attempted                = 10
+  research_legs_attempted              = 10
+  legs_attempted                       = 20
+  legs_planned                         = 20
+  payloads_available                   = 19
+  semantically_scorable_legs           = 19
+  fully_completed_cases                = 10
+  papers_with_no_attempted_leg         = []
+  papers_with_only_one_mode_attempted  = []
+  complete                             = true
+  rendered                             = "10/10 papers, 20/20 legs"
+  legs_scored (top level)              = 19
+  legs_attempted (top level)           = 20
+
+==============================================================================
+2. PER-LEG OUTCOMES, TIMEOUTS AND PAYLOAD PRESERVATION
+==============================================================================
+  manifest rows : 20
+  status tally  : {"timeout": 1, "pass": 8, "fail": 5, "scope_conflict": 6}
+
+  leg                                status             elapsed  ceiling   ovr  reserve  files
+  ----------------------------------------------------------------------------------------------------
+  PMC12096016/research               pass                1349.0        -  None        -  18
+  PMC12096016/strict                 pass                1952.9        -  None        -  21
+  PMC12180156/research               pass                 633.5        -  None        -  18
+  PMC12180156/strict                 fail                1377.3        -  None        -  14
+  PMC12312563/research               scope_conflict       460.6        -  None        -  7
+  PMC12312563/strict                 scope_conflict       407.5        -  None        -  7
+  PMC12421875/research               scope_conflict       949.3        -  None        -  7
+  PMC12421875/strict                 scope_conflict       842.1        -  None        -  7
+  PMC12444477/research               pass                2446.5        -  None        -  18
+  PMC12444477/strict                 timeout             3600.8     3600 False      120  0
+  PMC12452463/research               pass                1300.5        -  None        -  18
+  PMC12452463/strict                 fail                1317.6        -  None        -  14
+  PMC12657337/research               scope_conflict       842.9        -  None        -  7
+  PMC12657337/strict                 scope_conflict      1011.2        -  None        -  7
+  PMC12782028/research               pass                 844.8        -  None        -  16
+  PMC12782028/strict                 pass                 590.6        -  None        -  19
+  PMC12856317/research               pass                 879.2        -  None        -  18
+  PMC12856317/strict                 fail                1122.7        -  None        -  14
+  PMC13231680/research               fail                 360.4        -  None        -  6
+  PMC13231680/strict                 fail                 624.8        -  None        -  6
+
+==============================================================================
+2a. TIMEOUTS — every one, with its ceiling
+==============================================================================
+  PMC12444477/strict                 elapsed=3600.79  ceiling=3600.0  (100.0% of ceiling)  reason=budget_exhausted
+      budget = {"leg_timeout_seconds": 3600.0, "leg_timeout_default_seconds": 3600.0, "leg_timeout_overridden": false, "elapsed_seconds": 3600.79, "remaining_seconds": -0.79, "finalization_reserve_seconds": 120.0, "child_deadline_seconds": 3480.0}
+
+  A timeout at 3600 s is NOT automatically a defect and must NOT be waved away
+  either (T108-READINESS 2.1). Every timed-out leg is CENSORED: it proves the
+  work needed MORE than 3600 s and never how much more.
+
+==============================================================================
+2b. LEG-CEILING OVERRIDE AUDIT (must be empty) — and what it can actually see
+==============================================================================
+  legs with leg_timeout_overridden=true : 0 []
+  Expected 0 -- T-108 runs at the 3600 s DEFAULT, so there is no override and no
+  empty leg_timeout_override_reason for PRODUCT_CONTRACT 9 to catch.
+
+  EVIDENCE LIMIT, stated rather than glossed: only 1 of 20 manifest
+  row(s) carry a budget block at all. The runner writes it on the TIMEOUT path; a
+  leg that finished normally records no ceiling, so for those legs the absence of
+  leg_timeout_overridden is NOT positive proof of 'false' -- it is no observation.
+  The run-wide claim rests on the pre-launch resolution (_ceiling(3600.0) ->
+  overridden False, evidence/g11/T-108/07) plus these timeout rows confirming it
+  in a PRODUCED artifact. An audit that counted silent legs as confirmations
+  would be reporting its own blind spot as a pass.
+    PMC12444477/strict: leg_timeout_overridden=False ceiling=3600.0 default=3600.0
+
+==============================================================================
+2c. MISSING OR PARTIAL PAYLOADS
+==============================================================================
+  legs with an EMPTY files list : 1
+    PMC12444477/strict                 status=timeout          preserved: LEG_TERMINAL.json(1131B), LEG_TRACE.jsonl(24564B), RESULT.txt(5157B)
+
+==============================================================================
+3. C-111 TIMEOUT / RETRY TELEMETRY (read off disk, per leg)
+==============================================================================
+  PMC12444477/strict: timeout_source=outer_parent_kill
+      {"finalization_reserve": {"available_seconds": 120.0, "used_seconds": 120.79, "left_seconds": -0.79, "child_deadline_seconds": 3480.0, "leg_timeout_seconds": 3600.0, "elapsed_seconds": 3600.79, "exhausted": true}, "timeout_source": "outer_parent_kill", "payload_before_cleanup": {"existed": false, "leg_dir": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\runs_verify\\2026-09-01_1612\\papers\\PMC12444477\\strict", "files": [{"name": "LEG_TRACE.jsonl", "bytes": 24564, "instrument": true}], "payload_file_count": 0, "payload_bytes": 0}, "cleanup_decisions": [], "terminal_state_before_cleanup": {"status": "timeout", "stage_recorded_by_row": "unknown", "termination_reason": "budget_exhausted", "operational_failure": true, "failure_kind": "timeout", "parent_killed_child": true, "child_reported_its_own_row": false, "child_returncode": null, "elapsed_seconds": 3600.79, "leg_timeout_seconds": 3600.0, "child_stdout_chars": 0, "child_stderr_chars": 5524}}
+
+==============================================================================
+4. ACCEPTANCE PRIORITIES — raw and accepted, each with composition
+==============================================================================
+
+  rank 1: zero known false real identifiers
+      ok                         = false
+      evaluated                  = true
+      observed                   = 2
+      raw                        = 2
+      accepted                   = 2
+      accepted_status            = "PASS"
+      papers                     = ["PMC12180156", "PMC12444477"]
+
+  rank 2: zero unsupported retained reactions
+      ok                         = null
+      evaluated                  = false
+      observed                   = "NOT EVALUATED -- 0 counted, but the unsupported-reaction verdict was never reached on 12 of 19 scored leg(s), covering 8 paper(s). This zero is the absence of a measurement, not the absence of unsupported reactions."
+      counted                    = 0
+      papers                     = []
+      not_evaluated_papers       = ["PMC12096016", "PMC12312563", "PMC12421875", "PMC12444477", "PMC12452463", "PMC12657337", "PMC12782028", "PMC12856317"]
+      not_evaluated_legs         = ["PMC12096016:research", "PMC12096016:strict", "PMC12312563:strict", "PMC12421875:research", "PMC12421875:strict", "PMC12444477:research", "PMC12452463:research", "PMC12452463:strict", "PMC12657337:research", "PMC12657337:strict", "PMC12782028:strict", "PMC12856317:strict"]
+      not_evaluated_reasons (12):
+        PMC12444477:research: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 10 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indistin
+        PMC12657337:strict: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 2 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+        PMC12657337:research: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 4 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+        PMC12421875:strict: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 8 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+        PMC12421875:research: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 8 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+        PMC12312563:strict: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 3 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+        PMC12856317:strict: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 1 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+        PMC12096016:strict: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 6 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+        PMC12096016:research: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 5 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+        PMC12452463:strict: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 3 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+        PMC12452463:research: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 3 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+        PMC12782028:strict: the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature set is a SUBSET (supported_reactions_complete is false), so the 2 retained reaction(s) that matched no signature cannot be judged either way -- an unmatched row may be invented, may be a step the paper states in a form no signature was written for, or may be a legitimate cross-paper RAG addition, and those are indisting
+
+  rank 3: zero referential-integrity violations
+      ok                         = true
+      evaluated                  = true
+      observed                   = 0
+      papers                     = []
+
+  rank 4: meaningful requested-pathway coverage
+      ok                         = false
+      evaluated                  = true
+      observed                   = "0/8 = 0%"
+      papers                     = []
+      requested_core_coverage    = {"legs_with_coverage": 11, "legs_with_forbidden_terms": 8, "papers_with_forbidden_terms": ["PMC12096016", "PMC12180156", "PMC12444477", "PMC12452463", "PMC12856317"], "forbidden_terms_excluded": 9, "legs_cleared_by_reconciliation": [], "legs_still_below_minimum": ["PMC12444477:research"], "legs_with_undefined_accepted_rate": [], "legs_at": "coverage_reconciliation_corpus.legs"}
+
+  rank 5: maximize strict PWML pass rate among eligible/exportable papers
+      ok                         = false
+      evaluated                  = true
+      observed                   = "0/2 = 0%"
+      papers                     = []
+      requested_core_coverage    = {"legs_with_coverage": 11, "legs_with_forbidden_terms": 8, "papers_with_forbidden_terms": ["PMC12096016", "PMC12180156", "PMC12444477", "PMC12452463", "PMC12856317"], "forbidden_terms_excluded": 9, "legs_cleared_by_reconciliation": [], "legs_still_below_minimum": ["PMC12444477:research"], "legs_with_undefined_accepted_rate": [], "legs_at": "coverage_reconciliation_corpus.legs"}
+
+==============================================================================
+5. PRIORITY-1 ROW COMPOSITION — raw_rows and accepted_rows, every finding named
+==============================================================================
+  raw=2  accepted=2  accepted_status='PASS'  target=6  absolute ok=False
+
+  RAW ROWS (2) -- each is one known false real identifier:
+    PMC12444477/research  /entities/compounds/9
+        name        : '(p)ppGpp'
+        kind        : false_real_identifier
+        identifiers : {"hmdb": "HMDB0060480", "pubchem": "38166"}
+        tolerance   : ''   accepted=True
+    PMC12180156/strict  /entities/compounds/2
+        name        : 'δ-aminolevulinic acid'
+        kind        : false_real_identifier
+        identifiers : {"drugbank": "DB00855", "hmdb": "HMDB0001149", "kegg": "C00430", "chebi": "17549", "pubchem": "137"}
+        tolerance   : ''   accepted=True
+  ACCEPTED ROWS (2) -- after authorized case-scoped tolerances
+  CONTRACT-ADJUSTED ROWS (0): []
+    none. Under D-074 as ruled, no Priority-1 row can be contract-adjusted, so
+    accepted is identically raw. A zero here means 'no licence can reach this',
+    NOT 'none was measured'.
+  variance_note: Six remains the target. Seven is a one-finding stochastic band (PASS_WITHIN_VARIANCE), not evidence that the pipeline defect is fixed: T-105's seven was composed of almost entirely different rows than T-104's seven. The band absorbs variance, not regressions -- a changed composition is inspected on its merits, and eight or more is an actual acceptance failure. Do not rerun to move from seven to six.
+
+==============================================================================
+5a. RELEASE DISPOSITION OF EVERY strict_exportable LEG — why Priority 5 reads as it does
+==============================================================================
+  Priority 5's denominator is 2 paper(s): ['PMC12096016', 'PMC12782028']
+  PMC12096016/strict  runner_status='pass'
+      status                       = "review_required"
+      strict_acceptance_eligible   = false
+      strict_gates_passed          = true
+      semantic_evaluation          = "passed"
+      completeness                 = 0.75
+      missing_anchors              = ["NADH", "ATP", "EntD", "Fur"]
+      reasons                      = ["requested_core_anchors_unmatched:NADH,ATP,EntD,Fur"]
+  PMC12782028/strict  runner_status='pass'
+      status                       = "review_required"
+      strict_acceptance_eligible   = false
+      strict_gates_passed          = true
+      semantic_evaluation          = "passed"
+      completeness                 = 0.538462
+      missing_anchors              = ["oxysterols", "MSMO1", "SQLE", "FDFT1", "HMGCR", "HMGCS1"]
+      reasons                      = ["requested_core_anchors_unmatched:oxysterols,MSMO1,SQLE,FDFT1,HMGCR,HMGCS1"]
+
+  A runner 'pass' is NOT a Priority-5 point. A leg that executes, clears the strict
+  technical gates and passes semantic evaluation can still be held at review_required
+  for incomplete requested-core coverage -- which is merge rule 7 working as written:
+  incomplete-but-correct pathways are PRESERVED as review_required, never dropped and
+  never promoted. Read the reasons above before calling this priority an operational
+  failure or a biological one.
+
+==============================================================================
+6. NEGATIVE CONTROLS
+==============================================================================
+  PMC13231680  relevance=context_only  is_negative_control=True
+      research  status='fail' release=None reactions=None semantic_ok=False
+      strict    status='fail' release=None reactions=None semantic_ok=True
+  PMC12180156  relevance=context_only  is_negative_control=False
+      research  status='pass' release=None reactions=None semantic_ok=True
+      strict    status='fail' release={'status': 'diagnostic_only', 'pipeline_executed': True, 'strict_gates_passed': False, 'semantic_evaluation': 'failed', 'semantic_not_evaluated_reason': '', 'semantic_failed_checks': ['actor_named_in_its_own_cited_span'], 'semantic_check_evaluability': [{'check': 'requested_pathway_anchors_present', 'applicable': True, 'inapplicable_reason': ''}, {'check': 'organism_compatible', 'applicable': True, 'inapplicable_reason': ''}, {'check': 'no_real_id_or_name_conflict', 'applicable': True, 'inapplicable_reason': ''}, {'check': 'no_rejected_rag_reaction_reintroduced', 'applicable': False, 'inapplicable_reason': 'AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable'}, {'check': 'actor_named_in_its_own_cited_span', 'applicable': True, 'inapplicable_reason': ''}], 'strict_acceptance_eligible': False, 'completeness': None, 'missing_anchors': [], 'retrieval_attempts': None, 'expansion_blocked_reason': '', 'coverage_evaluated': False, 'reasons': ['strict_technical_gates_blocked_export']} reactions=None semantic_ok=False
+
+==============================================================================
+7. PRIORITY-2 EVALUABILITY — the acceptance-instrument limitation (D-087)
+==============================================================================
+  gold cases                                : 10
+  supported_reactions_complete TRUE         : 0
+  max_retained_reactions set                : 2 -> [('PMC13231680', 0), ('PMC12180156', 2)]
+
+  Priority 2 = N is a real number and it is NOT a measure of how much
+  invented chemistry this run produced. With supported_reactions_complete
+  unset on every case, the unsupported-reaction verdict can only be reached
+  where a max_retained_reactions ceiling exists -- and both ceilings are on
+  negative controls. Reported as an acceptance-instrument limitation per D-087.
+
+==============================================================================
+8. CONTRACT ADJUSTMENTS APPLIED
+==============================================================================
+  rank 1: raw=2 accepted=2 (identical - no adjustment reached this priority)
+
+==============================================================================
+9. LpxH ON PMC12444477 — measured here or reported unverified
+==============================================================================
+  research  status='pass' findings=0
+  strict    status='timeout' findings=0
+  No findings available on either leg -> LpxH remains UNVERIFIED on T-108.
+
+==============================================================================
+10. OVERALL
+==============================================================================
+  priorities with ok=false     : [1, 4, 5]
+  priorities not evaluated     : [2]
+
+  T108_SCORE_EMITTED: legs=20 scorable=19 timeouts=1 missing_payload=1
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0d7a4523ab312228397541c76c735410f6383fc3  [git, worktree dirty=True]
+label                   : official-score-full
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/t108_score.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW runs_verify/2026-09-01_1612
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 734372 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 2.12 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  732800:python.exe
+descendants terminated  : 1  732800
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\T-108\11-official-score-full.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

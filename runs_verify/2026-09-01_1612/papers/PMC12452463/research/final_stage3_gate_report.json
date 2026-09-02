@@ -1,0 +1,329 @@
+{
+  "stage": "final_pre_export_stage3_gates",
+  "ok": false,
+  "normalization_stats": {
+    "complexes_created": 0,
+    "composites_rewritten": 0,
+    "reactions_rewritten": 0,
+    "scaffold_split_reactions": 0,
+    "entities_moved_out_of_compounds": 0,
+    "entities_added_as_compounds": 0,
+    "entities_added_as_proteins": 0,
+    "catalysts_promoted_to_enzymes": 0,
+    "interaction_enzymes_promoted": 0,
+    "scaffold_inputs_added": 0,
+    "scaffold_in_modifiers_count": 0,
+    "n_plus_tokens_remaining": 0,
+    "complexes_list": [
+      "enterobactin synthase complex"
+    ],
+    "n_autostate_created": 0,
+    "n_entities_assigned_to_autostate": 0,
+    "transporters_attached": 0,
+    "enzymes_attached_from_reaction_evidence": 0,
+    "modifier_refs_canonicalized": 0,
+    "modifier_refs_dropped": 0,
+    "forbidden_complexes_removed": 0,
+    "dedupe_removed_reactions": 0,
+    "dedupe_removed_transports": 0,
+    "dedupe_removed": 0,
+    "dedupe_removed_total": 0,
+    "no_op_removed_count": 0,
+    "no_op_quarantined_count": 0,
+    "locked_no_op_quarantined_count": 0,
+    "evidenced_no_op_quarantined_count": 0,
+    "unsupported_no_op_dropped_count": 0,
+    "duplicate_locked_reactions_quarantined_count": 0,
+    "n_same_as_groups": 0,
+    "n_aliases_rewritten": 0,
+    "n_entities_deduped": 0,
+    "n_single_protein_complexes_removed": 0,
+    "complex_named_proteins_relocated": 0,
+    "nucleic_acid_named_entities_relocated": 0,
+    "entity_type_mismatches_flagged": 0,
+    "unresolved_complex_components_dropped": 0,
+    "component_only_proteins_removed": 0,
+    "pruned_disconnected_proteins": [],
+    "pruned_disconnected_proteins_count": 0,
+    "alias_example_mappings": [],
+    "false_protein_promotions_blocked": 0,
+    "unused_proteins_quarantined": 0,
+    "unused_proteins_flagged_for_review": 0,
+    "alias_canonicalization": {
+      "n_same_as_groups": 0,
+      "n_aliases_rewritten": 0,
+      "n_entities_deduped": 0,
+      "n_single_protein_complexes_removed": 0,
+      "example_mappings": []
+    }
+  },
+  "connectivity": {
+    "n_reactions": 4,
+    "n_transports": 2,
+    "n_interactions": 2,
+    "n_reaction_coupled_transports": 0,
+    "n_nodes": 31,
+    "n_edges": 44,
+    "n_components": 1,
+    "main_component_size": 31,
+    "largest_component_pct": 100.0,
+    "n_isolated_nodes": 0,
+    "proteins_degree0": 0,
+    "proteins_attached_pct": 100.0
+  },
+  "errors": [
+    {
+      "path": "/entities/proteins/5",
+      "reason": "Protein 'Fur' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "Fur",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (no_candidate_passed_identity_verification)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identity verification could not be completed (not_evaluated)",
+            "review_required": true,
+            "uncertainty": "the submitted identifier is preserved as an unverified claim (uniprot=P0A9A9); a lookup failure is not evidence that it is false",
+            "sources": []
+          },
+          {
+            "stage": "gap_resolution",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution filled a missing identifier mapping for this protein from a api candidate the paper never supplied",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              "4 key(s), 82 chars elided"
+            ]
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "Fur",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "ambiguity": {
+            "candidate_count": 10,
+            "verified_count": 0,
+            "verified_accessions": [],
+            "rejections": [
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided"
+            ],
+            "reason": "no_candidate_passed_identity_verification"
+          },
+          "rejected_candidates": [
+            {
+              "pathbank_protein_id": 5917,
+              "name": "Succinate dehydrogenase iron-sulfur subunit",
+              "gene_name": "sdhB",
+              "uniprot": "P07014",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 5979,
+              "name": "Cysteine desulfurase",
+              "gene_name": "iscS",
+              "uniprot": "P0A6B7",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6015,
+              "name": "Thiosulfate sulfurtransferase glpE",
+              "gene_name": "glpE",
+              "uniprot": "P0A6V5",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6079,
+              "name": "Sulfurtransferase tusA",
+              "gene_name": "tusA",
+              "uniprot": "P0A890",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6151,
+              "name": "Formate dehydrogenase, nitrate-inducible, iron-sulfur subunit",
+              "gene_name": "fdnH",
+              "uniprot": "P0AAJ3",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6152,
+              "name": "Formate dehydrogenase-O iron-sulfur subunit",
+              "gene_name": "fdoH",
+              "uniprot": "P0AAJ5",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6154,
+              "name": "Sulfurtransferase tusE",
+              "gene_name": "tusE",
+              "uniprot": "P0AB18",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6201,
+              "name": "Fumarate reductase iron-sulfur subunit",
+              "gene_name": "frdB",
+              "uniprot": "P0AC47",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "identity_status": "unresolved",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "Fur",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "no_candidate_describes_the_shipped_identifier"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "verification_status": "not_evaluated",
+            "identity": "uniprot:P0A9A9",
+            "judged_candidate": {},
+            "judged_candidates": [
+              "8 key(s), 212 chars elided",
+              "8 key(s), 189 chars elided",
+              "8 key(s), 203 chars elided",
+              "8 key(s), 191 chars elided",
+              "8 key(s), 230 chars elided",
+              "8 key(s), 212 chars elided",
+              "8 key(s), 191 chars elided",
+              "8 key(s), 207 chars elided"
+            ],
+            "identity_evidence": {
+              "status": "not_evaluated",
+              "accession": "P0A9A9",
+              "lookup": "",
+              "detail": "no_identity_evidence_source"
+            }
+          },
+          "identity_evidence": {
+            "status": "not_evaluated",
+            "accession": "P0A9A9",
+            "lookup": "",
+            "detail": "no_identity_evidence_source"
+          },
+          "unverified_identity_claim": {
+            "identifiers": {
+              "uniprot": "P0A9A9"
+            },
+            "verification_status": "not_evaluated",
+            "failed_check": "identity_evidence_missing",
+            "note": "submitted identifier; verification could not be completed",
+            "evidence": "4 key(s), 105 chars elided"
+          },
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P0A9A9"
+          }
+        },
+        "mapped_ids": {},
+        "synonyms": []
+      }
+    }
+  ],
+  "report_schema_version": 1,
+  "phase": "final_pre_export",
+  "payload_sha256": "b418a5fa4993a909bec834d498ff9fa2a73e0db6da2f9d9a5f3d32040abe6f98",
+  "canonical_graph_sha256": "960bcd6851b00294184cf96d7dabba769bc6bc82b228b251effb368cfe2377cc",
+  "canonical_payload_sha256": "b418a5fa4993a909bec834d498ff9fa2a73e0db6da2f9d9a5f3d32040abe6f98",
+  "hash_schema_version": 2
+}

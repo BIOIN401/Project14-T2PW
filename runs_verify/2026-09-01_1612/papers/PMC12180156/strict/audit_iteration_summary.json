@@ -1,0 +1,80 @@
+{
+  "run_id": "",
+  "round_count": 2,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.28,
+      "max_tokens": 4500,
+      "candidate_count": 3,
+      "selected_candidate_index": 3,
+      "selected_score": [
+        0,
+        0,
+        4,
+        2,
+        -2,
+        4
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 4,
+      "warning_count": 3,
+      "patch_count": 4,
+      "accepted_patch_count": 2,
+      "rejected_patch_count": 2,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Add missing UniProt identifiers to ALAS2 and ferrochelatase to satisfy identifier requirements, and add missing substrates succinyl-CoA and protoporphyrin IX to reactions to match evidence and biochemical correctness.",
+      "top_errors": [
+        "Protein 'ALAS2' is missing a UniProt or DrugBank identifier.",
+        "Protein 'ferrochelatase' is missing a UniProt or DrugBank identifier.",
+        "Reaction 'δ-aminolevulinic acid synthesis from glycine and succinyl-CoA' is missing input 'succinyl-CoA' which is required by the evidence."
+      ],
+      "gap_mapped_ids_added": 1,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    },
+    {
+      "round": 2,
+      "temperature": 0.15,
+      "max_tokens": 4300,
+      "candidate_count": 1,
+      "selected_candidate_index": 1,
+      "selected_score": [
+        0,
+        0,
+        1,
+        0,
+        -2,
+        2
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 1,
+      "warning_count": 1,
+      "patch_count": 2,
+      "accepted_patch_count": 2,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Add missing compound succinyl-CoA and include it as a reaction input to align with evidence. Ferrochelatase's missing identifier is reported as a warning since no confident UniProt choice exists; manual review is advised.",
+      "top_errors": [
+        "Reaction 'δ-aminolevulinic acid synthesis from glycine and succinyl-CoA' is missing required input 'succinyl-CoA' per evidence."
+      ],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": false,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

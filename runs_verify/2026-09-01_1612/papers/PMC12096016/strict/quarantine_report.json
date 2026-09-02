@@ -1,0 +1,775 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "pathwhiz",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:a6841863804f6a46",
+  "resulting_payload_hash": "sha256:1eda8f349bfec0a8",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "pathwhiz",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "23dihydro23dihydroxybenzoate 23didhb",
+      "23dihydroxybenzoic acid 23dhb",
+      "atp",
+      "chorismate",
+      "enta",
+      "entb",
+      "entc",
+      "entd",
+      "ente",
+      "enterobactin",
+      "entf",
+      "fur",
+      "isochorismate",
+      "lserine",
+      "nadh",
+      "pyruvate"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:56d736a60f79f273",
+  "ok": true,
+  "counts": {
+    "core_accepted": 9,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 1,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entccatalyzed isomerization of chorismate to isochorismate",
+        "isochorismate",
+        "isochorismate synthase"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "entb isochorismatase conversion of isochorismate to 23didhb and pyruvate",
+        "isochorismatase",
+        "isochorismate",
+        "pyruvate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntA dehydrogenase conversion of 2,3-diDHB to 2,3-DHB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "23dihydroxybenzoic acid",
+        "enta dehydrogenase conversion of 23didhb to 23dhb",
+        "oxidoreductase enta"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "EntE adenylation of 2,3-DHB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid",
+        "23dihydroxybenzoylamp",
+        "adenosine triphosphate",
+        "ente adenylation of 23dhb",
+        "ente complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "EntF-catalyzed enterobactin synthesis",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoylamp",
+        "ente complex",
+        "enterobactin",
+        "enterobactin synthase complex",
+        "entf complex",
+        "entfcatalyzed enterobactin synthesis",
+        "lserine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 5,
+      "pointer": "/processes/reactions/5",
+      "name": "EntD-catalyzed phosphopantetheinylation of EntB",
+      "essential_participant": "apo-EntB",
+      "iteration": 0,
+      "core_terms": [
+        "apoentb",
+        "entd complex",
+        "entdcatalyzed phosphopantetheinylation of entb",
+        "holoentb"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/5",
+          "inputs": [
+            "apo-EntB"
+          ],
+          "outputs": [
+            "holo-EntB"
+          ],
+          "locked_reaction_id": "rxn_lock_004",
+          "name": "EntD-catalyzed phosphopantetheinylation of EntB",
+          "enzymes": [
+            {
+              "entity": "EntD complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "62 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ],
+          "biological_state": "cytoplasmic state",
+          "evidence": "123 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "EntD complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "62 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "apo-EntB"
+      }
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "Enterobactin secretion via TolC",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin secretion via tolc",
+        "tolc"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "2,3-DHB competitive inhibition of EntB isochorismatase",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dhb competitive inhibition of entb isochorismatase",
+        "23dihydroxybenzoic acid",
+        "entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "2,3-DHB binding to EntE",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dhb binding to ente",
+        "23dihydroxybenzoic acid",
+        "ente"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "EntC-EntB interaction for isochorismate channeling",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entc",
+        "entcentb interaction for isochorismate channeling"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 5,
+      "pointer": "/processes/reactions/5",
+      "name": "EntD-catalyzed phosphopantetheinylation of EntB",
+      "essential_participant": "apo-EntB",
+      "iteration": 0,
+      "core_terms": [
+        "apoentb",
+        "entd complex",
+        "entdcatalyzed phosphopantetheinylation of entb",
+        "holoentb"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/5",
+          "inputs": [
+            "apo-EntB"
+          ],
+          "outputs": [
+            "holo-EntB"
+          ],
+          "locked_reaction_id": "rxn_lock_004",
+          "name": "EntD-catalyzed phosphopantetheinylation of EntB",
+          "enzymes": [
+            {
+              "entity": "EntD complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "62 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ],
+          "biological_state": "cytoplasmic state",
+          "evidence": "123 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "EntD complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "62 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "apo-EntB"
+      },
+      "original_process": {
+        "inputs": [
+          "apo-EntB"
+        ],
+        "outputs": [
+          "holo-EntB"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "EntD-catalyzed phosphopantetheinylation of EntB",
+        "enzymes": [
+          {
+            "entity": "EntD complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "phosphopantetheinylated at Ser245 by the accessory enzyme EntD",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "the ArCP domain of apo-EntB itself must be phosphopantetheinylated at Ser245 by the accessory enzyme EntD to form holo-EntB",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "EntD complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "phosphopantetheinylated at Ser245 by the accessory enzyme EntD",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    }
+  ],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entccatalyzed isomerization of chorismate to isochorismate",
+        "isochorismate",
+        "isochorismate synthase"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "entb isochorismatase conversion of isochorismate to 23didhb and pyruvate",
+        "isochorismatase",
+        "isochorismate",
+        "pyruvate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntA dehydrogenase conversion of 2,3-diDHB to 2,3-DHB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "23dihydroxybenzoic acid",
+        "enta dehydrogenase conversion of 23didhb to 23dhb",
+        "oxidoreductase enta"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "EntE adenylation of 2,3-DHB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid",
+        "23dihydroxybenzoylamp",
+        "adenosine triphosphate",
+        "ente adenylation of 23dhb",
+        "ente complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "EntF-catalyzed enterobactin synthesis",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoylamp",
+        "ente complex",
+        "enterobactin",
+        "enterobactin synthase complex",
+        "entf complex",
+        "entfcatalyzed enterobactin synthesis",
+        "lserine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "Enterobactin secretion via TolC",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin secretion via tolc",
+        "tolc"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "2,3-DHB competitive inhibition of EntB isochorismatase",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dhb competitive inhibition of entb isochorismatase",
+        "23dihydroxybenzoic acid",
+        "entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "2,3-DHB binding to EntE",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dhb binding to ente",
+        "23dihydroxybenzoic acid",
+        "ente"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "EntC-EntB interaction for isochorismate channeling",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entc",
+        "entcentb interaction for isochorismate channeling"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.75,
+    "missing_anchors": [
+      "NADH",
+      "ATP",
+      "EntD",
+      "Fur"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "4 requested-core anchor(s) matched no admitted process: NADH, ATP, EntD, Fur; candidate processes withheld by strict admission (quarantined_unmapped_entity:1); admitting them would require unsupported biology",
+    "coverage_evaluated": true,
+    "reasons": [
+      "requested_core_anchors_unmatched:NADH,ATP,EntD,Fur"
+    ],
+    "applied": true,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [
+      "rxn_lock_004"
+    ],
+    "locked_reactions_found": 6,
+    "exported_locked_reactions": 5,
+    "quarantined_locked_reactions": 1,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "enterobactin",
+      "L-serine",
+      "NADH",
+      "pyruvate",
+      "ATP",
+      "EntB",
+      "EntC",
+      "EntA",
+      "EntE",
+      "EntF",
+      "EntD",
+      "Fur"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "enterobactin biosynthesis",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "2,3-dihydroxybenzoic acid (2,3-DHB)",
+        "chorismate",
+        "isochorismate",
+        "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+        "enterobactin",
+        "L-serine",
+        "NADH",
+        "pyruvate",
+        "ATP"
+      ],
+      "key_proteins": [
+        "EntB",
+        "EntC",
+        "EntA",
+        "EntE",
+        "EntF",
+        "EntD",
+        "Fur"
+      ],
+      "likely_compartments": [
+        "cytoplasm"
+      ],
+      "main_subprocesses": [
+        "chorismate isomerization to isochorismate (EntC)",
+        "isochorismate hydrolysis to 2,3-diDHB and pyruvate (EntB isochorismatase)",
+        "2,3-diDHB reduction to 2,3-DHB (EntA)",
+        "2,3-DHB adenylation and loading onto EntB (EntE)",
+        "enterobactin assembly via NRPS cycles (EntF)"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "results",
+        "discussion",
+        "methods",
+        "supplementary"
+      ],
+      "pathway_relevance_score": 1.0,
+      "document_type": "primary_research",
+      "context_type": "single_pathway",
+      "scope_status": "clear",
+      "scope_clarity_score": 1.0,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:cd637a10d6ea5563",
+        "response_hash": "sha256:204d348c16b4e85a",
+        "raw_chars": 1031,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 1031,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "enterobactin",
+      "L-serine",
+      "pyruvate",
+      "EntB",
+      "EntC",
+      "EntA",
+      "EntE",
+      "EntF"
+    ],
+    "unmatched_terms": [
+      "NADH",
+      "ATP",
+      "EntD",
+      "Fur"
+    ],
+    "coverage_ratio": 0.75,
+    "core_accepted_processes": 9,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 9,
+    "quarantined_processes": 1,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:a6841863804f6a46.sha256:56d736a60f79f273"
+}

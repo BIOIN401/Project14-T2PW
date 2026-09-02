@@ -1,0 +1,58 @@
+RESULT: FAIL
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1122.7s (18m42s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+termination_reason  : (not recorded)
+operational_failure : (not recorded)
+message      : post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_stage3_gates
+issue codes  : gate.protein_clpxp_is_missing_a_uniprot_or_drugbank_identifier
+
+DETAIL / TRACEBACK
+----------------------------------------
+6 QA issues need review.
+[post_normalization_contract_report] gate.protein_clpxp_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'CLPXP' is missing a UniProt or DrugBank identifier.
+
+COUNTS
+----------------------------------------
+  blocking_issues = 1
+  compounds = 5
+  contract_errors = 1
+  entities = 15
+  gate_errors = 0
+  proteins = 4
+  reactions = 2
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1169 B)
+  - contract_reports.json  (17915 B)
+  - coverage_summary.json  (2618 B)
+  - final_mapped.json  (131479 B)
+  - final_stage3_gate_report.json  (2738 B)
+  - gap_iteration_summary.json  (210 B)
+  - gate_fail_report.json  (15810 B)
+  - graph_closure_iterations.json  (2053 B)
+  - initial_stage3_gate_report.json  (15810 B)
+  - merged_payload.json  (65330 B)
+  - quarantine_report.json  (14201 B)
+  - rag_admission_report.json  (221875 B)
+  - removed_entity_report.json  (1709 B)
+  - stage1_payload.json  (10279 B)

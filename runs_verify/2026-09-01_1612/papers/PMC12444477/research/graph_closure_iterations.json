@@ -1,0 +1,481 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "converged": true,
+  "stable_after": 2,
+  "iteration_count": 2,
+  "max_iterations": 50,
+  "iterations": [
+    {
+      "iteration": 1,
+      "changed": true,
+      "removed_entities": [
+        {
+          "bucket": "compounds",
+          "name": "UDP-GlcNAc",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "R-3-hydroxymyristoyl-ACP",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "palmitoyl-CoA",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "glycerophospholipids",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "laurate",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "Myristic acid",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "cardiolipin",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxC",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxH",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxB",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxL",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxM",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "LapB",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "YejM",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "FabZ",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "PldA",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "FadD",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "YhcB",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "ObgE",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "RnhA",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "RnhB",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "GcvB",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "LapA",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "FtsH",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "PbgA",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "LapD",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "AcpT",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "protein_complexes",
+          "name": "FtsH",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "protein_complexes",
+          "name": "FtsH/YciM complex",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "protein_complexes",
+          "name": "PbgA-LapB regulatory complex",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": null
+        }
+      ],
+      "removed_locations": [
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "UDP-GlcNAc",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "R-3-hydroxymyristoyl-ACP",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "palmitoyl-CoA",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "UDP-GlcNAc",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "glycerophospholipids",
+          "reason": "location_entity_removed",
+          "biological_state": "inner membrane state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "palmitoyl-CoA",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "laurate",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "Myristic acid",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "cardiolipin",
+          "reason": "location_entity_removed",
+          "biological_state": "inner membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LpxC",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LpxH",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli inner membrane cytoplasmic leaflet state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LpxB",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli inner membrane cytoplasmic leaflet state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LpxL",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli inner membrane cytoplasmic leaflet state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LpxM",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli inner membrane cytoplasmic leaflet state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LapB",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli inner membrane cytoplasmic leaflet state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "YejM",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli inner membrane cytoplasmic leaflet state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "FabZ",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "PldA",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli outer membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "FadD",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "YhcB",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli inner membrane cytoplasmic leaflet state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "ObgE",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "RnhA",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "RnhB",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "GcvB",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LapA",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli inner membrane cytoplasmic leaflet state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LpxC",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "FtsH",
+          "reason": "location_entity_removed",
+          "biological_state": "inner membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LapB",
+          "reason": "location_entity_removed",
+          "biological_state": "inner membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "YejM",
+          "reason": "location_entity_removed",
+          "biological_state": "inner membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "FabZ",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "ObgE",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LpxL",
+          "reason": "location_entity_removed",
+          "biological_state": "inner membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LpxM",
+          "reason": "location_entity_removed",
+          "biological_state": "inner membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "PbgA",
+          "reason": "location_entity_removed",
+          "biological_state": "inner membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LapD",
+          "reason": "location_entity_removed",
+          "biological_state": "inner membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "YhcB",
+          "reason": "location_entity_removed",
+          "biological_state": "inner membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "PldA",
+          "reason": "location_entity_removed",
+          "biological_state": "outer membrane state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "FadD",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "AcpT",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "GcvB",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        }
+      ],
+      "removed_biological_states": [
+        {
+          "bucket": "biological_states",
+          "name": "E. coli periplasmic state",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "periplasmic leaflet of inner membrane state",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "periplasmic state",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "__auto_state__",
+          "reason": "state_unreferenced_after_quarantine"
+        }
+      ],
+      "quarantined_processes": []
+    },
+    {
+      "iteration": 2,
+      "changed": false,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    }
+  ]
+}
