@@ -1,6 +1,6 @@
 # T-108 release-candidate readiness
 
-**Status: `GO` — re-derived at `0bbac3fd`, 2026-09-01. All nineteen rows GREEN. Row 19 closed by a dedicated owning session; T-108 LAUNCHED once into `runs_verify/2026-09-01_1612`. See § 6.** The `NO-GO` at `848bc18b` (§ 5) is preserved as the record of what was true before this session, and it was the correct answer then. Blockers named below. This file is updated as conditions close;
+**Status: `NO-GO` — 2026-09-02. See § 7.** The `GO` at `0bbac3fd` (§ 6) was correct and is **spent**: T-108 launched once under it and is scored **`NOT ACCEPTED`**. It is now NO-GO again because the **acceptance instrument itself is being corrected under D-088**, and a candidate scored mid-correction cannot be interpreted. The `NO-GO` at `848bc18b` (§ 5) is preserved as the record of what was true before this session, and it was the correct answer then. Blockers named below. This file is updated as conditions close;
 **a `GO` requires every row green, verified at the integration tip, not remembered.**
 
 **T-108 is a NEW milestone identity.** It is not a re-run, re-score or re-reading of T-107.
@@ -404,3 +404,71 @@ model-usage telemetry.
 
 **A timeout at 3600 s is not automatically a defect and must not be waved away either** — § 2.1's
 censoring limit stands, and any T-108 timeout is new information about the requirement.
+
+---
+
+## 7. CLOSED, then REOPENED as `NO-GO` — 2026-09-02, after T-108 ran and after D-088
+
+**§ 6's `GO` was correct and it is spent.** T-108 launched once under it, ran 20/20 legs, and is
+scored: **`NOT ACCEPTED`** — `T108-RESULT.md`. **T-108 is immutable and is not re-run or re-scored.**
+
+### 7.1 Status now: **`NO-GO` for any further release-candidate launch**
+
+**A new candidate needs a NEW milestone identity and a separately recorded readiness decision.** This
+file's § 1, § 5 and § 6 tables are the record of three earlier assessments and are **not** a standing
+authorisation for anything.
+
+**The blocker is no longer operational.** Every row § 5.4 flagged as rot-prone was re-derived green at
+launch, the run completed cleanly, and run ownership held end to end. **The blocker is that the
+acceptance instrument itself is being corrected** — see § 7.2.
+
+### 7.2 The F-167 question is RESOLVED — **D-088** — and the correction is not yet built
+
+**F-167 is no longer open.** It asked whether a requested core legitimately includes cofactors and
+regulators; **the product owner has ruled (D-088, 2026-09-02)**:
+
+> **The pipeline's primary goal is to recover the paper's important pathway reactions as correctly as
+> possible. It is not required to achieve perfect participant-level biochemical completeness.**
+
+**Hard completeness decisions move to validated reactions and major subprocesses**, and flat Stage-0
+`key_compounds` / `key_proteins` stop being automatic hard release requirements. **This supersedes
+the assumption that every requested-core entity must match an admitted process for release.**
+
+**Nothing is implemented. No production, scorer, test or gold file has changed.** The correction is
+chartered as **one narrow acceptance/release-policy card** in `HANDOFF.md` § 5.2a.
+
+### 7.3 Why that makes T-108-class launches NO-GO right now
+
+**A release candidate scored on an instrument that is mid-correction cannot be interpreted.** Under
+D-088 the pass/fail boundary for Priorities 4 and 5 is about to move by design, so a run launched
+before the card lands would be measured by a rule already ruled wrong, and a run launched during
+would be measured by neither rule cleanly. **`HANDOFF.md` § 5.2a step 9 is explicit: launch only
+after the new reaction-focused instrument is reviewed, merged, gated and remotely verified.**
+
+**This is not the row-19 blocker of § 5.2.** That one was about the operator; this one is about the
+instrument. **Run ownership is a solved problem here** — `T108-RUN-OWNERSHIP.md` records the pattern
+that worked.
+
+### 7.4 What a rebuilt readiness table must additionally prove
+
+Beyond the nineteen rows, D-088 adds obligations that a future `GO` must carry:
+
+| Obligation | Source |
+|---|---|
+| Expected core reactions / major subprocesses **defined or curated** for all ten papers | D-088 clause 9 — the cap needs a replacement input before the old one is removed |
+| Archived-artifact **A/B across all 83 committed legs** | `HANDOFF.md` § 5.2a step 5 |
+| `PMC12096016` loses **only** the false entity-anchor cap | D-088 expected consequences |
+| `PMC12782028` **remains** a reaction-recall failure | D-088 expected consequences |
+| The **60** subprocess-aligned and **90** payload-unwired anchors remain **separately visible** | D-088 clauses 7 and 8 |
+| **No gold-forbidden content becomes releasable** because entity anchors were downgraded | D-088 expected consequences |
+
+**Both named consequences must hold simultaneously.** A correction that clears `PMC12096016` **and**
+`PMC12782028` has removed the measurement rather than improved recall, and is a reject.
+
+### 7.5 What carries forward unchanged from the T-108 launch
+
+The § 2.1 leg-ceiling ruling **stands at 3600 s with no override** and is now backed by a live
+result: timeouts **3 → 1**, scorable denominator **17 → 19**, `PMC12096016/strict` recovered at
+**108.5%** of the old ceiling. **F-166** records the limit — one leg consumed the full 3600 s and
+still timed out, so the ceiling is sufficient for the corpus and not for every leg in it. **No
+ceiling change is proposed on one observation.**

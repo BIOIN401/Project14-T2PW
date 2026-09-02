@@ -5137,3 +5137,86 @@ that is reported as **a limitation of the acceptance instrument**, in the report
 
 **Recorded, not implemented.** No case is set. `DECISION-PACKET-F150-HALF2.md` is preserved unchanged
 as the statement of the question; this entry is the answer to it.
+
+---
+
+## D-088 — pathway completeness is judged on validated REACTIONS and SUBPROCESSES, not on flat Stage-0 entity anchors · 2026-09-02 · LOCKED
+
+**Product-owner ruling, given directly**, resolving the question F-167 localised and deliberately
+left unclassified. **This supersedes the assumption that every requested-core entity must match an
+admitted process for release.**
+
+**Recorded as documentation only. NOT implemented. No production, scorer, test or gold file was
+changed to record it, and T-108 is NOT launched.** The correction is chartered in
+`HANDOFF.md` § 5.2 for the next wave.
+
+### The goal, stated first because every clause below follows from it
+
+> **The pipeline's primary goal is to recover the paper's important pathway reactions as correctly as
+> possible. It is not required to achieve perfect participant-level biochemical completeness.**
+
+### The ruling
+
+1. **Flat Stage-0 `key_compounds` and `key_proteins` are NOT automatically hard release
+   requirements.**
+2. **Missing ordinary cofactors, currency metabolites, regulators, ancillary proteins, water, protons
+   or similar secondary details should normally produce completeness WARNINGS or secondary-score
+   deductions — not automatically remove `release_ready`.**
+3. **This does not mean all small molecules can be ignored.** A participant remains **important**
+   when it:
+   - is a **defining substrate or product** of the reaction;
+   - is **necessary to distinguish the reaction's identity or direction**;
+   - is **explicitly central to the paper's pathway scope**.
+4. **Hard pathway-completeness decisions are based on validated core reactions and major
+   subprocesses**, not arbitrary entity anchors.
+5. **Missing an entire named pathway branch or subprocess remains a genuine reaction-recall
+   failure.**
+6. **An extracted entity does not satisfy reaction coverage merely by existing in the payload.** It
+   must be **connected to the appropriate admitted process or relationship.**
+7. **Preserve all current raw requested anchors and unmatched-anchor diagnostics.** Reclassifying them
+   **must not erase the evidence that exposed the problem.**
+8. **Report these separately, never fused:**
+   - core reaction / subprocess recall;
+   - reaction correctness and unsupported reactions;
+   - extracted-but-unwired entities;
+   - participant / cofactor completeness;
+   - Stage-0 specification inconsistency.
+9. **The incomplete-core hard cap may eventually apply only to validated reaction/process-level
+   requirements.** The current **untyped Stage-0 entity-anchor list must not remain its sole
+   hard-failure input.**
+10. **Do NOT simply filter cofactors, match against the entity list, or relax the cap without
+    replacing it with reaction-level coverage.** Those shortcuts would **hide genuine failures.**
+
+### Expected consequences that MUST be preserved
+
+| Case | Required outcome |
+|---|---|
+| `PMC12096016` | `ATP`, `NADH` and `Fur` must **not individually hard-fail** an otherwise correct reaction pathway. **`EntD` must remain VISIBLE as an extracted/supporting entity that is not properly wired**, unless its required relationship is demonstrated |
+| `PMC12782028` | must **remain incomplete** — its upstream **mevalonate reaction arm is genuinely absent** |
+| The census populations | the **60/374** subprocess-aligned unmatched anchors and the **90/374** payload-present-but-unwired anchors **must remain separately visible after the correction** |
+| Gold-forbidden content | **no gold-forbidden content may become releasable merely because entity anchors are downgraded** |
+
+**Clause 10 and the four consequences above exist to make one failure mode unreachable:** a change
+that moves Priority 5 off zero by removing the measurement rather than by improving recall. **A gold
+or policy change that improves a score is the case that most needs an independent reviewer** —
+merge rule 6's reasoning, applied to acceptance policy.
+
+### Why this ruling and not the obvious alternative
+
+**The obvious alternative — filter cofactors out of the anchor list — would close 84% of the observed
+failures and retire the symptom that keeps the other 16% visible.** The corpus census
+(`evidence/f167_history_census.py`, G11 `T-108/13`) measured **60 of 374 unmatched anchors that ARE
+named in Stage-0's own `main_subprocesses`**: cases where the pipeline failed to match something
+Stage 0 itself called a step. **No cofactor policy disposes of those.** Clause 10 forbids the
+shortcut precisely because it is the one that looks like progress.
+
+### What this ruling does NOT do
+
+- **It does not weaken any biological gate.** Clauses 3, 5, 6 and the `PMC12782028` consequence all
+  tighten what counts. Merge rule 6 is untouched.
+- **It does not discard the anchors.** Clause 7 preserves the raw diagnostics; the reclassification
+  changes what is **hard-failing**, not what is **recorded**.
+- **It does not authorise a Stage-0 redesign.** `HANDOFF.md` § 5.2 scopes the successor card
+  narrowly and says so.
+- **It does not re-open T-107 or T-108.** Both verdicts stand as facts about the artifacts they
+  produced.

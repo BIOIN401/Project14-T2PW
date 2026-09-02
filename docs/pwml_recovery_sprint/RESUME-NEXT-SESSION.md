@@ -16,7 +16,7 @@ state.**
 
 ---
 
-## 0. CURRENT — **T-108 RAN and is `NOT ACCEPTED`**, 2026-09-02. Read this section and nothing below it first.
+## 0. CURRENT — **T-108 RAN and is `NOT ACCEPTED`; D-088 charters the correction**, 2026-09-02. Read this section and nothing below it first.
 
 **Integration `479128b3`+, pushed and remotely verified. `main` untouched: local `7531692`, remote
 `03f1af5`.** Everything below this section is older and superseded where it disagrees.
@@ -38,6 +38,33 @@ separately recorded readiness decision.
 | 3 | zero referential-integrity violations | **0** | **true** |
 | 4 | meaningful requested-pathway coverage | **0/8** | **false** |
 | 5 | strict PWML pass rate among eligible papers | **0/2** | **false** |
+
+### D-088 — the ruling that decides the next wave, and T-108's NO-GO
+
+**Recorded as documentation only. NOT implemented. T-108 is NOT launched.**
+
+> **The pipeline's primary goal is to recover the paper's important pathway reactions as correctly as
+> possible. It is not required to achieve perfect participant-level biochemical completeness.**
+
+**Hard completeness decisions move to validated reactions and major subprocesses.** Flat Stage-0
+`key_compounds` / `key_proteins` stop being automatic hard release requirements; missing ordinary
+cofactors, currency metabolites, regulators, ancillary proteins, water and protons become
+**warnings or secondary-score deductions**, not automatic removal of `release_ready`. **This
+supersedes the assumption that every requested-core entity must match an admitted process for
+release.**
+
+**It does NOT loosen anything biological.** A participant stays important when it is a defining
+substrate or product, distinguishes the reaction's identity or direction, or is central to the
+paper's scope; **missing a whole named branch or subprocess stays a genuine reaction-recall
+failure**; an extracted entity does **not** satisfy coverage merely by existing in the payload; and
+**no gold-forbidden content may become releasable because entity anchors were downgraded.**
+
+**Clause 10 is the one that will be tested:** *do not simply filter cofactors, match against the
+entity list, or relax the cap without replacing it with reaction-level coverage.* Each of those
+moves Priority 5 off zero immediately and **hides genuine failures.**
+
+**T-108 is NO-GO** until the D-088 card is reviewed, merged, gated and remotely verified —
+`HANDOFF.md` § 5.2a step 9. The ten-step work order lives there.
 
 ### The three things a successor most needs to know
 
@@ -100,6 +127,17 @@ limitation.** **Recorded, deliberately NOT implemented — the gated tree is unt
 **F-165** — T-107/T-108 Priority-1 counts measured against different gold sets; a benchmark number is
 a reading and a reading has an instrument. **F-166** — one leg needs more than 3600 s; the ceiling
 restoration was right *and* insufficient for that leg, and both halves must travel together.
+**F-167** — the requested-core anchors are Stage-0's `key_*` lists, and the incomplete-core cap makes
+one unmatched anchor enough to remove `release_ready`. **Resolved by D-088.**
+
+**F-167 carries an AMENDMENT that refutes its own strongest claim, and both measurements are
+preserved.** It reported **0 of 10** unmatched anchors appearing in Stage-0's subprocess list — **valid
+for the two Priority-5 denominator legs it sampled, and INCORRECTLY GENERALISED to the corpus.** A
+census over all **83** committed legs measured **60 of 374 (16%) that DO appear**, **314 of 374 that
+do not**, and **90 of 374 (24%) present in payloads but unwired**. **88% of all committed legs carry
+at least one unmatched anchor; only 10 of 83 ever fully matched.** The 16% is the population D-088
+clause 5 keeps as a genuine reaction-recall failure, and the original framing would have justified
+exactly the shortcut clause 10 forbids.
 
 ### Run hygiene, verified at close
 

@@ -7999,3 +7999,36 @@ same artifacts, available the whole time and costing one probe, moved the headli
 **0%** to **16%** and exposed a defect class the original finding argued nobody needed to look for.
 **A finding that explains the case in front of you is the one least likely to have been tested
 against the cases that are not.**
+
+### DISPOSITION RESOLVED, 2026-09-02 — **D-088**
+
+**The product owner has ruled.** F-167 is no longer "localised but unclassified": the question it
+handed over — *does a requested core legitimately include cofactors and regulators?* — is answered,
+and the answer reshapes what the finding means.
+
+**D-088 in one line:** *the pipeline's primary goal is to recover the paper's important pathway
+reactions as correctly as possible; it is not required to achieve perfect participant-level
+biochemical completeness.* **Hard completeness decisions move to validated reactions and major
+subprocesses. Flat Stage-0 entity anchors stop being automatic hard release requirements.**
+
+**Both measurements this finding produced are preserved, and both are load-bearing under the ruling:**
+
+| Measurement | Scope | Status under D-088 |
+|---|---|---|
+| **0 of 10** unmatched anchors appeared in Stage-0's subprocess list | the **two Priority-5 denominator legs only** | **valid for those two legs, and it was INCORRECTLY GENERALISED to the corpus** |
+| **60 of 374 (16%)** DID appear in Stage-0 subprocesses | corpus-wide, 83 committed legs | **the population D-088 clause 5 keeps as a genuine reaction-recall failure** |
+| **314 of 374 (84%)** did NOT | corpus-wide | the population D-088 clauses 1-2 reclassify to warnings / secondary deductions |
+| **90 of 374 (24%)** present in payload, unwired | corpus-wide | **D-088 clause 6** — existing in the payload does not satisfy coverage |
+
+**Stated explicitly, because the record must not let the error propagate:** *the original 0/10
+conclusion was valid only for the two sampled denominator legs and was incorrectly generalised to the
+corpus.* The corpus figure is **16%, not 0%**.
+
+**What the ruling changes about this finding's own emphasis.** F-167 argued the dominant mechanism is
+anchor derivation. That is still the **majority** (84%) — but D-088 clause 10 forbids acting on it
+alone, and clause 5 makes the **minority 16% the harder obligation**. The finding's original framing
+would have justified exactly the shortcut clause 10 prohibits.
+
+**Not implemented.** The correction is chartered in `HANDOFF.md` § 5.2 as one narrow
+acceptance/release-policy card for the next wave. **No production, scorer, test or gold file was
+changed to record this disposition.**

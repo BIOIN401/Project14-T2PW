@@ -12,6 +12,16 @@ The same holds, unchanged, for **T-107**.
 Full result: **`T108-RESULT.md`**. Ownership record: **`T108-RUN-OWNERSHIP.md`**. Run manifest and
 its pre-launch proofs: **`T108-MANIFEST.md`**.
 
+**A product-owner ruling landed after the run — `DECISIONS.md` D-088 — and it reshapes the next
+wave.** Pathway completeness is judged on **validated reactions and major subprocesses**, not on flat
+Stage-0 entity anchors. It **supersedes the assumption that every requested-core entity must match an
+admitted process for release**, and it charters **exactly one narrow card**. **It is recorded as
+documentation only and is NOT implemented.**
+
+> **T-108 IS NO-GO until that card is reviewed, merged, gated and remotely verified.** The launch is
+> § 5.2a step 9, not before. **T-107 and T-108 both remain immutable; neither is re-run or
+> re-scored.**
+
 ---
 
 ## 1. Takeover — verify once, do not trust these numbers
@@ -157,7 +167,7 @@ SHA into every scored run's artifacts** — is registered, not chartered.
 
 ## 5. THE NEXT WORK ORDER
 
-### 5.1 No code change is chartered from T-108
+### 5.1 What T-108 itself chartered: nothing. What D-088 charters: exactly one card
 
 The only genuine `product_contract_violation`s are **F-147** (`PMC12180156/strict` +
 `PMC12452463/strict`, one shared seam), **registered and deliberately UNCHARTERED** because a
@@ -168,6 +178,10 @@ predicted places and the gates refused them.
 
 **Everything else T-108 surfaced is a gate refusing output.** Nothing in this result argues for
 weakening any gate.
+
+**Separately from T-108's failures, the product owner has since ruled (D-088) and that ruling
+charters ONE narrow card.** It is an acceptance/release-policy change, not a fix for a T-108 defect,
+and it is scoped in § 5.2 below. **It must not become a Stage-0 redesign.**
 
 ### 5.2 THE CODE THAT IS CAUSING THE PROBLEM — localised, F-167
 
@@ -205,12 +219,22 @@ it; **the all-anchors rule is.**
   each**; the payload contains **none of them** and the leg produced **3** core processes for a
   five-subprocess pathway. **The whole upstream mevalonate/squalene arm is missing.**
 
-**NOT CLASSIFIED, and that is deliberate.** § 14 requires a classification before any code change and
-this does not supply one. **The open question is biological:** *does a requested core for
-"enterobactin biosynthesis" legitimately include `Fur` and `NADH`?* Both answers are defensible.
-Note that **`gold_data_defect` is probably not even available here** — the anchors come from
-`requested_core_source: "pathway_context"`, i.e. **Stage 0, not gold**. **Route to
-`pwml-bio-auditor` against the committed artifacts. Do not charter a card first.**
+**RESOLVED BY THE PRODUCT OWNER — D-088, 2026-09-02.** The biological question this finding handed
+over is answered, and the answer **supersedes the assumption that every requested-core entity must
+match an admitted process for release.**
+
+> **The pipeline's primary goal is to recover the paper's important pathway reactions as correctly as
+> possible. It is not required to achieve perfect participant-level biochemical completeness.**
+
+**Hard completeness decisions move to validated reactions and major subprocesses.** Flat Stage-0
+`key_compounds` / `key_proteins` stop being automatic hard release requirements; missing ordinary
+cofactors, currency metabolites, regulators, ancillary proteins, water and protons become
+**completeness warnings or secondary-score deductions**, not automatic removal of `release_ready`.
+
+**But a participant stays IMPORTANT when it is a defining substrate or product, is needed to
+distinguish the reaction's identity or direction, or is explicitly central to the paper's pathway
+scope** — and **missing an entire named branch or subprocess remains a genuine reaction-recall
+failure.** Read D-088's ten clauses in full before touching anything; clause 10 in particular.
 
 **Three traps for whoever picks this up.**
 
@@ -254,6 +278,43 @@ extracted, never wired into an admitted process.
 
 **Do not let a ruling on cofactors close this card.** It would dispose of 84% and leave the worse 16%
 unexamined, with the symptom retired.
+
+### 5.2a THE NEXT SESSION'S WORK ORDER — in this order, under D-088
+
+**T-108 is NO-GO for the duration of this correction. Do not launch it.** It is launched only at
+step 9, after the new instrument is reviewed, merged, gated and remotely verified.
+
+1. **Charter ONE narrow acceptance/release-policy card implementing D-088.** One card, one ownership
+   boundary. **Not a Stage-0 redesign** — see step 3.
+2. **Preserve the raw anchor diagnostics** (D-088 clause 7) while **separating reaction-level recall
+   from participant completeness**. The reclassification changes what HARD-FAILS, never what is
+   recorded. **Erasing the diagnostics that exposed this is a reject.**
+3. **No large Stage-0 redesign during this finishing wave.** Stage-0's specification inconsistency is
+   reported as its own line (D-088 clause 8), not fixed here. Widening scope is how a finishing wave
+   stops finishing.
+4. **Define or curate the expected core reactions / major subprocesses for the ten benchmark papers.**
+   This is the substitute hard-failure input D-088 clause 9 requires. **Until it exists there is
+   nothing to replace the entity-anchor cap WITH, and clause 10 forbids removing the cap without a
+   replacement.** This step is the long pole; treat it as such.
+5. **Run an archived-artifact A/B across all 83 committed legs.** Offline, deterministic, no re-run of
+   any leg. The corpus is already committed under both `runs/` and `runs_verify/`; name both roots.
+6. **Prove the discrimination on the two named cases:** `PMC12096016` **loses only the false
+   entity-anchor cap**, and `PMC12782028` **remains a reaction-recall failure** because its upstream
+   mevalonate arm is genuinely absent. **A change that clears both is wrong** — it has removed the
+   measurement rather than improved recall.
+7. **Verify the 60 subprocess-aligned and 90 payload-unwired cases remain SEPARATELY visible** after
+   the correction. If either population disappears from the reporting, the correction hid a defect
+   class rather than reclassifying it.
+8. **Rebuild T-108 readiness** — every row re-derived at the then-current tip, not carried forward.
+   `T108-READINESS.md` § 5.4 says which rows rot silently.
+9. **Launch T-108 only after the new reaction-focused instrument is reviewed, merged, gated and
+   remotely verified.** A new milestone identity and a separately recorded readiness decision.
+10. **After T-108, move directly into the RAG and LLM evaluation framework.**
+
+**The trap in this work order, stated once.** Steps 4 and 6 are what make it honest. Skipping step 4
+leaves clause 10's "without replacing it with reaction-level coverage" unsatisfied, and step 6 is the
+only check that distinguishes *"we fixed the cap"* from *"we deleted the failure."* **Both named
+consequences must hold simultaneously; either one alone is a false pass.**
 
 ### 5.3 Priority 2 stays unevaluable until D-087's standard is met
 
