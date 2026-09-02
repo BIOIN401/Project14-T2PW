@@ -48,6 +48,13 @@ unambiguous.**
 Everything else in the record is right: read-only, unrelated assessment, not authorized for sprint
 work. Ownership reasoning depends on this distinction, so it is corrected here rather than repeated.
 
+**Closing correction from the peer, recorded because the distinction matters.** After the run
+finished I told `project14-t2pw-93` it was unblocked. It corrected me: **being unblocked is not
+being authorized.** Its user asked for an assessment with edits explicitly excluded and has not
+authorized any run, so releasing the lock removed an *external blocker*, not the *requirement*.
+It is not launching anything, and would still notify before pushing. Recorded verbatim in effect
+so that *"session 93 was unblocked and proceeded"* can never be read out of this file.
+
 **Transfer recipients: none.** There is no live peer authorized for sprint work, so **no transfer is
 possible** and none is planned. This session therefore holds the run to completion. If an
 unavoidable session failure occurs, a transfer is valid **only** to an already-live named peer that
