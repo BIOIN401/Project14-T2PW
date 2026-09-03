@@ -1,0 +1,2401 @@
+{
+ "instrument": "rd093_rag_metrics",
+ "charter": "D-093 s.5.7",
+ "evaluation_only": true,
+ "corpus": "committed (git ls-files)",
+ "caveats": {
+  "legs_total": 162,
+  "truncated_legs": 57,
+  "candidates_counted_not_persisted": 12838
+ },
+ "aggregate": {
+  "untruncated": {
+   "legs": 105,
+   "gaps_total": 1799,
+   "positive_queries": 1212,
+   "negative_queries": 587,
+   "ties_in_top5": 2910,
+   "recall_at_1": 0.39603960396039606,
+   "recall_at_1_numerator": 480,
+   "recall_at_3": 0.7376237623762376,
+   "recall_at_3_numerator": 894,
+   "recall_at_5": 0.9298679867986799,
+   "recall_at_5_numerator": 1127,
+   "recall_denominator_positive_queries": 1212,
+   "precision_at_5": 0.5362190812720848,
+   "precision_at_5_numerator": 1821,
+   "precision_at_5_denominator_retrieved_in_top5": 3396,
+   "mrr": 0.5972785373775472,
+   "negative_query_rejection_rate": 1.0,
+   "negative_query_denominator": 587,
+   "outcomes": {
+    "retrieval_did_not_find_it": 55,
+    "found_but_ranked_poorly": 82,
+    "found_but_not_admitted": 0,
+    "correct_candidate_rejected": 1123,
+    "unsupported_candidate_admitted": 0,
+    "unsupported_candidate_correctly_rejected": 587,
+    "rejected_candidate_reintroduced": 0
+   }
+  },
+  "truncated": {
+   "legs": 57,
+   "gaps_total": 1203,
+   "positive_queries": 1101,
+   "negative_queries": 102,
+   "ties_in_top5": 2454,
+   "recall_at_1": 0.043596730245231606,
+   "recall_at_1_numerator": 48,
+   "recall_at_3": 0.2924613987284287,
+   "recall_at_3_numerator": 322,
+   "recall_at_5": 0.6103542234332425,
+   "recall_at_5_numerator": 672,
+   "recall_denominator_positive_queries": 1101,
+   "precision_at_5": 0.4533799533799534,
+   "precision_at_5_numerator": 1167,
+   "precision_at_5_denominator_retrieved_in_top5": 2574,
+   "mrr": 0.27236770193173465,
+   "negative_query_rejection_rate": 0.8235294117647058,
+   "negative_query_denominator": 102,
+   "outcomes": {
+    "retrieval_did_not_find_it": 18,
+    "found_but_ranked_poorly": 426,
+    "found_but_not_admitted": 2,
+    "correct_candidate_rejected": 650,
+    "unsupported_candidate_admitted": 18,
+    "unsupported_candidate_correctly_rejected": 84,
+    "rejected_candidate_reintroduced": 2
+   }
+  }
+ },
+ "legs": [
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 22,
+   "positive_queries": 20,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_admitted": 2,
+    "correct_candidate_rejected": 20
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 21,
+   "positive_queries": 21,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 21
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12180156/research",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 24,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 24
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12180156/strict",
+   "target_paper": "PMC12180156",
+   "population": "truncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 36,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 36
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12312563/research",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 17,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 17
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12421875/research",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 15,
+   "positive_queries": 15,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 15
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12421875/strict",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 31,
+   "positive_queries": 31,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 31
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/research",
+   "target_paper": "PMC12444477",
+   "population": "truncated",
+   "gold_signatures": 2,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 20,
+   "positive_queries": 20,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 20
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "target_paper": "PMC12444477",
+   "population": "truncated",
+   "gold_signatures": 2,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 18,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 17,
+    "found_but_ranked_poorly": 1
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 16,
+   "positive_queries": 16,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 13
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12657337/research",
+   "target_paper": "PMC12657337",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 24,
+   "positive_queries": 19,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_admitted": 4,
+    "found_but_ranked_poorly": 15,
+    "unsupported_candidate_correctly_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12657337/strict",
+   "target_paper": "PMC12657337",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 18,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_admitted": 1,
+    "found_but_ranked_poorly": 15
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12782028/strict",
+   "target_paper": "PMC12782028",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 19,
+   "positive_queries": 19,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 17,
+    "found_but_ranked_poorly": 2
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12856317/research",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 6,
+   "positive_queries": 6,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 6
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 13,
+   "positive_queries": 12,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 11,
+    "found_but_ranked_poorly": 1,
+    "unsupported_candidate_correctly_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC13231680/strict",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 9,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 9
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1148/papers/PMC13231680/research",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 9,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 9
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1207/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 17,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 16
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1234/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 16,
+   "positive_queries": 16,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 16
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1234/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 7,
+   "positive_queries": 7,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 6,
+    "found_but_ranked_poorly": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 18,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_not_admitted": 2,
+    "correct_candidate_rejected": 16
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12180156/research",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 9,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 9
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 17,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 15
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1358/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 21,
+   "positive_queries": 19,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_admitted": 2,
+    "correct_candidate_rejected": 19
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1504/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 9,
+   "positive_queries": 9,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 9
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1647/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 14,
+   "positive_queries": 13,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 12,
+    "found_but_ranked_poorly": 1,
+    "unsupported_candidate_correctly_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 21,
+   "positive_queries": 19,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_admitted": 2,
+    "correct_candidate_rejected": 19
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 20,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_admitted": 2,
+    "correct_candidate_rejected": 18
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12180156/research",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 26,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 26
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12180156/strict",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 21,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 21
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 16,
+   "positive_queries": 16,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 15
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 18,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 14,
+    "found_but_ranked_poorly": 3
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12782028/research",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 62,
+   "positive_queries": 62,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 62
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12856317/research",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 12,
+   "positive_queries": 10,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 10,
+    "unsupported_candidate_correctly_rejected": 2
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 6,
+   "positive_queries": 6,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 6
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-18_1328/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 22,
+   "positive_queries": 22,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 22
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-18_1328/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 21,
+   "positive_queries": 19,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 1,
+    "unsupported_candidate_admitted": 2,
+    "correct_candidate_rejected": 19
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-18_1328/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 14,
+   "positive_queries": 14,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 13,
+    "correct_candidate_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-18_1328/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 17,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 1,
+    "found_but_ranked_poorly": 14,
+    "correct_candidate_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_1822/papers/PMC12312563/research",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 8,
+   "positive_queries": 8,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 8
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_1822/papers/PMC12312563/strict",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 13,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 13
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_1822/papers/PMC12782028/research",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 55,
+   "positive_queries": 34,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 34,
+    "unsupported_candidate_correctly_rejected": 21
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_1822/papers/PMC12782028/strict",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 15,
+   "positive_queries": 15,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 15
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2014/papers/PMC12312563/research",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 15,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 15
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2014/papers/PMC12312563/strict",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 14,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 14
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2057/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 28,
+   "positive_queries": 28,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 28
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2057/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 25,
+   "positive_queries": 25,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 25
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2057/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 25,
+   "positive_queries": 25,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 25
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2057/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 16,
+   "positive_queries": 16,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 16
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 20,
+   "positive_queries": 20,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 19,
+    "found_but_ranked_poorly": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 15,
+   "positive_queries": 15,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 15
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12180156/research",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 7,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 7
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12180156/strict",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 18,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 18
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12312563/research",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 14,
+   "positive_queries": 14,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 14
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12312563/strict",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 16,
+   "positive_queries": 16,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 16
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12421875/research",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 21,
+   "positive_queries": 21,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 20
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12421875/strict",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 17,
+   "positive_queries": 16,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 11,
+    "unsupported_candidate_correctly_rejected": 1,
+    "found_but_ranked_poorly": 4
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 13,
+   "positive_queries": 13,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 13
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 13,
+   "positive_queries": 13,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 13
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12657337/research",
+   "target_paper": "PMC12657337",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 30,
+   "positive_queries": 24,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_admitted": 1,
+    "unsupported_candidate_correctly_rejected": 5,
+    "found_but_ranked_poorly": 22,
+    "correct_candidate_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12657337/strict",
+   "target_paper": "PMC12657337",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 41,
+   "positive_queries": 41,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 39
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12782028/research",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 62,
+   "positive_queries": 62,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 62
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12782028/strict",
+   "target_paper": "PMC12782028",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 21,
+   "positive_queries": 16,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 10,
+    "unsupported_candidate_correctly_rejected": 5,
+    "found_but_ranked_poorly": 6
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12856317/research",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 15,
+   "positive_queries": 15,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 15
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 6,
+   "positive_queries": 6,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 6
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC13231680/research",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 4,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 4
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC13231680/strict",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 12,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 12
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_1821/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 25,
+   "positive_queries": 25,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 25
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2017/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 25,
+   "positive_queries": 25,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 25
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2017/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 12,
+   "positive_queries": 12,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 12
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2017/papers/PMC12856317/research",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 11,
+   "positive_queries": 11,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 11
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2017/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 6,
+   "positive_queries": 6,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 5,
+    "found_but_ranked_poorly": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 24,
+   "positive_queries": 24,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 24
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 20,
+   "positive_queries": 20,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 20
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12180156/research",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 11,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 11
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12180156/strict",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 12,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 12
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12312563/research",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 8,
+   "positive_queries": 8,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 8
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12312563/strict",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 7,
+   "positive_queries": 7,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 7
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12421875/research",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 15,
+   "positive_queries": 15,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 13,
+    "found_but_ranked_poorly": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12421875/strict",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 27,
+   "positive_queries": 23,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 21,
+    "unsupported_candidate_correctly_rejected": 4,
+    "found_but_ranked_poorly": 2
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12444477/strict",
+   "target_paper": "PMC12444477",
+   "population": "truncated",
+   "gold_signatures": 2,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 19,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 18,
+    "unsupported_candidate_correctly_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 13,
+   "positive_queries": 13,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 13
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 11,
+   "positive_queries": 11,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 11
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12657337/research",
+   "target_paper": "PMC12657337",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 25,
+   "positive_queries": 25,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 22,
+    "correct_candidate_rejected": 2
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12657337/strict",
+   "target_paper": "PMC12657337",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 28,
+   "positive_queries": 23,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 22,
+    "unsupported_candidate_correctly_rejected": 5
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12782028/research",
+   "target_paper": "PMC12782028",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 18,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 12,
+    "found_but_ranked_poorly": 5,
+    "unsupported_candidate_correctly_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12782028/strict",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 21,
+   "positive_queries": 21,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 21
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12856317/research",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 13,
+   "positive_queries": 13,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 13
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 11,
+   "positive_queries": 11,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 11
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC13231680/research",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 10,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 10
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC13231680/strict",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 0,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 28,
+   "positive_queries": 28,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 27,
+    "found_but_ranked_poorly": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 24,
+   "positive_queries": 24,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 24
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 16,
+   "positive_queries": 16,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 15,
+    "correct_candidate_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 20,
+   "positive_queries": 20,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 19,
+    "correct_candidate_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12856317/research",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 6,
+   "positive_queries": 6,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 6
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 15,
+   "positive_queries": 15,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 15
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC13231680/research",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 3,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 3
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC13231680/strict",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 12,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 12
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1402/papers/PMC12180156/research",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 10,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 10
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1402/papers/PMC12782028/research",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 52,
+   "positive_queries": 52,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 52
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 35,
+   "positive_queries": 32,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 3,
+    "correct_candidate_rejected": 32
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 25,
+   "positive_queries": 25,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 25
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12180156/research",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 13,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 13
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12180156/strict",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 10,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 10
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12312563/research",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 14,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 14
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12312563/strict",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 7,
+   "positive_queries": 7,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 7
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12421875/research",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 17,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 17
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12421875/strict",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 31,
+   "positive_queries": 4,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 4,
+    "unsupported_candidate_correctly_rejected": 27
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12444477/research",
+   "target_paper": "PMC12444477",
+   "population": "untruncated",
+   "gold_signatures": 2,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 30,
+   "positive_queries": 5,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 25,
+    "correct_candidate_rejected": 5
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12444477/strict",
+   "target_paper": "PMC12444477",
+   "population": "truncated",
+   "gold_signatures": 2,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 14,
+   "positive_queries": 13,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 13,
+    "unsupported_candidate_correctly_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 17,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 17
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 12,
+   "positive_queries": 12,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 11,
+    "correct_candidate_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12657337/research",
+   "target_paper": "PMC12657337",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 23,
+   "positive_queries": 23,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 20,
+    "correct_candidate_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12657337/strict",
+   "target_paper": "PMC12657337",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 26,
+   "positive_queries": 25,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_admitted": 1,
+    "found_but_ranked_poorly": 24,
+    "correct_candidate_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12782028/research",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 69,
+   "positive_queries": 4,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 65,
+    "correct_candidate_rejected": 4
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12782028/strict",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 52,
+   "positive_queries": 52,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 52
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12856317/research",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 12,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 12
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 10,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 10
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC13231680/research",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 7,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 7
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC13231680/strict",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 0,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-25_1216/papers/PMC12444477/research",
+   "target_paper": "PMC12444477",
+   "population": "truncated",
+   "gold_signatures": 2,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 12,
+   "positive_queries": 11,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 11,
+    "unsupported_candidate_correctly_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+   "target_paper": "PMC12444477",
+   "population": "truncated",
+   "gold_signatures": 2,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 18,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 18
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-25_1216/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 14,
+   "positive_queries": 12,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 12,
+    "unsupported_candidate_correctly_rejected": 2
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-27_1341/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 16,
+   "positive_queries": 16,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 16
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-27_1341/papers/PMC12782028/strict",
+   "target_paper": "PMC12782028",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 71,
+   "positive_queries": 58,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 55,
+    "unsupported_candidate_correctly_rejected": 13,
+    "found_but_ranked_poorly": 3
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 16,
+   "positive_queries": 16,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 16
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12180156/research",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 11,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 11
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12180156/strict",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 7,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 7
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12312563/research",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 0,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12312563/strict",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 15,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 15
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12421875/research",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 18,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 18
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12421875/strict",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 18,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 17
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 32,
+   "positive_queries": 32,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 32
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 29,
+   "positive_queries": 29,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 29
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12657337/research",
+   "target_paper": "PMC12657337",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 27,
+   "positive_queries": 26,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 8,
+    "found_but_ranked_poorly": 18,
+    "unsupported_candidate_correctly_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12657337/strict",
+   "target_paper": "PMC12657337",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 26,
+   "positive_queries": 26,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 26
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12782028/research",
+   "target_paper": "PMC12782028",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 20,
+   "positive_queries": 2,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 2,
+    "unsupported_candidate_correctly_rejected": 18
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12782028/strict",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 20,
+   "positive_queries": 20,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 20
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12856317/research",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 8,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 8
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 12,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 12
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC13231680/research",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 0,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC13231680/strict",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 3,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 3
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12096016/research",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 17,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 17
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12096016/strict",
+   "target_paper": "PMC12096016",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 18,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 18
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12180156/research",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 12,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 12
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12180156/strict",
+   "target_paper": "PMC12180156",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 7,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 7
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12312563/research",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 9,
+   "positive_queries": 9,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 9
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12312563/strict",
+   "target_paper": "PMC12312563",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 9,
+   "positive_queries": 9,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 9
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12421875/research",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 27,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 13,
+    "correct_candidate_rejected": 4,
+    "unsupported_candidate_correctly_rejected": 9
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12421875/strict",
+   "target_paper": "PMC12421875",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 24,
+   "positive_queries": 24,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 24
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12444477/research",
+   "target_paper": "PMC12444477",
+   "population": "truncated",
+   "gold_signatures": 2,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 17,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "found_but_ranked_poorly": 17
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12452463/research",
+   "target_paper": "PMC12452463",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 18,
+   "positive_queries": 18,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 17,
+    "found_but_ranked_poorly": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12452463/strict",
+   "target_paper": "PMC12452463",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 1,
+   "gaps_total": 34,
+   "positive_queries": 34,
+   "outcomes": {
+    "retrieval_did_not_find_it": 1,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 34
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12657337/research",
+   "target_paper": "PMC12657337",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 29,
+   "positive_queries": 27,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_admitted": 1,
+    "correct_candidate_rejected": 11,
+    "found_but_ranked_poorly": 15,
+    "unsupported_candidate_correctly_rejected": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12657337/strict",
+   "target_paper": "PMC12657337",
+   "population": "truncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 24,
+   "positive_queries": 24,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 23
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12782028/research",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 2,
+   "gaps_total": 36,
+   "positive_queries": 36,
+   "outcomes": {
+    "retrieval_did_not_find_it": 2,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 36
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12782028/strict",
+   "target_paper": "PMC12782028",
+   "population": "untruncated",
+   "gold_signatures": 3,
+   "signatures_never_retrieved": 3,
+   "gaps_total": 30,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 3,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 30
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12856317/research",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 7,
+   "positive_queries": 7,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 7
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12856317/strict",
+   "target_paper": "PMC12856317",
+   "population": "untruncated",
+   "gold_signatures": 1,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 17,
+   "positive_queries": 17,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "correct_candidate_rejected": 16,
+    "found_but_ranked_poorly": 1
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC13231680/research",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 8,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 8
+   }
+  },
+  {
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC13231680/strict",
+   "target_paper": "PMC13231680",
+   "population": "untruncated",
+   "gold_signatures": 0,
+   "signatures_never_retrieved": 0,
+   "gaps_total": 3,
+   "positive_queries": 0,
+   "outcomes": {
+    "retrieval_did_not_find_it": 0,
+    "rejected_candidate_reintroduced": 0,
+    "unsupported_candidate_correctly_rejected": 3
+   }
+  }
+ ]
+}
