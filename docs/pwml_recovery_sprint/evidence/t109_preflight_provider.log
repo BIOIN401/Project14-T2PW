@@ -1,0 +1,54 @@
+tree under measurement : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+.env read              : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.env  exists=True
+LLM_PROVIDER           : 'openrouter'
+LLM_TEMPERATURE        : '0'
+LLM_MAX_RETRIES        : '3'  (ratified at 3; T108-READINESS section 3)
+OPENROUTER_BASE_URL    : 'https://openrouter.ai/api/v1'
+
+pinned models (all nine must be identical):
+  OPENROUTER_MODEL                         'deepseek/deepseek-v4-flash'     OK
+  OPENROUTER_PREPROCESSOR_MODEL            'deepseek/deepseek-v4-flash'     OK
+  OPENROUTER_EXTRACTION_MODEL              'deepseek/deepseek-v4-flash'     OK
+  OPENROUTER_INFERENCE_MODEL               'deepseek/deepseek-v4-flash'     OK
+  OPENROUTER_AUDIT_MODEL                   'deepseek/deepseek-v4-flash'     OK
+  OPENROUTER_CURATOR_MODEL                 'deepseek/deepseek-v4-flash'     OK
+  OPENROUTER_GAP_MODEL                     'deepseek/deepseek-v4-flash'     OK
+  OPENROUTER_OVERWATCH_MODEL               'deepseek/deepseek-v4-flash'     OK
+  OPENROUTER_FINAL_COMPLETENESS_MODEL      'deepseek/deepseek-v4-flash'     OK
+  distinct model values across the nine  : 1  (must be 1)
+
+OPENROUTER_API_KEY     : present=True length=73 prefix_ok=True
+  (value NEVER printed. Note: this file writes it as 'KEY = value' with
+   spaces, so a '^OPENROUTER_API_KEY=' grep finds only the commented line.)
+
+NO NETWORK CALL WAS MADE. This probe proves CONFIGURATION, not reachability;
+reachability is proven by the first leg of the run itself and by nothing cheaper.
+
+VERDICT: PASS -- provider openrouter, nine models pinned identically, key present
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a844443f75bf04424d2faf482aae53bc099df920  [git, worktree dirty=True]
+label                   : preflight-provider
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/t109_preflight_provider.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 204744 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.19 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  206048:python.exe
+descendants terminated  : 1  206048
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/T-109/01-preflight-provider.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=T-109  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
