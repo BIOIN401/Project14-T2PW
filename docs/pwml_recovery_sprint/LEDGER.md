@@ -9696,3 +9696,104 @@ non-acceptance is attributed to the **test instrument**, not to the pipeline.
 **`prompts/PROMPT-001-eval-framework.md`** — a complete, paste-ready launcher carrying the
 verification block, the freeze rules, the ordered work order, the process traps and the standing
 traps. **It is the deliverable that closes this wave.**
+
+---
+
+## ORCH-723 — the RAG / LLM EVALUATION phase, D-093 § 5 items 2–7 · 2026-09-03
+
+**Charter: `D-093`.** Not PWML recovery and not measurement repair. Evaluation-only throughout: no
+production module was imported, edited or exercised; no acceptance verdict was produced; T-107,
+T-108 and T-109 remain immutable and `NOT ACCEPTED`; `supported_reactions_complete` was **not
+reopened** and stays UNSET on all ten gold cases. **D-093 § 2 upheld — the F-176 runtime change
+stays DENIED and production behaviour is unchanged.**
+
+| task | artefact | tests | commit |
+|---|---|---|---|
+| `R-D092-1` row-level RAG lineage | `evidence/rd092_1_reaction_lineage.py` | 17 | `89409b2` |
+| lineage-aware evaluator, TWO TABLES | `evidence/rd093_two_table_metrics.py` | 9 | `e9b765e` |
+| Phoenix ingestion | `evidence/rd093_phoenix_ingest.py` | 13 | `70b48b8` |
+| core RAG metrics | `evidence/rd093_rag_metrics.py` | 15 | `b149e1d` |
+
+**G9.** All four are NEW capabilities and each carries an **explicitly labelled new acceptance
+test**; none claims to repair pre-existing observable behaviour, so none carries a fabricated
+base-SHA failure.
+
+### Results
+
+**Support classes over the committed corpus, per population, never summed:**
+
+| population | legs | reactions | target_paper | external_rag | unsupported | indeterminate |
+|---|---|---|---|---|---|---|
+| canonical | 114 | 433 | 82.4% | 1.4% | **0** | 15.9% |
+| fallback | 61 | 609 | 73.1% | 0 | **0** | 26.9% |
+
+**Two tables, two denominators, not addable:** canonical recall 60.0% = 135/225 (signature, leg)
+pairs, precision 42.1% = 142/337 rows claimed target-paper-supported, unsupported rate 0.0% = 0/419
+retained. Fallback 91.5%, 34.0%, 0.0% = 0/578.
+
+**Core RAG metrics, untruncated population (105 legs, 1,799 gaps):** Recall@1 39.6%, Recall@3 73.8%,
+**Recall@5 93.0%**, Precision@5 53.6%, MRR 0.597, negative-query rejection 100.0%.
+
+**Phoenix:** 1,314 spans **verified by querying the store back out** — 1,042 reaction, 175 leg, 97
+retriever — and the 6 `external_rag_supported` spans cross-match the two-table instrument exactly.
+
+### The finding that matters
+
+**Retrieval is not the bottleneck; admission is.** `Recall@5 = 93.0%` and only **55** gold signatures
+were never retrieved, against **1,123 of 1,212 positive queries** ending in
+`correct_candidate_rejected`. **One blended "RAG accuracy" would have hidden this**, which is why
+D-093 § 6 forbids one. The `100.0%` negative-query rejection must be read beside it: the gate admits
+almost nothing anywhere (15 accepted candidates across all 19 T-109 legs).
+
+`unsupported` is **zero in both populations**, and it is a measured zero, not an unreached check:
+every candidate `unsupported` verdict rested on a **cross-run** chunk join, and the conservative rule
+refuses to charge a row on another run's retrieval draw.
+
+### Corrections to inherited figures
+
+- **"1,947 rejected candidates" reconciles with nothing measurable.** T-109 measures 3,276
+  considered / 3,261 rejected by its own counts, **2,076 persisted**, 1,795 unique
+  `(gap_id, name, chunk_id)`. Five legs truncate; **1,185 counted rejections were never persisted**.
+- Corpus-wide: **57 of 162 legs truncate and 12,838 candidates were counted but never persisted.**
+  Truncated legs are a separate population.
+- **The premise "rag_provenance lives on entities, not reaction rows" is out of date** — 236 of
+  1,079 committed reaction rows carry `rag_provenance` and 431 carry `provenance_lineage`.
+
+### Traps paid for, recorded for successors
+
+1. **A missing key read as zero, twice, in my own instruments** — both caught by cross-checking
+   against an independent census *before* publishing. `R-D092-1` first tiered on lineage **sources**
+   instead of the lineage **key**, losing all 650 sourceless `paper_stated` attributions (canonical
+   `row_lineage` 2 → 232). The RAG metrics first printed three **structural zeros** for categories
+   nothing ever assigned.
+2. **The two payload populations disagree on schema** — canonical enzymes key `entity`, fallback key
+   `protein`; reading one drops the enzyme from every row of the other.
+3. **`provenance` on a canonical enzyme is a different vocabulary wearing the same word** —
+   `extracted`/`inferred` is HOW, not WHERE.
+4. **Never combine a shell `&` with a backgrounded `bounded_run`** — the harness reports "completed"
+   while the wrapper runs on. Nothing was orphaned (Job Object held them; all PIDs recorded), but
+   tracking had to be manual.
+
+### Gates
+
+SMOKE **508**; gold-readers **465 / 0 / 8 / 0**; new focused **54 passed**; **G11 strict: 29
+artifacts, 0 non-compliant** under `--require-pin --forbid-refused-pin --forbid-foreign-src
+--require-label-match`; **zero surviving owned processes on every job**. Gold blob unchanged.
+
+### NOT done, and why
+
+**D-093 § 5 item 9 — freeze and select the ten unseen papers. NOT STARTED.** Capture and scoring now
+demonstrably work on archived data, so the gate is arguably met, but consuming the unseen cohort is a
+**one-way door** and these four instruments have had **no independent review**. It needs a
+product-owner go, not a Lead's judgement call.
+
+### Recommended next
+
+1. **Sample the admission rejection reasons against gold** — `candidate_type_cannot_fill_gap`,
+   `evidence_relation_roles_unassignable`, `evidence_states_no_reaction_relation`,
+   `no_local_evidence_span` are already on disk. Is the gate correctly strict or wrongly strict?
+   Highest-value open question, evaluation-only, needs no unfreeze.
+2. **Independent review of the four instruments** — the Lead does not approve its own work, and the
+   `R-D092-1` classifier is now load-bearing for Priority 2.
+3. **Priority 2 is answerable in principle** now that the evaluator knows where each reaction came
+   from (D-093 § 4's precondition). Still needs a product-owner ruling; the flag stays UNSET.

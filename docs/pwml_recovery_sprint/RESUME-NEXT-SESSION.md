@@ -1,6 +1,169 @@
 # RESUME — next session handoff
 
-## 0. CURRENT — **`ORCH-722`: F-175 and F-176 CLOSED under narrow unfreezes, F-177 built, F-178 found and fixed, and the Priority-2 flag was set, measured and WITHDRAWN. Production still FROZEN.** 2026-09-03.
+## 0. CURRENT — **`ORCH-723`: the RAG/LLM EVALUATION phase. `R-D092-1` built, the lineage-aware evaluator and TWO TABLES built, Phoenix started and ingested, core RAG metrics measured. Production still FROZEN.** 2026-09-03.
+
+> **⚠ NOTHING IS RUNNING AND NOTHING IS CHARTERED.** Heavy lock free (`C:/t/heavylock` absent), zero
+> sprint-owned Python beyond the two `ms-python.isort` LSP processes. **`D-090` still controls:
+> production is FROZEN and T-110 is NOT authorized. `supported_reactions_complete` remains UNSET on
+> all ten gold cases and was NOT reopened.**
+
+**Verify the tip yourself:** `git rev-parse HEAD` = `git rev-parse origin/sprint/pwml-recovery`
+= `git ls-remote origin sprint/pwml-recovery`. **`main` untouched — local `7531692`, remote `03f1af5`.**
+Gold blob unchanged at `98739a59dd6c376f8a19968c7fa5dc3145be5b15`.
+
+### What ORCH-723 delivered — D-093 § 5 items 2 through 7
+
+| # | item | status |
+|---|---|---|
+| 2 | **`R-D092-1`** row-level RAG lineage | **BUILT** — `evidence/rd092_1_reaction_lineage.py`, 17 tests |
+| 3 | lineage-aware deterministic evaluator | **BUILT** — `evidence/rd093_two_table_metrics.py`, 9 tests |
+| 4 | re-evaluate archived canonical into the three classes | **DONE** — 1,042 rows over 175 legs |
+| 5 | target-paper P/R/F1 **separate** from the unsupported rate | **DONE** — two tables, two denominators |
+| 6 | **Phoenix** started and records ingested | **DONE and VERIFIED** — 1,314 spans queried back out of the store |
+| 7 | core RAG metrics | **DONE** — `evidence/rd093_rag_metrics.py`, 15 tests |
+| 8 | validate on archived runs | **DONE** — tests prove against a REAL archived leg |
+| 9 | freeze and select the ten unseen papers | **NOT STARTED, and deliberately so** — see below |
+
+### The one thing to read first
+
+**RETRIEVAL IS NOT THE BOTTLENECK. ADMISSION IS.** On the 105 untruncated committed legs,
+`Recall@5 = 93.0%` and only **55** gold signatures were never retrieved at all — while
+**1,123 of 1,212 positive queries** end in `correct_candidate_rejected`. The gate refuses a
+gold-matching, well-ranked candidate in the large majority of cases. **One blended "RAG accuracy"
+number would have hidden this entirely**, which is exactly why D-093 § 6 forbids one.
+
+Read the `100.0%` negative-query rejection beside it: the gate admits almost nothing anywhere
+(**15 accepted candidates across all 19 T-109 legs**), so a perfect negative score is a consequence
+of near-total rejection, not independent evidence of discrimination.
+
+### Measured results — per population, NEVER summed (F-177 discipline extended)
+
+**Support classes (D-093 § 1), over the committed corpus:**
+
+| population | legs | reactions | target_paper | external_rag | unsupported | indeterminate |
+|---|---|---|---|---|---|---|
+| canonical | 114 | 433 | 82.4% | 1.4% | **0** | 15.9% |
+| fallback | 61 | 609 | 73.1% | 0 | **0** | 26.9% |
+
+**The two tables — different denominators, not addable:**
+
+| population | TABLE 1 recall | TABLE 1 precision | TABLE 2 unsupported rate |
+|---|---|---|---|
+| canonical | 60.0% = 135/225 sig-leg pairs | 42.1% = 142/337 rows claimed | 0.0% = 0/419 retained |
+| fallback | 91.5% = 107/117 sig-leg pairs | 34.0% = 143/420 rows claimed | 0.0% = 0/578 retained |
+
+**`unsupported` is ZERO in both populations, and that is a real finding, not an empty check.**
+Every candidate `unsupported` verdict rested on a **cross-run** chunk join, and the conservative
+rule refuses to charge a row on another run's retrieval draw. Within-run evidence that a canonical
+reaction lacks defensible support does not exist in the committed corpus.
+
+### FIVE MEASURED FACTS that anyone touching this evaluator must know
+
+1. **The brief's premise is out of date, in the chartered direction.** Not "lineage lives only on
+   entities": **236 of 1,079** committed reaction rows carry `rag_provenance` and **431** carry
+   `provenance_lineage`. `pipeline._carry_rag_provenance` shipped that carrier. **Three provenance
+   eras**, not one.
+2. **Lineage `support="unsupported"` is NOT D-093's `unsupported`.** 650 of 692 reaction lineage
+   entries are `(paper_stated, explicit)` with `support=unsupported`, because that field grades
+   whether a **named source** backs the row. Reading it as a biological verdict relabels 650
+   paper-explicit rows as unsupported — **the D-091 collapse one level down.**
+3. **`origin="rag_literature"` does not mean external.** 11 of 14 such source refs point AT the
+   target paper (9 via the `seed_paper` sentinel, 2 by id). Externality is resolved from
+   `source_id`, never from `origin`.
+4. **The reaction `evidence` string is not reaction-specific and silently carries EXTERNAL text.**
+   On the cited leg it is **35,029 characters of PMC8091085's abstract**, while that leg's own
+   `01_source_text.txt` contains **zero** occurrences of `MenI`, `DHNA-CoA thioesterase` or
+   `LMRG_02730`. A "row has evidence therefore the paper supports it" test **passes every row in
+   the corpus** and launders external text as target-paper support.
+5. **Participant inheritance cannot establish D-093 condition 1.** Entity provenance names a span
+   that mentions a PARTICIPANT, never one that states the reaction. Inheritance alone is capped at
+   `indeterminate`. The **chunk join** is the only deterministic bridge, and it resolves 37 of 79
+   entity chunks — including the `fb1cf2b2…` chunk D-091 turned on.
+
+### The inheritance rule, adopted and documented as D-093 required
+
+Four named tiers in **strict precedence, never a union**: `row_lineage` → `row_rag_provenance` →
+`participant_inheritance` → `no_signal`. A row carrying its own lineage was attributed by the stage
+that introduced it; letting participant provenance override it would let an entity's retrieval
+history rewrite a reaction's attribution. Entity-name lookup **keeps every colliding record** rather
+than picking a winner (`isochorismate`, `SEPHCHC` and `MenD` each appear twice on the cited leg).
+`seed_paper` and the leg target both resolve to TARGET; an **empty id resolves to UNRESOLVED, never
+to target** — absence is not attribution.
+
+### Corrections to inherited figures — measure, do not trust
+
+- **"1,947 rejected candidates" reconciles with nothing measurable.** T-109
+  (`runs_verify/2026-09-01_1612`, 19 committed legs, disk identical to HEAD) measures **3,276
+  considered / 3,261 rejected** by its own counts, **2,076 rejected rows PERSISTED**, and **1,795
+  unique** `(gap_id, name, chunk_id)`. Five legs truncate, so **1,185 counted rejections were never
+  persisted** and their provenance is genuinely `unavailable`.
+- Corpus-wide the truncation is larger: **57 of 162 legs** hit `max_report_entries` and **12,838**
+  candidates were counted but never persisted. **Truncated legs are a separate population** and are
+  never summed with clean ones.
+
+### Traps this wave paid for
+
+1. **A missing key read as zero, twice, in my own instruments.** (a) `R-D092-1` first tiered on
+   lineage **sources** rather than the lineage **key**, demoting all 650 sourceless `paper_stated`
+   attributions to inheritance or `no_signal`; fixing it moved canonical `row_lineage` **2 → 232**
+   and `indeterminate` **259 → 67**. (b) The RAG metrics first printed three **structural zeros** —
+   `retrieval_did_not_find_it`, `found_but_not_admitted`, `rejected_candidate_reintroduced` — for
+   categories nothing ever assigned. A gold signature no candidate matches produces **no gap**, so a
+   per-gap counter can never see it. **Both were caught by cross-checking against an independent
+   census before publishing.**
+2. **The two payload populations disagree on schema.** Every one of the 702 canonical enzyme records
+   is keyed `entity`; fallback rows key it `protein`. Reading one drops the enzyme from every row of
+   the other population.
+3. **`provenance` on a canonical enzyme is a DIFFERENT vocabulary wearing the same word** —
+   `extracted` (612) / `inferred` (90), which is HOW, not WHERE. It is not source attribution.
+4. **Never combine a shell `&` with a backgrounded `bounded_run`.** The harness task reports
+   "completed" while the wrapper keeps running. The processes were never orphaned (the Job Object
+   held them and every PID was recorded), but tracking had to be done by hand.
+5. **A denominator that could have misled.** The two-table report first printed "135 of 225 verified
+   gold signatures"; gold states **13 distinct** signatures across the 6 scored papers, and 225 is
+   the micro-averaged count of **(signature, leg) pairs**. Both are now printed and the unit named.
+
+### Why item 9 — the ten unseen papers — was NOT started
+
+**D-093 § 5 gates it: "Only then freeze and select the ten unseen papers", and "do not consume the
+unseen cohort before capture and scoring demonstrably work on archived data."** Capture and scoring
+now demonstrably work on archived data, so the gate is arguably met — but consuming the unseen
+cohort is a **one-way door** and the instruments have not been independently reviewed. **It needs a
+product-owner go, not a Lead's judgement call.**
+
+### What the next session should weigh
+
+1. **The admission gate is where the pathway is lost, and that is now measured rather than
+   suspected.** `correct_candidate_rejected` = 1,123 against `retrieval_did_not_find_it` = 55. The
+   rejection taxonomy is already on disk (`reason_counts`): `candidate_type_cannot_fill_gap`,
+   `evidence_relation_roles_unassignable`, `evidence_states_no_reaction_relation`,
+   `no_local_evidence_span`. **Sampling those against gold would say whether the gate is correctly
+   strict or wrongly strict — and that is the highest-value next question.** It is an EVALUATION
+   question and needs no unfreeze.
+2. **Independent review of these four instruments.** Every merge rule was met and the gates are
+   green, but the Lead does not approve its own work, and R-D092-1's classifier is now load-bearing
+   for Priority 2.
+3. **Priority 2 is now answerable in principle** — the evaluator knows where each reaction came
+   from, which D-093 § 4 named as the precondition. It still needs a product-owner ruling, and the
+   flag stays UNSET until then.
+4. **Phoenix is a bounded job, not a service.** Relaunch:
+   `PHOENIX_WORKING_DIR=C:/t/phoenix_t2pw C:/t/phxenv/Scripts/python.exe -m phoenix.server.main serve`
+   under `bounded_run.py` with a real `--timeout`, then re-ingest. The eval venv is deliberately
+   **separate from the project `.venv`** so no dashboard dependency can reach a merge gate.
+
+### Verified state at this tip — measure, do not trust
+
+| check | expected |
+|---|---|
+| Gold | `98739a59dd6c376f8a19968c7fa5dc3145be5b15`, `supported_reactions_complete` UNSET on all ten |
+| SMOKE | **508 passed** — `g11/ORCH-723/27` |
+| gold-readers split | **465 / 0 / 8 / 0** — `g11/ORCH-723/28` |
+| new focused tests | **54 passed** across four files — `g11/ORCH-723/26` |
+| G11 strict | **29 artifacts, 0 non-compliant**, all four strict flags |
+| `streamlit_app.py` | sha256 `47e4fafa…`, **modified and never committed** |
+| Python processes | exactly two `ms-python.isort … lsp_server.py` — **match on FULL COMMAND LINE** |
+
+## 0-prevORCH722 — **SUPERSEDED by `ORCH-723`, 2026-09-03.** Its F-175/F-176 closures, F-177, F-178 and the D-091 withdrawal all STAND; what is superseded is its status as current and its statement that the evaluation stack is NOT started — ORCH-723 built it. **`ORCH-722`: F-175 and F-176 CLOSED under narrow unfreezes, F-177 built, F-178 found and fixed, and the Priority-2 flag was set, measured and WITHDRAWN. Production still FROZEN.** 2026-09-03.
 
 > **⚠ NOTHING IS RUNNING AND NOTHING IS CHARTERED.** Heavy lock free (`C:/t/heavylock` absent), zero
 > sprint-owned Python beyond the two `ms-python.isort` LSP processes, no unowned job. **`D-090`
