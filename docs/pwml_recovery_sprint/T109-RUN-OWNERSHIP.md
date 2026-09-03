@@ -53,6 +53,10 @@ the responsibility to monitor through cleanup. **A transfer nobody has accepted 
 | Run directory | **`runs_verify/2026-09-02_2052`** (staged, verified, to be continued **without `--fresh`**) |
 | Wrapper | `docs/pwml_recovery_sprint/evidence/bounded_run.py`, build `sha256:83d13954…` (unmodified, identical to T-108's) |
 | Basetemp / log root | `C:/t/x109/` (parent pre-created) |
+| Wrapper stdout/stderr log | `C:/t/x109/log/t109_run.log` |
+| Wrapper task id | **`bjyoa5sl4`** (Bash tracked background; notifies this session on exit) |
+| Monitor task id | **`b62ia9a1u`** (persistent; one event per leg completion and per failure signature) |
+| Process chain | outer `bounded_run.py` **191228** -> job root **206276** (the PID named in the lock) -> `batch_run.py` **206044** -> **203820** -> leg children |
 | Per-leg ceiling | **3600 s default, NO override** — `leg_timeout_overridden: false`, verified **in the staged directory before launch** |
 | Wrapper hard ceiling | **72000 s (20 h)** — same as T-108, for comparability |
 | Internal `--deadline` | **18 h** — same as T-108 |
@@ -87,3 +91,4 @@ reserve · partial-payload preservation.
 | # | UTC | Wrapper | Legs | Notes |
 |---|---|---|---|---|
 | 0 | 2026-09-03T02:5x Z | not launched | — | ownership claimed; all pre-launch gates green; this file committed and pushed **before** the wrapper started |
+| 1 | 2026-09-03T02:54:33Z | **LAUNCHED** | 0/20 | Lock acquired, token `T-109:206276:e322f748e2aaee66`. `CONTINUING the incomplete run 2026-09-02_2052 (no --fresh given)` — `already recorded : 0`, `still to do : 20`. `whole-night deadline : 18.0h from now`. Leg `[1/20] PMC12444477 / strict -> starting (timeout 3600s)` |

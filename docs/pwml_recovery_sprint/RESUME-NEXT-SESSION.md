@@ -16,7 +16,114 @@ state.**
 
 ---
 
-## 0. CURRENT — **`ORCH-719`: C-115 MERGED and gate 10 is green; C-114 ruled and superseded by C-116, which is in flight.** 2026-09-02. Read this section and nothing below it first.
+## 0. CURRENT — `ORCH-720`: the product owner RULED (`D-089`), readiness is rebuilt `GO`, and **T-109 IS LAUNCHED AND RUNNING**. 2026-09-03. Read this section and nothing below it first.
+
+**Integration tip `1a117eaa`, pushed and remotely verified: local = `origin/` = `git ls-remote`.
+`main` untouched — local `7531692`, remote `03f1af5`.** Everything below § 0 is older and superseded
+where it disagrees.
+
+> **⚠ IF YOU ARE PICKING THIS UP MID-RUN, READ `T109-RUN-OWNERSHIP.md` FIRST.** A live 20-leg
+> benchmark may still be in flight. **Do not launch anything heavy, do not clear `C:/t/heavylock`,
+> and do not start a second wrapper.** The lock names its holder and PID; the ownership file names
+> the wrapper task, the monitor task and the whole process chain.
+
+### The ruling that unblocked everything — `D-089`
+
+**D-088 clause 10 controls for this release. The INCOMPLETE-CORE CAP is unchanged.** No cofactor
+vocabulary, no entity-list match, no Stage-0 redesign, no gold change, no curated expectations inside
+production. `PMC12096016/strict` stays `review_required` with its pathway **preserved for review**,
+and **Priority 5 stays `0/2`**.
+
+> **Recorded as an EXPLICITLY ACCEPTED CONSERVATIVE LIMITATION — never as delivery of D-088 clause
+> 2.** A report that describes the cap's survival as "D-088 implemented" is wrong. `D-089` § 3 and
+> **F-173** exist so that error is catchable by reading rather than by re-deriving.
+
+**The product principle is reaffirmed, not withdrawn.** What is deferred is its implementation:
+**`R-D089-1`**, a stable, general, **non-paper-keyed** reaction/subprocess completeness specification
+typing participants as *defining* / *optional* / *extracted-but-unwired* / *genuinely absent*,
+registered for the **RAG / LLM evaluation phase**. Not this wave, by ruling.
+
+### T-109 — the milestone identity, and why it is not a second T-108
+
+The ruling says *"launch T-108 once."* **T-108 has already been launched once**, is scored
+`NOT ACCEPTED`, and the same ruling says *"Do not rerun T-108."* `T108-READINESS.md` § 7.1 requires a
+new identity and a separately recorded readiness decision. **`T-109` is the only reading under which
+all three hold.** T-108 is untouched and `T108-RESULT.md` is not edited.
+
+| | |
+|---|---|
+| Run directory | **`runs_verify/2026-09-02_2052`** |
+| Launched | **2026-09-03T02:54:33Z**, continuing the verified directory **without `--fresh`** |
+| Ceiling | 3600 s per leg, **no override**; 72000 s wrapper; 18 h internal deadline — **T-108's, unchanged, for comparability** |
+| Expected | **~6.4 h**, from T-108's measured 22929.17 s on the same corpus |
+| Owner | this session, sole owner — `T109-RUN-OWNERSHIP.md` |
+
+**Score it EXACTLY ONCE, with `evidence/t108_score.py <repo> <run-dir>` (generic despite the name —
+do not rename it, every prior report was produced by those bytes). Report hard-gate acceptance
+SEPARATELY from diagnostic Priorities 4 and 5. Do not call it accepted if any actual hard gate
+fails. If it hard-fails, triage from the immutable artifacts — DO NOT RERUN IT.**
+
+### The gates, measured today at `0859fba9`/`a844443f` and not inherited
+
+| gate | state |
+|---|---|
+| **SMOKE** (merge gate 10) | **503 passed, exit 0**, survivors 0, pin verdict `refused=false, violations=[], foreign_src=[]` — `ORCH-720/01` |
+| **gold-readers** | **456 / 0 / 8 / 0**, exit 0 — `ORCH-720/02` |
+| **battery + F-146** | **`battery=0/29  F146=REJECTED  C1..C6=0`** — `ORCH-720/03` |
+| **mutation harness** | **17 mutations, SURVIVORS 0** — `ORCH-720/05` |
+| **Chunk D** | **RED in the primary checkout** — `run-core 159/160`, `node15 0/1`. **F-174.** See below |
+| `acceptance.py` | CRLF sha256 `4bd893ac…` · LF sha256 `d9f817e1…` · git blob `56aa593e…`. **Two of those three are sha256 and one is not; they have been conflated before** |
+| gold | `36f4b7b690b577f72882c3045ca6728d1ec8d9d1`, clean in working tree and HEAD |
+| `ms-python.isort` processes | **TWO.** It has been 2 and 3 in this sprint — **match on COMMAND LINE, never count or PID** |
+
+### The two findings this wave, and they are the same shape as F-171 and F-172
+
+**F-173 — `PMC12096016/strict`'s `review_required` is a KNOWN FALSE NEGATIVE with a KNOWN SIGN.**
+Half of Priority 5's strict denominator is known-misclassified in a known direction. **The metric is
+safe to ship and dangerous to quote bare.**
+
+**F-174 — the authoritative Chunk D gate has NEVER been run in the primary checkout.** Both committed
+green runs had `cwd` inside a **worktree**, read out of their own reports. **It cannot be a code
+regression:** the only commit since the last green Chunk D touched three evidence artifacts and no
+`src/`, `tests/` or `scripts/`. Node 1's mechanism is **proven** (red with the resolution DB
+configured, green with it deconfigured, tree and commit held fixed); **node 2's lever is NOT isolated
+and is registered OPEN.** Not a readiness row — `TEST_MATRIX:244` excludes Chunk D from the smoke
+gate — and T-108 ran in this same checkout.
+
+> **Four times now this sprint a green signal has meant less than its readers believed** — F-171,
+> F-172, F-173, F-174. **`187/187` was true of the worktrees it was measured in and was never true of
+> the primary checkout, and nobody had asked which one it meant.**
+
+### Traps that cost real time, in this session and the last
+
+1. **`grep -E "^OPENROUTER_API_KEY=" .env` finds NOTHING.** The live key is written `KEY = value`
+   **with spaces**, so the only line a `^KEY=` grep can match is the commented-out one above it, and
+   the check reports the key ABSENT while `python-dotenv` resolves it fine. **This briefly looked
+   like a hard readiness failure.** Verify configuration **through the loader**, or do not claim to
+   have verified it — `evidence/t109_preflight_provider.py` is committed for exactly this.
+2. **The `.pin.json` verdict goes in `evidence/g11/pin/<TASK>/`, not in the task directory.** Put it
+   in the task directory and `g11_evidence.py check` reads it as a malformed cleanup report and
+   fails the whole task.
+3. **A foreground bounded run that may wait on a lock is killed by the tool's 120 s cap** — not 600 —
+   **while holding the lock.** Background it and branch on **exit 95**.
+4. **Four AppTest files stall a one-process pytest silently for 40 minutes.** Chunk D's authoritative
+   gate is the split-process runner. **The failure mode is silence, not error.**
+5. **Pre-create every `--basetemp` parent.** A missing parent produces `1 error in 0.18s`, which
+   looks exactly like a test result and is not.
+6. **Before building an instrument to separate two hypotheses, check whether one is already excluded
+   by something already written down.** I wrote a 140-line A/B probe for a question
+   `git diff --name-only` answered in one line.
+
+### Protected, unchanged
+
+**F-147 registered and deliberately UNCHARTERED.** `placeholder_backed_proteins` — escalate only.
+**T-107 and T-108 immutable.** `main` untouched. `streamlit_app.py` never committed. Gold
+**`36f4b7b690b577f72882c3045ca6728d1ec8d9d1`**. Never commit caches, `topics_*.txt`, the stray 0-byte
+`ValueError` and `=`, `out/`, `outputs/`, `tmp/`. **`HANDOFF.md` § 7 forbids pruning a worktree.**
+
+---
+
+## 0-prev1. `ORCH-719` — the D-088 correction wave, 2026-09-02. **SUPERSEDED by § 0 above.** Its C-115/C-116/C-117 merges, its C-114 ruling and its two operational lessons all STAND; what is superseded is its status as current and its statement that the product question is still open — it was ruled as `D-089`.
 
 **Integration tip `1e6415ec`, pushed and remotely verified: local = `origin/` = `git ls-remote`.
 `main` untouched — local `7531692`, remote `03f1af5`.** Everything below § 0 is older and superseded

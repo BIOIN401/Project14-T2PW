@@ -1,5 +1,25 @@
 # PWML RECOVERY SPRINT — HANDOFF after the T-108 execution wave
 
+> ## ⚠ SUPERSEDED IN PART — read `RESUME-NEXT-SESSION.md` § 0 FIRST
+>
+> **2026-09-03, `ORCH-720`.** This file was written after the T-108 execution wave and two things in
+> it are now out of date:
+>
+> 1. **§ 5.2a's work order is DISCHARGED through step 9.** The product owner ruled — **`D-089`**,
+>    D-088 clause 10 controls, the INCOMPLETE-CORE CAP is unchanged, Priority 5 stays `0/2` as an
+>    **explicitly accepted conservative limitation** and never as delivery of D-088 clause 2. The
+>    reaction-level replacement is deferred to the RAG / LLM phase as **`R-D089-1`**.
+> 2. **Step 9 is DONE: `T-109` is launched.** Readiness was rebuilt row by row in
+>    **`T109-READINESS.md`** (decision `GO`) and the run is owned by
+>    **`T109-RUN-OWNERSHIP.md`**. The milestone is **T-109, not a second T-108** — T-108 stays
+>    immutable and `NOT ACCEPTED`.
+>
+> **If a run is still in flight: do not launch anything heavy, do not clear `C:/t/heavylock`, and do
+> not start a second wrapper.**
+>
+> Everything else here — § 6 Protected, § 7 Process, § 8 lessons — **still stands.**
+
+
 You are the **Lead Orchestrator and Integration Authority** for
 `C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW`, integration branch `sprint/pwml-recovery`.
 
