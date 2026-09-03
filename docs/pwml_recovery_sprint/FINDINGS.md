@@ -8679,3 +8679,54 @@ though the name were the scope.
 been red for days. Here, a checker certifies a gate whose other half it never looks at. **Both are
 green signals that mean less than their readers believed, and in both cases the signal was correct
 about what it actually measured.**
+
+### AMENDMENT, same day — `REV-116` confirms it, finds it WORSE in one direction and FAIRER in another
+
+**Confirmed independently for the third time** (implementer, Lead, reviewer), and the reviewer read
+the checker's structure rather than only its output.
+
+**Worse than registered — nothing reads a pin verdict back, anywhere.**
+
+- `check_report` (`:241-306`) implements five rules: filename shape, existence/placeholder, schema,
+  cleanup/survivors, `--json` consistency. **None concerns the measured tree.**
+- `iter_reports` (`:309-329`) only walks directories matching
+  `TASK_RE = ^[A-Z0-9]+-\d{3}[a-z]?$`, **so `evidence/g11/pin/` is never opened at all.**
+- A grep across the whole evidence and scripts tree finds `pin-verdict` / `pin.json` **only in
+  `pinned_pytest.py`, which WRITES them.** **No consumer anywhere in the repository ever reads one
+  back.**
+
+So the verdicts are produced, committed and — mechanically — never consulted by anything. **Their only
+reader is a human who thinks to open one.** That is a stronger statement than "check doesn't enforce
+rule 10", and it is the accurate one.
+
+**Fairer than registered — the skip is deliberate and documented, and this is a MISSING enforcer
+rather than a BROKEN one.** `TEST_MATRIX.md:145-148` records that a `.pin.json` sitting beside the
+cleanup reports **fails the `bounded_run` schema with 22 spurious violations**, which is exactly why
+they live in a separate `pin/` tree and why `iter_reports` skips it. **Whoever built that made a
+considered choice and wrote it down.** What was never built is the replacement check.
+
+**The registration stands, with its emphasis corrected:** the defect is not that someone skipped
+something carelessly. It is that **a deliberate structural separation removed the verdicts from the
+one automated reader**, and nobody noticed that the remaining checker's clean report was then being
+cited — by cards, implementers, reviewers and me — as covering a gate it had been explicitly
+architected not to cover.
+
+### The smaller gap, also confirmed and also one step further
+
+`NAME_RE` captures the label group but `check_report` **never compares it to `data["label"]`.** So
+`09-d088-diagnostics-unpinned-superseded.json` carries `"label": "d088-diagnostics"` **and**
+`"json_report_path": …\C-116\03-d088-diagnostics.json` — two committed artifacts in one directory now
+pointing at the same original path.
+
+**The reviewer judged the un-edited copy CORRECT and I agree:** rewriting a cleanup report to match
+its new filename would be **fabricating evidence**, and the stale internal path is the only surviving
+proof of which sequence the attempt originally held. **The mapping exists only in the commit message**,
+which is thin. A `README` line in `evidence/g11/C-116/` is the cheap fix and belongs on the follow-up.
+
+### Disposition unchanged
+
+**Still not chartered, and now for a better-articulated reason.** The fix is a new enforcer over a
+surface every card depends on — `bounded_run.py`'s build hash is in every G11 report, and F-163 is the
+standing reason not to touch that casually mid-wave. **It is also now clear the fix is not "make
+`check` read `pin/`"** — that path was closed deliberately — **but "build the rule-10 checker that was
+never built."** Different job, different card, and it should be scoped knowing that.
