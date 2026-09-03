@@ -1,22 +1,154 @@
 # RESUME — next session handoff
 
-**Updated in place by the Lead Orchestrator, 2026-09-02, during `ORCH-719` (the D-088 correction wave).
-§ 0 is the current state; § 0-prev0 is the T-108 execution wave it supersedes, and § 0-prev and
-everything after are earlier waves, superseded where they disagree.** The paragraph below describes the 2026-08-31 rewrite and is kept as that wave's record.
+## 0. CURRENT — **`ORCH-721` closed: F-174 node 2 SOLVED, F-176 REFUTED, F-172 checker BUILT. Production still FROZEN.** 2026-09-03. Read this section and nothing below it first.
 
-**Rewritten in place by the Lead Orchestrator, 2026-08-31, at the close of the post-triage wave
-(`ORCH-717`).** Supersedes the 2026-08-29 record, which was written at the close of the T-107
-triage wave and is stale in two sections: it says the instruments are the next job (they are now
-fixed and merged), and it quotes **SMOKE 473**, which **moved to 503 under merge rule 4**.
-Previous content is in git history. **`LEDGER.md` remains the single source of truth for task
-state.**
+> **⚠ NOTHING IS RUNNING AND NOTHING IS CHARTERED.** Heavy lock free (`C:/t/heavylock` absent),
+> zero sprint-owned Python, no unowned job. `D-090` still controls: **production is FROZEN and
+> T-110 is NOT authorized.** No `src/` byte changed this wave and none may change without a ruling.
 
-> **⚠ Keep this file in the repo and update it in place.** A G11 report certifies a job was clean
-> and preserves **nothing** about what it found. Commit the probe and its log, not just the report.
+**Integration tip: verify it yourself. `git rev-parse HEAD` = `git rev-parse origin/sprint/pwml-recovery` = `git ls-remote origin sprint/pwml-recovery`.**
+**`main` untouched — local `7531692`, remote `03f1af5`. Never write it.**
+Everything below § 0 is older and superseded where it disagrees.
+
+### What ORCH-721 settled, and the one thing it got wrong first
+
+| finding | before | after |
+|---|---|---|
+| **F-174 node 2** | OPEN, *"the DB-config lever is already excluded"* | **EXPLAINED.** The lever is `.env`, and **the exclusion was wrong** |
+| **F-176** | *"register it: `AdmissionReport.rejected` is not persisted"* | **REGISTERED AS REFUTED.** It is persisted, and the check works |
+| **F-172** | not chartered | **checker BUILT**, enforcement opt-in, two residuals open |
+| **F-175** | *"the writer never runs"* | **AMENDED.** The writer runs; the hand-off drops the file. **ESCALATED** |
+| **F-177** | — | **NEW.** The semantic tally sums canonical and pre-quarantine payloads |
+
+**F-174 node 2 — the method is the transferable part.** A worktree cut at the **identical SHA** is
+**green** where the primary checkout is **red**; dropping only the primary's `.env` into that clean
+worktree reproduces the exact assertion; the uncommitted `streamlit_app.py` modification does not.
+Bisected to **two independently sufficient single keys, `LLM_PROVIDER` and `PATHBANK_DB_*`**.
+
+> **That is why the old row said the DB was excluded and was wrong.** With two sufficient causes, a
+> one-variable A/B reads red in both arms. **The DB was masked, not excluded.** Do not re-inherit it.
+
+A second symptom — `AppTest script run timed out after 120.0(s)`, 151 s — was the **same cause**:
+the job ran without `T2PW_OFFLINE_CURATOR=1` and made live curator calls, because only the primary
+checkout has `.env`. With the flag set the same test fails in **5.37 s** with the registered
+assertion. **A worktree is offline by accident, not by policy.**
+
+**RESIDUAL, stated so it is not lost:** neutralising both keys in the primary leaves it **red**
+(`g11/ORCH-721/27`, `/28`). **At least one further lever exists in the primary's untracked state
+and is NOT identified.** The worktree A/B is the authoritative isolation.
+
+### The correction this wave had to make to itself
+
+**I wrote a rule from a remembered count and the count was wrong — twice.**
+
+1. I designed `pin_verdict_refused` to be unconditionally fatal on *"0 of 583 verdicts say
+   refused"*. The true count is **10** (7 with a sibling report), and **most are `H-010`/`REV-070`
+   negative controls proving refusal works**. An unconditional rule would have failed the proof of
+   the mechanism. The equivalence proof caught it and returned FAIL.
+2. I then wrote *"129 of 583 … `T2PW_FROM_WRONG_TREE` is clean on all 129"*. True figures:
+   **122 of 606**, and **three are not clean**. **The reviewer caught it by reading the pin files
+   rather than the sentence.**
+
+> Both are recorded verbatim in `check_pin_verdict`'s docstring and in F-172's amendment, on
+> purpose. **A wave about unchecked universals that hid its own would be worthless.**
+
+### Verified state at this tip — measure, do not trust
+
+| check | expected |
+|---|---|
+| Gold | `git hash-object src/t2pw/bench/gold/pinned_v1.json` = `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` |
+| SMOKE (merge gate 10) | **503 passed, exit 0**, survivors 0 — `g11/ORCH-721/35`, pin clean |
+| `g11_evidence.py selftest` | **11/11** — `g11/ORCH-721/36` |
+| G9 default-verdict equivalence | **5203 identical / 0 different** — `g11/ORCH-721/37` |
+| This wave's own G11 | **37 reports, 0 non-compliant, under ALL FOUR strict flags**; 25/25 pytest jobs pinned |
+| `streamlit_app.py` | sha256 `47e4fafa…`, **modified and never committed** |
+| Python processes | exactly two `ms-python.isort … lsp_server.py` — **match on FULL COMMAND LINE, never count or PID** |
+
+### THE NEXT WORK ORDER — unchanged in shape, re-ordered by what is now known
+
+**`prompts/PROMPT-001-eval-framework.md` is still the launcher.** Its item 3 (F-174) and item 4
+(F-172) are **done**; items 1, 2 and 5 stand. What ORCH-721 adds:
+
+1. **`supported_reactions_complete` — still item 1, still untouched by this wave.** The only hard
+   gate between a run and acceptance. **D-087 unchanged: one deliberately chosen case, after a
+   genuine biological completeness audit, routed to `pwml-bio-auditor`. The audit is the cost, not
+   the edit, and it is not a Lead judgement.** `goldset.py:384` warns that setting it without
+   exhaustive signatures turns every unattributed row into a reported fabrication;
+   `semantic.py:700` records that would have been **227** on a run that produced far fewer.
+   **ORCH-721 did not attempt it and claims nothing about it.**
+
+2. **THREE ESCALATIONS NEEDING A PRODUCT-OWNER RULING.** All three touch FROZEN files, all three
+   are plausibly observability-only, and **none was argued into place by its author**:
+   - **F-175** — add `COVERAGE_DIAGNOSTICS_FILENAME` to the carry tuple in `driver.py`. One tuple
+     entry. **Cannot be proved without a real benchmark leg** — a unit test would repeat C-116's
+     mistake exactly.
+   - **F-176** — correct the stale `inapplicable_reason` at `semantic.py:1244`, which currently
+     asserts something false and is propagated into the runtime release record.
+   - **F-176 (second half)** — decide whether the runtime record should carry a
+     `semantic_check_evaluability` claim it is structurally unable to make, since the artifact it
+     reports as absent is written after it runs.
+
+3. **F-177** — carry `payload_source` into the semantic tally. **Evaluation-only, outside the
+   freeze, chartered-ready.** `acceptance.py:1370` already computes it.
+
+4. **F-172's two residuals** — indirect pytest drivers (`chunk_d_gate.py`, the authoritative AppTest
+   gate) are **NOT COVERED** by the new checker, and **3206** unpinned pytest reports are a standing
+   backlog. Neither is closed and nothing pretends otherwise.
+
+5. **A test-hygiene card, unchartered:** make the four AppTest boundary files **pin** the
+   environment they read — `T2PW_OFFLINE_CURATOR`, `LLM_PROVIDER`, `PATHBANK_DB_*` — inside the
+   fixture, so Chunk D means the same thing in every tree. This is F-174's real fix and it edits
+   `tests/`, a gate surface.
+
+### The evaluation stack — NOT started, and deliberately
+
+**No Phoenix, no Ragas, no OpenTelemetry instrumentation, no deterministic evaluator skeleton, and
+no unseen-cohort work was begun.** The wave spent its budget on measurement integrity, which was
+the stated goal, and **the unseen pilot must not run before capture exists.** What ORCH-721 leaves
+for it, ready to reuse:
+
+- `evidence/f176_admission_persistence_probe.py` — **read-only** replay of any archived run
+  directory, per-leg, reporting every semantic check as **PASSED / FAILED / UNEVALUABLE**, split by
+  payload source. It is the first instrument in this project that distinguishes *applicable* from
+  *passed*, and it is the interim answer to F-177.
+- **1,947 rejected RAG candidates across 19 T-109 legs**, each with `gap_id`, claim, retrieval
+  `evidence` (chunk id, section, score, span) and rejection `reasons` — the RAG-evaluation dataset
+  is **already on disk** and does not need to be regenerated.
+
+### Semantic verdicts on T-109, since applicability was previously reported as if it were passing
+
+**ARM A (artifacts as they are), 19 gold legs, SPLIT because summing them is F-177:**
+
+| check | canonical (10) | fallback (9) |
+|---|---|---|
+| `requested_pathway_anchors_present` | 5 pass / 5 fail | 7 pass / 2 fail |
+| `reaction_source_carrier_present` | 10 pass | 9 pass |
+| `retained_reactions_match_supported_signatures` | 2 pass / **8 unevaluable** | **9 unevaluable** |
+| `organism_compatible` | 10 pass | 9 pass |
+| `no_real_id_or_name_conflict` | 7 pass / 3 fail | 3 pass / 6 fail |
+| `no_rejected_rag_reaction_reintroduced` | **10 pass / 0 fail** | 7 pass / **2 fail** |
+| `minimum_connected_core` | 9 pass / 1 fail | 9 pass |
+| `placeholder_identities_distinguished` | 9 pass / 1 fail | 9 pass |
+
+> **`applicable` is not `passed`.** The earlier *"four of five biology checks pass"* summary was
+> read off an `applicable` column in the **runtime** release record — which is a different
+> evaluator from the offline scorer, and which reported the RAG check inapplicable **on legs whose
+> own directories contain the artifact it said was missing.**
+>
+> **`T-109 is NOT re-scored by any of this.** No acceptance verdict was produced and its
+> disposition is unchanged: `NOT ACCEPTED`, for the Priority-2 reason, immutably.
+
+### Protected — unchanged, and ORCH-721 committed none of it
+
+`streamlit_app.py` · `data/enrichment_cache.json` · `data/id_mapping_cache.json` · `topics_*.txt` ·
+`out/` · `outputs/` · `tmp/` · `runs_verify/` · the stray 0-byte `=` and `ValueError`.
+**F-147 stays registered and deliberately UNCHARTERED — escalate only.**
+**No worktree was pruned.** One was **added**: `.claude/worktrees/orch721-f174`, detached at
+`cb982dc2`, and it is **live evidence** — it is the green arm of the F-174 A/B. Leave it.
 
 ---
 
-## 0. CURRENT — **SPRINT CLOSED. `D-090`: engineering-complete, production FROZEN, T-110 NOT authorized.** Next phase is the evaluation framework. 2026-09-03. Read this section and nothing below it first.
+## 0-prevD090 — **SUPERSEDED by `ORCH-721`, 2026-09-03.** Current as of the D-090 close; its rulings all STAND, and what is superseded is its status as current plus two claims ORCH-721 refuted (F-174 node 2 "OPEN", and the resolution-DB "excluded") — **SPRINT CLOSED. `D-090`: engineering-complete, production FROZEN, T-110 NOT authorized.** Next phase is the evaluation framework. 2026-09-03.
 
 > **⚠ NOTHING IS RUNNING AND NOTHING IS CHARTERED HERE.** T-109 exited, was scored once, and is
 > **CLOSED and IMMUTABLE**. Heavy lock free, zero sprint-owned Python, no unowned job.

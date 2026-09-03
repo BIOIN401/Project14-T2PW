@@ -1,8 +1,8 @@
-corpus            : 5200 committed artifact(s)
+corpus            : 5203 committed artifact(s)
 base module       : .claude/worktrees/orch721-f174/docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py
 tip module        : docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py
 
-DEFAULT-VERDICT EQUIVALENCE: 5200 identical, 0 DIFFERENT
+DEFAULT-VERDICT EQUIVALENCE: 5203 identical, 0 DIFFERENT
 
 THE NEW RULES ARE NOT INERT -- artifacts whose verdict CHANGES under each flag:
   --require-pin          : 3206
@@ -11,9 +11,9 @@ THE NEW RULES ARE NOT INERT -- artifacts whose verdict CHANGES under each flag:
   --forbid-refused-pin   : 7
 
 RULE-10 AUDIT over the same corpus:
-  reports                  = 5200
-  direct_pytest            = 3723
-  with_pin                 = 517
+  reports                  = 5203
+  direct_pytest            = 3724
+  with_pin                 = 518
   without_pin              = 3206
   pin_refused              = 7
   pin_with_violations      = 7
@@ -26,24 +26,24 @@ VERDICT: PASS -- default verdict identical on every artifact, and the new rules 
 report schema version   : 1
 wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
 wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
-wrapper vs HEAD         : clean  @ cb982dc20947b268f5592ba5b4ad72d9d9d8148b  [git, worktree dirty=True]
-label                   : f172-g9-equivalence-final
+wrapper vs HEAD         : clean  @ d7ded8b83fbccc1a73d794b22d4d3d5d4e24dd73  [git, worktree dirty=True]
+label                   : f172-g9-equivalence-postrev
 command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/f172_default_verdict_equivalence.py .claude/worktrees/orch721-f174/docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py
 cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
-root PID / process group: 432440 / None
+root PID / process group: 29220 / None
 isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
 timeout                 : 900 s
-duration                : 24.63 s
+duration                : 25.41 s
 exit reason             : completed
 exit code (real)        : 0
 returned code           : 0
-descendants observed    : 1  432428:python.exe
-descendants terminated  : 1  432428
+descendants observed    : 1  432660:python.exe
+descendants terminated  : 1  432660
 graceful attempted      : False
 forced                  : False
 FINAL SURVIVING COUNT   : 0
 cleanup                 : success
-json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-721/34-f172-g9-equivalence-final.json
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-721/37-f172-g9-equivalence-postrev.json
 json report written     : True
 pre-existing (reported, NEVER killed): 4
 ================================================

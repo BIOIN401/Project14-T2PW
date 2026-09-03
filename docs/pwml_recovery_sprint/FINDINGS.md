@@ -9118,7 +9118,7 @@ produced and T-109's disposition is untouched.**
 | the claim | the measurement |
 |---|---|
 | the batch driver does not persist it | **`driver.py:1472` writes `rag_admission_report.json`.** 181 exist across archived runs; **19 of T-109's 20 legs carry one** |
-| the artifact lacks the rejected set | **1,947 rejected rows** across those 19 legs, 49–200 per leg |
+| the artifact lacks the rejected set | **1,947 rejected rows** across those 19 legs, 19–200 per leg |
 | the fields the check needs are absent | `inputs`, `outputs`, `reversible`, `gap_id`, `name`, `reasons`, `evidence`, `source_paper` are populated on **100 %** of rows; `enzymes` is partial, correctly — not every reaction names one |
 | the evaluator cannot reach a verdict | **`acceptance.py:1372` loads it and `:1384` passes it.** A/B over 19 legs: **applicable 19/19 with the on-disk artifact, 0/19 without it** |
 
@@ -9258,5 +9258,110 @@ unfreeze and ruled on rather than argued into place by its author. **It also can
 required standard without a real benchmark-style leg**, which is a live-LLM job this wave did not
 run. The reviewer standard for F-175 demands the artifact appear in a real leg directory; a unit test
 of the tuple would be C-116's mistake a second time.
+
+---
+
+## F-172 — AMENDMENT, `ORCH-721`: the rule-10 reader is BUILT, enforcement is opt-in, and the first design was refuted by its own measurement
+
+- **Registered amendment 2026-09-03 (`ORCH-721`)** · F-172 moves from **not chartered** to
+  **CLOSED for the checker half**, with two named residuals · **Class: instrument scope, no
+  production code implicated** · reviewed independently before merge (`REV-721`)
+
+### What was built
+
+`g11_evidence.py check` now **always prints a MEASURED-TREE COVERAGE audit**, and gains four
+opt-in enforcement flags: `--require-pin`, `--forbid-refused-pin`, `--forbid-foreign-src`,
+`--require-label-match`. F-172's amendment concluded the fix was *"not 'make `check` read `pin/`'
+— that path was closed deliberately — but 'build the rule-10 checker that was never built'."*
+That is what this is: a new reader, in a new function, leaving `iter_reports` and its deliberate
+`pin/` skip untouched.
+
+**The always-printed audit is the load-bearing half, not the flags.** The registered defect was
+never that someone skipped a step; it was that a clean `check` was being *read* as covering rule 10
+by cards, implementers, reviewers and the Lead. A count that prints its own coverage underneath
+itself cannot be misread that way.
+
+### The measurement, over 5202 committed artifacts
+
+| | |
+|---|---|
+| reports invoking pytest **directly** | **3724** |
+| ...carrying a committed `.pin.json` | **518** |
+| ...carrying **none** | **3206** |
+| pins recording a **foreign `src`** on `sys.path` | **104** (of 122 such pins overall) |
+| pins saying **refused** | **7** |
+| filename label != the report's own `label` | **2535** |
+
+**No consumer had ever read one of these back.** F-172's amendment established that `pin.json`
+appears in the repository only in `pinned_pytest.py`, which writes them.
+
+### Why EVERY rule is opt-in, and why that is the finding's own lesson landing on its author
+
+**I designed `refused` to be unconditionally fatal** — a verdict saying "I measured the wrong tree"
+looked like affirmative bad evidence needing no judgement call — **and I justified it with a count
+of zero that I had taken myself.** Both halves were wrong.
+
+- **The count was 7, not 0** (10 refused verdicts exist; 7 have a committed sibling report).
+- **Reading them refuted the reasoning.** `H-010/05-refuse-primary-pin`,
+  `H-010/25-refuse-nested-worktree`, `REV-070/03-pin-wrongtree`, `/04-pin-nopythonpath` and
+  `/05-pin-selection-outside` are the cards that **built and reviewed `tree_pin`**. A refusal there
+  is the negative control passing.
+
+**An unconditional rule would have marked the proof of the mechanism as a breach of the
+mechanism** — F-171…F-175's exact shape, committed by the very card registered to stop it. The
+equivalence proof caught it: `0 of 583 say refused` was the assumption, `5196 identical / 0
+different` was the required result, and the run returned **FAIL**.
+
+> **A rule written from a remembered count is a rule whose scope nobody asked about.** The count
+> took ninety seconds to take and refuted the design.
+
+A second instance, caught by the reviewer rather than by me, is recorded verbatim in
+`check_pin_verdict`'s docstring: I wrote *"129 of 583 … and `T2PW_FROM_WRONG_TREE` is clean on all
+129."* The true figures are **122 of 606**, and **three are not clean** — `C-056c/focused-nochunk`,
+`H-010/05-refuse-primary-pin` and `REV-070/03-pin-wrongtree` all carry the code. The substantive
+claim survives; **the unchecked universal did not.**
+
+### What the foreign-src count does and does not mean
+
+**104 committed reports have a pin recording a `src` directory from another tree on `sys.path`.**
+`tree_pin.resolve_facts` writes that field under the comment *"The trap, named explicitly"* — and
+`tree_pin.check` then **omits it from the violation set**, so `refused` stays `false` and the fact
+has always been inert.
+
+**It is a LATENT RISK, not proof of a wrong measurement.** `T2PW_FROM_WRONG_TREE` is enforced
+separately, so on all but three `t2pw` itself resolved correctly and only a *sibling* importable
+could have come from the other tree. **"104 runs measured the wrong tree" would be a fabrication.**
+
+### Deviation from the directive, recorded where it can be found
+
+`HANDOFF.md` § 5.2 directed: *"make `g11_evidence.py check` **require** a `.pin.json` for every
+report whose command invokes pytest."* **Delivered instead as report-always / enforce-on-request,
+and the reason is measured rather than preferred:**
+
+1. `TEST_MATRIX` § 0 rule 10 mandates a verdict for **gates, G9 proofs and baseline captures** — not
+   for every pytest process ever launched — and a cleanup report does not record which a job was.
+2. Unconditional enforcement turns **3206 of 5202** committed artifacts red, destroying the
+   comparability F-163 is the standing reason to protect.
+3. Unconditional `refused` fails H-010's and REV-070's negative controls, as above.
+
+### Residuals, both explicitly NOT closed
+
+1. **Indirect drivers are NOT COVERED.** `chunk_d_gate.py`, `bench_acceptance.py`,
+   `c102_goldreaders_split.py` and six others spawn pytest in child processes this checker cannot
+   see. It **names them in the audit** rather than counting them clean — but the coverage gap for
+   Chunk D, the authoritative AppTest gate, is real and open.
+2. **3206 unpinned pytest reports are a standing backlog**, not a resolved item. Nothing
+   retroactively certifies them and nothing in this change pretends to.
+
+### Verification
+
+**G9, and it is the unusual shape:** a genuinely new capability carries labelled acceptance tests
+and needs no fabricated base failure — four are added to `selftest` (11/11). But the change also
+touches a surface every card depends on, so the obligation is the *opposite* of a base failure:
+`evidence/f172_default_verdict_equivalence.py` loads the **base module out of a worktree at the base
+SHA** and the tip module, calls `check_report` with no keyword arguments on the same paths, and
+proves **5200/5200 identical, 0 different** — while also proving the four flags are not inert
+(3206 / 2535 / 104 / 7). SMOKE **503 passed**, exit 0. This wave's own 35 reports pass `check`
+under all four strict flags, with 25/25 pytest jobs pinned.
 
 ---

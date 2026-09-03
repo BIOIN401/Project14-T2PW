@@ -52,8 +52,12 @@ standard is genuinely met, and test/gate tooling that measures the pipeline with
 **`F-175` and `supported_reactions_complete` curation move into the RAG / LLM evaluation work.**
 
 *Engineering-complete* means **no further production engineering is chartered in this sprint.** It is
-**not** a claim that every gate is green or every finding closed — **F-147 stays unchartered and
-F-174 node 2 stays OPEN.**
+**not** a claim that every gate is green or every finding closed — **F-147 stays unchartered.**
+
+> **SUPERSEDED IN PART by `ORCH-721`, 2026-09-03.** This section said *"F-174 node 2 stays OPEN"*.
+> **It is now EXPLAINED** — same-SHA A/B, worktree green and primary red, lever isolated to `.env`
+> and within it to two independent single keys. See F-174's `ORCH-721` amendment. One residual
+> stands: the lever set is **not** proven complete for the primary checkout.
 
 ### 2.1 The product owner ruled — `D-089`
 
@@ -183,9 +187,9 @@ curated set in the general pipeline.
 | id | what | why it matters |
 |---|---|---|
 | **`supported_reactions_complete`** | curate **ONE** case properly, per D-087 | **the only hard gate between a run and acceptance.** `goldset.py:384` warns that setting it without exhaustive signatures turns every unattributed row into a reported fabrication — `semantic.py:700` records that this would have reported **227** on a run that produced far fewer. **The audit is the cost, not the edit, and it is not a Lead judgement** |
-| **F-175** | make the batch path write `coverage_diagnostics.json` | a `D-089` requirement is unmet. **The test must assert the file exists in a BATCH LEG DIRECTORY** — C-116 had eleven passing tests and none ran the batch path |
-| **F-174 node 2** | isolate why `test_research_mode_keeps_the_unmapped_candidate_and_does_not_block` is red in the primary checkout | the authoritative Chunk D gate cannot be trusted anywhere until this is known. **The DB-config lever is already excluded** |
-| **F-172** | make `g11_evidence.py check` require a `.pin.json` for every report whose command invokes pytest | it certifies the lifecycle half of G11 and rule 10 **not at all**. Changing it mid-wave breaks comparability — **do it at a wave boundary, which is now** |
+| **F-175** | ~~make the batch path write `coverage_diagnostics.json`~~ **AMENDED by `ORCH-721`.** The writer **DOES** run on the batch path — 10 legs carry `quarantine_report.json`, which only it writes. The diagnostics are written to disk and **deliberately excluded from the RETURNED map**, and the driver carries only what that map names. The fix is **one tuple entry in FROZEN `driver.py`**, so it is **ESCALATED for a ruling**, and it still cannot be proved without a real benchmark leg | a `D-089` requirement is unmet. **The test must assert the file exists in a BATCH LEG DIRECTORY** — C-116 had eleven passing tests and none ran the batch path |
+| **F-174 node 2** | **DONE — `ORCH-721`.** ~~isolate why the test is red in the primary checkout~~ | ~~**The DB-config lever is already excluded**~~ — **THAT WAS WRONG, and this row is why the row itself is dangerous.** The DB lever was **masked, not excluded**: `LLM_PROVIDER` and `PATHBANK_DB_*` are **each independently sufficient**, so a one-variable A/B read red in both arms. Do not re-inherit the exclusion |
+| **F-172** | **DONE (checker half) — `ORCH-721`.** ~~make `check` **require** a `.pin.json`~~ — delivered as **report-always / enforce-on-request**, because requiring it turns **3206 of 5202** committed artifacts red and unconditional `refused` fails H-010's and REV-070's **negative controls**. Two residuals stay open: indirect drivers (`chunk_d_gate.py`) are NOT COVERED, and the 3206 unpinned reports are a standing backlog | it certifies the lifecycle half of G11 and rule 10 **not at all**. Changing it mid-wave breaks comparability — **do it at a wave boundary, which is now** |
 
 ### 5.3 Priority 2 is the only thing standing between a run and acceptance
 

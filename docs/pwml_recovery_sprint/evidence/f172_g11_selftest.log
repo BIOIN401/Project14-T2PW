@@ -12,7 +12,7 @@ G11 rule 10 -- MEASURED-TREE COVERAGE (F-172). Reported, not asserted.
   pin carries violation codes       : 0   <- fatal only with --forbid-refused-pin
   pin carries a FOREIGN src on path : 0   <- fatal only with --forbid-foreign-src
   filename label != report label    : 0   <- fatal only with --require-label-match
-FAIL C:\Users\Angad\AppData\Local\Temp\g11res_7_esu07u\H-004\01-killed.json
+FAIL C:\Users\Angad\AppData\Local\Temp\g11res_i486bjmo\H-004\01-killed.json
      report_never_written
 
 G11 evidence: 1 artifact(s), 1 non-compliant (spec v1)
@@ -30,7 +30,7 @@ ok   test_reservation_is_invisible_to_the_merge_gate
 ok   test_staging_contract_matches_the_wrapper
 ok   test_compliance_rules
 ok   test_credential_scan_is_word_bounded_and_still_bites
-ok   C:\Users\Angad\AppData\Local\Temp\g11sel_j7v1jvzj\H-004\01-a.json
+ok   C:\Users\Angad\AppData\Local\Temp\g11sel_k4p5bfcr\H-004\01-a.json
 
 G11 evidence: 1 artifact(s), 0 non-compliant (spec v1)
 
@@ -71,7 +71,7 @@ G11 rule 10 -- MEASURED-TREE COVERAGE (F-172). Reported, not asserted.
   pin carries violation codes       : 0   <- fatal only with --forbid-refused-pin
   pin carries a FOREIGN src on path : 0   <- fatal only with --forbid-foreign-src
   filename label != report label    : 0   <- fatal only with --require-label-match
-ok   C:\Users\Angad\AppData\Local\Temp\g11sel_j7v1jvzj\H-004\01-a.json
+ok   C:\Users\Angad\AppData\Local\Temp\g11sel_k4p5bfcr\H-004\01-a.json
 FAIL --task Z-999
      unmatched_task:Z-999 -- selector matched 0 committed artifacts
 
@@ -98,24 +98,24 @@ ok   test_rule10_unreadable_pin_is_a_violation_regardless_of_flags
 report schema version   : 1
 wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
 wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
-wrapper vs HEAD         : clean  @ cb982dc20947b268f5592ba5b4ad72d9d9d8148b  [git, worktree dirty=True]
-label                   : f172-g11-selftest
+wrapper vs HEAD         : clean  @ d7ded8b83fbccc1a73d794b22d4d3d5d4e24dd73  [git, worktree dirty=True]
+label                   : f172-selftest-postrev
 command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py selftest
 cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
-root PID / process group: 432380 / None
+root PID / process group: 454364 / None
 isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
 timeout                 : 600 s
-duration                : 1.07 s
+duration                : 0.97 s
 exit reason             : completed
 exit code (real)        : 0
 returned code           : 0
-descendants observed    : 4  432392:python.exe, 432416:python.exe, 432436:python.exe, 432616:git.exe
-descendants terminated  : 4  432392, 432416, 432436, 432616
+descendants observed    : 5  453108:python.exe, 452784:git.exe, 454568:python.exe, 454572:python.exe, 450756:git.exe
+descendants terminated  : 5  450756, 452784, 453108, 454568, 454572
 graceful attempted      : False
 forced                  : False
 FINAL SURVIVING COUNT   : 0
 cleanup                 : success
-json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-721/33-f172-g11-selftest.json
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-721/36-f172-selftest-postrev.json
 json report written     : True
 pre-existing (reported, NEVER killed): 4
 ================================================

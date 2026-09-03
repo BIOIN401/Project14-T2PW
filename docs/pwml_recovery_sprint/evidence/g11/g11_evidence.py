@@ -365,7 +365,7 @@ def check_pin_verdict(
     * **A MISSING verdict is opt-in** (``--require-pin``). Rule 10 mandates a
       verdict for gates, G9 proofs and baseline captures, not for every pytest
       process anyone ever launched, and the cleanup report cannot tell them apart.
-      Measured at registration: 3206 of 3700 pytest-invoking reports carry no
+      Measured at registration: 3206 of 3724 pytest-invoking reports carry no
       verdict, so making absence fatal by default would turn the whole committed
       tree red and destroy the comparability F-163 protects. It is REPORTED
       unconditionally instead, which is the half that was actually missing.
@@ -374,13 +374,28 @@ def check_pin_verdict(
       ``tree_pin.resolve_facts`` records ``foreign_src_entries`` under the comment
       *"The trap, named explicitly"* -- and ``tree_pin.check`` then omits it from
       the violation set, so ``refused`` stays ``false`` and the fact is inert.
-      **129 of 583 committed verdicts name the PRIMARY checkout's ``src``.**
+      **122 of the 606 committed verdicts name a ``src`` outside their expected
+      tree** -- almost always the PRIMARY checkout's. 104 of those have a committed
+      sibling report whose command invokes pytest directly, which is the population
+      :func:`audit_rule10` can see and count; the other 18 are driver-launched or
+      report-less and the audit says so rather than guessing.
 
-      That is a LATENT RISK, not proof of a wrong measurement, and the difference
-      is load-bearing: ``T2PW_FROM_WRONG_TREE`` IS enforced and is clean on all
-      129, so ``t2pw`` itself resolved correctly and only a sibling importable
-      could have come from the other tree. "129 runs measured the wrong tree"
-      would be a fabrication of exactly the kind F-172 is about.
+      That is a LATENT RISK, not proof of a wrong measurement. ``t2pw`` itself is
+      checked separately by ``T2PW_FROM_WRONG_TREE``, so on the great majority
+      ``t2pw`` resolved correctly and only a sibling importable could have come
+      from the other tree. **"122 runs measured the wrong tree" would be a
+      fabrication of exactly the kind F-172 is about.**
+
+      CORRECTED BY REVIEW, and the original error is left on the record because it
+      is this finding's own failure mode. I first wrote "129 of 583 ... and
+      ``T2PW_FROM_WRONG_TREE`` is clean on all 129". Both halves were wrong: the
+      counts were 122 of 606, and **three of them are NOT clean** --
+      ``pin/C-056c/focused-nochunk``, ``pin/H-010/05-refuse-primary-pin`` and
+      ``pin/REV-070/03-pin-wrongtree`` all carry ``T2PW_FROM_WRONG_TREE``. The
+      latter two are H-010's and REV-070's deliberate negative controls, so the
+      substantive risk claim survives -- but **"clean on all N" was an unchecked
+      universal in a wave whose entire subject is unchecked universals.** It was
+      caught by a reviewer reading the pin files rather than the sentence.
     """
 
     bad: List[str] = []
@@ -415,7 +430,7 @@ def check_label_match(path: str, data: Dict[str, Any]) -> Optional[str]:
     ``"label": "d088-diagnostics"`` AND a ``json_report_path`` still naming
     ``03-d088-diagnostics.json``.
 
-    OPT-IN, and the measurement is why. 2535 of 5172 committed reports mismatch,
+    OPT-IN, and the measurement is why. 2535 of 5202 committed reports mismatch,
     because ``g11_evidence.py next --label`` and ``bounded_run.py --label`` are
     supplied separately and nothing ever tied them together. At that rate the
     mismatch is the house style, not an anomaly, and defaulting it to fatal would
@@ -450,11 +465,27 @@ def check_report(
 
     RULES 7 and 8 (F-172) are appended at the end. Their four keyword flags all
     default to ``False``, so **the default verdict of this function is byte-for-byte
-    what it was before F-172** on every committed artifact -- deliberately, because
+    what it was before F-172 on every one of the 5202 committed artifacts**, proven
+    artifact-by-artifact against the base module by
+    ``evidence/f172_default_verdict_equivalence.py``. That mattered because
     ``bounded_run.py``'s build hash appears in every G11 report and F-163 is the
     standing reason not to break report comparability. What changed by default is
     that ``check`` now PRINTS a rule-10 audit it previously could not have printed;
     what changed under flags is that the audit can be made fatal.
+
+    TWO EXCEPTIONS AND ONE SCOPE LIMIT, named because "unchanged by default" is
+    the kind of claim this finding exists to distrust.
+
+    * ``pin_verdict_unreadable`` and ``pin_verdict_not_an_object`` are returned
+      with **no flag set**. A verdict that exists and cannot be read is not the
+      same fact as one that is absent, and it is never evidence of anything.
+      Neither can fire on the committed tree: all 606 verdicts parse and all 606
+      are objects.
+    * **The default verdict is no longer a pure function of the report file.** It
+      now also reads the sibling ``pin/`` tree, so a future corrupt ``.pin.json``
+      would flip a previously-clean report to non-compliant with no flag set. The
+      equivalence proof is a statement about today's tree, not a permanent
+      invariant. (Raised by review; recorded rather than argued away.)
     """
 
     bad: List[str] = []
@@ -1085,7 +1116,7 @@ def test_rule10_detects_pytest_directly_and_admits_what_it_cannot_see() -> None:
 
 def test_rule10_and_label_rules_are_opt_in_and_bite_when_asked() -> None:
     """NEW CAPABILITY (F-172), and the acceptance test for the design decision the
-    measurement forced. Each rule must be INERT by default -- 5196 committed
+    measurement forced. Each rule must be INERT by default -- 5202 committed
     artifacts must keep their exact verdict -- and MUST fire under its own flag.
 
     Both halves are asserted on the same fixture, because either alone is the bug:
@@ -1150,8 +1181,10 @@ def test_rule10_and_label_rules_are_opt_in_and_bite_when_asked() -> None:
 def test_rule10_unreadable_pin_is_a_violation_regardless_of_flags() -> None:
     """NEW CAPABILITY (F-172). A verdict that exists and cannot be parsed is not the
     same fact as one that is absent, and it is never evidence of anything -- so it
-    is the ONE class here that needs no flag. It also cannot fire on the committed
-    tree: all 583 verdicts parse."""
+    is one of the two classes here that need no flag -- ``pin_verdict_not_an_object``
+    is the other, for a verdict that parses into something that is not an object.
+    Neither can fire on the committed tree: all 606 verdicts parse and all 606 are
+    objects."""
 
     with tempfile.TemporaryDirectory(prefix="g11f172b_") as root:
         path = _write_report(root, "C-999", "01-broken.json")

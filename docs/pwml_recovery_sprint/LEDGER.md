@@ -9671,16 +9671,24 @@ non-acceptance is attributed to the **test instrument**, not to the pipeline.
 | item | state |
 |---|---|
 | **`supported_reactions_complete` curation** | **item 1 of the next phase.** The only hard gate between a run and acceptance. D-087 unchanged: one case at a time, independently verified complete. **The audit is the cost, not the edit** |
-| **`F-175`** — the batch path never writes `coverage_diagnostics.json` | evaluation-instrument gap. **Its test must assert the file exists in a BATCH LEG DIRECTORY** |
+| **`F-175`** — ~~the batch path never writes~~ **the batch path never CARRIES** `coverage_diagnostics.json` | evaluation-instrument gap. **AMENDED `ORCH-721`:** the writer runs; the file is excluded from its returned map and the driver carries only that map. **ESCALATED** — the fix is one tuple entry in FROZEN `driver.py`. **Its test must still assert the file exists in a BATCH LEG DIRECTORY** |
+| **`F-176`** — rejected-RAG evidence unavailable offline | **REGISTERED AS REFUTED, `ORCH-721`.** The artifact is persisted, carries 1,947 rejected rows, and the offline evaluator reaches a verdict with it (19/19) and cannot without it (0/19). Residual: a stale `inapplicable_reason` in FROZEN `semantic.py:1244`. **ESCALATED** |
+| **`F-177`** — semantic tally mixes canonical and pre-quarantine payloads | **NEW, `ORCH-721`.** 10 canonical legs and 9 fallback legs summed into one column; both RAG failures and 6 of 9 identity failures are in the fallback half. Evaluation-only, outside the freeze |
 | **`R-D089-1`** — general non-paper-keyed completeness specification | already registered there by D-089; its own wave, not a task |
 
 ### Carried forward OPEN, and not closed by the freeze
 
 - **F-147** — registered and deliberately **UNCHARTERED**. Escalate only.
-- **F-174 node 2** — the Chunk D red in the primary checkout. **Cannot be a code regression**
-  (the commit range proves it); the resolution-DB lever is **excluded**; the lever is **unknown**.
-- **F-172** — `g11_evidence.py check` certifies the lifecycle half of G11 and rule 10 not at all.
-  Deferred for comparability; **a phase boundary is the right moment and this is one.**
+- ~~**F-174 node 2**~~ — **EXPLAINED, `ORCH-721`.** Not a code regression (unchanged), and the
+  lever is `.env`: a worktree at the identical SHA is **green**, the primary is **red**, and adding
+  only `.env` to the clean worktree reproduces it. Two **independently sufficient** single keys,
+  `LLM_PROVIDER` and `PATHBANK_DB_*`. **The earlier "resolution-DB excluded" was a confounded
+  experiment** — the second lever was set in both arms. **Residual:** the lever set is not proven
+  complete for the primary checkout.
+- ~~**F-172**~~ — **CHECKER HALF DONE, `ORCH-721`.** `check` now always prints a measured-tree
+  coverage audit; enforcement is opt-in via four flags. Default verdict proven identical on
+  **5203/5203** committed artifacts. **Two residuals OPEN:** indirect pytest drivers are NOT
+  COVERED, and **3206** unpinned pytest reports are a standing backlog.
 
 ### The next session
 
