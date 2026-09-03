@@ -1,0 +1,367 @@
+T2PW: c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_research_mode_keeps_the_unmapped_candidate_and_does_not_block ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DBDC1A7950>
+
+    @pytest.mark.usefixtures("offline_mapping")
+    def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """A research run must come out with the pathway it went in with.
+    
+        The peripheral process here is unmapped, which is the normal state of a
+        genuinely novel enzyme rather than a defect. A strict run quarantines it --
+        ``test_the_app_reaches_quarantine_and_the_valid_core_reaches_review`` pins
+        that on the identical payload -- and a research run must not, because
+        research mode's whole contract is that findings annotate rather than block.
+        """
+    
+        # Enrichment runs BETWEEN mapping and the quarantine boundary, and the shared
+        # ``offline_mapping`` stub makes it a byte-for-byte copy. That collapses the
+        # pre-enrichment artifact (``final_mapped_db``) onto the post-enrichment one
+        # (``final_mapped_enriched``), so a comparison against either looks correct
+        # and the boundary assertion below would pin nothing about quarantine -- it
+        # would silently span every stage from mapping onwards. This override is
+        # local to this test, so no other node in this file sees it, and it does what
+        # the real Stage 7 does to an already-identified protein: attach the optional
+        # UniProt annotation under ``enrichment`` (see
+        # ``enrich_entities._enrich_payload_inner``) and nothing else. Fixed content,
+        # no clock and no network, so it is deterministic; it adds no reaction,
+        # removes none, renames nothing and touches no unidentified protein, so it is
+        # biologically inert -- and the two artifacts are now genuinely different
+        # objects, which is what makes the assertion below non-vacuous.
+        import t2pw.mapping.enrich_entities as enrich_entities  # noqa: PLC0415
+    
+        def _enrichment_that_annotates(
+            input_path: Any,
+            output_path: Any,
+            report_path: Any,
+            **_kwargs: Any,
+        ) -> Dict[str, Any]:
+            enriched = json.loads(Path(input_path).read_text(encoding="utf-8"))
+            for row in (enriched.get("entities") or {}).get("proteins") or []:
+                if not isinstance(row, dict):
+                    continue
+                # Exactly the real stage's own guard: a protein with no accession is
+                # not enriched, so the unidentified modifier this payload exists to
+                # exercise is left untouched.
+                accession = str((row.get("mapped_ids") or {}).get("uniprot") or "")
+                if not accession:
+                    continue
+                row.setdefault("enrichment", {}).setdefault("protein", {})["uniprot"] = {
+                    "status": "ok",
+                    "uniprot_id": accession,
+                    "provenance": {"source": "test_fixture", "query": accession},
+                }
+            report = {"summary": {"enrichment_annotated_for_test": True}}
+            Path(output_path).write_text(
+                json.dumps(enriched, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
+            Path(report_path).write_text(json.dumps(report, indent=2), encoding="utf-8")
+            return report
+    
+        monkeypatch.setattr(enrich_entities, "run_enrichment", _enrichment_that_annotates)
+    
+>       at = _run_post_pipeline_research(_payload_with_one_bad_peripheral())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_streamlit_quarantine_boundary.py:1068: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'biological_states': [{'name': 'cytosol', 'species': 'Homo sapiens', 'subcellular_location': 'cytosol'}], 'element_lo... 'name': 'Glutathione biosynthesis', 'organism': 'Homo sapiens', 'pathway_name': 'Glutathione biosynthesis', ...}, ...}
+
+    def _run_post_pipeline_research(payload: Dict[str, Any]):
+        """The same run, with the export-mode radio set to research.
+    
+        Set through the widget the operator uses, not by writing the derived
+        ``export_mode`` key, so the test exercises the same path a human does.
+        """
+    
+        _clear_artifacts()
+        at = _app_test().from_file(str(APP_PATH), default_timeout=APP_TIMEOUT)
+        at.run()
+        # Driven through the radio, not by writing the derived `export_mode` key:
+        # the widget is what an operator touches, and the app derives the mode from
+        # it on every rerun, so a written key would be overwritten anyway.
+        at.radio(key=KEY_EXPORT_MODE).set_value(RESEARCH_LABEL).run()
+        _seed_finished_pipeline(at, payload)
+        at.run()
+>       at.button(key=KEY_POST_PIPELINE).click().run()
+
+tests\test_streamlit_quarantine_boundary.py:1005: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Button(key='pwml_generate_btn', _value=True, label='Run audit and DB mapping')
+
+    def run(self, *, timeout: float | None = None) -> AppTest:
+        """Run the ``AppTest`` script which contains the element.
+    
+        Parameters
+        ----------
+        timeout
+            The maximum number of seconds to run the script. None means
+            use the AppTest's default.
+        """
+>       return self.root.run(timeout=timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py:179: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = {
+    0: SpecialBlock(
+        type='main',
+        children={
+            0: Title(tag='h1'),
+            1: Radio(ke...)
+        }
+    ),
+    1: SpecialBlock(
+        type='sidebar'
+    ),
+    2: SpecialBlock(
+        type='event'
+    )
+}
+
+    def run(self, *, timeout: float | None = None) -> AppTest:
+        """Run the script with updated widget values.
+    
+        Parameters
+        ----------
+        timeout
+            The maximum number of seconds to run the script. None means
+            use the AppTest's default.
+        """
+        assert self._runner is not None
+    
+        widget_states = self.get_widget_states()
+>       return self._runner._run(widget_states, timeout=timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py:2531: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = AppTest(
+    _script_path='C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\src\\t2pw\\app\\streamlit_app.py',
+...SpecialBlock(
+            type='sidebar'
+        ),
+        2: SpecialBlock(
+            type='event'
+        )
+    }
+)
+widget_state = widgets {
+  id: "$$ID-40bf5cf48b4e942a55417791802d766e-export_mode_radio"
+  string_value: "Research (relaxed)"
+}
+widge...e: false
+}
+widgets {
+  id: "$$ID-951266c70a83b565a08ea5a085821124-run_legacy_sbml_export_btn"
+  trigger_value: false
+}
+
+timeout = 120.0
+
+    def _run(
+        self,
+        widget_state: WidgetStates | None = None,
+        timeout: float | None = None,
+    ) -> AppTest:
+        """Run the script, and parse the output messages for querying
+        and interaction.
+    
+        Timeout is in seconds, or None to use the default timeout of the runner.
+        """
+        # Have to import the streamlit module itself so replacing st.secrets
+        # is visible to other modules.
+        import streamlit as st
+    
+        if timeout is None:
+            timeout = self.default_timeout
+    
+        # setup
+        mock_runtime = MagicMock(spec=Runtime)
+        mock_runtime.media_file_mgr = MediaFileManager(
+            MemoryMediaFileStorage("/mock/media")
+        )
+        mock_runtime.dataframe_source_mgr = DataframeSourceManager()
+        mock_runtime.cache_storage_manager = MemoryCacheStorageManager()
+        if self._bidi_component_manager is None:
+            bidi_component_manager = BidiComponentManager()
+            bidi_component_manager.discover_and_register_components(
+                start_file_watching=False
+            )
+            self._bidi_component_manager = bidi_component_manager
+        mock_runtime.bidi_component_registry = self._bidi_component_manager
+        Runtime._instance = mock_runtime
+        script_cache = ScriptCache()
+        # Reset to ensure st.navigation works correctly regardless of prior test state.
+        PagesManager.uses_pages_directory = None
+        pages_manager = PagesManager(
+            self._script_path, script_cache, setup_watcher=False
+        )
+    
+        saved_secrets: Secrets = st.secrets
+        # Only modify global secrets stuff if we have been given secrets
+        if self.secrets:
+            new_secrets = Secrets()
+            new_secrets._secrets = self.secrets
+            st.secrets = new_secrets
+    
+        script_runner = LocalScriptRunner(
+            self._script_path,
+            self.session_state,
+            pages_manager,
+            args=self.args,
+            kwargs=self.kwargs,
+        )
+    
+        # Register any files from FileUploader widgets with the file manager
+        self._register_uploaded_files(script_runner)
+    
+        with patch_config_options({"global.appTest": True}):
+>           self._tree = script_runner.run(
+                widget_state, self.query_params, timeout, self._page_hash
+            )
+
+.venv\Lib\site-packages\streamlit\testing\v1\app_test.py:407: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = LocalScriptRunner(forward_msg_queue=<streamlit.runtime.forward_msg_queue.ForwardMsgQueue object at 0x000001DBF8881F30>...codex"
+  installed_agents: "copilot"
+}
+}, {}, {'client_state': page_script_hash: "fdb5a5eb17aca2748e4874d75c908c0b"
+}])
+widget_state = widgets {
+  id: "$$ID-40bf5cf48b4e942a55417791802d766e-export_mode_radio"
+  string_value: "Research (relaxed)"
+}
+widge...e: false
+}
+widgets {
+  id: "$$ID-951266c70a83b565a08ea5a085821124-run_legacy_sbml_export_btn"
+  trigger_value: false
+}
+
+query_params = {}, timeout = 120.0, page_hash = ''
+
+    def run(
+        self,
+        widget_state: WidgetStates | None = None,
+        query_params: dict[str, Any] | None = None,
+        timeout: float = 3,
+        page_hash: str = "",
+    ) -> ElementTree:
+        """Run the script, and parse the output messages for querying
+        and interaction.
+    
+        Timeout is in seconds.
+        """
+        # TODO: save the query strings from the script run
+        query_string = ""
+        if query_params:
+            query_string = parse.urlencode(query_params, doseq=True)
+    
+        rerun_data = RerunData(
+            widget_states=widget_state,
+            query_string=query_string,
+            page_script_hash=page_hash,
+        )
+        self.request_rerun(rerun_data)
+        if not self._script_thread:
+            self.start()
+>       require_widgets_deltas(self, timeout)
+
+.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+runner = LocalScriptRunner(forward_msg_queue=<streamlit.runtime.forward_msg_queue.ForwardMsgQueue object at 0x000001DBF8881F30>...codex"
+  installed_agents: "copilot"
+}
+}, {}, {'client_state': page_script_hash: "fdb5a5eb17aca2748e4874d75c908c0b"
+}])
+timeout = 120.0
+
+    def require_widgets_deltas(runner: LocalScriptRunner, timeout: float = 3) -> None:
+        """Wait for the given ScriptRunner to emit a completion event. If the timeout
+        is reached, the runner will be shutdown and an error will be thrown.
+        """
+    
+        t0 = time.time()
+        while time.time() - t0 < timeout:
+            time.sleep(0.001)
+            if runner.script_stopped():
+                return
+    
+        # If we get here, the runner hasn't yet completed before our
+        # timeout. Create an error string for debugging.
+        err_string = f"AppTest script run timed out after {timeout}(s)"
+    
+        # Shutdown the runner before throwing an error, so that the script
+        # doesn't hang forever.
+        runner.request_stop()
+        runner.join()
+    
+>       raise RuntimeError(err_string)
+E       RuntimeError: AppTest script run timed out after 120.0(s)
+
+.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py:208: RuntimeError
+---------------------------- Captured stderr call -----------------------------
+2026-09-03 11:25:59.486 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.065 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.065 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.065 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.065 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.076 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.076 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.076 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.076 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.076 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.076 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.076 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.076 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.077 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.077 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.077 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.077 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.077 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.077 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:26:01.077 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:934 LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash, finish_reason=length, tools_sent=True) on attempt 1/3; retrying as a transient.
+WARNING  t2pw.llm.client:client.py:934 LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash, finish_reason=length, tools_sent=True) on attempt 2/3; retrying as a transient.
+ERROR    t2pw.llm.client:client.py:950 LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash, finish_reason=length, tools_sent=True) on 3 of 3 attempts; giving up and returning the empty response.
+=========================== short test summary info ===========================
+FAILED tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block
+1 failed in 151.20s (0:02:31)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ cb982dc20947b268f5592ba5b4ad72d9d9d8148b  [git, worktree dirty=True]
+label                   : f174-node2-traceback
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-721/06-f174-node2-traceback.pin.json tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block --basetemp=C:/t/orch721/bt02 --tb=long -q
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 423116 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1200 s
+duration                : 152.64 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  423128:python.exe
+descendants terminated  : 1  423128
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-721/06-f174-node2-traceback.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

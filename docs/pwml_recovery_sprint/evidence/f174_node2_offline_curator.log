@@ -1,0 +1,63 @@
+T2PW: c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_research_mode_keeps_the_unmapped_candidate_and_does_not_block ______
+tests\test_streamlit_quarantine_boundary.py:1109: in test_research_mode_keeps_the_unmapped_candidate_and_does_not_block
+    assert _before[_section] == _after[_section], f"{_section} moved pre-freeze"
+E   AssertionError: processes moved pre-freeze
+E   assert {'interaction...ansports': []} == {'interaction...ansports': []}
+E     
+E     Omitting 2 identical items, use -vv to show
+E     Differing items:
+E     {'reactions': [{'biological_state': 'cytosol', 'enzymes': [{'confidence': 1.0, 'entity': 'glutamate-cysteine ligase co...ymes': [], 'inputs': ['OPDA'], 'modifiers': [{'entity': 'OPR3', 'entity_type': 'protein', 'role': 'inhibitor'}], ...}]} != {'reactions': [{'biological_state': 'cytosol', 'enzymes': [{'confidence': 1.0, 'entity': 'glutamate-cysteine ligase co...ymes': [], 'inputs': ['OPDA'], 'modifiers': [{'entity': 'OPR3', 'entity_type': 'protein', 'role': 'inhibitor'}], ...}]}
+E     Use -v to get more diff
+---------------------------- Captured stderr call -----------------------------
+2026-09-03 11:29:24.134 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.689 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-09-03 11:29:25.690 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block
+1 failed in 5.37s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ cb982dc20947b268f5592ba5b4ad72d9d9d8148b  [git, worktree dirty=True]
+label                   : f174-node2-offline-curator
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-721/07-f174-node2-offline-curator.pin.json tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block --basetemp=C:/t/orch721/bt03 --tb=short -q
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 423572 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1200 s
+duration                : 6.94 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  413724:python.exe
+descendants terminated  : 1  413724
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-721/07-f174-node2-offline-curator.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -9010,3 +9010,253 @@ and both facts come from the same design decision.
 **F-171, F-172, F-173, F-174 and now F-175 are one lesson in five costumes:** a green signal whose
 scope nobody asked about. Here the signal was *"the diagnostics cannot go missing"* — true, and about
 a function the benchmark never invokes.
+
+---
+
+## F-174 — AMENDMENT, `ORCH-721`: node 2 is SOLVED. The lever is `.env`, there are TWO of them, and the experiment that "excluded" the resolution DB was confounded
+
+- **Registered amendment 2026-09-03 (`ORCH-721`)** · **Class: environment / working-tree
+  discrepancy, no production code implicated** · node 2 moves from **OPEN** to **EXPLAINED**
+- **Method:** a same-SHA A/B between the primary checkout and a worktree created at the identical
+  tip, then a single-key bisection of `.env` inside the worktree. Every arm ran through
+  `bounded_run.py` with a committed `.pin.json`; all arms cleanup-clean, survivors 0.
+
+### The measurement that settles it
+
+Same commit `cb982dc2`, same interpreter, same `T2PW_OFFLINE_CURATOR=1`, pin verdicts confirming
+each tree measured itself:
+
+| tree | result | evidence |
+|---|---|---|
+| primary checkout | **FAILED** `processes moved pre-freeze`, 5.00 s | `g11/ORCH-721/08` |
+| **worktree at the identical SHA** | **PASSED**, 3.73 s | `g11/ORCH-721/11` |
+| worktree **+ the primary's `.env`** | **FAILED**, identical assertion, 4.88 s | `g11/ORCH-721/13` |
+| worktree + the primary's **modified `streamlit_app.py`** | **PASSED**, 3.09 s | `g11/ORCH-721/12` |
+| worktree, clean (control re-run) | **PASSED**, 3.04 s | `g11/ORCH-721/14` |
+
+**`.env` alone, dropped into an otherwise clean worktree, reproduces the exact failure.** The
+uncommitted `streamlit_app.py` modification — the one source difference between the two trees, and
+the obvious suspect — is **NOT** a lever.
+
+### Two INDEPENDENT single-key levers, and why the earlier A/B could not see them
+
+Bisecting `.env` by key group, then to single keys, in the worktree:
+
+| `.env` content | result |
+|---|---|
+| only `LLM_PROVIDER` | **FAILED** 1.75 s |
+| only `PATHBANK_DB_*` | **FAILED** 5.02 s |
+| only `PATHBANK_ID_SOURCE` | passed |
+| only `LLM_MAX_TOKENS` / `LLM_TEMPERATURE` / `LLM_MAX_RETRIES` | passed |
+| only `RAG_*` / `NCBI_*` / `OPENROUTER_*` / `LOCAL_*` | passed |
+
+**`LLM_PROVIDER` and `PATHBANK_DB_*` are each independently SUFFICIENT.** That is exactly why the
+earlier arm reported *"red with the resolution DB configured and red with it deconfigured"* and
+concluded the DB was excluded: the deconfigured arm still had `LLM_PROVIDER` set, which is
+sufficient on its own. **The DB was never excluded — it was masked.**
+
+> **A one-variable A/B cannot exclude a cause when a second sufficient cause is held fixed in both
+> arms.** The prior conclusion was not carelessly drawn; it was drawn from an experiment whose design
+> could not have distinguished the two. This is the transferable half.
+
+### The second failure mode was the same root cause wearing a clock
+
+The first primary-checkout run of this test in `ORCH-721` failed with
+`RuntimeError: AppTest script run timed out after 120.0(s)` after **151 s**, not with the registered
+assertion. Its captured log names the reason:
+
+```
+LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash,
+finish_reason=length) on attempt 1/3 ... 2/3 ... 3 of 3; giving up
+```
+
+**The test made live LLM network calls.** `TEST_MATRIX` § 0 mandates `T2PW_OFFLINE_CURATOR=1` on TEST
+and GATE jobs and it had not been set. With it set the same test fails in **5.37 s** with the
+registered assertion. **Both symptoms are one cause: `.env` reaching a test that must not read it.**
+A worktree carries no `.env`, so the curator is offline there by accident rather than by policy — the
+same accident `pathway_curator`'s own docstring warns about, *"silent, environment-dependent, and
+stops being a no-op the moment the provider starts answering."*
+
+### What is NOT claimed
+
+- **The lever set is not proven COMPLETE for the primary checkout.** Neutralising both keys there
+  (`LLM_PROVIDER=local`/`""`, `PATHBANK_DB_HOST`/`_USER` empty) leaves the test **red**
+  (`g11/ORCH-721/27`, `/28`). Empty string is not a valid disable for `LLM_PROVIDER`, and the primary
+  additionally carries modified caches, `outputs/`, `out/` and `tmp/`. **At least one further
+  independent lever exists in the primary's untracked state and is NOT identified.** The worktree
+  A/B is the authoritative isolation; the primary neutralisation is not.
+- **This is not a production defect and no production code is implicated.** It is a test that reads
+  ambient environment it should pin.
+- **Node 1 is unchanged** and its mechanism was always correct.
+
+### What would close it fully
+
+Make the four AppTest boundary files pin the environment they need rather than inherit it —
+`T2PW_OFFLINE_CURATOR`, `LLM_PROVIDER` and the `PATHBANK_DB_*` set — inside the fixture, so the gate
+means the same thing in every tree. **Not chartered here:** it edits `tests/`, which is a gate
+surface, and belongs on its own card with a reviewer.
+
+---
+
+## F-176 — the claim that rejected-RAG evidence is unavailable to offline batch evaluation is REFUTED, and the real defect is a stale reason string that made the instrument lie about itself
+
+- **Severity LOW as a data gap (there is none), MEDIUM as a claims-hygiene problem** ·
+  **Class: evaluation-instrument defect, no production behaviour wrong** ·
+  **Registered 2026-09-03 (`ORCH-721`)**
+- **Registered against a claim, not in support of one.** The wave prompt asked for F-176 to be
+  registered as *"`AdmissionReport.rejected` is not persisted by the batch driver, so a previously
+  rejected RAG candidate cannot later be checked for reintroduction"*, and instructed that the claim
+  be verified first rather than copied. **It was verified. It is false in every one of its four
+  parts.**
+
+### The measurement
+
+`evidence/f176_admission_persistence_probe.py`, read-only over T-109's immutable artifacts
+(`g11/ORCH-721/04`, log `evidence/f176_admission_probe.log`). **No re-score: no acceptance verdict is
+produced and T-109's disposition is untouched.**
+
+| the claim | the measurement |
+|---|---|
+| the batch driver does not persist it | **`driver.py:1472` writes `rag_admission_report.json`.** 181 exist across archived runs; **19 of T-109's 20 legs carry one** |
+| the artifact lacks the rejected set | **1,947 rejected rows** across those 19 legs, 49–200 per leg |
+| the fields the check needs are absent | `inputs`, `outputs`, `reversible`, `gap_id`, `name`, `reasons`, `evidence`, `source_paper` are populated on **100 %** of rows; `enzymes` is partial, correctly — not every reaction names one |
+| the evaluator cannot reach a verdict | **`acceptance.py:1372` loads it and `:1384` passes it.** A/B over 19 legs: **applicable 19/19 with the on-disk artifact, 0/19 without it** |
+
+### The real defect, stated narrowly
+
+**The `inapplicable_reason` string is a lie about the system, and it is the string a human reads.**
+`semantic.py:1244` still says *"AdmissionReport.rejected is not written to disk by the batch driver;
+without it a reintroduced claim is undetectable."* That sentence was true when written and has not
+been true since `_add_identity_artifacts` was added — whose own docstring at `driver.py:1420`
+describes the gap in the **past tense**, as the reason the artifact is now persisted.
+
+It reaches readers because the **runtime** release record carries it. `semantic_check_evaluability`
+is built at `strict_quarantine.py:2710`, inside the pipeline, where the report has not yet been
+written to disk and is not passed in — so the runtime record says `applicable: False` **on a leg
+whose own directory contains the artifact with 101 rejected rows**. A prior investigation read that
+runtime field and reported the check unevaluable in batch. **The runtime record and the offline
+scorer disagree, and only the offline one is the evaluator.**
+
+### What the check actually FOUND, once evaluated
+
+**17 PASSED, 2 FAILED** over 19 gold legs — the first time this check has ever returned a verdict on
+a benchmark corpus. Both failures are on `PMC12421875`.
+
+**Neither is evidence that a rejected claim reached an export**, and the reason is F-177: both legs
+are `scope_conflict`, terminated at Stage 1, and hold **no `final_mapped.json` and no PWML**. The
+evaluator scored them against `merged_payload.json` — pre-mapping, pre-quarantine. Split by payload
+source: **canonical 0 failures, fallback 2.** The check's own reason string says *"present in the
+**exported** payload"*; on those legs there is no export.
+
+### Classification and disposition
+
+**Evaluation-instrument defect.** No production change is warranted, none is proposed, and D-090 is
+not engaged. The fix is to correct `semantic.py:1244`'s sentence and decide whether the runtime
+record should carry an evaluability claim it is structurally unable to make. **Both touch frozen
+production files, so both are ESCALATED rather than chartered here.**
+
+> **The lesson is F-172's in a sixth costume.** There the checker's name was read as its scope. Here
+> a reason string outlived the condition it described, was propagated into a machine-readable
+> production field, and was then read back as a measurement. **A cached explanation of an absence is
+> not a test for that absence.**
+
+---
+
+## F-177 — the semantic corpus tally mixes canonical payloads with pre-quarantine drafts, and the check reason strings say "exported payload" for both
+
+- **Severity MEDIUM as a measurement-integrity defect** · **Class: evaluation-instrument defect** ·
+  **Registered 2026-09-03 (`ORCH-721`)**
+- **Found by** the Lead Orchestrator while verifying F-176, from the same probe.
+
+### The measurement
+
+`acceptance._PAYLOAD_FILES` is `("final_mapped.json", "merged_payload.json")` and
+`_first_existing` falls back silently. Across T-109's 19 scored legs:
+
+- **10 legs** scored against `final_mapped.json` — the canonical, gate-bound, export-eligible payload;
+- **9 legs** scored against `merged_payload.json` — **pre-mapping and pre-quarantine**, belonging to
+  legs that produced no export at all.
+
+Every per-check corpus number published for a run is currently the **sum of those two populations**,
+and the split is not recorded anywhere in the score output. Per-check, ARM A, T-109:
+
+| check | canonical (10) | fallback (9) |
+|---|---|---|
+| `requested_pathway_anchors_present` | 5 pass / 5 fail | 7 pass / 2 fail |
+| `reaction_source_carrier_present` | 10 pass | 9 pass |
+| `retained_reactions_match_supported_signatures` | 2 pass / **8 unevaluable** | **9 unevaluable** |
+| `organism_compatible` | 10 pass | 9 pass |
+| `no_real_id_or_name_conflict` | 7 pass / 3 fail | 3 pass / 6 fail |
+| `no_rejected_rag_reaction_reintroduced` | **10 pass / 0 fail** | 7 pass / **2 fail** |
+| `minimum_connected_core` | 9 pass / 1 fail | 9 pass |
+| `placeholder_identities_distinguished` | 9 pass / 1 fail | 9 pass |
+
+**Two thirds of the `no_real_id_or_name_conflict` failures and BOTH RAG-reintroduction failures sit
+in the fallback population.** A reader given the summed column would conclude that rejected RAG
+claims reach exports. **Zero do.**
+
+### Why the fallback is right and the LABEL is wrong
+
+The fallback itself is correct and deliberate: `_add_identity_artifacts` exists precisely so a leg
+that died before mapping still stores something an audit can read, and "the file cannot answer the
+question" was the defect it fixed. **What is missing is that the answer never says which file
+answered it.** Several check reason strings then assert `"the exported payload"` regardless.
+
+### Disposition
+
+**Evaluation-only and outside the freeze.** The fix is to record `payload_source` beside every
+semantic verdict and to report the two populations separately — `acceptance.py` already computes
+`leg.payload_source` at `:1370` and simply does not carry it into the tally. **Not chartered here.**
+`evidence/f176_admission_persistence_probe.py` prints the split today and is the interim instrument.
+
+---
+
+## F-175 — AMENDMENT, `ORCH-721`: the writer DOES run on the batch path. What is missing is one filename in a hand-off tuple
+
+- **Registered amendment 2026-09-03 (`ORCH-721`)** · the finding **stands**; its stated **mechanism
+  is corrected**, and the fix is far smaller than registered.
+
+### What the finding got right
+
+**`coverage_diagnostics.json` exists in zero benchmark legs.** Re-measured this wave:
+`find runs runs_verify -name coverage_diagnostics.json | wc -l` = **0**. Unchanged and confirmed.
+
+### What is corrected
+
+F-175 states *"the writer never runs"* on the batch path. **It runs.** The batch driver drives the
+Streamlit app, which calls `write_quarantine_artifacts`, and the proof is in the corpus the finding
+itself cites: **10 of T-109's legs carry `quarantine_report.json`**, a file only that function
+writes. A writer that never ran could not have produced them.
+
+**The break is the hand-off, and it is deliberate at one end:**
+
+```python
+# strict_quarantine.py, write_quarantine_artifacts
+COVERAGE_DIAGNOSTICS_FILENAME: _d088_diagnostics_document(result.coverage),   # written to disk
+...
+# The RETURNED map stays the four-name set two unowned pinned consumers assert by equality
+if filename != COVERAGE_DIAGNOSTICS_FILENAME:
+    written[filename] = str(path)
+```
+
+The diagnostics **are** written to the app's `outputs/` directory and then **excluded from the
+returned map** — on purpose, because two pinned consumers assert that map by equality.
+`driver._add_identity_artifacts` carries exactly the four names it finds in that map, so the fifth
+file is left in `outputs/`, which the next pipeline run clears.
+
+### What this changes about the fix
+
+Not "call `write_quarantine_artifacts` from the batch path" — it is already reached. The change is
+to carry a fifth filename into the leg directory, resolving its path as a sibling of
+`COVERAGE_REPORT_FILENAME` rather than from the map. That is **one tuple entry and one path join in
+`src/t2pw/batch/driver.py`**, which is FROZEN under D-090.
+
+**ESCALATED, not chartered.** The change is plausibly observability-only — `out` is the write-artifacts
+payload and no runtime decision reads it — but `driver.py` is inside the freeze, and the wave order
+requires that an apparently observability-only edit to a frozen module be analysed as a potential
+unfreeze and ruled on rather than argued into place by its author. **It also cannot be proved to the
+required standard without a real benchmark-style leg**, which is a live-LLM job this wave did not
+run. The reviewer standard for F-175 demands the artifact appear in a real leg directory; a unit test
+of the tuple would be C-116's mistake a second time.
+
+---

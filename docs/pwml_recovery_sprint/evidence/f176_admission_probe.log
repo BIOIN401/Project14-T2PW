@@ -1,0 +1,426 @@
+MEASURED_TREE t2pw = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+gold cases = 10
+
+==============================================================================
+RUN = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052
+==============================================================================
+
+  PMC12096016/research
+    payload            : yes
+    admission on disk  : True  rejected_rows=180  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12096016\research\rag_admission_report.json
+    field coverage     : {'inputs': 180, 'outputs': 180, 'enzymes': 104, 'reversible': 180, 'gap_id': 180, 'name': 180, 'reasons': 180, 'evidence': 180, 'source_paper': 180}
+    payload source     : final_mapped.json  (canonical)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      FAILED            FAILED
+          finding: {"missing_anchor": "enterobactin", "paper_says": "Enterobactin is a catecholate siderophore with extraordinarily high affinity for ferric iron"}
+          finding: {"missing_anchor": "enterobactin biosynthesis", "paper_says": "inhibition of EntB isochorismatase therefore would target the committed step of the enterobactin biosynthetic pathway"}
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            PASSED            PASSED
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 FAILED            FAILED
+          finding: {"required": 4, "observed": 3, "n_reactions": 3, "n_components": 1, "isolated_reactions": 0, "reason": "reactions do not join into one chain through shared non-cofactor metabolites"}
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12096016/strict
+    payload            : yes
+    admission on disk  : True  rejected_rows=101  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12096016\strict\rag_admission_report.json
+    field coverage     : {'inputs': 101, 'outputs': 101, 'enzymes': 83, 'reversible': 101, 'gap_id': 101, 'name': 101, 'reasons': 101, 'evidence': 101, 'source_paper': 101}
+    payload source     : final_mapped.json  (canonical)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            PASSED            PASSED
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12180156/research
+    payload            : yes
+    admission on disk  : True  rejected_rows=63  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12180156\research\rag_admission_report.json
+    field coverage     : {'inputs': 63, 'outputs': 63, 'enzymes': 30, 'reversible': 63, 'gap_id': 63, 'name': 63, 'reasons': 63, 'evidence': 63, 'source_paper': 63}
+    payload source     : merged_payload.json  (fallback)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            PASSED            PASSED
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12180156/strict
+    payload            : yes
+    admission on disk  : True  rejected_rows=66  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12180156\strict\rag_admission_report.json
+    field coverage     : {'inputs': 66, 'outputs': 66, 'enzymes': 33, 'reversible': 66, 'gap_id': 66, 'name': 66, 'reasons': 66, 'evidence': 66, 'source_paper': 66}
+    payload source     : final_mapped.json  (canonical)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            PASSED            PASSED
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12312563/research
+    payload            : yes
+    admission on disk  : True  rejected_rows=64  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12312563\research\rag_admission_report.json
+    field coverage     : {'inputs': 64, 'outputs': 64, 'enzymes': 48, 'reversible': 64, 'gap_id': 64, 'name': 64, 'reasons': 64, 'evidence': 64, 'source_paper': 64}
+    payload source     : merged_payload.json  (fallback)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            FAILED            FAILED
+          finding: {"pointer": "/entities/compounds/0", "name": "ThDP", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "cofactor_as_protein", "reason": "The highest-frequency non-protein token in the paper (~30 occurrence
+          finding: {"pointer": "/entities/compounds/4", "name": "intermediate I", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "Transient covalent enzyme-bound adducts, not free metaboli
+          finding: {"pointer": "/entities/compounds/5", "name": "intermediate II", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "Transient covalent enzyme-bound adducts, not free metabol
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12312563/strict
+    payload            : yes
+    admission on disk  : True  rejected_rows=57  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12312563\strict\rag_admission_report.json
+    field coverage     : {'inputs': 57, 'outputs': 57, 'enzymes': 57, 'reversible': 57, 'gap_id': 57, 'name': 57, 'reasons': 57, 'evidence': 57, 'source_paper': 57}
+    payload source     : merged_payload.json  (fallback)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            FAILED            FAILED
+          finding: {"pointer": "/entities/compounds/0", "name": "thiamine diphosphate", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "cofactor_as_protein", "reason": "The highest-frequency non-protein token in the paper
+          finding: {"pointer": "/entities/compounds/7", "name": "intermediate I", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "Transient covalent enzyme-bound adducts, not free metaboli
+          finding: {"pointer": "/entities/compounds/8", "name": "intermediate II", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "Transient covalent enzyme-bound adducts, not free metabol
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12421875/research
+    payload            : yes
+    admission on disk  : True  rejected_rows=133  accepted_rows=1
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12421875\research\rag_admission_report.json
+    field coverage     : {'inputs': 133, 'outputs': 133, 'enzymes': 133, 'reversible': 133, 'gap_id': 133, 'name': 133, 'reasons': 133, 'evidence': 133, 'source_paper': 133}
+    payload source     : merged_payload.json  (fallback)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      FAILED            FAILED
+          finding: {"missing_anchor": "menaquinone biosynthesis", "paper_says": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            PASSED            PASSED
+      no_rejected_rag_reaction_reintroduced  FAILED            UNEVALUABLE
+          finding: {"pointer": "/processes/reactions/9", "name": "demethylmenaquinone (DMK) production", "claim_key": "dhna+prenyl diphosphate=>demethylmenaquinone dmk|mena|0", "rejected_for": ["candidate_type_cannot_fill_gap: gap gap-miss
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12421875/strict
+    payload            : yes
+    admission on disk  : True  rejected_rows=153  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12421875\strict\rag_admission_report.json
+    field coverage     : {'inputs': 153, 'outputs': 153, 'enzymes': 81, 'reversible': 153, 'gap_id': 153, 'name': 153, 'reasons': 153, 'evidence': 153, 'source_paper': 153}
+    payload source     : merged_payload.json  (fallback)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            PASSED            PASSED
+      no_rejected_rag_reaction_reintroduced  FAILED            UNEVALUABLE
+          finding: {"pointer": "/processes/reactions/5", "name": "MenD reaction", "claim_key": "chorismate=>dhna|mend+menf|0", "rejected_for": ["evidence_states_no_reaction_relation: the span names the participants but asserts no reaction 
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12444477/research
+    payload            : NO
+    admission on disk  : False  rejected_rows=None  accepted_rows=None
+    semantic           : NOT EVALUATED -- the run produced no payload to score
+
+  PMC12444477/strict
+    payload            : yes
+    admission on disk  : True  rejected_rows=104  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12444477\strict\rag_admission_report.json
+    field coverage     : {'inputs': 104, 'outputs': 104, 'enzymes': 84, 'reversible': 104, 'gap_id': 104, 'name': 104, 'reasons': 104, 'evidence': 104, 'source_paper': 104}
+    payload source     : final_mapped.json  (canonical)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            FAILED            FAILED
+          finding: {"pointer": "/entities/compounds/5", "name": "tetra-acylated disaccharide intermediate", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "A prose description of an unname
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   FAILED            FAILED
+          finding: {"pointer": "/entities/protein_complexes/7", "name": "LpxL", "kind": "unknown_backed_protein_not_acceptable", "reason": "this case tolerates Unknown-backed rows only for the entities it names one by one; 'LpxL' is not on
+          finding: {"pointer": "/entities/protein_complexes/8", "name": "LpxM", "kind": "unknown_backed_protein_not_acceptable", "reason": "this case tolerates Unknown-backed rows only for the entities it names one by one; 'LpxM' is not on
+
+  PMC12452463/research
+    payload            : yes
+    admission on disk  : True  rejected_rows=200  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12452463\research\rag_admission_report.json
+    field coverage     : {'inputs': 200, 'outputs': 200, 'enzymes': 190, 'reversible': 200, 'gap_id': 200, 'name': 200, 'reasons': 200, 'evidence': 200, 'source_paper': 200}
+    payload source     : final_mapped.json  (canonical)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      FAILED            FAILED
+          finding: {"missing_anchor": "ent operon", "paper_says": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"}
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            FAILED            FAILED
+          finding: {"pointer": "/entities/protein_complexes/0", "name": "enterobactin synthase complex", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "heading_or_prose", "reason": "A complex name explicitly denoting thr
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12452463/strict
+    payload            : yes
+    admission on disk  : True  rejected_rows=200  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12452463\strict\rag_admission_report.json
+    field coverage     : {'inputs': 200, 'outputs': 200, 'enzymes': 200, 'reversible': 200, 'gap_id': 200, 'name': 200, 'reasons': 200, 'evidence': 200, 'source_paper': 200}
+    payload source     : final_mapped.json  (canonical)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      FAILED            FAILED
+          finding: {"missing_anchor": "ent operon", "paper_says": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"}
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            PASSED            PASSED
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12657337/research
+    payload            : yes
+    admission on disk  : True  rejected_rows=200  accepted_rows=2
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12657337\research\rag_admission_report.json
+    field coverage     : {'inputs': 200, 'outputs': 200, 'enzymes': 4, 'reversible': 200, 'gap_id': 200, 'name': 200, 'reasons': 200, 'evidence': 200, 'source_paper': 200}
+    payload source     : merged_payload.json  (fallback)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      FAILED            FAILED
+          finding: {"missing_anchor": "menaquinone biosynthesis", "paper_says": "The key genes involved in menaquinone biosynthesis, including MenA and UbiE and their variants"}
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            FAILED            FAILED
+          finding: {"pointer": "/entities/compounds/9", "name": "SAM", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "cofactor_as_protein", "reason": "Methyl-donor cofactors named only in the figure legend; never protein
+          finding: {"pointer": "/entities/compounds/10", "name": "SAH", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "cofactor_as_protein", "reason": "Methyl-donor cofactors named only in the figure legend; never protei
+          finding: {"pointer": "/entities/proteins/3", "name": "BsHepPPS", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "strain_or_construct", "reason": "Author-coined organism-prefix labels. They must normalise to base
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12657337/strict
+    payload            : yes
+    admission on disk  : True  rejected_rows=114  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12657337\strict\rag_admission_report.json
+    field coverage     : {'inputs': 114, 'outputs': 114, 'enzymes': 2, 'reversible': 114, 'gap_id': 114, 'name': 114, 'reasons': 114, 'evidence': 114, 'source_paper': 114}
+    payload source     : merged_payload.json  (fallback)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            FAILED            FAILED
+          finding: {"pointer": "/entities/proteins/0", "name": "EcMenA", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "strain_or_construct", "reason": "Author-coined organism-prefix labels. They must normalise to base s
+          finding: {"pointer": "/entities/proteins/1", "name": "BsHepPPS", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "strain_or_construct", "reason": "Author-coined organism-prefix labels. They must normalise to base
+          finding: {"pointer": "/entities/proteins/2", "name": "BsUbiE", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "strain_or_construct", "reason": "Author-coined organism-prefix labels. They must normalise to base s
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12782028/research
+    payload            : yes
+    admission on disk  : True  rejected_rows=19  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12782028\research\rag_admission_report.json
+    field coverage     : {'inputs': 19, 'outputs': 19, 'enzymes': 1, 'reversible': 19, 'gap_id': 19, 'name': 19, 'reasons': 19, 'evidence': 19, 'source_paper': 19}
+    payload source     : final_mapped.json  (canonical)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      FAILED            FAILED
+          finding: {"missing_anchor": "mevalonate pathway", "paper_says": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"}
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            PASSED            PASSED
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12782028/strict
+    payload            : yes
+    admission on disk  : True  rejected_rows=32  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12782028\strict\rag_admission_report.json
+    field coverage     : {'inputs': 32, 'outputs': 32, 'enzymes': 0, 'reversible': 32, 'gap_id': 32, 'name': 32, 'reasons': 32, 'evidence': 32, 'source_paper': 32}
+    payload source     : final_mapped.json  (canonical)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      FAILED            FAILED
+          finding: {"missing_anchor": "mevalonate pathway", "paper_says": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"}
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            PASSED            PASSED
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12856317/research
+    payload            : yes
+    admission on disk  : True  rejected_rows=49  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12856317\research\rag_admission_report.json
+    field coverage     : {'inputs': 49, 'outputs': 49, 'enzymes': 11, 'reversible': 49, 'gap_id': 49, 'name': 49, 'reasons': 49, 'evidence': 49, 'source_paper': 49}
+    payload source     : final_mapped.json  (canonical)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures PASSED            PASSED
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            PASSED            PASSED
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC12856317/strict
+    payload            : yes
+    admission on disk  : True  rejected_rows=68  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12856317\strict\rag_admission_report.json
+    field coverage     : {'inputs': 68, 'outputs': 68, 'enzymes': 36, 'reversible': 68, 'gap_id': 68, 'name': 68, 'reasons': 68, 'evidence': 68, 'source_paper': 68}
+    payload source     : final_mapped.json  (canonical)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures PASSED            PASSED
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            FAILED            FAILED
+          finding: {"pointer": "/entities/compounds/4", "name": "pyridoxal 5-phosphate", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "cofactor_as_protein", "reason": "The ALAS2 cofactor. Never a substrate, never a prod
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC13231680/research
+    payload            : yes
+    admission on disk  : True  rejected_rows=67  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC13231680\research\rag_admission_report.json
+    field coverage     : {'inputs': 67, 'outputs': 67, 'enzymes': 18, 'reversible': 67, 'gap_id': 67, 'name': 67, 'reasons': 67, 'evidence': 67, 'source_paper': 67}
+    payload source     : merged_payload.json  (fallback)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            FAILED            FAILED
+          finding: {"pointer": "/entities/compounds/0", "name": "lipid A", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "Same test. No lipid A intermediate occurs anywhere in this paper.
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+  PMC13231680/strict
+    payload            : yes
+    admission on disk  : True  rejected_rows=77  accepted_rows=0
+    admission path     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC13231680\strict\rag_admission_report.json
+    field coverage     : {'inputs': 77, 'outputs': 77, 'enzymes': 35, 'reversible': 77, 'gap_id': 77, 'name': 77, 'reasons': 77, 'evidence': 77, 'source_paper': 77}
+    payload source     : merged_payload.json  (fallback)
+    check                                    ARM A (on-disk)   ARM B (none)
+      requested_pathway_anchors_present      PASSED            PASSED
+      reaction_source_carrier_present        PASSED            PASSED
+      retained_reactions_match_supported_signatures UNEVALUABLE       UNEVALUABLE
+      organism_compatible                    PASSED            PASSED
+      no_real_id_or_name_conflict            FAILED            FAILED
+          finding: {"pointer": "/entities/compounds/0", "name": "lipid A", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "Same test. No lipid A intermediate occurs anywhere in this paper.
+      no_rejected_rag_reaction_reintroduced  PASSED            UNEVALUABLE
+      minimum_connected_core                 PASSED            PASSED
+      placeholder_identities_distinguished   PASSED            PASSED
+
+==============================================================================
+TOTALS
+==============================================================================
+  legs                       = 20
+  admission_present          = 19
+  admission_with_rejected    = 19
+  rejected_rows              = 1947
+  A_applicable               = 19
+  B_applicable               = 0
+  A_passed                   = 17
+  A_failed                   = 2
+  canonical_payload_legs     = 10
+  fallback_payload_legs      = 9
+  A_failed_on_canonical      = 0
+  A_failed_on_fallback       = 2
+
+  per-check verdict tally (ARM A), SPLIT BY PAYLOAD SOURCE.
+    canonical = final_mapped.json -- gate-bound and export-eligible.
+    fallback  = merged_payload.json -- PRE-mapping, PRE-quarantine, nothing exported.
+    These are NOT the same measurement. Do not sum them into one corpus number.
+    minimum_connected_core
+        canonical  {'FAILED': 1, 'PASSED': 9}
+        fallback   {'PASSED': 9}
+    no_real_id_or_name_conflict
+        canonical  {'PASSED': 7, 'FAILED': 3}
+        fallback   {'PASSED': 3, 'FAILED': 6}
+    no_rejected_rag_reaction_reintroduced
+        canonical  {'PASSED': 10}
+        fallback   {'PASSED': 7, 'FAILED': 2}
+    organism_compatible
+        canonical  {'PASSED': 10}
+        fallback   {'PASSED': 9}
+    placeholder_identities_distinguished
+        canonical  {'PASSED': 9, 'FAILED': 1}
+        fallback   {'PASSED': 9}
+    reaction_source_carrier_present
+        canonical  {'PASSED': 10}
+        fallback   {'PASSED': 9}
+    requested_pathway_anchors_present
+        canonical  {'FAILED': 5, 'PASSED': 5}
+        fallback   {'PASSED': 7, 'FAILED': 2}
+    retained_reactions_match_supported_signatures
+        canonical  {'UNEVALUABLE': 8, 'PASSED': 2}
+        fallback   {'UNEVALUABLE': 9}
+
+  RAG-REINTRODUCTION FAILURES BY PAYLOAD SOURCE: canonical=0  fallback=2
+    A failure on a FALLBACK payload is NOT evidence that a rejected claim reached an
+    export -- that leg produced none. It is a statement about a pre-quarantine draft,
+    and the check's own reason string says 'the exported payload', which is wrong there.
+
+  VERDICT ON THE F-176 CLAIM ('AdmissionReport.rejected is not persisted by the batch driver'):
+    REFUTED. The artifact is on disk in real benchmark legs, it carries
+    populated rejected rows, and the offline evaluator reaches a verdict with
+    it and cannot without it.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ cb982dc20947b268f5592ba5b4ad72d9d9d8148b  [git, worktree dirty=True]
+label                   : f176-admission-probe-final
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/f176_admission_persistence_probe.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW runs_verify/2026-09-02_2052
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 419888 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 2.00 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  418800:python.exe
+descendants terminated  : 1  418800
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-721/04-f176-admission-probe-final.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

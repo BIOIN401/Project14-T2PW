@@ -102,6 +102,40 @@ VALID_EXIT_REASONS = {
     "completed", "nonzero", "timeout", "cancelled", "infrastructure_failure",
 }
 
+#: Where ``pinned_pytest.py`` writes its measurement-tree verdicts, and where
+#: ``iter_reports`` deliberately does NOT look. ``pin`` does not match
+#: :data:`TASK_RE`, so the reports walk skips it -- a ``.pin.json`` sitting beside
+#: the cleanup reports fails the ``bounded_run`` schema with 22 spurious
+#: violations, which is why the two trees were separated in the first place
+#: (``TEST_MATRIX.md:145-148``).
+#:
+#: F-172 is the consequence nobody costed: that separation removed the verdicts
+#: from the only automated reader, and a grep across the repository found
+#: ``pin.json`` mentioned ONLY in the writer. The verdicts have been produced,
+#: committed, and never once consulted. What follows is the rule-10 reader that
+#: was never built -- deliberately a NEW enforcer rather than an attempt to make
+#: ``iter_reports`` walk ``pin/``, because that path was closed on purpose and
+#: reopening it re-creates the 22 spurious violations.
+PIN_DIRNAME = "pin"
+
+#: A token meaning "this job ran pytest". Catches ``-m pytest``,
+#: ``pinned_pytest.py`` and a bare ``pytest`` executable alike.
+#:
+#: SCOPE, STATED RATHER THAN ASSUMED -- this is the whole lesson of F-171..F-175.
+#: It detects pytest invoked DIRECTLY on the wrapper command line. It does NOT
+#: detect pytest spawned by an intermediate driver, because those spawn child
+#: processes whose verdicts, if any, the child writes. :func:`audit_rule10`
+#: reports those separately as NOT COVERED rather than scoring them clean.
+_PYTEST_TOKEN = "pytest"
+
+#: Drivers known to run pytest in a child process. Named so the audit can say
+#: "not covered" out loud instead of counting them compliant by silence.
+INDIRECT_PYTEST_DRIVERS = (
+    "chunk_d_gate.py", "chunk_d_gate_selftest.py", "baseline_suite.py",
+    "c102_goldreaders_split.py", "c107_battery.py", "c107_mutation_attack.py",
+    "c102_mutation_attack.py", "c108_own_mutations.py", "bench_acceptance.py",
+)
+
 #: Required minimum content, keyed by the name ``bounded_run.CleanupReport``
 #: actually emits. Verified against live wrapper output by ``selftest``.
 REQUIRED_FIELDS: Dict[str, Tuple[type, ...]] = {
@@ -238,13 +272,189 @@ def allocate(task: str, label: str, root: str = REPORTS_ROOT) -> str:
 # --------------------------------------------------------------------------- #
 
 
-def check_report(path: str) -> List[str]:
+def pin_verdict_path(report_path: str) -> str:
+    """Where the measurement-tree verdict for one report must live.
+
+    ``evidence/g11/<TASK>/<SEQ>-<label>.json``
+      -> ``evidence/g11/pin/<TASK>/<SEQ>-<label>.pin.json``
+    """
+
+    directory, name = os.path.split(os.path.abspath(report_path))
+    task = os.path.basename(directory)
+    root = os.path.dirname(directory)
+    stem = name[: -len(".json")] if name.endswith(".json") else name
+    return os.path.join(root, PIN_DIRNAME, task, stem + ".pin.json")
+
+
+def command_runs_pytest(command: Any) -> bool:
+    """Did this job invoke pytest DIRECTLY? See :data:`_PYTEST_TOKEN` for scope."""
+
+    if not isinstance(command, list):
+        return False
+    return any(_PYTEST_TOKEN in str(token) for token in command)
+
+
+def command_drives_pytest_indirectly(command: Any) -> Optional[str]:
+    """The driver name if this job runs pytest in a child process, else ``None``."""
+
+    if not isinstance(command, list):
+        return None
+    for token in command:
+        base = os.path.basename(str(token))
+        if base in INDIRECT_PYTEST_DRIVERS:
+            return base
+    return None
+
+
+def read_pin_verdict(path: str) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
+    """``(verdict, violation_code)``.
+
+    Absence is NOT an error here. The caller decides whether a missing verdict is
+    fatal, because rule 10 requires one for a GATE, G9 PROOF or BASELINE CAPTURE
+    and not for every ad-hoc pytest run -- and the cleanup report does not record
+    which of those a job was.
+    """
+
+    if not os.path.isfile(path):
+        return None, None
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (OSError, ValueError) as exc:
+        return None, "pin_verdict_unreadable:" + type(exc).__name__
+    if not isinstance(data, dict):
+        return None, "pin_verdict_not_an_object"
+    return data, None
+
+
+def check_pin_verdict(
+    report_path: str,
+    data: Dict[str, Any],
+    *,
+    require_pin: bool = False,
+    forbid_foreign_src: bool = False,
+    forbid_refused_pin: bool = False,
+) -> List[str]:
+    """RULE 7 (F-172) -- the measurement-tree half of G11, read at last.
+
+    EVERY RULE HERE IS OPT-IN, AND THE REASON IS A MEASUREMENT THAT REFUTED MY
+    FIRST DESIGN. I wrote this function intending ``refused`` to be unconditionally
+    fatal, on the reasoning that a verdict saying "I measured the wrong tree" is
+    affirmative bad evidence needing no judgement call, and on a count I had taken
+    of zero. **The count was wrong: ten committed verdicts say ``refused``, seven
+    of them with a committed sibling report.** And reading them refuted the
+    reasoning too -- most are DELIBERATE NEGATIVE CONTROLS:
+    ``H-010/05-refuse-primary-pin``, ``H-010/25-refuse-nested-worktree`` and
+    ``REV-070/03-pin-wrongtree`` / ``04-pin-nopythonpath`` /
+    ``05-pin-selection-outside`` are the cards that BUILT and REVIEWED
+    ``tree_pin`` proving each violation code fires. A refusal there is the test
+    passing.
+
+    So an unconditional rule would have marked the proof of the mechanism as a
+    breach of the mechanism -- F-171..F-175's exact shape, a rule whose scope
+    nobody asked about, committed by the very card registered to stop it. Every
+    class below is therefore reported always and fatal only on request, and
+    :func:`check_report`'s default verdict is provably byte-identical to base
+    (``f172_default_verdict_equivalence.py``).
+
+    THE CLASSES.
+
+    * **A REFUSED verdict** (``--forbid-refused-pin``). Affirmative evidence the
+      run measured a tree it was not supposed to -- unless it is a negative
+      control, and this checker cannot tell those apart from the artifact alone.
+    * **A MISSING verdict is opt-in** (``--require-pin``). Rule 10 mandates a
+      verdict for gates, G9 proofs and baseline captures, not for every pytest
+      process anyone ever launched, and the cleanup report cannot tell them apart.
+      Measured at registration: 3206 of 3700 pytest-invoking reports carry no
+      verdict, so making absence fatal by default would turn the whole committed
+      tree red and destroy the comparability F-163 protects. It is REPORTED
+      unconditionally instead, which is the half that was actually missing.
+    * **A foreign ``src`` on ``sys.path`` is opt-in** (``--forbid-foreign-src``)
+      and is the finding this rule exists to surface.
+      ``tree_pin.resolve_facts`` records ``foreign_src_entries`` under the comment
+      *"The trap, named explicitly"* -- and ``tree_pin.check`` then omits it from
+      the violation set, so ``refused`` stays ``false`` and the fact is inert.
+      **129 of 583 committed verdicts name the PRIMARY checkout's ``src``.**
+
+      That is a LATENT RISK, not proof of a wrong measurement, and the difference
+      is load-bearing: ``T2PW_FROM_WRONG_TREE`` IS enforced and is clean on all
+      129, so ``t2pw`` itself resolved correctly and only a sibling importable
+      could have come from the other tree. "129 runs measured the wrong tree"
+      would be a fabrication of exactly the kind F-172 is about.
+    """
+
+    bad: List[str] = []
+    if not command_runs_pytest(data.get("command")):
+        return bad
+    verdict, unreadable = read_pin_verdict(pin_verdict_path(report_path))
+    if unreadable:
+        return [unreadable]
+    if verdict is None:
+        if require_pin:
+            bad.append("pin_verdict_missing")
+        return bad
+    if forbid_refused_pin:
+        if verdict.get("refused") is not False:
+            bad.append("pin_verdict_refused:" + str(verdict.get("refused")))
+        violations = verdict.get("violations")
+        if violations:
+            bad.append("pin_verdict_violations:" + ",".join(str(v) for v in violations))
+    foreign = verdict.get("foreign_src_entries")
+    if foreign and forbid_foreign_src:
+        bad.append("pin_verdict_foreign_src:" + str(len(foreign)))
+    return bad
+
+
+def check_label_match(path: str, data: Dict[str, Any]) -> Optional[str]:
+    """RULE 8 (F-172, the smaller gap) -- filename label vs the report own label.
+
+    ``NAME_RE`` has always captured the label group and ``check_report`` has never
+    compared it to ``data["label"]``, so a report can be filed under a name that
+    does not describe the job it records and nothing notices. The registered
+    instance is ``09-d088-diagnostics-unpinned-superseded.json`` carrying
+    ``"label": "d088-diagnostics"`` AND a ``json_report_path`` still naming
+    ``03-d088-diagnostics.json``.
+
+    OPT-IN, and the measurement is why. 2535 of 5172 committed reports mismatch,
+    because ``g11_evidence.py next --label`` and ``bounded_run.py --label`` are
+    supplied separately and nothing ever tied them together. At that rate the
+    mismatch is the house style, not an anomaly, and defaulting it to fatal would
+    relabel normal practice as fraud. Enforced forward by flag; counted always.
+    """
+
+    match = NAME_RE.match(os.path.basename(path))
+    if not match:
+        return None
+    internal = data.get("label")
+    if not isinstance(internal, str) or not internal:
+        return None
+    if match.group(2) == internal:
+        return None
+    return "label_mismatch:" + match.group(2) + "!=" + internal
+
+
+def check_report(
+    path: str,
+    *,
+    require_pin: bool = False,
+    forbid_foreign_src: bool = False,
+    forbid_refused_pin: bool = False,
+    require_label_match: bool = False,
+) -> List[str]:
     """Return the violation codes for one report. Empty list means compliant.
 
     RULE 1: existence is tested here, on the artifact, with no reference to any
     exit code. When ``--json`` is unwritable ``bounded_run.main`` returns the
     *child's* real code, so an exit-code-based check would certify a job that
     wrote no report at all.
+
+    RULES 7 and 8 (F-172) are appended at the end. Their four keyword flags all
+    default to ``False``, so **the default verdict of this function is byte-for-byte
+    what it was before F-172** on every committed artifact -- deliberately, because
+    ``bounded_run.py``'s build hash appears in every G11 report and F-163 is the
+    standing reason not to break report comparability. What changed by default is
+    that ``check`` now PRINTS a rule-10 audit it previously could not have printed;
+    what changed under flags is that the audit can be made fatal.
     """
 
     bad: List[str] = []
@@ -303,6 +513,20 @@ def check_report(path: str) -> List[str]:
     for cred_name, pattern in CRED_PATTERNS:
         if pattern.search(raw):
             bad.append(f"possible_credential:{cred_name}")
+
+    # RULES 7 and 8 (F-172) -- the measurement-tree half of G11, and the label
+    # cross-check. See :func:`check_pin_verdict` for why each class is or is not
+    # gated behind a flag.
+    bad.extend(check_pin_verdict(
+        path, data,
+        require_pin=require_pin,
+        forbid_foreign_src=forbid_foreign_src,
+        forbid_refused_pin=forbid_refused_pin,
+    ))
+    if require_label_match:
+        mismatch = check_label_match(path, data)
+        if mismatch:
+            bad.append(mismatch)
     return bad
 
 
@@ -364,7 +588,115 @@ def resolve_selection(
     return selected, unmatched
 
 
-def check_many(paths: List[str], unmatched: Sequence[str] = ()) -> int:
+def audit_rule10(paths: Sequence[str]) -> Dict[str, Any]:
+    """Count what rule 10 coverage actually looks like across a selection.
+
+    THIS IS THE HALF F-172 SAYS WAS MISSING. The registered defect is not that
+    someone skipped a step carelessly -- it is that a deliberate structural
+    separation put the pin verdicts where the only automated reader could not see
+    them, and the remaining checker's clean report was then cited, by cards,
+    implementers, reviewers and the Lead, as covering a gate it had been
+    explicitly architected not to cover.
+
+    So this summary prints on EVERY ``check`` run, pass or fail, flags or no
+    flags. A reader can no longer take "0 non-compliant" as a statement about the
+    measured tree, because the line underneath it says in numbers how much of the
+    measured tree this selection actually evidences.
+    """
+
+    stats: Dict[str, Any] = {
+        "reports": len(paths), "direct_pytest": 0, "with_pin": 0, "without_pin": 0,
+        "pin_unreadable": 0, "pin_refused": 0, "pin_with_violations": 0,
+        "pin_with_foreign_src": 0, "label_mismatch": 0,
+        "indirect_drivers": {}, "foreign_src_tasks": {},
+    }
+    for path in paths:
+        if not path.endswith(".json") or not os.path.isfile(path):
+            continue
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except (OSError, ValueError):
+            continue
+        if not isinstance(data, dict) or data.get(RESERVED_KEY):
+            continue
+        if check_label_match(path, data):
+            stats["label_mismatch"] += 1
+        driver = command_drives_pytest_indirectly(data.get("command"))
+        if driver:
+            stats["indirect_drivers"][driver] = stats["indirect_drivers"].get(driver, 0) + 1
+        if not command_runs_pytest(data.get("command")):
+            continue
+        stats["direct_pytest"] += 1
+        verdict, unreadable = read_pin_verdict(pin_verdict_path(path))
+        if unreadable:
+            stats["pin_unreadable"] += 1
+            continue
+        if verdict is None:
+            stats["without_pin"] += 1
+            continue
+        stats["with_pin"] += 1
+        if verdict.get("refused") is not False:
+            stats["pin_refused"] += 1
+        if verdict.get("violations"):
+            stats["pin_with_violations"] += 1
+        if verdict.get("foreign_src_entries"):
+            stats["pin_with_foreign_src"] += 1
+            task = os.path.basename(os.path.dirname(os.path.abspath(path)))
+            stats["foreign_src_tasks"][task] = stats["foreign_src_tasks"].get(task, 0) + 1
+    return stats
+
+
+def print_rule10_audit(stats: Dict[str, Any]) -> None:
+    """Print the audit. Never silent: "0 of 0" is itself the answer to a question."""
+
+    print("\nG11 rule 10 -- MEASURED-TREE COVERAGE (F-172). Reported, not asserted.")
+    print(f"  reports inspected                 : {stats['reports']}")
+    print(f"  invoke pytest DIRECTLY            : {stats['direct_pytest']}")
+    print(f"    ...with a committed pin verdict : {stats['with_pin']}")
+    print(f"    ...with NO pin verdict          : {stats['without_pin']}"
+          "   <- uncertifiable under rule 10; fatal only with --require-pin")
+    if stats["pin_unreadable"]:
+        print(f"    ...pin unreadable               : {stats['pin_unreadable']}")
+    print(f"  pin says REFUSED                  : {stats['pin_refused']}"
+          "   <- fatal only with --forbid-refused-pin")
+    print(f"  pin carries violation codes       : {stats['pin_with_violations']}"
+          "   <- fatal only with --forbid-refused-pin")
+    if stats["pin_refused"]:
+        print("      NOTE: a refused verdict is NOT automatically a breach. H-010 and")
+        print("      REV-070 BUILT and REVIEWED tree_pin, and their refusals are the")
+        print("      negative controls proving each violation code fires. This checker")
+        print("      cannot tell a control from a breach, so it counts and never judges.")
+    print(f"  pin carries a FOREIGN src on path : {stats['pin_with_foreign_src']}"
+          "   <- fatal only with --forbid-foreign-src")
+    if stats["foreign_src_tasks"]:
+        top = sorted(stats["foreign_src_tasks"].items(), key=lambda kv: -kv[1])[:8]
+        print("      by task: " + ", ".join(f"{t}={n}" for t, n in top))
+        print("      NOTE: a foreign src entry is a LATENT risk, not proof of a wrong")
+        print("      measurement. T2PW_FROM_WRONG_TREE is enforced separately and is")
+        print("      what would prove one. tree_pin.resolve_facts records this field")
+        print("      and tree_pin.check omits it from the violation set, so `refused`")
+        print("      stays false and nothing has ever acted on it.")
+    print(f"  filename label != report label    : {stats['label_mismatch']}"
+          "   <- fatal only with --require-label-match")
+    if stats["indirect_drivers"]:
+        drivers = sorted(stats["indirect_drivers"].items(), key=lambda kv: -kv[1])
+        print("  NOT COVERED -- pytest run by an intermediate driver, whose child")
+        print("  processes write their own verdicts (or none). This checker cannot")
+        print("  see them and does not pretend to:")
+        for name, count in drivers:
+            print(f"      {name:<34} {count}")
+
+
+def check_many(
+    paths: List[str],
+    unmatched: Sequence[str] = (),
+    *,
+    require_pin: bool = False,
+    forbid_foreign_src: bool = False,
+    forbid_refused_pin: bool = False,
+    require_label_match: bool = False,
+) -> int:
     failures = 0
     for path in paths:
         if not path.endswith(".json"):
@@ -372,7 +704,13 @@ def check_many(paths: List[str], unmatched: Sequence[str] = ()) -> int:
             print(f"FAIL {path}\n     unexpected_artifact (only .json reports)")
             failures += 1
             continue
-        bad = check_report(path)
+        bad = check_report(
+            path,
+            require_pin=require_pin,
+            forbid_foreign_src=forbid_foreign_src,
+            forbid_refused_pin=forbid_refused_pin,
+            require_label_match=require_label_match,
+        )
         if bad:
             failures += 1
             print(f"FAIL {path}\n     " + "\n     ".join(bad))
@@ -383,6 +721,10 @@ def check_many(paths: List[str], unmatched: Sequence[str] = ()) -> int:
     print(f"\nG11 evidence: {len(paths)} artifact(s), {failures} non-compliant "
           f"(spec v{G11_SPEC_VERSION})"
           + (f"; {len(unmatched)} unmatched selector(s)" if unmatched else ""))
+    # UNCONDITIONAL. The whole of F-172 is that a clean count was being read as a
+    # claim about the measured tree; printing the coverage under every count is
+    # what makes that misreading impossible rather than merely discouraged.
+    print_rule10_audit(audit_rule10(paths))
     return 1 if failures or unmatched else 0
 
 
@@ -681,6 +1023,145 @@ def test_credential_scan_is_word_bounded_and_still_bites() -> None:
                 f"got {check_report(path)}")
 
 
+def _write_report(root: str, task: str, name: str, **overrides: Any) -> str:
+    """A minimal COMPLIANT cleanup report on disk, for the rule-7/8 tests."""
+
+    directory = os.path.join(root, task)
+    os.makedirs(directory, exist_ok=True)
+    label = overrides.pop("label", name.split("-", 1)[1][: -len(".json")])
+    data: Dict[str, Any] = {
+        "label": label, "command": ["python", "-m", "pytest", "tests/test_x.py"],
+        "cwd": root, "root_pid": 1, "isolation": "test",
+        "started_at": "2026-09-03T00:00:00Z", "finished_at": "2026-09-03T00:00:01Z",
+        "exit_reason": "completed", "exit_code": 0, "returned_code": 0,
+        "descendants_observed": [], "descendants_terminated": [],
+        "final_surviving_count": 0, "survivors": [], "cleanup_success": True,
+        "duration_seconds": 1.0, "timeout_seconds": 60,
+        "json_report_path": "", "json_report_written": False,
+        "json_report_error": "", "notes": [],
+    }
+    data.update(overrides)
+    path = os.path.join(directory, name)
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, indent=2)
+    return path
+
+
+def _write_pin(root: str, task: str, name: str, **fields: Any) -> str:
+    directory = os.path.join(root, PIN_DIRNAME, task)
+    os.makedirs(directory, exist_ok=True)
+    payload: Dict[str, Any] = {
+        "refused": False, "violations": [], "foreign_src_entries": [],
+    }
+    payload.update(fields)
+    path = os.path.join(directory, name)
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=2)
+    return path
+
+
+def test_rule10_pin_path_is_the_sibling_pin_tree() -> None:
+    """NEW CAPABILITY (F-172). The reader must look in ``pin/<TASK>/``, not beside
+    the report -- ``TEST_MATRIX:145-148`` records that a ``.pin.json`` next to the
+    cleanup reports fails the ``bounded_run`` schema with 22 spurious violations."""
+
+    got = pin_verdict_path(os.path.join("root", "g11", "C-999", "01-smoke.json"))
+    assert got == os.path.abspath(
+        os.path.join("root", "g11", PIN_DIRNAME, "C-999", "01-smoke.pin.json")
+    ), got
+
+
+def test_rule10_detects_pytest_directly_and_admits_what_it_cannot_see() -> None:
+    """NEW CAPABILITY (F-172). Direct detection bites; indirect drivers are named
+    as NOT COVERED rather than counted clean -- the whole lesson of F-171..F-175."""
+
+    assert command_runs_pytest(["py", "-m", "pytest", "tests/"])
+    assert command_runs_pytest(["py", "evidence/pinned_pytest.py", "tests/"])
+    assert not command_runs_pytest(["py", "evidence/chunk_d_gate.py", "run"])
+    assert command_drives_pytest_indirectly(
+        ["py", "docs/x/evidence/chunk_d_gate.py", "run"]) == "chunk_d_gate.py"
+    assert command_drives_pytest_indirectly(["py", "-m", "pytest"]) is None
+
+
+def test_rule10_and_label_rules_are_opt_in_and_bite_when_asked() -> None:
+    """NEW CAPABILITY (F-172), and the acceptance test for the design decision the
+    measurement forced. Each rule must be INERT by default -- 5196 committed
+    artifacts must keep their exact verdict -- and MUST fire under its own flag.
+
+    Both halves are asserted on the same fixture, because either alone is the bug:
+    inert-always is a checker that certifies nothing, and fatal-always would have
+    failed H-010's and REV-070's negative controls, which are refusals PROVING the
+    refusal mechanism works.
+    """
+
+    with tempfile.TemporaryDirectory(prefix="g11f172_") as root:
+        # (a) pytest command, NO pin verdict at all.
+        nopin = _write_report(root, "C-999", "01-nopin.json")
+        assert check_report(nopin) == [], check_report(nopin)
+        assert check_report(nopin, require_pin=True) == ["pin_verdict_missing"]
+
+        # (b) pytest command with a CLEAN pin -- silent under every flag.
+        clean = _write_report(root, "C-999", "02-clean.json")
+        _write_pin(root, "C-999", "02-clean.pin.json")
+        for kwargs in ({}, {"require_pin": True}, {"forbid_refused_pin": True},
+                       {"forbid_foreign_src": True}):
+            assert check_report(clean, **kwargs) == [], (kwargs, check_report(clean, **kwargs))
+
+        # (c) a REFUSED pin -- the H-010 / REV-070 negative-control shape.
+        refused = _write_report(root, "C-999", "03-refused.json")
+        _write_pin(root, "C-999", "03-refused.pin.json",
+                   refused=True, violations=["T2PW_FROM_WRONG_TREE"])
+        assert check_report(refused) == [], "a refusal must NOT be fatal by default"
+        flagged = check_report(refused, forbid_refused_pin=True)
+        assert "pin_verdict_refused:True" in flagged, flagged
+        assert "pin_verdict_violations:T2PW_FROM_WRONG_TREE" in flagged, flagged
+
+        # (d) a foreign src on the path -- recorded by tree_pin, never enforced by it.
+        foreign = _write_report(root, "C-999", "04-foreign.json")
+        _write_pin(root, "C-999", "04-foreign.pin.json",
+                   foreign_src_entries=["C:/other/tree/src"])
+        assert check_report(foreign) == []
+        assert check_report(foreign, forbid_foreign_src=True) == ["pin_verdict_foreign_src:1"]
+
+        # (e) filename label vs the report's own label.
+        skew = _write_report(root, "C-999", "05-alpha.json", label="beta")
+        assert check_report(skew) == []
+        assert check_report(skew, require_label_match=True) == ["label_mismatch:alpha!=beta"]
+
+        # (f) a NON-pytest command is untouched by rule 7 even under every flag.
+        other = _write_report(root, "C-999", "06-other.json",
+                              command=["py", "evidence/chunk_d_gate.py", "run"])
+        assert check_report(other, require_pin=True, forbid_refused_pin=True,
+                            forbid_foreign_src=True) == []
+
+        # (g) the audit counts what the flags would fail, and names the driver it
+        #     cannot see. A count that disagreed with the rules would be worse
+        #     than no count.
+        paths = iter_reports(root=root, task="C-999")
+        stats = audit_rule10(paths)
+        assert stats["direct_pytest"] == 5, stats
+        assert stats["with_pin"] == 3 and stats["without_pin"] == 2, stats
+        assert stats["pin_refused"] == 1 and stats["pin_with_violations"] == 1, stats
+        assert stats["pin_with_foreign_src"] == 1, stats
+        assert stats["label_mismatch"] == 1, stats
+        assert stats["indirect_drivers"] == {"chunk_d_gate.py": 1}, stats
+
+
+def test_rule10_unreadable_pin_is_a_violation_regardless_of_flags() -> None:
+    """NEW CAPABILITY (F-172). A verdict that exists and cannot be parsed is not the
+    same fact as one that is absent, and it is never evidence of anything -- so it
+    is the ONE class here that needs no flag. It also cannot fire on the committed
+    tree: all 583 verdicts parse."""
+
+    with tempfile.TemporaryDirectory(prefix="g11f172b_") as root:
+        path = _write_report(root, "C-999", "01-broken.json")
+        os.makedirs(os.path.join(root, PIN_DIRNAME, "C-999"), exist_ok=True)
+        with open(os.path.join(root, PIN_DIRNAME, "C-999", "01-broken.pin.json"),
+                  "w", encoding="utf-8") as fh:
+            fh.write("{not json")
+        assert check_report(path) == ["pin_verdict_unreadable:JSONDecodeError"]
+
+
 TESTS = [
     test_required_fields_present_in_real_wrapper_output,
     test_naming_scheme_cannot_collide,
@@ -689,6 +1170,10 @@ TESTS = [
     test_compliance_rules,
     test_credential_scan_is_word_bounded_and_still_bites,
     test_selector_resolution,
+    test_rule10_pin_path_is_the_sibling_pin_tree,
+    test_rule10_detects_pytest_directly_and_admits_what_it_cannot_see,
+    test_rule10_and_label_rules_are_opt_in_and_bite_when_asked,
+    test_rule10_unreadable_pin_is_a_violation_regardless_of_flags,
 ]
 
 
@@ -716,6 +1201,21 @@ def main(argv: Optional[List[str]] = None) -> int:
     chk.add_argument("--task", default=None,
                      help="ONE task selector; matching zero artifacts is an error")
     chk.add_argument("paths", nargs="*")
+    chk.add_argument("--require-pin", action="store_true",
+                     help="RULE 7 (F-172): a report whose command invokes pytest "
+                          "must have a committed .pin.json. Off by default because "
+                          "rule 10 mandates a verdict for gates, G9 proofs and "
+                          "baseline captures, not for every pytest run.")
+    chk.add_argument("--forbid-refused-pin", action="store_true",
+                     help="RULE 7 (F-172): fail a report whose pin verdict says "
+                          "refused. Off by default: several committed refusals are "
+                          "H-010/REV-070 negative controls proving refusal works.")
+    chk.add_argument("--forbid-foreign-src", action="store_true",
+                     help="RULE 7 (F-172): fail a report whose pin verdict records a "
+                          "src directory from another tree on sys.path.")
+    chk.add_argument("--require-label-match", action="store_true",
+                     help="RULE 8 (F-172): the filename label must equal the "
+                          "report's own label field.")
     sub.add_parser("selftest", help="prove this spec matches bounded_run.py")
     args = parser.parse_args(argv)
 
@@ -731,7 +1231,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
     if args.cmd == "selftest":
         return selftest()
-    return check_many(*resolve_selection(args.paths, args.task))
+    return check_many(
+        *resolve_selection(args.paths, args.task),
+        require_pin=args.require_pin,
+        forbid_foreign_src=args.forbid_foreign_src,
+        forbid_refused_pin=args.forbid_refused_pin,
+        require_label_match=args.require_label_match,
+    )
 
 
 if __name__ == "__main__":
