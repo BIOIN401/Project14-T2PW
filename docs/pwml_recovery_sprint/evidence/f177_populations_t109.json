@@ -1,0 +1,514 @@
+{
+  "legs_by_population": {
+    "canonical": [
+      "PMC12096016/research",
+      "PMC12096016/strict",
+      "PMC12180156/strict",
+      "PMC12444477/strict",
+      "PMC12452463/research",
+      "PMC12452463/strict",
+      "PMC12782028/research",
+      "PMC12782028/strict",
+      "PMC12856317/research",
+      "PMC12856317/strict"
+    ],
+    "fallback": [
+      "PMC12180156/research",
+      "PMC12312563/research",
+      "PMC12312563/strict",
+      "PMC12421875/research",
+      "PMC12421875/strict",
+      "PMC12657337/research",
+      "PMC12657337/strict",
+      "PMC13231680/research",
+      "PMC13231680/strict"
+    ],
+    "no_payload": [
+      "PMC12444477/research"
+    ]
+  },
+  "counts": {
+    "requested_pathway_anchors_present": {
+      "canonical": {
+        "passed": 5,
+        "failed": 5,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      },
+      "fallback": {
+        "passed": 7,
+        "failed": 2,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      }
+    },
+    "reaction_source_carrier_present": {
+      "canonical": {
+        "passed": 10,
+        "failed": 0,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      },
+      "fallback": {
+        "passed": 9,
+        "failed": 0,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      }
+    },
+    "retained_reactions_match_supported_signatures": {
+      "canonical": {
+        "passed": 2,
+        "failed": 0,
+        "inapplicable": 8,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      },
+      "fallback": {
+        "passed": 0,
+        "failed": 0,
+        "inapplicable": 9,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      }
+    },
+    "organism_compatible": {
+      "canonical": {
+        "passed": 10,
+        "failed": 0,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      },
+      "fallback": {
+        "passed": 9,
+        "failed": 0,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      }
+    },
+    "no_real_id_or_name_conflict": {
+      "canonical": {
+        "passed": 7,
+        "failed": 3,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      },
+      "fallback": {
+        "passed": 3,
+        "failed": 6,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      }
+    },
+    "no_rejected_rag_reaction_reintroduced": {
+      "canonical": {
+        "passed": 10,
+        "failed": 0,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      },
+      "fallback": {
+        "passed": 7,
+        "failed": 2,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      }
+    },
+    "minimum_connected_core": {
+      "canonical": {
+        "passed": 9,
+        "failed": 1,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      },
+      "fallback": {
+        "passed": 9,
+        "failed": 0,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      }
+    },
+    "placeholder_identities_distinguished": {
+      "canonical": {
+        "passed": 9,
+        "failed": 1,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      },
+      "fallback": {
+        "passed": 9,
+        "failed": 0,
+        "inapplicable": 0,
+        "artifact_missing": 0,
+        "artifact_malformed": 0
+      }
+    }
+  },
+  "failures": [
+    {
+      "check": "requested_pathway_anchors_present",
+      "population": "canonical",
+      "leg": "PMC12096016/research",
+      "findings": [
+        {
+          "missing_anchor": "enterobactin",
+          "paper_says": "Enterobactin is a catecholate siderophore with extraordinarily high affinity for ferric iron"
+        },
+        {
+          "missing_anchor": "enterobactin biosynthesis",
+          "paper_says": "inhibition of EntB isochorismatase therefore would target the committed step of the enterobactin biosynthetic pathway"
+        }
+      ]
+    },
+    {
+      "check": "minimum_connected_core",
+      "population": "canonical",
+      "leg": "PMC12096016/research",
+      "findings": [
+        {
+          "required": 4,
+          "observed": 3,
+          "n_reactions": 3,
+          "n_components": 1,
+          "isolated_reactions": 0,
+          "reason": "reactions do not join into one chain through shared non-cofactor metabolites"
+        }
+      ]
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "population": "fallback",
+      "leg": "PMC12312563/research",
+      "findings": [
+        {
+          "pointer": "/entities/compounds/0",
+          "name": "ThDP",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "cofactor_as_protein",
+          "reason": "The highest-frequency non-protein token in the paper (~30 occurrences) and grammatically adjacent to the enzyme name ('the ThDP-dependent enzyme ... MenD'). Emitting it as a protein is the prototypical failure this paper surfaces."
+        },
+        {
+          "pointer": "/entities/compounds/4",
+          "name": "intermediate I",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "placeholder_product",
+          "reason": "Transient covalent enzyme-bound adducts, not free metabolites with distinct identity."
+        },
+        {
+          "pointer": "/entities/compounds/5",
+          "name": "intermediate II",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "placeholder_product",
+          "reason": "Transient covalent enzyme-bound adducts, not free metabolites with distinct identity."
+        },
+        {
+          "pointer": "/entities/compounds/6",
+          "name": "DHNA",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "heading_or_prose",
+          "reason": "DHNA is a downstream metabolite and ALLOSTERIC INHIBITOR here, never a substrate or product of MenD. Emitting it on either side of the MenD reaction inverts the paper."
+        }
+      ]
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "population": "fallback",
+      "leg": "PMC12312563/strict",
+      "findings": [
+        {
+          "pointer": "/entities/compounds/0",
+          "name": "thiamine diphosphate",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "cofactor_as_protein",
+          "reason": "The highest-frequency non-protein token in the paper (~30 occurrences) and grammatically adjacent to the enzyme name ('the ThDP-dependent enzyme ... MenD'). Emitting it as a protein is the prototypical failure this paper surfaces."
+        },
+        {
+          "pointer": "/entities/compounds/7",
+          "name": "intermediate I",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "placeholder_product",
+          "reason": "Transient covalent enzyme-bound adducts, not free metabolites with distinct identity."
+        },
+        {
+          "pointer": "/entities/compounds/8",
+          "name": "intermediate II",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "placeholder_product",
+          "reason": "Transient covalent enzyme-bound adducts, not free metabolites with distinct identity."
+        }
+      ]
+    },
+    {
+      "check": "requested_pathway_anchors_present",
+      "population": "fallback",
+      "leg": "PMC12421875/research",
+      "findings": [
+        {
+          "missing_anchor": "menaquinone biosynthesis",
+          "paper_says": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
+        }
+      ]
+    },
+    {
+      "check": "no_rejected_rag_reaction_reintroduced",
+      "population": "fallback",
+      "leg": "PMC12421875/research",
+      "findings": [
+        {
+          "pointer": "/processes/reactions/9",
+          "name": "demethylmenaquinone (DMK) production",
+          "claim_key": "dhna+prenyl diphosphate=>demethylmenaquinone dmk|mena|0",
+          "rejected_for": [
+            "candidate_type_cannot_fill_gap: gap gap-missing_compartment-716d47c3 asks for a compartment/location for 'MenA'; a reaction row expresses no location"
+          ],
+          "gap_id": "gap-missing_compartment-716d47c3",
+          "reason": "a claim the admission gate refused is present in the exported payload"
+        }
+      ]
+    },
+    {
+      "check": "no_rejected_rag_reaction_reintroduced",
+      "population": "fallback",
+      "leg": "PMC12421875/strict",
+      "findings": [
+        {
+          "pointer": "/processes/reactions/5",
+          "name": "MenD reaction",
+          "claim_key": "chorismate=>dhna|mend+menf|0",
+          "rejected_for": [
+            "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+          ],
+          "gap_id": "gap-orphan_metabolite-71211ca5",
+          "reason": "a claim the admission gate refused is present in the exported payload"
+        }
+      ]
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "population": "canonical",
+      "leg": "PMC12444477/strict",
+      "findings": [
+        {
+          "pointer": "/entities/compounds/5",
+          "name": "tetra-acylated disaccharide intermediate",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "placeholder_product",
+          "reason": "A prose description of an unnamed intermediate, not a chemical identity."
+        }
+      ]
+    },
+    {
+      "check": "placeholder_identities_distinguished",
+      "population": "canonical",
+      "leg": "PMC12444477/strict",
+      "findings": [
+        {
+          "pointer": "/entities/protein_complexes/7",
+          "name": "LpxL",
+          "kind": "unknown_backed_protein_not_acceptable",
+          "reason": "this case tolerates Unknown-backed rows only for the entities it names one by one; 'LpxL' is not one of them"
+        },
+        {
+          "pointer": "/entities/protein_complexes/8",
+          "name": "LpxM",
+          "kind": "unknown_backed_protein_not_acceptable",
+          "reason": "this case tolerates Unknown-backed rows only for the entities it names one by one; 'LpxM' is not one of them"
+        }
+      ]
+    },
+    {
+      "check": "requested_pathway_anchors_present",
+      "population": "canonical",
+      "leg": "PMC12452463/research",
+      "findings": [
+        {
+          "missing_anchor": "ent operon",
+          "paper_says": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"
+        }
+      ]
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "population": "canonical",
+      "leg": "PMC12452463/research",
+      "findings": [
+        {
+          "pointer": "/entities/protein_complexes/0",
+          "name": "enterobactin synthase complex",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "heading_or_prose",
+          "reason": "A complex name explicitly denoting three proteins: 'catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF'."
+        }
+      ]
+    },
+    {
+      "check": "requested_pathway_anchors_present",
+      "population": "canonical",
+      "leg": "PMC12452463/strict",
+      "findings": [
+        {
+          "missing_anchor": "ent operon",
+          "paper_says": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"
+        }
+      ]
+    },
+    {
+      "check": "requested_pathway_anchors_present",
+      "population": "fallback",
+      "leg": "PMC12657337/research",
+      "findings": [
+        {
+          "missing_anchor": "menaquinone biosynthesis",
+          "paper_says": "The key genes involved in menaquinone biosynthesis, including MenA and UbiE and their variants"
+        }
+      ]
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "population": "fallback",
+      "leg": "PMC12657337/research",
+      "findings": [
+        {
+          "pointer": "/entities/compounds/9",
+          "name": "SAM",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "cofactor_as_protein",
+          "reason": "Methyl-donor cofactors named only in the figure legend; never proteins."
+        },
+        {
+          "pointer": "/entities/compounds/10",
+          "name": "SAH",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "cofactor_as_protein",
+          "reason": "Methyl-donor cofactors named only in the figure legend; never proteins."
+        },
+        {
+          "pointer": "/entities/proteins/3",
+          "name": "BsHepPPS",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "strain_or_construct",
+          "reason": "Author-coined organism-prefix labels. They must normalise to base symbol plus organism, never become distinct novel proteins."
+        },
+        {
+          "pointer": "/entities/proteins/4",
+          "name": "EcMenA",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "strain_or_construct",
+          "reason": "Author-coined organism-prefix labels. They must normalise to base symbol plus organism, never become distinct novel proteins."
+        },
+        {
+          "pointer": "/entities/proteins/5",
+          "name": "BsUbiE",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "strain_or_construct",
+          "reason": "Author-coined organism-prefix labels. They must normalise to base symbol plus organism, never become distinct novel proteins."
+        }
+      ]
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "population": "fallback",
+      "leg": "PMC12657337/strict",
+      "findings": [
+        {
+          "pointer": "/entities/proteins/0",
+          "name": "EcMenA",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "strain_or_construct",
+          "reason": "Author-coined organism-prefix labels. They must normalise to base symbol plus organism, never become distinct novel proteins."
+        },
+        {
+          "pointer": "/entities/proteins/1",
+          "name": "BsHepPPS",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "strain_or_construct",
+          "reason": "Author-coined organism-prefix labels. They must normalise to base symbol plus organism, never become distinct novel proteins."
+        },
+        {
+          "pointer": "/entities/proteins/2",
+          "name": "BsUbiE",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "strain_or_construct",
+          "reason": "Author-coined organism-prefix labels. They must normalise to base symbol plus organism, never become distinct novel proteins."
+        }
+      ]
+    },
+    {
+      "check": "requested_pathway_anchors_present",
+      "population": "canonical",
+      "leg": "PMC12782028/research",
+      "findings": [
+        {
+          "missing_anchor": "mevalonate pathway",
+          "paper_says": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"
+        }
+      ]
+    },
+    {
+      "check": "requested_pathway_anchors_present",
+      "population": "canonical",
+      "leg": "PMC12782028/strict",
+      "findings": [
+        {
+          "missing_anchor": "mevalonate pathway",
+          "paper_says": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"
+        }
+      ]
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "population": "canonical",
+      "leg": "PMC12856317/strict",
+      "findings": [
+        {
+          "pointer": "/entities/compounds/4",
+          "name": "pyridoxal 5-phosphate",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "cofactor_as_protein",
+          "reason": "The ALAS2 cofactor. Never a substrate, never a product, never a protein."
+        }
+      ]
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "population": "fallback",
+      "leg": "PMC13231680/research",
+      "findings": [
+        {
+          "pointer": "/entities/compounds/0",
+          "name": "lipid A",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "placeholder_product",
+          "reason": "Same test. No lipid A intermediate occurs anywhere in this paper."
+        }
+      ]
+    },
+    {
+      "check": "no_real_id_or_name_conflict",
+      "population": "fallback",
+      "leg": "PMC13231680/strict",
+      "findings": [
+        {
+          "pointer": "/entities/compounds/0",
+          "name": "lipid A",
+          "kind": "forbidden_identity_present_unmapped",
+          "forbidden_kind": "placeholder_product",
+          "reason": "Same test. No lipid A intermediate occurs anywhere in this paper."
+        }
+      ]
+    }
+  ]
+}

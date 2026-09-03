@@ -1,0 +1,47 @@
+T2PW: c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch721-f174\src\t2pw\__init__.py
+F...F                                                                    [100%]
+================================== FAILURES ===================================
+E   AssertionError: the batch boundary dropped the D-088 coverage diagnostics
+    assert 'coverage_diagnostics.json' in {'contract_reports.json': '{\n  "post_extraction_contract_report": {\n    "ok": true,\n    "errors": [],\n    "warning...emoved_locations": [],\n      "removed_biological_states": [],\n      "quarantined_processes": []\n    }\n  ]\n}', ...}
+     +  where {'contract_reports.json': '{\n  "post_extraction_contract_report": {\n    "ok": true,\n    "errors": [],\n    "warning...emoved_locations": [],\n      "removed_biological_states": [],\n      "quarantined_processes": []\n    }\n  ]\n}', ...} = RunOutcome(paper_id='PMC1', mode='strict', status='pass', stage='pwml_export', seconds=0.46, failure_kind='', message=...ict_acceptance_eligible': True}, pwml_artifact='pathway.pwml', termination_reason='', termination_is_operational=False).artifacts
+---------------------------- Captured stderr call -----------------------------
+2026-09-03 12:29:14.307 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch721-f174\tests\test_batch_driver_quarantine_artifacts.py:410: AssertionError: the batch boundary dropped the D-088 coverage diagnostics
+E   AssertionError: an evaluator cannot find the diagnostics
+    assert 'none' == 'coverage_diagnostics.json'
+      
+      - coverage_diagnostics.json
+      + none
+---------------------------- Captured stderr call -----------------------------
+2026-09-03 12:29:16.237 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch721-f174\tests\test_batch_driver_quarantine_artifacts.py:552: AssertionError: an evaluator cannot find the diagnostics
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_quarantine_artifacts.py::test_f175_the_diagnostics_reach_a_real_batch_leg_directory
+FAILED tests/test_batch_driver_quarantine_artifacts.py::test_f175_an_offline_evaluator_can_consume_what_landed
+2 failed, 3 passed, 8 deselected in 4.24s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch721-f174\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ cb982dc20947b268f5592ba5b4ad72d9d9d8148b  [git, worktree dirty=True]
+label                   : f175-g9-base
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch721-f174 --pin-verdict c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-722/04-f175-g9-base.pin.json tests/test_batch_driver_quarantine_artifacts.py -k f175 --basetemp=C:/t/orch722/bt04 --tb=line -q
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch721-f174
+root PID / process group: 454816 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 5.88 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  453884:python.exe
+descendants terminated  : 1  453884
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/ORCH-722/04-f175-g9-base.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

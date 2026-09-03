@@ -38,6 +38,7 @@ from t2pw.batch.driver import STRICT, RunOutcome  # noqa: E402
 from t2pw.bench import acceptance  # noqa: E402
 from t2pw.pipeline.strict_quarantine import (  # noqa: E402
     CLOSURE_REPORT_FILENAME,
+    COVERAGE_DIAGNOSTICS_FILENAME,
     COVERAGE_REPORT_FILENAME,
     QUARANTINE_REPORT_FILENAME,
     REMOVED_ENTITY_REPORT_FILENAME,
@@ -57,13 +58,21 @@ from test_batch_driver import (  # noqa: E402
 from test_strict_quarantine import _add_reaction, _glutathione_payload  # noqa: E402
 
 
-#: The four, in the order ``write_quarantine_artifacts`` writes them.
+#: The four ``write_quarantine_artifacts`` RETURNS, in the order it writes them.
+#: Still exactly four: F-175 did not widen the returned map, and
+#: ``test_f175_the_returned_map_pin_is_untouched`` holds it to that.
 FOUR: Tuple[str, ...] = (
     QUARANTINE_REPORT_FILENAME,
     REMOVED_ENTITY_REPORT_FILENAME,
     CLOSURE_REPORT_FILENAME,
     COVERAGE_REPORT_FILENAME,
 )
+
+#: The five the BATCH DRIVER CARRIES into a leg directory. These are different
+#: sets and the difference is the whole of F-175: the producer writes five
+#: documents to disk and returns four, so the fifth has to be carried by a
+#: sibling-path resolution rather than by reading the map.
+CARRIED: Tuple[str, ...] = FOUR + (COVERAGE_DIAGNOSTICS_FILENAME,)
 
 _PWML = {
     "ok": True,
@@ -289,16 +298,28 @@ def test_only_a_named_artifact_at_its_own_path_is_persisted(tmp_path: Path) -> N
 # ---------------------------------------------------------------------------
 # Preservation: nothing else moved.
 # ---------------------------------------------------------------------------
-def test_only_the_four_artifacts_move_when_a_leg_produces_quarantine_output(
+def test_only_the_carried_artifacts_move_when_a_leg_produces_quarantine_output(
     tmp_path: Path,
 ) -> None:
-    """PRESERVATION. Same leg with and without the map: four files, nothing else.
+    """PRESERVATION. Same leg with and without the map: the carried set, nothing else.
 
     The manifest row is compared whole, minus ``seconds`` (wall clock) and ``files``
     (the artifact names and byte counts, which is the deliberate pinned-baseline
     move this card makes). Every other driver-observable field -- status, stage,
     failure_kind, message, detail, issue_codes, counts, warnings -- must be equal,
     and every artifact the leg already produced must be byte-identical.
+
+    PINNED BASELINE MOVED DELIBERATELY, ORCH-722, merge rule 4, exact delta:
+    ``FOUR`` -> ``CARRIED``, i.e. ``+1`` name, ``coverage_diagnostics.json``, under
+    the narrow D-090 exception of 2026-09-03 authorising F-175 artifact
+    persistence. Renamed from ``..._four_artifacts_...`` because the number in the
+    old name became false, and a test whose name misdescribes its assertion is the
+    F-172 defect in miniature.
+
+    NOTHING ELSE ABOUT THIS TEST WEAKENS. The whole-row equality and the
+    byte-identity of every pre-existing artifact are unchanged, and they are what
+    make this the preservation proof: exactly one name appears, and no other
+    driver-observable field moves with it.
     """
 
     _outputs, written = _produce(tmp_path)
@@ -316,9 +337,9 @@ def test_only_the_four_artifacts_move_when_a_leg_produces_quarantine_output(
     )
 
     assert _row(with_quarantine) == _row(plain)
-    assert set(with_quarantine.artifacts) - set(plain.artifacts) == set(FOUR)
+    assert set(with_quarantine.artifacts) - set(plain.artifacts) == set(CARRIED)
     assert {
-        name: blob for name, blob in with_quarantine.artifacts.items() if name not in FOUR
+        name: blob for name, blob in with_quarantine.artifacts.items() if name not in CARRIED
     } == plain.artifacts
 
 
@@ -362,3 +383,197 @@ def test_an_artifact_the_driver_cannot_read_is_a_diagnosis_not_a_crash(
     assert set(outcome.artifacts).isdisjoint(FOUR)
     assert outcome.warnings == []
     assert outcome.issue_codes == []
+
+
+# ---------------------------------------------------------------------------
+# F-175 (ORCH-722) -- the D-088 coverage diagnostics must reach a BATCH LEG.
+#
+# THE TEST IS THE POINT, and it is the whole lesson of the finding. C-116 shipped
+# ELEVEN passing tests for these diagnostics and not one of them ran the batch
+# path, so a file that reached zero benchmark legs was covered by a green suite.
+# Everything below therefore goes through the REAL driver -- ``_run(app, STRICT)``
+# executes the batch leg, and ``runner.write_artifacts`` puts the result on disk
+# in ``papers/<slug>/<mode>/`` -- and never asserts on an in-memory dict alone.
+#
+# WHY THE FILE NEEDS A SEPARATE CARRY AT ALL. ``write_quarantine_artifacts``
+# writes FIVE documents and deliberately RETURNS four: its own comment says the
+# returned map "stays the four-name set two unowned pinned consumers assert by
+# equality". Those consumers are still asserted below, unchanged. So the driver
+# resolves the fifth as a SIBLING of the coverage report rather than by widening
+# the map, and ``_produce``'s ``set(written) == set(FOUR)`` still holds.
+# ---------------------------------------------------------------------------
+def test_f175_the_diagnostics_reach_a_real_batch_leg_directory(tmp_path: Path) -> None:
+    """G9 REGRESSION. Fails on the base SHA: the file reaches no leg directory.
+
+    Asserted on CONTENT and on DISK, not on a symbol.
+    ``COVERAGE_DIAGNOSTICS_FILENAME`` and its producer both exist on the base SHA
+    and the file is written to the app's ``outputs/`` there too -- what does not
+    happen on base is the batch boundary carrying it across, which is precisely
+    why a symbol-absence proof would be worthless here.
+    """
+
+    outputs, written = _produce(tmp_path)
+    # The producer wrote five files and handed back four. That asymmetry is the
+    # defect's whole mechanism, so it is pinned here rather than assumed.
+    assert COVERAGE_DIAGNOSTICS_FILENAME not in written
+    assert (outputs / COVERAGE_DIAGNOSTICS_FILENAME).is_file()
+
+    app = _write_app(
+        tmp_path,
+        "f175_diagnostics",
+        _post_pipeline_body(_artifacts("pathwhiz", quarantine_artifacts=written), pwml=_PWML),
+    )
+
+    outcome = _run(app, STRICT)
+
+    assert outcome.status == "pass", outcome.detail
+    assert COVERAGE_DIAGNOSTICS_FILENAME in outcome.artifacts, (
+        "the batch boundary dropped the D-088 coverage diagnostics"
+    )
+    # ...and it is the producer's bytes, not something the driver re-authored.
+    assert outcome.artifacts[COVERAGE_DIAGNOSTICS_FILENAME] == (
+        outputs / COVERAGE_DIAGNOSTICS_FILENAME
+    ).read_text(encoding="utf-8")
+
+    # THROUGH THE RUNNER AND ONTO DISK. An offline evaluator reads the leg
+    # directory, so an in-memory dict is not where this claim can be settled.
+    leg_dir = tmp_path / "run" / "papers" / "pmc1" / "strict"
+    files = runner.write_artifacts(leg_dir, outcome.artifacts)
+    assert not [entry for entry in files if entry.get("error")]
+    landed = leg_dir / COVERAGE_DIAGNOSTICS_FILENAME
+    assert landed.is_file(), "the runner did not put the diagnostics in the leg directory"
+
+    # REAL LEG-DERIVED VALUES, not an empty shell. The peripheral reaction this
+    # payload exists to exercise is the one the boundary quarantined, so the
+    # diagnostics have to be about THIS leg.
+    document = json.loads(landed.read_text(encoding="utf-8"))
+    assert isinstance(document, dict) and document, "diagnostics landed empty"
+    assert document == json.loads(
+        (outputs / COVERAGE_DIAGNOSTICS_FILENAME).read_text(encoding="utf-8")
+    ), "the document changed crossing the seam"
+
+
+def test_f175_the_returned_map_pin_is_untouched(tmp_path: Path) -> None:
+    """The carry must not widen the RETURNED MAP. That pin still holds exactly.
+
+    ``write_quarantine_artifacts`` returns four names and
+    ``test_d088_coverage_diagnostics`` asserts the fifth is absent from that map.
+    The fix works around that contract instead of breaking it.
+
+    SCOPED PRECISELY, because the first draft of this test was named "the four
+    pinned consumers are untouched" and that was an OVERCLAIM. One pin DID move:
+    the driver's carried-artifact set went from four names to five, deliberately,
+    in ``test_only_the_carried_artifacts_move_...``. What is untouched is the
+    producer's returned map. Two different pins, and only one of them held.
+    """
+
+    _outputs, written = _produce(tmp_path)
+    assert set(written) == set(FOUR)
+    assert COVERAGE_DIAGNOSTICS_FILENAME not in written
+
+
+def test_f175_a_hostile_or_absent_diagnostics_path_persists_nothing(tmp_path: Path) -> None:
+    """The sibling resolution inherits the same two guards as the four-name loop.
+
+    The carry derives its path from the COVERAGE REPORT's recorded path, so a
+    session-state map naming a coverage report somewhere else must not cause an
+    arbitrary sibling file to be persisted under a filename an auditor trusts --
+    and a leg whose diagnostics are simply absent must persist nothing rather than
+    crash. Absence stays a diagnosis.
+    """
+
+    # A directory holding a decoy coverage report and NO diagnostics beside it.
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    (elsewhere / COVERAGE_REPORT_FILENAME).write_text('{"decoy": true}', encoding="utf-8")
+    app = _write_app(
+        tmp_path,
+        "f175_absent",
+        _post_pipeline_body(
+            _artifacts(
+                "pathwhiz",
+                quarantine_artifacts={
+                    COVERAGE_REPORT_FILENAME: str(elsewhere / COVERAGE_REPORT_FILENAME)
+                },
+            ),
+            pwml=_PWML,
+        ),
+    )
+
+    outcome = _run(app, STRICT)
+
+    assert outcome.status == "pass", outcome.detail
+    assert COVERAGE_DIAGNOSTICS_FILENAME not in outcome.artifacts
+
+
+def test_f175_release_status_and_pwml_are_BYTE_IDENTICAL_across_the_change(
+    tmp_path: Path,
+) -> None:
+    """THE AUTHORIZATION BOUNDARY, asserted rather than asserted-about.
+
+    The narrow D-090 exception permits artifact PERSISTENCE and nothing else. So
+    the leg's manifest row -- status, release record, codes, every field except
+    the deliberately-moved artifact list -- and the exported PWML bytes must be
+    exactly what they were. ``_row`` drops ``seconds`` (wall clock is not
+    behaviour) and ``files`` (the enumerated move); everything else must match a
+    leg run with NO quarantine artifacts published at all, which is the shape the
+    driver saw before this carry existed.
+    """
+
+    _outputs, written = _produce(tmp_path)
+
+    with_diagnostics = _run(
+        _write_app(
+            tmp_path,
+            "f175_with",
+            _post_pipeline_body(
+                _artifacts("pathwhiz", quarantine_artifacts=written), pwml=_PWML
+            ),
+        ),
+        STRICT,
+    )
+    without_any = _run(
+        _write_app(
+            tmp_path,
+            "f175_without",
+            _post_pipeline_body(_artifacts("pathwhiz"), pwml=_PWML),
+        ),
+        STRICT,
+    )
+
+    assert _row(with_diagnostics) == _row(without_any), (
+        "publishing the diagnostics moved something other than the artifact set"
+    )
+    # PWML bytes, compared directly. This leg is deterministic -- no model stage
+    # runs -- so byte equality is available here and is the strongest form.
+    assert with_diagnostics.artifacts["pathway.pwml"] == without_any.artifacts["pathway.pwml"]
+    # ...and the release record specifically, because that is the field the
+    # authorization names first.
+    assert with_diagnostics.to_dict().get("release") == without_any.to_dict().get("release")
+
+
+def test_f175_an_offline_evaluator_can_consume_what_landed(tmp_path: Path) -> None:
+    """NEW ACCEPTANCE. The artifact is not evidence until a reader can resolve it.
+
+    Mirrors how ``bench/acceptance.py`` finds the quarantine set: a filename
+    lookup against the leg directory on disk. A file that lands under a name no
+    consumer looks for would satisfy every assertion above and still be useless.
+    """
+
+    _outputs, written = _produce(tmp_path)
+    app = _write_app(
+        tmp_path,
+        "f175_consumable",
+        _post_pipeline_body(_artifacts("pathwhiz", quarantine_artifacts=written), pwml=_PWML),
+    )
+    outcome = _run(app, STRICT)
+
+    leg_dir = tmp_path / "run" / "papers" / "pmc1" / "strict"
+    runner.write_artifacts(leg_dir, outcome.artifacts)
+
+    found, source, path = acceptance._first_existing(
+        leg_dir, (COVERAGE_DIAGNOSTICS_FILENAME,)
+    )
+    assert source == COVERAGE_DIAGNOSTICS_FILENAME, "an evaluator cannot find the diagnostics"
+    assert Path(path) == leg_dir / COVERAGE_DIAGNOSTICS_FILENAME
+    assert isinstance(found, dict) and found

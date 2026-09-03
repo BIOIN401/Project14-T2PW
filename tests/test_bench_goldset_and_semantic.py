@@ -1110,3 +1110,147 @@ def test_an_empty_population_reports_n_a_not_zero_percent():
     denominator = Denominator(key="k", question="q", population="p")
     assert denominator.rate is None
     assert "n/a" in denominator.render()
+
+
+# ---------------------------------------------------------------------------
+# F-176 (ORCH-722) -- the RAG-reintroduction check must report its OWN state
+# honestly, and the six states must stay six.
+#
+# The corrected branch is authorized under the narrow D-090 exception of
+# 2026-09-03 as a REPORTING correction. These tests exist to pin that the
+# reporting moved and the BIOLOGY did not: the same payload and the same rejected
+# set must still produce the same pass/fail verdict they always did.
+#
+# Why six states and not two. The prior wave's error was reading `applicable`
+# as `passed`, off a runtime record whose reason string was stale. So each state
+# is asserted separately and by NAME:
+#   artifact missing | artifact malformed | applicable+passed | applicable+failed
+# plus the two negatives that keep the first two apart.
+# ---------------------------------------------------------------------------
+from t2pw.bench.semantic import (  # noqa: E402
+    CHECK_RAG_REINTRODUCTION,
+    _check_rag_reintroduction,
+)
+
+
+def _rejected(name, inputs, outputs, enzymes, reversible=False):
+    return {
+        "gap_id": "gap-test-1", "name": name, "inputs": inputs, "outputs": outputs,
+        "enzymes": enzymes, "reversible": reversible, "reasons": ["test_refusal"],
+    }
+
+
+def _process(name, inputs, outputs, enzymes, reversible=False):
+    return {
+        "name": name, "inputs": inputs, "outputs": outputs, "reversible": reversible,
+        "enzymes": [{"entity": e} for e in enzymes],
+    }
+
+
+_REJECTED_CLAIM = _rejected(
+    "chorismate to isochorismate", ["chorismate"], ["isochorismate"], ["EntC"])
+_SAME_CLAIM = _process(
+    "Chorismate to Isochorismate", ["Chorismate"], ["Isochorismate"], ["entC"])
+_OTHER_CLAIM = _process(
+    "serine to glycine", ["L-serine"], ["glycine"], ["GlyA"])
+
+
+def test_f176_artifact_missing_is_inapplicable_and_says_so_without_lying():
+    """STATE 1 of 6: nothing was supplied.
+
+    The reason must describe THIS CALL. The string it replaced asserted that the
+    batch driver never writes the artifact, which stopped being true when
+    ``_add_identity_artifacts`` began persisting it -- and which
+    ``release_status.semantic_verdict`` then relocated verbatim into a runtime
+    production field, where it was read back as a measurement.
+    """
+
+    result = _check_rag_reintroduction({"reactions": [_SAME_CLAIM]}, None)
+
+    assert result.name == CHECK_RAG_REINTRODUCTION
+    assert result.inapplicable_reason, "a missing artifact must be INAPPLICABLE"
+    assert not result.findings
+    # The specific falsehood, pinned so it cannot come back.
+    assert "is not written to disk by the batch driver" not in result.inapplicable_reason
+    assert "supplied to this evaluation call" in result.inapplicable_reason
+
+
+def test_f176_artifact_malformed_is_a_DIFFERENT_state_from_artifact_missing():
+    """STATE 2 of 6, and the reason the branch was split.
+
+    A report that arrived carrying no ``rejected`` key is a defect in the
+    ARTIFACT. Nothing arriving at all is a fact about the CALLER. Collapsing them
+    is how one wrong sentence came to describe two conditions.
+    """
+
+    missing = _check_rag_reintroduction({"reactions": []}, None)
+    malformed = _check_rag_reintroduction({"reactions": []}, {"accepted": []})
+
+    assert missing.inapplicable_reason and malformed.inapplicable_reason
+    assert missing.inapplicable_reason != malformed.inapplicable_reason
+    assert "MALFORMED" in malformed.inapplicable_reason
+
+
+def test_f176_artifact_present_and_clean_is_APPLICABLE_AND_PASSED():
+    """STATES 3 and 4: applicable, and passed. They are asserted SEPARATELY.
+
+    ``applicable`` is ``inapplicable_reason == ""``; ``passed`` is ``ok is True``.
+    Reading one off the other is the exact error this finding registered.
+    """
+
+    result = _check_rag_reintroduction(
+        {"reactions": [_OTHER_CLAIM]}, {"rejected": [_REJECTED_CLAIM]})
+
+    assert result.inapplicable_reason == "", "APPLICABLE"
+    assert result.ok is True, "PASSED"
+    assert not result.findings
+
+
+def test_f176_a_reintroduced_rejected_claim_still_FAILS_the_check():
+    """STATES 5 and 6: applicable, and failed. THE BIOLOGY MUST NOT HAVE MOVED.
+
+    This is the load-bearing test of the whole authorization. The edit was
+    permitted as a reporting correction only, so the refused-claim comparison has
+    to behave exactly as before: a payload republishing a claim the admission gate
+    refused is a FAILURE, matched through the order-independent claim key and
+    therefore across case and enzyme-case differences.
+    """
+
+    result = _check_rag_reintroduction(
+        {"reactions": [_SAME_CLAIM]}, {"rejected": [_REJECTED_CLAIM]})
+
+    assert result.inapplicable_reason == "", "APPLICABLE"
+    assert result.ok is False, "FAILED -- a refused claim is present in the payload"
+    assert len(result.findings) == 1
+    finding = result.findings[0]
+    assert finding["pointer"] == "/processes/reactions/0"
+    assert finding["gap_id"] == "gap-test-1"
+    assert finding["rejected_for"] == ["test_refusal"]
+
+
+def test_f176_applicability_and_verdict_are_independent_axes():
+    """The summary of the whole finding, as one assertion table.
+
+    Four inputs, four distinct (applicable, ok) pairs. If any future edit lets
+    ``applicable`` imply ``ok`` -- or lets an inapplicable state report ``ok is
+    False`` and demote a release for lack of evidence -- exactly one row moves.
+    """
+
+    rows = {
+        "missing": _check_rag_reintroduction({"reactions": [_SAME_CLAIM]}, None),
+        "malformed": _check_rag_reintroduction({"reactions": [_SAME_CLAIM]}, {"accepted": []}),
+        "clean": _check_rag_reintroduction({"reactions": [_OTHER_CLAIM]},
+                                           {"rejected": [_REJECTED_CLAIM]}),
+        "reintroduced": _check_rag_reintroduction({"reactions": [_SAME_CLAIM]},
+                                                  {"rejected": [_REJECTED_CLAIM]}),
+    }
+    observed = {
+        key: (result.inapplicable_reason == "", result.ok)
+        for key, result in rows.items()
+    }
+    assert observed == {
+        "missing": (False, True),       # inapplicable; never a failure for lack of evidence
+        "malformed": (False, True),     # inapplicable, and for a different reason
+        "clean": (True, True),          # applicable AND passed
+        "reintroduced": (True, False),  # applicable AND failed
+    }, observed

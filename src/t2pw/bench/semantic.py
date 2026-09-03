@@ -1235,14 +1235,55 @@ def _check_rag_reintroduction(
     processes: Mapping[str, List[Dict[str, Any]]],
     admission: Optional[Mapping[str, Any]],
 ) -> CheckResult:
+    # F-176, under the NARROW D-090 exception of 2026-09-03. This branch used to
+    # give ONE reason for two different conditions, and the reason was FALSE:
+    #
+    #     "AdmissionReport.rejected is not written to disk by the batch driver;
+    #      without it a reintroduced claim is undetectable"
+    #
+    # It has not been true since ``batch/driver.py`` began persisting
+    # ``rag_admission_report.json``. Measured 2026-09-03 over the T-109 corpus:
+    # the artifact is present in 19 of 20 leg directories carrying 1,947 rejected
+    # rows, ``bench/acceptance.py`` loads it and passes it here, and with it this
+    # check reaches a verdict on 19 of 19 legs and on 0 of 19 without it.
+    #
+    # WHY A WRONG STRING MATTERED ENOUGH TO BE WORTH A FROZEN-FILE EXCEPTION. It
+    # does not stay here. ``release_status.semantic_verdict`` RELOCATES this exact
+    # text into the runtime release record's ``semantic_check_evaluability``, so a
+    # machine-readable production field asserted, on legs whose own directories
+    # held the artifact, that the artifact is never written. A prior investigation
+    # read it back and reported the check unevaluable in batch. A cached
+    # explanation of an absence is not a test for that absence.
+    #
+    # THE TWO CONDITIONS ARE NOW SEPARATED, because "nothing was handed to me" and
+    # "what I was handed is malformed" are different facts about different
+    # components and only the second is a defect in the artifact.
+    #
+    # WHAT IS DELIBERATELY UNCHANGED: ``ok=True`` on the inapplicable path, the
+    # claim-key comparison, what counts as rejected, and what counts as
+    # reintroduced. This edit is authorized as a REPORTING correction only; the
+    # biological rule is not redesigned and no verdict moves because of it.
+    if admission is None:
+        return CheckResult(
+            name=CHECK_RAG_REINTRODUCTION,
+            ok=True,
+            summary="not evaluated: no RAG admission report was supplied to this evaluation",
+            inapplicable_reason=(
+                "no RAG admission report was supplied to this evaluation call, so a "
+                "reintroduced claim is undetectable here. This describes THIS call "
+                "only: the batch driver does persist rag_admission_report.json, and "
+                "the offline scorer loads it and reaches a verdict"
+            ),
+        )
     if not isinstance(admission, dict) or "rejected" not in admission:
         return CheckResult(
             name=CHECK_RAG_REINTRODUCTION,
             ok=True,
-            summary="not evaluated: no RAG admission report was persisted for this run",
+            summary="not evaluated: the RAG admission report carries no rejected set",
             inapplicable_reason=(
-                "AdmissionReport.rejected is not written to disk by the batch driver; "
-                "without it a reintroduced claim is undetectable"
+                "a RAG admission report was supplied but carries no 'rejected' key, so "
+                "there is no refused-claim set to compare the payload against. This is "
+                "a MALFORMED artifact, not a missing one"
             ),
         )
 

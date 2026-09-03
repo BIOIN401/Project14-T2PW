@@ -1,0 +1,115 @@
+MEASURED_TREE t2pw = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+RUN = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052
+
+==============================================================================
+F-177 SEMANTIC POPULATIONS -- never one number, always a denominator
+==============================================================================
+  canonical  = final_mapped.json  : post-mapping, gate-bound, export-eligible.
+               A verdict here is about a PRODUCT.
+  fallback   = merged_payload.json: PRE-mapping, PRE-quarantine draft from a
+               leg that produced no export. A verdict here is about a DRAFT.
+  These are NOT the same measurement and are never summed below.
+
+  canonical      legs = 10
+      PMC12096016/research, PMC12096016/strict, PMC12180156/strict, PMC12444477/strict, PMC12452463/research, PMC12452463/strict, PMC12782028/research, PMC12782028/strict, PMC12856317/research, PMC12856317/strict
+  fallback       legs = 9
+      PMC12180156/research, PMC12312563/research, PMC12312563/strict, PMC12421875/research, PMC12421875/strict, PMC12657337/research, PMC12657337/strict, PMC13231680/research, PMC13231680/strict
+  unknown_source legs = 0
+  no_payload     legs = 1
+      PMC12444477/research
+
+  PER CHECK, PER POPULATION
+    check                                          population          passed        failed  inapplicable artifact_missing artifact_malformed
+    minimum_connected_core                         canonical                9             1             0             0             0   (n=10)
+    minimum_connected_core                         fallback                 9             0             0             0             0   (n=9)
+    no_real_id_or_name_conflict                    canonical                7             3             0             0             0   (n=10)
+    no_real_id_or_name_conflict                    fallback                 3             6             0             0             0   (n=9)
+    no_rejected_rag_reaction_reintroduced          canonical               10             0             0             0             0   (n=10)
+    no_rejected_rag_reaction_reintroduced          fallback                 7             2             0             0             0   (n=9)
+    organism_compatible                            canonical               10             0             0             0             0   (n=10)
+    organism_compatible                            fallback                 9             0             0             0             0   (n=9)
+    placeholder_identities_distinguished           canonical                9             1             0             0             0   (n=10)
+    placeholder_identities_distinguished           fallback                 9             0             0             0             0   (n=9)
+    reaction_source_carrier_present                canonical               10             0             0             0             0   (n=10)
+    reaction_source_carrier_present                fallback                 9             0             0             0             0   (n=9)
+    requested_pathway_anchors_present              canonical                5             5             0             0             0   (n=10)
+    requested_pathway_anchors_present              fallback                 7             2             0             0             0   (n=9)
+    retained_reactions_match_supported_signatures  canonical                2             0             8             0             0   (n=10)
+    retained_reactions_match_supported_signatures  fallback                 0             0             9             0             0   (n=9)
+
+  EVERY FAILURE, ATTRIBUTED. A population report that hid these would be
+  worse than the mixed number it replaces.
+    [canonical] PMC12096016/research  requested_pathway_anchors_present
+        {"missing_anchor": "enterobactin", "paper_says": "Enterobactin is a catecholate siderophore with extraordinarily high affinity for ferric iron"}
+        {"missing_anchor": "enterobactin biosynthesis", "paper_says": "inhibition of EntB isochorismatase therefore would target the committed step of the enterobactin biosynthetic pathway"}
+    [canonical] PMC12096016/research  minimum_connected_core
+        {"required": 4, "observed": 3, "n_reactions": 3, "n_components": 1, "isolated_reactions": 0, "reason": "reactions do not join into one chain through shared non-cofactor metabolites"}
+    [fallback] PMC12312563/research  no_real_id_or_name_conflict
+        {"pointer": "/entities/compounds/0", "name": "ThDP", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "cofactor_as_protein", "reason": "The highest-frequency non-protein token in the p
+        {"pointer": "/entities/compounds/4", "name": "intermediate I", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "Transient covalent enzyme-bound adduct
+    [fallback] PMC12312563/strict  no_real_id_or_name_conflict
+        {"pointer": "/entities/compounds/0", "name": "thiamine diphosphate", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "cofactor_as_protein", "reason": "The highest-frequency non-protei
+        {"pointer": "/entities/compounds/7", "name": "intermediate I", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "Transient covalent enzyme-bound adduct
+    [fallback] PMC12421875/research  requested_pathway_anchors_present
+        {"missing_anchor": "menaquinone biosynthesis", "paper_says": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and M
+    [fallback] PMC12421875/research  no_rejected_rag_reaction_reintroduced
+        {"pointer": "/processes/reactions/9", "name": "demethylmenaquinone (DMK) production", "claim_key": "dhna+prenyl diphosphate=>demethylmenaquinone dmk|mena|0", "rejected_for": ["candidate_type_cannot_fi
+    [fallback] PMC12421875/strict  no_rejected_rag_reaction_reintroduced
+        {"pointer": "/processes/reactions/5", "name": "MenD reaction", "claim_key": "chorismate=>dhna|mend+menf|0", "rejected_for": ["evidence_states_no_reaction_relation: the span names the participants but 
+    [canonical] PMC12444477/strict  no_real_id_or_name_conflict
+        {"pointer": "/entities/compounds/5", "name": "tetra-acylated disaccharide intermediate", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "A prose desc
+    [canonical] PMC12444477/strict  placeholder_identities_distinguished
+        {"pointer": "/entities/protein_complexes/7", "name": "LpxL", "kind": "unknown_backed_protein_not_acceptable", "reason": "this case tolerates Unknown-backed rows only for the entities it names one by o
+        {"pointer": "/entities/protein_complexes/8", "name": "LpxM", "kind": "unknown_backed_protein_not_acceptable", "reason": "this case tolerates Unknown-backed rows only for the entities it names one by o
+    [canonical] PMC12452463/research  requested_pathway_anchors_present
+        {"missing_anchor": "ent operon", "paper_says": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"}
+    [canonical] PMC12452463/research  no_real_id_or_name_conflict
+        {"pointer": "/entities/protein_complexes/0", "name": "enterobactin synthase complex", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "heading_or_prose", "reason": "A complex name exp
+    [canonical] PMC12452463/strict  requested_pathway_anchors_present
+        {"missing_anchor": "ent operon", "paper_says": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"}
+    [fallback] PMC12657337/research  requested_pathway_anchors_present
+        {"missing_anchor": "menaquinone biosynthesis", "paper_says": "The key genes involved in menaquinone biosynthesis, including MenA and UbiE and their variants"}
+    [fallback] PMC12657337/research  no_real_id_or_name_conflict
+        {"pointer": "/entities/compounds/9", "name": "SAM", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "cofactor_as_protein", "reason": "Methyl-donor cofactors named only in the figure l
+        {"pointer": "/entities/compounds/10", "name": "SAH", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "cofactor_as_protein", "reason": "Methyl-donor cofactors named only in the figure 
+    [fallback] PMC12657337/strict  no_real_id_or_name_conflict
+        {"pointer": "/entities/proteins/0", "name": "EcMenA", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "strain_or_construct", "reason": "Author-coined organism-prefix labels. They must
+        {"pointer": "/entities/proteins/1", "name": "BsHepPPS", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "strain_or_construct", "reason": "Author-coined organism-prefix labels. They mu
+    [canonical] PMC12782028/research  requested_pathway_anchors_present
+        {"missing_anchor": "mevalonate pathway", "paper_says": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"}
+    [canonical] PMC12782028/strict  requested_pathway_anchors_present
+        {"missing_anchor": "mevalonate pathway", "paper_says": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"}
+    [canonical] PMC12856317/strict  no_real_id_or_name_conflict
+        {"pointer": "/entities/compounds/4", "name": "pyridoxal 5-phosphate", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "cofactor_as_protein", "reason": "The ALAS2 cofactor. Never a sub
+    [fallback] PMC13231680/research  no_real_id_or_name_conflict
+        {"pointer": "/entities/compounds/0", "name": "lipid A", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "Same test. No lipid A intermediate occurs any
+    [fallback] PMC13231680/strict  no_real_id_or_name_conflict
+        {"pointer": "/entities/compounds/0", "name": "lipid A", "kind": "forbidden_identity_present_unmapped", "forbidden_kind": "placeholder_product", "reason": "Same test. No lipid A intermediate occurs any
+
+  structured report written to docs/pwml_recovery_sprint/evidence/f177_populations_t109.json
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fa0a191c4736e6e939d1a9f74c436d766d0ab438  [git, worktree dirty=True]
+label                   : f177-populations
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/eval_semantic_populations.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW runs_verify/2026-09-02_2052 --json docs/pwml_recovery_sprint/evidence/f177_populations_t109.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 461484 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.78 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  454464:python.exe
+descendants terminated  : 1  454464
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-722/10-f177-populations.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

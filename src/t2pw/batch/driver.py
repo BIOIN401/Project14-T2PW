@@ -1486,6 +1486,7 @@ def _add_identity_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, A
         # boundary is provably untouched by this block.
         from t2pw.pipeline.strict_quarantine import (
             CLOSURE_REPORT_FILENAME,
+            COVERAGE_DIAGNOSTICS_FILENAME,
             COVERAGE_REPORT_FILENAME,
             QUARANTINE_REPORT_FILENAME,
             REMOVED_ENTITY_REPORT_FILENAME,
@@ -1506,6 +1507,45 @@ def _add_identity_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, A
                 continue
             if document:
                 out[name] = document
+
+        # F-175, under the NARROW D-090 exception of 2026-09-03. The D-088
+        # coverage diagnostics reached ZERO benchmark legs, so the preservation
+        # requirement D-089 imposed was unmet going forward.
+        #
+        # WHY IT IS NOT IN THE LOOP ABOVE. It is not a member of ``produced``.
+        # ``write_quarantine_artifacts`` writes all FIVE documents to disk and
+        # then deliberately returns only four: its own comment records that "the
+        # RETURNED map stays the four-name set two unowned pinned consumers
+        # assert by equality". That exclusion is load-bearing and is NOT touched
+        # here -- ``test_d088_coverage_diagnostics`` still asserts the fifth name
+        # is absent from the map, and ``test_the_four_quarantine_artifacts_...``
+        # still asserts the map is exactly the four. So the path is resolved as a
+        # SIBLING of the coverage report, which is the one member of the map that
+        # the same call wrote into the same directory.
+        #
+        # WHY THIS IS OBSERVABILITY-ONLY, stated so a reviewer can check it
+        # rather than take it. ``out`` is the artifact set ``runner.write_artifacts``
+        # serialises into the leg directory AFTER the leg's decisions are all made.
+        # Nothing downstream reads ``out`` to decide anything: not admission, not
+        # the canonical graph, not acceptance, not release status, not the
+        # exporter. The single reachable effect of this block is one more file on
+        # disk and one more name in the manifest's file list. F-168 forbids these
+        # diagnostics ever becoming a gate input and that prohibition is intact --
+        # this makes them READABLE, never CONSULTED.
+        #
+        # Same guards as the loop, for the same reasons: the ``.name`` check keeps
+        # a hostile session-state value from writing under a trusted filename, and
+        # every failure mode stays a diagnosis rather than a crash, because a leg
+        # that never reached the boundary legitimately has no diagnostics.
+        coverage_source = _text(produced.get(COVERAGE_REPORT_FILENAME))
+        if coverage_source and Path(coverage_source).name == COVERAGE_REPORT_FILENAME:
+            diagnostics = Path(coverage_source).with_name(COVERAGE_DIAGNOSTICS_FILENAME)
+            try:
+                document = diagnostics.read_text(encoding="utf-8")
+            except (OSError, ValueError):  # absent, swept away, locked, not utf-8
+                document = ""
+            if document:
+                out[COVERAGE_DIAGNOSTICS_FILENAME] = document
 
 
 def _rag_admission(rag_result: Any) -> Dict[str, Any]:

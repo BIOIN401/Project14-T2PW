@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import ast
 import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -105,8 +106,38 @@ def _row(document: Dict[str, Any], term: str) -> Dict[str, Any]:
 
 
 def _committed_legs() -> List[Path]:
-    return sorted(path for root in ("runs", "runs_verify")
-                  for path in (ROOT / root).rglob(COVERAGE_REPORT_FILENAME))
+    """The legs GIT has, which is what the census measured and what the name says.
+
+    F-178 (ORCH-722). This used to ``rglob`` the working tree and then assert the
+    result was 83 with the message "the committed corpus the census measured". Those
+    are different populations, and the gap is not hypothetical: running a benchmark
+    leaves an UNTRACKED run directory, so T-109's ten legs took the count to 93 and
+    turned two census tests red in the primary checkout. They stayed green in a
+    worktree, because a worktree checks out tracked files only.
+
+    So the gate was red for exactly the people who had run a benchmark and green for
+    anyone who never had -- the F-171..F-175 shape again, inverted: a signal whose
+    scope nobody asked about, this time failing rather than passing. Nothing about
+    the census, the rule or the corpus was ever wrong.
+
+    Asking git makes the name true and the count reproducible in BOTH trees. A tree
+    without git answers by skipping: a census that silently measured a different
+    population than it names is what this is fixing, so guessing here would
+    reintroduce the defect in a new place.
+    """
+
+    try:
+        listed = subprocess.run(
+            ["git", "-C", str(ROOT), "ls-files", "runs", "runs_verify"],
+            capture_output=True, text=True, timeout=60, check=True,
+        ).stdout
+    except (OSError, subprocess.SubprocessError) as exc:  # pragma: no cover
+        pytest.skip(f"git is required to enumerate the committed corpus: {exc}")
+    return sorted(
+        ROOT / line
+        for line in listed.splitlines()
+        if line.strip().endswith("/" + COVERAGE_REPORT_FILENAME)
+    )
 
 
 @pytest.mark.parametrize("leg", ARCHIVED_LEGS)
