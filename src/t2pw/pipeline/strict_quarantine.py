@@ -53,6 +53,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -103,6 +104,7 @@ __all__ = [
     "REMOVED_ENTITY_REPORT_FILENAME",
     "CLOSURE_REPORT_FILENAME",
     "COVERAGE_REPORT_FILENAME",
+    "COVERAGE_DIAGNOSTICS_FILENAME",
     "QUARANTINE_HISTORY_DIRNAME",
     "clear_quarantine_artifacts",
     "DEFAULT_MAX_CLOSURE_ITERATIONS",
@@ -182,6 +184,11 @@ QUARANTINE_REPORT_FILENAME = "quarantine_report.json"
 REMOVED_ENTITY_REPORT_FILENAME = "removed_entity_report.json"
 CLOSURE_REPORT_FILENAME = "graph_closure_iterations.json"
 COVERAGE_REPORT_FILENAME = "coverage_summary.json"
+
+#: The D-088 clause 6/7/8 diagnostics, written BESIDE the coverage verdict and
+#: never inside it: a record that never enters the object a gate receives cannot
+#: become a gate input by accident (C-056c, F-168).
+COVERAGE_DIAGNOSTICS_FILENAME = "coverage_diagnostics.json"
 
 #: Where a superseded artifact set is archived, keyed by the full decision
 #: identifier (payload hash *and* decision-input hash) it was taken under. One
@@ -919,6 +926,180 @@ def _term_matches(term_norm: str, process_terms: Set[str]) -> bool:
     return any(term_norm == other or term_norm in other or other in term_norm for other in process_terms)
 
 
+# ── D-088 diagnostics — RECORDED BESIDE THE VERDICT, NEVER INSIDE IT ────────
+#: Stamped on every document: the MEASUREMENT RULE these rows came from
+#: (``evidence/f167_history_census.py``, G11 ``T-108/13``), NOT a truth.
+_D088_DIAGNOSTICS_RULE = "f167_census_v1"
+
+#: Where :func:`evaluate_core_coverage` parks the diagnostics on the verdict it
+#: returns: an INSTANCE ATTRIBUTE on a ``dict`` subclass, so ``json.dumps``, ``dict()``,
+#: ``==`` and every consumer keep seeing the 15-key mapping they always saw.
+_D088_DIAGNOSTICS_ATTR = "d088_diagnostics"
+
+#: Generic words carrying no biological identity. VERBATIM from the ``standard``
+#: stoplist of ``evidence/d088_subprocess_recall_ab.py`` (``STOP_MINIMAL`` plus the
+#: standard additions, in order) -- the A/B that measured this rule over all 83 legs at
+#: three stoplist strengths, identical at every one (G11 ``ORCH-719/01``). **DO NOT
+#: TUNE IT**: comparability to the committed census depends on it staying identical.
+_D088_SUBPROCESS_STOPWORDS: frozenset = frozenset({
+    # STOP_MINIMAL -- English structure only
+    "a", "an", "and", "as", "at", "by", "for", "from", "in", "into", "of", "on",
+    "onto", "or", "the", "to", "via", "with", "its", "their",
+    # the STANDARD additions -- verbs and nouns that describe ANY enzymatic step
+    "reaction", "reactions", "step", "steps", "pathway", "pathways", "process",
+    "processes", "subprocess", "conversion", "synthesis", "formation", "production",
+    "complex", "cycle", "cycles", "activity", "mediated", "catalyzed", "catalysed",
+    "dependent", "final", "first", "second", "third", "last", "initial", "terminal",
+})
+
+
+def _d088_content_tokens(phrase: Any) -> Set[str]:
+    """Alphanumeric runs >= 3 chars minus stopwords; the probe's rule unchanged."""
+
+    return {
+        token
+        for token in re.split(r"[^a-z0-9]+", str(phrase).lower())
+        if len(token) >= 3 and token not in _D088_SUBPROCESS_STOPWORDS
+    }
+
+
+def _d088_payload_entity_names(payload: Mapping[str, Any]) -> List[str]:
+    """Every ``payload["entities"][<bucket>][*]["name"]``, bucket then row order."""
+
+    names: List[str] = []
+    for bucket in _safe_dict(_safe_dict(payload).get("entities")).values():
+        for row in _safe_list(bucket):
+            name = _row_name(row)
+            if name:
+                names.append(name)
+    return names
+
+
+def _d088_subprocess_list(pathway_context: Optional[Mapping[str, Any]]) -> List[str]:
+    """Stage-0's own ``main_subprocesses``, verbatim; non-empty strings only."""
+
+    return [
+        str(step)
+        for step in _safe_list(_safe_dict(pathway_context).get("main_subprocesses"))
+        if isinstance(step, str) and str(step).strip()
+    ]
+
+
+def _d088_anchor_diagnostics(
+    unmatched_terms: Sequence[str],
+    *,
+    payload: Mapping[str, Any],
+    core: Sequence[Mapping[str, Any]],
+    subprocesses: Sequence[str],
+) -> List[Dict[str, Any]]:
+    """The three shapes an unmatched anchor can have, kept apart (D-088 clause 8).
+
+    Rules copied from the corpus census (``evidence/f167_history_census.py``, G11
+    ``T-108/13``) and deliberately NOT improved: they keep these rows comparable to its
+    committed 374 / 60 / 90 totals. ``in_payload`` uses this module's :func:`_normalize`,
+    which agrees with the census's ``norm`` on all 374 anchors of all 83 legs.
+
+    **``in_payload`` IS A CENSUS-RULE RESULT, NOT A CLAIM THAT THE ENTITY WAS NEVER
+    EXTRACTED.** A synonym defeats its normalised substring test: on one archived leg
+    an anchor recorded ``in_payload: false`` is present under its spelled-out name AND
+    wired into an admitted ``core_accepted`` reaction -- BOTH HALVES of that row are
+    false. The rule is kept so the totals stay comparable, which is exactly why every
+    document carries ``diagnostics_rule``: clause 7 protects EVIDENCE, and a preserved
+    falsehood is not evidence. Read a row as *what ``f167_census_v1`` said*, never as
+    *what the pipeline extracted*; that matcher gap is classified elsewhere, NOT fixed
+    here. ``wired_to_admitted_core`` is ``False`` by construction (it re-asks
+    :func:`_term_matches` what produced that term's own unmatched verdict) and recorded
+    anyway, so the day it returns ``True`` the matcher bug is visible.
+    """
+
+    core_term_sets = [set(_safe_list(row.get("core_terms"))) for row in core]
+    normalized_names = [(name, _normalize(name)) for name in _d088_payload_entity_names(payload)]
+    blob = " | ".join(subprocesses).lower()
+
+    rows: List[Dict[str, Any]] = []
+    for term in unmatched_terms:
+        term_norm = _normalize(term)
+        payload_names = sorted(
+            {name for name, name_norm in normalized_names if term_norm and term_norm in name_norm}
+        )
+        lowered = str(term).lower()
+        rows.append({
+            "term": term,
+            "in_payload": bool(payload_names),
+            "payload_names": payload_names,
+            "wired_to_admitted_core": any(
+                _term_matches(term_norm, term_set) for term_set in core_term_sets
+            ),
+            "subprocess_aligned": bool(lowered) and bool(blob) and lowered in blob,
+            "aligned_subprocesses": [
+                step for step in subprocesses if lowered and lowered in step.lower()
+            ],
+        })
+    return rows
+
+
+def _d088_subprocess_coverage(
+    subprocesses: Sequence[str],
+    core: Sequence[Mapping[str, Any]],
+) -> List[Dict[str, Any]]:
+    """Which Stage-0-named steps are represented among the ADMITTED core processes.
+
+    ``covered``: some ``core_accepted`` admission's ``core_terms`` shares a content
+    token with the subprocess phrase. NOT claimed equivalent to
+    ``d088_subprocess_recall_ab.subprocess_covered`` -- that probe also unions each
+    admission's ``label``, and no equivalence holds in general; what was MEASURED is
+    narrower, that the two agreed on all 73 testable legs (REV-114). A subprocess with
+    no content tokens shares nothing and records ``covered: false`` with no covering
+    process -- *untestable* to the A/B, but a record here, not a gate, so no third state.
+    """
+
+    process_tokens: List[Tuple[str, Set[str]]] = []
+    for row in core:
+        tokens: Set[str] = set()
+        for term in _safe_list(row.get("core_terms")):
+            tokens |= _d088_content_tokens(term)
+        process_tokens.append((_row_name(row), tokens))
+
+    rows: List[Dict[str, Any]] = []
+    for step in subprocesses:
+        step_tokens = _d088_content_tokens(step)
+        covering: List[str] = []
+        for label, tokens in process_tokens:
+            if step_tokens & tokens and label not in covering:
+                covering.append(label)
+        rows.append({
+            "subprocess": step,
+            "covered": bool(covering),
+            "covering_processes": covering,
+        })
+    return rows
+
+
+def _d088_diagnostics_document(coverage: Mapping[str, Any]) -> Dict[str, Any]:
+    """The diagnostics document for a coverage verdict. ALWAYS returns one.
+
+    A verdict from :func:`evaluate_core_coverage` carries its diagnostics on
+    :data:`_D088_DIAGNOSTICS_ATTR`; that is the whole seam. One from anywhere else -- a
+    hand-built mapping, an archived document replayed off disk -- has none, and this
+    records THAT rather than inventing rows: ``diagnostics_computed`` false, the four
+    computed fields ``null``, which is not what ``[]`` would say. ``unmatched_terms`` is
+    copied VERBATIM either way, so this can always be cross-checked against the verdict
+    beside it -- two files CAN disagree, and this is what makes that detectable.
+    """
+
+    attached = _safe_dict(getattr(coverage, _D088_DIAGNOSTICS_ATTR, None))
+    document: Dict[str, Any] = {
+        "d088_diagnostics_version": 1,
+        "diagnostics_rule": _D088_DIAGNOSTICS_RULE,
+        "diagnostics_computed": bool(attached),
+        "unmatched_terms": list(_safe_list(_safe_dict(coverage).get("unmatched_terms"))),
+    }
+    for key in ("unmatched_anchor_diagnostics", "subprocess_coverage",
+                "subprocess_coverage_ratio", "subprocess_source_declared"):
+        document[key] = attached.get(key) if attached else None
+    return document
+
+
 def evaluate_core_coverage(
     payload: Mapping[str, Any],
     admissions: Sequence[Mapping[str, Any]],
@@ -956,6 +1137,27 @@ def evaluate_core_coverage(
     The import is function-local on purpose: this module is imported by the
     pipeline at large, and the coverage verdict is the only thing here that needs
     the classification vocabulary.
+
+    **D-088 DIAGNOSTICS: COMPUTED HERE, CARRIED BESIDE THE VERDICT, NEVER READ.**
+    Clauses 6/7/8 want the unmatched-anchor evidence preserved in SEPARATE
+    populations. They are computed in this call from the same ``terms``,
+    ``unmatched_terms``, ``core`` and ``payload``, and ATTACHED to the returned
+    verdict on :data:`_D088_DIAGNOSTICS_ATTR` -- an instance attribute invisible to
+    ``json.dumps``, ``dict()`` and ``==``. THE RETURNED MAPPING IS UNCHANGED: same
+    15 keys, same order, same bytes. Added as KEYS they broke two byte-pinned
+    consumers, one of which correctly detected request-derived content entering the
+    verdict outside ``requested_context``, its one designated request echo.
+
+    NOTHING here reads them -- not ``reasons``, ``minimum_core_satisfied``,
+    ``coverage_ratio``, either threshold, nor any release status. C-056c's
+    ``semantic_check_evaluability`` precedent exactly: *a carrier that could move a
+    verdict would be a second gate wearing a record's name.* F-168 is why that is
+    not optional -- ``subprocess_coverage``'s input, Stage-0's
+    ``main_subprocesses``, is itself an LLM DRAW: of 14 archived paper/mode pairs
+    with 2+ draws ZERO named an identical set every time, and on 3 of 7 archived
+    draws of the one paper whose missing upstream arm is invariant, Stage 0 did not
+    name that arm. A gate keyed to it would have a random denominator; a record of
+    what varied is exactly what a varying list is good for, which is why this is one.
     """
 
     from t2pw.pipeline.release_status import CoverageVerdict
@@ -1019,7 +1221,7 @@ def evaluate_core_coverage(
             f"requested_core_coverage_below_minimum:{coverage_ratio:.3f}<{float(min_core_coverage):.3f}"
         )
 
-    return CoverageVerdict({
+    verdict = CoverageVerdict({
         "schema_version": 1,
         "requested_core_terms": terms,
         "requested_core_declared": declared,
@@ -1043,6 +1245,25 @@ def evaluate_core_coverage(
         "minimum_core_satisfied": not reasons,
         "reasons": reasons,
     })
+
+    # D-088 clauses 6/7/8. Computed AFTER `reasons` is final, read by nothing above it,
+    # ATTACHED not inserted so the verdict still serializes to the exact bytes it did
+    # before this card. write_quarantine_artifacts writes them out.
+    subprocesses = _d088_subprocess_list(pathway_context)
+    subprocess_rows = _d088_subprocess_coverage(subprocesses, core)
+    covered = sum(1 for row in subprocess_rows if row["covered"])
+    setattr(verdict, _D088_DIAGNOSTICS_ATTR, {
+        "unmatched_anchor_diagnostics": _d088_anchor_diagnostics(
+            unmatched_terms, payload=payload, core=core, subprocesses=subprocesses
+        ),
+        "subprocess_coverage": subprocess_rows,
+        "subprocess_coverage_ratio": (
+            round(covered / len(subprocess_rows), 6) if subprocess_rows else 0.0
+        ),
+        # Absent and empty both False -- the census's own ``has_ctx``.
+        "subprocess_source_declared": bool(subprocesses),
+    })
+    return verdict
 
 
 # ── Admission ───────────────────────────────────────────────────────────────
@@ -2693,7 +2914,7 @@ def write_quarantine_artifacts(
     result: StrictQuarantineResult,
     out_dir: Path | str,
 ) -> Dict[str, str]:
-    """Persist the four artifacts and return ``name -> path``.
+    """Persist the artifact set; return ``name -> path`` for the four named ones.
 
     All four are always written, including when nothing was quarantined: an
     absent ``quarantine_report.json`` is indistinguishable from a run that never
@@ -2721,6 +2942,9 @@ def write_quarantine_artifacts(
         REMOVED_ENTITY_REPORT_FILENAME: result.removed_entity_report,
         CLOSURE_REPORT_FILENAME: result.closure_report,
         COVERAGE_REPORT_FILENAME: result.coverage,
+        # FIFTH -- same function, same loop, same archive block, so "verdict
+        # written, diagnostics absent" is UNREACHABLE (D-088 clauses 6/7/8).
+        COVERAGE_DIAGNOSTICS_FILENAME: _d088_diagnostics_document(result.coverage),
     }
 
     existing = directory / QUARANTINE_REPORT_FILENAME
@@ -2748,7 +2972,10 @@ def write_quarantine_artifacts(
             json.dumps(document, indent=2, ensure_ascii=False, default=str),
             encoding="utf-8",
         )
-        written[filename] = str(path)
+        # The RETURNED map stays the four-name set two unowned pinned consumers
+        # assert by equality; the diagnostics are a record on disk, not a member.
+        if filename != COVERAGE_DIAGNOSTICS_FILENAME:
+            written[filename] = str(path)
     return written
 
 
