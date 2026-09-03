@@ -8600,3 +8600,82 @@ wave committed its own run.
 
 **"Verify once, do not trust these numbers" has to mean the expensive rows too, or it means the rows
 that were never going to be wrong.**
+
+---
+
+## F-172 — `g11_evidence.py check` certifies the LIFECYCLE half of G11 and enforces rule 10 not at all, and the whole sprint has been quoting it as if it covered both
+
+- **Severity** MEDIUM as a tooling gap, HIGH as a claims-hygiene problem · **Class: instrument scope,
+  no production code implicated** · **Registered 2026-09-02 (`ORCH-719`)**
+- **Found by** C-116's implementer, unprompted, while reporting its own corrected G11 record.
+  **Confirmed independently by the Lead** before registration; routed to `REV-116` for a third read.
+
+### The measurement
+
+`check --task C-116` reports **`14 artifact(s), 0 non-compliant`, exit 0** — including sequences
+**09–14, which have no `.pin.json` verdict at all.**
+
+Confirmed at source rather than inferred: `grep -nE "pin|verdict|tree_pin|measurement"` over
+`evidence/g11/g11_evidence.py` returns **only** a docstring line, an unrelated `typing` import, and
+one sentence of prose. **The checker never opens, names, or requires a pin verdict.** What it
+validates is `REQUIRED_FIELDS` on the cleanup report plus `cleanup_success` — `check_report:241`,
+`:271`, `:282`.
+
+### Why this is not a bug in the tool
+
+**The tool is doing exactly what it was built for.** Its own docstring scopes it: *"G11 already
+required a cleanup report on every test record."* It is cleanup bookkeeping, and it is correct at it.
+
+**The defect is in how it has been read** — including by me, repeatedly, today. Throughout this sprint
+`check --task X` clean has been quoted as *the* G11 compliance proof, in card acceptance criteria, in
+implementer reports, in reviewer reports and in merge commits. But **G11 is `TEST_MATRIX` § 0 in
+full**, and its **rule 10** — the measurement-tree pin, `T2PW_MEASUREMENT_TREE_REFUSED`, exit 98 —
+is a separate obligation with a separate artifact that **nothing checks mechanically.**
+
+### The consequence, stated exactly
+
+**A card can pass `check --task` clean while every one of its runs measured the wrong tree.**
+
+That is not hypothetical: **C-116's first six pytest jobs did exactly that** — run through bare
+`-m pytest` instead of `pinned_pytest.py`, no verdict produced, and their reports would have been
+committed as ordinary evidence with `check` reporting `ok`. **The only thing that caught it was the
+implementer noticing its own violation and saying so.** No gate would have.
+
+**And the hazard rule 10 exists for is live in this repo.** `TEST_MATRIX` § 0 rule 10 records that
+the venv's editable `.pth` names the primary checkout's `src`, and that in-process
+`sys.path.insert(0, …)` in **24 of the 27 smoke and Chunk D modules** overrides `PYTHONPATH` in a
+worktree while being a no-op in the primary checkout. **A worktree run measuring the primary
+checkout's tree is the exact failure this sprint built exit 98 to refuse** — and the bookkeeping that
+certifies G11 does not look for it.
+
+### What is NOT claimed
+
+- **No committed merge in this wave is affected.** C-115, C-117 and the Lead's own ORCH-719 jobs all
+  carry `.pin.json` verdicts with `refused: false`, `violations: []`, `foreign_src_entries: []`, and
+  those were read individually rather than inferred from `check`.
+- **This is not a claim that any past run measured the wrong tree.** It is a claim that **`check`
+  would not have told anyone if one had.**
+- **Not chartered.** The obvious fix — have `check` require a sibling `.pin.json` for every report
+  whose command invokes `pytest`, and cross-check filename label against the report's own `label`
+  field — is a change to the tooling every card depends on, and `bounded_run.py`'s build hash appears
+  in every G11 report. **A mid-wave change to that surface breaks comparability**, which is F-163's
+  standing reason for not touching it casually.
+
+### A second, smaller gap in the same read
+
+**Filename label and internal `label` are not cross-checked.** `09-…-unpinned-superseded.json` carries
+`"label": "d088-diagnostics"` internally, because that is what the job ran as. Here it is deliberate
+and disclosed. In general it means **a report can be filed under a name that does not describe the job
+it records**, and nothing notices.
+
+### Standing lesson
+
+**A checker's name is not its scope, and "the check is clean" is a claim about what the check
+examines.** `g11_evidence.py check` is named for the gate and covers half of it. Everyone in this
+sprint — cards, implementers, reviewers, and the Lead in merge commits — has been citing it as
+though the name were the scope.
+
+**This is F-171's shape in a second place.** There, a handoff row certified a suite green that had
+been red for days. Here, a checker certifies a gate whose other half it never looks at. **Both are
+green signals that mean less than their readers believed, and in both cases the signal was correct
+about what it actually measured.**
