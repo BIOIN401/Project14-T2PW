@@ -9370,7 +9370,7 @@ this wave.**
 ## Standing constraints honoured
 
 - **No production, scorer, test or gold file changed by the Lead.** Gold blob still
-  `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` — **superseded 2026-09-03 by D-091, now `d0b588a79bb4aa3c11a7b5062a0b45bb8e20ab74`.**
+  `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` — **superseded 2026-09-03 by D-092, now `98739a59dd6c376f8a19968c7fa5dc3145be5b15`.** D-091 briefly moved it to `d0b588a79bb4aa3c11a7b5062a0b45bb8e20ab74` and was WITHDRAWN before merge.
 - Every job through `bounded_run.py` with the venv interpreter, a real `--timeout` and
   `--heavy-lock ORCH-719`. **Both jobs: `FINAL SURVIVING COUNT : 0`, `cleanup : success`, lock
   acquired and released.** `g11_evidence.py check --task ORCH-719` clean, no surviving `.staging`
@@ -9670,10 +9670,11 @@ non-acceptance is attributed to the **test instrument**, not to the pipeline.
 
 | item | state |
 |---|---|
-| **`supported_reactions_complete` curation** | **item 1 of the next phase.** The only hard gate between a run and acceptance. D-087 unchanged: one case at a time, independently verified complete. **The audit is the cost, not the edit** |
-| **`F-175`** — ~~the batch path never writes~~ **the batch path never CARRIES** `coverage_diagnostics.json` | evaluation-instrument gap. **AMENDED `ORCH-721`:** the writer runs; the file is excluded from its returned map and the driver carries only that map. **ESCALATED** — the fix is one tuple entry in FROZEN `driver.py`. **Its test must still assert the file exists in a BATCH LEG DIRECTORY** |
-| **`F-176`** — rejected-RAG evidence unavailable offline | **REGISTERED AS REFUTED, `ORCH-721`.** The artifact is persisted, carries 1,947 rejected rows, and the offline evaluator reaches a verdict with it (19/19) and cannot without it (0/19). Residual: a stale `inapplicable_reason` in FROZEN `semantic.py:1244`. **ESCALATED** |
-| **`F-177`** — semantic tally mixes canonical and pre-quarantine payloads | **NEW, `ORCH-721`.** 10 canonical legs and 9 fallback legs summed into one column; both RAG failures and 6 of 9 identity failures are in the fallback half. Evaluation-only, outside the freeze |
+| **`supported_reactions_complete` curation** | **STILL ITEM 1, AND NOW BLOCKED ON A PRODUCT DECISION, NOT ON AN AUDIT.** `ORCH-722` commissioned a full independent audit of `PMC12312563`, set the flag as **D-091**, measured it, and **WITHDREW it as D-092**. The biology is certified and stands; what fails is that the flag charges a correctly-attributed cross-paper RAG row as invented chemistry, violating the seed-only precondition `goldset.py` already documents. **No further audit will unblock this** — it needs a seed-only corpus, row-level RAG lineage (`R-D092-1`), or a product-owner ruling on the `policy_disagreement` (`R-D092-3`). |
+| **`F-175`** — the batch path never CARRIED `coverage_diagnostics.json` | **CLOSED `ORCH-722`** under a narrow D-090 exception. Carried as a sibling of the coverage report; the producer's four-name returned map is untouched. Real-batch-leg proof, byte-identical release record and PWML. |
+| **`F-176`** — rejected-RAG evidence unavailable offline | **REFUTED `ORCH-721`; the residual reporting defect CLOSED `ORCH-722`** under a narrow D-090 exception. The stale `inapplicable_reason` is corrected and split into supplied-nothing vs malformed. **STILL OPEN and needing a further ruling:** making the check APPLICABLE at runtime, which cannot be done narrowly — it is a `SEMANTIC_GATING_CHECK` and `quarantine_and_close` has no `admission` parameter, so wiring it could move release status. |
+| **`F-177`** — semantic tally mixes canonical and pre-quarantine payloads | **INSTRUMENT BUILT `ORCH-722`**, evaluation-only: `evidence/eval_semantic_populations.py` reports canonical / fallback / unknown / no-payload separately, refuses a denominator-free headline, and counts a non-evaluated leg rather than skipping it. **Not yet wired into `bench/acceptance.py`'s own tally, which still sums.** |
+| **`F-178`** — two helpers named `_committed_legs` / `all_committed_legs` globbed the WORKING TREE | **FOUND AND FIXED `ORCH-722`**, environment/working-tree discrepancy. An untracked benchmark run took the census corpus 83 -> 93, so three tests went red in the primary checkout and stayed green in every worktree — the gate was red for exactly the people who had run a benchmark. Both helpers now ask git. |
 | **`R-D089-1`** — general non-paper-keyed completeness specification | already registered there by D-089; its own wave, not a task |
 
 ### Carried forward OPEN, and not closed by the freeze

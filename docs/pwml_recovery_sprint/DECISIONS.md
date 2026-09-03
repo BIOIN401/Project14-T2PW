@@ -5507,3 +5507,124 @@ exactly-one-case narrowness, and a behavioural proof that the other nine still w
 > candidates it excluded and why, rejects six other papers with citations, and states three
 > conditions that would void it. **A flag set any more cheaply than that is the 227-fabrication
 > outcome waiting to happen.**
+
+---
+
+## D-092 — D-091 is WITHDRAWN before merge. `supported_reactions_complete` stays unset on every case; the ALIAS half ships alone · 2026-09-03 · LOCKED
+
+**This supersedes D-091 in full.** D-091 is left in place above, unedited, because a withdrawn
+ruling that is deleted teaches nobody why it was withdrawn.
+
+### 1. What is decided
+
+`supported_reactions_complete` is **unset on all ten pinned cases**, as it was before this wave.
+What ships instead is the **alias fix** on `PMC12312563`'s three `2-oxoglutarate` terms.
+
+Gold blob: `36f4b7b6…` → `d0b588a7…` (D-091) → **`98739a59dd6c376f8a19968c7fa5dc3145be5b15`** (D-092).
+
+### 2. The biology STANDS. The inference did not.
+
+**Nothing in the audit is retracted.** `PMC12312563` states exactly one reaction, gold's single
+signature is it, and the list is exhaustive of the paper. Re-verified independently: MenD 133
+occurrences, MenA/B/C/E/F/G/H/I zero each, free `chorismate` zero.
+
+**What failed is the step taken after the biology** — the inference from *"gold's list is exhaustive
+of the paper"* to *"any unmatched row is unsupported."* **That holds only if the payload is a
+function of ONE paper.** On the committed corpus it is not.
+
+### 3. The measurement that reversed it, which nobody had taken
+
+D-091 asserted the flag *"changes no acceptance verdict at all on the committed corpus"* and gave as
+its reason that both legs are `scope_conflict` with no `final_mapped.json`. **That reason described
+the T-109 run, which is UNTRACKED.** `git ls-files` says the committed corpus holds **3 canonical
+and 19 fallback legs** for this paper. **The claim was false, and it was mine.** Caught by review.
+
+Measured (`evidence/d091_committed_effect.py`), the flag moves **16 of 22** committed legs. On the
+committed canonical leg `runs/2026-07-27_1623/…/strict`, which reached `pwml_export` with
+`RESULT: PASS` and quarantined nothing, it charges rows that are **not fabrications**:
+
+| leg rows | what it is | charging it as invented would be |
+|---|---|---|
+| **0 and 5** | the paper's OWN MenD reaction, written `α-ketoglutarate` against a signature spelled `2-oxoglutarate` | **false** — a synonym, not a different molecule |
+| **6** | `DHNA-CoA → DHNA` by MenI / LMRG_02730 | **false** — all four entities carry `rag_provenance.source_id = PMC8091085`, a paper **PMC12312563 itself cites** (Smith et al. 2021, in its reference list). Real reaction, real enzyme, right organism, right pathway, source named |
+
+**Three of seven rows falsely accused, on the most defensible case in the set.**
+
+### 4. The flag's own documented precondition is violated
+
+`goldset.py` states the flag *"is incompatible with multi-paper RAG synthesis unless the run is
+seed-only."* That precondition **fails measurably**: four entities on a committed canonical leg carry
+another paper's `source_id`. This is not a judgement call; it is a documented condition failing
+against a committed artifact.
+
+**And the earlier RAG clearance was worthless, not merely narrow.** The audit cleared RAG on the
+basis that both T-109 legs showed `accepted: []`. Both legs **aborted at `stage1` with
+`scope_conflict` and never reached synthesis in earnest** — the empty set was an artifact of early
+termination. The auditor identified and owned this itself.
+
+> **D-087 clause 5 decides it.** *"Leaving the flag unset yields a number that is withheld and
+> labelled as withheld. Setting it wrongly yields a number that is stated and wrong, in the
+> direction of accusing the pipeline of inventing chemistry it did not invent."*
+
+### 5. What SHIPS, and why it is a strict improvement
+
+The alias gap is a **pre-existing gold defect present today with the flag OFF**. Measured on the
+committed canonical leg:
+
+| aliases | flag | supported-reaction check | false positives |
+|---|---|---|---|
+| no | off | **`ok=False`** — recall 0/1 | withheld |
+| no | on | `ok=False` | **7** |
+| **yes** | **off** | **`ok=True`** — recall 1/1 | withheld ✅ **shipped** |
+| yes | on | `ok=False` | 5 |
+
+**Without the aliases the paper's own MenD reaction failed to match the signature written for it.**
+The fix is warranted on its own merits and is independent of the flag.
+
+Aliases added to all three `2-oxoglutarate` terms — the signature input, `expected_substrates`, and
+the pathway anchor: `alpha-ketoglutarate`, `alpha-ketoglutaric acid`, `2-ketoglutarate`,
+`2-oxoglutaric acid`, `oxoglutaric acid`, `2-oxopentanedioate`.
+
+**Deliberately NOT added: bare `ketoglutarate` or `glutarate`.** `goldset.py` warns that
+`α-` and `β-ketoglutarate` must not collapse; every alias above pins either `alpha-` or `2-`. The
+Greek form is omitted because `_GREEK` already folds `α → alpha`, measured rather than assumed.
+
+### 6. Two authority defects in D-091, recorded because both are instructive
+
+1. **D-091 was Lead-authored in a register `CLAUDE.md` reserves to the product owner**, to satisfy a
+   D-087 guardrail whose entire purpose is to be *external to the agent setting the flag*. D-090 § 4
+   says of this exact curation: *"it is not a Lead judgement."* Even had the biology been sufficient,
+   the ruling was not mine to write. Raised by review.
+2. **The audit was commissioned, adopted, and then not re-consulted when new evidence appeared.**
+   The reversal came only because the measurement was forced by review and the question was routed
+   back. **An audit is not a one-shot artifact.**
+
+### 7. What must hold before this flag is reconsidered — on ANY case
+
+**One** of these, not merely a better audit:
+
+1. the scored corpus is **seed-only**; or
+2. **row-level RAG lineage exists** on `processes.reactions` — today lineage is on *entities* only,
+   so a row is attributable only by following its participants, and a scorer cannot exclude
+   non-seed rows from the precision denominator from the row alone; or
+3. a product-owner ruling that a **correctly-attributed cross-paper RAG reaction counts as
+   unsupported** for this benchmark. **That is a `policy_disagreement` and it is the product
+   owner's, not the Lead's and not the auditor's.**
+
+**Until one holds, no case in the pinned set can carry this flag safely — including the one whose
+biology is certified.**
+
+### 8. Registered open by this ruling
+
+- **`R-D092-1`** — row-level RAG provenance on `processes.reactions`. Blocks conditions 2 and 3.
+- **`R-D092-2`** — duplicate reaction rows are counted as separate true positives. Rows 0 and 5 of
+  the committed canonical leg are identical but for evidence-span length, and `true_positives`
+  counts pointers, so **Priority 2 currently rewards a duplicated row**. Found while measuring.
+- **`R-D092-3`** — the `policy_disagreement` in § 7.3, for the product owner.
+
+> **Standing lesson, and it is the expensive one.** The audit was rigorous, its biology was correct,
+> it was independently verified, and the flag it authorized **still had to be withdrawn** — because
+> "is this list exhaustive of the paper?" and "is every unmatched row unsupported?" are different
+> questions, and only the first was ever asked. **A correct answer to the wrong question is still
+> the wrong answer, and it is far more dangerous than an obviously wrong one, because it arrives
+> with evidence.**

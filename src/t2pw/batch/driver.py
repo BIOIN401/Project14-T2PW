@@ -1525,13 +1525,31 @@ def _add_identity_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, A
         #
         # WHY THIS IS OBSERVABILITY-ONLY, stated so a reviewer can check it
         # rather than take it. ``out`` is the artifact set ``runner.write_artifacts``
-        # serialises into the leg directory AFTER the leg's decisions are all made.
-        # Nothing downstream reads ``out`` to decide anything: not admission, not
-        # the canonical graph, not acceptance, not release status, not the
-        # exporter. The single reachable effect of this block is one more file on
-        # disk and one more name in the manifest's file list. F-168 forbids these
-        # diagnostics ever becoming a gate input and that prohibition is intact --
-        # this makes them READABLE, never CONSULTED.
+        # serialises into the leg directory after the leg's decisions are made.
+        #
+        # THE CLAIM IS ABOUT THIS KEY, NOT ABOUT ``out``. An earlier draft of this
+        # comment said "nothing downstream reads ``out`` to decide anything", and
+        # that is FALSE: :func:`_gate_failure_semantic_carry` (reached from
+        # ``:2140``) reads ``out[QUARANTINE_REPORT_FILENAME]`` and feeds it to
+        # ``classify_release_status``, and ``:2600``/``:2615`` read
+        # ``research_pathway_report.txt`` to decide a leg's pass/fail. Review
+        # caught the over-broad universal. The true and checkable claim:
+        #
+        #   ``coverage_diagnostics.json`` appears in ``src/`` in exactly three
+        #   places -- the writer (``strict_quarantine.py:2947``), its deliberate
+        #   exclusion from the returned map (``:2977``), and this block. NO READER
+        #   EXISTS. Not admission, not the canonical graph, not acceptance, not
+        #   release status, not the exporter.
+        #
+        # F-168 forbids these diagnostics ever becoming a gate input and that
+        # prohibition is intact -- this makes them READABLE, never CONSULTED.
+        #
+        # ONE FURTHER MANIFEST DELTA, enumerated because merge rule 4 wants the
+        # exact one: ``RunOutcome.capped_detail`` splices ``", ".join(sorted(
+        # self.artifacts))`` into its truncation marker, so on a leg whose
+        # ``detail`` exceeds ``DETAIL_LIMIT`` the manifest's ``detail`` string also
+        # gains this filename. That is a second observable change and it is not a
+        # decision input either.
         #
         # Same guards as the loop, for the same reasons: the ``.name`` check keeps
         # a hostile session-state value from writing under a trusted filename, and

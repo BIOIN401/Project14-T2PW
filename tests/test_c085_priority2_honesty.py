@@ -327,19 +327,26 @@ def _cached_text(case: GoldCase) -> str:
 
 
 # ---------------------------------------------------------------------------
-# D-091 / ORCH-722 -- the instrument proof.
+# D-092 / ORCH-722 -- the flag was set, MEASURED, and WITHDRAWN before merge.
 #
-# Everything above this line proves the WITHHOLDING is honest, on synthetic cases.
-# What was never provable was the other direction: that Priority 2 can reach a
-# real verdict on a REAL pinned gold case, because no pinned case carried
-# ``supported_reactions_complete``. D-091 sets it on exactly one, after an
-# independent biological audit, and these tests are what make that claim checkable
-# rather than announced.
+# D-091 set supported_reactions_complete on PMC12312563 after an independent
+# biological audit. The biology was right and still is: that paper states exactly
+# one reaction and the single gold signature is it. What the audit had not
+# measured -- and what the Lead asserted without measuring -- was the effect on
+# the COMMITTED corpus. Measured, the flag charges 3 of 7 rows on a committed
+# canonical leg that are not fabrications:
 #
-# They read the REAL pinned gold set, not a constructed case, because a synthetic
-# case cannot show that the edit landed on the right paper or that it stayed narrow.
+#   * rows 0 and 5 are the paper OWN MenD reaction, written by the pipeline as
+#     "alpha-ketoglutarate" against a signature term spelled "2-oxoglutarate";
+#   * row 6 is DHNA-CoA -> DHNA by MenI, whose four entities all carry
+#     rag_provenance.source_id = PMC8091085 -- a paper PMC12312563 itself cites.
+#
+# The flag docstring in goldset.py already states the flag is incompatible with
+# multi-paper RAG synthesis unless the run is seed-only. That precondition is
+# violated on committed evidence, so the flag was withdrawn and the ALIAS half --
+# which fixes a false failure that exists TODAY with the flag off -- shipped alone.
 # ---------------------------------------------------------------------------
-D091_CASE = "PMC12312563"
+AUDITED_CASE = "PMC12312563"
 
 
 def _pinned():
@@ -348,122 +355,154 @@ def _pinned():
     return {case.paper_id: case for case in load_gold_set().cases}
 
 
-def test_d091_exactly_one_pinned_case_carries_the_completeness_flag():
-    """NARROWNESS. D-087 forbids setting this broadly; this is the enforcement.
+def test_d092_no_pinned_case_carries_the_completeness_flag() -> None:
+    """THE INVARIANT D-091 BROKE AND D-092 RESTORED.
 
-    If a later wave sets a second case without its own audit and its own ruling,
-    this fails and names the extra paper. That is the single cheapest guard
-    available against the 227-fabricated-reactions outcome ``semantic.py`` warns
-    about, and it costs one assertion.
+    Named so the next agent reaching for this flag finds the reason rather than the
+    absence. Any case appearing here needs its own D-087 audit, its own ruling, AND
+    a seed-only scored corpus or row-level RAG lineage. The third is what D-091
+    lacked.
     """
 
     flagged = sorted(
         paper_id for paper_id, case in _pinned().items()
         if case.supported_reactions_complete
     )
-    assert flagged == [D091_CASE], (
-        "supported_reactions_complete must be set on exactly the one audited case; "
-        "each additional case needs its own D-087 audit and its own ruling"
+    assert flagged == [], (
+        "supported_reactions_complete is set on %s. Setting it while the scored "
+        "corpus contains cross-paper RAG rows reports correctly-attributed "
+        "chemistry as invented -- see D-092." % flagged
     )
 
 
-def test_d091_the_audited_case_reaches_a_MEASURED_ZERO_on_a_conforming_payload():
-    """THE INSTRUMENT PROOF, positive half.
+def test_d092_the_alias_fix_lets_the_paper_own_reaction_match_its_own_signature() -> None:
+    """THE HALF THAT SHIPPED, and it fixes a false failure present with the flag OFF.
 
-    A payload holding exactly the one reaction the paper supports must produce an
-    EVALUATED verdict of zero -- not the withheld zero every pinned case produced
-    before. ``unsupported_verdict_evaluated`` is the field that tells those two
-    zeros apart, and it is the whole point of the flag.
+    The committed canonical leg writes the substrate in the Greek form; gold spells
+    it "2-oxoglutarate". Before the alias list those were MATCH_NONE, so the MenD
+    reaction -- the only reaction this paper states -- failed to match the signature
+    written for it, and recall read 0/1.
+
+    The Greek form is used deliberately: it proves the _GREEK alpha-fold and the new
+    ASCII alias COMPOSE. A test using the ASCII spelling would pass on a half-fix.
     """
 
-    case = _pinned()[D091_CASE]
-    assert len(case.supported_reactions) == 1, "the audit was of a one-reaction case"
-    signature = case.supported_reactions[0]
+    case = _pinned()[AUDITED_CASE]
+    row = {
+        "name": "SEPHCHC synthase reaction",
+        "inputs": ["\u03b1-ketoglutarate", "isochorismate"],
+        "outputs": ["SEPHCHC"],
+        "enzymes": [{"entity": "MenD complex", "role": "catalyst"}],
+        "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I",
+    }
 
     report = validate_semantic_coverage(
-        case, _payload([_row_for(signature)]), paper_text=_cached_text(case)
-    )
+        case, _payload([row]), paper_text=_cached_text(case))
     check = report.checks[CHECK_SUPPORTED_REACTIONS]
 
-    assert report.support["unsupported_verdict_evaluated"] is True, (
-        "Priority 2 is still unevaluable on the one case that was audited"
+    assert report.support["false_negatives"] == 0, (
+        "the MenD reaction still does not match the signature written for it"
     )
+    assert report.support["attribution_rate"] == 1.0, report.support
+    matched = report.support["matched"]
+    assert [m["matched_by"] for m in matched] == [["/processes/reactions/0"]], matched
+    assert matched[0]["signature"] == "2-oxoglutarate + isochorismate -> SEPHCHC [MenD]"
+    # ...and with the flag OFF and EVERY row attributed, the verdict is a MEASURED
+    # zero rather than a withheld one. That is by design and not a consequence of
+    # the alias fix: a payload with no unmatched rows needs no completeness claim to
+    # be judged, because there is nothing left that a missing signature could
+    # explain (test_every_row_matching_a_signature_is_a_measured_zero_not_a_withheld_one).
+    # Asserted here because the first draft of this test assumed "flag off" implied
+    # "withheld", which is the same applicable-versus-passed confusion this file exists
+    # to prevent, in a third costume.
+    assert report.support["unsupported_verdict_evaluated"] is True
     assert check.applicable is True
     assert check.ok is True
     assert report.scientific_errors[ERR_UNSUPPORTED_REACTIONS] == 0
 
 
-def test_d091_the_audited_case_now_CHARGES_a_reaction_the_paper_does_not_support():
-    """THE INSTRUMENT PROOF, negative half -- and the half that carries the risk.
+def test_d092_the_mechanism_still_works_when_a_case_DOES_carry_the_flag() -> None:
+    """The instrument proof, kept -- driven by a SYNTHETIC flagged case.
 
-    An evaluable check that can only ever return zero is not evaluable, it is
-    decorative. This feeds the audited case a ThDP-adduct sub-step -- the exact
-    over-decomposition the archived legs actually produced for this paper, and the
-    exact shape the case's own ``forbidden_identifiers`` names ``placeholder_product``
-    -- and requires it to be CHARGED.
-
-    Both halves are needed together: the test above alone would pass on a rule that
-    never fires, and this one alone would pass on a rule that fires indiscriminately.
+    Withdrawing D-091 removed the only real case carrying the flag, so this drives
+    the same mechanism through dataclasses.replace. It proves the scorer WOULD reach
+    a real verdict if a case ever legitimately carried the flag, without requiring
+    one to. Both directions are asserted, plus the withheld control.
     """
 
-    case = _pinned()[D091_CASE]
-    unsupported = {
-        "name": "MenD-catalyzed decarboxylation of 2-oxoglutarate",
-        "inputs": ["2-oxoglutarate"],
-        "outputs": ["intermediate I"],
-        "enzymes": ["MenD"],
+    import dataclasses  # noqa: PLC0415
+
+    case_off = _pinned()[AUDITED_CASE]
+    case_on = dataclasses.replace(case_off, supported_reactions_complete=True)
+    matched = {
+        "name": "SEPHCHC synthase reaction",
+        "inputs": ["2-oxoglutarate", "isochorismate"], "outputs": ["SEPHCHC"],
+        "enzymes": [{"entity": "MenD complex"}],
+        "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I",
+    }
+    adduct = {
+        "name": "decarboxylation of 2-oxoglutarate",
+        "inputs": ["2-oxoglutarate"], "outputs": ["intermediate I"],
+        "enzymes": [{"entity": "MenD complex"}],
         "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I",
     }
 
-    report = validate_semantic_coverage(
-        case,
-        _payload([_row_for(case.supported_reactions[0]), unsupported]),
-        paper_text=_cached_text(case),
-    )
-    check = report.checks[CHECK_SUPPORTED_REACTIONS]
+    clean = validate_semantic_coverage(
+        case_on, _payload([matched]), paper_text=_cached_text(case_off))
+    assert clean.support["unsupported_verdict_evaluated"] is True
+    assert clean.checks[CHECK_SUPPORTED_REACTIONS].ok is True
+    assert clean.scientific_errors[ERR_UNSUPPORTED_REACTIONS] == 0
 
-    assert report.support["unsupported_verdict_evaluated"] is True
-    assert check.applicable is True
-    assert check.ok is False, "an unsupported reaction was not charged"
-    assert report.scientific_errors[ERR_UNSUPPORTED_REACTIONS] == 1
-    pointers = [f.get("pointer") for f in check.findings
-                if f.get("kind") == "unsupported_retained_reaction"]
-    assert pointers == ["/processes/reactions/1"], check.findings
+    charged = validate_semantic_coverage(
+        case_on, _payload([matched, adduct]), paper_text=_cached_text(case_off))
+    assert charged.support["unsupported_verdict_evaluated"] is True
+    assert charged.checks[CHECK_SUPPORTED_REACTIONS].ok is False
+    assert charged.scientific_errors[ERR_UNSUPPORTED_REACTIONS] == 1
+
+    withheld = validate_semantic_coverage(
+        case_off, _payload([matched, adduct]), paper_text=_cached_text(case_off))
+    assert withheld.support["unsupported_verdict_evaluated"] is False
+    assert withheld.scientific_errors[ERR_UNSUPPORTED_REACTIONS] == 0
 
 
-def test_d091_the_other_nine_pinned_cases_still_WITHHOLD_their_verdict():
-    """The edit must not have leaked. Asserted on BEHAVIOUR, not on the flag.
+def test_d092_a_cross_paper_rag_row_is_why_the_flag_stays_off() -> None:
+    """THE GUARD. Pins the REASON, not just the state.
 
-    Reading the flag back would only restate the edit. This feeds every other
-    pinned case an unattributed row and requires the verdict to stay withheld --
-    which is what "narrow" actually means for the instrument.
-
-    THE ROW HAS TO BE FOREIGN TO EVERY CASE. The first draft reused
-    _UNATTRIBUTED (isochorismate -> SEPHCHC) and PMC12421875 reported
-    evaluable. That was not a leak: PMC12421875 IS the menaquinone paper, the
-    row matched one of its real signatures, every retained row was then attributed,
-    and a fully-attributed payload is a MEASURED zero by design
-    (test_every_row_matching_a_signature_is_a_measured_zero_not_a_withheld_one).
-    A narrowness probe whose probe row is real chemistry for one of the papers
-    tests the wrong thing.
+    A row whose participants carry rag_provenance from another paper cannot match a
+    seed-paper signature by construction -- the flag docstring in goldset.py says
+    so. With the flag on it is charged as a fabrication; with the flag off it is
+    correctly absorbed into a withheld, labelled subset. This fails the day someone
+    sets the flag while such rows remain in the scored corpus.
     """
 
-    foreign = {
-        "name": "a reaction no pinned paper supports",
-        "inputs": ["zzz-substrate-not-in-any-paper"],
-        "outputs": ["zzz-product-not-in-any-paper"],
-        "enzymes": ["ZzzAse"],
-        "evidence": "q",
-    }
+    import dataclasses  # noqa: PLC0415
 
-    for paper_id, case in sorted(_pinned().items()):
-        if paper_id == D091_CASE or not case.supported_reactions:
-            continue
-        report = validate_semantic_coverage(
-            case,
-            _payload([_row_for(case.supported_reactions[0]), foreign]),
-            paper_text=_cached_text(case),
-        )
-        assert report.support["unsupported_verdict_evaluated"] is False, (
-            f"{paper_id} became evaluable without an audit or a ruling"
-        )
+    case_off = _pinned()[AUDITED_CASE]
+    assert case_off.supported_reactions_complete is False, "D-092 invariant"
+
+    imported = {
+        "name": "DHNA-CoA thioesterase activity",
+        "inputs": ["DHNA-CoA"], "outputs": ["DHNA"],
+        "enzymes": [{"entity": "MenI complex"}, {"entity": "LMRG_02730 complex"}],
+        "evidence": "MenI encodes a DHNA-CoA thioesterase necessary for menaquinone biosynthesis",
+    }
+    payload = _payload([imported])
+    payload["entities"]["proteins"] = [
+        {"name": "MenI", "rag_provenance": {"source_id": "PMC8091085"},
+         "rag_confidence": 0.865},
+    ]
+
+    withheld = validate_semantic_coverage(
+        case_off, payload, paper_text=_cached_text(case_off))
+    assert withheld.scientific_errors[ERR_UNSUPPORTED_REACTIONS] == 0, (
+        "a correctly-attributed cross-paper import must not be charged with the "
+        "flag off"
+    )
+
+    charged = validate_semantic_coverage(
+        dataclasses.replace(case_off, supported_reactions_complete=True),
+        payload, paper_text=_cached_text(case_off))
+    assert charged.scientific_errors[ERR_UNSUPPORTED_REACTIONS] == 1, (
+        "if this stops being charged the incompatibility has gone away and D-092 "
+        "can be revisited; until then it is the reason the flag stays off"
+    )

@@ -9365,3 +9365,169 @@ proves **5200/5200 identical, 0 different** — while also proving the four flag
 under all four strict flags, with 25/25 pytest jobs pinned.
 
 ---
+
+---
+
+## F-178 — two helpers named `_committed_legs` and `all_committed_legs` enumerate the WORKING TREE, so the census gates are RED for exactly the people who have run a benchmark
+
+- **Severity MEDIUM as a gate-trust defect, LOW as a product risk** · **Class: environment /
+  working-tree discrepancy, no production code implicated** · **Registered and FIXED 2026-09-03
+  (`ORCH-722`)**
+- **Found by its own failure**, while running the affected-files suite after the F-175 change.
+
+### The measurement
+
+```
+tests/test_d088_coverage_diagnostics.py:108   def _committed_legs():   ... rglob(...)
+tests/test_d088_coverage_diagnostics.py:175   assert len(legs) == 83, "the committed corpus the census measured"
+tests/test_c080_production_gate_kind_aware.py:183  def all_committed_legs():  ... iterdir(...)
+```
+
+| population | count |
+|---|---|
+| `coverage_summary.json` on disk under `runs/` + `runs_verify/` | **93** |
+| the same, **tracked by git** | **83** |
+| the difference | **exactly the 10 legs of the untracked T-109 run** |
+
+Three tests went red in the primary checkout — `test_census_populations_reproduce`,
+`test_the_diagnostics_document_agrees_with_the_verdict_on_every_archived_leg` and
+`test_no_committed_leg_flips_to_release_ready` — and **stayed green in every worktree**, because a
+worktree checks out tracked files only.
+
+> **The gate was red for exactly the people who had run a benchmark, and green for anyone who never
+> had.** That is F-171…F-175's shape a sixth time, inverted: a signal whose scope nobody asked
+> about, failing this time rather than passing.
+
+### Attribution was made mechanical BEFORE the fix
+
+The wave had just changed `driver.py`, `semantic.py` and the gold blob, so "it's the environment"
+was the convenient answer and therefore the one that needed proof:
+
+- `git diff --name-only` — **neither** `test_d088_coverage_diagnostics.py` nor
+  `strict_quarantine.py` had changed;
+- `grep -c "batch.driver" tests/test_d088_coverage_diagnostics.py` → **0**; the test never imports
+  the file that changed;
+- `grep -c "goldset|load_gold" tests/test_c080_production_gate_kind_aware.py` → **0**; the c080 test
+  never reads the gold set, so the gold edit could not reach it;
+- 93 − 83 = **10**, exactly the untracked legs.
+
+### What the absorbed leg showed, recorded rather than discarded
+
+`2026-09-02_2052/papers/PMC12444477/strict` replays to `release_ready` while its committed record
+says `diagnostic_only`. **That is NOT the flip `test_no_committed_leg_flips_to_release_ready`
+hunts:** it replays identically **with and without** the id check, so dropping the check is not what
+moves it. The leg FAILED in production and reached `diagnostic_only` by the gate-failure path, and
+the replay harness feeds only the quarantine and coverage artifacts to `classify_release_status`,
+which that path is not reachable from.
+
+**Classification: evaluation-instrument observation, NOT a production defect.** The corpus filter
+admits a leg the harness cannot model. Registered here rather than asserted away — dropping a signal
+while "fixing attribution" is precisely the failure mode F-177 warns about.
+
+### The fix, and why it is the name rather than the assertion that was wrong
+
+Both helpers now ask `git ls-files`. Nothing about the census, the rule or the corpus was ever
+wrong; **the population was**. A tree without git **skips** rather than guessing — a census that
+silently measured a different population than it names is the whole defect, so guessing would
+reintroduce it one layer down. Neither can go vacuous: `_committed_legs` is asserted `== 83`
+exactly, and `all_committed_legs` is guarded by `>= 22`.
+
+### Standing lesson
+
+**A helper's name is a claim about its population, and `rglob` is not `git ls-files`.** This is
+F-172's lesson — *a checker's name is not its scope* — relocated from a checker to a corpus. The
+tell was available for free: the assertion message already said *"the committed corpus the census
+measured"* while the code above it globbed a directory.
+
+---
+
+## F-175 — AMENDMENT, `ORCH-722`: CLOSED under a narrow product-owner exception
+
+**Product-owner ruling of 2026-09-03 authorized the minimum frozen-file change needed to make the
+benchmark path preserve `coverage_diagnostics.json`, for artifact persistence ONLY.**
+
+**Implemented as a sibling-path resolution, not as the tuple entry the previous amendment predicted.**
+`write_quarantine_artifacts` writes five documents and returns four, and its own comment says the
+four-name map is asserted by equality by two pinned consumers. Widening it would have broken them,
+so `driver._add_identity_artifacts` resolves the fifth as a sibling of the coverage report — whose
+path *is* in the map — and both pins still hold.
+
+**Observability-only, stated checkably rather than asserted:** `coverage_diagnostics.json` appears in
+`src/` in exactly three places — the writer, its deliberate exclusion from the returned map, and the
+new carry. **No reader exists.** F-168's prohibition on these diagnostics ever being a gate input is
+intact: this makes them *readable*, never *consulted*.
+
+> **An earlier draft of that comment claimed "nothing downstream reads `out` to decide anything".
+> That is FALSE** — `_gate_failure_semantic_carry` reads `out[QUARANTINE_REPORT_FILENAME]` and feeds
+> `classify_release_status`. Caught by review. The claim is about **this key**, not about `out`.
+
+**Proof (the point of the finding):** through the real driver and `runner.write_artifacts` onto
+disk, resolved by `acceptance._first_existing` — the reader an offline evaluator actually uses.
+**G9: 2 of 5 tests fail on base**, on content assertions, not symbol absence. Manifest row, release
+record and `pathway.pwml` bytes all identical to a leg run without the map.
+
+**Two pinned baselines moved, both enumerated:** the driver's carried set `FOUR → CARRIED` (+1
+name), and — found by review — `RunOutcome.capped_detail` splices the sorted artifact names into its
+truncation marker, so a leg whose `detail` exceeds `DETAIL_LIMIT` also gains the filename there.
+Neither is a decision input.
+
+---
+
+## F-176 — AMENDMENT, `ORCH-722`: the false reason string is CORRECTED; the runtime-applicability half is NOT, and needs a further ruling
+
+**Two of the three product-owner authorizations of 2026-09-03 are discharged here.** The
+`inapplicable_reason` no longer asserts that the batch driver does not persist the artifact, and it
+is split into two honest conditions — *nothing was supplied* versus *what was supplied is malformed*
+— because those are facts about different components and only the second is a defect in the
+evidence. A third branch was added under review for a supplied-but-not-an-object admission, which
+had been reported as "carries no 'rejected' key", naming the wrong defect.
+
+**The biology did not move**, and that is asserted rather than claimed: `ok=True` on every
+inapplicable path, the order-independent claim key, the rejected index and the findings construction
+are untouched. **G9: 2 of 5 tests fail on base** (the two asserting the corrected reporting) and
+**3 pass on base** (the three pinning the unchanged rule).
+
+### The half that was NOT done, and why stopping was correct
+
+**Ruling C also authorized correcting runtime evaluability reporting where the artifact exists.
+That was NOT implemented, deliberately.**
+
+- `no_rejected_rag_reaction_reintroduced` is a member of `release_status.SEMANTIC_GATING_CHECKS`.
+  `semantic_verdict` counts any applicable check toward `evaluable` and appends a failing one to
+  `failed`, so making it applicable at runtime **moves release status in both directions** — a
+  failure demotes, and an applicable pass can turn `not_evaluated` into `passed`.
+- `quarantine_and_close` has **no `admission` parameter at all**, so it cannot be threaded narrowly
+  either.
+
+**Authorization § 10 forbids any change that can alter release status. So the work stopped at the
+boundary and is escalated.** Independently confirmed by review.
+
+---
+
+## F-177 — AMENDMENT, `ORCH-722`: instrument BUILT, and the prior wave's summary CORRECTED
+
+`evidence/eval_semantic_populations.py` reports **canonical / fallback / unknown_source /
+no_payload** separately, in a fixed order, and refuses to emit a headline without a denominator.
+`classify_verdict` consults `inapplicable_reason` **before** `ok` — an inapplicable check carries
+`ok=True` by design, so reading `ok` first would score every unevaluable check as a pass, which is
+exactly how *"four of five biology checks pass"* was once read off an applicability column.
+
+**Re-derived from the corrected evaluator, not carried forward:**
+
+| prior claim | verdict |
+|---|---|
+| 2 rejected-RAG reintroduction failures | **CONFIRMED** — fallback 2, canonical 0 |
+| 9 identity failures | **CONFIRMED** — canonical 3 + fallback 6 |
+| 6 identity failures in fallback | **CONFIRMED** |
+| "canonical failures were zero" | **TRUE ONLY OF THE RAG CHECK.** Canonical carries **10** failures across four checks: anchors 5, identity 3, connected-core 1, placeholder 1. Any wider reading is wrong |
+
+**Two review corrections are folded in.** A leg that carried a payload but produced no evaluated
+report used to be `continue`d past with no counter — in a module whose thesis is that a silently
+absorbed population is the defect; it is now counted and printed. And the report now stamps the
+**gold blob** it was measured against, because the first run was committed beside a gold set it had
+not been measured against and nothing in the output said so.
+
+**Not yet wired into `bench/acceptance.py`'s own tally, which still sums.** That is the remaining
+work and it is stated rather than implied.
+
+---

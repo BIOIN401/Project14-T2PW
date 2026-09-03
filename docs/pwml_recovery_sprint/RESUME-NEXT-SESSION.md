@@ -56,8 +56,8 @@ and is NOT identified.** The worktree A/B is the authoritative isolation.
 
 | check | expected |
 |---|---|
-| Gold | `git hash-object src/t2pw/bench/gold/pinned_v1.json` = `d0b588a79bb4aa3c11a7b5062a0b45bb8e20ab74` (D-091; was `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` before 2026-09-03) |
-| SMOKE (merge gate 10) | **503 passed, exit 0**, survivors 0 — `g11/ORCH-721/35`, pin clean |
+| Gold | `git hash-object src/t2pw/bench/gold/pinned_v1.json` = `98739a59dd6c376f8a19968c7fa5dc3145be5b15` (**D-092**; `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` before this wave. D-091 briefly moved it to `d0b588a79bb4aa3c11a7b5062a0b45bb8e20ab74` and was WITHDRAWN before merge — the flag is unset, the aliases ship) |
+| SMOKE (merge gate 10) | **508 passed, exit 0**, survivors 0 — `g11/ORCH-722/17`, pin clean. **Was 503 through `ORCH-721`; +5 is the F-176 reporting tests, which live in `test_bench_goldset_and_semantic.py`, a SMOKE file. Merge rule 4, deliberate.** |
 | `g11_evidence.py selftest` | **11/11** — `g11/ORCH-721/36` |
 | G9 default-verdict equivalence | **5203 identical / 0 different** — `g11/ORCH-721/37` |
 | This wave's own G11 | **37 reports, 0 non-compliant, under ALL FOUR strict flags**; 25/25 pytest jobs pinned |

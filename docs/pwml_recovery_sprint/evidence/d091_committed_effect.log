@@ -1,0 +1,106 @@
+MEASURED_TREE t2pw = C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+GOLD BLOB          = 98739a59dd6c376f8a19968c7fa5dc3145be5b15
+
+COMMITTED legs for PMC12312563: 3 canonical, 19 fallback
+The T-109 run (runs_verify/2026-09-02_2052) is UNTRACKED and is NOT below.
+
+  [canonical] MOVED runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict
+        rows=7   OFF evaluated=False ok=True  unsupported=0
+                ON  evaluated=True  ok=False unsupported=5
+  [canonical] MOVED runs_verify/2026-08-21_2014/papers/PMC12312563/research
+        rows=4   OFF evaluated=False ok=True  unsupported=0
+                ON  evaluated=True  ok=False unsupported=3
+  [canonical] same  runs_verify/2026-08-21_2014/papers/PMC12312563/strict
+        rows=1   OFF evaluated=True  ok=True  unsupported=0
+                ON  evaluated=True  ok=True  unsupported=0
+  [fallback ] MOVED runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research
+        rows=10  OFF evaluated=False ok=True  unsupported=0
+                ON  evaluated=True  ok=False unsupported=9
+  [fallback ] MOVED runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict
+        rows=7   OFF evaluated=False ok=True  unsupported=0
+                ON  evaluated=True  ok=False unsupported=5
+  [fallback ] MOVED runs/2026-07-28_2122/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research
+        rows=5   OFF evaluated=False ok=True  unsupported=0
+                ON  evaluated=True  ok=False unsupported=3
+  [fallback ] MOVED runs/2026-07-28_2122/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict
+        rows=9   OFF evaluated=False ok=True  unsupported=0
+                ON  evaluated=True  ok=False unsupported=8
+  [fallback ] MOVED runs/2026-08-02_2130/papers/PMC12312563/research
+        rows=5   OFF evaluated=False ok=True  unsupported=0
+                ON  evaluated=True  ok=False unsupported=3
+  [fallback ] MOVED runs_verify/2026-08-21_1822/papers/PMC12312563/research
+        rows=4   OFF evaluated=False ok=True  unsupported=0
+                ON  evaluated=True  ok=False unsupported=3
+  [fallback ] same  runs_verify/2026-08-21_1822/papers/PMC12312563/strict
+        rows=1   OFF evaluated=True  ok=True  unsupported=0
+                ON  evaluated=True  ok=True  unsupported=0
+  [fallback ] MOVED runs_verify/2026-08-21_2014/papers/PMC12312563/research
+        rows=4   OFF evaluated=False ok=True  unsupported=0
+                ON  evaluated=True  ok=False unsupported=3
+  [fallback ] same  runs_verify/2026-08-21_2014/papers/PMC12312563/strict
+        rows=1   OFF evaluated=True  ok=True  unsupported=0
+                ON  evaluated=True  ok=True  unsupported=0
+  [fallback ] MOVED runs_verify/2026-08-21_2239/papers/PMC12312563/research
+        rows=2   OFF evaluated=False ok=False unsupported=0
+                ON  evaluated=True  ok=False unsupported=2
+  [fallback ] MOVED runs_verify/2026-08-21_2239/papers/PMC12312563/strict
+        rows=4   OFF evaluated=False ok=True  unsupported=0
+                ON  evaluated=True  ok=False unsupported=3
+  [fallback ] MOVED runs_verify/2026-08-22_2147/papers/PMC12312563/research
+        rows=3   OFF evaluated=False ok=False unsupported=0
+                ON  evaluated=True  ok=False unsupported=3
+  [fallback ] same  runs_verify/2026-08-22_2147/papers/PMC12312563/strict
+        rows=1   OFF evaluated=True  ok=True  unsupported=0
+                ON  evaluated=True  ok=True  unsupported=0
+  [fallback ] same  runs_verify/2026-08-24_1428/papers/PMC12312563/research
+        rows=1   OFF evaluated=True  ok=True  unsupported=0
+                ON  evaluated=True  ok=True  unsupported=0
+  [fallback ] same  runs_verify/2026-08-24_1428/papers/PMC12312563/strict
+        rows=1   OFF evaluated=True  ok=True  unsupported=0
+                ON  evaluated=True  ok=True  unsupported=0
+  [fallback ] MOVED runs_verify/2026-08-28_1816/papers/PMC12312563/research
+        rows=3   OFF evaluated=False ok=False unsupported=0
+                ON  evaluated=True  ok=False unsupported=3
+  [fallback ] MOVED runs_verify/2026-08-28_1816/papers/PMC12312563/strict
+        rows=4   OFF evaluated=False ok=False unsupported=0
+                ON  evaluated=True  ok=False unsupported=4
+  [fallback ] same  runs_verify/2026-09-01_1612/papers/PMC12312563/research
+        rows=1   OFF evaluated=True  ok=True  unsupported=0
+                ON  evaluated=True  ok=True  unsupported=0
+  [fallback ] MOVED runs_verify/2026-09-01_1612/papers/PMC12312563/strict
+        rows=3   OFF evaluated=False ok=False unsupported=0
+                ON  evaluated=True  ok=False unsupported=3
+
+LEGS WHOSE SUPPORTED-REACTION VERDICT MOVED: 15 of 22
+A leg that MOVED went from a WITHHELD zero to a MEASURED verdict. That is the
+flag doing its job, and it is the opposite of 'changes no acceptance verdict'.
+
+NOTE ON SCOPE: this measures the SEMANTIC check only. Whether a moved verdict
+changes an ACCEPTANCE priority depends on bench/acceptance.py's corpus and its
+contract adjustments, which are not re-run here and are not claimed.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5bd5a67e436939e4848a26f2f156c2238d306820  [git, worktree dirty=True]
+label                   : d092-committed-effect
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/d091_committed_effect.py c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 476368 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 1.95 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 2  484580:python.exe, 463208:git.exe
+descendants terminated  : 2  463208, 484580
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-722/26-d092-committed-effect.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

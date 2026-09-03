@@ -114,6 +114,14 @@ class Tally:
         self.counts: Dict[str, Dict[str, Dict[str, int]]] = {}
         self.failures: List[Dict[str, Any]] = []
         self.legs: Dict[str, List[str]] = {name: [] for name in POPULATION_ORDER}
+        #: Legs that carried a payload but produced no evaluated report. Counted
+        #: rather than skipped: a module about silently-absorbed populations that
+        #: silently absorbs one would be worthless.
+        self.not_evaluated: List[Dict[str, str]] = []
+
+    def record_not_evaluated(self, population: str, leg: str, reason: str) -> None:
+        self.not_evaluated.append(
+            {"population": population, "leg": leg, "reason": reason})
 
     def record_leg(self, population: str, leg: str) -> None:
         self.legs.setdefault(population, []).append(leg)
@@ -135,6 +143,7 @@ class Tally:
             "legs_by_population": {k: sorted(v) for k, v in self.legs.items() if v},
             "counts": self.counts,
             "failures": self.failures,
+            "not_evaluated": self.not_evaluated,
         }
 
 
@@ -178,6 +187,12 @@ def evaluate_run(repo: Path, run: Path, tally: Tally) -> None:
                 paper_text=paper_text,
             )
             if not report.evaluated:
+                # COUNTED, NOT DROPPED. An earlier draft `continue`d here with no
+                # counter, in a module whose entire thesis is that a silently
+                # absorbed leg is the defect. It never fired on T-109, which is
+                # exactly why it would have gone unnoticed.
+                tally.record_not_evaluated(
+                    population, leg, report.not_evaluated_reason or "(no reason given)")
                 continue
             for name, check in report.checks.items():
                 verdict = classify_verdict(check)
@@ -216,6 +231,12 @@ def render(tally: Tally) -> None:
                   + " ".join(f"{row[v]:>13}" for v in VERDICT_ORDER)
                   + f"   (n={evaluated})")
 
+    if tally.not_evaluated:
+        print("")
+        print("  LEGS WITH A PAYLOAD BUT NO EVALUATED REPORT -- counted, not skipped:")
+        for row in tally.not_evaluated:
+            print(f"    [{row['population']}] {row['leg']}  {row['reason']}")
+
     print("\n  EVERY FAILURE, ATTRIBUTED. A population report that hid these would be")
     print("  worse than the mixed number it replaces.")
     if not tally.failures:
@@ -241,6 +262,18 @@ def main(argv: List[str]) -> int:
     sys.path.insert(0, str(repo / "src"))
     import t2pw  # noqa: PLC0415
     print(f"MEASURED_TREE t2pw = {Path(t2pw.__file__).resolve()}")
+    # THE GOLD BLOB IS PART OF THE MEASUREMENT. The first run of this reporter was
+    # committed beside a gold set it had NOT been measured against (D-091 moved the
+    # blob hours later), and nothing in the output said so. Stamping it makes a
+    # stale report self-evidently stale instead of quietly wrong.
+    import subprocess  # noqa: PLC0415
+    try:
+        blob = subprocess.run(
+            ["git", "-C", str(repo), "hash-object", "src/t2pw/bench/gold/pinned_v1.json"],
+            capture_output=True, text=True, timeout=60, check=True).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        blob = "(git unavailable -- THIS REPORT IS UNSTAMPED)"
+    print(f"GOLD BLOB          = {blob}")
 
     tally = Tally()
     for entry in args[1:]:

@@ -549,7 +549,17 @@ def test_f175_release_status_and_pwml_are_BYTE_IDENTICAL_across_the_change(
     assert with_diagnostics.artifacts["pathway.pwml"] == without_any.artifacts["pathway.pwml"]
     # ...and the release record specifically, because that is the field the
     # authorization names first.
-    assert with_diagnostics.to_dict().get("release") == without_any.to_dict().get("release")
+    #
+    # THE KEY IS ``release_status``, NOT ``release`` (``driver.py:922``). The first
+    # draft of this line asserted ``.get("release")`` on both sides, which is
+    # ``None == None`` -- a green assertion measuring nothing, sold in its own
+    # comment as covering the field the authorization names first. Caught by
+    # review. The property was never uncovered (``_row`` compares the whole
+    # manifest row, ``release_status`` included), but a vacuous assertion is worse
+    # than no assertion: it reports coverage that does not exist.
+    assert "release_status" in with_diagnostics.to_dict(), "the key was renamed again"
+    assert (with_diagnostics.to_dict()["release_status"]
+            == without_any.to_dict()["release_status"])
 
 
 def test_f175_an_offline_evaluator_can_consume_what_landed(tmp_path: Path) -> None:

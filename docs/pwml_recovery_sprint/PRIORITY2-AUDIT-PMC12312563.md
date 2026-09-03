@@ -181,3 +181,74 @@ the DHNA row a scored unmatched row.
 
 **Also noted:** the research leg's RAG proposed `ThDP -> intermediate I` sixteen times and the
 admission gate **rejected it every time**. The hazard is real and the gate held.
+
+---
+
+# FOLLOW-UP ADJUDICATION, same auditor, same day — THE RECOMMENDATION IS REVERSED
+
+**The Lead routed three questions back to the auditor after review forced a measurement of the
+flag's effect on the COMMITTED corpus. The auditor reversed its operational recommendation. Its
+biology is unchanged and is not retracted.** Adopted as **D-092**.
+
+## Q1 — synonymy: YES, and the paper says so itself
+
+2-oxoglutarate, alpha-ketoglutarate, 2-ketoglutarate, oxoglutaric acid and 2-oxopentanedioate are
+one compound (ChEBI:30915 / :16810). C2 is a ketone, not a stereocentre, so there is no isomer to
+confuse. The paper makes the equation explicitly: *"the first (alpha-ketoacid) substrate (for MenD
+this is 2-oxoglutarate)"*. It writes `2-oxoglutarate` 8 times and `ketoglutarate` **0** times, so
+gold was right to use the paper's own token as the term name; the Greek spelling in the payload is
+the pipeline's canonicalisation, carrying `rag_provenance.source_id: "seed_paper"`.
+
+**Measured, not assumed** — `GoldTerm(name="2-oxoglutarate")` with no aliases: `2-oxoglutarate`
+exact; bare `oxoglutarate` matches by containment; **`alpha-ketoglutarate`, `2-ketoglutarate`,
+`2-oxoglutaric acid`, `oxoglutaric acid`, `2-oxopentanedioate`, `AKG`, `alpha-KG` all MATCH_NONE.**
+The Greek letter is already folded by `_GREEK`, so only the ASCII form is needed.
+
+**Do NOT add bare `ketoglutarate` or `glutarate`** — `goldset.py` warns `alpha-` and `beta-` must not
+collapse. **The same gap exists on `expected_substrates[0]` and on the `expected_pathway_anchors`
+entry**; fixing only the signature would leave the coverage checks holed.
+
+## Q2 — row [6] is NOT a fabrication, and it is the case AGAINST the flag
+
+`MenI` 0, `DHNA-CoA` 0, `thioesterase` 0, `LMRG` 0 in this paper — that stands. But *unsupported by
+the seed paper* and *fabricated* are different claims. All four participating entities carry
+`rag_provenance.source_id = "PMC8091085"`, `rag_confidence = 0.865`:
+*"Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone
+Biosynthesis…"* — **which PMC12312563 cites in its own reference list** (Smith et al., 2021,
+Infect. Immun. 89, e00792-20). The chemistry, enzyme, organism and pathway are all correct.
+
+This is textbook clause (c) of the flag's own docstring: *"a legitimate cross-paper addition from
+RAG synthesis, which cannot match a seed-paper signature by construction."*
+
+**Attribution limit, stated precisely:** the lineage is on the ENTITIES, not on the reaction row.
+Row [6] carries no `rag_provenance`. **A scorer cannot exclude RAG-derived rows from the precision
+denominator from the row alone.** That is the missing instrumentation — `R-D092-1`.
+
+## Q3 — WITHHOLD. Withdraw the flag; ship the aliases alone.
+
+Four configurations, measured read-only against the committed canonical leg
+(`runs/2026-07-27_1623/…/strict`, `RESULT: PASS`, `pwml_export`, nothing quarantined):
+
+| aliases | flag | ok | TP | FP | recall | verdict evaluated |
+|---|---|---|---|---|---|---|
+| no | off | **False** | 0 | withheld | **0/1** | no |
+| no | on | False | 0 | **7** | 0/1 | yes |
+| **yes** | **off** | **True** | 2 | withheld | **1/1** | no |
+| yes | on | False | 2 | **5** | 1/1 | yes |
+
+**(a)** The alias gap is a pre-existing defect that fails this check TODAY with the flag off.
+**(b)** Aliases do not rescue the flag — row [6] is still charged, and that is structural.
+**(c)** The flag's seed-only precondition is violated on committed evidence.
+
+**The auditor's own stated trigger fired.** Its original CONFIDENCE section said the RAG clearance
+was "two-legs-deep, not general" and named "a completed leg whose `rag_admission_report.json` shows
+a non-empty `accepted`" as what would change its mind. Its words on the reversal:
+
+> *"I generalised from two aborted legs, and I should have said the clearance was worthless rather
+> than merely 'two-legs-deep.' That is the error, and it is mine."*
+
+## Incidental defect found while measuring — `R-D092-2`
+
+Rows **[0] and [5] are duplicates**, identical but for evidence-span length. `true_positives` counts
+pointers, so they contribute **2 TP for 1 reaction** and `matched_by` confirms it. **Priority 2
+currently rewards a duplicated row.**

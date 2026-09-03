@@ -1275,7 +1275,18 @@ def _check_rag_reintroduction(
                 "the offline scorer loads it and reaches a verdict"
             ),
         )
-    if not isinstance(admission, dict) or "rejected" not in admission:
+    if not isinstance(admission, dict):
+        return CheckResult(
+            name=CHECK_RAG_REINTRODUCTION,
+            ok=True,
+            summary="not evaluated: the RAG admission report is not an object",
+            inapplicable_reason=(
+                f"a RAG admission report was supplied but is a {type(admission).__name__}, "
+                "not an object, so it has no 'rejected' set to read. This is a MALFORMED "
+                "artifact, not a missing one"
+            ),
+        )
+    if "rejected" not in admission:
         return CheckResult(
             name=CHECK_RAG_REINTRODUCTION,
             ok=True,

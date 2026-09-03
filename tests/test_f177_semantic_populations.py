@@ -204,7 +204,14 @@ def test_the_structured_report_never_emits_a_denominator_free_headline(
     reporter.evaluate_run(ROOT, run, tally)
 
     document = tally.to_dict()
-    assert set(document) == {"legs_by_population", "counts", "failures"}
+    assert set(document) == {
+        "legs_by_population", "counts", "failures", "not_evaluated",
+    }, "a new top-level key must be a POPULATION-attributed one, or the report grew a headline"
+    # ``not_evaluated`` is attributed too -- it was added under review because the
+    # reporter used to `continue` past such a leg with no counter at all, in a
+    # module whose thesis is that a silently absorbed leg is the defect.
+    for row in document["not_evaluated"]:
+        assert row["population"] in reporter.POPULATION_ORDER
     for _check, populations in document["counts"].items():
         assert populations, "a check with no population is an unattributed count"
         for population in populations:

@@ -34,8 +34,10 @@ START BY VERIFYING, NOT BY TRUSTING
   git rev-parse main; git ls-remote origin main  -> local 7531692 / remote 03f1af5,
                                                     NEVER written
   git hash-object src/t2pw/bench/gold/pinned_v1.json
-                                                 -> d0b588a79bb4aa3c11a7b5062a0b45bb8e20ab74
-                                                    (D-091 moved it from 36f4b7b690b577f72882c3045ca6728d1ec8d9d1)
+                                                 -> 98739a59dd6c376f8a19968c7fa5dc3145be5b15
+                                                    (D-092. Was 36f4b7b690b577f72882c3045ca6728d1ec8d9d1; D-091 briefly
+                                                    set supported_reactions_complete and was
+                                                    WITHDRAWN. The flag is UNSET on all ten.)
   ls C:/t/heavylock                              -> ABSENT
   Python processes: exactly two ms-python.isort lsp_server.py.
   MATCH ON FULL COMMAND LINE. Never on count, never on PID -- both have changed
