@@ -324,3 +324,146 @@ def _cached_text(case: GoldCase) -> str:
     """Enough stored text for every gold quote of this case to verify."""
 
     return "\n".join(s.quote for s in case.supported_reactions) or "no supported reactions"
+
+
+# ---------------------------------------------------------------------------
+# D-091 / ORCH-722 -- the instrument proof.
+#
+# Everything above this line proves the WITHHOLDING is honest, on synthetic cases.
+# What was never provable was the other direction: that Priority 2 can reach a
+# real verdict on a REAL pinned gold case, because no pinned case carried
+# ``supported_reactions_complete``. D-091 sets it on exactly one, after an
+# independent biological audit, and these tests are what make that claim checkable
+# rather than announced.
+#
+# They read the REAL pinned gold set, not a constructed case, because a synthetic
+# case cannot show that the edit landed on the right paper or that it stayed narrow.
+# ---------------------------------------------------------------------------
+D091_CASE = "PMC12312563"
+
+
+def _pinned():
+    from t2pw.bench.goldset import load_gold_set  # noqa: PLC0415
+
+    return {case.paper_id: case for case in load_gold_set().cases}
+
+
+def test_d091_exactly_one_pinned_case_carries_the_completeness_flag():
+    """NARROWNESS. D-087 forbids setting this broadly; this is the enforcement.
+
+    If a later wave sets a second case without its own audit and its own ruling,
+    this fails and names the extra paper. That is the single cheapest guard
+    available against the 227-fabricated-reactions outcome ``semantic.py`` warns
+    about, and it costs one assertion.
+    """
+
+    flagged = sorted(
+        paper_id for paper_id, case in _pinned().items()
+        if case.supported_reactions_complete
+    )
+    assert flagged == [D091_CASE], (
+        "supported_reactions_complete must be set on exactly the one audited case; "
+        "each additional case needs its own D-087 audit and its own ruling"
+    )
+
+
+def test_d091_the_audited_case_reaches_a_MEASURED_ZERO_on_a_conforming_payload():
+    """THE INSTRUMENT PROOF, positive half.
+
+    A payload holding exactly the one reaction the paper supports must produce an
+    EVALUATED verdict of zero -- not the withheld zero every pinned case produced
+    before. ``unsupported_verdict_evaluated`` is the field that tells those two
+    zeros apart, and it is the whole point of the flag.
+    """
+
+    case = _pinned()[D091_CASE]
+    assert len(case.supported_reactions) == 1, "the audit was of a one-reaction case"
+    signature = case.supported_reactions[0]
+
+    report = validate_semantic_coverage(
+        case, _payload([_row_for(signature)]), paper_text=_cached_text(case)
+    )
+    check = report.checks[CHECK_SUPPORTED_REACTIONS]
+
+    assert report.support["unsupported_verdict_evaluated"] is True, (
+        "Priority 2 is still unevaluable on the one case that was audited"
+    )
+    assert check.applicable is True
+    assert check.ok is True
+    assert report.scientific_errors[ERR_UNSUPPORTED_REACTIONS] == 0
+
+
+def test_d091_the_audited_case_now_CHARGES_a_reaction_the_paper_does_not_support():
+    """THE INSTRUMENT PROOF, negative half -- and the half that carries the risk.
+
+    An evaluable check that can only ever return zero is not evaluable, it is
+    decorative. This feeds the audited case a ThDP-adduct sub-step -- the exact
+    over-decomposition the archived legs actually produced for this paper, and the
+    exact shape the case's own ``forbidden_identifiers`` names ``placeholder_product``
+    -- and requires it to be CHARGED.
+
+    Both halves are needed together: the test above alone would pass on a rule that
+    never fires, and this one alone would pass on a rule that fires indiscriminately.
+    """
+
+    case = _pinned()[D091_CASE]
+    unsupported = {
+        "name": "MenD-catalyzed decarboxylation of 2-oxoglutarate",
+        "inputs": ["2-oxoglutarate"],
+        "outputs": ["intermediate I"],
+        "enzymes": ["MenD"],
+        "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I",
+    }
+
+    report = validate_semantic_coverage(
+        case,
+        _payload([_row_for(case.supported_reactions[0]), unsupported]),
+        paper_text=_cached_text(case),
+    )
+    check = report.checks[CHECK_SUPPORTED_REACTIONS]
+
+    assert report.support["unsupported_verdict_evaluated"] is True
+    assert check.applicable is True
+    assert check.ok is False, "an unsupported reaction was not charged"
+    assert report.scientific_errors[ERR_UNSUPPORTED_REACTIONS] == 1
+    pointers = [f.get("pointer") for f in check.findings
+                if f.get("kind") == "unsupported_retained_reaction"]
+    assert pointers == ["/processes/reactions/1"], check.findings
+
+
+def test_d091_the_other_nine_pinned_cases_still_WITHHOLD_their_verdict():
+    """The edit must not have leaked. Asserted on BEHAVIOUR, not on the flag.
+
+    Reading the flag back would only restate the edit. This feeds every other
+    pinned case an unattributed row and requires the verdict to stay withheld --
+    which is what "narrow" actually means for the instrument.
+
+    THE ROW HAS TO BE FOREIGN TO EVERY CASE. The first draft reused
+    _UNATTRIBUTED (isochorismate -> SEPHCHC) and PMC12421875 reported
+    evaluable. That was not a leak: PMC12421875 IS the menaquinone paper, the
+    row matched one of its real signatures, every retained row was then attributed,
+    and a fully-attributed payload is a MEASURED zero by design
+    (test_every_row_matching_a_signature_is_a_measured_zero_not_a_withheld_one).
+    A narrowness probe whose probe row is real chemistry for one of the papers
+    tests the wrong thing.
+    """
+
+    foreign = {
+        "name": "a reaction no pinned paper supports",
+        "inputs": ["zzz-substrate-not-in-any-paper"],
+        "outputs": ["zzz-product-not-in-any-paper"],
+        "enzymes": ["ZzzAse"],
+        "evidence": "q",
+    }
+
+    for paper_id, case in sorted(_pinned().items()):
+        if paper_id == D091_CASE or not case.supported_reactions:
+            continue
+        report = validate_semantic_coverage(
+            case,
+            _payload([_row_for(case.supported_reactions[0]), foreign]),
+            paper_text=_cached_text(case),
+        )
+        assert report.support["unsupported_verdict_evaluated"] is False, (
+            f"{paper_id} became evaluable without an audit or a ruling"
+        )

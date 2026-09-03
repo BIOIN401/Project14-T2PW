@@ -56,7 +56,7 @@ and is NOT identified.** The worktree A/B is the authoritative isolation.
 
 | check | expected |
 |---|---|
-| Gold | `git hash-object src/t2pw/bench/gold/pinned_v1.json` = `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` |
+| Gold | `git hash-object src/t2pw/bench/gold/pinned_v1.json` = `d0b588a79bb4aa3c11a7b5062a0b45bb8e20ab74` (D-091; was `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` before 2026-09-03) |
 | SMOKE (merge gate 10) | **503 passed, exit 0**, survivors 0 — `g11/ORCH-721/35`, pin clean |
 | `g11_evidence.py selftest` | **11/11** — `g11/ORCH-721/36` |
 | G9 default-verdict equivalence | **5203 identical / 0 different** — `g11/ORCH-721/37` |
@@ -231,7 +231,7 @@ fails. If it hard-fails, triage from the immutable artifacts — DO NOT RERUN IT
 | **mutation harness** | **17 mutations, SURVIVORS 0** — `ORCH-720/05` |
 | **Chunk D** | **RED in the primary checkout** — `run-core 159/160`, `node15 0/1`. **F-174.** See below |
 | `acceptance.py` | CRLF sha256 `4bd893ac…` · LF sha256 `d9f817e1…` · git blob `56aa593e…`. **Two of those three are sha256 and one is not; they have been conflated before** |
-| gold | `36f4b7b690b577f72882c3045ca6728d1ec8d9d1`, clean in working tree and HEAD |
+| gold | `36f4b7b690b577f72882c3045ca6728d1ec8d9d1`, clean in working tree and HEAD — **superseded by D-091, now `d0b588a79bb4aa3c11a7b5062a0b45bb8e20ab74`. This row records the ORCH-720 measurement and is left as that wave's record.** |
 | `ms-python.isort` processes | **TWO.** It has been 2 and 3 in this sprint — **match on COMMAND LINE, never count or PID** |
 
 ### The two findings this wave, and they are the same shape as F-171 and F-172

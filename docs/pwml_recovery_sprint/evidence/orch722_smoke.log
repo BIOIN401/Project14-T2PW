@@ -7,30 +7,30 @@ T2PW: c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
 ........................................................................ [ 85%]
 ........................................................................ [ 99%]
 ....                                                                     [100%]
-508 passed in 43.27s
+508 passed in 44.58s
 
 ================ CLEANUP REPORT ================
 report schema version   : 1
 wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
 wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
-wrapper vs HEAD         : clean  @ fa0a191c4736e6e939d1a9f74c436d766d0ab438  [git, worktree dirty=True]
-label                   : smoke-orch722
-command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-722/09-smoke-orch722.pin.json -q --basetemp=C:/t/orch722/smoke tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+wrapper vs HEAD         : clean  @ 84822906ba2f6e8cefe7098e01ee697c58dba25b  [git, worktree dirty=True]
+label                   : smoke-postgold
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-722/17-smoke-postgold.pin.json -q --basetemp=C:/t/orch722/smoke2 tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
 cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
-root PID / process group: 458680 / None
+root PID / process group: 471736 / None
 isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
 timeout                 : 1800 s
-duration                : 44.86 s
+duration                : 46.12 s
 exit reason             : completed
 exit code (real)        : 0
 returned code           : 0
-descendants observed    : 10  463476:python.exe, 464280:python.exe, 454116:python.exe, 464212:python.exe, 458332:python.exe, 462328:python.exe, 459256:python.exe, 463356:python.exe, 458748:git.exe, 464768:git.exe
-descendants terminated  : 10  454116, 458332, 458748, 459256, 462328, 463356, 463476, 464212, 464280, 464768
+descendants observed    : 8  465892:python.exe, 472168:python.exe, 472188:python.exe, 472252:python.exe, 472272:python.exe, 472420:python.exe, 472440:python.exe, 471460:git.exe
+descendants terminated  : 8  465892, 471460, 472168, 472188, 472252, 472272, 472420, 472440
 graceful attempted      : False
 forced                  : False
 FINAL SURVIVING COUNT   : 0
 cleanup                 : success
-json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-722/09-smoke-orch722.json
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-722/17-smoke-postgold.json
 json report written     : True
 pre-existing (reported, NEVER killed): 4
 ================================================

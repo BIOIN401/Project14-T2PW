@@ -9370,7 +9370,7 @@ this wave.**
 ## Standing constraints honoured
 
 - **No production, scorer, test or gold file changed by the Lead.** Gold blob still
-  `36f4b7b690b577f72882c3045ca6728d1ec8d9d1`.
+  `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` — **superseded 2026-09-03 by D-091, now `d0b588a79bb4aa3c11a7b5062a0b45bb8e20ab74`.**
 - Every job through `bounded_run.py` with the venv interpreter, a real `--timeout` and
   `--heavy-lock ORCH-719`. **Both jobs: `FINAL SURVIVING COUNT : 0`, `cleanup : success`, lock
   acquired and released.** `g11_evidence.py check --task ORCH-719` clean, no surviving `.staging`

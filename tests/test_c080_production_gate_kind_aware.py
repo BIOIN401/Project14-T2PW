@@ -48,6 +48,7 @@ input is a constructed payload or a committed artifact.
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -180,19 +181,61 @@ def legs(names):
     return out
 
 
+#: The three artifacts a leg needs before the replay harness can reconstruct it.
+_REPLAYABLE = ("quarantine_report.json", "coverage_summary.json", "final_mapped.json")
+
+
 def all_committed_legs():
+    """The legs GIT has. F-178 (ORCH-722): the name was aspirational, not true.
+
+    This walked the filesystem and called the result "committed". It is not the
+    same population: a benchmark run leaves an UNTRACKED run directory, so T-109
+    took the corpus from 83 to 93 and ``test_no_committed_leg_flips_to_release_ready``
+    went red in the primary checkout while staying green in every worktree. Second
+    instance of the same defect in one wave -- the first was
+    ``test_d088_coverage_diagnostics._committed_legs``.
+
+    THIS IS A FIXED REGRESSION CORPUS and its value depends on being fixed. Silently
+    absorbing whatever the last benchmark left means the assertion below changes
+    meaning between machines, which is the opposite of a regression test.
+
+    WHAT THE ABSORBED LEG ACTUALLY SHOWED, recorded rather than discarded, because
+    dropping a signal while "fixing attribution" is the failure mode F-177 warns
+    about. ``2026-09-02_2052/papers/PMC12444477/strict`` replays to ``release_ready``
+    while its committed record says ``diagnostic_only``. That is NOT the flip this
+    test hunts: it replays identically WITH and WITHOUT the id check, so dropping
+    the check is not what moves it. The leg FAILED in production and took the
+    gate-failure path to ``diagnostic_only``, and this harness feeds only the
+    quarantine and coverage artifacts to ``classify_release_status``, which that
+    path is not reachable from. So the corpus filter admits a leg the harness cannot
+    model. Evaluation-instrument observation, NOT a production defect, and it is
+    registered as such rather than asserted away.
+    """
+
     out = []
     if not RUNS.is_dir():
         return out
+    try:
+        listed = set(subprocess.run(
+            ["git", "-C", str(ROOT), "ls-files", "runs_verify"],
+            capture_output=True, text=True, timeout=60, check=True,
+        ).stdout.split())
+    except (OSError, subprocess.SubprocessError) as exc:  # pragma: no cover
+        pytest.skip("git is required to enumerate the committed corpus: %s" % exc)
     for run in sorted(RUNS.iterdir()):
         papers = run / "papers"
         if not papers.is_dir():
             continue
         for paper in sorted(papers.iterdir()):
             for leg in sorted(paper.iterdir()):
-                if all((leg / artifact).is_file() for artifact in
-                       ("quarantine_report.json", "coverage_summary.json", "final_mapped.json")):
-                    out.append(("%s/papers/%s/%s" % (run.name, paper.name, leg.name), leg))
+                if not all((leg / artifact).is_file() for artifact in _REPLAYABLE):
+                    continue
+                if not all(
+                    (leg / artifact).relative_to(ROOT).as_posix() in listed
+                    for artifact in _REPLAYABLE
+                ):
+                    continue  # present on disk, absent from git: not this corpus
+                out.append(("%s/papers/%s/%s" % (run.name, paper.name, leg.name), leg))
     return out
 
 

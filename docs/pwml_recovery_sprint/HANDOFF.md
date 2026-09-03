@@ -26,7 +26,7 @@
 |---|---|---|
 | Integration tip | `local = origin/ = git ls-remote` | `git rev-parse HEAD; git rev-parse origin/sprint/pwml-recovery; git ls-remote origin sprint/pwml-recovery` |
 | `main` | local `7531692` / remote `03f1af5`, **never written** | `git rev-parse main; git ls-remote origin main` |
-| Gold | `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` | `git hash-object src/t2pw/bench/gold/pinned_v1.json` |
+| Gold | `d0b588a79bb4aa3c11a7b5062a0b45bb8e20ab74` (D-091; was `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` before 2026-09-03) | `git hash-object src/t2pw/bench/gold/pinned_v1.json` |
 | `acceptance.py` | CRLF sha256 `4bd893ac…` · LF sha256 `d9f817e1…` · blob `56aa593e…` | **two of those three are sha256 and one is not — say which you mean** |
 | `streamlit_app.py` | sha256 `47e4fafa…`, **modified and never committed** | `git status --porcelain src/t2pw/app/streamlit_app.py` |
 | Heavy lock | **absent** | `ls C:/t/heavylock` |

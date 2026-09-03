@@ -5399,3 +5399,111 @@ instrument's silence.** Priority 2 reported `0` and the scorer said, in its own 
 was *"the absence of a measurement, not the absence of unsupported reactions."* **The correct response
 to an unevaluable gate is to make the evidence better, never to make the code look better** — and
 this decision writes that into the freeze so the cheaper direction is unavailable.
+
+---
+
+## D-091 — `supported_reactions_complete` is set TRUE on `PMC12312563` and on NO other case, after an independent biological audit · 2026-09-03 · LOCKED
+
+**D-087's guardrail requires an explicit ruling here naming the case before any agent may set this
+flag.** This is that ruling. It names one case and authorizes nothing beyond it.
+
+### 1. What is decided
+
+`src/t2pw/bench/gold/pinned_v1.json`, case **`PMC12312563`** only, gains
+`"supported_reactions_complete": true` and a prose scope declaration appended to its `notes`.
+**The other nine cases are untouched and remain unset.**
+
+**Gold blob moves `36f4b7b690b577f72882c3045ca6728d1ec8d9d1` -> `d0b588a79bb4aa3c11a7b5062a0b45bb8e20ab74`.**
+Every handoff row pinning the old hash is updated in the same commit. The diff is **two lines**.
+
+### 2. Why this case, and why not the ones that would have been easier
+
+**The audit chose the case; the Lead did not.** It was routed to `pwml-bio-auditor` under D-087
+clause 3, which requires independent verification, and the auditor was given the ten-case table and
+told explicitly not to pick the one that would most easily pass. Its adjudication is preserved
+verbatim at [`PRIORITY2-AUDIT-PMC12312563.md`](PRIORITY2-AUDIT-PMC12312563.md).
+
+`PMC12312563` is a single-enzyme structural paper on *Listeria monocytogenes* MenD. Its scope is
+bounded by **the paper's own enzyme roster**, which is a countable fact rather than a judgement:
+**MenD occurs 133 times and MenA/B/C/E/F/G/H/I occur ZERO times each**; free chorismate, SHCHC, OSB,
+OSB-CoA, prenyl and pyruvate all occur **zero** times. One reaction is stated, and gold already
+carries exactly that one signature.
+
+**Every richer case was rejected for a named, quoted reason** — `PMC12096016` states EntA and EntE
+steps gold has no signature for; `PMC12421875` declares eight enzymes against three signatures;
+`PMC12782028` states an unsignatured MSMO1 catalysis; `PMC12856317` was the serious rival and was
+rejected because gold **blesses LONP1 and CLPXP under `acceptable_enzymes`**, so declaring its
+one-signature list exhaustive would put the gold case at war with itself.
+
+### 3. The counts were re-verified by the Lead before this ruling was written
+
+The auditor is not taken at its word on any load-bearing number. Re-measured independently against
+`01_source_text.txt`: MenD **133**; the eight other Men symbols **0** each; SEPHCHC **9**;
+isochorismate **9**; 2-oxoglutarate **8**; SHCHC/OSB/prenyl/pyruvate **0**; and free `chorismate`
+with word boundaries **0** — all nine `chorismate` substrings lie inside `isochorismate`. The gold
+case's single signature and its verbatim quote were read directly, as was the pre-existing
+`forbidden_identifiers` entry naming `intermediate I` / `intermediate II` as `placeholder_product`.
+
+> **One correction to the Lead's own briefing, recorded because it would have misled a successor:**
+> the brief told the auditor the paper text was `00_PAPER.txt`. That file is a **738-byte run
+> header**. The text is `01_source_text.txt` (47,976 chars) and the auditor found and said so.
+
+### 4. Why setting it is defensible even though it makes the score WORSE
+
+**It does.** On both committed legs of this paper the flag costs precision — strict goes to 1/4,
+research to 0/2. **That is the point and it is the evidence that this is not score-chasing.** The
+flag is set because the unsupported-reaction verdict becomes **reachable on a non-negative-control
+paper for the first time**, which is the standing D-087 instrument limitation and the sole reason
+T-109 could not be accepted.
+
+The strongest objection is that the pipeline decomposes the one reaction into ThDP-adduct sub-steps
+carrying verbatim paper quotes, so the flag will charge rows whose evidence is real text. **The
+objection is factually right and it still fails**, on gold's own terms: this case's
+`forbidden_identifiers` already names `intermediate I`/`intermediate II` as `placeholder_product`,
+and `goldset.py:391-393` defines that kind as one where *"the extractor did not read a product, so
+the reaction is unsupported."* **Setting the flag enforces a position the gold set already took.** A
+reviewer wishing to overturn this must overturn that, not the audit.
+
+### 5. What this does NOT decide
+
+- **It does not set the flag anywhere else.** Each further case needs its own audit and its own
+  ruling. `test_d091_exactly_one_pinned_case_carries_the_completeness_flag` enforces this
+  mechanically and names any paper that appears.
+- **It does not accept T-109.** T-107/T-108/T-109 stay immutable and `NOT ACCEPTED`.
+  **This paper's two T-109 legs are both `scope_conflict` and hold no `final_mapped.json`,** so on
+  the committed corpus the flag changes no acceptance verdict at all. Its effect there is
+  **unmeasured**, and saying otherwise would be the overclaim this ruling exists to avoid.
+- **It does not unfreeze `src/t2pw/bench/`.** This is a DATA change, exactly as D-090 § 5 anticipated.
+- **It does not resolve the double-count question** the auditor raised: the same row is charged once
+  by the forbidden-identifier check and once by Priority 2. That is a scoring-design question about
+  two checks measuring different things, it is the product owner's, and it is **registered open**.
+
+### 6. The three conditions under which this ruling is VOID
+
+Recorded by the auditor and adopted verbatim, because a completeness claim is only as good as the
+text it was made against:
+
+1. **Supplementary Fig. S1 entering the ingested corpus.** It is the classical-pathway scheme and
+   may depict the full seven-enzyme chain. The audit is scoped to `01_source_text.txt`, which is also
+   exactly what `_check_supported_reactions` verifies quotes against — claim and scorer are scoped
+   alike, and a wider text is a different audit.
+2. **A completed leg on this paper whose `rag_admission_report.json` shows a non-empty `accepted`.**
+   Both committed legs show `accepted: []` (57 and 64 candidates, all rejected), which clears the
+   flag's documented incompatibility with cross-paper RAG synthesis **for those two legs only**.
+3. **A ruling that a mechanistic ThDP-adduct sub-step IS a supported reaction for scoring.** That
+   would contradict `forbidden_identifiers` and `goldset.py:391-393`, and it would flip the verdict
+   to NOT EXHAUSTIVE for this case.
+
+### 7. Verification required by this ruling, and performed
+
+Per the standing rule that a gold edit needs more than SMOKE: **SMOKE and the gold-readers split
+both ran, A/B'd against the pre-edit SHA `84822906`.** The instrument proof is four tests in
+`test_c085_priority2_honesty.py` reading the REAL pinned gold — a measured zero on a conforming
+payload, a CHARGED unsupported reaction on the ThDP-adduct shape the archived legs actually produced,
+exactly-one-case narrowness, and a behavioural proof that the other nine still withhold.
+
+> **Standing lesson.** The audit is the cost, not the edit. The edit is two lines; the adjudication
+> behind it enumerates every reaction in a 48,000-character paper, quotes each one, names five
+> candidates it excluded and why, rejects six other papers with citations, and states three
+> conditions that would void it. **A flag set any more cheaply than that is the 227-fabrication
+> outcome waiting to happen.**
