@@ -8913,3 +8913,100 @@ four times:** F-171 (a handoff row certifying a suite green that had been red fo
 instrument conservatively wrong in a known direction), and now this. **`187/187` was true of the
 worktrees it was measured in and was never true of the primary checkout, and nobody had asked which
 one it meant.**
+
+---
+
+## F-175 — C-116's D-088 diagnostics are written ONLY on the Streamlit path, so they do not exist for any benchmark leg, and a ruling requirement is unmet
+
+- **Severity HIGH as a ruling-compliance gap**, LOW as a product risk — no production behaviour is
+  wrong · **Class: integration seam, no biology implicated** · **Registered 2026-09-03 (`ORCH-720`),
+  measured live during T-109**
+- **Found by** the Lead Orchestrator while inspecting `PMC12096016/strict` on T-109 — the first live
+  benchmark run since C-116 merged.
+
+### The measurement
+
+```
+COVERAGE_DIAGNOSTICS_FILENAME = "coverage_diagnostics.json"      strict_quarantine.py:191
+$ find runs_verify/2026-09-02_2052 -name coverage_diagnostics.json | wc -l
+0
+```
+
+**Zero, across every leg of a 20-leg run.** What *does* reach a leg directory is
+`coverage_summary.json` and `quarantine_report.json`.
+
+### The mechanism, traced rather than guessed
+
+```
+$ grep -rn "write_quarantine_artifacts" src/ scripts/ --include=*.py
+src/t2pw/app/streamlit_app.py:58     import
+src/t2pw/app/streamlit_app.py:1838   artifacts = write_quarantine_artifacts(result, outputs_dir)
+src/t2pw/app/streamlit_app.py:4715   quarantine_artifacts = write_quarantine_artifacts(...)
+src/t2pw/batch/driver.py:1430        -- a COMMENT
+src/t2pw/batch/driver.py:1970        -- a COMMENT
+```
+
+**`write_quarantine_artifacts` is called from `streamlit_app.py` and from nowhere else.** The batch
+driver only *mentions* it in prose. The diagnostics are the fifth entry in that function's `payloads`
+dict (`:2947`), so they are written exactly where that function runs — **the app** — and never in a
+benchmark leg, which reaches its `coverage_summary.json` by a different route.
+
+### C-116 is NOT broken, and this is not REV-116's miss
+
+**Everything C-116 claimed is true.** Its anti-drift construction — *"computed in the same call,
+written by the same function, so `verdict written, diagnostics absent` is unreachable"* — holds
+exactly as written, and its own comment at `:2943` says so. **Its eleven tests pass.** REV-116
+reviewed the diff against the card's boundary, which was `strict_quarantine.py`.
+
+**The defect is that the premise was scoped to one caller and nobody asked whether the benchmark used
+it.** *"Unreachable within `write_quarantine_artifacts`"* and *"reached on every leg"* are different
+claims, and only the first was ever established.
+
+**This is `R-C116-1` — registered at merge as "diagnostics not carried across the batch/Streamlit
+artifact seam" — now confirmed live and worse than registered.** It is not that they are lost in
+transit. **The writer never runs.**
+
+### The ruling requirement this leaves unmet, stated exactly
+
+The product-owner ruling of 2026-09-02 (`D-089`) directs:
+
+> **Preserve the separate C-116 diagnostics so the 60 subprocess-aligned and 90
+> payload-present-but-unwired anchors remain visible.**
+
+| Where | Preserved? |
+|---|---|
+| The archived 374/60/90 census and its committed logs (`f167_history_census.py`, `f169_wiring_census.py`, `d088_subprocess_recall_ab.py`) | **YES** — committed, unaffected |
+| The Streamlit path | **YES** — the writer runs there |
+| **Per-leg, in a benchmark run** | **NO — the file is never written** |
+
+**The historical record the ruling was reasoning about is intact.** What is missing is the forward
+capability: a future run does not carry its own diagnostics, so the populations cannot be re-derived
+per leg from a new run's artifacts. **That is the half of the requirement that is unmet, and it is
+stated this narrowly on purpose.**
+
+### What this does NOT mean
+
+- **It does not invalidate T-109.** The diagnostics are a *record*, never a gate input — F-168
+  forbids them being one, and the `RULING-C114-DISPOSITION` § 4 reversal condition is not met.
+  Nothing about the run's scoring reads them.
+- **It does not mean the anchors are invisible.** `coverage_summary.json` still carries
+  `matched_terms` and `unmatched_terms` verbatim on every leg. What is missing is the **census
+  classification** — the subprocess-aligned / payload-present-but-unwired split.
+- **It is not a reason to change anything mid-run.** T-109 is one-shot and live.
+
+### What would close it
+
+**Chartered work, not this wave:** call `write_quarantine_artifacts` from the batch path, or write
+the diagnostics wherever the batch driver writes `coverage_summary.json`, with a test that asserts
+the file exists **in a batch leg directory** rather than in a unit fixture. **The test is the point.**
+C-116 had eleven passing tests and none of them ran the batch path.
+
+### Standing lesson — and it is the fifth of this exact shape
+
+**A test that proves a property inside a function proves nothing about whether the function is
+called.** C-116's diagnostics are unreachable-to-lose and unreachable-to-produce at the same time,
+and both facts come from the same design decision.
+
+**F-171, F-172, F-173, F-174 and now F-175 are one lesson in five costumes:** a green signal whose
+scope nobody asked about. Here the signal was *"the diagnostics cannot go missing"* — true, and about
+a function the benchmark never invokes.
