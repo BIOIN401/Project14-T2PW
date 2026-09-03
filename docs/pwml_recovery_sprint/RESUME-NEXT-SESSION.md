@@ -16,7 +16,25 @@ state.**
 
 ---
 
-## 0. CURRENT — `ORCH-720`: the product owner RULED (`D-089`), readiness is rebuilt `GO`, and **T-109 IS LAUNCHED AND RUNNING**. 2026-09-03. Read this section and nothing below it first.
+## 0. CURRENT — `ORCH-720` CLOSED: `D-089` ruled, **T-109 RAN, WAS SCORED ONCE, AND IS `NOT ACCEPTED`**. 2026-09-03. Read this section and nothing below it first.
+
+> **⚠ NOTHING IS RUNNING.** T-109 exited at 07:51:36Z, was scored once, and is **CLOSED and
+> IMMUTABLE**. Heavy lock free, zero sprint-owned Python, no unowned job. **`HANDOFF.md` is the
+> full successor briefing; `T109-RESULT.md` is the verdict.**
+>
+> **T-109: `NOT ACCEPTED`. No hard gate FAILED; Priority 2 could not be EVALUATED, and that is not a
+> pass** (D-087, unchanged). P1 `ok=true` raw **0** · P2 `ok=null` **NOT EVALUATED** · P3 `ok=true`
+> **0** · P4 `0/8` · P5 `0/2`. **Operationally the best run of the sprint: 20/20 legs, timeouts
+> 3 -> 1 -> 0, 4.95 h, survivors 0.**
+>
+> **D-088's two required consequences BOTH held on a fresh draw.** `PMC12096016/strict` was capped by
+> **`EntD` alone** (`ATP`/`NADH`/`Fur` all matched) and `PMC12782028/strict` by the genuinely absent
+> mevalonate arm — **`HMGCR`, `HMGCS1`, named in its own artifacts.** A change clearing both would
+> have been a reject; nothing cleared either.
+>
+> **Priority 1 fell 8 -> 0 and that is NOT a fix.** No production code changed between the two runs.
+> It is evidence about the draw until a second run reproduces it.
+
 
 **Integration tip `1a117eaa`, pushed and remotely verified: local = `origin/` = `git ls-remote`.
 `main` untouched — local `7531692`, remote `03f1af5`.** Everything below § 0 is older and superseded
