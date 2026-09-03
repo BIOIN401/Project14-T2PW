@@ -1,0 +1,59 @@
+{
+ "instrument": "rd092_1_reaction_lineage",
+ "charter": "D-093 s.3 (R-D092-1)",
+ "evaluation_only": true,
+ "corpus": "committed (git ls-files) -- NOT the working tree (F-178)",
+ "legs_discovered": 187,
+ "legs_malformed": [],
+ "admission_chunks_indexed": 119,
+ "summary": {
+  "canonical": {
+   "reactions": 433,
+   "legs": 114,
+   "support_class": {
+    "target_paper_supported": 357,
+    "external_rag_supported": 6,
+    "unsupported": 0,
+    "indeterminate": 70
+   },
+   "attribution_tier": {
+    "row_lineage": 232,
+    "row_rag_provenance": 9,
+    "participant_inheritance": 85,
+    "no_signal": 107
+   },
+   "chunk_join_scope": {
+    "unavailable": 354,
+    "cross_run": 5,
+    "no_chunk_match": 63,
+    "within_run": 11
+   },
+   "reaction_specific_joins": 13
+  },
+  "fallback": {
+   "reactions": 609,
+   "legs": 61,
+   "support_class": {
+    "target_paper_supported": 445,
+    "external_rag_supported": 0,
+    "unsupported": 0,
+    "indeterminate": 164
+   },
+   "attribution_tier": {
+    "row_lineage": 182,
+    "row_rag_provenance": 222,
+    "participant_inheritance": 58,
+    "no_signal": 147
+   },
+   "chunk_join_scope": {
+    "unavailable": 348,
+    "cross_run": 142,
+    "no_chunk_match": 105,
+    "within_run": 14
+   },
+   "reaction_specific_joins": 98
+  }
+ },
+ "records_omitted": 1042,
+ "reproduce": "python docs/pwml_recovery_sprint/evidence/rd092_1_reaction_lineage.py . --json <out>"
+}

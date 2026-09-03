@@ -1,0 +1,146 @@
+{
+  "label": "smoke-rd092-1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-723/05-smoke-rd092-1.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt723/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-09-03T20:22:35+00:00",
+  "finished_at": "2026-09-03T20:23:19+00:00",
+  "duration_seconds": 43.94760580000002,
+  "timeout_seconds": 900.0,
+  "root_pid": 505988,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 507380,
+      "name": "python.exe",
+      "ppid": 505988
+    },
+    {
+      "pid": 505832,
+      "name": "python.exe",
+      "ppid": 507380
+    },
+    {
+      "pid": 427136,
+      "name": "python.exe",
+      "ppid": 507380
+    },
+    {
+      "pid": 507776,
+      "name": "python.exe",
+      "ppid": 427136
+    },
+    {
+      "pid": 506428,
+      "name": "python.exe",
+      "ppid": 507380
+    },
+    {
+      "pid": 507600,
+      "name": "python.exe",
+      "ppid": 506428
+    },
+    {
+      "pid": 504840,
+      "name": "python.exe",
+      "ppid": 507380
+    },
+    {
+      "pid": 507196,
+      "name": "python.exe",
+      "ppid": 504840
+    },
+    {
+      "pid": 505440,
+      "name": "git.exe",
+      "ppid": 507380
+    }
+  ],
+  "descendants_terminated": [
+    427136,
+    504840,
+    505440,
+    505832,
+    506428,
+    507196,
+    507380,
+    507600,
+    507776
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 493972,
+      "name": "python.exe"
+    },
+    {
+      "pid": 495780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 504288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 505808,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/ORCH-723/05-smoke-rd092-1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "49286ac60e347c0b74c7a932afa7eba5ce3e4314",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
