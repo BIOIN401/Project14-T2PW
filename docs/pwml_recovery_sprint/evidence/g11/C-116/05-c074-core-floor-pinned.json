@@ -1,0 +1,128 @@
+{
+  "label": "c074-core-floor-pinned",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/c116-d088-artifact",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-116/05-c074-core-floor-pinned.pin.json",
+    "-q",
+    "--basetemp=C:/t/c116/p11",
+    "tests/test_c074_strict_core_floor.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\c116-d088-artifact",
+  "started_at": "2026-09-03T00:50:25+00:00",
+  "finished_at": "2026-09-03T00:50:29+00:00",
+  "duration_seconds": 3.581561099999817,
+  "timeout_seconds": 1200.0,
+  "root_pid": 164664,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 164704,
+      "name": "python.exe",
+      "ppid": 164664
+    },
+    {
+      "pid": 159580,
+      "name": "git.exe",
+      "ppid": 164704
+    },
+    {
+      "pid": 162740,
+      "name": "git.exe",
+      "ppid": 164704
+    },
+    {
+      "pid": 163888,
+      "name": "git.exe",
+      "ppid": 164704
+    },
+    {
+      "pid": 164352,
+      "name": "git.exe",
+      "ppid": 164704
+    },
+    {
+      "pid": 164608,
+      "name": "git.exe",
+      "ppid": 164704
+    }
+  ],
+  "descendants_terminated": [
+    159580,
+    162740,
+    163888,
+    164352,
+    164608,
+    164704
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 65836,
+      "name": "python.exe"
+    },
+    {
+      "pid": 65880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 161920,
+      "name": "python.exe"
+    },
+    {
+      "pid": 163416,
+      "name": "python.exe"
+    },
+    {
+      "pid": 163828,
+      "name": "python.exe"
+    },
+    {
+      "pid": 163900,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\c116-d088-artifact\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-116\\05-c074-core-floor-pinned.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\c116-d088-artifact\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\c116-d088-artifact",
+    "repo_head": "a806540380239a04b785c1dfe7c0ece862363228",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-116",
+    "token": "C-116:163416:f1d130b88d7f7765",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
