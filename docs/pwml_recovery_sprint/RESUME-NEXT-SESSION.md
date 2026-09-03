@@ -1,6 +1,167 @@
 # RESUME — next session handoff
 
-## 0. CURRENT — **`ORCH-721` closed: F-174 node 2 SOLVED, F-176 REFUTED, F-172 checker BUILT. Production still FROZEN.** 2026-09-03. Read this section and nothing below it first.
+## 0. CURRENT — **`ORCH-722`: F-175 and F-176 CLOSED under narrow unfreezes, F-177 built, F-178 found and fixed, and the Priority-2 flag was set, measured and WITHDRAWN. Production still FROZEN.** 2026-09-03.
+
+> **⚠ NOTHING IS RUNNING AND NOTHING IS CHARTERED.** Heavy lock free (`C:/t/heavylock` absent), zero
+> sprint-owned Python beyond the two `ms-python.isort` LSP processes, no unowned job. **`D-090`
+> still controls: production is FROZEN and T-110 is NOT authorized.**
+
+**Verify the integration tip yourself:** `git rev-parse HEAD` = `git rev-parse origin/sprint/pwml-recovery`
+= `git ls-remote origin sprint/pwml-recovery`. **`main` untouched — local `7531692`, remote `03f1af5`.**
+
+### The one thing to read first
+
+**A full, rigorous, independently-verified biological audit authorized a gold flag — and the flag
+still had to be withdrawn.** Not because the biology was wrong. Because *"is this list exhaustive of
+the paper?"* and *"is every unmatched row unsupported?"* are different questions, and only the first
+was asked. **D-091 → D-092 in `DECISIONS.md` is the whole story and it is worth the ten minutes.**
+
+### What ORCH-722 changed
+
+| item | before | after |
+|---|---|---|
+| **F-175** | ESCALATED, "one tuple entry in frozen `driver.py`" | **CLOSED** under a narrow unfreeze — and the fix was *not* a tuple entry |
+| **F-176** stale reason | ESCALATED | **CLOSED** under a narrow unfreeze |
+| **F-176** runtime applicability | ESCALATED | **STILL OPEN.** Cannot be done narrowly — see below |
+| **F-177** | new finding, no instrument | **INSTRUMENT BUILT**, evaluation-only |
+| **F-178** | — | **NEW, found and fixed.** Two helpers named `_committed_legs` globbed the working tree |
+| **`supported_reactions_complete`** | "needs an audit" | **audited, set, measured, WITHDRAWN.** No longer a curation problem |
+
+### Three narrow product-owner unfreezes were granted; TWO were used, and the third was refused BY ME
+
+**Used:** F-175 artifact persistence, and F-176's stale `inapplicable_reason`.
+
+**NOT used — and stopping was the right call, confirmed by review:** making
+`no_rejected_rag_reaction_reintroduced` *applicable at runtime*. It is a member of
+`release_status.SEMANTIC_GATING_CHECKS`, so making it applicable **moves release status in both
+directions** — a failure demotes, and an applicable pass can turn `not_evaluated` into `passed`. And
+`quarantine_and_close` has **no `admission` parameter at all**, so it cannot be threaded narrowly
+either. The authorization forbids anything that alters release status. **It needs a further ruling.**
+
+### Priority 2 is no longer blocked on an audit. It is blocked on a PRODUCT DECISION.
+
+The audit of `PMC12312563` is **certified and stands**: that paper states exactly one reaction and
+gold's single signature is it. What killed the flag is that the scored corpus is **not seed-only**.
+On the committed canonical leg `runs/2026-07-27_1623/…/strict`, setting the flag charges
+`DHNA-CoA → DHNA` by MenI — whose four entities carry `rag_provenance.source_id = PMC8091085`, **a
+paper `PMC12312563` cites in its own reference list**. Real reaction, real enzyme, right organism,
+right pathway, source named. `goldset.py` already documents the flag as incompatible with
+multi-paper RAG synthesis unless the run is seed-only.
+
+**No further audit will unblock this.** One of these must hold first:
+
+1. the scored corpus is **seed-only**; or
+2. **`R-D092-1`** — row-level RAG lineage on `processes.reactions`. Lineage today is on *entities*
+   only, so a scorer cannot exclude non-seed rows from the precision denominator from the row alone;
+   or
+3. **`R-D092-3`** — a product-owner ruling that a correctly-attributed cross-paper RAG reaction
+   counts as unsupported for this benchmark. **A `policy_disagreement`, and the product owner's
+   alone.**
+
+**Also registered: `R-D092-2`** — duplicate reaction rows count as separate true positives, so
+Priority 2 currently *rewards* a duplicated row.
+
+### What DID ship for Priority 2, and it is a strict improvement
+
+**The alias fix.** `PMC12312563`'s three `2-oxoglutarate` terms now carry
+`alpha-ketoglutarate`, `alpha-ketoglutaric acid`, `2-ketoglutarate`, `2-oxoglutaric acid`,
+`oxoglutaric acid`, `2-oxopentanedioate`. Measured on the committed canonical leg: **`ok=False` →
+`ok=True`, recall 0/1 → 1/1**, with the flag OFF. Without them the paper's own MenD reaction failed
+to match the signature written for it — a false failure that existed before this wave.
+
+> **Never add bare `ketoglutarate` or `glutarate`.** `goldset.py` warns `α-` and `β-` must not
+> collapse; every alias above pins either `alpha-` or `2-`.
+
+### Verified state at this tip — measure, do not trust
+
+| check | expected |
+|---|---|
+| Gold | `98739a59dd6c376f8a19968c7fa5dc3145be5b15` (was `36f4b7b6…`; D-091 briefly `d0b588a7…`, withdrawn) |
+| SMOKE (merge gate 10) | **508 passed, exit 0** — `g11/ORCH-722/27`. Was 503; +5 is the F-176 tests |
+| gold-readers split | **465 / 0 / 8 / 0** — `g11/ORCH-722/28`. Was 456; +9 = 5 F-175 + 4 D-092 |
+| `streamlit_app.py` | sha256 `47e4fafa…`, **modified and never committed** |
+| Python processes | exactly two `ms-python.isort … lsp_server.py` — **match on FULL COMMAND LINE** |
+
+### Traps this wave paid for
+
+1. **A test named `_committed_legs` that calls `rglob` is not measuring the committed corpus.**
+   F-178, two files. An untracked benchmark run took the census 83 → 93 and three tests went red in
+   the primary checkout while staying green in every worktree — **red for exactly the people who had
+   run a benchmark.** Both helpers now ask git.
+2. **`applicable` is not `passed`, in a third costume.** A payload where EVERY row matches a
+   signature is a **measured** zero even with the flag off — no completeness claim is needed when
+   nothing is unmatched. I assumed "flag off ⇒ withheld" and was wrong.
+3. **A narrowness probe whose probe row is real chemistry for one of the papers tests nothing.**
+   My first one used menaquinone chemistry against the menaquinone paper, it matched, and the case
+   read "evaluable". Use a row foreign to every paper.
+4. **Measure before you assert, especially when the assertion is convenient.** "Changes no
+   acceptance verdict at all" was written without measuring, and rested on a run directory that is
+   untracked. Review caught it; the measurement reversed the wave's headline result.
+
+### THE NEXT WORK ORDER
+
+**`prompts/PROMPT-001-eval-framework.md` is still the launcher.** Its items 3 (F-174) and 4 (F-172)
+were done in `ORCH-721`; F-175, F-176's reporting half, F-177 and F-178 are done here.
+
+1. **THREE PRODUCT-OWNER DECISIONS ARE WAITING**, and none is an engineering task:
+   `R-D092-3` (cross-paper RAG rows vs Priority 2), the F-176 runtime-applicability ruling, and
+   whether `R-D092-1` is chartered.
+2. **`R-D092-1`** — row-level RAG lineage. The largest unblocker; it also makes RAG evaluation
+   attributable per reaction rather than per entity.
+3. **F-177 into `bench/acceptance.py`** — the instrument exists at
+   `evidence/eval_semantic_populations.py` but acceptance's own tally still sums canonical and
+   fallback. Evaluation-only, outside the freeze, chartered-ready.
+4. **F-172's two residuals** — indirect pytest drivers (`chunk_d_gate.py`, the gold-readers split:
+   44 unpinned pytest invocations per run) are NOT COVERED, and 3206 unpinned reports are a backlog.
+5. **The AppTest environment-pinning card** — F-174's real fix. `tests/` is a gate surface.
+
+### The evaluation stack — NOT started, and say so plainly
+
+**No Phoenix, no OpenTelemetry, no Ragas, no deterministic scorer skeleton, and no unseen-cohort
+work.** This wave spent its budget on measurement integrity and on one gold audit that ended in a
+withdrawal. **Do not run the unseen ten-paper pilot** — capture does not exist yet.
+
+Ready to reuse:
+- `evidence/eval_semantic_populations.py` — read-only replay of any archived run, per-leg, every
+  check as PASSED / FAILED / INAPPLICABLE / ARTIFACT_MISSING / ARTIFACT_MALFORMED, split by
+  population, gold-blob stamped, and it counts a non-evaluated leg rather than skipping it.
+- `evidence/d091_committed_effect.py` — read-only A/B of a gold-flag change across the committed
+  corpus. Reusable for any future flag.
+- `evidence/f176_admission_persistence_probe.py` — the applicable-vs-passed A/B.
+- **1,947 rejected RAG candidates across 19 T-109 legs**, each with `gap_id`, claim, retrieval
+  evidence (chunk id, section, score, span) and rejection reasons. **The RAG-evaluation dataset is
+  already on disk.**
+
+### Semantic populations at this tip (T-109 artifacts, read-only, gold `98739a59`)
+
+| check | canonical (10) | fallback (9) |
+|---|---|---|
+| `requested_pathway_anchors_present` | 5 pass / 5 fail | 7 pass / 2 fail |
+| `reaction_source_carrier_present` | 10 pass | 9 pass |
+| `retained_reactions_match_supported_signatures` | 2 pass / **8 unevaluable** | **9 unevaluable** |
+| `organism_compatible` | 10 pass | 9 pass |
+| `no_real_id_or_name_conflict` | 7 pass / 3 fail | 3 pass / 6 fail |
+| `no_rejected_rag_reaction_reintroduced` | **10 pass / 0 fail** | 7 pass / **2 fail** |
+| `minimum_connected_core` | 9 pass / 1 fail | 9 pass |
+| `placeholder_identities_distinguished` | 9 pass / 1 fail | 9 pass |
+
+> **"Canonical failures were zero" is TRUE ONLY OF THE RAG CHECK.** Canonical carries **10** failures
+> across four checks. Never quote a combined number without its denominator — that is F-177.
+>
+> **T-109 is not re-scored by any of this.** No acceptance verdict was produced; it remains
+> `NOT ACCEPTED`, immutably.
+
+### Protected — unchanged, and ORCH-722 committed none of it
+
+`streamlit_app.py` · `data/enrichment_cache.json` · `data/id_mapping_cache.json` · `topics_*.txt` ·
+`out/` · `outputs/` · `tmp/` · `runs_verify/` · the stray 0-byte `=` and `ValueError`.
+**F-147 stays registered and deliberately UNCHARTERED — escalate only.**
+**No worktree pruned.** `.claude/worktrees/orch721-f174` (detached at `cb982dc2`) is live evidence —
+the base arm of every G9 proof in the last two waves. Leave it.
+
+---
+
+## 0-prevORCH721 — **SUPERSEDED by `ORCH-722`.** Its findings all STAND; superseded is its status as current — **`ORCH-721` closed: F-174 node 2 SOLVED, F-176 REFUTED, F-172 checker BUILT. Production still FROZEN.** 2026-09-03.
 
 > **⚠ NOTHING IS RUNNING AND NOTHING IS CHARTERED.** Heavy lock free (`C:/t/heavylock` absent),
 > zero sprint-owned Python, no unowned job. `D-090` still controls: **production is FROZEN and
