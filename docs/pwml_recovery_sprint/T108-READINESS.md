@@ -472,3 +472,59 @@ result: timeouts **3 → 1**, scorable denominator **17 → 19**, `PMC12096016/s
 **108.5%** of the old ceiling. **F-166** records the limit — one leg consumed the full 3600 s and
 still timed out, so the ceiling is sufficient for the corpus and not for every leg in it. **No
 ceiling change is proposed on one observation.**
+
+---
+
+## 8. The § 7 `NO-GO` is LIFTED by `D-089` — and the successor candidate is **T-109**, not a second T-108 · 2026-09-02
+
+**§ 7's `NO-GO` was correct and it is now spent, for the reason § 7.3 itself named.**
+
+§ 7.3 made launches NO-GO because *"a release candidate scored on an instrument that is
+mid-correction cannot be interpreted"* — the Priority-4/5 boundary was *"about to move by design."*
+
+**Under `D-089` the boundary is not moving.** The product owner ruled that D-088 clause 10 controls
+for this release: the INCOMPLETE-CORE CAP stays unchanged, no cofactor vocabulary, no entity-list
+match, no Stage-0 redesign, no gold change, no curated expectations in production. **The instrument
+is therefore not mid-correction — the correction is deferred, in writing, to the RAG / LLM
+evaluation phase (`R-D089-1`).** A candidate scored now is scored on a stable, fully documented rule
+whose single known error has a **known sign** (F-173). **That is interpretable, which is exactly
+what § 7.3 required and could not have at the time.**
+
+### 8.1 The milestone identity — stated before anything else, because the ruling's wording and this file's § 7.1 collide
+
+The ruling says *"launch T-108 once."* **T-108 has already been launched once.** It ran 20/20 legs,
+is scored `NOT ACCEPTED`, and the **same ruling** says *"Do not rerun T-108"* and *"Do not redraw,
+rerun, or chase a favorable outcome."* § 7.1 of this file says a new candidate needs a **new
+milestone identity and a separately recorded readiness decision.**
+
+> **There is exactly one reading in which every one of those sentences is true: launch the
+> release-candidate milestone once, under a NEW identity. That identity is `T-109`.**
+
+**T-108 is untouched, immutable and still `NOT ACCEPTED`.** Nothing about it is re-run, re-scored or
+reinterpreted, and `T108-RESULT.md` is not edited. **The readiness decision for T-109 is recorded
+separately in `T109-READINESS.md`,** as § 7.1 requires; this section exists only to close § 7's
+NO-GO and to record why the name changed.
+
+### 8.2 § 7.4's six D-088 obligations — discharged, retired, or holding, and which is which
+
+**A rebuilt table must not report a row as PASS when the change it gated never happened.**
+
+| § 7.4 obligation | State | Why |
+|---|---|---|
+| Expected core reactions / subprocesses **curated for all ten papers** | **DISCHARGED** | `curation/`, 41 reactions / 35 subprocesses / 8 undetailed, 64 important + 34 secondary participants, **174 quotes verbatim, 0 soft, 0 bad, 0 fatal, 0 warnings** — `d088_curation_validator.py` |
+| **A/B across all 83 committed legs** | **DISCHARGED** | `d088_curated_recall_ab_v4.py`, G11 `ORCH-719/09`, naming `runs/` **and** `runs_verify/` |
+| `PMC12096016` loses **only** the false entity-anchor cap | **RETIRED BY RULING** | No correction is built, so nothing is lost. The cap stands; **F-173** records the resulting `review_required` as a known false negative with a known sign |
+| `PMC12782028` **remains** a reaction-recall failure | **HOLDS** | The cap is unchanged, so the leg it correctly holds stays held. **True positive**, not an artefact |
+| The **60** subprocess-aligned and **90** payload-unwired anchors remain separately visible | **DISCHARGED** | **C-116** (`175e1a6f`) — separate artifact, coverage verdict byte-identical to base, verified by REV-116 against the diff |
+| **No gold-forbidden content becomes releasable** | **HOLDS** | No anchor was downgraded. Nothing moved in the releasable direction at all |
+
+**The two "RETIRED" and "HOLDS" rows are not achievements.** They hold because the wave declined to
+make the change that would have put them at risk. Recording them as delivery of D-088 clause 2 is
+the exact claim `D-089` § 3 forbids.
+
+### 8.3 What § 7.5 carries forward, unchanged
+
+The § 2.1 leg-ceiling ruling **stands at 3600 s with no override**, now backed by T-108's live
+result: timeouts **3 → 1**, scorable denominator **17 → 19**, `PMC12096016/strict` recovered at
+**108.5%** of the old ceiling. **F-166** still records that one leg consumed the full 3600 s and
+still timed out. **No ceiling change is proposed, then or now** — one observation is not a basis.

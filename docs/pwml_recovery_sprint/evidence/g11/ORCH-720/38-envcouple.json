@@ -1,0 +1,133 @@
+{
+  "label": "envcouple",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/orch720_chunkd_env_coupling.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW",
+    "C:/t/orch720/envcouple"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-09-03T02:44:57+00:00",
+  "finished_at": "2026-09-03T02:45:12+00:00",
+  "duration_seconds": 14.617619599997852,
+  "timeout_seconds": 1800.0,
+  "root_pid": 205496,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 205320,
+      "name": "python.exe",
+      "ppid": 205496
+    },
+    {
+      "pid": 205272,
+      "name": "python.exe",
+      "ppid": 205308
+    },
+    {
+      "pid": 205308,
+      "name": "python.exe",
+      "ppid": 205320
+    },
+    {
+      "pid": 205252,
+      "name": "python.exe",
+      "ppid": 205320
+    },
+    {
+      "pid": 205524,
+      "name": "python.exe",
+      "ppid": 205252
+    },
+    {
+      "pid": 205404,
+      "name": "python.exe",
+      "ppid": 205440
+    },
+    {
+      "pid": 205440,
+      "name": "python.exe",
+      "ppid": 205320
+    },
+    {
+      "pid": 205244,
+      "name": "python.exe",
+      "ppid": 205320
+    },
+    {
+      "pid": 205448,
+      "name": "python.exe",
+      "ppid": 205244
+    }
+  ],
+  "descendants_terminated": [
+    205244,
+    205252,
+    205272,
+    205308,
+    205320,
+    205404,
+    205440,
+    205448,
+    205524
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 193984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 198948,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204896,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/ORCH-720/38-envcouple.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "0859fba90b8819de3305d0203031280dd2e67c22",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-720",
+    "token": "ORCH-720:204896:0b3d110c5bbe9e2f",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

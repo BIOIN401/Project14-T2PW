@@ -9577,3 +9577,70 @@ a frozen record under merge rule 8). **Lead recommendation: clause 2 yields. `Pr
 `0/2` and the headline number does not move.**
 
 **Step 9 remains NO-GO.** No milestone launched, none scheduled.
+
+---
+
+## `ORCH-720` — the product owner RULED, the blocker is CLEARED, and the wave moves to steps 8-10 · 2026-09-02
+
+**Session `project14-t2pw-51` `[e2c249]`, Lead Orchestrator and Integration Authority.** Opened at
+integration tip `0859fba9`, `local = origin/ = git ls-remote` verified before any work.
+
+### The ruling, and the one thing it changes about launching
+
+**`D-089` (LOCKED): D-088 clause 10 controls for this release. The INCOMPLETE-CORE CAP stays.**
+Priority 5 stays `0/2`, recorded as an **explicitly accepted conservative limitation** and never as
+delivery of D-088 clause 2. Full text in `DECISIONS.md` D-089, the packet's § 7 and `FINDINGS.md`
+F-173.
+
+**This clears the step-9 blocker, and it clears it for the reason `T108-READINESS.md` § 7.3 named.**
+That section made launches NO-GO because *"a release candidate scored on an instrument that is
+mid-correction cannot be interpreted"* — the Priority-4/5 boundary was *"about to move by design."*
+
+> **Under D-089 the boundary is not moving.** The instrument is not mid-correction; the correction is
+> ruled **deferred to the RAG / LLM evaluation phase**. A candidate scored now is scored on a stable,
+> fully documented rule whose one known error has a **known sign** (F-173). **That is interpretable,
+> which is exactly what § 7.3 required and could not have.**
+
+**§ 7.4's six additional obligations are DISCHARGED OR RETIRED, and which is which matters:**
+
+| § 7.4 obligation | State under D-089 |
+|---|---|
+| Expected core reactions / subprocesses curated for all ten papers | **DISCHARGED** — `curation/`, 41 reactions / 35 subprocesses, 174 quotes verbatim, 0 fatal |
+| Archived-artifact A/B across all 83 committed legs | **DISCHARGED** — `d088_curated_recall_ab_v4.py`, G11 `ORCH-719/09` |
+| `PMC12096016` loses **only** the false entity-anchor cap | **RETIRED BY RULING** — no correction is built, so nothing is lost. The cap stands and F-173 records it as a known false negative |
+| `PMC12782028` **remains** a reaction-recall failure | **HOLDS, trivially and deliberately** — the cap is unchanged, so the leg it correctly holds stays held |
+| The **60** / **90** populations remain separately visible | **DISCHARGED** — C-116 (`175e1a6f`), separate artifact, verdict byte-identical |
+| No gold-forbidden content becomes releasable | **HOLDS, trivially** — no anchor was downgraded |
+
+**The two retired rows are retired because the change they gate never happened, not because they
+were satisfied.** Recording them as "PASS" would be the exact claim D-089 § 3 forbids.
+
+### Registered, NOT chartered — the deferred long-term correction
+
+**`R-D089-1` — a stable, general, non-paper-keyed reaction/subprocess completeness specification**,
+typing participants as **defining** / **optional** / **extracted-but-unwired** / **genuinely
+absent**. Owner phase: **the RAG / LLM evaluation framework** (`HANDOFF.md` § 5.2a step 10).
+**Explicitly out of scope for this finishing wave** by ruling. This is the third option
+`DECISION-PACKET-D088-RUNTIME-CAP.md` § 4 named and declined to smuggle in; it now has a home.
+
+### The Priority-5 hard-gate question the ruling required be checked before launch
+
+The ruling directed: *"If authoritative contract text still makes Priority 5 an absolute hard gate,
+quote the exact conflict before launching; do not silently rewrite an unrelated locked rule."*
+
+**Checked. There is no conflict.** The authoritative text says the opposite, in terms —
+`src/t2pw/bench/acceptance.py:1050-1052`, the docstring of `AcceptanceReport.priorities`:
+
+> Priorities 1-3 are absolute: any non-zero count fails them, regardless of how good the rest of the
+> run looks. **Priority 4 is a coverage judgement and priority 5 is a rate to maximise, so neither is
+> a hard gate.**
+
+**And nothing gates on them mechanically.** The only consumers of `priorities()` are
+`acceptance.py:1201` (serialisation into `acceptance_priorities`) and `render.py:61-66` (display).
+**No caller anywhere computes `all(entry["ok"] ...)`** — the `ok=None` refusal path the docstring
+describes is a property the docstring reserves for a hypothetical caller, not a live gate.
+`PRODUCT_CONTRACT` § 15 constrains Priority **1** and the O-1 instrument and says nothing making
+Priority 5 absolute.
+
+**So the accepted Priority-5 limitation is non-blocking on the authoritative text, not on a Lead
+reading of it.** No locked rule was rewritten and none needed to be.

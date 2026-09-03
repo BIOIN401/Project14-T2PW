@@ -5220,3 +5220,87 @@ shortcut precisely because it is the one that looks like progress.
   narrowly and says so.
 - **It does not re-open T-107 or T-108.** Both verdicts stand as facts about the artifacts they
   produced.
+
+---
+
+## D-089 — D-088 clause 10 CONTROLS for this release; the INCOMPLETE-CORE CAP stays, and the resulting Priority-5 zero is an ACCEPTED CONSERVATIVE LIMITATION · 2026-09-02 · LOCKED
+
+**Ruled by the product owner** in answer to `DECISION-PACKET-D088-RUNTIME-CAP.md` § 6, raised by the
+Lead Orchestrator at `ORCH-719`. **This decision does not amend, reopen or soften D-088.** D-088
+stays exactly as locked. This decision resolves which of D-088's own clauses yields where two of
+them cannot both be honoured by any implementation available in this wave.
+
+### 1. The ruling
+
+**Clause 10 controls. Clause 2's runtime consequence is NOT delivered this wave.**
+
+| Directive | Status |
+|---|---|
+| Keep the existing **INCOMPLETE-CORE CAP** unchanged | **BINDING** — `release_status.py:1087` is not to be touched this wave |
+| Relax the cap on a **cofactor vocabulary** | **FORBIDDEN** |
+| Match anchors **merely against the entity list** | **FORBIDDEN** |
+| Introduce a **Stage-0 redesign** in this finishing wave | **FORBIDDEN** |
+| Change **gold**, or read **curated benchmark expectations inside production** | **FORBIDDEN** |
+
+### 2. The product principle is REAFFIRMED, not withdrawn
+
+The product owner restated it in the same ruling, and it remains the intended end state:
+
+> Missing ordinary cofactors, currency metabolites, regulators or ancillary proteins **should not
+> ultimately block an otherwise complete pathway.** What matters most is that the pathway's core
+> reactions and major subprocesses are **present, connected and biologically correct.** Extracting an
+> entity without wiring it into an admitted process **does not satisfy completeness.**
+
+**The ruling is about capability, not about principle.** The finding is that the current system
+cannot implement that distinction safely without **also releasing `PMC12782028`, whose upstream
+mevalonate arm is genuinely missing.** Given that choice, the ruling directs the **conservative false
+negative.**
+
+### 3. The accepted consequences
+
+| Consequence | Status |
+|---|---|
+| `PMC12096016/strict` remains `review_required` | **ACCEPTED** |
+| Its pathway output remains **preserved and available for review** | **REQUIRED** — it must not be dropped. Merge rule 7 |
+| Priority 5 remains **`0/2`** | **ACCEPTED** |
+| The C-116 separate diagnostics keeping the **60** subprocess-aligned and **90** payload-present-but-unwired anchors visible | **PRESERVED** |
+| The full **374**-anchor census and its corrected population split | **PRESERVED** |
+
+**This is recorded as an explicitly accepted conservative limitation. It is NOT successful delivery
+of D-088 clause 2, and no report, handoff, badge or summary may describe it as such.** A future
+reader finding Priority 5 at `0/2` must be able to reach this paragraph and learn that the zero was
+*chosen*, that it was chosen to avoid hiding a real recall failure, and that the alternative was
+measured and rejected rather than overlooked.
+
+### 4. The proper long-term correction is DEFERRED, not abandoned
+
+**Replace the flat all-anchor requirement with a stable, general, non-paper-keyed reaction/subprocess
+completeness specification.** It must distinguish, as first-class typed categories:
+
+1. **defining** substrates, products, enzymes, reactions and major pathway branches;
+2. **optional** cofactors, currency metabolites, regulators and ancillary proteins;
+3. **extracted-but-unwired** entities;
+4. **genuinely absent** core reactions or subprocesses.
+
+**Registered as follow-up work for the later RAG / LLM evaluation phase.** It is **not** to be
+implemented in this finishing wave. This is the third option the packet named and declined to
+smuggle in, now given an explicit home.
+
+### 5. What this decision does NOT do
+
+- **It does not reopen D-088.** Clauses 1-10 stand verbatim.
+- **It does not change gold.** `pinned_v1.json` stays at `36f4b7b690b577f72882c3045ca6728d1ec8d9d1`.
+- **It does not relitigate T-107 or T-108.** Both remain immutable and `NOT ACCEPTED`.
+- **It does not touch `supported_reactions_complete`.** D-087 governs, unchanged, and the ruling
+  restates it: never set broadly, never guessed, and only ever on individually curated cases whose
+  expected reaction sets have been **independently verified complete.**
+- **It does not weaken a biological gate.** It declines to weaken one. Merge rule 6 is untouched, and
+  the direction of this ruling is the safe direction.
+
+### 6. Standing lesson
+
+**The packet asked the product owner to choose between a score and a measurement, and the answer was
+the measurement.** The cheap move was available, it was specified, it was known to move the headline
+number, and it was refused because it would have cleared a leg whose failure is real. **Record this
+as the shape of the correct answer when a change improves a score: the question is never "did the
+number move" but "did the thing the number measures move."**

@@ -1,0 +1,74 @@
+tree            : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+.env present    : True
+nodes under test: 2
+  - tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance
+  - tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block
+
+NOTHING ON DISK IS MODIFIED. .env is neither edited, moved nor deleted.
+
+==============================================================================
+ARM: 1. primary checkout, environment UNTOUCHED (what the gate ran)
+==============================================================================
+  PATHBANK_DB_HOST in child : (absent)
+  PATHBANK_DB_USER in child : (absent)
+
+  [1] test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance
+      1 error in 0.18s
+      EXIT 1 -> RED
+
+  [2] test_research_mode_keeps_the_unmapped_candidate_and_does_not_block
+      1 failed in 5.28s
+      EXIT 1 -> RED
+
+==============================================================================
+ARM: 2. SAME tree, SAME commit -- resolution DB deconfigured (worktree-like)
+==============================================================================
+  PATHBANK_DB_HOST in child : <empty>
+  PATHBANK_DB_USER in child : <empty>
+
+  [1] test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance
+      1 error in 0.21s
+      EXIT 1 -> RED
+
+  [2] test_research_mode_keeps_the_unmapped_candidate_and_does_not_block
+      1 failed in 5.42s
+      EXIT 1 -> RED
+
+==============================================================================
+VERDICT
+==============================================================================
+  test_cli_export_emits_the_canonical_organism_and_keeps_its_pro arm1=RED   arm2=RED   unchanged
+  test_research_mode_keeps_the_unmapped_candidate_and_does_not_b arm1=RED   arm2=RED   unchanged
+
+  RED with the DB configured      : 2 / 2
+  GREEN with it deconfigured      : 0 / 2
+
+  ENVIRONMENT EXONERATED for at least one node. The test is red with and without the DB config, so
+  the cause is elsewhere and (A) must be investigated before any launch.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0859fba90b8819de3305d0203031280dd2e67c22  [git, worktree dirty=True]
+label                   : envcouple
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch720_chunkd_env_coupling.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW C:/t/orch720/envcouple
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 205496 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 14.62 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 9  205320:python.exe, 205272:python.exe, 205308:python.exe, 205252:python.exe, 205524:python.exe, 205404:python.exe, 205440:python.exe, 205244:python.exe, 205448:python.exe
+descendants terminated  : 9  205244, 205252, 205272, 205308, 205320, 205404, 205440, 205448, 205524
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-720/38-envcouple.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-720  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

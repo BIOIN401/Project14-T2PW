@@ -235,3 +235,72 @@ was a comment in the function I was proposing to change, written by D-072 for th
 finding it cost one grep. **Before proposing that instrument X compensates for gate Y, read what X
 actually reads** — the seam between them is where the assumption lives, and it is usually already
 documented by whoever hit it first.
+
+---
+
+## 7. RESOLVED — 2026-09-02. **The product owner ruled: clause 10 controls. The cap stays.**
+
+**Recorded as `D-089` (LOCKED).** This packet is CLOSED. Nothing below reopens it.
+
+### 7.1 The answer to § 6's corrected ask
+
+The ask was:
+
+> Do you accept that outcome — cap unchanged, diagnostics added, curated dataset built, Priority 5
+> remaining `0/2` — or do you direct that the cap be relaxed on a cofactor vocabulary despite clause
+> 10, accepting that `PMC12782028` would be released at runtime and would remain a failure only in a
+> reading beside the score?
+
+**Answered: the first. The outcome is accepted.**
+
+| Directive from the ruling | Effect here |
+|---|---|
+| Keep the INCOMPLETE-CORE CAP unchanged | `release_status.py:1087` **untouched this wave** |
+| Do not relax it on a cofactor vocabulary | **Candidate C stays rejected** |
+| Do not match anchors merely against the entity list | **Candidate A stays rejected** |
+| No Stage-0 redesign in this finishing wave | **Candidate B stays rejected**; step 3 holds |
+| No gold change, no curated expectations inside production | **Candidate D stays rejected**; `PRODUCT_CONTRACT` § 12 holds |
+
+**All four candidates in § 2 were rejected by the analysis and are now rejected by ruling.** The
+packet's own recommendation and the ruling agree; the ruling is the authority, not the agreement.
+
+### 7.2 The one thing the ruling adds that the packet did not say
+
+The packet framed the choice as *score versus measurement.* **The ruling names it more precisely:
+the choice is which direction to be wrong in.**
+
+> the current system cannot implement that distinction safely without also releasing `PMC12782028`,
+> whose upstream mevalonate arm is genuinely missing. For this release, **choose the conservative
+> false negative.**
+
+**`PMC12096016/strict` staying `review_required` is a FALSE NEGATIVE and the ruling says so.** It is
+not a correct classification that happens to be inconvenient. The pipeline recovered that pathway
+adequately and the instrument declines to say so, because the only available way to say so would
+also have said it about a pathway that is genuinely missing an arm. **Calling it what it is, in the
+document that accepts it, is the whole point of accepting it explicitly.**
+
+### 7.3 The product principle is NOT withdrawn
+
+D-088's clause 2 intent stands and was restated in the ruling verbatim. **What is deferred is its
+implementation, not its correctness.** The replacement — a stable, general, non-paper-keyed
+reaction/subprocess completeness specification distinguishing defining participants, optional
+cofactors, extracted-but-unwired entities and genuinely absent core reactions — is **registered as
+follow-up work for the RAG / LLM evaluation phase.**
+
+**That is the third option § 4 named and explicitly declined to smuggle into this wave.** It now has
+an owner phase and a written scope, which is what § 4 asked for.
+
+### 7.4 What must be preserved, by ruling
+
+- `PMC12096016`'s pathway output stays **preserved and available for review** — never dropped.
+- The **C-116 separate diagnostics**, so the **60** subprocess-aligned and **90**
+  payload-present-but-unwired anchors stay separately visible.
+- The full **374**-anchor census and its **corrected population split** (F-169 and its amendment —
+  the 12 ATP rows that are a matcher gap and not a completeness gap).
+
+### 7.5 The claim that must never be made
+
+**Priority 5 at `0/2` is an accepted conservative limitation. It is not delivery of D-088 clause 2.**
+Any report, handoff, badge, summary or successor session that describes the cap's survival as
+"D-088 implemented" is wrong, and D-089 § 3 exists so that the error is catchable by reading rather
+than by re-deriving.

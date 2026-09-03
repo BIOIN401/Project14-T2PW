@@ -8730,3 +8730,186 @@ surface every card depends on — `bounded_run.py`'s build hash is in every G11 
 standing reason not to touch that casually mid-wave. **It is also now clear the fix is not "make
 `check` read `pin/`"** — that path was closed deliberately — **but "build the rule-10 checker that was
 never built."** Different job, different card, and it should be scoped knowing that.
+
+---
+
+## F-173 — `PMC12096016/strict`'s `review_required` is a KNOWN FALSE NEGATIVE, accepted by ruling, and it will stay one until a general reaction-level specification exists
+
+- **Severity** MEDIUM as an instrument limitation, **ZERO as a defect** — nothing is broken and no
+  code is wrong · **Class: accepted conservative limitation, ruled** · **Registered 2026-09-02
+  (`ORCH-719`)**
+- **Ruled by the product owner as `D-089`.** Raised by the Lead Orchestrator in
+  `DECISION-PACKET-D088-RUNTIME-CAP.md`.
+
+### The finding
+
+**D-088's two named consequences straddle a boundary the production classifier cannot cross.**
+
+`PMC12096016/strict` must lose its cap and `PMC12782028/strict` must keep it. Every input that
+separates those two legs is either **curated per paper** — forbidden in production by
+`PRODUCT_CONTRACT` § 12 — or **drawn from Stage 0**, which F-168 measured to be unstable across
+draws (**0 of 14 paper/mode pairs named an identical subprocess set twice**). On every input
+production is actually allowed to read, the two legs are indistinguishable:
+
+| leg | requested-core coverage | core processes | separable? |
+|---|---|---|---|
+| `PMC12096016/strict` | 0.750 | 9 | **no** |
+| `PMC12782028/strict` | 0.538 | 3 | **no** — both clear every threshold |
+
+**So the cap is retained knowing it is wrong on one of the two legs.** That is the accepted trade:
+one false negative, in exchange for not releasing a pathway whose upstream mevalonate arm is
+genuinely absent.
+
+### Why this is a finding and not merely a decision
+
+**The decision is `D-089`. The finding is that the error has a KNOWN SIGN.**
+
+A limitation recorded as *"Priority 5 is 0/2"* invites a future reader to treat the zero as a
+measurement of the pipeline. **It is not.** It is a measurement of the pipeline **plus** an
+instrument that is conservatively wrong on 1 of the 2 legs in the denominator. **Half of Priority
+5's strict denominator is known-misclassified in a known direction**, and any reading of that
+metric that does not carry this sentence is overstating what the pipeline failed to do.
+
+### What would close it
+
+The replacement registered in `D-089` § 4 and deferred to the RAG / LLM evaluation phase: a
+**stable, general, non-paper-keyed** reaction/subprocess completeness specification typing
+participants as **defining**, **optional**, **extracted-but-unwired** or **genuinely absent**.
+**Nothing smaller closes it.** All four smaller candidates were measured and rejected — see the
+packet § 2 and F-168.
+
+### What is NOT claimed
+
+- **Not that `PMC12096016` would pass acceptance if the cap were lifted.** The cap is one input.
+  Removing it makes the leg *eligible* to be scored on the rest; it does not predict the rest.
+- **Not that `PMC12782028`'s cap is also a false negative.** It is a **true** positive — F-167 and
+  the curated set both put the mevalonate arm genuinely absent from the payload.
+- **Not that the anchors are noise.** F-169 established that `PMC12096016`'s four unmatched anchors
+  are four different defects, one of which (**ATP**, 12 rows across 8 run trees) is a **matcher gap
+  inside the production synonym layer** — a real defect that a cofactor filter would have hidden
+  permanently rather than fixed.
+
+### Standing lesson
+
+**An instrument that is conservative in a known direction is safe to ship and dangerous to quote.**
+Shipping it is right: the alternative released a genuinely incomplete pathway. Quoting its output as
+a pipeline capability measurement is wrong, and the distance between those two sentences is exactly
+where this sprint has repeatedly lost information — F-171's green row that had been red for days,
+F-172's checker that certified half a gate. **This is the third instance of the same shape, and the
+first one caught before anybody quoted it.**
+
+---
+
+## F-174 — the authoritative Chunk D gate has NEVER been run in the primary checkout, and it is RED there on two nodes for reasons that cannot be code
+
+- **Severity** MEDIUM as a gate-scope defect, **LOW as a product risk** · **Class: instrument /
+  environment coupling, no production code implicated** · **Registered 2026-09-02 (`ORCH-720`)**
+- **Found by** the Lead Orchestrator while rebuilding T-109 readiness — the first time the gate was
+  run outside a worktree.
+
+### The measurement
+
+`chunk_d_gate.py run` at tip `0859fba9`, in the **primary checkout**:
+
+```
+jobs=28 executed=26/187 omissions=161 additions=0
+failed=[ 'run-core = passed=159/160, failed=1'
+         'node15   = passed=0/1,     failed=1' ]
+```
+
+The same gate at the C-114 tip (G11 `ORCH-719/14`) and the C-116 tip (`ORCH-719/17`) reported
+**`187/187`, `failed=none`, exit 0**. Both of those ran with
+`cwd = .claude/worktrees/c114-d088-diagnostics` and `.../c116-d088-artifact` respectively — **read
+out of the committed reports, not recalled.**
+
+| node | assertion |
+|---|---|
+| `test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance` | `assert report["db_resolution"]["available"] is False` → `assert True is False` |
+| `test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block` | `AssertionError: processes moved pre-freeze` |
+
+### It cannot be a code regression, and this was settled by reading the commit range
+
+**The last green Chunk D is the C-116 merge `175e1a6f`. Exactly one commit separates it from the
+tip:**
+
+```
+$ git diff --stat 175e1a6f..HEAD -- src/ tests/ scripts/
+(empty)
+$ git diff --name-only 175e1a6f..HEAD
+docs/pwml_recovery_sprint/evidence/g11/ORCH-719/18-smoke-postmerge-c116.json
+docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-719/18-smoke-postmerge-c116.pin.json
+docs/pwml_recovery_sprint/evidence/orch719_smoke_postmerge_c116.log
+```
+
+**Three evidence artifacts. No `src/`, no `tests/`, no `scripts/`.** A code regression between the
+last green run and this red one is not unlikely — it is **impossible**. Both failures are therefore
+properties of the **environment the gate runs in**, not of the tree it measures.
+
+### Node 1's mechanism is proven; node 2's is not, and the difference is stated rather than blurred
+
+**Node 1 — ESTABLISHED.** The test's own comment names the coupling: *"no worktree carries a
+`.env`, so `PathBankDbResolver.from_env()` answers `None` and this leg is offline."* Holding the tree
+and the commit fixed and moving **only** the child environment:
+
+| arm | `PATHBANK_DB_HOST` / `_USER` | result |
+|---|---|---|
+| 1 | from `.env` | **RED** |
+| 2 | empty string | **GREEN** |
+
+Empty rather than deleted, because `config.ensure_dotenv_loaded` calls
+`load_dotenv(..., override=False)`: an **absent** key is refilled from `.env`, a **present-and-empty**
+one is left alone, and empty is what reaches `from_env`'s `if not host or not user: return None`
+(`map_ids.py:855`).
+
+**Node 2 — CLASS SETTLED, LEVER NOT ISOLATED.** It is red in **both** arms, so the resolution DB is
+not its lever. What it reports is compound **canonicalization** moving `processes` across the
+pre-freeze boundary:
+
+```
+'inputs' : ['L-glutamate', 'L-cysteine']      ->  ['L-glutamate', 'L-Cysteine']
+'outputs': ['gamma-glutamylcysteine']         ->  ['γ-Glutamylcysteine']
+'outputs': ['OPC-8:0']                        ->  ['8-[(1R,2R)-3-oxo-2-{(Z)-pent-2-enyl}cyclopentyl]octanoate']
+```
+
+**The remaining candidate levers are all working-tree state**, and the two obvious ones are already
+known to differ: `data/enrichment_cache.json` is **39.9 MB in the working tree against 34.2 MB
+committed**, and `data/id_mapping_cache.json` **4.83 MB against 4.10 MB** — a worktree checks out the
+committed bytes, the primary checkout carries whatever the last live benchmark left. **Checked and
+NOT the answer on its own:** both the working and committed caches contain `Glutamylcysteine`, so a
+bare presence/absence story does not fit and the precise lever is **open**.
+
+### Why this does not block T-109, stated so it is not mistaken for a waiver
+
+1. **Chunk D is not a readiness row.** `T108-READINESS.md`'s nineteen rows do not include it, and
+   `TEST_MATRIX:244` says in terms *"Chunk D is excluded from the smoke gate."* Merge gate 10 is
+   SMOKE, measured **503 passed / exit 0** at this tip.
+2. **T-108 ran in this same primary checkout, with this same `.env` and these same caches.** Whatever
+   node 2 is reacting to was equally present for T-108. It therefore does not make T-109 less
+   comparable to T-108 — it makes them comparable in the same way.
+3. **Both failures are pre-freeze.** Merge rule 8 governs post-freeze repair and is untouched.
+
+**What is NOT claimed: that node 2 is harmless.** *"A pre-freeze stage canonicalizes compound names
+and `processes` moves"* is a statement about production behaviour, and the test says it must not
+happen. **It is registered as open, not explained away.** Isolating it is unchartered work, and
+starting it inside a finishing wave is the scope creep this sprint keeps being warned about.
+
+### The part of this that was my own waste, recorded because it is the transferable half
+
+**I wrote a 140-line A/B probe to answer a question `git diff --name-only` answers in one line.** The
+probe's own docstring asserted *"a SHA-based A/B cannot separate these"* — true of a SHA-based
+**A/B**, and irrelevant, because the commit range did not need to be **run**, only **read**. The
+probe then failed its first arm on an unrelated defect of mine (`--basetemp` parents not
+pre-created), producing `1 error in 0.18s` that looked exactly like a result and was not.
+
+> **Before building an instrument to distinguish two hypotheses, check whether one of them is
+> already excluded by something already written down.** Here the code had not changed at all, and
+> every minute spent on the probe was spent proving something the history had settled.
+
+### Standing lesson, and it is the fourth of this shape
+
+**A gate's green result is a property of where it was run, and this sprint has now recorded that
+four times:** F-171 (a handoff row certifying a suite green that had been red for days), F-172
+(`g11_evidence.py check` certifying the lifecycle half of G11 and rule 10 not at all), F-173 (an
+instrument conservatively wrong in a known direction), and now this. **`187/187` was true of the
+worktrees it was measured in and was never true of the primary checkout, and nobody had asked which
+one it meant.**
