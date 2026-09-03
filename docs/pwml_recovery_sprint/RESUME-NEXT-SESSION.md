@@ -16,25 +16,33 @@ state.**
 
 ---
 
-## 0. CURRENT — `ORCH-720` CLOSED: `D-089` ruled, **T-109 RAN, WAS SCORED ONCE, AND IS `NOT ACCEPTED`**. 2026-09-03. Read this section and nothing below it first.
+## 0. CURRENT — **SPRINT CLOSED. `D-090`: engineering-complete, production FROZEN, T-110 NOT authorized.** Next phase is the evaluation framework. 2026-09-03. Read this section and nothing below it first.
 
-> **⚠ NOTHING IS RUNNING.** T-109 exited at 07:51:36Z, was scored once, and is **CLOSED and
-> IMMUTABLE**. Heavy lock free, zero sprint-owned Python, no unowned job. **`HANDOFF.md` is the
-> full successor briefing; `T109-RESULT.md` is the verdict.**
+> **⚠ NOTHING IS RUNNING AND NOTHING IS CHARTERED HERE.** T-109 exited, was scored once, and is
+> **CLOSED and IMMUTABLE**. Heavy lock free, zero sprint-owned Python, no unowned job.
 >
-> **T-109: `NOT ACCEPTED`. No hard gate FAILED; Priority 2 could not be EVALUATED, and that is not a
-> pass** (D-087, unchanged). P1 `ok=true` raw **0** · P2 `ok=null` **NOT EVALUATED** · P3 `ok=true`
-> **0** · P4 `0/8` · P5 `0/2`. **Operationally the best run of the sprint: 20/20 legs, timeouts
-> 3 -> 1 -> 0, 4.95 h, survivors 0.**
+> **`D-090`: the recovery pipeline is ENGINEERING-COMPLETE and production is FROZEN. T-110 is NOT
+> authorized.** **The next phase is the RAG / LLM EVALUATION FRAMEWORK — its launcher is
+> [`prompts/PROMPT-001-eval-framework.md`](prompts/PROMPT-001-eval-framework.md). Paste it into a
+> fresh session.** `HANDOFF.md` is the full briefing; `T109-RESULT.md` is the verdict.
 >
-> **D-088's two required consequences BOTH held on a fresh draw.** `PMC12096016/strict` was capped by
-> **`EntD` alone** (`ATP`/`NADH`/`Fur` all matched) and `PMC12782028/strict` by the genuinely absent
-> mevalonate arm — **`HMGCR`, `HMGCS1`, named in its own artifacts.** A change clearing both would
-> have been a reject; nothing cleared either.
+> **T-109: OPERATIONALLY SUCCESSFUL, formally `NOT ACCEPTED`, because Priority 2's test dataset was
+> not evaluable.** P1 `ok=true` raw **0** · P2 `ok=null` **NOT EVALUATED** on 13 of 19 legs · P3
+> `ok=true` **0** · P4 `0/8` · P5 `0/2`. **Priority 2 did not FAIL — it could not be EVALUATED**
+> (D-087, unchanged: `supported_reactions_complete` unset on all ten cases, both
+> `max_retained_reactions` ceilings on negative controls). **20/20 legs, timeouts 3 -> 1 -> 0,
+> 4.95 h, survivors 0 — the best-executing run of the sprint.**
+>
+> **THE RULE MOST LIKELY TO BE BROKEN BY ACCIDENT:** *no production behaviour changes solely to
+> satisfy the incomplete test instrument.* A `src/` change justified by *"it would make Priority 2
+> evaluable"* is a **reject**. **The instrument is what is incomplete.**
+>
+> **D-088's two required consequences BOTH held on a fresh draw.** `PMC12096016/strict` capped by
+> **`EntD` alone** (`ATP`/`NADH`/`Fur` all matched); `PMC12782028/strict` by the genuinely absent
+> mevalonate arm — **`HMGCR`, `HMGCS1`, named in its own artifacts.**
 >
 > **Priority 1 fell 8 -> 0 and that is NOT a fix.** No production code changed between the two runs.
-> It is evidence about the draw until a second run reproduces it.
-
+> Evidence about the draw until a second run reproduces it.
 
 **Integration tip `1a117eaa`, pushed and remotely verified: local = `origin/` = `git ls-remote`.
 `main` untouched — local `7531692`, remote `03f1af5`.** Everything below § 0 is older and superseded

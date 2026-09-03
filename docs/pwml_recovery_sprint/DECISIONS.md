@@ -5304,3 +5304,98 @@ the measurement.** The cheap move was available, it was specified, it was known 
 number, and it was refused because it would have cleared a leg whose failure is real. **Record this
 as the shape of the correct answer when a change improves a score: the question is never "did the
 number move" but "did the thing the number measures move."**
+
+---
+
+## D-090 — the recovery pipeline is ENGINEERING-COMPLETE and production is FROZEN; T-109's non-acceptance is a TEST-INSTRUMENT limitation, not a pipeline defect · 2026-09-03 · LOCKED
+
+**Ruled by the product owner** at the close of `ORCH-720`, after T-109 ran, was scored once and was
+recorded `NOT ACCEPTED`. **This closes the PWML recovery sprint's engineering phase.**
+
+### 1. The ruling
+
+| Directive | Status |
+|---|---|
+| The recovery pipeline is **engineering-complete** | **DECLARED** |
+| **Production is FROZEN** | **BINDING** — see § 3 for what "frozen" covers |
+| **T-110 is NOT authorized** | **BINDING** — no release candidate is to be launched |
+| T-109 was **operationally successful** but **formally `NOT ACCEPTED`** | **RECORDED** — see § 2 |
+| **F-175** and **`supported_reactions_complete` curation** move to the **RAG / LLM evaluation** work | **BINDING** |
+| **No production behaviour changes solely to satisfy the incomplete test instrument** | **BINDING** |
+
+### 2. T-109's disposition, stated exactly
+
+**Operationally successful. Formally `NOT ACCEPTED`. The reason is the test dataset, not the
+pipeline.**
+
+| Hard gate | Result |
+|---|---|
+| **Priority 1** — zero false real identifiers | **PASS**, `ok=true`, raw **0**, accepted **0** |
+| **Priority 2** — zero unsupported retained reactions | **NOT EVALUABLE**, `ok=null`, `evaluated=false` |
+| **Priority 3** — zero referential-integrity violations | **PASS**, `ok=true`, observed **0** |
+
+> **Priority 2 did not FAIL. It could not be EVALUATED**, because
+> `supported_reactions_complete` is unset on all ten gold cases (**D-087**) and the verdict is
+> reachable only where a `max_retained_reactions` ceiling exists — **and both ceilings are on
+> negative controls.** The run is refused under `acceptance.py:1057`'s correct default for an
+> unproven absolute, and **that default is about the evidence, not about the code.**
+
+**Operational record:** 20/20 legs, `complete: true`, **timeouts 3 → 1 → 0**, zero empty payloads,
+4.95 h, `FINAL SURVIVING COUNT 0`, cleanup success.
+
+**Priorities 4 (`0/8`) and 5 (`0/2`) are NOT hard gates** — `acceptance.py:1050-1052` — and Priority
+5's zero is the accepted conservative limitation of **`D-089`**, unchanged by this decision.
+
+### 3. What "production is frozen" means, and what it does not
+
+**FROZEN — no change without a new product-owner ruling:**
+
+- `src/t2pw/pipeline/` — including `release_status.py`'s **INCOMPLETE-CORE CAP**, unchanged per D-089
+- `src/t2pw/pwml/`, `src/t2pw/mapping/`, `src/t2pw/batch/`, `src/t2pw/llm/`
+- `src/t2pw/bench/gold/pinned_v1.json` — blob `36f4b7b690b577f72882c3045ca6728d1ec8d9d1`
+- `src/t2pw/bench/acceptance.py` and the scorer's semantics
+
+**NOT frozen — this is where the next phase works:**
+
+- the **evaluation framework** and its instruments under `docs/pwml_recovery_sprint/evidence/`
+- **gold curation** where D-087's standard is genuinely met, case by case
+- **test and gate tooling** that measures the pipeline without altering it — F-172's G11 checker,
+  F-174's Chunk D environment coupling, F-175's batch-path diagnostics writer
+- documentation, findings, ledger
+
+**The load-bearing sentence:** *"No production behaviour changes solely to satisfy the incomplete
+test instrument."* **A change to `src/` justified by "it would make Priority 2 evaluable" or "it
+would move Priority 5 off zero" is a REJECT under this decision.** The instrument is what is
+incomplete; the pipeline is not to be bent to it. This is merge rule 6's reasoning applied to the
+whole tree, and it is the same principle `D-089` applied to the cap.
+
+### 4. What moves to the RAG / LLM evaluation phase
+
+| Item | Why it belongs there |
+|---|---|
+| **`R-D089-1`** — a stable, general, **non-paper-keyed** reaction/subprocess completeness specification | already registered there by D-089; it is the long-term replacement for the flat anchor cap |
+| **`supported_reactions_complete` curation** | **D-087 governs and is UNCHANGED**: never set broadly, never guessed, only on individually curated cases whose expected reaction sets have been **independently verified complete**. The audit is the cost, not the edit, and it is not a Lead judgement |
+| **F-175** — the batch path never writes `coverage_diagnostics.json` | it is an evaluation-instrument gap, not a pipeline defect. **Its fix must carry a test asserting the file exists in a BATCH LEG DIRECTORY** — C-116 had eleven passing tests and none ran the batch path |
+
+**Priority 2 is the only hard gate standing between a run and acceptance.** Making it evaluable is
+therefore the highest-value work in the next phase — **and it is a DATA task, not a code task.**
+
+### 5. What this decision does NOT do
+
+- **It does not accept T-109.** The verdict stands at `NOT ACCEPTED`, immutable, in `T109-RESULT.md`.
+- **It does not reopen D-087, D-088 or D-089.** All three stand unchanged.
+- **It does not declare the pipeline correct.** *Engineering-complete* means **no further production
+  engineering is chartered in this sprint**; it is not a claim that every gate has been shown green
+  or that every finding is closed. **F-147 stays registered and unchartered. F-174 node 2 stays
+  OPEN.**
+- **It does not authorize T-110 or any successor candidate.** A future candidate needs a new
+  milestone identity, a separately recorded readiness decision, and a fresh product-owner
+  authorization.
+
+### 6. Standing lesson
+
+**A test that cannot answer its question is not a failing test, and a pipeline is not guilty of its
+instrument's silence.** Priority 2 reported `0` and the scorer said, in its own words, that the zero
+was *"the absence of a measurement, not the absence of unsupported reactions."* **The correct response
+to an unevaluable gate is to make the evidence better, never to make the code look better** — and
+this decision writes that into the freeze so the cheaper direction is unavailable.

@@ -1,12 +1,22 @@
-# PWML RECOVERY SPRINT — HANDOFF after `D-089` and the T-109 release candidate
+# PWML RECOVERY SPRINT — FINAL HANDOFF. Engineering complete, production FROZEN.
 
 **Written by the Lead Orchestrator, session `project14-t2pw-51` `[e2c249]`, at the close of
 `ORCH-720`, 2026-09-03.** Replaces the T-108-execution-wave handoff, which is in git history.
 **`LEDGER.md` remains the single source of truth for task state.**
 
-> **⚠ NOTHING IS RUNNING.** T-109 exited, was scored once, and is closed. The heavy lock is free,
-> zero sprint-owned Python is alive, and no job is unowned. Verify all three yourself before
-> claiming anything — § 1.
+> ## ⚠ THE ENGINEERING SPRINT IS CLOSED — `D-090`
+>
+> **The recovery pipeline is ENGINEERING-COMPLETE and production is FROZEN.** **T-110 is NOT
+> authorized.** **Nothing is running:** T-109 exited, was scored once, and is closed; the heavy lock
+> is free, zero sprint-owned Python is alive, no job is unowned. Verify all three yourself — § 1.
+>
+> **The next phase is the RAG / LLM EVALUATION FRAMEWORK. Its launcher is
+> [`prompts/PROMPT-001-eval-framework.md`](prompts/PROMPT-001-eval-framework.md) — paste it into a
+> fresh session.**
+>
+> **The rule most likely to be broken by accident:** *no production behaviour changes solely to
+> satisfy the incomplete test instrument.* A `src/` change justified by *"it would make Priority 2
+> evaluable"* or *"it would move Priority 5 off zero"* is a **reject**.
 
 ---
 
@@ -25,6 +35,25 @@
 ---
 
 ## 2. What happened this wave, and what it settles
+
+### 2.0 The product owner closed the sprint — `D-090`
+
+**The recovery pipeline is engineering-complete. Production is FROZEN. T-110 is not authorized.**
+
+**T-109's disposition, in the ruling's own terms: OPERATIONALLY SUCCESSFUL, formally `NOT ACCEPTED`,
+because Priority 2's test dataset was not evaluable.** The non-acceptance is attributed to the
+**test instrument**, not to the pipeline — Priority 2 did not fail, it could not be evaluated.
+
+**FROZEN:** `src/t2pw/pipeline/` (including the INCOMPLETE-CORE CAP), `pwml/`, `mapping/`, `batch/`,
+`llm/`, `acceptance.py` semantics, and the gold blob.
+**NOT FROZEN:** the evaluation framework and its instruments, gold **curation** where D-087's
+standard is genuinely met, and test/gate tooling that measures the pipeline without altering it.
+
+**`F-175` and `supported_reactions_complete` curation move into the RAG / LLM evaluation work.**
+
+*Engineering-complete* means **no further production engineering is chartered in this sprint.** It is
+**not** a claim that every gate is green or every finding closed — **F-147 stays unchartered and
+F-174 node 2 stays OPEN.**
 
 ### 2.1 The product owner ruled — `D-089`
 
@@ -121,11 +150,19 @@ unmet going forward**, though the archived census and its committed logs are int
 
 ---
 
-## 5. THE NEXT WORK ORDER
+## 5. THE NEXT WORK ORDER — the RAG / LLM evaluation framework
+
+> **The launcher is [`prompts/PROMPT-001-eval-framework.md`](prompts/PROMPT-001-eval-framework.md).**
+> It carries the full ordered work order, the freeze rules, the verification block and every process
+> trap. **Paste it into a fresh session.** What follows is the summary it expands.
 
 **Nothing below is chartered. Charter one card at a time, narrowly, and review the diff.**
 
-### 5.1 First — the RAG / LLM evaluation framework, which is where the sprint was always going
+**The ordering changed under `D-090`:** `supported_reactions_complete` is now **item 1**, because
+Priority 2 is the only hard gate standing between a run and acceptance and **making it evaluable is a
+DATA task, not a code task.**
+
+### 5.1 The framework itself — where the sprint was always going
 
 **`R-D089-1` lives here and it is the largest piece.** A stable, general, non-paper-keyed
 reaction/subprocess completeness specification distinguishing:
@@ -145,6 +182,7 @@ curated set in the general pipeline.
 
 | id | what | why it matters |
 |---|---|---|
+| **`supported_reactions_complete`** | curate **ONE** case properly, per D-087 | **the only hard gate between a run and acceptance.** `goldset.py:384` warns that setting it without exhaustive signatures turns every unattributed row into a reported fabrication — `semantic.py:700` records that this would have reported **227** on a run that produced far fewer. **The audit is the cost, not the edit, and it is not a Lead judgement** |
 | **F-175** | make the batch path write `coverage_diagnostics.json` | a `D-089` requirement is unmet. **The test must assert the file exists in a BATCH LEG DIRECTORY** — C-116 had eleven passing tests and none ran the batch path |
 | **F-174 node 2** | isolate why `test_research_mode_keeps_the_unmapped_candidate_and_does_not_block` is red in the primary checkout | the authoritative Chunk D gate cannot be trusted anywhere until this is known. **The DB-config lever is already excluded** |
 | **F-172** | make `g11_evidence.py check` require a `.pin.json` for every report whose command invokes pytest | it certifies the lifecycle half of G11 and rule 10 **not at all**. Changing it mid-wave breaks comparability — **do it at a wave boundary, which is now** |

@@ -9644,3 +9644,46 @@ Priority 5 absolute.
 
 **So the accepted Priority-5 limitation is non-blocking on the authoritative text, not on a Lead
 reading of it.** No locked rule was rewritten and none needed to be.
+
+---
+
+## `ORCH-720` CLOSED — `D-090`: the sprint's engineering phase is over · 2026-09-03
+
+**T-109 ran once, was scored once, and is immutable: `NOT ACCEPTED`.** Full record in
+`T109-RESULT.md`; live monitoring in `T109-RUN-OWNERSHIP.md`; every job under G11 `T-109` and
+`ORCH-720`, **0 non-compliant, survivors 0 on every one.**
+
+### The closing ruling
+
+**`D-090` — the recovery pipeline is ENGINEERING-COMPLETE and production is FROZEN. T-110 is NOT
+authorized.**
+
+**T-109's disposition: OPERATIONALLY SUCCESSFUL, formally `NOT ACCEPTED`, because Priority 2's test
+dataset was not evaluable.** Priority 2 **did not fail — it could not be evaluated.** The
+non-acceptance is attributed to the **test instrument**, not to the pipeline.
+
+> **No production behaviour changes solely to satisfy the incomplete test instrument.** A `src/`
+> change justified by *"it would make Priority 2 evaluable"* or *"it would move Priority 5 off zero"*
+> is a **reject**. This is merge rule 6's reasoning applied to the whole tree.
+
+### Moved to the RAG / LLM evaluation phase, by ruling
+
+| item | state |
+|---|---|
+| **`supported_reactions_complete` curation** | **item 1 of the next phase.** The only hard gate between a run and acceptance. D-087 unchanged: one case at a time, independently verified complete. **The audit is the cost, not the edit** |
+| **`F-175`** — the batch path never writes `coverage_diagnostics.json` | evaluation-instrument gap. **Its test must assert the file exists in a BATCH LEG DIRECTORY** |
+| **`R-D089-1`** — general non-paper-keyed completeness specification | already registered there by D-089; its own wave, not a task |
+
+### Carried forward OPEN, and not closed by the freeze
+
+- **F-147** — registered and deliberately **UNCHARTERED**. Escalate only.
+- **F-174 node 2** — the Chunk D red in the primary checkout. **Cannot be a code regression**
+  (the commit range proves it); the resolution-DB lever is **excluded**; the lever is **unknown**.
+- **F-172** — `g11_evidence.py check` certifies the lifecycle half of G11 and rule 10 not at all.
+  Deferred for comparability; **a phase boundary is the right moment and this is one.**
+
+### The next session
+
+**`prompts/PROMPT-001-eval-framework.md`** — a complete, paste-ready launcher carrying the
+verification block, the freeze rules, the ordered work order, the process traps and the standing
+traps. **It is the deliverable that closes this wave.**

@@ -201,3 +201,31 @@ which is why the command line is the identity and the PID never is.**
 **T-109 ran exactly once, is scored exactly once, and is now IMMUTABLE. It is not re-run, not
 re-scored and not reinterpreted.** A further candidate needs a new milestone identity and a
 separately recorded readiness decision.
+
+---
+
+## 9. FORMAL DISPOSITION — `D-090`, 2026-09-03
+
+**The product owner has ruled on this run and on the sprint it closes.**
+
+> **T-109 was OPERATIONALLY SUCCESSFUL and is formally `NOT ACCEPTED`, because Priority 2's test
+> dataset was not evaluable.**
+
+**Both halves are the record. Neither is a hedge.**
+
+| | |
+|---|---|
+| **Operationally successful** | 20/20 legs, `complete: true`, **timeouts 3 → 1 → 0**, zero empty payloads, 4.95 h of a 20 h ceiling, `FINAL SURVIVING COUNT 0`, cleanup success. **Priorities 1 and 3 both PASS.** The best-executing release candidate of the sprint |
+| **Formally `NOT ACCEPTED`** | **Priority 2 did not FAIL — it could not be EVALUATED.** `supported_reactions_complete` is unset on all ten gold cases (D-087) and both `max_retained_reactions` ceilings sit on negative controls, so the verdict was never reached on 13 of 19 scored legs |
+
+**The non-acceptance is attributed to the TEST INSTRUMENT, not to the pipeline.** `D-090` § 2 records
+this and `D-090` § 3 makes the consequence binding: **no production behaviour changes solely to
+satisfy the incomplete test instrument.** A `src/` change justified by *"it would make Priority 2
+evaluable"* is a reject.
+
+**Also ruled:** the recovery pipeline is **engineering-complete**, **production is FROZEN**, **T-110
+is NOT authorized**, and **F-175** plus **`supported_reactions_complete` curation** move into the
+RAG / LLM evaluation work.
+
+**This section changes no measurement above it.** Every number in §§ 1-8 was scored once from the
+committed artifacts and stands unaltered. **T-109 remains immutable.**
