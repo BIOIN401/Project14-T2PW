@@ -5628,3 +5628,125 @@ biology is certified.**
 > questions, and only the first was ever asked. **A correct answer to the wrong question is still
 > the wrong answer, and it is far more dangerous than an obviously wrong one, because it arrives
 > with evidence.**
+
+---
+
+## D-093 — THREE RULINGS. Evidence gets three classes, not two; the F-176 runtime change is DENIED; `R-D092-1` row-level lineage is CHARTERED · 2026-09-03 · LOCKED
+
+**Product-owner ruling, transcribed by the Lead. These are the product owner's words and decisions;
+the Lead authored none of the three.** They close the questions `D-092` § 7 registered open and they
+redirect the phase: **the next work is genuinely RAG / LLM evaluation, not PWML recovery.**
+
+### 1. `R-D092-3` — APPROVED, with a distinction that is the whole point
+
+**A correctly-attributed cross-paper RAG reaction must NOT be classified as hallucinated or
+unsupported merely because its evidence comes from another paper.** Bringing in externally supported
+biology is *what RAG and gap resolution are for.*
+
+**But it must be classified SEPARATELY. Three classes, not two:**
+
+| class | meaning |
+|---|---|
+| **`target_paper_supported`** | directly supported by the target paper |
+| **`external_rag_supported`** | supported by valid retrieved external evidence |
+| **`unsupported`** | lacks adequate target-paper or admissible external support |
+
+**For an externally supported reaction to avoid the `unsupported` label it must have ALL of:**
+
+1. direct **reaction-specific** evidence — not a span that merely mentions the participants;
+2. **pathway / scope** compatibility;
+3. **organism / context** compatibility where relevant;
+4. **preserved lineage** back to the retrieved source.
+
+> **THE CLAUSE THAT CHANGES THE METRICS.** *External RAG support does not count toward claims that
+> the target paper itself was exhaustively extracted.* **Stage-1 paper-extraction recall and
+> final-system biological support are SEPARATE METRICS and must never be summed.**
+
+**This is why setting `supported_reactions_complete` naively produced nonsense:** the current
+instrument cannot distinguish the three evidence classes, so it collapsed `external_rag_supported`
+into `unsupported` and reported a cited paper's real chemistry as invented. **The D-091 failure did
+not reveal a bad audit. It revealed the missing abstraction.**
+
+### 2. F-176 runtime applicability — **DENIED**
+
+**The refusal recorded in `D-092` was correct and is upheld.**
+
+If making `no_rejected_rag_reaction_reintroduced` runtime-applicable changes `release_status`, then
+it is **not observability-only** — it changes frozen acceptance semantics. **Runtime production
+behaviour stays unchanged.**
+
+**Instead the EVALUATION layer reports it independently**, with these kept apart:
+
+- `runtime_gate_applicable`
+- `offline_evaluable`
+- `offline_verdict`
+
+The 19 persisted admission artifacts can then be scientifically evaluated **without changing whether
+the production pipeline releases or reviews a pathway.** That separation is the objective.
+
+### 3. `R-D092-1` — APPROVED and CHARTERED IMMEDIATELY. It is the next implementation task.
+
+**Evaluation-only row/reaction-level RAG lineage.** For each final/canonical reaction, recover where
+possible:
+
+- final reaction identity · origin stage · target paper
+- whether target-paper evidence supports it · evidence quote / span IDs
+- RAG candidate ID · retrieved source paper or document · retrieved quotation / chunk
+- retrieval rank / score where available
+- admission / rejection result · rejection reason
+- whether audit or repair later modified or reintroduced it
+- whether it survives into the canonical graph
+- **support class:** `target_paper_supported` · `external_rag_supported` · `unsupported` ·
+  `indeterminate`
+
+**Build it FROM THE EXISTING ARCHIVED ARTIFACTS FIRST.** 1,947 rejected candidates with provenance
+already exist. **Do not re-run expensive pipeline legs to recreate information that is already on
+disk.**
+
+**Where lineage genuinely cannot be reconstructed, report the field as `unavailable`.** **Do NOT
+modify frozen runtime solely to backfill old runs.**
+
+### 4. What this decides for Priority 2
+
+**`supported_reactions_complete` stays UNSET.** The failed `PMC12312563` audit demonstrated that
+**the old binary interpretation is not adequate for a pipeline that legitimately performs external
+RAG enrichment.**
+
+The next evaluator must separate two questions that are **not the same claim**:
+
+| question | metric family |
+|---|---|
+| **Paper extraction completeness** — did we recover the reactions the TARGET PAPER supports? | reaction precision / recall / F1 against the paper-specific gold set |
+| **Final pathway support** — does every retained reaction have defensible evidence, from the target paper **or** properly attributed external RAG? | final unsupported-reaction rate |
+
+**Priority 2 should eventually address the SECOND question**, if its purpose is preventing
+unsupported retained reactions. **The first belongs to reaction recall against the gold set.**
+
+> **Stop trying to make the old Priority-2 boolean work before the evaluator understands where each
+> reaction came from.**
+
+### 5. Ordered work for the next wave — and it is not another repair sweep
+
+**Explicitly: DO NOT do another measurement-repair sweep.**
+
+1. **Record these three rulings.** *(Discharged by this entry.)*
+2. Charter and implement **`R-D092-1`** row-level lineage.
+3. Build the **lineage-aware deterministic evaluator**.
+4. **Re-evaluate archived canonical reactions** into the three support classes.
+5. Produce **target-paper reaction precision / recall / F1 SEPARATELY** from the final
+   unsupported-reaction rate.
+6. **Start Phoenix** and ingest these lineage / evaluation records.
+7. Add the **core RAG metrics** using existing artifacts.
+8. **Validate all of it on archived runs.**
+9. **Only then** freeze and select the ten unseen papers.
+
+### 6. What is unchanged
+
+**Production remains FROZEN under `D-090`.** `D-087`, `D-088`, `D-089`, `D-090` and `D-092` all
+stand. T-107, T-108 and T-109 remain immutable and `NOT ACCEPTED`. **T-110 is still not authorized.**
+
+> **Standing lesson, and it is the product owner's own framing.** *"The audit failure actually
+> exposed the exact missing abstraction we need for the paper."* A rigorous audit, a correct
+> biological verdict and a withdrawn ruling together bought something none of them would have alone:
+> the knowledge that **evidence provenance is a first-class property of a reaction**, and that a
+> benchmark which cannot say *where a reaction came from* cannot say whether it should be there.
