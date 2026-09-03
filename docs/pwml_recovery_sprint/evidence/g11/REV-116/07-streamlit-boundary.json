@@ -1,0 +1,90 @@
+{
+  "label": "streamlit-boundary",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/c116-d088-artifact/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/pin/REV-116/07-streamlit-boundary.pin.json",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/c116-d088-artifact",
+    "-q",
+    "--basetemp=C:/t/rev116/j07",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/c116-d088-artifact",
+  "started_at": "2026-09-03T01:12:14+00:00",
+  "finished_at": "2026-09-03T01:13:04+00:00",
+  "duration_seconds": 49.7008937999999,
+  "timeout_seconds": 2400.0,
+  "root_pid": 166716,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 151176,
+      "name": "python.exe",
+      "ppid": 166716
+    }
+  ],
+  "descendants_terminated": [
+    151176
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 65836,
+      "name": "python.exe"
+    },
+    {
+      "pid": 65880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 171684,
+      "name": "python.exe"
+    },
+    {
+      "pid": 171836,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/REV-116/07-streamlit-boundary.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\c116-d088-artifact\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\c116-d088-artifact",
+    "repo_head": "fde7eadf8ace7845653eb8fb5f6a51becfdb61ce",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-116",
+    "token": "REV-116:171836:2f1d2c0c15878b9a",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

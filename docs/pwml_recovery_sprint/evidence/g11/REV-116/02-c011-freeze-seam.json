@@ -1,0 +1,168 @@
+{
+  "label": "c011-freeze-seam",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/c116-d088-artifact/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/pin/REV-116/02-c011-freeze-seam.pin.json",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/c116-d088-artifact",
+    "-q",
+    "--basetemp=C:/t/rev116/j02",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/c116-d088-artifact",
+  "started_at": "2026-09-03T01:04:40+00:00",
+  "finished_at": "2026-09-03T01:04:59+00:00",
+  "duration_seconds": 18.370827599999757,
+  "timeout_seconds": 900.0,
+  "root_pid": 169256,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 169272,
+      "name": "python.exe",
+      "ppid": 169256
+    },
+    {
+      "pid": 169772,
+      "name": "git.exe",
+      "ppid": 169272
+    },
+    {
+      "pid": 169960,
+      "name": "python.exe",
+      "ppid": 169272
+    },
+    {
+      "pid": 169980,
+      "name": "python.exe",
+      "ppid": 169960
+    },
+    {
+      "pid": 166980,
+      "name": "python.exe",
+      "ppid": 169028
+    },
+    {
+      "pid": 169028,
+      "name": "python.exe",
+      "ppid": 169272
+    },
+    {
+      "pid": 169648,
+      "name": "python.exe",
+      "ppid": 169272
+    },
+    {
+      "pid": 169680,
+      "name": "python.exe",
+      "ppid": 169648
+    },
+    {
+      "pid": 169660,
+      "name": "python.exe",
+      "ppid": 169692
+    },
+    {
+      "pid": 169692,
+      "name": "python.exe",
+      "ppid": 169272
+    },
+    {
+      "pid": 168564,
+      "name": "python.exe",
+      "ppid": 169272
+    },
+    {
+      "pid": 169752,
+      "name": "python.exe",
+      "ppid": 168564
+    },
+    {
+      "pid": 168788,
+      "name": "python.exe",
+      "ppid": 169088
+    },
+    {
+      "pid": 169088,
+      "name": "python.exe",
+      "ppid": 169272
+    }
+  ],
+  "descendants_terminated": [
+    166980,
+    168564,
+    168788,
+    169028,
+    169088,
+    169272,
+    169648,
+    169660,
+    169680,
+    169692,
+    169752,
+    169772,
+    169960,
+    169980
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 65836,
+      "name": "python.exe"
+    },
+    {
+      "pid": 65880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 167384,
+      "name": "python.exe"
+    },
+    {
+      "pid": 168096,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/REV-116/02-c011-freeze-seam.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\c116-d088-artifact\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\c116-d088-artifact",
+    "repo_head": "fde7eadf8ace7845653eb8fb5f6a51becfdb61ce",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-116",
+    "token": "REV-116:168096:bceacfbc958ec580",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
