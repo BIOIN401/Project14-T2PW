@@ -410,3 +410,93 @@ def test_real_archived_leg_row_evidence_string_is_not_treated_as_attribution() -
     assert rec["row_evidence_present"] is True
     assert rec["support_class"] != rd.TARGET_PAPER_SUPPORTED, (
         "presence of an evidence string was read as target-paper attribution")
+
+
+# ---------------------------------------------------------------------------
+# Fact (6): a database grounding is not literature evidence
+#
+# Found while diagnosing the 2026-09-02 run: a reaction grounded only in ChEBI /
+# KEGG / DrugBank / CAS / taxonomy identifiers was reported as carrying "external
+# participant provenance", borrowing the vocabulary D-093 reserves for retrieved
+# literature. These pin the separation.
+# ---------------------------------------------------------------------------
+
+def test_database_grounded_origin_resolves_to_database_not_external(rd: Any) -> None:
+    """The ORIGIN decides, and it is checked before any id comparison.
+
+    Id-shape heuristics cannot do this job: a PathBank protein id is a bare integer
+    and an NCBI taxonomy id is ``9606``, so guessing would be guessing about which
+    evidence is literature.
+    """
+
+    assert rd.resolve_source("CHEBI:17627", "PMC111", "database_grounded") == rd.SRC_DATABASE
+    assert rd.resolve_source("9606", "PMC111", "database_grounded") == rd.SRC_DATABASE
+    assert rd.resolve_source("C00032", "PMC111", "database_grounded") == rd.SRC_DATABASE
+    # Without the origin it is only an unrecognised id, and stays external.
+    assert rd.resolve_source("CHEBI:17627", "PMC111") == rd.SRC_EXTERNAL
+
+
+def test_a_row_grounded_only_in_databases_is_not_called_external_provenance(rd: Any) -> None:
+    """The exact defect: ChEBI/KEGG groundings described as external literature."""
+
+    reaction = {"name": "heme biosynthesis reaction", "inputs": ["glycine"],
+                "outputs": ["heme"], "evidence": "x"}
+    payload = {"entities": {"compounds": [
+        {"name": "glycine", "provenance_lineage": [{
+            "stage": "identifier_mapping", "origin": "database_grounded",
+            "support": "direct", "paper_explicit": "not_evaluated",
+            "reason": "", "review_required": False, "uncertainty": "",
+            "sources": [{"source_id": "CHEBI:15428", "source_type": "database",
+                         "uri": "", "locator": "CHEBI:15428"}]}]},
+        {"name": "heme", "provenance_lineage": [{
+            "stage": "identifier_mapping", "origin": "database_grounded",
+            "support": "direct", "paper_explicit": "not_evaluated",
+            "reason": "", "review_required": False, "uncertainty": "",
+            "sources": [{"source_id": "CHEBI:17627", "source_type": "database",
+                         "uri": "", "locator": "CHEBI:17627"}]}]},
+    ]}}
+    rec = _classify(rd, reaction, payload=payload)
+    assert rec["source_resolutions"] == [rd.SRC_DATABASE, rd.SRC_DATABASE]
+    assert rec["support_class"] == rd.INDETERMINATE
+    assert "database groundings" in rec["support_reason"]
+    assert "external" not in rec["support_reason"], (
+        "a ChEBI grounding was described with D-093's literature vocabulary")
+
+
+def test_a_database_grounding_can_never_reach_external_rag_supported(rd: Any) -> None:
+    """Even with a chunk join that would otherwise promote the row."""
+
+    reaction = {"name": "r", "inputs": ["glycine"], "outputs": ["heme"], "evidence": "x"}
+    payload = {"entities": {"compounds": [
+        {"name": "glycine", "provenance_lineage": [{
+            "stage": "identifier_mapping", "origin": "database_grounded",
+            "support": "direct", "paper_explicit": "not_evaluated",
+            "reason": "", "review_required": False, "uncertainty": "",
+            "sources": [{"source_id": "CHEBI:15428", "source_type": "database",
+                         "uri": "", "locator": "cx"}]}]},
+    ]}}
+    rec = _classify(rd, reaction, payload=payload,
+                    adm=_adm("accepted", "runs/R", ["glycine"], ["heme"]))
+    assert rec["support_class"] != rd.EXTERNAL_RAG_SUPPORTED
+
+
+def test_database_groundings_do_not_weaken_a_target_paper_attribution(rd: Any) -> None:
+    """A paper-stated row whose participants are also ChEBI-grounded stays supported."""
+
+    reaction = {"name": "r", "inputs": ["a"], "outputs": ["b"], "evidence": "x"}
+    payload = {"entities": {"compounds": [
+        {"name": "a", "provenance_lineage": [
+            {"stage": "rag_admission", "origin": "rag_literature", "support": "direct",
+             "paper_explicit": "not_evaluated", "reason": "", "review_required": False,
+             "uncertainty": "", "sources": [{"source_id": "seed_paper",
+                                             "source_type": "paper", "uri": "", "locator": ""}]},
+            {"stage": "identifier_mapping", "origin": "database_grounded",
+             "support": "direct", "paper_explicit": "not_evaluated", "reason": "",
+             "review_required": False, "uncertainty": "",
+             "sources": [{"source_id": "CHEBI:1", "source_type": "database",
+                          "uri": "", "locator": "CHEBI:1"}]}]},
+    ]}}
+    rec = _classify(rd, reaction, payload=payload)
+    assert rd.SRC_TARGET in rec["source_resolutions"]
+    assert rd.SRC_DATABASE in rec["source_resolutions"]
+    assert rec["support_class"] == rd.TARGET_PAPER_SUPPORTED

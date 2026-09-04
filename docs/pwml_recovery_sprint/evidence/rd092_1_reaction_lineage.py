@@ -38,8 +38,22 @@ classifier was written. Each of them defeats an obvious implementation.
     Of the 14 ``rag_literature`` source references in the corpus, 9 carry the
     ``seed_paper`` sentinel and 2 carry the leg's own target paper id: 11 of 14 point
     AT THE TARGET PAPER. Only 3 are genuinely foreign. Externality is decided by
-    resolving ``source_id`` against the leg's target paper (:func:`resolve_source`),
-    never by reading ``origin``.
+    resolving ``source_id`` against the leg's target paper (:func:`resolve_source`).
+    ``origin`` is consulted for ONE thing only -- separating a database grounding from
+    literature, see (6) -- and never to decide whether a literature source is foreign.
+
+(6) A DATABASE GROUNDING IS NOT LITERATURE EVIDENCE, and treating it as one was a
+    real defect in this module, found while diagnosing the 2026-09-02 run.
+    ``identifier_mapping`` records ChEBI, KEGG, DrugBank, CAS, HMDB and NCBI-taxonomy
+    identifiers as lineage sources with ``origin="database_grounded"``. Resolving those
+    by id alone returns ``external`` -- so a reaction grounded only in a compound
+    dictionary was reported as carrying "external participant provenance", borrowing
+    the vocabulary D-093 reserves for retrieved literature. :data:`SRC_DATABASE` keeps
+    them apart. Measured at the time of the fix: this moved NO support class and NO
+    published number -- all six ``external_rag_supported`` rows resolve to a real paper
+    (PMC12452463) -- but the reason strings were wrong, and a row whose ONLY non-target
+    sources are database groundings is now named as such instead of implying a second
+    paper was consulted.
 
 (4) THE REACTION ``evidence`` STRING IS NOT REACTION-SPECIFIC EVIDENCE, AND IT
     SILENTLY CARRIES EXTERNAL TEXT. On the leg the brief cites, reaction row 6's
@@ -88,7 +102,9 @@ sentinel. A name lookup returning "the" entity would silently pick one. So looku
 collects the SET of provenance records for a name, and a name whose records disagree
 about externality makes the row ``indeterminate`` rather than picking a winner.
 
-SOURCE RESOLUTION. ``seed_paper`` (the sentinel documented at
+SOURCE RESOLUTION. A source whose lineage ``origin`` is ``database_grounded`` resolves
+to DATABASE and is checked FIRST, because it is the stage's own typed statement of what
+kind of source it is (fact 6). Otherwise: ``seed_paper`` (the sentinel documented at
 ``identity_admission.py:262``) and a ``source_id`` equal to the leg's target paper both
 resolve to TARGET. An empty id resolves to UNRESOLVED, never to target -- absence is
 not attribution. Anything else is EXTERNAL.
@@ -162,6 +178,19 @@ TIER_ORDER: Tuple[str, ...] = (
 SRC_TARGET = "target"
 SRC_EXTERNAL = "external"
 SRC_UNRESOLVED = "unresolved"
+#: A DATABASE GROUNDING IS NOT LITERATURE EVIDENCE, and conflating the two was a real
+#: defect in this module. ``identifier_mapping`` records ChEBI, KEGG, DrugBank, CAS,
+#: HMDB and NCBI-taxonomy identifiers as lineage sources with
+#: ``origin="database_grounded"``. Those are perfectly good *identity* evidence and they
+#: are not evidence that any paper states a REACTION. Before this class existed,
+#: ``resolve_source`` saw a non-target ``source_id`` such as ``CHEBI:17627`` and
+#: returned ``external``, so a row grounded only in a compound dictionary was described
+#: as carrying "external participant provenance" -- the vocabulary D-093 reserves for
+#: retrieved literature. Measured on the corpus at the time of the fix: this never
+#: promoted a row to ``external_rag_supported`` (all six such rows resolve to a real
+#: paper, PMC12452463), so no published number moved -- but the reason strings were
+#: wrong and a future chunk-join change could have made it worse than cosmetic.
+SRC_DATABASE = "database_grounded"
 
 #: Payload populations, from F-177. Never summed.
 CANONICAL = "canonical"
@@ -271,7 +300,24 @@ def load_json(path: Path) -> Optional[Any]:
 # Source resolution
 # --------------------------------------------------------------------------
 
-def resolve_source(source_id: Any, target: Optional[str]) -> str:
+def resolve_source(source_id: Any, target: Optional[str], origin: Any = None) -> str:
+    """Resolve one source reference. ``origin`` decides database vs literature.
+
+    The ORIGIN is authoritative and is checked FIRST, before any id comparison. It is
+    the stage's own typed statement of what kind of source this is, and it is the only
+    reliable signal: ``CHEBI:17627`` is recognisable by shape, but a PathBank protein id
+    is a bare integer and a taxonomy id is ``9606`` -- id-shape heuristics would have to
+    guess, and guessing which evidence is literature is exactly what must not happen
+    here. Sources with no recorded origin (entity ``rag_provenance``, which has no
+    origin field) fall through to the id comparison unchanged.
+    """
+
+    if isinstance(origin, str) and origin == "database_grounded":
+        return SRC_DATABASE
+    return _resolve_by_id(source_id, target)
+
+
+def _resolve_by_id(source_id: Any, target: Optional[str]) -> str:
     """Resolve one ``source_id`` against the leg's target paper.
 
     Never reads ``origin``: measured, 11 of the 14 ``rag_literature`` source
@@ -611,13 +657,23 @@ def classify_support(tier: str, resolutions: Sequence[str], join: Dict[str, Any]
             return TARGET_PAPER_SUPPORTED, "no provenance carrier; row carries a Stage-1 evidence string"
         return INDETERMINATE, "no provenance carrier and no evidence string"
 
-    if res == {SRC_TARGET}:
-        return TARGET_PAPER_SUPPORTED, f"all sources resolve to the target paper ({tier})"
+    if res <= {SRC_TARGET, SRC_DATABASE} and SRC_TARGET in res:
+        # Database groundings alongside target-paper sources do not weaken the
+        # target-paper attribution; they are identity evidence for the participants.
+        return TARGET_PAPER_SUPPORTED, f"all literature sources resolve to the target paper ({tier})"
 
     if SRC_EXTERNAL not in res:
-        # No external source, and no explicit paper_stated assertion either. Either
-        # the ids present resolve to nothing, or the carrier holds only entries that
-        # attribute nothing (``audit_modified`` records a modification, not an
+        # No external LITERATURE source, and no explicit paper_stated assertion.
+        if res == {SRC_DATABASE}:
+            # The row is grounded only in compound/protein dictionaries. That is
+            # identity evidence, NOT evidence that any paper states this reaction, and
+            # calling it "external provenance" would borrow D-093's literature
+            # vocabulary for a ChEBI accession.
+            return (INDETERMINATE,
+                    f"only database groundings (ChEBI/KEGG/DrugBank/CAS/taxonomy) -- "
+                    f"identifier evidence, not literature evidence for the reaction ({tier})")
+        # Either the ids present resolve to nothing, or the carrier holds only entries
+        # that attribute nothing (``audit_modified`` records a modification, not an
         # origin). Both are genuinely indeterminate and are named apart.
         if not res:
             return INDETERMINATE, f"provenance carrier present but names no source ({tier})"
@@ -717,7 +773,8 @@ def attribute_row(reaction: Dict[str, Any], entity_index: Dict[str, List[Dict[st
             found.extend(rec["sources"])
         per_participant.append({
             "name": name, "entity_found": True,
-            "resolutions": sorted({resolve_source(s.get("source_id"), target) for s in found}),
+            "resolutions": sorted({resolve_source(s.get("source_id"), target, s.get("origin"))
+                                   for s in found}),
             "sources": found,
         })
         sources.extend(found)
@@ -735,12 +792,16 @@ def build_record(reaction: Dict[str, Any], leg: Dict[str, str], row_index: int,
     target = None if leg["target_paper"] == UNAVAILABLE else leg["target_paper"]
     tier, sources, detail = attribute_row(reaction, entity_index, target)
 
-    resolutions = [resolve_source(s.get("source_id"), target) for s in sources]
+    resolutions = [resolve_source(s.get("source_id"), target, s.get("origin"))
+                   for s in sources]
     chunk_ids = [s.get("chunk_id") for s in sources if s.get("chunk_id")]
     # Join on the first external-bearing chunk; a row whose externality comes from
     # several chunks is rare and the record keeps them all for a reader.
     join_chunk_id = ""
     for src, res in zip(sources, resolutions):
+        # SRC_DATABASE is excluded deliberately: a database grounding's locator is a
+        # record id (a PathBank protein id, a ChEBI accession), never a retrieval
+        # chunk id, so joining on it could only ever match by coincidence.
         if res == SRC_EXTERNAL and src.get("chunk_id"):
             join_chunk_id = src["chunk_id"]
             break

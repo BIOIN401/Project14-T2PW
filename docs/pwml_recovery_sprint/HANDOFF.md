@@ -255,3 +255,120 @@ absent, and T-109 then named the missing enzymes — `HMGCR`, `HMGCS1` — in it
 > the number measures move."** The ruling chose the conservative false negative, the run vindicated
 > the choice on fresh data, and **Priority 5 still reads `0/2`.** Both of those sentences are the
 > result.
+
+---
+
+## ORCH-723 § 2 — F-179 … F-182, from the `runs_verify/2026-09-02_2052` diagnosis · 2026-09-03
+
+**Evaluation-only. Nothing re-run, no production patched, no redraw taken.** The source run
+stays **untracked and byte-untouched**; the diagnosis is made auditable by a compact committed
+bundle instead — `evidence/f179_bundle/` (`INVENTORY.json` = SHA-256 + byte count + exact source
+path for 32 artifacts; `EXTRACTS.json` = the minimum record behind each finding; `DIAGNOSIS.md`
+= the report). Rebuild and re-verify with
+`evidence/f179_bundle_build.py . [--verify]` — verify re-hashes every entry and exits 1 on drift.
+
+### The run's own scorecard measures the wrong thing
+
+`SUMMARY.txt` says "strict PWML: 3 pass / 4 fail". Against gold's `expected_export`, the run is
+**9 of 10 correct**. Only **2 of 10** gold cases are `strict_exportable`; 8 are `partial_only`, so
+refusal is the correct outcome for most of the corpus, and the three scope conflicts are
+**deliberate organism traps** (`topics_t104.txt`, and each case lists *Bacillus subtilis* in
+`forbidden_organisms`). One export is wrong, and it is F-179.
+
+### The four findings, classified separately
+
+| id | finding | classification |
+|---|---|---|
+| **F-179** | `PMC12180156` exported `glycine → heme` | **production defect / false-positive biological export** |
+| **F-180** | `ferric iron (Fe3+)` parsed as a composite `+` token | **production tokenizer defect — secondary / deferred** |
+| **F-181** | interactions reference unregistered entities `HRM3` / `HRM6` | **production referential-integrity defect — secondary / deferred** |
+| **F-182** | `final_gate_report_missing` on `PMC12444477` | **lifecycle / observability defect — NOT automatically a biological failure** |
+
+**F-179.** The canonical payload carries **one reaction, `glycine → heme`** — an eight-step pathway
+collapsed to one step. Gold states `supported_reactions: 0`, *"Zero heme-biosynthesis reactions have
+both sides named anywhere in the file"*, and *"nothing about heme biosynthesis is exportable"*. The
+runtime nevertheless recorded `release_status: review_required`, **`semantic_evaluation: passed`**,
+`strict_gates_passed: true`, and wrote `pathway.review_required.pwml`. The row carries **no
+`provenance_lineage` and no `rag_provenance`**; its only stage, `identifier_mapping`, is INHERITED
+from participants grounded in ChEBI/KEGG/DrugBank — identity evidence, not evidence any paper states
+the reaction. `rd092_1_reaction_lineage.py` classifies it **`indeterminate`** and does not vouch for
+it. **No stage ever claimed a paper stated this reaction, and the semantic gate passed it.**
+
+**F-180.** Ionic charge notation read as a composite separator, on the core metabolite of an
+iron-acquisition paper. The leg's refusal was *correct* (gold: the route is broken with EntA absent)
+but the *reason* is wrong, so the right outcome is reached by coincidence.
+
+**F-181.** `HRM` = heme regulatory motif. The leg's **final Stage-3 gate passed** (`ok: true`); this
+blocked it separately.
+
+**F-182.** `final_stage3_gate_report.json` is absent, so post-pipeline validation fails on a missing
+report. Gold independently expects no strict export here, so the outcome is right — but the recorded
+reason is a lifecycle gap, not a biological verdict. **Do not read F-182 as a biology failure.**
+
+> **A correction recorded rather than quietly dropped.** An earlier reading claimed a "UniProt
+> promotion defect" — that accessions were resolved and never written to the row. **Wrong.** `LpxA`
+> carries `mapped_ids.uniprot = P0A722` and `protein_external_identity` returns it; the
+> missing-identifier errors come from the **initial** gate, which runs before mapping. Corpus-wide
+> only **2 of 2,189** protein rows are verified-but-invisible.
+
+### Recurrence census — `evidence/rd093_shortcut_census.py` — THE MECHANISM IS NOT ISOLATED
+
+Read-only over committed **and** preserved runs, populations never summed, nothing re-run:
+
+| criterion | committed (115 legs / 433 rows) | preserved-untracked (10 / 33) | distinct papers |
+|---|---|---|---|
+| `exact_glycine_heme` | 6 | 1 | **1** |
+| `only_identifier_mapping_own_lineage` | 0 | 0 | 0 |
+| `only_identifier_mapping_inherited` | 0 | 0 | 0 |
+| `no_paper_and_no_rag` | 198 | 1 | **9** |
+| `precursor_terminal_shortcut` | 62 | 4 | **6** |
+
+**Intersection — terminal product produced AND no paper-stated and no RAG-literature attribution:
+28 rows, 6 papers, 13 runs. 8 of those were in legs that EXPORTED a PWML.**
+
+Current release-naming regime, exported instances: `2026-08-21_2239` PMC12782028
+`…-3β-ol → cholesterol` (semantic **failed**); `2026-08-22_2147` PMC12180156 `iron → heme` and
+`Glycine → heme`; `2026-08-24_1428` PMC12180156 `Glycine → heme`; `2026-09-02_2052` PMC12180156
+`glycine → heme` — **the last four all `semantic_evaluation: passed`**. Three older legs shipped a
+**bare `pathway.pwml`**, the name reserved for "ship it, no review needed", before the
+`review_required` naming existed.
+
+**VERDICT.** The literal `glycine → heme` row is confined to `PMC12180156` — but it is **not a draw
+artifact**: it reproduces across four runs over one month, in both modes, under five different
+reaction names, and the semantic gate passed it every time. The **underlying mechanism recurs
+independently on a second paper and a second pathway** (PMC12782028, cholesterol), where the gate
+*did* catch it — evidence the gate can catch this class and did not here.
+
+> **Recorded as a CANDIDATE REPEATED PRODUCT-CONTRACT VIOLATION requiring a narrow product-owner
+> unfreeze — NOT an isolated known limitation.** `product_contract_violation` because gold's
+> `export_rationale` says nothing is exportable and the pipeline exported a reaction no source
+> states. **The unseen cohort must NOT be consumed until this is ruled on**: a false-positive export
+> that passes the semantic gate would score as a success on unseen papers.
+
+### Evaluation-only fix shipped this wave
+
+`rd092_1_reaction_lineage.py` fact (6): a **database grounding is not literature evidence**.
+`identifier_mapping` records ChEBI/KEGG/DrugBank/CAS/taxonomy ids as lineage sources with
+`origin="database_grounded"`; resolving by id alone returned `external`, so a row grounded only in a
+compound dictionary was described with the vocabulary D-093 reserves for retrieved literature. New
+`SRC_DATABASE` class, resolved from **origin** (checked first — id-shape heuristics cannot separate
+a PathBank integer id from a paper id). **Verified: no support class and no published number moved,
+and all six `external_rag_supported` rows still derive from a real external PAPER (`PMC12452463`,
+within-run, reaction-specific) and none from a database grounding.** 4 focused tests added.
+
+### Caveats carried forward
+
+- `runs_verify/2026-09-02_2052` is **untracked** — its four legs rest on a single-disk artifact.
+- `precursor_terminal_shortcut` is a **heuristic** over gold (0–3 signatures per paper), so a real
+  terminal step absent from that short list is flagged. The **intersection** with
+  `no_paper_and_no_rag` is the defensible signal and is why both are reported.
+- The 62/198 raw counts include `research`-mode legs, which never export PWML.
+
+### Open, and needing a ruling rather than engineering
+
+1. **F-179's unfreeze request** — above. Production stays frozen until then.
+2. **F-180 / F-181** — production defects, deferred by classification, not by doubt.
+3. **Asymmetry noticed in `classify_support`**, recorded not changed: at
+   `participant_inheritance` a chunk join finding BOTH accepted and rejected records yields
+   `indeterminate`, while at row tier it yields `external_rag_supported`. Changing it would move a
+   published number and needs review first.

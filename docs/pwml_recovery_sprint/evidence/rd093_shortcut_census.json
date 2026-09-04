@@ -1,0 +1,6158 @@
+{
+ "instrument": "rd093_shortcut_census",
+ "charter": "ORCH-723 follow-up to the 2026-09-02 diagnosis",
+ "evaluation_only": true,
+ "reran_nothing": true,
+ "criteria_definitions": {
+  "exact_glycine_heme": "inputs == {glycine} and outputs == {heme}",
+  "only_identifier_mapping_own_lineage": "row's OWN provenance_lineage names only identifier_mapping",
+  "only_identifier_mapping_inherited": "row carries NO lineage; participants' lineage names only identifier_mapping",
+  "no_paper_and_no_rag": "no paper_stated/paper_explicit origin AND no rag_literature origin on the row",
+  "precursor_terminal_shortcut": "produces the requested pathway's terminal product and matches no gold signature"
+ },
+ "populations": {
+  "committed": {
+   "legs": 115,
+   "reaction_rows": 433,
+   "criteria": {
+    "exact_glycine_heme": 6,
+    "only_identifier_mapping_own_lineage": 0,
+    "only_identifier_mapping_inherited": 0,
+    "no_paper_and_no_rag": 198,
+    "precursor_terminal_shortcut": 62
+   }
+  },
+  "preserved_untracked": {
+   "legs": 10,
+   "reaction_rows": 33,
+   "criteria": {
+    "exact_glycine_heme": 1,
+    "only_identifier_mapping_own_lineage": 0,
+    "only_identifier_mapping_inherited": 0,
+    "no_paper_and_no_rag": 1,
+    "precursor_terminal_shortcut": 4
+   }
+  }
+ },
+ "distinct_papers_per_criterion": {
+  "exact_glycine_heme": [
+   "PMC12180156"
+  ],
+  "only_identifier_mapping_own_lineage": [],
+  "only_identifier_mapping_inherited": [],
+  "no_paper_and_no_rag": [
+   "PMC12096016",
+   "PMC12180156",
+   "PMC12312563",
+   "PMC12444477",
+   "PMC12452463",
+   "PMC12782028",
+   "PMC12856317",
+   "PMC13231680",
+   "PMC13278307"
+  ],
+  "precursor_terminal_shortcut": [
+   "PMC12096016",
+   "PMC12180156",
+   "PMC12444477",
+   "PMC12452463",
+   "PMC12782028",
+   "PMC12856317"
+  ]
+ },
+ "hits": [
+  {
+   "population": "committed",
+   "run": "runs/2026-07-27_1623",
+   "leg_dir": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+   "paper": "PMC12312563",
+   "row_index": 0,
+   "name": "SEPHCHC synthase reaction",
+   "inputs": [
+    "α-ketoglutarate",
+    "isochorismate"
+   ],
+   "outputs": [
+    "SEPHCHC"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-27_1623",
+   "leg_dir": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+   "paper": "PMC12312563",
+   "row_index": 1,
+   "name": "decarboxylation of 2-oxoglutarate",
+   "inputs": [
+    "α-ketoglutarate"
+   ],
+   "outputs": [
+    "intermediate I"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-27_1623",
+   "leg_dir": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+   "paper": "PMC12312563",
+   "row_index": 2,
+   "name": "addition of isochorismate to intermediate I",
+   "inputs": [
+    "intermediate I",
+    "isochorismate"
+   ],
+   "outputs": [
+    "SEPHCHC"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-27_1623",
+   "leg_dir": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+   "paper": "PMC12312563",
+   "row_index": 3,
+   "name": "formation of intermediate II",
+   "inputs": [
+    "intermediate I",
+    "isochorismate"
+   ],
+   "outputs": [
+    "intermediate II"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-27_1623",
+   "leg_dir": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+   "paper": "PMC12312563",
+   "row_index": 4,
+   "name": "breakdown of intermediate II to SEPHCHC",
+   "inputs": [
+    "intermediate II"
+   ],
+   "outputs": [
+    "SEPHCHC"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-27_1623",
+   "leg_dir": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+   "paper": "PMC12312563",
+   "row_index": 5,
+   "name": "SEPHCHC synthase reaction",
+   "inputs": [
+    "α-ketoglutarate",
+    "isochorismate"
+   ],
+   "outputs": [
+    "SEPHCHC"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-27_1623",
+   "leg_dir": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+   "paper": "PMC12312563",
+   "row_index": 6,
+   "name": "DHNA-CoA thioesterase activity",
+   "inputs": [
+    "DHNA-CoA"
+   ],
+   "outputs": [
+    "DHNA"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 0,
+   "name": "LpxA reaction",
+   "inputs": [
+    "UDP-GlcNAc",
+    "β-hydroxyacyl-ACP"
+   ],
+   "outputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-GlcNAc"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 1,
+   "name": "LpxC reaction",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-GlcNAc"
+   ],
+   "outputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 2,
+   "name": "LpxD reaction",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+    "β-hydroxyacyl-ACP"
+   ],
+   "outputs": [
+    "UDP-2,3-diacylglucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 3,
+   "name": "LpxH reaction",
+   "inputs": [
+    "UDP-2,3-diacylglucosamine"
+   ],
+   "outputs": [
+    "lipid IV_A precursor",
+    "UMP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 4,
+   "name": "LpxB reaction",
+   "inputs": [
+    "lipid IV_A precursor"
+   ],
+   "outputs": [
+    "tetra-acylated disaccharide intermediate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 5,
+   "name": "LpxK reaction",
+   "inputs": [
+    "tetra-acylated disaccharide intermediate"
+   ],
+   "outputs": [
+    "lipid IV_A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 6,
+   "name": "WaaA reaction",
+   "inputs": [
+    "lipid IV_A",
+    "Kdo"
+   ],
+   "outputs": [
+    "Kdo-lipid IV_A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 7,
+   "name": "LpxL reaction",
+   "inputs": [
+    "Kdo-lipid IV_A"
+   ],
+   "outputs": [
+    "Kdo-lipid A precursor"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 8,
+   "name": "LpxM reaction",
+   "inputs": [
+    "Kdo-lipid A precursor"
+   ],
+   "outputs": [
+    "Kdo-lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 9,
+   "name": "lipid IV A -> lipid A precursor",
+   "inputs": [
+    "lipid IV A"
+   ],
+   "outputs": [
+    "lipid A precursor"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 10,
+   "name": "Acetyl-CoA -> malonyl-CoA",
+   "inputs": [
+    "Acetyl-CoA"
+   ],
+   "outputs": [
+    "malonyl-CoA"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 11,
+   "name": "sn -glycerol-3-phosphate (G3P) -> 1-acyl-G3P",
+   "inputs": [
+    "sn -glycerol-3-phosphate (G3P)"
+   ],
+   "outputs": [
+    "1-acyl-G3P"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 12,
+   "name": "1-acyl-G3P -> Phosphatidic acid (PA)",
+   "inputs": [
+    "1-acyl-G3P"
+   ],
+   "outputs": [
+    "Phosphatidic acid (PA)"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 13,
+   "name": "Phosphatidic acid (PA) -> cytidine diphosphate-diacylglycerol (CDP-DAG)",
+   "inputs": [
+    "Phosphatidic acid (PA)"
+   ],
+   "outputs": [
+    "cytidine diphosphate-diacylglycerol (CDP-DAG)"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 14,
+   "name": "CDP-DAG -> PG",
+   "inputs": [
+    "CDP-DAG"
+   ],
+   "outputs": [
+    "PG"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 15,
+   "name": "CDP-DAG -> phosphatidylserine",
+   "inputs": [
+    "CDP-DAG"
+   ],
+   "outputs": [
+    "phosphatidylserine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 16,
+   "name": "PG -> CL",
+   "inputs": [
+    "PG"
+   ],
+   "outputs": [
+    "CL"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 17,
+   "name": "PE -> CL",
+   "inputs": [
+    "PE"
+   ],
+   "outputs": [
+    "CL"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 18,
+   "name": "PA to CDP-DAG conversion",
+   "inputs": [
+    "PA"
+   ],
+   "outputs": [
+    "cytidine diphosphate-diacylglycerol (CDP-DAG)"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 19,
+   "name": "CDP-DAG reaction with sn-glycerol 3-phosphate to form PG",
+   "inputs": [
+    "CDP-DAG",
+    "sn-glycerol 3-phosphate"
+   ],
+   "outputs": [
+    "PG"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 20,
+   "name": "condensation of CDP-DAG with G3P to form the intermediate PG phosphate (PGP)",
+   "inputs": [
+    "CDP-DAG",
+    "G3P"
+   ],
+   "outputs": [
+    "PG phosphate (PGP)"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 21,
+   "name": "dephosphorylation of PGP to produce PG",
+   "inputs": [
+    "PGP"
+   ],
+   "outputs": [
+    "PG"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 22,
+   "name": "phosphatidic acid generation",
+   "inputs": [
+    "acyl-ACP"
+   ],
+   "outputs": [
+    "phosphatidic acid"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 23,
+   "name": "PG synthesis",
+   "inputs": [
+    "CDP-DAG",
+    "G3P"
+   ],
+   "outputs": [
+    "PG phosphate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 24,
+   "name": "PG formation",
+   "inputs": [
+    "PG phosphate"
+   ],
+   "outputs": [
+    "PG"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 25,
+   "name": "UDP-3-O-(R-3-hydroxylmyristoyl)-N-acetylglucosamine (myr-UDP-GlcNAc) -> UDP-3-O-(R-3-hydroxylmyristoyl)-glucosamine (myr-UDP-GlcN)",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxylmyristoyl)-N-acetylglucosamine (myr-UDP-GlcNAc)"
+   ],
+   "outputs": [
+    "UDP-3-O-(R-3-hydroxylmyristoyl)-glucosamine (myr-UDP-GlcN)"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477",
+   "row_index": 26,
+   "name": "first committed step in phospholipid biosynthesis",
+   "inputs": [
+    "glycerol-3-phosphate"
+   ],
+   "outputs": [
+    "phospholipid"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 0,
+   "name": "MCR-1-mediated PEtN transfer to lipid A",
+   "inputs": [
+    "lipid A",
+    "PEtN"
+   ],
+   "outputs": [
+    "PEtN-lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 1,
+   "name": "modification of lipid A by L-4AraN",
+   "inputs": [
+    "L-4AraN",
+    "Lipid A"
+   ],
+   "outputs": [
+    "modified Lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 2,
+   "name": "modification of lipid A",
+   "inputs": [
+    "4-amino-4-deoxy-L-arabinose",
+    "Phospohoethanolamine",
+    "lipid A"
+   ],
+   "outputs": [
+    "modified lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 3,
+   "name": "modification of lipid A",
+   "inputs": [
+    "pmrHFIJKLM operon"
+   ],
+   "outputs": [
+    "modified lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 4,
+   "name": "modification of lipid A",
+   "inputs": [
+    "pmrD"
+   ],
+   "outputs": [
+    "modified lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 5,
+   "name": "4-amino-4-deoxy-L-arabinose -> lipid A",
+   "inputs": [
+    "4-amino-4-deoxy-L-arabinose"
+   ],
+   "outputs": [
+    "lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 6,
+   "name": "Phosphoethanolamine -> lipid A",
+   "inputs": [
+    "Phosphoethanolamine"
+   ],
+   "outputs": [
+    "lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 7,
+   "name": "addition of PEtN to lipid A",
+   "inputs": [
+    "PEtN",
+    "lipid A"
+   ],
+   "outputs": [
+    "lipid A modified with PEtN"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 8,
+   "name": "addition of PEtN to lipid A",
+   "inputs": [
+    "PEtN",
+    "lipid A"
+   ],
+   "outputs": [
+    "LPS"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 9,
+   "name": "addition of 4-amino-4-deoxy-L-arabinose (L-Ara4N) to lipid A",
+   "inputs": [
+    "4-amino-4-deoxy-L-arabinose (L-Ara4N)",
+    "lipid A"
+   ],
+   "outputs": [
+    "lipid A modified with L-Ara4N"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 10,
+   "name": "lipid A -> modified lipid A",
+   "inputs": [
+    "lipid A"
+   ],
+   "outputs": [
+    "modified lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 11,
+   "name": "transfer of PEtN to the phosphate groups of lipid A",
+   "inputs": [
+    "PEtN",
+    "phosphate groups of lipid A"
+   ],
+   "outputs": [
+    "lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 12,
+   "name": "PEtN -> lipid A with PEtN",
+   "inputs": [
+    "PEtN"
+   ],
+   "outputs": [
+    "lipid A with PEtN"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-07-28_0919",
+   "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307",
+   "row_index": 13,
+   "name": "phosphorylation of PhoP",
+   "inputs": [
+    "PhoP"
+   ],
+   "outputs": [
+    "phosphorylated PhoP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 0,
+   "name": "EntC isochorismate synthase reaction",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 1,
+   "name": "EntB isochorismatase reaction",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate",
+    "pyruvate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 2,
+   "name": "EntA dehydrogenase reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoic acid"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 3,
+   "name": "EntE 2,3-DHB adenylation",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid",
+    "ATP"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoyl-AMP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF enterobactin assembly",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin",
+    "AMP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 0,
+   "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 1,
+   "name": "EntB isochorismatase reaction",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "pyruvate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 2,
+   "name": "EntA-catalyzed conversion of 2,3-diDHB to 2,3-DHB",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoic acid (2,3-DHB)"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 3,
+   "name": "EntE-catalyzed adenylation of 2,3-DHB",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "ATP"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "PPi"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-catalyzed enterobactin formation",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 5,
+   "name": "EntB isochorismatase reaction (NADH-dependent coupled assay)",
+   "inputs": [
+    "isochorismate",
+    "NADH"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "pyruvate",
+    "NAD+"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "ferrochelatase reaction",
+   "inputs": [
+    "iron"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 1,
+   "name": "ALAS2 reaction",
+   "inputs": [
+    "glycine"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "exact_glycine_heme",
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 2,
+   "name": "serine hydroxymethyltransferase reaction",
+   "inputs": [
+    "serine"
+   ],
+   "outputs": [
+    "glycine",
+    "5,10-methylene-THF"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 3,
+   "name": "5,10-methylene-THF to formate",
+   "inputs": [
+    "5,10-methylene-THF"
+   ],
+   "outputs": [
+    "formate",
+    "THF"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "serine hydroxymethyltransferase reaction",
+   "inputs": [
+    "serine"
+   ],
+   "outputs": [
+    "glycine",
+    "5,10-methylene-THF"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 1,
+   "name": "ALAS2 reaction",
+   "inputs": [
+    "glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "δ-aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "row_index": 0,
+   "name": "LpxA reaction",
+   "inputs": [
+    "UDP-GlcNAc",
+    "β-hydroxyacyl-ACP"
+   ],
+   "outputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "row_index": 1,
+   "name": "LpxC reaction",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+   ],
+   "outputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "row_index": 2,
+   "name": "LpxD reaction",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+    "β-hydroxyacyl-ACP"
+   ],
+   "outputs": [
+    "UDP-2,3-diacylglucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "row_index": 3,
+   "name": "LpxH reaction",
+   "inputs": [
+    "UDP-2,3-diacylglucosamine"
+   ],
+   "outputs": [
+    "2,3-diacylglucosamine-1-phosphate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "row_index": 4,
+   "name": "LpxB reaction",
+   "inputs": [
+    "2,3-diacylglucosamine-1-phosphate"
+   ],
+   "outputs": [
+    "tetra-acylated disaccharide"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "row_index": 5,
+   "name": "LpxK reaction",
+   "inputs": [
+    "tetra-acylated disaccharide"
+   ],
+   "outputs": [
+    "lipid IV_A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "row_index": 6,
+   "name": "WaaA reaction",
+   "inputs": [
+    "lipid IV_A",
+    "Kdo"
+   ],
+   "outputs": [
+    "Kdo-lipid IV_A"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "row_index": 7,
+   "name": "LpxL reaction",
+   "inputs": [
+    "Kdo-lipid IV_A",
+    "acyl-ACP"
+   ],
+   "outputs": [
+    "Kdo-lipid A"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 0,
+   "name": "LpxA reaction",
+   "inputs": [
+    "UDP-GlcNAc",
+    "β-hydroxyacyl-ACP"
+   ],
+   "outputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 1,
+   "name": "LpxC reaction",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+   ],
+   "outputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 2,
+   "name": "LpxD reaction",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+   ],
+   "outputs": [
+    "UDP-2,3-diacylglucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 3,
+   "name": "LpxH reaction",
+   "inputs": [
+    "UDP-2,3-diacylglucosamine"
+   ],
+   "outputs": [
+    "lipid X",
+    "UMP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 4,
+   "name": "LpxB reaction",
+   "inputs": [
+    "lipid X",
+    "UDP-2,3-diacylglucosamine"
+   ],
+   "outputs": [
+    "tetra-acylated disaccharide intermediate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 5,
+   "name": "LpxK reaction",
+   "inputs": [
+    "tetra-acylated disaccharide intermediate"
+   ],
+   "outputs": [
+    "lipid IV_A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 6,
+   "name": "WaaA reaction",
+   "inputs": [
+    "lipid IV_A"
+   ],
+   "outputs": [
+    "Kdo-lipid IV_A"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 7,
+   "name": "LpxL reaction",
+   "inputs": [
+    "Kdo-lipid IV_A"
+   ],
+   "outputs": [
+    "Kdo-lipid A (intermediate)"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 8,
+   "name": "LpxM reaction",
+   "inputs": [
+    "Kdo-lipid A (intermediate)"
+   ],
+   "outputs": [
+    "Kdo-lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 9,
+   "name": "UDP-N-acetylglucosamine acyltransferase reaction",
+   "inputs": [
+    "UDP-GlcNAc"
+   ],
+   "outputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 10,
+   "name": "UDP-3-0-[(R)-3-hydroxymyristoyl]-α-D-glucosamine N-acylation reaction",
+   "inputs": [
+    "UDP-3-0-[(R)-3-hydroxymyristoyl]-α-D-glucosamine"
+   ],
+   "outputs": [
+    "UDP-N2,O3-bis [(R)-3-hydroxymyristoyl]-α-D-glucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 11,
+   "name": "LpxC deacetylase reaction",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+   ],
+   "outputs": [
+    "UDP-3-0-[(R)-3-hydroxymyristoyl]-α-D-glucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 0,
+   "name": "EntC reaction",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 1,
+   "name": "EntB reaction",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 2,
+   "name": "EntE reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+   ],
+   "outputs": [
+    "DHB-AMP"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "enterobactin assembly reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 0,
+   "name": "LSS reaction",
+   "inputs": [
+    "2,3-oxidosqualene"
+   ],
+   "outputs": [
+    "lanosterol"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 1,
+   "name": "CYP51A1 reaction",
+   "inputs": [
+    "lanosterol"
+   ],
+   "outputs": [
+    "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 2,
+   "name": "DHCR24 reaction",
+   "inputs": [
+    "desmosterol"
+   ],
+   "outputs": [
+    "cholesterol"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12856317/research",
+   "paper": "PMC12856317",
+   "row_index": 0,
+   "name": "ALAS2 reaction",
+   "inputs": [
+    "glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC12856317/strict",
+   "paper": "PMC12856317",
+   "row_index": 0,
+   "name": "ALAS2 reaction",
+   "inputs": [
+    "glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs/2026-08-02_2130",
+   "leg_dir": "runs/2026-08-02_2130/papers/PMC13231680/strict",
+   "paper": "PMC13231680",
+   "row_index": 0,
+   "name": "NDM-1-catalyzed meropenem hydrolysis",
+   "inputs": [
+    "meropenem"
+   ],
+   "outputs": [
+    "hydrolyzed meropenem"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1148",
+   "leg_dir": "runs_verify/2026-08-04_1148/papers/PMC13231680/research",
+   "paper": "PMC13231680",
+   "row_index": 0,
+   "name": "LpxC reaction",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+   ],
+   "outputs": [
+    "phosphorylated UDP-3-O-R-3-hydroxymyristoyl-glucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1207",
+   "leg_dir": "runs_verify/2026-08-04_1207/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 0,
+   "name": "Chorismate to isochorismate (EntC)",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1207",
+   "leg_dir": "runs_verify/2026-08-04_1207/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 1,
+   "name": "Isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (EntB)",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1207",
+   "leg_dir": "runs_verify/2026-08-04_1207/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 2,
+   "name": "Activation of DHB to DHB-AMP (EntE)",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "DHB-AMP"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1207",
+   "leg_dir": "runs_verify/2026-08-04_1207/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Assembly of enterobactin (EntD/EntE/EntF complex)",
+   "inputs": [
+    "DHB-AMP"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1234",
+   "leg_dir": "runs_verify/2026-08-04_1234/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 0,
+   "name": "EntC-catalyzed conversion of chorismate to isochorismate",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1234",
+   "leg_dir": "runs_verify/2026-08-04_1234/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 1,
+   "name": "EntB isochorismatase reaction",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate",
+    "pyruvate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1234",
+   "leg_dir": "runs_verify/2026-08-04_1234/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 2,
+   "name": "EntA-catalyzed conversion of 2,3-diDHB to 2,3-DHB",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoic acid"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1234",
+   "leg_dir": "runs_verify/2026-08-04_1234/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 3,
+   "name": "EntE-catalyzed adenylation of 2,3-DHB",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid",
+    "ATP"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoyl-AMP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1234",
+   "leg_dir": "runs_verify/2026-08-04_1234/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-catalyzed enterobactin synthesis",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1234",
+   "leg_dir": "runs_verify/2026-08-04_1234/papers/PMC12856317/strict",
+   "paper": "PMC12856317",
+   "row_index": 0,
+   "name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA",
+   "inputs": [
+    "glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1306",
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 0,
+   "name": "EntC isochorismate synthase reaction",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1306",
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 1,
+   "name": "EntB isochorismatase reaction",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "pyruvate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1306",
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 2,
+   "name": "EntA dehydrogenase reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoic acid (2,3-DHB)"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1306",
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 3,
+   "name": "EntE adenylation reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "ATP"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "PPi"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1306",
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF enterobactin synthase reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin",
+    "AMP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1306",
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 0,
+   "name": "EntC reaction",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1306",
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 1,
+   "name": "EntB reaction",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1306",
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 2,
+   "name": "EntE reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "DHB-AMP"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1306",
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "enterobactin synthase complex reaction",
+   "inputs": [
+    "DHB-AMP"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1306",
+   "leg_dir": "runs_verify/2026-08-04_1306/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 4,
+   "name": "enterobactin iron binding",
+   "inputs": [
+    "enterobactin",
+    "ferric iron"
+   ],
+   "outputs": [
+    "ferri-enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1358",
+   "leg_dir": "runs_verify/2026-08-04_1358/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 0,
+   "name": "EntC-catalyzed chorismate isomerization",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1358",
+   "leg_dir": "runs_verify/2026-08-04_1358/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 1,
+   "name": "EntB isochorismatase reaction",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate",
+    "pyruvate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1358",
+   "leg_dir": "runs_verify/2026-08-04_1358/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 2,
+   "name": "EntA 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoic acid"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1358",
+   "leg_dir": "runs_verify/2026-08-04_1358/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 3,
+   "name": "EntE-catalyzed 2,3-DHB adenylation",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid",
+    "ATP"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoyl-AMP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1358",
+   "leg_dir": "runs_verify/2026-08-04_1358/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-catalyzed enterobactin assembly",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1358",
+   "leg_dir": "runs_verify/2026-08-04_1358/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 5,
+   "name": "MenD-catalyzed conversion of isochorismate to SEPHCHC",
+   "inputs": [
+    "isochorismate",
+    "2-ketoglutarate"
+   ],
+   "outputs": [
+    "SEPHCHC"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1504",
+   "leg_dir": "runs_verify/2026-08-04_1504/papers/PMC12856317/strict",
+   "paper": "PMC12856317",
+   "row_index": 0,
+   "name": "ALAS2-catalyzed ALA formation",
+   "inputs": [
+    "glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1647",
+   "leg_dir": "runs_verify/2026-08-04_1647/papers/PMC12856317/strict",
+   "paper": "PMC12856317",
+   "row_index": 0,
+   "name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA",
+   "inputs": [
+    "glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 0,
+   "name": "EntC isochorismate synthase reaction",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 1,
+   "name": "EntB isochorismatase reaction",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate",
+    "pyruvate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 2,
+   "name": "EntA dehydrogenase reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate",
+    "NAD+"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoic acid",
+    "NADH"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 3,
+   "name": "EntE adenylation reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid",
+    "ATP"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoyl-AMP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF enterobactin synthase reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 0,
+   "name": "EntC isochorismate synthase reaction",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 1,
+   "name": "EntB isochorismatase reaction",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate",
+    "pyruvate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 2,
+   "name": "EntA dehydrogenase reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate",
+    "NAD+"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoic acid",
+    "NADH"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 3,
+   "name": "EntE adenylation reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid",
+    "ATP"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoyl-AMP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF enterobactin synthase reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "serine hydroxymethyltransferase reaction",
+   "inputs": [
+    "serine"
+   ],
+   "outputs": [
+    "glycine",
+    "5,10-methylene-THF"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "SHMT2 reaction",
+   "inputs": [
+    "serine"
+   ],
+   "outputs": [
+    "glycine",
+    "5,10-methylene-THF"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 1,
+   "name": "ALAS2 reaction",
+   "inputs": [
+    "glycine"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "exact_glycine_heme",
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 2,
+   "name": "ferrochelatase reaction",
+   "inputs": [
+    "iron"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 0,
+   "name": "EntC reaction",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 1,
+   "name": "EntB reaction",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 2,
+   "name": "EntE reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "DHB-AMP"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Enterobactin synthase complex reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 0,
+   "name": "Chorismate to isochorismate by EntC",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 1,
+   "name": "Isochorismate to DHB by EntB",
+   "inputs": [
+    "isochorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 2,
+   "name": "DHB activation to DHB-AMP by EntE",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "DHB-AMP"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Enterobactin assembly by enterobactin synthase complex",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 4,
+   "name": "Enterobactin binds ferric iron",
+   "inputs": [
+    "enterobactin",
+    "ferric iron"
+   ],
+   "outputs": [
+    "ferri-enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12782028/research",
+   "paper": "PMC12782028",
+   "row_index": 0,
+   "name": "LSS reaction",
+   "inputs": [
+    "2,3-oxidosqualene"
+   ],
+   "outputs": [
+    "lanosterol"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12782028/research",
+   "paper": "PMC12782028",
+   "row_index": 1,
+   "name": "CYP51A1 reaction",
+   "inputs": [
+    "lanosterol"
+   ],
+   "outputs": [
+    "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12782028/research",
+   "paper": "PMC12782028",
+   "row_index": 2,
+   "name": "DHCR24 reaction",
+   "inputs": [
+    "desmosterol"
+   ],
+   "outputs": [
+    "cholesterol"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12782028/research",
+   "paper": "PMC12782028",
+   "row_index": 3,
+   "name": "MSMO1 reaction",
+   "inputs": [
+    "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol"
+   ],
+   "outputs": [
+    "desmosterol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12856317/research",
+   "paper": "PMC12856317",
+   "row_index": 0,
+   "name": "ALAS2-mediated condensation of glycine and succinyl-CoA",
+   "inputs": [
+    "glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12856317/strict",
+   "paper": "PMC12856317",
+   "row_index": 0,
+   "name": "ALAS2-catalyzed ALA synthesis",
+   "inputs": [
+    "glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-04_1754",
+   "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12856317/strict",
+   "paper": "PMC12856317",
+   "row_index": 1,
+   "name": "ALAS2-catalyzed ALA synthesis (full)",
+   "inputs": [
+    "glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "aminolevulinic acid",
+    "carbon dioxide",
+    "CoA-SH"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "unavailable",
+   "semantic_evaluation": "unavailable",
+   "strict_gates_passed": null,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-18_1328",
+   "leg_dir": "runs_verify/2026-08-18_1328/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 3,
+   "name": "EntE-catalyzed adenylation of 2,3-DHB",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "Adenosine triphosphate"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "release_ready",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-18_1328",
+   "leg_dir": "runs_verify/2026-08-18_1328/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-catalyzed enterobactin assembly with L-serine",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "L-serine",
+    "Adenosine triphosphate"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "release_ready",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-18_1328",
+   "leg_dir": "runs_verify/2026-08-18_1328/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF enterobactin synthase reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "diagnostic_only",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": false,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-18_1328",
+   "leg_dir": "runs_verify/2026-08-18_1328/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "enterobactin assembly",
+   "inputs": [
+    "2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "diagnostic_only",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": false,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-18_1328",
+   "leg_dir": "runs_verify/2026-08-18_1328/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 4,
+   "name": "enterobactin iron binding",
+   "inputs": [
+    "enterobactin",
+    "Fe3"
+   ],
+   "outputs": [
+    "ferric-enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "diagnostic_only",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": false,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_1822",
+   "leg_dir": "runs_verify/2026-08-21_1822/papers/PMC12782028/research",
+   "paper": "PMC12782028",
+   "row_index": 3,
+   "name": "cholesterol oxidation to oxysterols",
+   "inputs": [
+    "cholesterol"
+   ],
+   "outputs": [
+    "oxysterols"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "release_ready",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_1822",
+   "leg_dir": "runs_verify/2026-08-21_1822/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 2,
+   "name": "DHCR24 reaction",
+   "inputs": [
+    "desmosterol"
+   ],
+   "outputs": [
+    "cholesterol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2014",
+   "leg_dir": "runs_verify/2026-08-21_2014/papers/PMC12312563/research",
+   "paper": "PMC12312563",
+   "row_index": 1,
+   "name": "Decarboxylation of 2-oxoglutarate to intermediate I",
+   "inputs": [
+    "Oxoglutaric acid"
+   ],
+   "outputs": [
+    "intermediate I"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "diagnostic_only",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2014",
+   "leg_dir": "runs_verify/2026-08-21_2014/papers/PMC12312563/research",
+   "paper": "PMC12312563",
+   "row_index": 2,
+   "name": "Addition of isochorismate to intermediate I forming intermediate II",
+   "inputs": [
+    "intermediate I",
+    "isochorismate"
+   ],
+   "outputs": [
+    "intermediate II"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "diagnostic_only",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2014",
+   "leg_dir": "runs_verify/2026-08-21_2014/papers/PMC12312563/research",
+   "paper": "PMC12312563",
+   "row_index": 3,
+   "name": "Breakdown of intermediate II to SEPHCHC",
+   "inputs": [
+    "intermediate II"
+   ],
+   "outputs": [
+    "SEPHCHC"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "diagnostic_only",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2057",
+   "leg_dir": "runs_verify/2026-08-21_2057/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF enterobactin synthase reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2057",
+   "leg_dir": "runs_verify/2026-08-21_2057/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 5,
+   "name": "EntC–EntB channeling reaction in presence of 2,3-DHB (inhibited)",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate",
+    "pyruvate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "audit_repair"
+   ],
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2057",
+   "leg_dir": "runs_verify/2026-08-21_2057/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF enterobactin synthase reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2057",
+   "leg_dir": "runs_verify/2026-08-21_2057/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Enterobactin synthase complex-catalyzed assembly of enterobactin",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "release_ready",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2057",
+   "leg_dir": "runs_verify/2026-08-21_2057/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "enterobactin synthase complex reaction",
+   "inputs": [
+    "DHB-AMP"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2239",
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-catalyzed enterobactin synthesis",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin",
+    "Adenosine monophosphate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2239",
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "heme biosynthesis reaction",
+   "inputs": [
+    "Glycine"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "exact_glycine_heme",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2239",
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 1,
+   "name": "ALAS2-catalyzed δ-aminolevulinic acid synthesis",
+   "inputs": [
+    "succinyl-CoA",
+    "Glycine"
+   ],
+   "outputs": [
+    "δ-aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2239",
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "ALAS2 condenses glycine and succinyl-CoA to produce δ-aminolevulinic acid",
+   "inputs": [
+    "glycine"
+   ],
+   "outputs": [
+    "δ-aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2239",
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Enterobactin synthase complex reaction",
+   "inputs": [
+    "DHB-AMP"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2239",
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 2,
+   "name": "Enterobactin iron binding",
+   "inputs": [
+    "enterobactin",
+    "Fe3"
+   ],
+   "outputs": [
+    "ferric-enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "release_ready",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2239",
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12782028/research",
+   "paper": "PMC12782028",
+   "row_index": 3,
+   "name": "cholesterol oxidation to oxysterols",
+   "inputs": [
+    "cholesterol"
+   ],
+   "outputs": [
+    "oxysterols"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "release_ready",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2239",
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 2,
+   "name": "DHCR24 reaction",
+   "inputs": [
+    "desmosterol"
+   ],
+   "outputs": [
+    "cholesterol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2239",
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 3,
+   "name": "MSMO1 reaction",
+   "inputs": [
+    "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol"
+   ],
+   "outputs": [
+    "cholesterol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "audit_repair"
+   ],
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-21_2239",
+   "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12856317/strict",
+   "paper": "PMC12856317",
+   "row_index": 1,
+   "name": "ALAS2 reaction with pyridoxal 5-phosphate cofactor",
+   "inputs": [
+    "Glycine",
+    "succinyl-CoA",
+    "Pyridoxal 5'-phosphate"
+   ],
+   "outputs": [
+    "aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2017",
+   "leg_dir": "runs_verify/2026-08-22_2017/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "enterobactin synthase complex reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoate (DHB)"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2017",
+   "leg_dir": "runs_verify/2026-08-22_2017/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Assembly of enterobactin (EntD/EntE/EntF complex)",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-catalyzed enterobactin formation",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 5,
+   "name": "EntD-catalyzed phosphopantetheinylation of apo-EntB",
+   "inputs": [
+    "apo-EntB"
+   ],
+   "outputs": [
+    "holo-EntB"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF enterobactin synthase reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "ferrochelatase reaction",
+   "inputs": [
+    "protoporphyrin IX",
+    "iron"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "ferrochelatase-catalyzed heme biosynthesis reaction",
+   "inputs": [
+    "iron"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 1,
+   "name": "glycine consumption in heme biosynthesis",
+   "inputs": [
+    "Glycine"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "exact_glycine_heme",
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "assembly of enterobactin",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 2,
+   "name": "Assembly of enterobactin (EntD/EntE/EntF complex)",
+   "inputs": [
+    "DHB-AMP"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Enterobactin binding to ferric iron",
+   "inputs": [
+    "enterobactin",
+    "Fe3+"
+   ],
+   "outputs": [
+    "ferri-enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 2,
+   "name": "DHCR24 reaction",
+   "inputs": [
+    "desmosterol"
+   ],
+   "outputs": [
+    "cholesterol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC13231680/research",
+   "paper": "PMC13231680",
+   "row_index": 0,
+   "name": "PSA decomposition to sulfacetamide",
+   "inputs": [
+    "phthalylsulfacetamide"
+   ],
+   "outputs": [
+    "sulfacetamide"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "release_ready",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC13231680/research",
+   "paper": "PMC13231680",
+   "row_index": 1,
+   "name": "NDM-1 catalyzed hydrolysis of meropenem",
+   "inputs": [
+    "meropenem"
+   ],
+   "outputs": [
+    "hydrolyzed meropenem"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "release_ready",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-22_2147",
+   "leg_dir": "runs_verify/2026-08-22_2147/papers/PMC13231680/strict",
+   "paper": "PMC13231680",
+   "row_index": 0,
+   "name": "PSA conversion to sulfacetamide",
+   "inputs": [
+    "phthalylsulfacetamide"
+   ],
+   "outputs": [
+    "sulfacetamide"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "release_ready",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1203",
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF enterobactin synthase reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1203",
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-catalyzed enterobactin synthesis",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1203",
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 5,
+   "name": "EntA dehydrogenase conversion of 2,3-diDHB to 2,3-DHB with NAD+",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate",
+    "NAD+"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoic acid",
+    "NADH"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1203",
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 6,
+   "name": "Enterobactin chelation of ferric iron",
+   "inputs": [
+    "enterobactin",
+    "Fe3"
+   ],
+   "outputs": [
+    "ferric-enterobactin complex"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1203",
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Enterobactin assembly (EntD/EntE/EntF complex)",
+   "inputs": [
+    "DHB"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1203",
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12856317/research",
+   "paper": "PMC12856317",
+   "row_index": 1,
+   "name": "ALAS2-catalyzed condensation (full)",
+   "inputs": [
+    "Glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "aminolevulinic acid",
+    "carbon dioxide",
+    "CoA-SH"
+   ],
+   "gold_matches_a_signature": true,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "release_ready",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1203",
+   "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC13231680/strict",
+   "paper": "PMC13231680",
+   "row_index": 0,
+   "name": "NDM-1 catalyzed hydrolysis of meropenem",
+   "inputs": [
+    "meropenem"
+   ],
+   "outputs": [
+    "hydrolyzed meropenem"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1428",
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF enterobactin synthase reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1428",
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 5,
+   "name": "EntA dehydrogenase reaction",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate",
+    "NAD+"
+   ],
+   "outputs": [
+    "2,3-dihydroxybenzoic acid",
+    "NADH"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1428",
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-catalyzed enterobactin synthesis",
+   "inputs": [
+    "2,3-dihydroxybenzoic acid",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1428",
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "heme biosynthesis (terminal step catalyzed by ferrochelatase)",
+   "inputs": [
+    "Glycine"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "exact_glycine_heme",
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1428",
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Assembly of enterobactin",
+   "inputs": [
+    "DHB-AMP"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-24_1428",
+   "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 2,
+   "name": "CYP51A1 reaction: lanosterol -> 4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+   "inputs": [
+    "lanosterol"
+   ],
+   "outputs": [
+    "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-25_1216",
+   "leg_dir": "runs_verify/2026-08-25_1216/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "row_index": 5,
+   "name": "LpxH reaction",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxydecanoyl)-glucosamine"
+   ],
+   "outputs": [
+    "lipid IVA"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-25_1216",
+   "leg_dir": "runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 5,
+   "name": "LpxH dephosphorylation",
+   "inputs": [
+    "UDP-2,3-diacylglucosamine"
+   ],
+   "outputs": [
+    "tetra-acylated disaccharide intermediate"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-25_1216",
+   "leg_dir": "runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "row_index": 6,
+   "name": "LpxD acylation",
+   "inputs": [
+    "UDP-3-O-(R-3-hydroxymyristoyl)-α-D-glucosamine"
+   ],
+   "outputs": [
+    "UDP-2,3-diacylglucosamine"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-27_1341",
+   "leg_dir": "runs_verify/2026-08-27_1341/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-mediated condensation and cyclization",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-phosphopantetheinyl-EntB",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-27_1341",
+   "leg_dir": "runs_verify/2026-08-27_1341/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 2,
+   "name": "DHCR24 (3β-hydroxysterol Δ24-reductase) reaction",
+   "inputs": [
+    "desmosterol"
+   ],
+   "outputs": [
+    "cholesterol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "audit_repair",
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-27_1341",
+   "leg_dir": "runs_verify/2026-08-27_1341/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 3,
+   "name": "cholesterol oxidation to oxysterols",
+   "inputs": [
+    "cholesterol"
+   ],
+   "outputs": [
+    "oxysterols"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "audit_repair"
+   ],
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-28_1816",
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "glycine to heme (ferrochelatase-catalyzed)",
+   "inputs": [
+    "iron"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-28_1816",
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 1,
+   "name": "ALAS2 reaction (glycine to δ-aminolevulinic acid)",
+   "inputs": [
+    "Glycine"
+   ],
+   "outputs": [
+    "δ-aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-28_1816",
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "ferrochelatase reaction",
+   "inputs": [
+    "protoporphyrin IX",
+    "iron"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-28_1816",
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Enterobactin assembly (EntD/EntE/EntF complex)",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-28_1816",
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Assembly of enterobactin (synthase complex)",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-28_1816",
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 4,
+   "name": "Enterobactin binding Fe3+",
+   "inputs": [
+    "enterobactin",
+    "Fe3"
+   ],
+   "outputs": [
+    "ferri-enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-28_1816",
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12782028/research",
+   "paper": "PMC12782028",
+   "row_index": 3,
+   "name": "cholesterol oxidation to oxysterol",
+   "inputs": [
+    "cholesterol"
+   ],
+   "outputs": [
+    "oxysterol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-28_1816",
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 2,
+   "name": "DHCR24 reaction",
+   "inputs": [
+    "desmosterol"
+   ],
+   "outputs": [
+    "cholesterol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-08-28_1816",
+   "leg_dir": "runs_verify/2026-08-28_1816/papers/PMC13231680/research",
+   "paper": "PMC13231680",
+   "row_index": 0,
+   "name": "phthalylsulfacetamide decomposition to sulfacetamide",
+   "inputs": [
+    "phthalylsulfacetamide"
+   ],
+   "outputs": [
+    "sulfacetamide"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": [
+    "audit_repair"
+   ],
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12096016/research",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-catalyzed enterobactin assembly",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF-catalyzed enterobactin synthesis",
+   "inputs": [
+    "2,3-dihydroxybenzoyl-AMP",
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "SFXN4 modulation of heme biosynthesis",
+   "inputs": [
+    "glycine"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "exact_glycine_heme",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "row_index": 1,
+   "name": "ferrochelatase reaction",
+   "inputs": [
+    "iron"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": [
+    "audit_repair"
+   ],
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "δ-aminolevulinic acid synthesis from glycine and succinyl-CoA",
+   "inputs": [
+    "Glycine",
+    "succinyl-CoA"
+   ],
+   "outputs": [
+    "δ-aminolevulinic acid"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": [
+    "audit_repair"
+   ],
+   "criteria": [
+    "no_paper_and_no_rag"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 1,
+   "name": "SFXN4-modulated ferrochelatase reaction (heme synthesis step)",
+   "inputs": [
+    "iron"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "failed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "row_index": 6,
+   "name": "LpxK reaction",
+   "inputs": [
+    "UDP-2,3-diacylglucosamine"
+   ],
+   "outputs": [
+    "lipid A"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 2,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Enterobactin assembly (EntD/EntE/EntF complex)",
+   "inputs": [
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "enterobactin synthase complex reaction",
+   "inputs": [
+    "2,3-dihydroxybenzoate-AMP (DHB-AMP)"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 2,
+   "name": "DHCR24 reaction",
+   "inputs": [
+    "desmosterol"
+   ],
+   "outputs": [
+    "cholesterol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "committed",
+   "run": "runs_verify/2026-09-01_1612",
+   "leg_dir": "runs_verify/2026-09-01_1612/papers/PMC12856317/strict",
+   "paper": "PMC12856317",
+   "row_index": 1,
+   "name": "heme inhibition of ALAS2",
+   "inputs": [
+    "heme"
+   ],
+   "outputs": [
+    "ALAS2",
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 1,
+   "own_lineage_stages": null,
+   "criteria": [
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "preserved_untracked",
+   "run": "runs_verify/2026-09-02_2052",
+   "leg_dir": "runs_verify/2026-09-02_2052/papers/PMC12096016/strict",
+   "paper": "PMC12096016",
+   "row_index": 4,
+   "name": "EntF reaction",
+   "inputs": [
+    "L-serine"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "preserved_untracked",
+   "run": "runs_verify/2026-09-02_2052",
+   "leg_dir": "runs_verify/2026-09-02_2052/papers/PMC12180156/strict",
+   "paper": "PMC12180156",
+   "row_index": 0,
+   "name": "heme biosynthesis reaction",
+   "inputs": [
+    "glycine"
+   ],
+   "outputs": [
+    "heme"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 0,
+   "own_lineage_stages": null,
+   "criteria": [
+    "exact_glycine_heme",
+    "no_paper_and_no_rag",
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  },
+  {
+   "population": "preserved_untracked",
+   "run": "runs_verify/2026-09-02_2052",
+   "leg_dir": "runs_verify/2026-09-02_2052/papers/PMC12452463/research",
+   "paper": "PMC12452463",
+   "row_index": 3,
+   "name": "Enterobactin assembly (enterobactin synthase complex)",
+   "inputs": [
+    "DHB-AMP"
+   ],
+   "outputs": [
+    "enterobactin"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": []
+  },
+  {
+   "population": "preserved_untracked",
+   "run": "runs_verify/2026-09-02_2052",
+   "leg_dir": "runs_verify/2026-09-02_2052/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "row_index": 2,
+   "name": "DHCR24 reaction",
+   "inputs": [
+    "desmosterol"
+   ],
+   "outputs": [
+    "cholesterol"
+   ],
+   "gold_matches_a_signature": false,
+   "gold_signature_count": 3,
+   "own_lineage_stages": [
+    "paper_extraction"
+   ],
+   "criteria": [
+    "precursor_terminal_shortcut"
+   ],
+   "release_status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "pwml_files": [
+    "pathway.review_required.pwml"
+   ]
+  }
+ ]
+}

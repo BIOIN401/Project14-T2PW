@@ -1,0 +1,281 @@
+{
+ "F-179": {
+  "finding": "F-179",
+  "title": "false-positive biological export: fabricated one-step pathway collapse",
+  "classification": "production defect / false-positive biological export",
+  "source_leg": "runs_verify/2026-09-02_2052/papers/PMC12180156/strict",
+  "result_txt_failure_lines": [
+   "RESULT: PASS (with warnings)",
+   "message    : strict run completed; pathway.review_required.pwml is 19563 bytes",
+   "blocking_issues = 0"
+  ],
+  "release_facts": {
+   "status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "semantic_not_evaluated_reason": ""
+  },
+  "gate_errors": {
+   "gate_fail_report.json": {
+    "ok": null,
+    "status": "failed",
+    "phase": "initial_post_normalization",
+    "errors": [
+     {
+      "path": "/entities/proteins/0",
+      "reason": "Protein 'ALAS2' is missing a UniProt or DrugBank identifier."
+     },
+     {
+      "path": "/entities/proteins/1",
+      "reason": "Protein 'ferrochelatase' is missing a UniProt or DrugBank identifier."
+     }
+    ]
+   },
+   "final_stage3_gate_report.json": {
+    "ok": true,
+    "status": null,
+    "phase": "final_pre_export",
+    "errors": []
+   }
+  },
+  "canonical_reaction_rows": [
+   {
+    "row_index": 0,
+    "name": "heme biosynthesis reaction",
+    "inputs": [
+     "glycine"
+    ],
+    "outputs": [
+     "heme"
+    ],
+    "enzymes": [
+     "ALAS2 complex",
+     "ferrochelatase complex"
+    ],
+    "has_provenance_lineage": false,
+    "lineage_stages": null,
+    "has_rag_provenance": false,
+    "evidence_chars": 72
+   }
+  ],
+  "participant_provenance": [
+   {
+    "kind": "compounds",
+    "name": "glycine",
+    "lineage": [
+     {
+      "stage": "paper_extraction",
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "sources": []
+     },
+     {
+      "stage": "identifier_mapping",
+      "origin": "unresolved",
+      "paper_explicit": "not_evaluated",
+      "sources": []
+     }
+    ],
+    "rag_provenance_source": null
+   },
+   {
+    "kind": "compounds",
+    "name": "heme",
+    "lineage": [
+     {
+      "stage": "paper_extraction",
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "sources": []
+     },
+     {
+      "stage": "identifier_mapping",
+      "origin": "database_grounded",
+      "paper_explicit": "not_evaluated",
+      "sources": [
+       "14875-96-8",
+       "1799",
+       "24604415",
+       "C00032",
+       "CHEBI:17627",
+       "DB02577",
+       "HEME_A",
+       "HMDB0003178"
+      ]
+     },
+     {
+      "stage": "identifier_mapping",
+      "origin": "database_grounded",
+      "paper_explicit": "not_evaluated",
+      "sources": [
+       "14875-96-8",
+       "1799",
+       "24604415",
+       "C00032",
+       "CHEBI:17627",
+       "DB02577",
+       "HEME_A",
+       "HMDB0003178"
+      ]
+     }
+    ],
+    "rag_provenance_source": null
+   }
+  ],
+  "pwml_files": [
+   "pathway.review_required.pwml"
+  ]
+ },
+ "F-180": {
+  "finding": "F-180",
+  "title": "composite tokenizer misparses ionic charge notation (Fe3+)",
+  "classification": "production tokenizer defect, secondary/deferred",
+  "source_leg": "runs_verify/2026-09-02_2052/papers/PMC12452463/strict",
+  "result_txt_failure_lines": [
+   "RESULT: FAIL",
+   "failure_kind : contract",
+   "message      : post-pipeline validation failed: 8 blocking issue(s) at final_pre_export_stage3_gates",
+   "issue codes  : actor_schema_not_canonical, gate.expected_plus_tokens_found, gate.generated_protein_complex_wrapper_enterobactin_synthase_complex_, gate.composite_validation_failed",
+   "blocking_issues = 8"
+  ],
+  "release_facts": {
+   "status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "semantic_not_evaluated_reason": ""
+  },
+  "gate_errors": {
+   "gate_fail_report.json": {
+    "status": "failed",
+    "phase": "initial_post_normalization",
+    "error": "Composite entity 'ferric iron (Fe3+)' in /entities/compounds has no protein-like left component; unsupported."
+   },
+   "final_stage3_gate_report.json": {
+    "ok": false,
+    "status": null,
+    "phase": "final_pre_export",
+    "errors": [
+     {
+      "path": "/normalization_stats/n_plus_tokens_remaining",
+      "reason": "Expected 0 plus tokens, found 1."
+     },
+     {
+      "path": "/processes",
+      "reason": "Composite validation failed: Composite validation failed:\n/entities/compounds/5/name has '+' token: ferric iron (Fe3+)"
+     }
+    ]
+   }
+  }
+ },
+ "F-181": {
+  "finding": "F-181",
+  "title": "interactions reference registry entities that were never registered",
+  "classification": "production referential-integrity defect, secondary/deferred",
+  "source_leg": "runs_verify/2026-09-02_2052/papers/PMC12856317/strict",
+  "result_txt_failure_lines": [
+   "RESULT: FAIL",
+   "failure_kind : contract",
+   "message      : post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_stage3_gates",
+   "issue codes  : gate.registry_validation_failed",
+   "blocking_issues = 1"
+  ],
+  "release_facts": {
+   "status": "review_required",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "semantic_not_evaluated_reason": ""
+  },
+  "gate_errors": {
+   "gate_fail_report.json": {
+    "ok": null,
+    "status": "failed",
+    "phase": "initial_post_normalization",
+    "errors": [
+     {
+      "path": "/entities/proteins/0",
+      "reason": "Protein 'ALAS2' is missing a UniProt or DrugBank identifier."
+     },
+     {
+      "path": "/processes",
+      "reason": "Registry validation failed: Registry validation failed:\n/processes/interactions/1/entity_2 unknown entity: HRM3\n/processes/interactions/2/entity_2 unknown entity: HRM6"
+     }
+    ]
+   },
+   "final_stage3_gate_report.json": {
+    "ok": true,
+    "status": null,
+    "phase": "final_pre_export",
+    "errors": []
+   }
+  }
+ },
+ "F-182": {
+  "finding": "F-182",
+  "title": "final gate report never emitted; leg fails as final_gate_report_missing",
+  "classification": "lifecycle/evaluation observability defect, NOT automatically biological failure",
+  "source_leg": "runs_verify/2026-09-02_2052/papers/PMC12444477/strict",
+  "result_txt_failure_lines": [
+   "RESULT: FAIL",
+   "failure_kind : contract",
+   "message      : post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_gate_lifecycle [final_gate_report_missing]",
+   "issue codes  : gate.gate_lifecycle",
+   "blocking_issues = 1"
+  ],
+  "release_facts": {
+   "status": "diagnostic_only",
+   "semantic_evaluation": "passed",
+   "strict_gates_passed": true,
+   "semantic_not_evaluated_reason": ""
+  },
+  "gate_errors": {
+   "gate_fail_report.json": {
+    "ok": null,
+    "status": "failed",
+    "phase": "initial_post_normalization",
+    "errors": [
+     {
+      "path": "/entities/proteins/0",
+      "reason": "Protein 'LpxA' is missing a UniProt or DrugBank identifier."
+     },
+     {
+      "path": "/entities/proteins/2",
+      "reason": "Protein 'LpxD' is missing a UniProt or DrugBank identifier."
+     },
+     {
+      "path": "/entities/proteins/3",
+      "reason": "Protein 'LpxH' is missing a UniProt or DrugBank identifier."
+     },
+     {
+      "path": "/entities/proteins/6",
+      "reason": "Protein 'LpxL' is missing a UniProt or DrugBank identifier."
+     },
+     {
+      "path": "/entities/proteins/7",
+      "reason": "Protein 'LpxM' is missing a UniProt or DrugBank identifier."
+     },
+     {
+      "path": "/entities/proteins/8",
+      "reason": "Protein 'FtsH' is missing a UniProt or DrugBank identifier."
+     },
+     {
+      "path": "/entities/proteins/9",
+      "reason": "Protein 'LapB' is missing a UniProt or DrugBank identifier."
+     },
+     {
+      "path": "/entities/proteins/10",
+      "reason": "Protein 'YejM' is missing a UniProt or DrugBank identifier."
+     },
+     {
+      "path": "/entities/proteins/12",
+      "reason": "Protein 'ObgE' is missing species/organism."
+     },
+     {
+      "path": "/entities/proteins/12",
+      "reason": "Protein 'ObgE' is missing a UniProt or DrugBank identifier."
+     }
+    ]
+   },
+   "final_stage3_gate_report.json": "ABSENT"
+  }
+ }
+}
