@@ -9914,3 +9914,101 @@ within-run, reaction-specific) and none from a database grounding.** 4 focused t
    `participant_inheritance` a chunk join finding BOTH accepted and rejected records yields
    `indeterminate`, while at row tier it yields `external_rag_supported`. Changing it would move a
    published number and needs review first.
+
+---
+
+## ORCH-723 § 3 — `F-179` REPAIRED under a narrow unfreeze; production RE-FROZEN · 2026-09-03
+
+**Authority: `D-094`** (recorded in `DECISIONS.md`). `D-090` stands; exactly one seam was opened and
+is now closed again. `F-180`, `F-181`, `F-182` and the newly registered `F-183` were **not** fixed.
+
+### Production files changed — the entire diff
+
+| file | change |
+|---|---|
+| `src/t2pw/pipeline/reaction_support.py` | **NEW** leaf module. Reads provenance, mutates nothing. |
+| `src/t2pw/pipeline/stage_contracts.py` | `validate_pre_export` **only**, lines 354-400. |
+
+`src/t2pw/app/streamlit_app.py` is PROTECTED and was **read but never modified** —
+sha256 `47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632`, unchanged from
+session start. No gold, no cache, no run directory, no worktree touched.
+
+### The rule
+
+A canonical reaction is supported by **(A)** a `paper_stated` / `paper_explicit="explicit"` lineage
+entry, or **(B)** a `rag_literature` lineage entry or the row-level `rag_provenance` carrier.
+**(C)** deterministic transformations inherit support automatically, because support is **ANY**
+qualifying entry rather than the newest and `lineage.py` is append-only.
+
+**Never support alone:** `identifier_mapping` · `database_grounded` · ChEBI/KEGG/DrugBank/CAS/HMDB/
+UniProt/PathBank identifiers · entity normalization · the presence of substrate/product names
+elsewhere in the graph. **Identity is not occurrence.**
+
+**No paper id, pathway name, chemical name, gold reaction, reaction-count threshold or chemistry
+appears in the executable code** — asserted by a test that strips docstrings via `ast` and greps the
+re-rendered source. The discovery census's `terminal_product` / `precursor_terminal_shortcut`
+signals are deliberately **absent**.
+
+### Scope, stated honestly
+
+It is a **leg-level floor, not per-row enforcement**: it refuses a pathway in which NO reaction has
+support. **198 unattributed rows across the committed legs are still retained**, and **13 of the 28
+census-flagged rows sit in legs this rule permits.** The narrower per-row question is left open
+because the only per-row remedy at an exporter is deletion, which merge rule 8 forbids.
+
+### Measured effect — archives replayed through the production rule, nothing re-run
+
+| population | legs | supported | indeterminate | no_defensible_core |
+|---|---|---|---|---|
+| committed | 115 | 80 | 24 | **11** |
+| preserved (untracked) | 10 | 9 | 0 | **1** |
+
+Every blocked leg is `PMC12180156` or `PMC13231680` — the two `context_only` gold cases whose
+`export_rationale` says nothing is exportable. **5 previously-exported legs would no longer
+export**, one of them a bare `pathway.pwml`.
+
+**False-positive protection: 43 legs of `PMC12096016` / `PMC12782028` → 39 supported, 4
+indeterminate (pre-carrier), ZERO blocked.**
+
+Census replay of the 28 intersection rows: **13** in legs that remain exportable (a defensible core
+exists — **they are not all fabricated**), **7** indeterminate, **8** in blocked legs; of the 8 that
+had exported, **4** no longer would.
+
+### THE WAVE'S LESSON — revision 1 was REJECTED, and rightly
+
+The first revision raised the refusal on the **outer** stage report while the production caller
+branches on the **inner** `pwml_contract_report["ok"]`, which stayed `True`. **The export still
+happened. Eighteen focused tests passed over an unfixed defect** because every one asserted the
+outer report. Independent review traced the caller and caught it; I reproduced it before fixing.
+
+Revision 2 writes the issue into `pwml_contract_report`, so the caller's own decision variable
+flips, `output_path` comes back empty, and the finding is **persisted** in
+`pwml_required_field_gate_report.json` instead of vanishing with the exception. Four new tests
+assert the **caller's decision variable**.
+
+> **A gate that raises where nobody reads is not a gate.** Fourth time this project has shipped a
+> green suite over an unexercised real path.
+
+Two false claims in the module were corrected rather than defended: that `run_pwml_export` returned
+`ok=False` (untrue of revision 1), and that research mode downgrades this finding at the PWML seam
+(untrue in either — that caller does not use `run_stage_contract`; harmless because PWML
+deliverables are STRICT-only).
+
+### Gates
+
+focused **22** · `stage_contracts` + `stage8_export_contract` **51** · SMOKE **508** ·
+gold-readers **465 / 0 / 8 / 0** · **Chunk D 185/187 before AND after** — the two failures
+(`test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance`,
+`test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block`)
+are **PRE-EXISTING**, A/B-proved by stashing the patch and re-running: both fail at base.
+**Delta from this change on Chunk D: zero.** Zero surviving processes on every job.
+
+### Registered, NOT fixed
+
+`F-180` tokenizer · `F-181` referential integrity · `F-182` gate lifecycle ·
+**`F-183` (new): `pwml/writer.py` builds an IR by a second path that never calls
+`validate_pre_export`, so the F-179 rule has no reach there.** All deferred.
+
+### PRODUCTION IS RE-FROZEN
+
+`D-094` § 7. `D-090` governs again in full. **Do not continue into F-180/F-181 cleanup.**

@@ -5750,3 +5750,152 @@ stand. T-107, T-108 and T-109 remain immutable and `NOT ACCEPTED`. **T-110 is st
 > biological verdict and a withdrawn ruling together bought something none of them would have alone:
 > the knowledge that **evidence provenance is a first-class property of a reaction**, and that a
 > benchmark which cannot say *where a reaction came from* cannot say whether it should be there.
+
+---
+
+## D-094 — `F-179` was a REPEATED product-contract violation; the pre-export seam was narrowly unfrozen, repaired, and **RE-FROZEN** · 2026-09-03 · LOCKED
+
+**Product-owner ruling, transcribed by the Lead.** `D-090`'s production freeze stands in full.
+This entry records the ONE seam that was temporarily opened, why the threshold for opening it was
+met, what was changed, and that production is **frozen again**.
+
+### 1. Why the freeze was opened at all
+
+`F-179` crossed the predeclared threshold: **not an isolated limitation, a repeated
+anti-invention defect.** The read-only archive census (`evidence/rd093_shortcut_census.py`,
+committed) established, without re-running any leg:
+
+- the literal `glycine -> heme` collapse reproduced across **four runs over roughly one month**,
+  in **both modes**, under **five different reaction names**, and
+  `semantic_evaluation` recorded **`passed`** every time;
+- the broader intersection — a reaction producing the pathway's terminal product while carrying
+  **neither paper-stated nor RAG attribution** — covers **28 rows / 6 papers / 13 runs**;
+- **8** of those rows sat in legs that **exported a PWML**; **3** historical legs emitted a bare
+  `pathway.pwml`, the name `PRODUCT_CONTRACT` § 13 reserves for "ship it, no review needed";
+- an analogous **cholesterol** case on a different paper was **caught** by the gate, proving the
+  same class was protected inconsistently rather than not at all.
+
+**Classification: `product_contract_violation`.** Gold's `export_rationale` for the affected paper
+independently says nothing is exportable, and the pipeline exported a reaction no source states.
+
+### 2. The contract enforced, and the seam
+
+> **A canonical reaction may not be exported merely because its entities were successfully
+> normalized, mapped or identified. Every exported biological reaction must have defensible
+> reaction-level support, directly or through an explicitly supported lineage.**
+
+Permissible support: **(A)** target-paper reaction support (`paper_stated` /
+`paper_explicit="explicit"`); **(B)** external RAG reaction support (`rag_literature` lineage, or
+the row-level `rag_provenance` carrier, both already admission-gated); **(C)** deterministic
+inherited support — normalization, ID mapping, synonym replacement and canonicalization inherit
+support from an already-supported reaction where reaction identity is unchanged.
+
+**Never support on their own:** `identifier_mapping` · `database_grounded` · a ChEBI, KEGG,
+DrugBank, CAS, HMDB, UniProt or PathBank identifier · successful entity normalization · the
+presence of substrate/product names elsewhere in the graph. **Identity is not occurrence.**
+
+**Seam:** `t2pw.pipeline.stage_contracts.validate_pre_export`, plus one new leaf module
+`t2pw.pipeline.reaction_support`. It is the narrowest safe point: the canonical reaction set
+already exists, provenance is inspectable, no biology is generated, and a failure there already
+returns `ok=False` with an empty `output_path` so **no PWML is serialized**. Stage 1 extraction and
+RAG behaviour are untouched. `streamlit_app.py` — protected — was read and **not modified**.
+
+**(C) needs no rule of its own:** support is ANY qualifying lineage entry, never the newest, and
+`lineage.py` is append-only. *Identifier mapping modified a supported reaction* stays valid;
+*identifier mapping is the only discoverable reason the reaction exists* does not.
+
+### 3. Refusal, not deletion — and `review_required` is not a dumping ground
+
+Merge rule 8 forbids an exporter repairing biology after the freeze, and deleting the only row of a
+one-reaction payload would delete the pathway, not repair it. So the check **refuses serialization
+and leaves the payload untouched**, using the existing no-defensible-core behaviour. **No new
+output state was invented.**
+
+**`review_required` means valid biology with identified uncertainty. It does not license
+serializing chemistry with no defensible reaction-level support.** An unsupported pathway is not
+downgraded and shipped; it is not shipped.
+
+It fires **only when NO reaction in the payload is supported.** A payload with a defensible core
+plus some unattributed rows is not blocked — that narrower per-row question is deliberately left
+open rather than answered with a per-row deletion the exporter may not make.
+
+### 4. The archival-uncertainty guard
+
+`lineage_carrier_active` abstains where the provenance carrier was not running: absence there is a
+fact about the run, not about the biology. **`D-091`'s failure was collapsing "we cannot tell" into
+"it is unsupported", and that must not recur at a new seam.** Three verdicts stay apart by name:
+`supported` · `indeterminate` · `no_defensible_core`. Only the last is a violation.
+
+### 5. Measured effect — replayed on archives, nothing re-run
+
+| population | legs | supported | indeterminate | no_defensible_core |
+|---|---|---|---|---|
+| committed | 115 | 80 | 24 | **11** |
+| preserved (untracked) | 10 | 9 | 0 | **1** |
+
+**Every blocked leg is `PMC12180156` or `PMC13231680`** — the two `context_only` gold cases whose
+`export_rationale` independently says nothing is exportable. **5 previously-exported legs would no
+longer export**, including one bare `pathway.pwml`.
+
+**False-positive protection: of 43 legs of the two gold `strict_exportable` papers
+(`PMC12096016`, `PMC12782028`), 39 are `supported`, 4 are `indeterminate` (pre-carrier era) and
+ZERO are blocked.**
+
+Census replay of the 28 intersection rows: **13** sit in legs that remain exportable because a
+defensible core exists — **they are NOT all fabricated, and the rule does not pretend they are** —
+**7** indeterminate, **8** in blocked legs; of the 8 that had exported, **4** no longer would.
+
+### 6. Deliberately NOT fixed
+
+`F-180` (`ferric iron (Fe3+)` composite tokenizer) and `F-181` (`HRM3`/`HRM6` unregistered registry
+endpoints) remain **production defects, deferred**. `F-182` (`final_gate_report_missing`) remains a
+**lifecycle/observability defect, deferred**; it is not automatically a biological failure. **This
+wave was not broadened into another recovery sprint.**
+
+### 7. **PRODUCTION IS RE-FROZEN**
+
+The `F-179` seam is closed. `D-090` governs again in full: **no further production change without a
+new narrow authorization.** T-107, T-108 and T-109 remain immutable and `NOT ACCEPTED`; T-110
+remains unauthorized; `supported_reactions_complete` remains **UNSET** on all ten gold cases and was
+not touched.
+
+### 8. The standing lesson
+
+**A gate that reads provenance must be told what provenance MEANS.** The pipeline resolved glycine
+and heme to real identities, and every stage did its job correctly — extraction found nothing,
+mapping grounded what it was given, the exporter serialized what it received. Nothing was broken;
+the missing thing was a rule saying that **entity identity is not reaction occurrence.** The defect
+lived in the space between correct stages, which is exactly where a contract, and not a stage, has
+to stand.
+
+### 9. The repair was REJECTED on first review, and the reason is the wave's lesson
+
+**Independent review rejected revision 1 and was right.** The check raised its refusal on the
+OUTER stage report, while the production caller branches on the INNER
+`report["pwml_contract_report"]["ok"]` — which stayed `True`. Measured on the real archived
+payload: the contract aborted, the exception was caught, the caller fell through, and
+**`PMC12180156` still serialized `pathway.review_required.pwml`.** The defect was not fixed, and
+**eighteen focused tests passed over it** because every one of them asserted the outer report.
+
+**Revision 2 writes the issue into `pwml_contract_report` and sets that report's `ok = False`**, so
+the caller's own decision variable flips, the export returns `ok=False` with an empty
+`output_path`, and the finding is persisted in `pwml_required_field_gate_report.json` instead of
+vanishing with the exception. Four new tests assert **the caller's decision variable**, not the
+report the caller discards.
+
+> **This is the fourth time this project has shipped a green test suite over an unexercised real
+> path.** The rule is unchanged between revisions — what was wrong was the wiring, and only a
+> reviewer who traced the caller could see it. **A gate that raises where nobody reads is not a
+> gate.**
+
+Two review findings were corrected rather than argued: the module had asserted that
+`run_pwml_export` returns `ok=False` (untrue of revision 1) and that research mode downgrades this
+finding at the PWML seam (untrue in either revision — that caller does not route through
+`run_stage_contract`; it costs nothing because PWML deliverables are STRICT-mode only). Both now
+state what the code does.
+
+### 10. `F-183` registered, NOT fixed
+
+`pwml/writer.py` builds an IR by a second path that never calls `validate_pre_export`, so the
+F-179 rule has **no reach there**. Out of this authorization's boundary. **Registered as `F-183`,
+deferred**, alongside `F-180`, `F-181` and `F-182`.

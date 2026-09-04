@@ -354,11 +354,72 @@ def validate_pre_export(payload: Any, *, strict_db: bool = True) -> Report:
     pwml_report = validate_required_pwml_contract(payload, strict_db=strict_db)
     report["pwml_contract_report"] = pwml_report
     report["warnings"] = _issue_list(pwml_report.get("warnings"))
+
+    # F-179. PRODUCT_CONTRACT 2 ("no unsupported retained reactions") and 3 (every
+    # externally added process identifies the stage that introduced it and its
+    # supporting source), enforced for reactions at the last point before
+    # serialization. Reads provenance only -- no chemistry, no pathway names, no gold.
+    # Recorded on the report whatever the verdict, because "we could not tell" and
+    # "there is a defensible core" are different facts and both are worth reading.
+    from t2pw.pipeline.reaction_support import (
+        CODE_NO_DEFENSIBLE_REACTION_SUPPORT,
+        evaluate_reaction_support,
+        reaction_support_issue,
+    )
+
+    report["reaction_support_report"] = evaluate_reaction_support(payload)
+    support_issue = reaction_support_issue(payload)
+
+    if support_issue is not None:
+        # THE FINDING MUST LAND ON ``pwml_contract_report``, NOT ONLY ON THE OUTER
+        # REPORT, AND THAT IS THE WHOLE FIX. The production caller
+        # (``streamlit_app.py:4815``, inside ``run_pwml_export``) catches
+        # ``StageContractError`` and then decides on the INNER report:
+        #
+        #     required_gate_report = pre_export_contract.get("pwml_contract_report")
+        #     if not required_gate_report.get("ok", False):
+        #         return {"ok": False, "output_path": "", ...}
+        #
+        # An earlier revision of this hunk raised on the outer report only. The inner
+        # ``ok`` stayed True, the caller fell through, and the F-179 payload was still
+        # serialized -- eighteen green tests over an unfixed defect. Independent review
+        # caught it; measured on the real archived leg, the export proceeded.
+        #
+        # Writing it here also means the finding reaches DISK: the caller persists this
+        # very mapping as ``pwml_required_field_gate_report.json``, so the refusal is
+        # auditable in the run artifacts instead of vanishing with the exception.
+        pwml_report["ok"] = False
+        pwml_report["errors"] = list(_issue_list(pwml_report.get("errors"))) + [support_issue]
+        # ``ir.validate_required_pwml_contract`` guarantees ``summary.error_codes``
+        # mirrors ``errors`` (``ir.py:3087``). Updating the count alone would persist a
+        # self-contradictory artifact -- ``error_count: 1`` beside ``error_codes: []`` --
+        # and this mapping is written to disk as ``pwml_required_field_gate_report.json``
+        # for a later reader who has no way to know which field to trust.
+        summary = pwml_report.get("summary")
+        if isinstance(summary, dict):
+            summary["error_count"] = len(pwml_report["errors"])
+            summary["error_codes"] = sorted(
+                {code for code in (_safe_dict(issue).get("code")
+                                   for issue in pwml_report["errors"]) if code}
+            )
+
     if pwml_report.get("ok") is False:
         report["ok"] = False
         report["errors"] = _issue_list(pwml_report.get("errors"))
         report["summary"] = _summary(report)
-        _abort(report, "Pre-export PWML contract failed.")
+        # Name the reason the contract actually failed. When the ONLY error is the
+        # F-179 support finding, "PWML contract failed" would send a reader looking
+        # for a missing required field that is not there.
+        only_support = all(
+            _safe_dict(issue).get("code") == CODE_NO_DEFENSIBLE_REACTION_SUPPORT
+            for issue in report["errors"]
+        ) and bool(report["errors"])
+        _abort(
+            report,
+            "No exported reaction has defensible reaction-level support."
+            if only_support
+            else "Pre-export PWML contract failed.",
+        )
 
     report["summary"] = _summary(report)
     return report
