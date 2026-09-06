@@ -166,3 +166,48 @@ being invented.** Its outputs are judged on (a) the structural/product table tha
 count, graph validity, referential integrity, species, unprovenanced rows — and (b)
 **human biological review**, which is the point of the exercise. A pilot leg is never
 recorded as a benchmark pass or fail.
+
+---
+
+## THE PWML DENOMINATOR IS 10, NOT 20 — read this before quoting any pilot number
+
+**Measured over the project's entire committed history, not assumed:**
+
+| mode | legs | produced a `.pwml` |
+|---|---|---|
+| research | **153** | **0** |
+| strict | 156 | 34 |
+
+**Research mode has never produced a PWML, in 153 legs.** It is not a failure mode and not
+a regression: `bench/acceptance.py:125` defines `_STRICT_DELIVERABLES` as
+`("pathway.pwml", "pathway.review_required.pwml")`, and only a strict leg calls the
+exporter (`batch/driver.py:68`). **Research mode is diagnostic** — it contributes reaction
+extraction and RAG behaviour, not a PWML artifact.
+
+### Consequence for the pilot's tables
+
+The pilot runs **20 legs over 10 papers**, but only the **10 strict legs** can produce a
+PWML. Therefore:
+
+- **"PWML generated" is `n / 10`, never `n / 20`.** Quoting `n / 20` halves the reported
+  rate through a category error, and it is exactly the kind of figure that survives into an
+  abstract uncorrected.
+- **Research legs must never be counted as PWML failures.** A research leg with no `.pwml`
+  is behaving exactly as designed.
+- The two modes answer different questions and their denominators are **not summed** — the
+  same discipline `F-177` established for canonical vs fallback payloads and
+  `rd093_rag_metrics.py` for truncated vs untruncated legs.
+
+### The outcome classes are also not interchangeable
+
+A leg can end without a PWML for reasons that mean completely different things, and the
+report keeps them apart:
+
+| class | what it means | is it a product failure? |
+|---|---|---|
+| `scope_conflict` | Stage 0 read a pathway string that disagrees with the requested one — often the *same* pathway phrased differently | **No** — an instrument/agreement artifact, not a failure to recover chemistry |
+| contract `FAIL` | a gate blocked export, e.g. a referential-integrity violation | **The gate working.** No broken graph shipped. Counts against completeness, not against correctness |
+| `review_required` PWML | a PWML was produced and needs human review | **A SUCCESS** if the biology is useful — the charter is explicit |
+| research leg, no PWML | by design | **No** |
+
+**`release_ready` is not the success metric and `review_required` is not a failure.**
