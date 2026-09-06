@@ -5899,3 +5899,105 @@ state what the code does.
 `pwml/writer.py` builds an IR by a second path that never calls `validate_pre_export`, so the
 F-179 rule has **no reach there**. Out of this authorization's boundary. **Registered as `F-183`,
 deferred**, alongside `F-180`, `F-181` and `F-182`.
+
+---
+
+## D-095 — `F-183` classified as NOT a live export bypass; ONE narrow admission correction authorized for the nominalized-conversion over-rejection; production RE-FROZEN on merge · 2026-09-06 · LOCKED
+
+**Authority:** the product owner's final-pass charter of 2026-09-06, which delegates two
+decisions and no more — the `F-183` classification, and *"exactly one narrow admission
+correction"* if and only if a clear repeated over-rejection mechanism is demonstrated.
+Evidence: `ORCH-724-ADMISSION-AUDIT.md` and `evidence/g11/ORCH-724/`.
+
+### 1. `F-183` — CLASSIFIED, no change, does not delay the project
+
+`writer.run_pwml_pipeline_export` is reachable **only** from `scripts/run_pwml.py`
+(`README.md:40`) and from tests. No batch run, benchmark, app export or script invokes it.
+Every product PWML is written through `batch/driver.py` → `AppTest` →
+`streamlit_app.run_pwml_export`, where `validate_pre_export` (`:4788`) stands ahead of
+`DeterministicPwmlBuilder` (`:5003`) **in the same function**.
+
+**It is therefore NOT a live production export bypass.** It is a manual operator utility
+that converts an operator-supplied payload; it runs no LLM and invents no chemistry.
+`F-183` stays OPEN as a hygiene precondition — *if the CLI is ever wired into a batch or
+app flow it needs the seam first* — and is **not** work owed before the unseen cohort.
+
+### 2. The admission audit's finding
+
+All **41** curated core reactions passed the quote-verification screen; **none** was
+excluded, so the decision set is credible. At the product-relevant unit — *(run, leg,
+curated reaction)* — **95** pairs were never admitted, and the blocking reasons are
+**spread across five codes, not concentrated**. Most of the rejecting is CORRECT:
+`no_local_evidence_span` (20) is `F-179` working; `candidate_type_cannot_fill_gap` (11) is
+a reaction offered against an enzyme-identity or compartment gap, which it genuinely
+cannot fill; `evidence_states_no_reaction_relation` (8) held up on inspection.
+
+**Exactly one code is a demonstrated over-rejection with a single general cause:**
+`evidence_relation_roles_unassignable`. As sole blocker on curated-correct chemistry over
+untruncated legs it accounts for **294 rejections across only 12 distinct spans**, of
+which **71.8% are one construction** — a nominalized `conversion of X to Y` whose catalyst
+follows in a `catalyzed by …` phrase or parenthetical. No template in
+`_ALL_PROSE_PATTERNS` reads it: `catalyzes_to_subjectless` requires the governing verb.
+`parse_span_relation` returns `None` on all of them, verified directly. The reactions lost
+include **the first step of the enterobactin pathway** (`PMC12452463:R1`,
+`PMC12096016:R1`).
+
+### 3. What is authorized — ONE template, and nothing else
+
+**`C-118`.** A narrow unfreeze of `D-090`, in the shape of `D-094`: one card, one
+boundary, re-frozen on merge.
+
+**Owned surface:** `src/t2pw/rag/admission.py` — the `_EXTRA_PROSE_PATTERNS` tuple and
+whatever minimal helper the new template needs; plus `tests/test_rag_relation_recall.py`
+for the pinned numbers and the named-false-negative list. **Nothing else in `src/`.**
+
+**The change:** add ONE template to `_EXTRA_PROSE_PATTERNS`, tried last, for the
+nominalized conversion with an explicitly attached catalyst. `_PROSE_PATTERNS` stays
+**byte-identical**, exactly as `C-061` kept it.
+
+**Binding constraints — a violation of any one is a reject:**
+
+1. **The catalyst must be bound only from an explicit `catalyzed by <actor>` attached to
+   the same nominalization.** If the sentence does not name one, the template yields no
+   catalyst. It may never infer, carry over or guess a catalyst.
+2. **Both participants must come from the span.** The template asserts only roles the
+   sentence assigns — no defaulting, no completion from the claim.
+3. **`F-179` is untouchable.** The template must NOT parse
+   `condensation of glycine and succinyl-CoA to produce …` — the nominalized-subject form
+   that is still a named known false negative and is the glycine→heme shape. This is a
+   **required negative control**, asserted in the test file.
+4. **Negation and hypotheticals must not parse**: `is not catalyzed by`, `No conversion of
+   … was observed`, `If … were catalyzed by`.
+5. **An anaphoric actor still yields no catalyst** — the existing
+   `test_an_anaphoric_actor_still_yields_no_catalyst` invariant extends to this template.
+6. `wrong` and `unsupported` in `test_recall_over_real_source_sentences_is_measured_and_pinned`
+   **must stay at zero.** Recall may move up and `missed` down; those two may not move.
+7. **No admission threshold, score cutoff, organism rule, pathway rule or gap-type rule is
+   touched.** Database or entity identity is still not reaction evidence.
+8. Every rejection record the gate writes today is still written.
+
+**Explicitly NOT authorized in this pass** — naming them so a later reader does not read
+the silence as permission: the copula-adverb form (`is first converted to`, 22.4%); the
+locant-comma and multi-clause artifacts behind `evidence_relation_disagrees_with_claim`;
+gap routing, so that a reaction proposed against an enzyme-identity gap could be re-offered
+against a connectivity gap. All three are real. **One correction was authorized and one is
+being taken.**
+
+### 4. Required before merge
+
+`G9` applies and this is a **correction of pre-existing observable behaviour**, so the
+proof must **fail behaviourally on the base SHA** `70b6d7d2` and pass at the tip. Symbol
+absence is not proof.
+
+Also required: focused tests; the affected existing suites; the `F-179` regression
+(`evidence/f179_repair_regression.py`) with **zero** newly-blocked legs on `PMC12096016`
+and `PMC12782028`; `glycine → heme` still blocked; the integration smoke suite; and
+**independent review of the actual diff** by a reviewer that did not write it. All under
+`TEST_MATRIX` § 0 — bounded wrapper, `--basetemp`, zero surviving owned processes.
+
+### 5. On merge
+
+**PRODUCTION IS RE-FROZEN IMMEDIATELY.** `D-090` resumes in full. This unfreeze covers
+`C-118`'s boundary and expires with it. It is **not** authority for a second admission
+change, and a disappointing number on the unseen cohort does **not** reopen it — the
+product owner's stopping rule governs.
