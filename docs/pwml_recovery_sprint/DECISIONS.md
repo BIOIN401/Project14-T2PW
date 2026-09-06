@@ -6088,3 +6088,126 @@ Production ownership, the F-179 constraints, the negative controls, and the
 NOT-authorized list (copula-adverb form, `evidence_relation_disagrees_with_claim`
 artifacts, gap routing) all stand exactly as written in `D-095`. **Production RE-FREEZES
 on merge.**
+
+---
+
+## D-096 — `C-118` MERGED on `REV-118`'s `APPROVE`; PRODUCTION RE-FROZEN; `F-184` registered, NOT fixed · 2026-09-06 · LOCKED
+
+**`C-118` merged `a5ffdbeb` (`--no-ff`) from `agent/c118-nominalized-conversion` @ `ca11afe7`,
+three commits on base `70b6d7d2`. `D-095`'s narrow unfreeze is SPENT. `D-090` resumes in
+full: PRODUCTION IS FROZEN.**
+
+### The merge gates, all ten
+
+| rule | evidence |
+|---|---|
+| 1. dependency merged | none — `C-118` is the wave's only card |
+| 2. diff inside its boundary | `src/` touched in ONE file, two hunks, both after line 700; verified by the reviewer path-class by path-class |
+| 3. focused tests pass | 85 at tip (66 + 19) vs 68 at base |
+| 4. affected tests pass / baseline moved deliberately | 599 tip vs 582 base, **+17 = exactly the new tests**, 0 failed at both ends. The `C-061` golden moved **deliberately** under `D-095a` with the exact delta documented |
+| 5. independent review of the ACTUAL diff | `REV-118` **APPROVE** — and it regenerated rather than read: own `_PROSE_PATTERNS` hash, own golden at both revisions, own `G9` in both directions |
+| 6. no biological gate weakened to raise PWML output | proved by **tuple reordering**, below |
+| 7. incomplete-but-correct preserved | untouched — no release/refusal code in the diff |
+| 8. no exporter repairs biology post-freeze | untouched — the diff is upstream of the canonical graph |
+| 9. `G9` | fails **behaviourally** at `70b6d7d2` (10 failed / 56 passed; 9 of the 10 are `None`-where-a-relation-is-required or `ok == False`), passes at tip |
+| 10. integration smoke after merge | **508 passed**, exit 0, `FINAL SURVIVING COUNT : 0`, `cleanup : success`, pin verdict committed — `g11/ORCH-724/17-smoke-postmerge.json` |
+
+### `F-179` is not weakened, and the proof is stronger than "unreachable"
+
+The reviewer monkeypatched `_ALL_PROSE_PATTERNS` to put the new template **FIRST** and
+re-ran the real parser: the glycine/succinyl-CoA condensation form and eleven sibling
+nominalizations (`decarboxylation`, `cyclization`, `oxidation`, `formation`, …) all still
+return `None`. **Unreachable at any position — construction, not ordering.**
+
+The orchestrator then closed the reviewer's one carry-forward, which was the sharpest
+question anyone asked in this wave: *the F-179 block is on the head noun, not on the
+chemistry — so what if a paper writes the glycine step as a "conversion of"?* **It does.**
+`data/rag_index/acquire_cache/fulltext/429a937f77d12c24dd9223edc62a34cf.json` contains:
+
+> "This process involves **the conversion of glycine and succinyl-CoA into aminolaevulinic
+> acid (ALA)**, a reaction that requires pyridoxal 5′-phosphate … as a cofactor."
+
+At the tip that sentence still parses to **`None`** — it carries no attached `catalyzed
+by` — and `glycine → heme` against it is refused, exactly as at base. It occurs **0** times
+across 14,919 persisted evidence spans.
+
+And on a synthetic sentence that *does* carry an attached catalyst, the template reads
+`glycine + succinyl-CoA → aminolevulinic acid [ALAS1]` — **the one-step reaction the
+sentence actually states, correctly attributed** — and the fabricated `glycine → heme`
+claim against it is still **REFUSED** (`evidence_relation_disagrees_with_claim`).
+
+> **This is the important finding of the wave.** The `F-179` guarantee does not rest on the
+> template being unable to reach glycine. It rests on the gate **comparing the claim to the
+> relation**. Reading a sentence correctly and refusing a claim that sentence does not
+> support are different things, and the second is what protects the product.
+
+### The `F-179` corpus regression, and what it does NOT prove
+
+**Byte-identical to the committed baseline.** 80 supported / 24 indeterminate / 11
+no-defensible-core; 5 previously-exported-now-blocked, the same five as before; **zero
+newly-blocked legs on `PMC12096016` or `PMC12782028`.** `D-095` § 4 is satisfied.
+
+**Stated so nobody over-reads it:** that instrument replays archived payloads through
+`pipeline/reaction_support.py`, which `C-118` does not touch. It is **insensitive to this
+change by construction**, and an identical result is expected rather than informative. The
+evidence that actually carries this merge is the regenerated 2,000-span golden and the
+reordering proof, not this file.
+
+### `REV-118` Finding 2 — the certification of record
+
+`C-118`'s own bundle carries **22 reports and no `--pin-verdict` files**, violating
+`TEST_MATRIX` § 0 rule 10 (*"a run with no verdict is uncertifiable"*). The reviewer caught
+it and pre-empted it by re-running **every** gate itself, pinned.
+
+**RULING: `evidence/g11/REV-118/` + `evidence/g11/pin/REV-118/` is the CERTIFICATION OF
+RECORD for this merge** — 18 artifacts, 0 non-compliant, 9 direct pytest runs, **9 with
+committed pin verdicts**, 0 refused, 0 foreign src, 0 label mismatches, verified by the
+orchestrator. `C-118`'s reports are retained as the implementer's working evidence and are
+**explicitly not** the certification.
+
+This is not a lowering of rule 10. The certifying runs are pinned, measured-tree-verified
+and produced by an **independent operator**, which is a stronger basis than a writer
+certifying its own work. **Standing rule for future cards: pin from the first gate. A
+reviewer will not always be able to rescue an unpinned bundle.**
+
+### `F-184` — REGISTERED, NOT FIXED. Negation and hypothetical scoping across the template family
+
+`REV-118` Finding 1. `_NOT_NEGATED` is a fixed-width lookbehind immediately before
+`conversion`, so it catches the three shapes `D-095` § 3(4) named and misses post-posed and
+clausal denial. At the tip these parse and are admitted:
+
+- `Conversion of chorismate to isochorismate (catalyzed by EntC) was not observed`
+- `Compound X inhibits the conversion of chorismate to isochorismate (catalyzed by EntC)`
+- and the families `We did not observe …`, `There was no evidence of …`, `does not occur`,
+  `prevents`, `blocks`, `In the absence of …`, `Neither … nor …`, `It remains unclear
+  whether`, `putative`, `proposed`.
+
+**The reviewer calibrated before judging, and this is why it is not a reject: 8 of 15
+negation probes were ALREADY admitted at BASE**, through `catalyzes_to`, `converts_to` and
+`converting_to` — e.g. *"EntC does not catalyze the conversion of chorismate to
+isochorismate"* is admitted at base. `C-118` is the **first of fourteen templates to carry
+any negation guard at all**; base→tip is identical apart from the two nominalized rows.
+**The class is pre-existing and `C-118` makes it strictly narrower, not wider.**
+
+It is nonetheless a **live over-read class in the product** and is registered as `F-184`,
+**owner: post-publication.** It must be fixed across `_ALL_PROSE_PATTERNS`, not on one
+template — a guard on the newest template only would leave the twelve older routes open and
+create a false sense of coverage.
+
+**Carried into `F-184` and NOT fixed now: the `_NOT_NEGATED` comment overclaims.** It says
+the guard *"refuses the shapes a paper actually writes an absence in"*, which is false for
+post-posed negation; the two sentences before it correctly disclaim generality. The
+product owner's charter forbids extending this pass, so the correction rides with `F-184`
+rather than costing another implement/review cycle — **recorded here so the overclaim is on
+the register rather than only in the code.**
+
+`REV-118` Findings 3, 4 and 5 (coordinated `catalyzed by` attribution; cosmetic catalyst
+strings such as `EntC in vitro`; one docstring line that overclaims and self-corrects four
+paragraphs later) are **LOW, recorded, not fixed.** None admits chemistry a span does not
+state.
+
+### On merge
+
+**PRODUCTION IS RE-FROZEN. `D-090` governs in full.** `D-095` and `D-095a` are spent and
+are **not** authority for a second admission change. A disappointing number on the unseen
+cohort does **not** reopen production — the product owner's stopping rule governs.
