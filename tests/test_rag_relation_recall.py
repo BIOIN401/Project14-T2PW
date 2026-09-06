@@ -157,6 +157,10 @@ PAPERS = {
     "PMC12856317": "PMC12856317__a-reversible-feedback-mechanism-regulating-mito",
     "PMC13278307": "PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g",
     "PMC12096016": "PMC12096016__the-enterobactin-biosynthetic-intermediate-2-3",
+    # C-118: the paper the nominalized-conversion spans come from. It carries no
+    # LABELLED row — see the C-118 section at the end of this module for why the
+    # pinned instrument is left byte-identical.
+    "PMC12452463": "PMC12452463__enterobactin-a-key-player-in-bacterial-iron-acq",
 }
 RUN = ROOT / "runs" / "2026-07-28_0919" / "papers"
 
@@ -454,6 +458,14 @@ def test_recall_over_real_source_sentences_is_measured_and_pinned() -> None:
     assert len(wrong) == 0
     assert len(missed) == 4
     assert len(unsupported) == 0
+    # C-118 moved NONE of these, deliberately and measurably. The construction it
+    # recovers -- a bare nominalized "conversion of X to Y" with the catalyst in
+    # an attached "catalyzed by ..." -- does not occur anywhere in LABELLED, so
+    # there is no sentence here for it to move and the instrument is left
+    # byte-identical rather than grown to flatter the number. Its own measurement
+    # is the C-118 section at the end of this module, held to the same verbatim
+    # standard. A future change to that template that DID move a number here
+    # would therefore be visible as itself.
 
     # Metabolite-role and full-role recall are equal here, which is the point of
     # the correction: every sentence whose chemistry parses now also gets its
@@ -715,3 +727,252 @@ def test_the_two_menaquinone_clauses_are_read_from_the_joined_sentence() -> None
     assert validate_evidence_span(
         joined, inputs=["DMK"], outputs=["MK"], enzymes=["MenG"]
     ).ok
+
+
+# ---------------------------------------------------------------------------
+# C-118 (D-095): the nominalized conversion with an explicitly attached catalyst.
+# ---------------------------------------------------------------------------
+# ORCH-724 measured `evidence_relation_roles_unassignable` as the one repeated
+# over-rejection with a single general cause: 294 sole-blocker rejections of
+# curated-correct chemistry over 12 distinct spans, 71.8% of them ONE
+# construction — a bare nominalized "conversion of X to Y" whose catalyst
+# follows in a "catalyzed by ..." parenthetical or participial phrase. No
+# template read it: `catalyzes_to_subjectless` requires the governing verb
+# ("catalyzes the conversion of A to B"), and these sentences put the
+# nominalization first and the catalyst after. The reactions lost include the
+# FIRST STEP OF THE ENTEROBACTIN PATHWAY (`PMC12452463:R1`, `PMC12096016:R1`).
+#
+# Why these spans are not added to `LABELLED`. The labelled set is the pinned
+# measurement instrument, and growing it while measuring against it inflates the
+# very number being reported. It is left byte-identical on purpose: the recall
+# pin below therefore reads "C-118 moved nothing in the instrument", which is a
+# checkable no-regression statement, and this construction is measured here, in
+# its own section, against the same standard — every span asserted verbatim in
+# a committed source artifact before any role is asserted about it.
+NOMINALIZED_PMC = "PMC12452463"
+
+#: The four spans, verbatim from the committed archive of the rejection records,
+#: each of which `parse_span_relation` returned `None` for at base SHA 70b6d7d2.
+#: All four state the same reaction: chorismate -> isochorismate, catalysed by
+#: EntC, which the papers also name in full as "isochorismate synthase (EntC)".
+NOMINALIZED_CONVERSION_SPANS: tuple = (
+    "conversion of chorismate to isochorismate (catalyzed by EntC)",
+    "the conversion of chorismate to isochorismate (catalyzed by EntC)",
+    "Chorismate to Isochorismate : The pathway begins with the conversion of "
+    "chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) .",
+    "The key steps in enterobactin production, a catechol-type siderophore, "
+    "include the conversion of chorismate to isochorismate (catalyzed by EntC), "
+    "formation of 2,3-dihydroxybenzoate (DHB) by EntB, activation of DHB to DHB",
+)
+
+#: The one template C-118 added, or `None` on a tree that does not have it. The
+#: lookup is tolerant on purpose: the G9 proof is BEHAVIOURAL (the parses below),
+#: and the pattern-level safety controls must be able to run — and pass — on the
+#: base tree too, where they are vacuously true. Symbol absence proves nothing
+#: and is never asserted here.
+def _c118_template():
+    from t2pw.rag.admission import _EXTRA_PROSE_PATTERNS
+
+    for name, pattern in _EXTRA_PROSE_PATTERNS:
+        if name == "nominalized_conversion_catalyzed_by":
+            return pattern
+    return None
+
+
+@pytest.mark.parametrize("span", NOMINALIZED_CONVERSION_SPANS)
+def test_the_nominalized_conversion_spans_are_verbatim_source(span) -> None:
+    """Real paper text, not a paraphrase, on the same standard as ``LABELLED``.
+
+    Whitespace collapsing is the only transformation. These come out of the
+    committed rejection archive; this asserts they also occur, exactly, in the
+    checked-in source text of the paper they were extracted from.
+    """
+    artifact = artifact_for(NOMINALIZED_PMC)
+    assert artifact.exists(), artifact
+    body = _norm(artifact.read_text(encoding="utf-8", errors="replace"))
+    assert _norm(span) in body, (
+        f"{NOMINALIZED_PMC}: not verbatim in "
+        f"{artifact.relative_to(ROOT).as_posix()}\n  {span!r}"
+    )
+
+
+@pytest.mark.parametrize("span", NOMINALIZED_CONVERSION_SPANS)
+def test_the_nominalized_conversion_parses_with_its_stated_roles(span) -> None:
+    """G9: this FAILS on base SHA 70b6d7d2, where every one of these is ``None``.
+
+    Substrate, product and catalyst all come from the span. Nothing is defaulted
+    and nothing is completed from a claim: the sentence names all three.
+    """
+    relation = parse_span_relation(span)
+    assert relation is not None, span
+    assert relation.pattern == "nominalized_conversion_catalyzed_by"
+    assert relation.inputs == ["chorismate"]
+    assert relation.outputs == ["isochorismate"]
+    assert len(relation.catalysts) == 1
+    spellings = {_norm(s).casefold() for s in actor_spellings(relation.catalysts[0])}
+    assert "entc" in spellings, relation.catalysts
+    assert relation.reversible is False
+
+
+@pytest.mark.parametrize("span", NOMINALIZED_CONVERSION_SPANS)
+def test_the_enterobactin_first_step_now_validates_end_to_end(span) -> None:
+    """Through the real gate: the claim the papers state is admitted, and only it.
+
+    This is the product effect of the parse above — `PMC12452463:R1` /
+    `PMC12096016:R1`, the first step of the enterobactin pathway, was refused as
+    `evidence_relation_roles_unassignable` on every leg it was retrieved for.
+    """
+    assert validate_evidence_span(
+        span, inputs=["chorismate"], outputs=["isochorismate"], enzymes=["EntC"]
+    ).ok
+
+    # ... and the gate is not thereby loosened. A reversed reaction, a catalyst
+    # the span never attached, and a compound the span never mentions are all
+    # still refused against exactly the same evidence.
+    for inputs, outputs, enzymes in (
+        (["isochorismate"], ["chorismate"], ["EntC"]),
+        (["chorismate"], ["isochorismate"], ["EntB"]),
+        (["chorismate"], ["2,3-dihydroxybenzoate"], ["EntC"]),
+    ):
+        assert not validate_evidence_span(
+            span, inputs=inputs, outputs=outputs, enzymes=enzymes
+        ).ok, (inputs, outputs, enzymes)
+
+
+def test_the_nominalized_subject_form_is_still_refused() -> None:
+    """REQUIRED NEGATIVE CONTROL (D-095 constraint 3). F-179 is untouchable.
+
+    "condensation of glycine and succinyl-CoA to produce aminolevulinic acid" is
+    the nominalized-SUBJECT form. It is the glycine->heme shape the whole F-179
+    repair exists to block, it is a NAMED known false negative in
+    :func:`test_the_known_false_negatives_are_named_not_hidden`, and C-118 must
+    not widen into it.
+
+    It cannot, by construction rather than by ordering: the template's head noun
+    is the literal word ``conversion``, not the :data:`_NOMINALIZATION_RE` family,
+    so no amount of rewriting the rest of that sentence brings it into range.
+    """
+    glycine = "condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+    body = _norm(artifact_for("PMC12856317").read_text(encoding="utf-8", errors="replace"))
+    assert _norm(glycine) in body
+
+    assert parse_span_relation(glycine) is None
+
+    template = _c118_template()
+    if template is not None:
+        assert template.search(glycine) is None
+        # Not even when the subject form is handed the attached catalyst that is
+        # the ONLY thing this template adds.
+        for hostile in (
+            "condensation of glycine and succinyl-CoA to produce aminolevulinic "
+            "acid (catalyzed by ALAS1)",
+            "the condensation of glycine and succinyl-CoA, catalyzed by ALAS1",
+            "decarboxylation of 2-oxoglutarate to intermediate I (catalyzed by MenD)",
+        ):
+            assert template.search(hostile) is None, hostile
+
+    # The named-false-negative list is unchanged: C-118 recovers a construction
+    # that the labelled corpus does not contain, so nothing left this list.
+    _mets, _full, _wrong, missed, _unsupported = _classify()
+    assert "condensation of glycine an" in sorted(s[:26] for _pmc, s in missed)
+
+
+def test_a_negated_or_hypothetical_conversion_is_not_read_as_a_reaction() -> None:
+    """D-095 constraint 4. An absence, a denial and a supposition are not evidence.
+
+    Two independent things refuse these. The template requires the ``catalyzed
+    by`` to be attached to THIS nominalization by a parenthesis or a comma, so a
+    denial ("is not catalyzed by") and a supposition ("were catalyzed by") never
+    reach the actor group at all. And :data:`_NOT_NEGATED` refuses the shape that
+    would otherwise slip through — a negated sentence that DOES carry the
+    parenthetical.
+    """
+    template = _c118_template()
+    for span in (
+        "The conversion of chorismate to isochorismate is not catalyzed by EntC",
+        "No conversion of chorismate to isochorismate was observed",
+        "No conversion of chorismate to isochorismate (catalyzed by EntC) was observed",
+        "Not the conversion of chorismate to isochorismate (catalyzed by EntC)",
+        "If the conversion of chorismate to isochorismate were catalyzed by EntC, "
+        "the pathway would be shorter",
+        "The conversion of chorismate to isochorismate has never been catalyzed by EntC",
+    ):
+        if template is not None:
+            assert template.search(span) is None, span
+        relation = parse_span_relation(span)
+        assert relation is None or relation.pattern != (
+            "nominalized_conversion_catalyzed_by"
+        ), (span, relation)
+
+
+def test_an_unattached_catalyst_is_never_carried_onto_the_nominalization() -> None:
+    """D-095 constraint 1. No ``catalyzed by`` attached here means no catalyst.
+
+    The template does not fire at all when the sentence names no catalyst, so the
+    span keeps returning exactly what it returned before C-118 — nothing — rather
+    than a relation with a catalyst borrowed from somewhere else in the text. A
+    statement terminator between the two is likewise not an attachment.
+    """
+    template = _c118_template()
+    for span in (
+        "the conversion of chorismate to isochorismate",
+        "The pathway begins with the conversion of chorismate to isochorismate",
+        "the conversion of chorismate to isochorismate; catalyzed by EntC",
+    ):
+        if template is not None:
+            assert template.search(span) is None, span
+        relation = parse_span_relation(span)
+        assert relation is None or relation.pattern != (
+            "nominalized_conversion_catalyzed_by"
+        ), (span, relation)
+
+
+def test_the_nominalized_conversion_keeps_the_anaphoric_actor_refusal() -> None:
+    """D-095 constraint 5, through the real :func:`_clean_actor`, not the regex.
+
+    ``which`` is not a protein name and neither is ``the enzyme``. The relation
+    survives — the sentence really does state a conversion — but it carries NO
+    catalyst, so a candidate naming one is refused as an unsupported catalyst
+    injection, exactly as it is for every other subjectless construction.
+    """
+    for span in (
+        "the conversion of chorismate to isochorismate (catalyzed by the enzyme)",
+        "the conversion of chorismate to isochorismate, catalyzed by these enzymes",
+        "the conversion of chorismate to isochorismate, catalyzed by this enzyme",
+    ):
+        relation = parse_span_relation(span)
+        assert relation is not None, span
+        assert relation.pattern == "nominalized_conversion_catalyzed_by"
+        assert relation.inputs == ["chorismate"]
+        assert relation.outputs == ["isochorismate"]
+        assert relation.catalysts == [], (span, relation.catalysts)
+
+        refused = validate_evidence_span(
+            span, inputs=["chorismate"], outputs=["isochorismate"], enzymes=["EntC"]
+        )
+        assert not refused.ok
+        assert any(
+            r.startswith("unsupported_catalyst_injection") for r in refused.reasons
+        ), refused.reasons
+
+
+def test_the_new_template_is_tried_last_and_claims_nothing_an_older_one_reads() -> None:
+    """Order is load-bearing, and C-118 sits at the end of it.
+
+    ``HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate
+    (HepPP)`` contains a nominalized conversion, but it also names its actor
+    through the governing verb, and ``catalyzes_to`` must keep reading it. The
+    new template runs only where no earlier one produced a reading.
+    """
+    from t2pw.rag.admission import _ALL_PROSE_PATTERNS, _PROSE_PATTERNS
+
+    names = [name for name, _p in _ALL_PROSE_PATTERNS]
+    assert names[-1] == "nominalized_conversion_catalyzed_by"
+    assert names[: len(_PROSE_PATTERNS)] == [name for name, _p in _PROSE_PATTERNS]
+
+    governed = parse_span_relation(
+        "HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP)"
+    )
+    assert governed is not None
+    assert governed.pattern == "catalyzes_to"
+    assert governed.catalysts == ["HepPPS"]

@@ -701,19 +701,106 @@ _SYNTHESIS_VERB = (
     r"(?:s|es|ed)?"
 )
 
-#: Templates added by C-061, kept OUT of :data:`_PROSE_PATTERNS` so that constant
-#: stays byte-identical, and tried LAST for the same reason the actor-free forms
-#: are last: a template only ever runs on a construction no earlier one claimed.
+#: A negator sitting immediately before the nominalization. "No conversion of X
+#: to Y (catalyzed by E) was observed" REPORTS AN ABSENCE; reading it as a
+#: reaction would ship chemistry the paper explicitly denied. Written as separate
+#: fixed-width lookbehinds because ``re`` refuses a variable-width one, and as
+#: assertions rather than consumed tokens so they never shift the match start.
 #:
-#: One entry. "Subsequently, MenA joins DHNA and prenyl diphosphate to produce
-#: demethylmenaquinone (DMK)" is a paper-explicit, two-substrate reaction with its
-#: catalyst bound by the sentence's own subject, and NO existing template reads it
-#: at any position — measured, not assumed. The claim quoting it verbatim was
-#: therefore refused as disagreeing with its own evidence.
+#: The determiner rows are not redundant. The template may begin at the word
+#: ``conversion`` itself, so "Not the conversion of X to Y (catalyzed by E)" has
+#: its negator TWO words back and a one-word guard would miss it. Both windows
+#: are therefore spelled out.
+#:
+#: Deliberately a bounded literal list, not a general negation parser. Scoping a
+#: negation across arbitrary prose is not a thing a template can do, and this
+#: does not pretend to: it refuses the shapes a paper actually writes an absence
+#: in. The honest failure mode of a guard this narrow is refusing to read a
+#: sentence, which is what every other template here already does with a
+#: construction it cannot assign roles for.
+_NOT_NEGATED = (
+    r"(?<!\bno\s)(?<!\bnot\s)(?<!\bnor\s)(?<!\bnever\s)(?<!\bwithout\s)"
+    r"(?<!\bneither\s)"
+    r"(?<!\bno\sthe\s)(?<!\bnot\sthe\s)(?<!\bnor\sthe\s)(?<!\bnever\sthe\s)"
+    r"(?<!\bno\sa\s)(?<!\bnot\sa\s)(?<!\bnever\sa\s)(?<!\bno\ssuch\s)"
+)
+
+#: :data:`_ACTOR` with BALANCED parentheses, for a catalyst phrase that a
+#: parenthesis may also be closing around it.
+#:
+#: ``_ACTOR``'s token class contains ``(`` and ``)`` as ordinary characters, so
+#: on "(catalyzed by EntC)" it reads the catalyst as ``EntC)`` — it swallows the
+#: very bracket that terminates the phrase, and ``EntC)`` is a spelling of no
+#: protein. Making the tokens lazy instead is worse, not better: it then reads
+#: "isochorismate synthase (EntC) ." as ``isochorismate synthase (EntC``, an
+#: unbalanced OPEN bracket. So a parenthetical is matched as a whole token or not
+#: at all, and a bare token carries no bracket in either direction.
+#:
+#: A SEPARATE constant because :data:`_ACTOR` is shared by every historical
+#: template and must not move. It is strictly NARROWER than ``_ACTOR`` — same
+#: six-token cap, same leading-letter rule, fewer characters admitted per token —
+#: and :func:`_clean_actor` still re-imposes the four-word cap and the anaphor
+#: refusal on whatever it yields, so it cannot widen what counts as a protein
+#: name: "isochorismate synthase (EntC)" is read whole, and "the enzyme" still
+#: yields no catalyst at all.
+_ACTOR_PARENTHETICAL = r"\([^()]{1,60}\)"
+_ATTACHED_ACTOR = (
+    rf"[A-Za-z][\w\-/]*(?:\s+(?:{_ACTOR_PARENTHETICAL}|[\w\-/]+)){{0,5}}?"
+)
+
+#: Templates added by C-061 (and extended by C-118), kept OUT of
+#: :data:`_PROSE_PATTERNS` so that constant stays byte-identical, and tried LAST
+#: for the same reason the actor-free forms are last: a template only ever runs on
+#: a construction no earlier one claimed.
+#:
+#: ``actor_combines_to_make`` (C-061). "Subsequently, MenA joins DHNA and prenyl
+#: diphosphate to produce demethylmenaquinone (DMK)" is a paper-explicit,
+#: two-substrate reaction with its catalyst bound by the sentence's own subject,
+#: and NO existing template reads it at any position — measured, not assumed. The
+#: claim quoting it verbatim was therefore refused as disagreeing with its own
+#: evidence.
 #:
 #: The explicit ``to <produce|yield|form|give|generate>`` is load-bearing: it is
 #: what makes the phrase after it a PRODUCT rather than a destination, a cofactor
 #: or a location, so the template asserts a role the sentence actually assigns.
+#:
+#: ``nominalized_conversion_catalyzed_by`` (C-118, authorized by D-095). The
+#: measured construction is a bare nominalization whose catalyst follows it:
+#: "the conversion of chorismate to isochorismate (catalyzed by EntC)". No
+#: template reads it — ``catalyzes_to_subjectless`` requires the GOVERNING VERB
+#: ("catalyzes the conversion of A to B"), and these sentences put the
+#: nominalization first and the catalyst after, in a parenthetical or a
+#: participial phrase. ORCH-724 measured 294 sole-blocker
+#: ``evidence_relation_roles_unassignable`` rejections of curated-correct
+#: chemistry over 12 spans, 71.8% of them this one shape, including the first
+#: step of the enterobactin pathway.
+#:
+#: Four things make it narrow enough to be safe, each of them load-bearing:
+#:
+#: * the head noun is the literal ``conversion`` and nothing else. It is NOT the
+#:   :data:`_NOMINALIZATION_RE` family: "condensation of glycine and succinyl-CoA
+#:   to produce ..." is the nominalized-SUBJECT form, it is a named known false
+#:   negative, and it is the glycine->heme shape F-179 exists to block. This
+#:   template cannot reach it, by construction rather than by ordering;
+#: * the catalyst is bound ONLY from an explicit ``catalyzed by`` attached to this
+#:   same nominalization by a parenthesis or a comma. Nothing is inferred, carried
+#:   over from a neighbouring clause, or defaulted; a sentence naming no catalyst
+#:   simply does not match this template at all;
+#: * both participant groups exclude ``.;,()``, so the product side stops at the
+#:   parenthetical rather than swallowing it, and neither side can run across a
+#:   clause boundary into a different predicate;
+#: * the actor ends on a lookahead for ``) . , ;`` or end-of-span rather than on
+#:   :data:`_TAIL`. The highest-frequency span in the measured population does not
+#:   END at its catalyst — "... include the conversion of chorismate to
+#:   isochorismate (catalyzed by EntC), formation of 2,3-dihydroxybenzoate (DHB)
+#:   by EntB, ..." — so a ``_TAIL`` lookahead would refuse exactly the sentence
+#:   the correction is for.
+#:
+#: An anaphoric actor still yields NO catalyst: the phrase goes through the
+#: unchanged :func:`_clean_actor`, so "catalyzed by the enzyme" returns ``[]`` and
+#: a candidate naming an enzyme against it is still refused as an unsupported
+#: catalyst injection. The relation itself survives with an empty catalyst list,
+#: which is the same answer every other subjectless template already gives.
 _EXTRA_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
     (
         # "MenA joins DHNA and prenyl diphosphate to produce DMK"
@@ -721,6 +808,19 @@ _EXTRA_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
         re.compile(
             rf"(?P<enz>{_ACTOR})\s+{_SYNTHESIS_VERB}\s+(?P<lhs>{_ENTITY})\s+to\s+"
             rf"{_MAKE}(?P<rhs>{_ENTITY}){_TAIL}",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        # "the conversion of chorismate to isochorismate (catalyzed by EntC)" and
+        # "... the conversion of chorismate to isochorismate, catalyzed by
+        #  isochorismate synthase (EntC) ."
+        "nominalized_conversion_catalyzed_by",
+        re.compile(
+            rf"\b{_NOT_NEGATED}conversion\s+of\s+"
+            rf"(?P<lhs>[^.;,()]+?)\s+(?:in)?to\s+"
+            rf"(?P<rhs>[^.;,()]+?)\s*(?:\(\s*|,\s*)catal(?:yz|ys)ed\s+by\s+"
+            rf"(?P<enz>{_ATTACHED_ACTOR})\s*(?=[).,;]|$)",
             re.IGNORECASE,
         ),
     ),
