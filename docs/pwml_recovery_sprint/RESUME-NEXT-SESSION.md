@@ -1,6 +1,143 @@
 # RESUME — next session handoff
 
-## 0. CURRENT — **`F-179` CLOSED under narrow unfreeze `D-094`; production RE-FROZEN. `F-183` is the gate before the unseen cohort.** 2026-09-03.
+## 0. CURRENT — **ONE final bounded completeness pass, then fresh papers. The infrastructure phase is OVER.** 2026-09-03.
+
+> ## ▶ NEXT ACTION: one final bounded completeness pass
+>
+> **Use the existing 41-reaction curation corpus to determine whether the RAG admission gate is
+> obviously over-rejecting genuinely correct reactions.** Do only enough validation to answer that
+> product question. **If a repeated narrow over-rejection mechanism is demonstrated, permit ONE
+> evidence-preserving admission correction with F-179 regression protection. Otherwise make no
+> production change.**
+>
+> **After that decision, freeze code and configuration and proceed to fresh unseen-paper runs and
+> manual PWML evaluation. Do not start another infrastructure or optimization wave.**
+
+### The product objective — this is the whole thing
+
+> **Given a biological pathway paper, produce the most complete biologically defensible PWML
+> possible, while avoiding obvious fabricated chemistry and preserving useful partial pathways.**
+
+Everything else — evaluation frameworks, Phoenix, lineage instruments, RAG metrics, gold
+reconstruction — is **instrumentation that already exists and is DONE being built.** The project is
+deliberately no longer doing broad recovery or evaluation-infrastructure work.
+
+### The one question, and what counts as an answer
+
+**Is the RAG admission gate clearly rejecting a substantial number of genuinely correct,
+already-curated reactions?**
+
+The measurement that raises the question is committed and is not in dispute:
+
+| | |
+|---|---|
+| Retrieval **finds** the reaction | `Recall@5` = **93.0%** |
+| Gold signatures never retrieved at all | **55** |
+| Positive queries ending in `correct_candidate_rejected` | **1,123 of 1,212** |
+
+**Retrieval is not the bottleneck. Admission is.** The rejection reasons are already on disk in
+every `rag_admission_report.json` — `candidate_type_cannot_fill_gap`,
+`evidence_relation_roles_unassignable`, `evidence_states_no_reaction_relation`,
+`no_local_evidence_span`.
+
+**Score the rejections against the 41-reaction CURATION corpus, not the 19-signature gold.**
+`docs/pwml_recovery_sprint/curation/expected_core_*.json` holds **41 curated core reactions, 35
+major subprocesses and 64 important participants**, each with substrates, products, enzymes, a
+verbatim quote, a confidence and a rationale, produced by two independent curator sets. **The old
+sparse recovery gold (19 signatures) is not sufficient by itself to judge product completeness** —
+it is under half the curated truth, so precision scored against it reads far worse than reality.
+
+**Enough is enough.** A clear repeated mechanism — one reason code rejecting many curated
+reactions for the same wrong cause — is an answer. An exhaustive audit of all 1,123 is not
+required and is not wanted.
+
+### Bounds on the decision
+
+- **If YES** → ONE narrow, evidence-preserving admission correction. It must keep every rejection
+  record it already writes, and it must pass the F-179 regression (`evidence/f179_repair_regression.py`)
+  with **zero** newly-blocked legs on `PMC12096016` / `PMC12782028`. It needs a narrow
+  product-owner unfreeze, exactly like `D-094`.
+- **If NO** → **make no production change** and move on.
+
+Either way the next step after the decision is **fresh unseen papers and manual PWML evaluation.**
+
+**Verify the tip yourself:** `git rev-parse HEAD` = `git rev-parse origin/sprint/pwml-recovery`
+= `git ls-remote origin sprint/pwml-recovery`. **`main` untouched — local `7531692`, remote `03f1af5`.**
+Gold blob unchanged at `98739a59dd6c376f8a19968c7fa5dc3145be5b15`.
+
+### `F-183` — a quick reachability check, NOT a campaign
+
+**`F-183` is a known second writer/export path concern.** `pwml/writer.py` builds a PWML IR by a
+path that never calls `validate_pre_export`, so the `F-179` rule has no reach there.
+
+> **It should receive only a quick reachability check in the next session. It must not become
+> another large pre-evaluation engineering wave.**
+
+Determine which of three it is: **dead / test-only** · **live but already protected** · **live and a
+real F-179 bypass**. **If it is not clearly a live bypass, move on.** If it clearly is one, capable
+of exporting unsupported reactions, escalate narrowly. **No exhaustive historical blast-radius
+campaign is required before moving forward.**
+
+### Completed work — do not rebuild any of this
+
+| item | state |
+|---|---|
+| **`D-090`** production freeze | established and in force |
+| **`F-179`** repeated false-positive biological export | **CLOSED** |
+| **`D-094`** narrow unfreeze for the `F-179` seam | granted, used, and **re-frozen the same wave** |
+| the `glycine → heme` fabricated shortcut | **BLOCKED on the protected main export path** (`validate_pre_export`) |
+| `PMC12096016` and `PMC12782028` | **remained valid** under the F-179 regression — 39 supported / 4 indeterminate / **0 blocked** across their 43 legs |
+| Phoenix / evaluation tooling | **EXISTS** — `evidence/rd093_phoenix_ingest.py`, 1,314 spans verified out of the store |
+| reaction lineage tooling | **EXISTS** — `evidence/rd092_1_reaction_lineage.py` (`R-D092-1`) |
+| RAG metrics tooling | **EXISTS** — `evidence/rd093_rag_metrics.py`, seven outcomes kept apart |
+| two-table metrics | **EXISTS** — `evidence/rd093_two_table_metrics.py`, two denominators, never summed |
+| curation corpus | **EXISTS and is richer than gold** — 41 core reactions, 35 subprocesses, 64 participants |
+| `F-180` `Fe3+` tokenizer · `F-181` `HRM3`/`HRM6` registry · `F-182` gate lifecycle | **DEFERRED**, production defects, not this pass |
+
+### SUPERSEDED — none of this is the next action
+
+**Any instruction anywhere in this file, in `HANDOFF.md`, or in `prompts/` that says the next phase
+is one of the following is HISTORICAL and must not be acted on:**
+
+- more evaluation-framework construction · more Phoenix infrastructure ·
+  `supported_reactions_complete` work · large-scale gold reconstruction · broad recovery
+  engineering · re-running old benchmark milestones (T-107 / T-108 / T-109 stay immutable and
+  `NOT ACCEPTED`; **T-110 is not authorized**).
+
+`prompts/PROMPT-001-eval-framework.md` **was executed in `ORCH-723` and is spent. Do not paste it
+again.** `supported_reactions_complete` stays **UNSET** on all ten gold cases; `D-093` § 4 rules
+that the boolean is not the next task.
+
+### What the current numbers do and do not say
+
+- **Invention floor, independent of gold completeness:** **62 of 419** canonical rows (**14.8%**)
+  carry no paper-stated and no RAG attribution. Nothing anywhere claims a source for them.
+- **Precision against the 19-signature gold is 42.1%** — a **bound, not a rate**. Gold lists ~2
+  reactions per paper; the curation corpus lists 41. Do not quote 57.9% as a hallucination rate;
+  that is the mistake `D-091` was withdrawn for.
+- **Extraction is not the loss point:** fallback recall 91.5% vs canonical 60.0%. Caveat: different
+  evaluable-leg counts (53 vs 94), so it needs a same-leg paired comparison before it is firm.
+
+### Verified state at this tip — measure, do not trust
+
+| check | expected | evidence |
+|---|---|---|
+| Gold | `98739a59dd6c376f8a19968c7fa5dc3145be5b15`, `supported_reactions_complete` UNSET on all ten | `git hash-object` |
+| SMOKE | **508 passed** | `g11/ORCH-723/89-smoke-docs-fix.json` |
+| gold-readers split | **465 / 0 / 8 / 0** | `g11/ORCH-723/90-goldreaders-docs-fix.json` |
+| F-179 focused (+ `stage_contracts`, `stage8`) | **52 passed** | `g11/ORCH-723/86-f179-focused-r3.json` |
+| evaluation instruments focused | **58 passed** across four files | `g11/ORCH-723/33-rd092-dbgrounded-tests.json` |
+| F-179 corpus regression | 39 / 4 / **0 blocked** on the gold exportable papers | `g11/ORCH-723/85-f179-regression-r2.json` |
+| Chunk D | **185/187 before AND after** — both failures pre-existing, A/B-proved | `g11/chunkd/ORCH-723/` |
+| G11 strict | **58 artifacts, 0 non-compliant**, all four strict flags | `g11_evidence.py check --task ORCH-723` |
+| `streamlit_app.py` | sha256 `47e4fafa…`, **modified and never committed** | `git status --porcelain` |
+| Python processes | exactly two `ms-python.isort … lsp_server.py` — **match on FULL COMMAND LINE** | never on count or PID |
+
+> **`chunk_d_gate.py` child reports live in `evidence/g11/chunkd/<TASK>/`, not the task directory.**
+> That driver invokes pytest directly, so its child reports can never carry a measured-tree pin.
+> They are preserved with a README, each still carrying its own zero-survivor cleanup record.
+
+## 0-prevORCH723b — **SUPERSEDED by § 0 above, 2026-09-03.** Every fact it records STANDS — F-179 closed, D-094 granted and re-frozen, F-183 open. What is superseded is its status as current and its framing of F-183 as a gate requiring full scoping before the cohort: the product owner has since reduced F-183 to a QUICK REACHABILITY CHECK and made the admission-gate completeness pass the single next action. **`F-179` CLOSED under narrow unfreeze `D-094`; production RE-FROZEN.** 2026-09-03.
 
 > **⚠ NOTHING IS RUNNING AND NOTHING IS CHARTERED.** Heavy lock free (`C:/t/heavylock` absent), zero
 > sprint-owned Python beyond the two `ms-python.isort` LSP processes.

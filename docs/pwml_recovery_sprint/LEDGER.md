@@ -10050,3 +10050,63 @@ was invisible to anyone reading the live-state document.
 
 **Lesson.** *A ledger is appended to; an entry point is rewritten.* Appending to a document whose
 header states the next action leaves the header lying, and the header is what gets read.
+
+---
+
+## ORCH-723 § 5 — direction simplified by the product owner; entry points rewritten. DOCS ONLY · 2026-09-03
+
+**No code, no gold, no protected file, no run directory, no worktree.** `HANDOFF.md`,
+`RESUME-NEXT-SESSION.md` and this entry only. **No engineering or evaluation wave was started.**
+
+### The product-owner direction, recorded
+
+> **Given a biological pathway paper, produce the most complete biologically defensible PWML
+> possible, while avoiding obvious fabricated chemistry and preserving useful partial pathways.**
+
+**The project is no longer doing broad recovery or evaluation-infrastructure work.** Excessive
+testing and infrastructure expansion stop here.
+
+### The single next action
+
+**ONE final bounded completeness pass**, then fresh papers:
+
+> Use the existing **41-reaction curation corpus** to determine whether the RAG admission gate is
+> obviously over-rejecting genuinely correct reactions. Do only enough validation to answer that
+> product question. **If a repeated narrow over-rejection mechanism is demonstrated, permit ONE
+> evidence-preserving admission correction with F-179 regression protection. Otherwise make no
+> production change.** After that decision, freeze code and configuration and proceed to fresh
+> unseen-paper runs and manual PWML evaluation.
+
+The question is sharp because the measurement is already committed: retrieval finds the biology
+(`Recall@5` = **93.0%**, only **55** gold signatures never retrieved) while **1,123 of 1,212**
+positive queries end in `correct_candidate_rejected`.
+
+**Score against curation, not gold.** `curation/expected_core_*.json` holds **41 curated core
+reactions, 35 major subprocesses, 64 important participants** — more than double gold's 19
+signatures. **The old sparse recovery gold is not sufficient by itself to judge product
+completeness**, and precision scored against it (42.1%) is a bound, not a rate.
+
+### `F-183` — scope reduced by ruling
+
+**A quick reachability check in the next session, not a pre-evaluation engineering wave.**
+Dead/test-only · live but already protected · live F-179 bypass. **If not clearly a live bypass,
+move on.** No exhaustive historical blast-radius campaign is required before moving forward.
+
+### Superseded, and now unmistakably so
+
+Live guidance pointing at more evaluation-framework construction, more Phoenix infrastructure,
+`supported_reactions_complete` work, large-scale gold reconstruction, broad recovery engineering, or
+re-running old benchmark milestones is **HISTORICAL**. Each surviving instance is inside a collapsed
+"superseded" block, under an explicit HISTORICAL warning, or in a `0-prev*` section —
+verified by grep, three instances, all contained. `prompts/PROMPT-001-eval-framework.md` is spent.
+
+### Preserved and restated at the entry points
+
+`D-090` freeze established · `F-179` was a repeated false-positive biological export defect ·
+`D-094` authorized the narrow fix · **`F-179` CLOSED** · production **re-frozen** · the
+`glycine → heme` fabricated shortcut is **blocked on the protected main export path** ·
+`PMC12096016` and `PMC12782028` **remained valid** (39 supported / 4 indeterminate / **0 blocked**
+across 43 legs) · Phoenix, lineage and RAG-metrics tooling all **exist and must not be rebuilt** ·
+`F-180` / `F-181` / `F-182` deferred.
+
+**Nothing historical was erased.** Superseded guidance is marked, not deleted.

@@ -4,31 +4,69 @@
 `ORCH-720`, 2026-09-03.** Replaces the T-108-execution-wave handoff, which is in git history.
 **`LEDGER.md` remains the single source of truth for task state.**
 
-> ## ⚠ START HERE — CURRENT AS OF `ORCH-723`, 2026-09-03
+> ## ⚠ START HERE — the infrastructure phase is OVER. 2026-09-03.
 >
-> **THE NEXT ACTION IS TO SCOPE `F-183`. It is read-only and needs no unfreeze.**
-> `pwml/writer.py` builds a PWML IR by a **second export path that never calls
-> `validate_pre_export`**, so the `F-179` support rule has no reach there. Establish only this:
-> **is that path reachable in a batch or app run, or is it dead / test-only / already covered?**
-> **If dead, test-only or otherwise protected** → `F-179`'s guarantee holds on every live export
-> path; proceed to independent review and freeze of the ORCH-723 evaluation instruments, then the
-> unseen cohort. **If live** → it needs the same seam first, under a new narrow authorization.
+> ### NEXT ACTION: one final bounded completeness pass.
 >
-> **DO NOT consume the ten unseen papers before `F-183` is scoped.** A false-positive biological
-> export on a path the gate cannot see would score as a **success** on unseen papers.
+> **Use the existing 41-reaction curation corpus to determine whether the RAG admission gate is
+> obviously over-rejecting genuinely correct reactions.** Do only enough validation to answer that
+> product question. **If a repeated narrow over-rejection mechanism is demonstrated, permit ONE
+> evidence-preserving admission correction with F-179 regression protection. Otherwise make no
+> production change.**
+>
+> **After that decision, freeze code and configuration and proceed to fresh unseen-paper runs and
+> manual PWML evaluation. Do not start another infrastructure or optimization wave.**
+>
+> ### The product objective — this is the whole thing
+>
+> > **Given a biological pathway paper, produce the most complete biologically defensible PWML
+> > possible, while avoiding obvious fabricated chemistry and preserving useful partial pathways.**
+>
+> The project is **deliberately no longer doing broad recovery or evaluation-infrastructure work.**
+> The evaluation stack, the lineage tooling, Phoenix and the RAG metrics all **already exist** and
+> are **done being built** — see § 4.
+>
+> ### The one question
+>
+> **Is the RAG admission gate clearly rejecting a substantial number of genuinely correct,
+> already-curated reactions?** Retrieval finds the biology (`Recall@5` = **93.0%**, only **55** gold
+> signatures never retrieved); **1,123 of 1,212** positive queries end in
+> `correct_candidate_rejected`. Score those rejections against the **41-reaction curation corpus**
+> in `curation/expected_core_*.json`, **not** the 19-signature gold — the old sparse recovery gold
+> **is not sufficient by itself to judge product completeness.** A clear repeated mechanism is an
+> answer; an exhaustive audit of all 1,123 is not required and is not wanted.
+>
+> ### `F-183` — a quick reachability check, not a campaign
+>
+> **`F-183` is a known second writer/export path concern.** *It should receive only a quick
+> reachability check in the next session. It must not become another large pre-evaluation
+> engineering wave.* Decide only which it is: **dead/test-only** · **live but already protected** ·
+> **live and a real F-179 bypass**. **If it is not clearly a live bypass, move on.** If it clearly
+> is one, escalate narrowly. **No exhaustive historical blast-radius campaign.**
+>
+> ### Freeze
 >
 > **PRODUCTION IS FROZEN.** `D-090` governs. It was narrowly unfrozen for the `F-179` seam ONLY,
-> under **`D-094`**, and **re-frozen the same wave**. `T-110` is still NOT authorized.
-> `supported_reactions_complete` remains **UNSET** on all ten gold cases.
+> under **`D-094`**, and **re-frozen the same wave**. `T-110` is still NOT authorized, and T-107 /
+> T-108 / T-109 stay immutable and `NOT ACCEPTED`. `supported_reactions_complete` remains **UNSET**
+> on all ten gold cases and is **not** the next task (`D-093` § 4).
 >
 > **`RESUME-NEXT-SESSION.md` § 0 is the live state.** Read it before this document: §§ 1–8 below
 > were written at the close of `ORCH-720` and are **historical** except where this banner and the
 > superseding notes in §§ 1, 4 and 5 correct them.
 >
+> ### NOT the next action — superseded, do not act on any of these
+>
+> More evaluation-framework construction · more Phoenix infrastructure ·
+> `supported_reactions_complete` work · large-scale gold reconstruction · broad recovery
+> engineering · re-running old benchmark milestones. **`prompts/PROMPT-001-eval-framework.md` was
+> executed in `ORCH-723` and is spent — do not paste it again.**
+>
 > **The rule most likely to be broken by accident:** *no production behaviour changes solely to
-> satisfy the incomplete test instrument.* A `src/` change justified by *"it would make Priority 2
-> evaluable"* or *"it would move Priority 5 off zero"* is a **reject**. `D-094` was granted for a
-> **repeated product-contract violation**, which is a different thing, and it is closed.
+> satisfy the incomplete test instrument.* `D-094` was granted for a **repeated product-contract
+> violation**, which is a different thing, and it is closed. The one admission correction permitted
+> above is likewise a **product** decision, not an instrument one, and needs its own narrow
+> authorization.
 >
 > <details><summary>Superseded ORCH-720 banner, kept for the record</summary>
 >
@@ -58,11 +96,20 @@
 > `src/t2pw/app/streamlit_app.py` was **read but never modified** — its sha256 below is unchanged.
 >
 > **2. Findings register:** `F-179` **CLOSED**. `F-180`, `F-181`, `F-182` **DEFERRED**.
-> **`F-183` OPEN and is the gate before the unseen cohort** — see the banner above and § 4.
+> **`F-183` OPEN — a quick reachability check only, not a gate requiring full scoping** (see the
+> banner and § 4).
+>
+> **3. What already exists and must NOT be rebuilt:** the evaluation stack
+> (`evidence/rd093_two_table_metrics.py`), reaction lineage (`evidence/rd092_1_reaction_lineage.py`),
+> RAG metrics (`evidence/rd093_rag_metrics.py`), Phoenix ingestion
+> (`evidence/rd093_phoenix_ingest.py`), and the **curation corpus richer than gold** —
+> **41 curated core reactions, 35 major subprocesses, 64 important participants** in
+> `curation/expected_core_*.json`. **The old sparse recovery gold (19 signatures) is not sufficient
+> by itself to judge product completeness.**
 >
 > Current evidence pointers live in `RESUME-NEXT-SESSION.md` § 0. The current gate results are
-> **SMOKE 508** (`g11/ORCH-723/87-smoke-f179-final.json`), **gold-readers 465 / 0 / 8 / 0**
-> (`g11/ORCH-723/88-goldreaders-f179-final.json`) and **G11 strict 56 artifacts, 0 non-compliant**.
+> **SMOKE 508** (`g11/ORCH-723/89-smoke-docs-fix.json`), **gold-readers 465 / 0 / 8 / 0**
+> (`g11/ORCH-723/90-goldreaders-docs-fix.json`) and **G11 strict, 0 non-compliant**.
 
 | Check | Expected | How |
 |---|---|---|
@@ -180,7 +227,14 @@ have **released the leg whose mevalonate arm is missing.**
 > | **F-180** | `ferric iron (Fe3+)` parsed as a composite `+` token | production tokenizer defect — **DEFERRED** |
 > | **F-181** | interactions reference unregistered entities `HRM3` / `HRM6` | production referential-integrity defect — **DEFERRED** |
 > | **F-182** | `final_gate_report_missing` | lifecycle / observability defect — **DEFERRED**. **NOT automatically a biological failure** |
-> | **F-183** | `pwml/writer.py` builds an IR by a second export path that never calls `validate_pre_export`, so the `F-179` rule has no reach there | **OPEN — the gate before the unseen cohort** |
+> | **F-183** | `pwml/writer.py` builds an IR by a second export path that never calls `validate_pre_export`, so the `F-179` rule has no reach there | **OPEN — quick reachability check only.** Dead/test-only · live but protected · live bypass. If not clearly a live bypass, **move on**. Not a campaign. |
+>
+> **What `F-179`'s closure actually guarantees, stated precisely:** the `glycine → heme` fabricated
+> shortcut — an eight-step pathway collapsed into one step no source states — is **BLOCKED on the
+> protected main export path** (`validate_pre_export`, reached by both the app and the batch driver).
+> `PMC12096016` and `PMC12782028`, the two gold `strict_exportable` papers, **remained valid** under
+> the regression: 39 supported / 4 indeterminate / **0 blocked** across their 43 legs. The rule is a
+> **leg-level floor**, not per-row enforcement — 198 unattributed rows are still retained corpus-wide.
 >
 > Earlier findings `F-172`, `F-174`, `F-175`, `F-176` (reporting half), `F-177` and `F-178` are
 > done. The evidence bundle for `F-179`…`F-182` is `evidence/f179_bundle/` — `INVENTORY.json`
@@ -222,10 +276,15 @@ unmet going forward**, though the archived census and its committed logs are int
 > spans verified out of the store, and the core RAG metrics with seven outcomes kept apart.
 > **Do not paste that launcher again.**
 >
-> **The current next action is in the banner at the top of this file: scope `F-183`.** Then
-> independent review and freeze of the evaluation instruments → freeze the evaluation-method
-> manifest → archive/corpus analysis → freeze the ten unseen-paper manifest → 20 unseen legs →
-> manual PWML review → manuscript analysis.
+> **The current next action is in the banner at the top of this file: ONE final bounded
+> completeness pass on the RAG admission gate, scored against the 41-reaction curation corpus.**
+> Then — after that single decision — freeze code and configuration and go to **fresh unseen-paper
+> runs and manual PWML evaluation.** `F-183` gets a quick reachability check along the way, not a
+> wave of its own.
+>
+> **The multi-step evaluation programme previously listed here is SUPERSEDED.** No further
+> evaluation-method manifests, archive/corpus campaigns or instrument-building are required before
+> fresh papers.
 >
 > **`supported_reactions_complete` IS NO LONGER "ITEM 1" — `D-093` § 4 SUPERSEDES THAT.** The
 > ruling is explicit: *"Stop trying to make the old Priority-2 boolean work before the evaluator
