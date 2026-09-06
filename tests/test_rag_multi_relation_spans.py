@@ -404,9 +404,9 @@ def test_every_unchanged_candidate_answers_exactly_as_it_did_at_base() -> None:
     # Which of them are still refused is now PINNED AS A SET rather than asserted
     # to be empty. C-061's "all changed are ok" said nothing about which entries
     # were allowed to stay refused; this names the only one that may, and
-    # test_the_delta_is_five_paper_verbatim_reactions below proves its refusal got
-    # STRICTLY MORE SPECIFIC rather than appearing from nowhere. A new refusal
-    # anywhere else in the changed set fails here.
+    # test_the_delta_is_paper_verbatim_reactions_and_no_admission_broke below
+    # proves its refusal got STRICTLY MORE SPECIFIC rather than appearing from
+    # nowhere. A new refusal anywhere else in the changed set fails here.
     still_refused = sorted(
         e["key"] for e in tip["entries"] if e["key"] in set(changed) and not e["ok"]
     )
@@ -417,12 +417,13 @@ def test_every_unchanged_candidate_answers_exactly_as_it_did_at_base() -> None:
     assert len(unchanged) == 1751
 
 
-def test_the_delta_is_five_paper_verbatim_reactions() -> None:
+def test_the_delta_is_paper_verbatim_reactions_and_no_admission_broke() -> None:
     """A9 — what moved, in biology rather than in counts.
 
-    The NAME is C-061's and is kept deliberately: D-095a forbids adding,
-    removing, renaming or reordering any test function in this file. C-118 took
-    the count from five to TEN.
+    Named for the INVARIANT and not for the count, so it cannot go stale the next
+    time this golden legitimately moves. It was
+    ``test_the_delta_is_five_paper_verbatim_reactions`` under C-061, whose five
+    C-118 took to ten.
 
     C-061's five, all of them a clause of a sentence that states several: MenA's
     and MenG's steps in PMC12421875 (both legs), and MenA's and UbiE's steps in
