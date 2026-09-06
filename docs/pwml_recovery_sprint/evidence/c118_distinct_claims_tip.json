@@ -1,0 +1,433 @@
+{
+  "n_distinct": 10,
+  "rows": [
+    {
+      "key": "PMC12452463/research/rejected[195]",
+      "span": "the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC)",
+      "claim_inputs": [
+        "chorismate"
+      ],
+      "claim_outputs": [
+        "isochorismate"
+      ],
+      "claim_enzymes": [
+        "isochorismate synthase (EntC)"
+      ],
+      "ok": true,
+      "reasons": [],
+      "relations": [
+        {
+          "pattern": "nominalized_conversion_catalyzed_by",
+          "inputs": [
+            "chorismate"
+          ],
+          "outputs": [
+            "isochorismate"
+          ],
+          "catalysts": [
+            "isochorismate synthase (EntC)"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "PMC12452463/research/rejected[186]",
+      "span": "conversion of chorismate to isochorismate (catalyzed by EntC)",
+      "claim_inputs": [
+        "chorismate"
+      ],
+      "claim_outputs": [
+        "isochorismate"
+      ],
+      "claim_enzymes": [
+        "EntC"
+      ],
+      "ok": true,
+      "reasons": [],
+      "relations": [
+        {
+          "pattern": "nominalized_conversion_catalyzed_by",
+          "inputs": [
+            "chorismate"
+          ],
+          "outputs": [
+            "isochorismate"
+          ],
+          "catalysts": [
+            "EntC"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "PMC12452463/research/rejected[187]",
+      "span": "The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) .",
+      "claim_inputs": [
+        "chorismate"
+      ],
+      "claim_outputs": [
+        "isochorismate"
+      ],
+      "claim_enzymes": [
+        "isochorismate synthase (EntC)"
+      ],
+      "ok": true,
+      "reasons": [],
+      "relations": [
+        {
+          "pattern": "nominalized_conversion_catalyzed_by",
+          "inputs": [
+            "chorismate"
+          ],
+          "outputs": [
+            "isochorismate"
+          ],
+          "catalysts": [
+            "isochorismate synthase (EntC)"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "PMC12421875/research/rejected[95]",
+      "span": "Subsequently, MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK), and MenG demethylates DMK to generate MK ( Fig. 1A ).",
+      "claim_inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "claim_outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "claim_enzymes": [
+        "MenA"
+      ],
+      "ok": true,
+      "reasons": [],
+      "relations": [
+        {
+          "pattern": "enzyme_verb_to",
+          "inputs": [
+            "DMK"
+          ],
+          "outputs": [
+            "MK"
+          ],
+          "catalysts": []
+        },
+        {
+          "pattern": "enzyme_verb_to",
+          "inputs": [
+            "DMK"
+          ],
+          "outputs": [
+            "MK"
+          ],
+          "catalysts": [
+            "MenG"
+          ]
+        },
+        {
+          "pattern": "actor_combines_to_make",
+          "inputs": [
+            "DHNA",
+            "prenyl diphosphate"
+          ],
+          "outputs": [
+            "demethylmenaquinone (DMK)"
+          ],
+          "catalysts": [
+            "MenA"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "PMC12421875/research/rejected[96]",
+      "span": "Subsequently, MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK), and MenG demethylates DMK to generate MK ( Fig. 1A ).",
+      "claim_inputs": [
+        "DMK"
+      ],
+      "claim_outputs": [
+        "MK"
+      ],
+      "claim_enzymes": [
+        "MenG"
+      ],
+      "ok": true,
+      "reasons": [],
+      "relations": [
+        {
+          "pattern": "enzyme_verb_to",
+          "inputs": [
+            "DMK"
+          ],
+          "outputs": [
+            "MK"
+          ],
+          "catalysts": []
+        },
+        {
+          "pattern": "enzyme_verb_to",
+          "inputs": [
+            "DMK"
+          ],
+          "outputs": [
+            "MK"
+          ],
+          "catalysts": [
+            "MenG"
+          ]
+        },
+        {
+          "pattern": "actor_combines_to_make",
+          "inputs": [
+            "DHNA",
+            "prenyl diphosphate"
+          ],
+          "outputs": [
+            "demethylmenaquinone (DMK)"
+          ],
+          "catalysts": [
+            "MenA"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "PMC12421875/strict/rejected[158]",
+      "span": "Subsequently, MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)",
+      "claim_inputs": [
+        "DHNA",
+        "prenyl diphosphate"
+      ],
+      "claim_outputs": [
+        "demethylmenaquinone (DMK)"
+      ],
+      "claim_enzymes": [
+        "MenA"
+      ],
+      "ok": true,
+      "reasons": [],
+      "relations": [
+        {
+          "pattern": "actor_combines_to_make",
+          "inputs": [
+            "DHNA",
+            "prenyl diphosphate"
+          ],
+          "outputs": [
+            "demethylmenaquinone (DMK)"
+          ],
+          "catalysts": [
+            "MenA"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "PMC12452463/research/rejected[191]",
+      "span": "Chorismate to Isochorismate : The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) .",
+      "claim_inputs": [
+        "chorismate"
+      ],
+      "claim_outputs": [
+        "isochorismate"
+      ],
+      "claim_enzymes": [],
+      "ok": true,
+      "reasons": [],
+      "relations": [
+        {
+          "pattern": "nominalized_conversion_catalyzed_by",
+          "inputs": [
+            "chorismate"
+          ],
+          "outputs": [
+            "isochorismate"
+          ],
+          "catalysts": [
+            "isochorismate synthase (EntC)"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "PMC12452463/research/rejected[190]",
+      "span": "The key steps in enterobactin production, a catechol-type siderophore, include the conversion of chorismate to isochorismate (catalyzed by EntC), formation of 2,3-dihydroxybenzoate (DHB) by EntB, activation of DHB to DHB-AMP by EntE, and final assembly of three DHB molecules into the cyclic trilactone structure of ente\u2026",
+      "claim_inputs": [
+        "DHB"
+      ],
+      "claim_outputs": [
+        "enterobactin"
+      ],
+      "claim_enzymes": [
+        "EntD/EntE/EntF enzyme complex"
+      ],
+      "ok": false,
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['chorismate'] -> ['isochorismate'] but the claim states ['dhb'] -> ['enterobactin']",
+        "unsupported_catalyst_injection: EntD/EntE/EntF enzyme complex is not the catalyst the span attaches to this reaction"
+      ],
+      "relations": [
+        {
+          "pattern": "nominalized_conversion_catalyzed_by",
+          "inputs": [
+            "chorismate"
+          ],
+          "outputs": [
+            "isochorismate"
+          ],
+          "catalysts": [
+            "EntC"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "PMC12657337/strict/rejected[196]",
+      "span": "In this pathway, HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP), MenA converts HepPP to DMK-7, and UbiE methylates DMK-7 to yield MK-7.",
+      "claim_inputs": [
+        "HepPP"
+      ],
+      "claim_outputs": [
+        "DMK-7"
+      ],
+      "claim_enzymes": [
+        "MenA"
+      ],
+      "ok": true,
+      "reasons": [],
+      "relations": [
+        {
+          "pattern": "catalyzes_to",
+          "inputs": [
+            "FPP"
+          ],
+          "outputs": [
+            "heptaprenyl pyrophosphate (HepPP)"
+          ],
+          "catalysts": [
+            "HepPPS"
+          ]
+        },
+        {
+          "pattern": "catalyzes_to_subjectless",
+          "inputs": [
+            "FPP"
+          ],
+          "outputs": [
+            "heptaprenyl pyrophosphate (HepPP)"
+          ],
+          "catalysts": []
+        },
+        {
+          "pattern": "converts_to",
+          "inputs": [
+            "HepPP"
+          ],
+          "outputs": [
+            "DMK-7"
+          ],
+          "catalysts": [
+            "MenA"
+          ]
+        },
+        {
+          "pattern": "enzyme_verb_to",
+          "inputs": [
+            "DMK-7"
+          ],
+          "outputs": [
+            "MK-7"
+          ],
+          "catalysts": []
+        },
+        {
+          "pattern": "enzyme_verb_to",
+          "inputs": [
+            "DMK-7"
+          ],
+          "outputs": [
+            "MK-7"
+          ],
+          "catalysts": [
+            "UbiE"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "PMC12657337/strict/rejected[197]",
+      "span": "In this pathway, HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP), MenA converts HepPP to DMK-7, and UbiE methylates DMK-7 to yield MK-7.",
+      "claim_inputs": [
+        "DMK-7"
+      ],
+      "claim_outputs": [
+        "MK-7"
+      ],
+      "claim_enzymes": [
+        "UbiE"
+      ],
+      "ok": true,
+      "reasons": [],
+      "relations": [
+        {
+          "pattern": "catalyzes_to",
+          "inputs": [
+            "FPP"
+          ],
+          "outputs": [
+            "heptaprenyl pyrophosphate (HepPP)"
+          ],
+          "catalysts": [
+            "HepPPS"
+          ]
+        },
+        {
+          "pattern": "catalyzes_to_subjectless",
+          "inputs": [
+            "FPP"
+          ],
+          "outputs": [
+            "heptaprenyl pyrophosphate (HepPP)"
+          ],
+          "catalysts": []
+        },
+        {
+          "pattern": "converts_to",
+          "inputs": [
+            "HepPP"
+          ],
+          "outputs": [
+            "DMK-7"
+          ],
+          "catalysts": [
+            "MenA"
+          ]
+        },
+        {
+          "pattern": "enzyme_verb_to",
+          "inputs": [
+            "DMK-7"
+          ],
+          "outputs": [
+            "MK-7"
+          ],
+          "catalysts": []
+        },
+        {
+          "pattern": "enzyme_verb_to",
+          "inputs": [
+            "DMK-7"
+          ],
+          "outputs": [
+            "MK-7"
+          ],
+          "catalysts": [
+            "UbiE"
+          ]
+        }
+      ]
+    }
+  ]
+}
