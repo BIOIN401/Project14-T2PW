@@ -10110,3 +10110,119 @@ across 43 legs) · Phoenix, lineage and RAG-metrics tooling all **exist and must
 `F-180` / `F-181` / `F-182` deferred.
 
 **Nothing historical was erased.** Superseded guidance is marked, not deleted.
+
+---
+
+## `ORCH-724` — the final bounded product pass. F-183 closed out, ONE admission correction, cohort frozen. 2026-09-06
+
+**Lead Orchestrator.** Takeover verified: `local = origin/ = git ls-remote` at
+`70b6d7d2`; `main` untouched (local `7531692`, remote `03f1af5`); gold blob unchanged at
+`98739a59dd6c376f8a19968c7fa5dc3145be5b15`; heavy lock absent; exactly the two
+`ms-python.isort … lsp_server.py` processes, matched on full command line.
+
+### Task A — `F-183` CLASSIFIED, no change, did not delay the project
+
+**NOT a live production export bypass.** The call graph is closed and was read, not
+inferred: `validate_pre_export` has exactly ONE production call site
+(`streamlit_app.py:4788`) and it stands ahead of `DeterministicPwmlBuilder` (`:5003`)
+**inside the same function**, `run_pwml_export` (`:4610`). The second path,
+`writer.run_pwml_pipeline_export` (`writer.py:2642`), is reachable only from
+`scripts/run_pwml.py` (`README.md:40`) and from tests — no batch run, benchmark, app
+export or script invokes it, over `src/`, `scripts/`, `tests/` and every
+`.ps1`/`.bat`/`.sh`/`.yml`/`Makefile`. `batch/driver.py` drives *the real Streamlit app*
+through `AppTest`, so every product PWML — all twenty unseen legs included — is gated.
+
+Stated precisely, because the distinction matters: the CLI is **not protected by the
+F-179 rule**; what makes it not a bypass is that **nothing in the product reaches it**.
+`F-183` stays OPEN as a hygiene precondition — if that CLI is ever wired into a batch or
+app flow it needs the seam first — and is **not work owed now**.
+
+### Task B — the audit, and what it actually found
+
+`evidence/orch724_admission_audit.py`, evaluation-only, read-only, no leg re-run. Scored
+the gate's rejections against the **41-reaction curation corpus**, not the 19-signature
+gold, using `bench.semantic._signature_matches` so it cannot disagree with the committed
+RAG metrics about what "the same reaction" means.
+
+**All 41 curated core reactions passed the quote screen; 0 excluded.** The decision set is
+credible.
+
+**The headline number overstates the problem, and this is the correction that matters:**
+2,439 curated-matching rejections over untruncated legs is **not** 2,439 mistakes — the
+same few spans are re-proposed across many gaps, legs and runs. At the product-relevant
+unit, *(run, leg, curated reaction)*, **95 pairs were never admitted**, and the blocking
+reasons are **spread across five codes**:
+`evidence_relation_disagrees_with_claim` 27 · `no_local_evidence_span` 20 ·
+`evidence_relation_roles_unassignable` 16 · `candidate_type_cannot_fill_gap` 11 ·
+`evidence_states_no_reaction_relation` 8 · others ≤ 4.
+
+**Most of the rejecting is CORRECT.** `no_local_evidence_span` is `F-179` working as
+designed. `candidate_type_cannot_fill_gap` is a *reaction* offered against an
+enzyme-identity or compartment gap it genuinely cannot fill — a **gap-routing** property,
+not an admission defect, and out of scope by ruling.
+
+**One code is a demonstrated over-rejection with a single general cause.** As sole blocker
+on curated-correct chemistry, `evidence_relation_roles_unassignable` accounts for **294
+rejections across only 12 distinct spans**, **71.8% of them one construction**: a
+nominalized `conversion of X to Y` whose catalyst follows in an attached `catalyzed by …`.
+No template in `_ALL_PROSE_PATTERNS` reads it — `catalyzes_to_subjectless` requires the
+governing verb — and `parse_span_relation` was confirmed to return `None` on all of them.
+Lost reactions include **the first step of the enterobactin pathway**.
+
+### `D-095` / `D-095a` — ONE narrow correction, and its boundary amendment
+
+`C-118`: one template appended to `_EXTRA_PROSE_PATTERNS`, following the `C-061`
+precedent, `_PROSE_PATTERNS` byte-identical. The glycine/succinyl-CoA condensation is a
+**required negative control** so `F-179` cannot be weakened. Explicitly **NOT** authorized
+and named so silence is not read as permission: the copula-adverb form (22.4%), the
+locant-comma and multi-clause artifacts behind `evidence_relation_disagrees_with_claim`,
+and gap routing.
+
+**Recorded honestly:** on *this* ten-paper corpus the fix recovers **3 of 41** curated core
+reactions. It was authorized on **generality**, not on that count.
+
+`D-095a` amended the boundary to permit re-pinning the `C-061` preservation golden,
+**test-only**, after the orchestrator verified the delta against the committed evidence
+rather than the report: `changed_not_rejected` **empty** at the tip, so **no
+previously-admitted candidate broke**; all five new distinct claims read individually and
+all the chorismate→isochorismate/EntC shape; `_PROSE_PATTERNS` sha256 `fea7cc2dd2393224`
+at both revisions. The re-pin was required to be **sharper, not looser** — a proposed
+loop that merely tolerated the one still-refused entry was refused, and replaced by a
+named-set pin plus a base-digest reconstruction proving that entry was already refused at
+base for a vaguer reason.
+
+**A latent defect in `C-061`'s own test was found while re-pinning** and is fixed: its
+`agreeing` filter's first conjunct never mentioned the relation `r`, so the only
+per-relation requirement was catalyst-only and a claim could bind to a relation whose
+chemistry it did not share. Metabolite equality on both sides is now required.
+
+### The unseen cohort — SELECTED, VERIFIED, FROZEN
+
+`topics_unseen_pilot.txt` · `UNSEEN-COHORT-MANIFEST.md`. Ten papers × two modes = **20
+legs**. "Unseen" is **measured**: every id checked against a **195-id exclusion set** from
+five independent sources (RAG acquire cache 167, ever-run-as-a-leg 38, topics files 10,
+curation 10, gold 10). None appears. The five development pathways are avoided too, so the
+cohort is unseen at the **pathway** level; it adds two kingdoms absent from development
+(fungi, plants). All ten verified fetchable **through the project's own
+`fetch_full_text`**. Staged clean: eligible 10, ineligible 0, no_full_text 0, **20 legs
+planned, 0 skipped**.
+
+**`bench_acceptance.py --verify-plan` REFUSES this plan, and that is CORRECT** — it
+compares against the pinned gold set, which is by construction the ten *development*
+papers. Recorded so nobody reads it as a defect or "fixes" the topics file. The real
+consequence, stated plainly: **this pilot cannot be scored by `bench_acceptance.py`,
+because no gold exists for these papers and none was invented.** It is judged on the
+structural product table plus **human biological review**, and **no pilot leg is ever
+recorded as a benchmark pass or fail**.
+
+### State at this entry
+
+| item | state |
+|---|---|
+| `F-183` | **CLASSIFIED — not a live bypass.** OPEN as a hygiene precondition only |
+| `D-095` / `D-095a` | recorded, LOCKED |
+| `C-118` | implemented, `agent/c118-nominalized-conversion` @ `ca11afe7`, three commits on `70b6d7d2`, **NOT merged** |
+| `REV-118` | dispatched, charter at `prompts/REV-118.md` |
+| unseen cohort | **FROZEN**, staged, 20 legs planned |
+| production | **STILL FROZEN.** `D-090` governs; `D-095` expires with `C-118` and production **re-freezes on merge** |
+| SMOKE | **508** at base and tip. `TEST_MATRIX.md` records 503; that drift is **pre-existing** and was NOT edited away |
