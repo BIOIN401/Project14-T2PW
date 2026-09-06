@@ -1,0 +1,42 @@
+# ORCH-724 UNSEEN-PAPER PILOT — the frozen ten. 2026-09-06.
+#
+# Ten papers x two modes (strict, research) = 20 legs. No favourable-draw reruns:
+# a leg is re-run only for an objectively invalid infrastructure execution.
+#
+# SELECTION IS FROZEN. See docs/pwml_recovery_sprint/UNSEEN-COHORT-MANIFEST.md for
+# citations, categories and per-paper inclusion reasons.
+#
+# NONE of these ten is in the development corpus. Every id was checked against a
+# 195-id exclusion set built from five independent sources — the ten gold cases, the
+# ten curated papers, every paper ever run as a leg, every paper in the RAG acquire
+# cache (i.e. ever used as a retrieval SOURCE during development), and every id named
+# in a topics file. Evidence: evidence/orch724_exclusion_set.json.
+#
+# The five DEVELOPMENT pathways — lipid A, menaquinone, heme, enterobactin and
+# cholesterol biosynthesis — are also all avoided, so the cohort is unseen at the
+# pathway level and not only at the paper level.
+#
+# Scope is MANDATORY. A bare id stages a scopeless, invalid run
+# (see runs/INVALID-scopeless-2026-08-01_1724).
+#
+# Format: PMCID | requested pathway | requested organism
+#
+# --- 2 bacterial ---------------------------------------------------------------
+PMC12071552 | wall teichoic acid D-alanylation        | Staphylococcus aureus
+PMC11172790 | pyoverdine biosynthesis                 | Pseudomonas aeruginosa
+# --- 2 eukaryotic --------------------------------------------------------------
+PMC12376012 | sphingolipid biosynthesis               | Homo sapiens
+PMC7232280  | molybdenum cofactor biosynthesis        | Neurospora crassa
+# --- 2 long / branched ---------------------------------------------------------
+PMC11405693 | phenylpropanoid biosynthesis            | Arabidopsis thaliana
+PMC8510960  | terpenoid indole alkaloid biosynthesis  | Catharanthus roseus
+# --- 2 cofactor / regulator-heavy ----------------------------------------------
+PMC3480714  | cobalamin biosynthesis                  | Salmonella enterica
+PMC12542839 | riboflavin biosynthesis                 | Bacillus subtilis
+# --- 1 mixed / ambiguous -------------------------------------------------------
+PMC13017326 | anthocyanin biosynthesis                | Vitis vinifera
+# --- 1 negative / context-only -------------------------------------------------
+# A clinical therapeutics review. It states no pathway chemistry (0 reaction cues
+# measured over 110,584 chars) and mentions lipid A only as a resistance mechanism.
+# The CORRECT product outcome here is little or nothing. Anything rich is a red flag.
+PMC12326985 | siderophore biosynthesis                | Acinetobacter baumannii
