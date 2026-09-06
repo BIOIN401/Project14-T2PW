@@ -132,3 +132,37 @@ rich pathway here is a fabrication finding, not a success.*
 - Runs on the **frozen production SHA**, under the bounded runner, one heavy job at a time.
 - Existing Phoenix / evaluation artifacts are captured where already supported. **No new
   observability infrastructure is built for this run.**
+
+## Staging result, and one expected refusal
+
+`scripts/batch_run.py --stage-only` against `topics_unseen_pilot.txt`:
+
+```
+acquisition funnel: requested 10, examined 10, eligible 10, ineligible 0,
+                    no_full_text 0, accepted 10
+planned 10 paper(s) x 2 mode(s) = 20 run(s); 0 candidate(s) skipped
+```
+
+**All ten papers stage. Twenty legs planned. Nothing skipped.** Evidence:
+`evidence/g11/ORCH-724/10-pilot-stage.json`.
+
+### `bench_acceptance.py --verify-plan` REFUSES this plan, and that is correct
+
+```
+verdict: REFUSED
+  MISSING  PMC12444477 … (the ten gold papers)
+  EXTRA    PMC11172790 … (the ten pilot papers)
+```
+
+`--verify-plan` exists to stop a **pinned acceptance run** from executing against the
+wrong papers: it compares the plan to the **gold set**, which is by construction the ten
+*development* papers. The unseen pilot is deliberately none of them, so a refusal is the
+guard doing its job — **not a defect, and not a reason to change the topics file.**
+
+The consequence is stated plainly so nobody looks for it later: **this pilot cannot be
+scored by `bench_acceptance.py`, because no gold exists for these ten papers and none is
+being invented.** Its outputs are judged on (a) the structural/product table that
+`evidence/orch724_pilot_summary.py` produces — PWML generated, release state, reaction
+count, graph validity, referential integrity, species, unprovenanced rows — and (b)
+**human biological review**, which is the point of the exercise. A pilot leg is never
+recorded as a benchmark pass or fail.
