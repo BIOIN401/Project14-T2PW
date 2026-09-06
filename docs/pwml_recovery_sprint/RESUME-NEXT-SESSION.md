@@ -1,6 +1,148 @@
 # RESUME — next session handoff
 
-## 0. CURRENT — **`ORCH-723`: the RAG/LLM EVALUATION phase. `R-D092-1` built, the lineage-aware evaluator and TWO TABLES built, Phoenix started and ingested, core RAG metrics measured. Production still FROZEN.** 2026-09-03.
+## 0. CURRENT — **`F-179` CLOSED under narrow unfreeze `D-094`; production RE-FROZEN. `F-183` is the gate before the unseen cohort.** 2026-09-03.
+
+> **⚠ NOTHING IS RUNNING AND NOTHING IS CHARTERED.** Heavy lock free (`C:/t/heavylock` absent), zero
+> sprint-owned Python beyond the two `ms-python.isort` LSP processes.
+>
+> **PRODUCTION IS FROZEN AGAIN.** `D-090` governs. It was narrowly unfrozen for the `F-179` seam
+> ONLY, under **`D-094`**, and **re-frozen the same wave**. `T-110` is still NOT authorized.
+> `supported_reactions_complete` remains **UNSET** on all ten gold cases and was not reopened.
+
+### ▶ THE NEXT ACTION, and it is not the unseen cohort
+
+**1. Scope `F-183` first. It is read-only and needs no unfreeze.**
+`pwml/writer.py` builds a PWML IR by a **second export path that never calls
+`validate_pre_export`**, so the `F-179` rule has no reach there. Determine only this: **is that path
+reachable in a batch or app run, or is it dead / test-only / already covered by another gate?**
+
+- **If dead, test-only, or otherwise protected** → `F-179`'s guarantee holds on every live export
+  path. Proceed to step 2.
+- **If live** → it needs the same seam before ten unseen papers are consumed, and that is a new
+  narrow authorization, not this wave's.
+
+**2. Then, in order:** independent review and freeze of the ORCH-723 evaluation instruments →
+freeze the evaluation-method manifest → archive/corpus analysis → freeze the ten unseen-paper
+manifest → strict + research once each (20 unseen legs) → manual PWML review →
+manuscript-oriented analysis.
+
+> **DO NOT consume the unseen cohort before `F-183` is scoped.** A false-positive biological export
+> on a path the gate cannot see would be scored as a **success** on unseen papers.
+
+**Verify the tip yourself:** `git rev-parse HEAD` = `git rev-parse origin/sprint/pwml-recovery`
+= `git ls-remote origin sprint/pwml-recovery`. **`main` untouched — local `7531692`, remote `03f1af5`.**
+Gold blob unchanged at `98739a59dd6c376f8a19968c7fa5dc3145be5b15`.
+
+### `F-179` — what was wrong, what changed, and what it does NOT cover
+
+**The defect.** `PMC12180156` exported a canonical payload whose only reaction was `glycine → heme`
+— an eight-step pathway collapsed into one step. Stage 1 extracted **zero** reactions; the row first
+appears in the merged payload with **no `provenance_lineage` and no `rag_provenance`**. Its
+participants are paper-stated entities that resolve to real ChEBI/KEGG identities, and nothing in
+the pipeline said **entity identity is not reaction occurrence**. The runtime recorded
+`semantic_evaluation: passed` and wrote a PWML. It recurred across **four runs over a month**, and
+the broader mechanism covers **28 rows / 6 papers / 13 runs**.
+
+**The repair — the ENTIRE production diff:**
+
+| file | change |
+|---|---|
+| `src/t2pw/pipeline/reaction_support.py` | **NEW** leaf module. Reads provenance, mutates nothing, imports no stage. |
+| `src/t2pw/pipeline/stage_contracts.py` | `validate_pre_export` **only**. |
+
+`src/t2pw/app/streamlit_app.py` is PROTECTED and was **read but never modified** — sha256
+`47e4fafa…`, unchanged.
+
+**The rule.** A canonical reaction is supported by **(A)** a `paper_stated` /
+`paper_explicit="explicit"` lineage entry, or **(B)** a `rag_literature` entry or the row-level
+`rag_provenance` carrier. **(C)** deterministic transformations inherit support automatically,
+because support is **ANY** qualifying entry rather than the newest and `lineage.py` is append-only.
+**Never support alone:** `identifier_mapping`, `database_grounded`, any ChEBI/KEGG/DrugBank/CAS/
+HMDB/UniProt/PathBank id, entity normalization, or participant names elsewhere in the graph.
+
+**What it does NOT cover, stated so nobody has to discover it:**
+
+1. **`F-183`** — the second export path in `pwml/writer.py`. **Step 1 above.**
+2. It is a **leg-level floor, not per-row enforcement**: it refuses a pathway in which NO reaction
+   has support. **198 unattributed rows are still retained** across the committed legs, and **13 of
+   the 28 census-flagged rows sit in legs the rule permits.**
+3. `_iter_rows` reads only `processes.reactions`, so a payload whose biology is entirely
+   transports/interactions is `indeterminate` and never subject to the floor. Faithful to `D-094`
+   § 2 ("every exported biological **reaction**"), recorded as a known scope edge.
+
+**Measured, archives replayed through the production rule, nothing re-run:** committed 115 legs →
+80 supported / 24 indeterminate / **11 blocked**; preserved 10 legs → 9 / 0 / **1**. Every blocked
+leg is `PMC12180156` or `PMC13231680`, the two `context_only` gold cases whose `export_rationale`
+says nothing is exportable. **5 previously-exported legs would no longer export.**
+**False-positive protection: 43 legs of `PMC12096016` / `PMC12782028` → 39 supported, 4
+indeterminate (pre-carrier), ZERO blocked.**
+
+### Findings register — current
+
+| id | status |
+|---|---|
+| **F-179** false-positive biological export | **CLOSED** under `D-094`; production re-frozen |
+| **F-180** `ferric iron (Fe3+)` composite tokenizer | **production defect, DEFERRED** |
+| **F-181** `HRM3`/`HRM6` unregistered registry endpoints | **production defect, DEFERRED** |
+| **F-182** `final_gate_report_missing` | **lifecycle/observability, DEFERRED** — NOT automatically a biological failure |
+| **F-183** second PWML export path bypasses `validate_pre_export` | **OPEN — the gate before the unseen cohort** |
+
+### What ORCH-723 delivered before the repair — D-093 § 5 items 2–8
+
+`R-D092-1` row-level lineage · the lineage-aware evaluator and the TWO TABLES (two denominators,
+never summed) · re-evaluation of 1,042 canonical rows into the three support classes · Phoenix
+started and **1,314 spans verified by querying the store back out** · core RAG metrics with the
+seven outcomes kept apart. **Item 9 (the unseen cohort) is deliberately not started** — see the
+next action above.
+
+**The finding that matters most from that work:** *retrieval is not the bottleneck; admission is.*
+`Recall@5 = 93.0%` and only **55** gold signatures were never retrieved, against **1,123 of 1,212
+positive queries** ending in `correct_candidate_rejected`. One blended "RAG accuracy" number would
+have hidden it.
+
+### `supported_reactions_complete` — the old "item 1" is SUPERSEDED
+
+**Do not treat setting that boolean as the next data task.** `D-093` § 4 rules the opposite:
+*"Stop trying to make the old Priority-2 boolean work before the evaluator understands where each
+reaction came from."* Any earlier handoff text making it item 1 predates `D-093`. It stays UNSET.
+
+### Traps this phase paid for
+
+1. **A gate that raises where nobody reads is not a gate.** The `F-179` repair was **REJECTED on
+   first review**: it raised on the OUTER stage report while the production caller branches on the
+   INNER `pwml_contract_report["ok"]`. The export still happened, with **eighteen focused tests
+   green over an unfixed defect**. Assert the variable the caller actually reads.
+2. **A missing key read as zero, twice.** `R-D092-1` first tiered on lineage *sources* instead of
+   the lineage *key*, losing all 650 sourceless `paper_stated` attributions; the RAG metrics first
+   printed three **structural zeros** for categories nothing ever assigned.
+3. **A/B before calling anything a regression.** Two Chunk D failures appeared after the F-179
+   patch; both fail at base. Delta zero.
+4. **Never combine a shell `&` with a backgrounded `bounded_run`** — the harness reports "completed"
+   while the wrapper runs on.
+5. **A database grounding is not literature evidence.** ChEBI/KEGG ids resolved as "external" until
+   `SRC_DATABASE` separated them.
+
+### Verified state at this tip — measure, do not trust
+
+| check | expected | evidence |
+|---|---|---|
+| Gold | `98739a59dd6c376f8a19968c7fa5dc3145be5b15`, `supported_reactions_complete` UNSET on all ten | `git hash-object` |
+| SMOKE | **508 passed** | `g11/ORCH-723/87-smoke-f179-final.json` |
+| gold-readers split | **465 / 0 / 8 / 0** | `g11/ORCH-723/88-goldreaders-f179-final.json` |
+| F-179 focused (+ `stage_contracts`, `stage8`) | **52 passed** | `g11/ORCH-723/86-f179-focused-r3.json` |
+| evaluation instruments focused | **58 passed** across four files | `g11/ORCH-723/33-rd092-dbgrounded-tests.json` |
+| F-179 corpus regression | 39 / 4 / **0 blocked** on the gold exportable papers | `g11/ORCH-723/85-f179-regression-r2.json` |
+| Chunk D | **185/187 before AND after** — both failures pre-existing, A/B-proved | `g11/chunkd/ORCH-723/` |
+| G11 strict | **56 artifacts, 0 non-compliant**, all four strict flags | `g11_evidence.py check --task ORCH-723` |
+| `streamlit_app.py` | sha256 `47e4fafa…`, **modified and never committed** | `git status --porcelain` |
+| Python processes | exactly two `ms-python.isort … lsp_server.py` — **match on FULL COMMAND LINE** | never on count or PID |
+
+> **`chunk_d_gate.py` child reports live in `evidence/g11/chunkd/<TASK>/`, not the task directory.**
+> That driver invokes pytest directly, so its child reports can never carry a measured-tree pin and
+> would fail a strict `--require-pin` run 64 times for reasons that are properties of the driver.
+> They are preserved with a README, and each still carries its own zero-survivor cleanup record.
+
+## 0-prevORCH723a — **SUPERSEDED by § 0 above, same wave, 2026-09-03.** Everything it records STANDS; what is superseded is its status as current, its statement that production had not moved (the F-179 seam was narrowly unfrozen under `D-094` and re-frozen), and its evidence pointers, which predate the repair. **`ORCH-723`: the RAG/LLM EVALUATION phase. `R-D092-1` built, the lineage-aware evaluator and TWO TABLES built, Phoenix started and ingested, core RAG metrics measured. Production still FROZEN.** 2026-09-03.
 
 > **⚠ NOTHING IS RUNNING AND NOTHING IS CHARTERED.** Heavy lock free (`C:/t/heavylock` absent), zero
 > sprint-owned Python beyond the two `ms-python.isort` LSP processes. **`D-090` still controls:

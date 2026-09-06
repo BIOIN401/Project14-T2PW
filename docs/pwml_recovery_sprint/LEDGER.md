@@ -10012,3 +10012,41 @@ are **PRE-EXISTING**, A/B-proved by stashing the patch and re-running: both fail
 ### PRODUCTION IS RE-FROZEN
 
 `D-094` § 7. `D-090` governs again in full. **Do not continue into F-180/F-181 cleanup.**
+
+---
+
+## ORCH-723 § 4 — handoff entry-point correction, DOCS ONLY · 2026-09-03
+
+**No code, no gold, no protected file, no run directory.** `HANDOFF.md` and
+`RESUME-NEXT-SESSION.md` only.
+
+**The defect being fixed was mine.** ORCH-723 § 2 and § 3 were **appended** to `HANDOFF.md`, which
+is correct for a chronological ledger and wrong for an **entry point**: the top of that file still
+carried the `ORCH-720` banner instructing a successor to *"paste
+`prompts/PROMPT-001-eval-framework.md` into a fresh session"* — work that `ORCH-723` had already
+executed — and `RESUME-NEXT-SESSION.md` § 0 contained **zero** mentions of `F-179` or `D-094`, so
+the single most important fact about this branch (production moved, narrowly, and was re-frozen)
+was invisible to anyone reading the live-state document.
+
+**Corrected:**
+
+- `RESUME-NEXT-SESSION.md` § 0 rewritten for the post-`F-179` state; the previous § 0 demoted to
+  `0-prevORCH723a` under the file's existing convention, with its findings kept STANDING and only
+  its currency and evidence pointers superseded.
+- `HANDOFF.md` banner replaced: the next action is now **scope `F-183`**, with the unseen-cohort
+  hold stated in the banner itself. The `ORCH-720` banner is retained verbatim inside a collapsed
+  block marked *"do not paste it again"*.
+- `HANDOFF.md` § 1 records the `D-094` unfreeze, the two production files changed, the findings
+  register and the current gate evidence.
+- `HANDOFF.md` § 4 carries the current findings table (`F-179` closed · `F-180`/`F-181`/`F-182`
+  deferred · **`F-183` open**) so a fresh agent never has to infer it from appended history.
+- `HANDOFF.md` § 5 marked HISTORICAL, and its **`supported_reactions_complete` is "item 1"** claim
+  explicitly superseded by `D-093` § 4. The original paragraph is kept so the change of direction
+  stays legible.
+
+**Evidence pointers refreshed** to `g11/ORCH-723/87-smoke-f179-final.json`,
+`88-goldreaders-f179-final.json`, `86-f179-focused-r3.json`, `85-f179-regression-r2.json` and
+`g11/chunkd/ORCH-723/`, replacing the pre-repair `/27` and `/28`.
+
+**Lesson.** *A ledger is appended to; an entry point is rewritten.* Appending to a document whose
+header states the next action leaves the header lying, and the header is what gets read.

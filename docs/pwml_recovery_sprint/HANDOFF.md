@@ -4,23 +4,65 @@
 `ORCH-720`, 2026-09-03.** Replaces the T-108-execution-wave handoff, which is in git history.
 **`LEDGER.md` remains the single source of truth for task state.**
 
-> ## ⚠ THE ENGINEERING SPRINT IS CLOSED — `D-090`
+> ## ⚠ START HERE — CURRENT AS OF `ORCH-723`, 2026-09-03
 >
-> **The recovery pipeline is ENGINEERING-COMPLETE and production is FROZEN.** **T-110 is NOT
-> authorized.** **Nothing is running:** T-109 exited, was scored once, and is closed; the heavy lock
-> is free, zero sprint-owned Python is alive, no job is unowned. Verify all three yourself — § 1.
+> **THE NEXT ACTION IS TO SCOPE `F-183`. It is read-only and needs no unfreeze.**
+> `pwml/writer.py` builds a PWML IR by a **second export path that never calls
+> `validate_pre_export`**, so the `F-179` support rule has no reach there. Establish only this:
+> **is that path reachable in a batch or app run, or is it dead / test-only / already covered?**
+> **If dead, test-only or otherwise protected** → `F-179`'s guarantee holds on every live export
+> path; proceed to independent review and freeze of the ORCH-723 evaluation instruments, then the
+> unseen cohort. **If live** → it needs the same seam first, under a new narrow authorization.
 >
-> **The next phase is the RAG / LLM EVALUATION FRAMEWORK. Its launcher is
-> [`prompts/PROMPT-001-eval-framework.md`](prompts/PROMPT-001-eval-framework.md) — paste it into a
-> fresh session.**
+> **DO NOT consume the ten unseen papers before `F-183` is scoped.** A false-positive biological
+> export on a path the gate cannot see would score as a **success** on unseen papers.
+>
+> **PRODUCTION IS FROZEN.** `D-090` governs. It was narrowly unfrozen for the `F-179` seam ONLY,
+> under **`D-094`**, and **re-frozen the same wave**. `T-110` is still NOT authorized.
+> `supported_reactions_complete` remains **UNSET** on all ten gold cases.
+>
+> **`RESUME-NEXT-SESSION.md` § 0 is the live state.** Read it before this document: §§ 1–8 below
+> were written at the close of `ORCH-720` and are **historical** except where this banner and the
+> superseding notes in §§ 1, 4 and 5 correct them.
 >
 > **The rule most likely to be broken by accident:** *no production behaviour changes solely to
 > satisfy the incomplete test instrument.* A `src/` change justified by *"it would make Priority 2
-> evaluable"* or *"it would move Priority 5 off zero"* is a **reject**.
+> evaluable"* or *"it would move Priority 5 off zero"* is a **reject**. `D-094` was granted for a
+> **repeated product-contract violation**, which is a different thing, and it is closed.
+>
+> <details><summary>Superseded ORCH-720 banner, kept for the record</summary>
+>
+> *"THE ENGINEERING SPRINT IS CLOSED — `D-090`. The recovery pipeline is ENGINEERING-COMPLETE and
+> production is FROZEN. T-110 is NOT authorized. Nothing is running… The next phase is the RAG / LLM
+> EVALUATION FRAMEWORK. Its launcher is `prompts/PROMPT-001-eval-framework.md` — paste it into a
+> fresh session."* — **`PROMPT-001` was executed in `ORCH-723`; D-093 § 5 items 2–8 are DONE. Do
+> not paste it again.**
+>
+> </details>
 
 ---
 
 ## 1. Takeover — verify once, do not trust these numbers
+
+> **UPDATED BY `ORCH-723`.** Two things changed since this table was written at the close of
+> `ORCH-720`, and both matter on takeover:
+>
+> **1. PRODUCTION CODE MOVED — once, narrowly, under `D-094`, and it is frozen again.** The entire
+> production diff of this phase is:
+>
+> | file | change |
+> |---|---|
+> | `src/t2pw/pipeline/reaction_support.py` | **NEW** leaf module: a canonical reaction needs defensible reaction-level support to export. Reads provenance, mutates nothing, imports no stage. |
+> | `src/t2pw/pipeline/stage_contracts.py` | `validate_pre_export` **only**. |
+>
+> `src/t2pw/app/streamlit_app.py` was **read but never modified** — its sha256 below is unchanged.
+>
+> **2. Findings register:** `F-179` **CLOSED**. `F-180`, `F-181`, `F-182` **DEFERRED**.
+> **`F-183` OPEN and is the gate before the unseen cohort** — see the banner above and § 4.
+>
+> Current evidence pointers live in `RESUME-NEXT-SESSION.md` § 0. The current gate results are
+> **SMOKE 508** (`g11/ORCH-723/87-smoke-f179-final.json`), **gold-readers 465 / 0 / 8 / 0**
+> (`g11/ORCH-723/88-goldreaders-f179-final.json`) and **G11 strict 56 artifacts, 0 non-compliant**.
 
 | Check | Expected | How |
 |---|---|---|
@@ -129,6 +171,22 @@ have **released the leg whose mevalonate arm is missing.**
 
 ## 4. Findings registered this wave — F-173, F-174, F-175
 
+> **CURRENT FINDINGS REGISTER — `ORCH-723`. Read this table instead of inferring from the
+> historical text below or from the appended `ORCH-723 § 2 / § 3` sections at the end of this file.**
+>
+> | id | what | status |
+> |---|---|---|
+> | **F-179** | false-positive biological export: a canonical payload whose only reaction (`glycine → heme`) no source states, shipped with `semantic_evaluation: passed` | **CLOSED** under `D-094`; production re-frozen |
+> | **F-180** | `ferric iron (Fe3+)` parsed as a composite `+` token | production tokenizer defect — **DEFERRED** |
+> | **F-181** | interactions reference unregistered entities `HRM3` / `HRM6` | production referential-integrity defect — **DEFERRED** |
+> | **F-182** | `final_gate_report_missing` | lifecycle / observability defect — **DEFERRED**. **NOT automatically a biological failure** |
+> | **F-183** | `pwml/writer.py` builds an IR by a second export path that never calls `validate_pre_export`, so the `F-179` rule has no reach there | **OPEN — the gate before the unseen cohort** |
+>
+> Earlier findings `F-172`, `F-174`, `F-175`, `F-176` (reporting half), `F-177` and `F-178` are
+> done. The evidence bundle for `F-179`…`F-182` is `evidence/f179_bundle/` — `INVENTORY.json`
+> (SHA-256 + source path for 32 artifacts), `EXTRACTS.json`, `DIAGNOSIS.md`. Re-verify with
+> `evidence/f179_bundle_build.py . --verify`.
+
 **F-173** — `PMC12096016/strict`'s `review_required` is a known false negative **with a known sign**;
 half of Priority 5's strict denominator is known-misclassified in a known direction. **T-109 REFINED
 it:** on that draw the cap was held by `EntD` alone, which D-088 does not excuse, so *that* instance
@@ -154,11 +212,26 @@ unmet going forward**, though the archived census and its committed logs are int
 
 ---
 
-## 5. THE NEXT WORK ORDER — the RAG / LLM evaluation framework
+## 5. THE NEXT WORK ORDER — ~~the RAG / LLM evaluation framework~~ **EXECUTED. See the banner.**
 
-> **The launcher is [`prompts/PROMPT-001-eval-framework.md`](prompts/PROMPT-001-eval-framework.md).**
-> It carries the full ordered work order, the freeze rules, the verification block and every process
-> trap. **Paste it into a fresh session.** What follows is the summary it expands.
+> ## ⚠ THIS SECTION IS HISTORICAL. DO NOT WORK FROM IT.
+>
+> **`PROMPT-001-eval-framework.md` was executed in `ORCH-723`.** `D-093` § 5 items 2–8 are **DONE**:
+> `R-D092-1` row-level lineage, the lineage-aware evaluator, the two tables with two denominators,
+> re-evaluation of 1,042 canonical rows into the three support classes, Phoenix started with 1,314
+> spans verified out of the store, and the core RAG metrics with seven outcomes kept apart.
+> **Do not paste that launcher again.**
+>
+> **The current next action is in the banner at the top of this file: scope `F-183`.** Then
+> independent review and freeze of the evaluation instruments → freeze the evaluation-method
+> manifest → archive/corpus analysis → freeze the ten unseen-paper manifest → 20 unseen legs →
+> manual PWML review → manuscript analysis.
+>
+> **`supported_reactions_complete` IS NO LONGER "ITEM 1" — `D-093` § 4 SUPERSEDES THAT.** The
+> ruling is explicit: *"Stop trying to make the old Priority-2 boolean work before the evaluator
+> understands where each reaction came from."* It stays **UNSET** on all ten gold cases. The
+> paragraph immediately below predates `D-093` and is wrong on this point; it is kept only so the
+> change of direction is legible.
 
 **Nothing below is chartered. Charter one card at a time, narrowly, and review the diff.**
 
