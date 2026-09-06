@@ -385,25 +385,85 @@ def test_every_unchanged_candidate_answers_exactly_as_it_did_at_base() -> None:
         for entry in tip["entries"]
         if base_digests[entry["key"]] != entry["digest"]
     ]
-    assert len(changed) == 115, changed[:10]
+    # RE-PINNED by C-118 under D-095a, a deliberate baseline move under permanent
+    # merge rule 4. C-061 itself moved these to 115 changed / 1885 unchanged by
+    # recovering the MenA/MenG/UbiE clauses of two multi-reaction sentences.
+    # C-118 adds ONE template for the nominalized "conversion of X to Y
+    # (catalyzed by E)", which reads PMC12452463's enterobactin spans that no
+    # template read before, so 115 -> 249 changed and 1885 -> 1751 unchanged.
+    # Measured, not estimated: docs/pwml_recovery_sprint/evidence/
+    # c118_golden_delta_base.json (115/1885/5) and c118_golden_delta_tip.json
+    # (249/1751/10), both produced by c118_golden_delta.py from this same corpus.
+    #
+    # THE SAFETY PROPERTY IS UNCHANGED and is the assertion below it: every
+    # changed entry is a candidate the production run REJECTED, so this card, like
+    # C-061, can only ever unblock a refusal — no admission broke.
+    assert len(changed) == 249, changed[:10]
     assert all("/rejected[" in key for key in changed), changed[:10]
-    assert all(
-        entry["ok"] for entry in tip["entries"] if entry["key"] in set(changed)
+
+    # Which of them are still refused is now PINNED AS A SET rather than asserted
+    # to be empty. C-061's "all changed are ok" said nothing about which entries
+    # were allowed to stay refused; this names the only one that may, and
+    # test_the_delta_is_paper_verbatim_reactions_and_no_admission_broke below
+    # proves its refusal got STRICTLY MORE SPECIFIC rather than appearing from
+    # nowhere. A new refusal anywhere else in the changed set fails here.
+    still_refused = sorted(
+        e["key"] for e in tip["entries"] if e["key"] in set(changed) and not e["ok"]
     )
+    assert still_refused == ["PMC12452463/research/rejected[190]"], still_refused
 
     # Nothing that used to be admitted moved, and no refusal changed its wording.
     unchanged = [e for e in tip["entries"] if e["key"] not in set(changed)]
-    assert len(unchanged) == 1885
+    assert len(unchanged) == 1751
 
 
-def test_the_delta_is_five_paper_verbatim_reactions() -> None:
+def test_the_delta_is_paper_verbatim_reactions_and_no_admission_broke() -> None:
     """A9 — what moved, in biology rather than in counts.
 
-    Five distinct claims, all of them a clause of a sentence that states several:
-    MenA's and MenG's steps in PMC12421875 (both legs), and MenA's and UbiE's
-    steps in PMC12657337's three-reaction sentence. Every one names substrates,
-    product and catalyst that its own span states word for word. No claim gained
-    admission on a reaction its span does not state.
+    Named for the INVARIANT and not for the count, so it cannot go stale the next
+    time this golden legitimately moves. It was
+    ``test_the_delta_is_five_paper_verbatim_reactions`` under C-061, whose five
+    C-118 took to ten.
+
+    C-061's five, all of them a clause of a sentence that states several: MenA's
+    and MenG's steps in PMC12421875 (both legs), and MenA's and UbiE's steps in
+    PMC12657337's three-reaction sentence.
+
+    C-118's five (D-095a), all one shape: the nominalized "conversion of
+    chorismate to isochorismate" with EntC in an attached "catalyzed by ...",
+    from PMC12452463 — the first step of the enterobactin pathway, which no
+    template read before. Every one of the ten names substrates, product and
+    catalyst that its own span states word for word.
+
+    WHY THIS IS SHARPER THAN THE ASSERTION IT REPLACES. C-061 asserted one thing
+    of the delta: every changed claim is admitted. That is silent about a claim
+    that stays refused — it can only fail, never characterise. This now asserts
+    three things at once:
+
+    * every changed entry sits in the production run's ``rejected`` list, so no
+      previously ADMITTED candidate broke;
+    * every changed claim either becomes ``ok`` — and then the relation the span
+      was read as stating is the one claimed, not a neighbouring clause's — or
+      STAYS REFUSED with a DIFFERENT, MORE SPECIFIC reason;
+    * and none moves from ``ok`` to refused.
+
+    Exactly one stays refused, and it is named rather than excused:
+    ``PMC12452463/research/rejected[190]``, the claim ``DHB -> enterobactin
+    [EntD/EntE/EntF enzyme complex]`` made against a span that states
+    chorismate -> isochorismate. At base it was refused as
+    ``evidence_relation_roles_unassignable`` — *"no implemented pattern could
+    assign substrate/product/catalyst roles"* — which is now simply untrue: the
+    pattern reads it. It is refused instead as
+    ``evidence_relation_disagrees_with_claim`` plus
+    ``unsupported_catalyst_injection``, which is what is actually wrong with the
+    claim. The gate became MORE precise, not looser.
+
+    That transition is PROVED, not asserted: the base entry is reconstructed from
+    the reason string and its digest checked against the committed
+    ``c061_relation_golden_base.json``, so "it was already refused at base, and
+    for the vaguer reason" rests on committed evidence rather than on this
+    docstring. And because that is the only entry refused at the tip, "none moves
+    from ok to refused" is established for the whole changed set.
     """
     import c061_relation_golden as golden
 
@@ -419,12 +479,24 @@ def test_the_delta_is_five_paper_verbatim_reactions() -> None:
         key = f"{row['paper']}/{row['leg']}/{row['bucket']}[{row['index']}]"
         if base_digests[key] == tip[key]["digest"]:
             continue
+        # No changed entry may come from the ACCEPTED list: unblocking a refusal
+        # is what this family of cards may do, breaking an admission is not.
+        assert row["bucket"] == "rejected", key
         distinct[
             (row["span"], tuple(row["inputs"]), tuple(row["outputs"]), tuple(row["enzymes"]))
         ] = row
 
-    assert len(distinct) == 5, [k[1:] for k in distinct]
-    for span, inputs, outputs, enzymes in distinct:
+    # RE-PINNED by C-118 under D-095a: 5 -> 10, the five C-061 menaquinone claims
+    # plus five chorismate -> isochorismate / EntC claims from PMC12452463.
+    assert len(distinct) == 10, [k[1:] for k in distinct]
+    assert sum(1 for r in distinct.values() if r["paper"] == "PMC12452463") == 5
+    assert sum(1 for r in distinct.values() if r["paper"] != "PMC12452463") == 5
+
+    def fold(names):
+        return {str(n).casefold().strip() for n in names if str(n).strip()}
+
+    still_refused = []
+    for (span, inputs, outputs, enzymes), row in distinct.items():
         verdict = validate_evidence_span(
             span,
             inputs=list(inputs),
@@ -432,18 +504,95 @@ def test_the_delta_is_five_paper_verbatim_reactions() -> None:
             enzymes=list(enzymes),
             reversible=False,
         )
-        assert verdict.ok
+        if not verdict.ok:
+            still_refused.append(
+                (f"{row['paper']}/{row['leg']}/{row['bucket']}[{row['index']}]", verdict)
+            )
+            continue
+
         # The reaction the span was read as stating is the reaction claimed —
         # not a neighbouring clause's, and not a mixture of two.
+        #
+        # C-118 STRENGTHENS this. C-061 filtered on ``validate_evidence_span(...)
+        # .ok and catalysts == enzymes``, and that first conjunct does not mention
+        # ``r``: it is the same verdict for every candidate relation, so the only
+        # per-relation requirement was on the CATALYST. A claim could therefore be
+        # matched to a relation whose chemistry it does not share. The metabolite
+        # equality below is new and is the requirement that actually pins the
+        # clause; the catalyst equality is C-061's, unchanged, wherever the claim
+        # names an enzyme.
         agreeing = [
             r
             for r in parse_span_relations(span)
-            if validate_evidence_span(
+            if fold(r.inputs) == fold(inputs)
+            and fold(r.outputs) == fold(outputs)
+            and (fold(r.catalysts) == fold(enzymes) if enzymes else True)
+        ]
+        assert agreeing, (span[:60], inputs, outputs, enzymes)
+
+        if not enzymes:
+            # A claim that names NO catalyst is admitted against a span that does
+            # name one: it asserts strictly LESS than its evidence, which is not a
+            # disagreement. Demanding ``catalysts == ()`` of the relation here
+            # would be a requirement about the SPAN — that it name no catalyst
+            # either — and is unsatisfiable for exactly the sentences this card
+            # recovers, so it is not what C-061's rule meant.
+            #
+            # What must remain impossible is naming the WRONG catalyst, and that
+            # is asserted rather than assumed: a claim identical to this one
+            # except that it injects an enzyme the span never attached is REFUSED.
+            injected = validate_evidence_span(
                 span,
                 inputs=list(inputs),
                 outputs=list(outputs),
-                enzymes=list(enzymes),
-            ).ok
-            and set(map(str.casefold, r.catalysts)) == set(map(str.casefold, enzymes))
-        ]
-        assert agreeing, (span[:60], inputs, outputs, enzymes)
+                enzymes=["NotTheCatalystThisSpanNames"],
+            )
+            assert not injected.ok
+            assert any(
+                r.startswith(REASON_UNSUPPORTED_CATALYST) for r in injected.reasons
+            ), injected.reasons
+
+    # ------------------------------------------------------------------
+    # The one claim that stays refused, and the proof that its refusal got
+    # more specific rather than appearing from nowhere.
+    # ------------------------------------------------------------------
+    assert [key for key, _v in still_refused] == [
+        "PMC12452463/research/rejected[190]"
+    ], [k for k, _v in still_refused]
+    key, verdict = still_refused[0]
+
+    base_reason = (
+        f"{REASON_ROLES_UNASSIGNABLE}: the span states a relation but no "
+        "implemented pattern could assign substrate/product/catalyst "
+        "roles — recorded for review rather than inferred"
+    )
+    # AT BASE: no relation at all, refused, and refused for exactly that reason.
+    # Reconstructed and digested with the golden's own function, so this is a
+    # statement about the committed base file and not about this test's memory.
+    assert (
+        golden.entry_digest(
+            {
+                "span_sha256": tip[key]["span_sha256"],
+                "shim": None,
+                "ok": False,
+                "reasons": [base_reason],
+                "normalized_reversible": None,
+            }
+        )
+        == base_digests[key]
+    )
+
+    # AT TIP: still refused — so it did NOT move from ok to refused — but the
+    # vague code is gone and two specific ones replaced it.
+    assert tip[key]["ok"] is False
+    assert tip[key]["shim"]["pattern"] == "nominalized_conversion_catalyzed_by"
+    assert not any(
+        r.startswith(REASON_ROLES_UNASSIGNABLE) for r in tip[key]["reasons"]
+    ), tip[key]["reasons"]
+    assert any(
+        r.startswith(REASON_RELATION_DISAGREES) for r in tip[key]["reasons"]
+    ), tip[key]["reasons"]
+    assert any(
+        r.startswith(REASON_UNSUPPORTED_CATALYST) for r in tip[key]["reasons"]
+    ), tip[key]["reasons"]
+    assert set(verdict.reasons) == set(tip[key]["reasons"])

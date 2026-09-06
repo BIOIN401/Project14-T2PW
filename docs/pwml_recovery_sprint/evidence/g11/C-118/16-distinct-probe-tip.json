@@ -1,0 +1,73 @@
+{
+  "label": "c118-distinct-probe",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/c118_distinct_probe.py",
+    "docs/pwml_recovery_sprint/evidence/c118_distinct_claims_tip.json"
+  ],
+  "cwd": "C:\\t\\c118",
+  "started_at": "2026-09-06T19:39:08+00:00",
+  "finished_at": "2026-09-06T19:39:17+00:00",
+  "duration_seconds": 9.735408799984725,
+  "timeout_seconds": 900.0,
+  "root_pid": 119264,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 120520,
+      "name": "python.exe",
+      "ppid": 119264
+    }
+  ],
+  "descendants_terminated": [
+    120520
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8524,
+      "name": "python.exe"
+    },
+    {
+      "pid": 101616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 101756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 120104,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-118/16-distinct-probe-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c118\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c118",
+    "repo_head": "eb9155fdf6a71894dd1bd50959b6a68179f0bae4",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
