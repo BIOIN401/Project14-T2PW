@@ -6001,3 +6001,90 @@ and `PMC12782028`; `glycine → heme` still blocked; the integration smoke suite
 `C-118`'s boundary and expires with it. It is **not** authority for a second admission
 change, and a disappointing number on the unseen cohort does **not** reopen it — the
 product owner's stopping rule governs.
+
+---
+
+## D-095a — `C-118` boundary amendment: the C-061 preservation golden may be RE-PINNED, test-only · 2026-09-06 · LOCKED
+
+**Amends `D-095` § 3 only. Production ownership is unchanged and production stays frozen
+apart from the single `_EXTRA_PROSE_PATTERNS` template already authorized.**
+
+### What happened
+
+`C-118` reported that `tests/test_rag_multi_relation_spans.py` — the `C-061` preservation
+golden over 2,000 real candidate spans — moves, and correctly **refused to touch it**
+because the file is outside its write list. The branch therefore carries 2 failures. That
+was the right call: merge gate 2 would have rejected a silent widening.
+
+### The delta, verified by the orchestrator against the committed evidence, not the report
+
+| | base | tip |
+|---|---|---|
+| `changed` | 115 | **249** |
+| `unchanged` | 1,885 | **1,751** |
+| `distinct` claims | 5 | **10** |
+| `all_changed_are_rejected` | `True` | **`True`** |
+| `changed_not_rejected` | `[]` | **`[]`** |
+| `all_changed_now_ok` | `True` | `False` (exactly 1) |
+
+**The safety property holds and was checked directly: `changed_not_rejected` is empty at
+the tip, so every changed entry sits in the `rejected` list. No previously-admitted
+candidate broke.**
+
+The five NEW distinct claims were read individually. All five are the
+chorismate → isochorismate / EntC shape, each stated word for word by its own span:
+
+- `conversion of chorismate to isochorismate (catalyzed by EntC)`
+- `the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC)`
+- `The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) .`
+- `Chorismate to Isochorismate : The pathway begins with …`
+- `The key steps in enterobactin production … include the conversion of chorismate to isochorismate (catalyzed by EntC), formation of …`
+
+**Nothing unrelated entered.** The five pre-existing `C-061` MenA/MenG/HepPPS rows are
+preserved unchanged. `_PROSE_PATTERNS` was independently confirmed byte-identical —
+sha256 `fea7cc2dd2393224`, 5,677 chars, at both revisions.
+
+The single changed-but-not-ok entry, `PMC12452463/research/rejected[190]`, **stays
+refused**; its reason moved from `evidence_relation_roles_unassignable` to
+`evidence_relation_disagrees_with_claim` plus `unsupported_catalyst_injection`. That is
+the gate becoming **more** precise, not looser.
+
+### The amendment
+
+`C-118` may write `tests/test_rag_multi_relation_spans.py`, **for re-pinning only.**
+
+**This is a deliberate baseline move under permanent merge rule 4, with the exact delta
+documented above.** It is not permission to weaken a test.
+
+**Binding on how it is re-pinned:**
+
+1. **The invariant must be PRESERVED OR STRENGTHENED, never loosened.** `C-061`'s standing
+   rule applies: *re-pointing a stale comparand is in scope, weakening the comparison is
+   not.* Specifically, `test_the_delta_is_five_paper_verbatim_reactions` must **not** be
+   softened into a loop that merely tolerates a failure. Restate it as the sharper
+   property the tip actually satisfies:
+   > every changed entry is in the `rejected` list; each one either becomes `ok`, or
+   > stays refused **with a different, more specific reason**; and **none moves from `ok`
+   > to refused.**
+   The single not-ok entry must be named, with its before and after reason, so a reader
+   sees why it is not a regression.
+2. The re-pinned counts are the measured ones — 249 / 1,751 / 10 — with a comment saying
+   `C-118` moved them, from what, and why, exactly as `C-061` documented its own move.
+3. **No test function may be added, removed, renamed or reordered** in that file if it is
+   addressed positionally by any gate; check before editing.
+4. Nothing else in the file changes.
+
+### The four extra evidence files are ACCEPTED
+
+`evidence/c118_golden_delta.py`, `c118_entry_probe.py` and their two JSON outputs stay.
+They are orchestration measurement tooling on the `c061_base_proof.py` precedent — run by
+no gate, imported by no production code — and they are the reason the golden-delta claim
+above could be **verified rather than believed**. Deleting them would make the merge rest
+on a report instead of on evidence.
+
+### Unchanged
+
+Production ownership, the F-179 constraints, the negative controls, and the
+NOT-authorized list (copula-adverb form, `evidence_relation_disagrees_with_claim`
+artifacts, gap routing) all stand exactly as written in `D-095`. **Production RE-FREEZES
+on merge.**
