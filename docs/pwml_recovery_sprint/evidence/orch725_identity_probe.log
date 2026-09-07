@@ -1,0 +1,341 @@
+============================================================================================
+PART A -- production identity/species predicates applied to the SHIPPED payload
+============================================================================================
+root : .
+run  : runs_verify/2026-09-06_1425
+
+############################################################################################
+PMC7232280/strict   [FAIL -- 2 identity issue codes (Neurospora crassa)]
+  final_stage3_gate_report : ok=True errors=0 stage=final_pre_export_stage3_gates
+  FAILING CONTRACT REPORT  : post_normalization_contract_report phase=audit_round stage=post_normalization errors=2
+      - /entities/proteins/4 Protein 'NIT-9G' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/5 Protein 'NIT-9E' is missing a UniProt or DrugBank identifier.
+  proteins in shipped payload: 2
+    [0] NIT-8                        identity=Q7SEW2                               species=Neurospora crassa      keys=['uniprot', 'mapped_ids']
+    [1] Unknown                      identity=UNKNOWN                              species=Arabidopsis thaliana   keys=['uniprot', 'uniprot_id', 'mapped_ids']
+  protein_complexes (5):
+      MPT synthase complex                           rule=-                                  target_organism=-
+      NIT-7A                                         rule=pathbank_unknown_protein_fallback  target_organism=Neurospora crassa
+      NIT-7B                                         rule=pathbank_unknown_protein_fallback  target_organism=Neurospora crassa
+      NIT-9G                                         rule=pathbank_unknown_protein_fallback  target_organism=Neurospora crassa
+      NIT-9E                                         rule=pathbank_unknown_protein_fallback  target_organism=Neurospora crassa
+  entities the FAILING report named, located in the shipped payload:
+      NIT-9E                                       -> now a protein_complex
+      NIT-9G                                       -> now a protein_complex
+  highest /entities/proteins/N index in the failing report: 5; shipped protein rows: 2 -> THE SHIPPED LIST CANNOT HOST IT
+  => shipped payload PASSES (0 row-level objection(s))
+
+############################################################################################
+PMC8510960/strict   [FAIL -- 7 identity issue codes (Catharanthus roseus)]
+  final_stage3_gate_report : ok=True errors=0 stage=final_pre_export_stage3_gates
+  FAILING CONTRACT REPORT  : post_normalization_contract_report phase=audit_round stage=post_normalization errors=7
+      - /entities/proteins/0 Protein 'G10H' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/3 Protein 'SGD' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/5 Protein 'DAT' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/10 Protein 'CrNPF2.9' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/11 Protein 'CrTPT2' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/12 Protein 'CrGATA1' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/13 Protein 'CrPIF1' is missing a UniProt or DrugBank identifier.
+  proteins in shipped payload: 3
+    [0] TDC                          identity=P17770                               species=Catharanthus roseus    keys=['uniprot', 'mapped_ids']
+    [1] PRX1                         identity=Q0VYC8                               species=Catharanthus roseus    keys=['uniprot', 'mapped_ids']
+    [2] Unknown                      identity=UNKNOWN                              species=Arabidopsis thaliana   keys=['uniprot', 'uniprot_id', 'mapped_ids']
+  protein_complexes (5):
+      TDC complex                                    rule=-                                  target_organism=-
+      PRX1 complex                                   rule=-                                  target_organism=-
+      G10H                                           rule=pathbank_unknown_protein_fallback  target_organism=Catharanthus roseus
+      STR                                            rule=pathbank_unknown_protein_fallback  target_organism=Catharanthus roseus
+      SGD                                            rule=pathbank_unknown_protein_fallback  target_organism=Catharanthus roseus
+  entities the FAILING report named, located in the shipped payload:
+      CrGATA1                                      -> absent (dropped or quarantined before export)
+      CrNPF2.9                                     -> absent (dropped or quarantined before export)
+      CrPIF1                                       -> absent (dropped or quarantined before export)
+      CrTPT2                                       -> absent (dropped or quarantined before export)
+      DAT                                          -> absent (dropped or quarantined before export)
+      G10H                                         -> now a protein_complex
+      SGD                                          -> now a protein_complex
+  highest /entities/proteins/N index in the failing report: 13; shipped protein rows: 3 -> THE SHIPPED LIST CANNOT HOST IT
+  => shipped payload PASSES (0 row-level objection(s))
+
+############################################################################################
+PMC12376012/strict   [FAIL -- 10 identity issue codes (Homo sapiens)]
+  final_stage3_gate_report : ok=True errors=0 stage=final_pre_export_stage3_gates
+  FAILING CONTRACT REPORT  : post_normalization_contract_report phase=audit_round stage=post_normalization errors=10
+      - /entities/proteins/3 Protein 'ORMDL1' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/4 Protein 'ORMDL2' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/5 Protein 'ORMDL3' is missing a UniProt or DrugBank identifier.
+      - /entities/proteins/9 Protein 'dihydroceramide Δ4-desaturase 1' is missing species/organism.
+      - /entities/proteins/10 Protein 'sphingosine kinase' is missing species/organism.
+      - /entities/proteins/11 Protein 'sphingomyelin synthase 1' is missing species/organism.
+      - /entities/proteins/12 Protein 'ceramide kinase' is missing species/organism.
+      - /entities/proteins/13 Protein 'ceramidase' is missing species/organism.
+      - /entities/proteins/14 Protein 'sphingomyelinase' is missing species/organism.
+      - /entities/proteins/15 Protein 'S1P phosphatase' is missing species/organism.
+  proteins in shipped payload: 8
+    [0] SPTLC1                       identity=O15269                               species=Homo sapiens           keys=['uniprot', 'mapped_ids']
+    [1] SPTLC2                       identity=O15270                               species=Homo sapiens           keys=['uniprot', 'mapped_ids']
+    [2] SPTssa                       identity=Q969W0                               species=Homo sapiens           keys=['uniprot', 'mapped_ids']
+    [3] KDSR                         identity=Q06136                               species=Homo sapiens           keys=['uniprot', 'mapped_ids']
+    [4] CERT                         identity=Q9Y5P4                               species=Homo sapiens           keys=['uniprot', 'mapped_ids']
+    [5] ceramide synthase            identity=Q71RH2                               species=Homo sapiens           keys=['uniprot', 'mapped_ids']
+    [6] S1P phosphatase              identity=Q8TCT9                               species=Homo sapiens           keys=['uniprot', 'mapped_ids']
+    [7] Unknown                      identity=UNKNOWN                              species=Arabidopsis thaliana   keys=['uniprot', 'uniprot_id', 'mapped_ids']
+  protein_complexes (8):
+      Serine Palmitoyltransferase complex            rule=-                                  target_organism=-
+      3-ketodihydrosphingosine reductase             rule=pathbank_protein_complex_id        target_organism=-
+      S1P phosphatase complex                        rule=-                                  target_organism=-
+      dihydroceramide Δ4-desaturase 1                rule=pathbank_unknown_protein_fallback  target_organism=Homo sapiens
+      sphingosine kinase                             rule=pathbank_unknown_protein_fallback  target_organism=Homo sapiens
+      sphingomyelin synthase 1                       rule=pathbank_unknown_protein_fallback  target_organism=Homo sapiens
+      ceramidase                                     rule=pathbank_unknown_protein_fallback  target_organism=Homo sapiens
+      sphingomyelinase                               rule=pathbank_unknown_protein_fallback  target_organism=Homo sapiens
+  entities the FAILING report named, located in the shipped payload:
+      ORMDL1                                       -> absent (dropped or quarantined before export)
+      ORMDL2                                       -> absent (dropped or quarantined before export)
+      ORMDL3                                       -> absent (dropped or quarantined before export)
+      S1P phosphatase                              -> STILL a bare protein
+      ceramidase                                   -> now a protein_complex
+      ceramide kinase                              -> absent (dropped or quarantined before export)
+      dihydroceramide Δ4-desaturase 1              -> now a protein_complex
+      sphingomyelin synthase 1                     -> now a protein_complex
+      sphingomyelinase                             -> now a protein_complex
+      sphingosine kinase                           -> now a protein_complex
+  highest /entities/proteins/N index in the failing report: 15; shipped protein rows: 8 -> THE SHIPPED LIST CANNOT HOST IT
+  => shipped payload PASSES (0 row-level objection(s))
+
+############################################################################################
+PMC11172790/strict   [FAIL -- 1 registry-validation issue (P. aeruginosa)]
+  final_stage3_gate_report : ok=True errors=0 stage=final_pre_export_stage3_gates
+  FAILING CONTRACT REPORT  : post_normalization_contract_report phase=audit_round stage=post_normalization errors=1
+      - /processes Registry validation failed: Registry validation failed:
+/processes/interactions/5/entity_2 unknown entity: inner membran
+  proteins in shipped payload: 0
+  => shipped payload PASSES (0 row-level objection(s))
+
+############################################################################################
+PMC12071552/strict   [control: PASSED, produced the pilot's only PWML]
+  final_stage3_gate_report : ok=True errors=0 stage=final_pre_export_stage3_gates
+  proteins in shipped payload: 2
+    [0] DltA                         identity=P0C397                               species=Staphylococcus aureu   keys=['uniprot']
+    [1] DltD                         identity=Q2FZW3                               species=Staphylococcus aureu   keys=['uniprot']
+  protein_complexes (1):
+      DltA complex                                   rule=-                                  target_organism=-
+  => shipped payload PASSES (0 row-level objection(s))
+
+============================================================================================
+PART A VERDICT
+============================================================================================
+  PMC7232280/strict              shipped payload PASSES
+  PMC8510960/strict              shipped payload PASSES
+  PMC12376012/strict             shipped payload PASSES
+  PMC11172790/strict             shipped payload PASSES
+  PMC12071552/strict             shipped payload PASSES
+
+  'shipped payload PASSES' on a leg the run FAILED is the STALE reading: the run
+  was failed on a superseded audit_round report, not on the payload that would
+  have been exported. That is F-147, already registered, and PRODUCT_CONTRACT
+  section 1 names a stale gate report an unacceptable terminal blocker.
+  It is NOT on its own a licence to make these legs pass -- F-147 carries a
+  documented precondition and it is a product decision, not this probe's.
+
+
+============================================================================================
+PART B -- what did the resolver actually refuse? (identity_verdict, D-003 retained rows)
+============================================================================================
+
+--------------------------------------------------------------------------------------------
+REDUNDANT-RIVAL (same gene, same organism as the shipped accession)
+  entities: 17   papers: 3  ['PMC11172790', 'PMC12376012', 'PMC8510960']
+    PMC11172790/research PvdL                                 org=Pseudomonas aeruginosa       reason=ambiguous_insufficient_margin
+        1 rival(s), all same gene+organism; reviewed(judged)=False, margin=0.0
+    PMC11172790/research PvdI                                 org=Pseudomonas aeruginosa       reason=ambiguous_insufficient_margin
+        4 rival(s), all same gene+organism; reviewed(judged)=False, margin=0.0
+    PMC11172790/research PvdJ                                 org=Pseudomonas aeruginosa       reason=ambiguous_insufficient_margin
+        4 rival(s), all same gene+organism; reviewed(judged)=False, margin=0.0
+    PMC11172790/research PvdD                                 org=Pseudomonas aeruginosa       reason=ambiguous_insufficient_margin
+        4 rival(s), all same gene+organism; reviewed(judged)=False, margin=0.0
+    PMC11172790/research PvdA                                 org=Pseudomonas aeruginosa       reason=ambiguous_insufficient_margin
+        4 rival(s), all same gene+organism; reviewed(judged)=True, margin=0.04999999999999993
+    PMC11172790/research PvdE                                 org=Pseudomonas aeruginosa       reason=ambiguous_insufficient_margin
+        7 rival(s), all same gene+organism; reviewed(judged)=False, margin=0.0
+    PMC12376012/research ORMDL1                               org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        4 rival(s), all same gene+organism; reviewed(judged)=True, margin=0.030000000000000027
+    PMC12376012/research ORMDL2                               org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        2 rival(s), all same gene+organism; reviewed(judged)=True, margin=0.030000000000000027
+    PMC12376012/research ORMDL3                               org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        4 rival(s), all same gene+organism; reviewed(judged)=True, margin=0.030000000000000027
+    PMC12376012/research Orm1                                 org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        3 rival(s), all same gene+organism; reviewed(judged)=True, margin=0.030000000000000027
+    PMC12376012/research Orm2                                 org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        7 rival(s), all same gene+organism; reviewed(judged)=True, margin=0.030000000000000027
+    PMC12376012/research dihydroceramide Δ4-desaturase 1      org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        judged O15121 (Homo sapiens) reviewed=True margin=0.030000000000000027; 2 competing accession(s)
+    PMC12376012/strict   ORMDL1                               org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        judged Q9P0S3 (Homo sapiens) reviewed=True margin=0.030000000000000027; 4 competing accession(s)
+    PMC12376012/strict   ORMDL2                               org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        judged Q53FV1 (Homo sapiens) reviewed=True margin=0.030000000000000027; 2 competing accession(s)
+    PMC12376012/strict   ORMDL3                               org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        judged Q8N138 (Homo sapiens) reviewed=True margin=0.030000000000000027; 4 competing accession(s)
+    PMC8510960/strict   G10H                                 org=Catharanthus roseus          reason=ambiguous_insufficient_margin
+        judged Q8VWZ7 (Catharanthus roseus) reviewed=True margin=0.030000000000000027; 1 competing accession(s)
+    PMC8510960/strict   DAT                                  org=Catharanthus roseus          reason=ambiguous_insufficient_margin
+        judged Q9ZTK5 (Catharanthus roseus) reviewed=True margin=0.030000000000000027; 2 competing accession(s)
+
+--------------------------------------------------------------------------------------------
+NO ORGANISM-MATCHING RECORD IN POOL
+  entities: 12   papers: 6  ['PMC11405693', 'PMC12071552', 'PMC12376012', 'PMC12542839', 'PMC7232280', 'PMC8510960']
+    PMC11405693/strict   NADPH-cytochrome P450 reductases     org=Arabidopsis thaliana         reason=species_mismatch
+        judged A0AAE7E7C3 is Arcobacter defluvii; 0 of 0 pool rows are Arabidopsis thaliana
+    PMC12071552/strict   DltB                                 org=Staphylococcus aureus (MRS   reason=species_mismatch
+        judged P39580 is Bacillus subtilis (strain 168); 0 of 0 pool rows are Staphylococcus aureus (MRSA N315)
+    PMC12376012/research sphingomyelinases                    org=Homo sapiens                 reason=species_mismatch
+        judged A0A023FR36 is Amblyomma cajennense; 0 of 1 pool rows are Homo sapiens
+    PMC12542839/research RibM                                 org=Bacillus subtilis            reason=species_mismatch
+        judged K4REQ6 is Streptomyces davaonensis (strain DSM 101723 / JCM 4913 / KCC S-0913 / 768); 0 of 7 pool rows are Bacillus subtilis
+    PMC7232280/strict   NIT-1                                org=Neurospora crassa            reason=species_mismatch
+        judged A8WVF1 is Caenorhabditis briggsae; 0 of 8 pool rows are Neurospora crassa
+    PMC7232280/strict   NIT-7AB                              org=Neurospora crassa            reason=species_mismatch
+        judged A0ACE1RQG3 is Coccomyxa elongata; 0 of 8 pool rows are Neurospora crassa
+    PMC7232280/strict   NIT-12                               org=Neurospora crassa            reason=species_mismatch
+        judged A0AAD5R976 is Parelaphostrongylus tenuis; 0 of 1 pool rows are Neurospora crassa
+    PMC7232280/strict   NIT-7A                               org=Neurospora crassa            reason=species_mismatch
+        judged A0ABP1FMS2 is Coccomyxa viridis; 0 of 0 pool rows are Neurospora crassa
+    PMC7232280/strict   NIT-7B                               org=Neurospora crassa            reason=species_mismatch
+        judged A0ACB5RXM8 is Neofusicoccum parvum; 0 of 0 pool rows are Neurospora crassa
+    PMC8510960/strict   BIS1                                 org=Catharanthus roseus          reason=species_mismatch
+        judged O59793 is Schizosaccharomyces pombe (strain 972 / ATCC 24843); 0 of 8 pool rows are Catharanthus roseus
+    PMC8510960/strict   CrMPK3                               org=Catharanthus roseus          reason=species_mismatch
+        judged P19525 is Homo sapiens; 0 of 8 pool rows are Catharanthus roseus
+    PMC8510960/strict   SGD                                  org=Catharanthus roseus          reason=species_mismatch
+        judged Q8GU20 is Rauvolfia serpentina; 0 of 0 pool rows are Catharanthus roseus
+
+--------------------------------------------------------------------------------------------
+MARGIN REJECT, rival rows elided in the snapshot
+  entities: 6   papers: 2  ['PMC11172790', 'PMC12376012']
+    PMC11172790/strict   PvdL                                 org=Pseudomonas aeruginosa       reason=ambiguous_insufficient_margin
+        judged A0A0H2ZA98 (Pseudomonas aeruginosa (strain UCBPP-PA14)) reviewed=False margin=0.0; 1 competing accession(s)
+    PMC11172790/strict   PvdD                                 org=Pseudomonas aeruginosa       reason=ambiguous_insufficient_margin
+        judged Q5DIV9 (Pseudomonas aeruginosa) reviewed=False margin=0.0; 4 competing accession(s)
+    PMC11172790/strict   PvdE                                 org=Pseudomonas aeruginosa       reason=ambiguous_insufficient_margin
+        judged Q5DIU3 (Pseudomonas aeruginosa) reviewed=False margin=0.0; 7 competing accession(s)
+    PMC12376012/research SPTLC3                               org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        judged None (Homo sapiens) reviewed=None margin=0.0; 1 competing accession(s)
+    PMC12376012/research sphingosine kinase                   org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        judged None (Homo sapiens) reviewed=None margin=0.0; 2 competing accession(s)
+    PMC12376012/research sphingosine kinase-1                 org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        judged None (Homo sapiens) reviewed=None margin=0.0; 1 competing accession(s)
+
+--------------------------------------------------------------------------------------------
+WRONG-CANDIDATE-SELECTED (an organism-matching row WAS in the pool)
+  entities: 5   papers: 2  ['PMC12071552', 'PMC12376012']
+    PMC12071552/strict   DltA                                 org=Staphylococcus aureus (MRS   reason=species_mismatch
+        judged P10515 (Homo sapiens) but 2 pool row(s) match Staphylococcus aureus (MRSA N315): P0C397, Q2YWQ8
+    PMC12071552/strict   DltD                                 org=Staphylococcus aureus (MRS   reason=species_mismatch
+        judged Q2FZW3 (Staphylococcus aureus (strain NCTC 8325 / PS 47)) but 1 pool row(s) match Staphylococcus aureus (MRSA N315): Q2FZW3
+    PMC12071552/strict   DltC                                 org=Staphylococcus aureus (MRS   reason=species_mismatch
+        judged P39579 (Bacillus subtilis (strain 168)) but 3 pool row(s) match Staphylococcus aureus (MRSA N315): Q2FZW4, P0C426, P0A020
+    PMC12376012/research ORMDL                                org=Homo sapiens                 reason=species_mismatch
+        judged Q9VP04 (Drosophila melanogaster) but 7 pool row(s) match Homo sapiens: A0A1B0GXE7, F6WST4, F8VXD5, J3QRM9
+    PMC12376012/research sphingosine-1-phosphate phosphatas   org=Homo sapiens                 reason=species_mismatch
+        judged Q9ZVJ5 (Arabidopsis thaliana) but 1 pool row(s) match Homo sapiens: Q8IWX5
+
+--------------------------------------------------------------------------------------------
+NAME-GATE reject
+  entities: 4   papers: 2  ['PMC12376012', 'PMC8510960']
+    PMC12376012/research SPT/ORMDL                            org=Homo sapiens                 reason=implausible_name_match
+        judged Q8N138 ORM1-like protein 3
+    PMC8510960/strict   CrNPF2.9                             org=Catharanthus roseus          reason=implausible_name_match
+        judged A0ACC0AMT9 Magnesium transporter
+    PMC8510960/strict   CrTPT2                               org=Catharanthus roseus          reason=implausible_name_match
+        judged A0ACC0AMT9 Magnesium transporter
+    PMC8510960/strict   CrGATA1                              org=Catharanthus roseus          reason=implausible_name_match
+        judged A0A4Y5QBH9 GATA-like transcription factor
+
+--------------------------------------------------------------------------------------------
+NAME-GATE, no accession on the judged row
+  entities: 3   papers: 1  ['PMC12376012']
+    PMC12376012/research glucosylceramide synthase            org=Homo sapiens                 reason=implausible_name_match
+        generic/family-level name
+    PMC12376012/research ceramidases                          org=Homo sapiens                 reason=implausible_name_match
+        generic/family-level name
+    PMC12376012/research sphingomyelinase                     org=Homo sapiens                 reason=implausible_name_match
+        generic/family-level name
+
+--------------------------------------------------------------------------------------------
+NAME-GATE vs EXACT GENE+ORGANISM MATCH
+  entities: 3   papers: 1  ['PMC8510960']
+    PMC8510960/strict   CrMYC2                               org=Catharanthus roseus          reason=implausible_name_match
+        Q400L2 gene=['myc2'] org=Catharanthus roseus display='Transcription factor'
+    PMC8510960/strict   CrWRKY1                              org=Catharanthus roseus          reason=implausible_name_match
+        F6KW33 gene=[] org=Catharanthus roseus display='WRKY1'
+    PMC8510960/strict   CrERF5                               org=Catharanthus roseus          reason=implausible_name_match
+        A0A5B8YYU5 gene=['ERF5'] org=Catharanthus roseus display='Ethylene responsive factor 5'
+
+--------------------------------------------------------------------------------------------
+GENUINE AMBIGUITY
+  entities: 2   papers: 2  ['PMC12376012', 'PMC7232280']
+    PMC12376012/strict   SPTLC3                               org=Homo sapiens                 reason=ambiguous_insufficient_margin
+        0 distinct rival(s)
+    PMC7232280/strict   NIT-3                                org=Neurospora crassa            reason=ambiguous_insufficient_margin
+        1 distinct rival(s)
+
+--------------------------------------------------------------------------------------------
+score_below_minimum
+  entities: 1   papers: 1  ['PMC12376012']
+    PMC12376012/research sphingosine 1-phosphate lyase        org=Homo sapiens                 reason=score_below_minimum
+        
+
+--------------------------------------------------------------------------------------------
+NO CANDIDATE DESCRIBES THE SHIPPED ACCESSION
+  entities: 1   papers: 1  ['PMC12542839']
+    PMC12542839/research RibFC                                org=Bacillus subtilis            reason=identity_evidence_missing
+        shipped uniprot:P54575, pool of 8 describes none of it
+
+--------------------------------------------------------------------------------------------
+MIXED-RIVAL
+  entities: 1   papers: 1  ['PMC8510960']
+    PMC8510960/strict   ORCA3                                org=Catharanthus roseus          reason=ambiguous_insufficient_margin
+        1 redundant + 3 genuinely distinct rival(s)
+
+============================================================================================
+PART B SUMMARY -- refusals by mechanism
+============================================================================================
+   17  REDUNDANT-RIVAL (same gene, same organism as the shipped accession)
+   12  NO ORGANISM-MATCHING RECORD IN POOL
+    6  MARGIN REJECT, rival rows elided in the snapshot
+    5  WRONG-CANDIDATE-SELECTED (an organism-matching row WAS in the pool)
+    4  NAME-GATE reject
+    3  NAME-GATE, no accession on the judged row
+    3  NAME-GATE vs EXACT GENE+ORGANISM MATCH
+    2  GENUINE AMBIGUITY
+    1  score_below_minimum
+    1  NO CANDIDATE DESCRIBES THE SHIPPED ACCESSION
+    1  MIXED-RIVAL
+   55  TOTAL refused protein rows
+
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fe1c0847ee01bb031153fff018151794cff802d5  [git, worktree dirty=True]
+label                   : orch725-identity-probe-v2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch725_identity_probe.py . runs_verify/2026-09-06_1425
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 680344 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.36 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  684216:python.exe
+descendants terminated  : 1  684216
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-725/02-identity-probe-v2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

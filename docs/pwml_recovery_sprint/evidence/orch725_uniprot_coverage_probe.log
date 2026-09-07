@@ -1,0 +1,185 @@
+====================================================================================================
+ORCH-725 -- UniProt read-only coverage probe: is the residual class COVERAGE or QUERY?
+====================================================================================================
+endpoint : https://rest.uniprot.org/uniprotkb/search
+cases    : 13   (3 requests each, 0.6s apart; no cache is read or written)
+
+####################################################################################################
+[bacteria/strain-parenthetical]  DltA   (pipeline organism: 'Staphylococcus aureus (MRSA N315)')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=10 
+        P10515       Dihydrolipoyllysine-residue acetyltransferas   gene=DLAT                     org=Homo sapiens                         REVIEWED
+        Q81G39       D-alanine--D-alanyl carrier protein ligase     gene=dltA                     org=Bacillus cereus (strain ATCC 14579   REVIEWED
+        P0C397       D-alanine--D-alanyl carrier protein ligase     gene=dltA                     org=Staphylococcus aureus                REVIEWED
+  3 CONTROL, organism -> 'Staphylococcus aureus' http=200 hits=10 
+        P0C397       D-alanine--D-alanyl carrier protein ligase     gene=dltA                     org=Staphylococcus aureus                REVIEWED
+        P99107       D-alanine--D-alanyl carrier protein ligase     gene=dltA                     org=Staphylococcus aureus (strain N315   REVIEWED
+        Q5HHF2       D-alanine--D-alanyl carrier protein ligase     gene=dltA                     org=Staphylococcus aureus (strain COL)   REVIEWED
+  => QUERY CONSTRUCTION -- production query found 0, a control found records
+
+####################################################################################################
+[bacteria/strain-parenthetical]  DltC   (pipeline organism: 'Staphylococcus aureus (MRSA N315)')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=10 
+        P39579       D-alanyl carrier protein                       gene=dltC                     org=Bacillus subtilis (strain 168)       REVIEWED
+        Q5M4V3       D-alanyl carrier protein                       gene=dltC                     org=Streptococcus thermophilus (strain   REVIEWED
+        Q2FZW4       D-alanyl carrier protein                       gene=dltC                     org=Staphylococcus aureus (strain NCTC   REVIEWED
+  3 CONTROL, organism -> 'Staphylococcus aureus' http=200 hits=10 
+        Q2FZW4       D-alanyl carrier protein                       gene=dltC                     org=Staphylococcus aureus (strain NCTC   REVIEWED
+        P0C426       D-alanyl carrier protein                       gene=dltC                     org=Staphylococcus aureus                REVIEWED
+        P0A020       D-alanyl carrier protein                       gene=dltC                     org=Staphylococcus aureus (strain MW2)   REVIEWED
+  => QUERY CONSTRUCTION -- production query found 0, a control found records
+
+####################################################################################################
+[fungi]  NIT-9G   (pipeline organism: 'Neurospora crassa')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=0 
+  3 CONTROL, name -> 'nit-9'                   http=200 hits=0 
+  => COVERAGE -- no organism-matching record found by any form
+
+####################################################################################################
+[fungi]  NIT-9E   (pipeline organism: 'Neurospora crassa')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=0 
+  3 CONTROL, name -> 'nit-9'                   http=200 hits=0 
+  => COVERAGE -- no organism-matching record found by any form
+
+####################################################################################################
+[fungi]  NIT-1   (pipeline organism: 'Neurospora crassa')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=10 
+        A8WVF1       Protein CBR-NIT-1                              gene=nit-1                    org=Caenorhabditis briggsae              unreviewed
+        A0AAD5R9M0   Nitrilase                                      gene=NIT-1_1                  org=Parelaphostrongylus tenuis           unreviewed
+        E3M8G1       CRE-NIT-1 protein                              gene=Cre-nit-1                org=Caenorhabditis remanei               unreviewed
+  3 CONTROL, name -> 'nit-1'                   http=200 hits=0 
+  => COVERAGE -- no organism-matching record found by any form
+
+####################################################################################################
+[fungi]  NIT-12   (pipeline organism: 'Neurospora crassa')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=1 
+        A0AAD5R976   Carbon-nitrogen hydrolase                      gene=NIT-1_2                  org=Parelaphostrongylus tenuis           unreviewed
+  3 CONTROL, name -> 'nit-12'                  http=200 hits=0 
+  => COVERAGE -- no organism-matching record found by any form
+
+####################################################################################################
+[plants]  CrNPF2.9   (pipeline organism: 'Catharanthus roseus')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=0 
+  3 CONTROL, name -> 'NPF2.9'                  http=200 hits=1 
+        A0A1Q1PNY2   NPF2.9                                         gene=NPF2.9                   org=Catharanthus roseus                  unreviewed
+  => QUERY CONSTRUCTION -- production query found 0, a control found records
+
+####################################################################################################
+[plants]  CrTPT2   (pipeline organism: 'Catharanthus roseus')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=0 
+  3 CONTROL, name -> 'TPT2'                    http=200 hits=0 
+  => COVERAGE -- no organism-matching record found by any form
+
+####################################################################################################
+[plants]  CrGATA1   (pipeline organism: 'Catharanthus roseus')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=0 
+  3 CONTROL, name -> 'GATA1'                   http=200 hits=1 
+        A0A4Y5QBH9   GATA-like transcription factor                 gene=GATA1                    org=Catharanthus roseus                  unreviewed
+  => QUERY CONSTRUCTION -- production query found 0, a control found records
+
+####################################################################################################
+[plants]  CrPIF1   (pipeline organism: 'Catharanthus roseus')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=0 
+  3 CONTROL, name -> 'PIF1'                    http=200 hits=4 
+        A0ACC0B2X7   DNA helicase Pif1-like 2B domain-containing    gene=                         org=Catharanthus roseus                  unreviewed
+        A0ACC0ASR5   DNA helicase Pif1-like 2B domain-containing    gene=                         org=Catharanthus roseus                  unreviewed
+        A0ACC0BTX4   DNA helicase Pif1-like 2B domain-containing    gene=                         org=Catharanthus roseus                  unreviewed
+  => QUERY CONSTRUCTION -- production query found 0, a control found records
+
+####################################################################################################
+[plants]  BIS1   (pipeline organism: 'Catharanthus roseus')
+  1 production, species-restricted             http=200 hits=0 
+  2 production, unrestricted                   http=200 hits=10 
+        O59793       Stress response protein bis1                   gene=bis1                     org=Schizosaccharomyces pombe (strain    REVIEWED
+        Q9LN63       Protein BRASSINAZOLE-RESISTANT 2               gene=BZR2                     org=Arabidopsis thaliana                 REVIEWED
+        Q27Z07       3,5-dihydroxybiphenyl synthase                 gene=BIS1                     org=Sorbus aucuparia                     REVIEWED
+  => COVERAGE -- no organism-matching record found by any form
+
+####################################################################################################
+[human]  ORMDL1   (pipeline organism: 'Homo sapiens')
+  1 production, species-restricted             http=200 hits=5 
+        Q9P0S3       ORM1-like protein 1                            gene=ORMDL1                   org=Homo sapiens                         REVIEWED
+        A0A1B0GXE7   ORMDL sphingolipid biosynthesis regulator 1    gene=ORMDL1                   org=Homo sapiens                         unreviewed
+        F6WST4       ORMDL sphingolipid biosynthesis regulator 1    gene=ORMDL1                   org=Homo sapiens                         unreviewed
+  2 production, unrestricted                   http=200 hits=10 
+        Q9P0S3       ORM1-like protein 1                            gene=ORMDL1                   org=Homo sapiens                         REVIEWED
+        Q921I0       ORM1-like protein 1                            gene=Ormdl1                   org=Mus musculus                         REVIEWED
+        Q29RQ9       ORM1-like protein 1                            gene=ORMDL1                   org=Bos taurus                           REVIEWED
+  => production query already reached it
+
+####################################################################################################
+[human]  sphingomyelinase   (pipeline organism: 'Homo sapiens')
+  1 production, species-restricted             http=200 hits=10 
+        Q9NXE4       Sphingomyelin phosphodiesterase 4              gene=SMPD4                    org=Homo sapiens                         REVIEWED
+        Q9NY59       Sphingomyelin phosphodiesterase 3              gene=SMPD3                    org=Homo sapiens                         REVIEWED
+        Q92485       Acid sphingomyelinase-like phosphodiesterase   gene=SMPDL3B                  org=Homo sapiens                         REVIEWED
+  2 production, unrestricted                   http=200 hits=10 
+        Q9NY59       Sphingomyelin phosphodiesterase 3              gene=SMPD3                    org=Homo sapiens                         REVIEWED
+        Q9NXE4       Sphingomyelin phosphodiesterase 4              gene=SMPD4                    org=Homo sapiens                         REVIEWED
+        P17405       Sphingomyelin phosphodiesterase                gene=SMPD1                    org=Homo sapiens                         REVIEWED
+  3 CONTROL, name -> 'SMPD1'                   http=200 hits=10 
+        P17405       Sphingomyelin phosphodiesterase                gene=SMPD1                    org=Homo sapiens                         REVIEWED
+        E9LUE8       Sphingomyelin phosphodiesterase                gene=SMPD1                    org=Homo sapiens                         unreviewed
+        E9LUE6       Sphingomyelin phosphodiesterase                gene=SMPD1                    org=Homo sapiens                         unreviewed
+  => production query already reached it
+
+====================================================================================================
+PROBE SUMMARY
+====================================================================================================
+  requests attempted : 37
+  HTTP success       : 37
+  transport errors   : 0
+  zero-hit responses : 22
+  responses with hits: 15
+
+  bacteria/strain-parenthetical    DltA                 QUERY CONSTRUCTION -- production query found 0, a control found records
+  bacteria/strain-parenthetical    DltC                 QUERY CONSTRUCTION -- production query found 0, a control found records
+  fungi                            NIT-9G               COVERAGE -- no organism-matching record found by any form
+  fungi                            NIT-9E               COVERAGE -- no organism-matching record found by any form
+  fungi                            NIT-1                COVERAGE -- no organism-matching record found by any form
+  fungi                            NIT-12               COVERAGE -- no organism-matching record found by any form
+  plants                           CrNPF2.9             QUERY CONSTRUCTION -- production query found 0, a control found records
+  plants                           CrTPT2               COVERAGE -- no organism-matching record found by any form
+  plants                           CrGATA1              QUERY CONSTRUCTION -- production query found 0, a control found records
+  plants                           CrPIF1               QUERY CONSTRUCTION -- production query found 0, a control found records
+  plants                           BIS1                 COVERAGE -- no organism-matching record found by any form
+  human                            ORMDL1               production query already reached it
+  human                            sphingomyelinase     production query already reached it
+
+  A 'COVERAGE' line is a correct refusal that no query change can recover.
+  A 'QUERY CONSTRUCTION' line is a recoverable entity the resolver did not reach.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fe1c0847ee01bb031153fff018151794cff802d5  [git, worktree dirty=True]
+label                   : orch725-uniprot-coverage
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch725_uniprot_coverage_probe.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 679124 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 420 s
+duration                : 47.81 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  685984:python.exe
+descendants terminated  : 1  685984
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-725/03-uniprot-coverage.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
