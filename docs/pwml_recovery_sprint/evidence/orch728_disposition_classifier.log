@@ -1,0 +1,230 @@
+========================================================================================================
+ORCH-728 -- disposition classifier: refuse / review_required / release_ready
+========================================================================================================
+MIN_CONNECTED_CORE_REACTIONS = 2
+No paper-specific gold is read by the rule. Gold appears only in the final check.
+
+########################################################################################################
+COHORT: unseen pilot  (runs_verify/2026-09-06_1425)
+########################################################################################################
+########################################################################################################
+COHORT: development legs named by F-147
+########################################################################################################
+
+  PMC11172790/strict   [2026-09-06_1425]
+      recorded: status=fail            pwml=none
+      floor   : F1=True  F0=True  F2=True  F3=True  F4=False
+      payload : reactions=0 connected_core=0 f179=clean
+      => MUST REFUSE ENTIRELY
+         serialization floor fails: F4_defensible_core
+
+  PMC11172790/research [2026-09-06_1425]
+      recorded: status=pass            pwml=none
+      floor   : F1=True  F0=False
+      => MUST REFUSE ENTIRELY
+         research mode is diagnostic by design -- never serialises (acceptance.py:125)
+
+  PMC11405693/strict   [2026-09-06_1425]
+      recorded: status=fail            pwml=none
+      floor   : F1=True  F0=True  F2=True  F3=False  F4=True
+      payload : reactions=6 connected_core=5 f179=clean
+      => MUST REFUSE ENTIRELY
+         serialization floor fails: F3_final_semantic_contract [reaction_enzyme_must_be_protein_complex, reaction_enzyme_must_be_protein_complex]
+
+  PMC11405693/research [2026-09-06_1425]
+      recorded: status=pass            pwml=none
+      floor   : F1=True  F0=False
+      => MUST REFUSE ENTIRELY
+         research mode is diagnostic by design -- never serialises (acceptance.py:125)
+
+  PMC12071552/strict   [2026-09-06_1425]
+      recorded: status=pass            pwml=['pathway.review_required.pwml']
+      floor   : F1=True  F0=True  F2=True  F3=True  F4=True
+      payload : reactions=2 connected_core=2 f179=clean
+      => SHOULD EMIT REVIEW_REQUIRED
+         floor holds; capped by: semantic: requested_pathway_anchors_present; requested core threshold not met; coverage 0.40
+
+  PMC12071552/research [2026-09-06_1425]
+      recorded: status=scope_conflict  pwml=none
+      floor   : F1=False
+      => MUST REFUSE ENTIRELY
+         no canonical payload (scope_conflict) -- the pipeline never reached Stage 3
+
+  PMC12326985/strict   [2026-09-06_1425]
+      recorded: status=fail            pwml=none
+      floor   : F1=False
+      => MUST REFUSE ENTIRELY
+         no canonical payload (ambiguous_review_scope) -- the pipeline never reached Stage 3
+
+  PMC12326985/research [2026-09-06_1425]
+      recorded: status=fail            pwml=none
+      floor   : F1=False
+      => MUST REFUSE ENTIRELY
+         no canonical payload (unknown) -- the pipeline never reached Stage 3
+
+  PMC12376012/strict   [2026-09-06_1425]
+      recorded: status=fail            pwml=none
+      floor   : F1=True  F0=True  F2=True  F3=False  F4=True
+      payload : reactions=15 connected_core=15 f179=clean
+      => MUST REFUSE ENTIRELY
+         serialization floor fails: F3_final_semantic_contract [reaction_enzyme_must_be_protein_complex, reaction_enzyme_must_be_protein_complex]
+
+  PMC12376012/research [2026-09-06_1425]
+      recorded: status=pass            pwml=none
+      floor   : F1=True  F0=False
+      => MUST REFUSE ENTIRELY
+         research mode is diagnostic by design -- never serialises (acceptance.py:125)
+
+  PMC12542839/strict   [2026-09-06_1425]
+      recorded: status=timeout         pwml=none
+      floor   : F1=False
+      => MUST REFUSE ENTIRELY
+         no canonical payload (timeout) -- the pipeline never reached Stage 3
+
+  PMC12542839/research [2026-09-06_1425]
+      recorded: status=pass            pwml=none
+      floor   : F1=True  F0=False
+      => MUST REFUSE ENTIRELY
+         research mode is diagnostic by design -- never serialises (acceptance.py:125)
+
+  PMC13017326/strict   [2026-09-06_1425]
+      recorded: status=timeout         pwml=none
+      floor   : F1=False
+      => MUST REFUSE ENTIRELY
+         no canonical payload (timeout) -- the pipeline never reached Stage 3
+
+  PMC13017326/research [2026-09-06_1425]
+      recorded: status=timeout         pwml=none
+      floor   : F1=False
+      => MUST REFUSE ENTIRELY
+         no canonical payload (timeout) -- the pipeline never reached Stage 3
+
+  PMC3480714/strict   [2026-09-06_1425]
+      recorded: status=scope_conflict  pwml=none
+      floor   : F1=False
+      => MUST REFUSE ENTIRELY
+         no canonical payload (scope_conflict) -- the pipeline never reached Stage 3
+
+  PMC3480714/research [2026-09-06_1425]
+      recorded: status=scope_conflict  pwml=none
+      floor   : F1=False
+      => MUST REFUSE ENTIRELY
+         no canonical payload (scope_conflict) -- the pipeline never reached Stage 3
+
+  PMC7232280/strict   [2026-09-06_1425]
+      recorded: status=fail            pwml=none
+      floor   : F1=True  F0=True  F2=True  F3=True  F4=True
+      payload : reactions=5 connected_core=5 f179=clean
+      => SHOULD EMIT REVIEW_REQUIRED
+         floor holds; capped by: superseded audit_round report (2 errors); 4 Unknown-backed enzyme(s); semantic: requested_pathway_anchors_present; coverage 0.73
+
+  PMC7232280/research [2026-09-06_1425]
+      recorded: status=scope_conflict  pwml=none
+      floor   : F1=False
+      => MUST REFUSE ENTIRELY
+         no canonical payload (scope_conflict) -- the pipeline never reached Stage 3
+
+  PMC8510960/strict   [2026-09-06_1425]
+      recorded: status=fail            pwml=none
+      floor   : F1=True  F0=True  F2=True  F3=True  F4=True
+      payload : reactions=5 connected_core=3 f179=clean
+      => SHOULD EMIT REVIEW_REQUIRED
+         floor holds; capped by: superseded audit_round report (7 errors); 3 Unknown-backed enzyme(s); semantic: requested_pathway_anchors_present; coverage 0.50; fragmented graph (56% in main component)
+
+  PMC8510960/research [2026-09-06_1425]
+      recorded: status=scope_conflict  pwml=none
+      floor   : F1=False
+      => MUST REFUSE ENTIRELY
+         no canonical payload (scope_conflict) -- the pipeline never reached Stage 3
+
+  PMC12452463/strict   [2026-08-28_1816]
+      recorded: status=?               pwml=none
+      floor   : F1=True  F0=True  F2=True  F3=True  F4=True
+      payload : reactions=5 connected_core=4 f179=clean
+      => SHOULD EMIT REVIEW_REQUIRED
+         floor holds; capped by: superseded audit_round report (3 errors); 1 Unknown-backed enzyme(s); coverage 0.93; fragmented graph (74% in main component)
+
+  PMC12452463/strict   [2026-09-02_2052]
+      recorded: status=fail            pwml=none
+      floor   : F1=True  F0=True  F2=False  F3=True  F4=True
+      payload : reactions=3 connected_core=3 f179=clean
+      => MUST REFUSE ENTIRELY
+         serialization floor fails: F2_final_stage3_gate [Expected 0 plus tokens, found 1.; Composite validation failed: Composite validation failed:
+/entities/compounds/5/name has ']
+
+  PMC12180156/strict   [2026-08-28_1816]
+      recorded: status=?               pwml=none
+      floor   : F1=True  F0=True  F2=True  F3=False  F4=False
+      payload : reactions=1 connected_core=1 f179=no_defensible_reaction_support
+      => MUST REFUSE ENTIRELY
+         serialization floor fails: F3_final_semantic_contract, F4_defensible_core [no_defensible_reaction_support]
+
+  PMC12180156/strict   [2026-09-02_2052]
+      recorded: status=pass            pwml=['pathway.review_required.pwml']
+      floor   : F1=True  F0=True  F2=True  F3=False  F4=False
+      payload : reactions=1 connected_core=1 f179=no_defensible_reaction_support
+      => MUST REFUSE ENTIRELY
+         serialization floor fails: F3_final_semantic_contract, F4_defensible_core [no_defensible_reaction_support]
+
+========================================================================================================
+SUMMARY
+========================================================================================================
+  must refuse entirely         PMC11172790/strict   [2026-09-06_1425] rx=  0  serialization floor fails: F4_defensible_core
+  must refuse entirely         PMC11172790/research [2026-09-06_1425] rx=  -  research mode is diagnostic by design -- never serialises (acceptance.py:125)
+  must refuse entirely         PMC11405693/strict   [2026-09-06_1425] rx=  6  serialization floor fails: F3_final_semantic_contract [reaction_enzyme_must_be
+  must refuse entirely         PMC11405693/research [2026-09-06_1425] rx=  -  research mode is diagnostic by design -- never serialises (acceptance.py:125)
+  must refuse entirely         PMC12071552/research [2026-09-06_1425] rx=  -  no canonical payload (scope_conflict) -- the pipeline never reached Stage 3
+  must refuse entirely         PMC12180156/strict   [2026-08-28_1816] rx=  1  serialization floor fails: F3_final_semantic_contract, F4_defensible_core [no_
+  must refuse entirely         PMC12180156/strict   [2026-09-02_2052] rx=  1  serialization floor fails: F3_final_semantic_contract, F4_defensible_core [no_
+  must refuse entirely         PMC12326985/strict   [2026-09-06_1425] rx=  -  no canonical payload (ambiguous_review_scope) -- the pipeline never reached St
+  must refuse entirely         PMC12326985/research [2026-09-06_1425] rx=  -  no canonical payload (unknown) -- the pipeline never reached Stage 3
+  must refuse entirely         PMC12376012/strict   [2026-09-06_1425] rx= 15  serialization floor fails: F3_final_semantic_contract [reaction_enzyme_must_be
+  must refuse entirely         PMC12376012/research [2026-09-06_1425] rx=  -  research mode is diagnostic by design -- never serialises (acceptance.py:125)
+  must refuse entirely         PMC12452463/strict   [2026-09-02_2052] rx=  3  serialization floor fails: F2_final_stage3_gate [Expected 0 plus tokens, found
+  must refuse entirely         PMC12542839/strict   [2026-09-06_1425] rx=  -  no canonical payload (timeout) -- the pipeline never reached Stage 3
+  must refuse entirely         PMC12542839/research [2026-09-06_1425] rx=  -  research mode is diagnostic by design -- never serialises (acceptance.py:125)
+  must refuse entirely         PMC13017326/strict   [2026-09-06_1425] rx=  -  no canonical payload (timeout) -- the pipeline never reached Stage 3
+  must refuse entirely         PMC13017326/research [2026-09-06_1425] rx=  -  no canonical payload (timeout) -- the pipeline never reached Stage 3
+  must refuse entirely         PMC3480714/strict   [2026-09-06_1425] rx=  -  no canonical payload (scope_conflict) -- the pipeline never reached Stage 3
+  must refuse entirely         PMC3480714/research [2026-09-06_1425] rx=  -  no canonical payload (scope_conflict) -- the pipeline never reached Stage 3
+  must refuse entirely         PMC7232280/research [2026-09-06_1425] rx=  -  no canonical payload (scope_conflict) -- the pipeline never reached Stage 3
+  must refuse entirely         PMC8510960/research [2026-09-06_1425] rx=  -  no canonical payload (scope_conflict) -- the pipeline never reached Stage 3
+  should emit review_required  PMC12071552/strict   [2026-09-06_1425] rx=  2  floor holds; capped by: semantic: requested_pathway_anchors_present; requested
+  should emit review_required  PMC12452463/strict   [2026-08-28_1816] rx=  5  floor holds; capped by: superseded audit_round report (3 errors); 1 Unknown-ba
+  should emit review_required  PMC7232280/strict   [2026-09-06_1425] rx=  5  floor holds; capped by: superseded audit_round report (2 errors); 4 Unknown-ba
+  should emit review_required  PMC8510960/strict   [2026-09-06_1425] rx=  5  floor holds; capped by: superseded audit_round report (7 errors); 3 Unknown-ba
+
+   20  must refuse entirely
+    4  should emit review_required
+    0  should emit release_ready
+   24  TOTAL legs classified
+
+  unseen pilot: 3 of 20 legs would emit a PWML
+                3 of 10 STRICT legs (strict is the deliverable; acceptance.py:125)
+                today the pilot emitted 1
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 8beb36f683601d62b6bdfb6f676a72d62091d0f0  [git, worktree dirty=True]
+label                   : orch728-disposition-classifier-v2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch728_disposition_classifier.py .
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 37796 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.36 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  31572:python.exe
+descendants terminated  : 1  31572
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-728/02-classifier-v2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
