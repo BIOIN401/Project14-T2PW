@@ -211,3 +211,47 @@ report keeps them apart:
 | research leg, no PWML | by design | **No** |
 
 **`release_ready` is not the success metric and `review_required` is not a failure.**
+
+---
+
+## MANIFEST DEFECT — `PMC3480714` carries the WRONG ORGANISM. Both its legs are mine, not the product's.
+
+**Found during the pilot run, 2026-09-06. Recorded, not corrected — the run was in flight and
+editing a topics file mid-run to improve an outcome is exactly the tuning this pass forbids.**
+
+The manifest requests `PMC3480714 | cobalamin biosynthesis | Salmonella enterica`.
+**That organism is wrong for this paper.** Deery *et al.* (Nat Chem Biol 2012) perform the
+enzyme-trap work in a **recombinant *Escherichia coli* host** expressing genes from
+*Rhodobacter capsulatus* and *Pseudomonas denitrificans*. I assigned *Salmonella* from the
+pathway's reputation — cobalamin biosynthesis is classically the *S. enterica* `cob` system —
+rather than from what this paper actually did. **A selection error by the orchestrator.**
+
+Both legs ended `scope_conflict`, and in both the gate was RIGHT:
+
+| leg | Stage 0 read | requested |
+|---|---|---|
+| strict | `Escherichia coli (recombinant host with genes from Rhodobacter capsulatus, Pseudomonas denitrificans, etc.)` | `Salmonella enterica` |
+| research | `Escherichia coli` | `Salmonella enterica` |
+
+Stage 0 read the organism **correctly and consistently across two independent draws** while the
+manifest was wrong. This is the organism-compatibility check **working as designed**, and it is
+evidence *for* that gate, not against it.
+
+### How this must be counted
+
+- **These two legs are NOT product failures.** They are a manifest defect and are reported in
+  their own row, never folded into the scope-brittleness count or the PWML denominator as a
+  system shortfall.
+- The mechanical scope-string over-rejection count is therefore **3** (`PMC12071552/research`,
+  `PMC7232280/research`, `PMC8510960/research` — parenthetical and capitalisation
+  differences on the *same* pathway), **not 5**.
+- `PMC3480714` contributes **0 evaluable legs**. The effective cohort for product conclusions
+  is **9 papers / 18 legs**, and the strict-PWML denominator drops from 10 to **9**.
+- **Not re-run.** The charter permits re-running only an objectively invalid *infrastructure*
+  execution. A leg lost to a mis-specified request is a curation error, not an infrastructure
+  failure, and re-running it with a corrected organism after seeing the result would be
+  outcome-driven tuning.
+
+**If this cohort is ever re-run, the row should read `Escherichia coli`** — as a correction to a
+known-wrong input, decided on the paper's content and recorded here in advance, not chosen to
+improve a score.
