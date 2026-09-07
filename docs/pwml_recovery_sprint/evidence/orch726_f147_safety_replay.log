@@ -1,0 +1,305 @@
+====================================================================================================
+ORCH-726 -- F-147 SAFETY REPLAY. Archived payloads, CURRENT HEAD validators.
+====================================================================================================
+repo root : .
+validators: run_strict_post_normalization_gates | validate_post_normalization |
+            validate_pre_export (embeds F-179) | reaction_support (F-179 itemised)
+
+####################################################################################################
+PMC12452463/strict   [development]   runs_verify/2026-09-02_2052
+   F-147 case A: enterobactin synthase complex / RyhB / secretion / Unknown-backed
+   archived outcome: status=fail  pwml=none
+   [1] stage-3 gate            ok=False errors=2
+          - /normalization_stats/n_plus_tokens_remaining Expected 0 plus tokens, found 1.
+          - /processes Composite validation failed: Composite validation failed:
+/entities/compounds/5/name has '+' token: ferric iron (Fe3+)
+   [2] post_normalization      ok=False errors=3
+          - /processes/transports/1/transporters/0 actor_schema_not_canonical Normalized actor rows must include non-empty entity and entity_type fields.
+          - /normalization_stats/n_plus_tokens_remaining Expected 0 plus tokens, found 1.
+          - /processes Composite validation failed: Composite validation failed:
+/entities/compounds/5/name has '+' token: ferric iron (Fe3+)
+   [3] pre_export (FINAL)      raw_ok=False  errors=2 (of which 2 export-time metadata artifacts)  -> SUBSTANTIVE ok=True
+       ^ pwml_contract_report.ok is what run_pwml_export decides on
+          - /metadata/name pathway_missing_name Pathway is missing a name.  [instrument artifact]
+          - /metadata/subject pathway_missing_subject Pathway is missing a subject.  [instrument artifact]
+   [4] F-179 reaction_support  verdict=supported  issue=none
+          supported: 3
+          row 'EntC reaction                                  -> support_class=target_paper
+          row 'EntB reaction                                  -> support_class=target_paper
+          row 'EntE reaction                                  -> support_class=target_paper
+   [5] provenance              reactions=3  rows with NO lineage=0
+          EntC reaction                                lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          EntB reaction                                lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          EntE reaction                                lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+   [6] F-147 precondition tokens in the archived FINAL payload:
+          'enterobactin synthase complex'      present=True
+          'RyhB'                               present=True
+          'enterobactin secretion'             present=True
+   [7] driver simulation       today: error_count=8  ['post_normalization_contract_report(phase=audit_round, 8 errors)']
+                               with audit_round dropped: error_count=0  []
+   => IF ONLY THE STALE REPORT WERE DROPPED: STILL BLOCKED by stage-3 gate
+
+####################################################################################################
+PMC12180156/strict   [development]   runs_verify/2026-09-02_2052
+   F-147 case B: ferrochelatase reaction on protoporphyrin IX (gold hallucination test)
+   archived outcome: status=pass  pwml=['pathway.review_required.pwml']
+   [1] stage-3 gate            ok=True errors=0
+   [2] post_normalization      ok=True errors=0
+   [3] pre_export (FINAL)      raw_ok=False  errors=3 (of which 2 export-time metadata artifacts)  -> SUBSTANTIVE ok=False
+       ^ pwml_contract_report.ok is what run_pwml_export decides on
+          - /metadata/name pathway_missing_name Pathway is missing a name.  [instrument artifact]
+          - /metadata/subject pathway_missing_subject Pathway is missing a subject.  [instrument artifact]
+          - /processes/reactions no_defensible_reaction_support No exported reaction has defensible reaction-level support: the provenance carrier is active in th
+   [4] F-179 reaction_support  verdict=no_defensible_core  issue=YES -> no_defensible_reaction_support
+          supported: 0
+          row 'heme biosynthesis reaction                     -> support_class=None
+   [5] provenance              reactions=1  rows with NO lineage=1
+          heme biosynthesis reaction                   lineage=0 origins=[] evidence=True rag_added=False
+   [6] F-147 precondition tokens in the archived FINAL payload:
+          'protoporphyrin'                     present=True
+          'ferrochelatase'                     present=True
+   [7] driver simulation       today: error_count=0  []
+                               with audit_round dropped: error_count=0  []
+   => IF ONLY THE STALE REPORT WERE DROPPED: STILL BLOCKED by pre_export (substantive), F-179 no_defensible_reaction_support
+
+####################################################################################################
+PMC12452463/strict   [development(T-107 archive)]   runs_verify/2026-08-28_1816
+   the payload F-147 was registered from
+   archived outcome: status=?  pwml=none
+   [1] stage-3 gate            ok=True errors=0
+   [2] post_normalization      ok=True errors=0
+   [3] pre_export (FINAL)      raw_ok=False  errors=2 (of which 2 export-time metadata artifacts)  -> SUBSTANTIVE ok=True
+       ^ pwml_contract_report.ok is what run_pwml_export decides on
+          - /metadata/name pathway_missing_name Pathway is missing a name.  [instrument artifact]
+          - /metadata/subject pathway_missing_subject Pathway is missing a subject.  [instrument artifact]
+   [4] F-179 reaction_support  verdict=supported  issue=none
+          supported: 4
+          row 'Chorismate to isochorismate (EntC)             -> support_class=target_paper
+          row 'Isochorismate to DHB (EntB)                    -> support_class=target_paper
+          row 'Activation of DHB to DHB-AMP (EntE)            -> support_class=target_paper
+          row 'Assembly of enterobactin (synthase complex)    -> support_class=target_paper
+          row 'Enterobactin binding Fe3+                      -> support_class=None
+   [5] provenance              reactions=5  rows with NO lineage=1
+          Chorismate to isochorismate (EntC)           lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          Isochorismate to DHB (EntB)                  lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          Activation of DHB to DHB-AMP (EntE)          lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          Assembly of enterobactin (synthase complex   lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          Enterobactin binding Fe3+                    lineage=0 origins=[] evidence=True rag_added=False
+   [6] F-147 precondition tokens in the archived FINAL payload:
+          'enterobactin synthase complex'      present=True
+          'RyhB'                               present=True
+          'enterobactin secretion'             present=True
+   [7] driver simulation       today: error_count=3  ['post_normalization_contract_report(phase=audit_round, 3 errors)']
+                               with audit_round dropped: error_count=0  []
+   => IF ONLY THE STALE REPORT WERE DROPPED: WOULD EXPORT
+
+####################################################################################################
+PMC12180156/strict   [development(T-107 archive)]   runs_verify/2026-08-28_1816
+   the payload F-147 was registered from
+   archived outcome: status=?  pwml=none
+   [1] stage-3 gate            ok=True errors=0
+   [2] post_normalization      ok=True errors=0
+   [3] pre_export (FINAL)      raw_ok=False  errors=3 (of which 2 export-time metadata artifacts)  -> SUBSTANTIVE ok=False
+       ^ pwml_contract_report.ok is what run_pwml_export decides on
+          - /metadata/name pathway_missing_name Pathway is missing a name.  [instrument artifact]
+          - /metadata/subject pathway_missing_subject Pathway is missing a subject.  [instrument artifact]
+          - /processes/reactions no_defensible_reaction_support No exported reaction has defensible reaction-level support: the provenance carrier is active in th
+   [4] F-179 reaction_support  verdict=no_defensible_core  issue=YES -> no_defensible_reaction_support
+          supported: 0
+          row 'ferrochelatase reaction                        -> support_class=None
+   [5] provenance              reactions=1  rows with NO lineage=1
+          ferrochelatase reaction                      lineage=0 origins=[] evidence=True rag_added=False
+   [6] F-147 precondition tokens in the archived FINAL payload:
+          'protoporphyrin'                     present=True
+          'ferrochelatase'                     present=True
+   [7] driver simulation       today: error_count=1  ['post_normalization_contract_report(phase=audit_round, 1 errors)']
+                               with audit_round dropped: error_count=0  []
+   => IF ONLY THE STALE REPORT WERE DROPPED: STILL BLOCKED by pre_export (substantive), F-179 no_defensible_reaction_support
+
+####################################################################################################
+PMC7232280/strict   [unseen]   runs_verify/2026-09-06_1425
+   Moco biosynthesis, Neurospora crassa
+   archived outcome: status=fail  pwml=none
+   [1] stage-3 gate            ok=True errors=0
+   [2] post_normalization      ok=True errors=0
+   [3] pre_export (FINAL)      raw_ok=False  errors=2 (of which 2 export-time metadata artifacts)  -> SUBSTANTIVE ok=True
+       ^ pwml_contract_report.ok is what run_pwml_export decides on
+          - /metadata/name pathway_missing_name Pathway is missing a name.  [instrument artifact]
+          - /metadata/subject pathway_missing_subject Pathway is missing a subject.  [instrument artifact]
+   [4] F-179 reaction_support  verdict=supported  issue=none
+          supported: 5
+          row 'NIT-7A conversion of GTP to 3',8-cH2 GTP       -> support_class=target_paper
+          row 'NIT-7B conversion of 3',8-cH2 GTP to cPMP      -> support_class=target_paper
+          row 'MPT synthase conversion of cPMP to MPT         -> support_class=target_paper
+          row 'NIT-9G adenylation of MPT to MPT-AMP           -> support_class=target_paper
+          row 'NIT-9E conversion of MPT-AMP to Moco           -> support_class=target_paper
+   [5] provenance              reactions=5  rows with NO lineage=0
+          NIT-7A conversion of GTP to 3',8-cH2 GTP     lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          NIT-7B conversion of 3',8-cH2 GTP to cPMP    lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          MPT synthase conversion of cPMP to MPT       lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          NIT-9G adenylation of MPT to MPT-AMP         lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          NIT-9E conversion of MPT-AMP to Moco         lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+   [7] driver simulation       today: error_count=2  ['post_normalization_contract_report(phase=audit_round, 2 errors)']
+                               with audit_round dropped: error_count=0  []
+   => IF ONLY THE STALE REPORT WERE DROPPED: WOULD EXPORT
+
+####################################################################################################
+PMC8510960/strict   [unseen]   runs_verify/2026-09-06_1425
+   MIA biosynthesis, Catharanthus roseus
+   archived outcome: status=fail  pwml=none
+   [1] stage-3 gate            ok=True errors=0
+   [2] post_normalization      ok=True errors=0
+   [3] pre_export (FINAL)      raw_ok=False  errors=2 (of which 2 export-time metadata artifacts)  -> SUBSTANTIVE ok=True
+       ^ pwml_contract_report.ok is what run_pwml_export decides on
+          - /metadata/name pathway_missing_name Pathway is missing a name.  [instrument artifact]
+          - /metadata/subject pathway_missing_subject Pathway is missing a subject.  [instrument artifact]
+   [4] F-179 reaction_support  verdict=supported  issue=none
+          supported: 5
+          row 'TDC reaction                                   -> support_class=target_paper
+          row 'G10H reaction                                  -> support_class=target_paper
+          row 'STR reaction                                   -> support_class=target_paper
+          row 'SGD reaction                                   -> support_class=target_paper
+          row 'Catharanthine-vindoline coupling               -> support_class=target_paper
+   [5] provenance              reactions=5  rows with NO lineage=0
+          TDC reaction                                 lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          G10H reaction                                lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          STR reaction                                 lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          SGD reaction                                 lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          Catharanthine-vindoline coupling             lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+   [7] driver simulation       today: error_count=7  ['post_normalization_contract_report(phase=audit_round, 7 errors)']
+                               with audit_round dropped: error_count=0  []
+   => IF ONLY THE STALE REPORT WERE DROPPED: WOULD EXPORT
+
+####################################################################################################
+PMC12376012/strict   [unseen]   runs_verify/2026-09-06_1425
+   sphingolipid metabolism, Homo sapiens
+   archived outcome: status=fail  pwml=none
+   [1] stage-3 gate            ok=True errors=0
+   [2] post_normalization      ok=True errors=0
+   [3] pre_export (FINAL)      raw_ok=False  errors=4 (of which 2 export-time metadata artifacts)  -> SUBSTANTIVE ok=False
+       ^ pwml_contract_report.ok is what run_pwml_export decides on
+          - /metadata/name pathway_missing_name Pathway is missing a name.  [instrument artifact]
+          - /metadata/subject pathway_missing_subject Pathway is missing a subject.  [instrument artifact]
+          - /processes/reactions/4/enzymes/0 reaction_enzyme_must_be_protein_complex Reaction 'ceramide synthase reaction' enzyme/modifier 'ceramide synthase' mus
+          - /processes/reactions/4/modifiers/0 reaction_enzyme_must_be_protein_complex Reaction 'ceramide synthase reaction' enzyme/modifier 'ceramide synthase' m
+   [4] F-179 reaction_support  verdict=supported  issue=none
+          supported: 6
+          row 'SPT reaction                                   -> support_class=target_paper
+          row 'KDSR reaction                                  -> support_class=target_paper
+          row 'Ceramide synthase reaction                     -> support_class=target_paper
+          row 'serine palmitoyltransferase reaction           -> support_class=target_paper
+          row 'ceramide synthase reaction                     -> support_class=target_paper
+          row 'dihydroceramide desaturase reaction            -> support_class=target_paper
+          row 'Sphingomyelin synthase reaction                -> support_class=None
+          row 'Glucosylceramide synthase reaction             -> support_class=None
+          row 'Sphingosine kinase reaction                    -> support_class=None
+          row 'Sphingomyelin hydrolysis                       -> support_class=None
+          row 'Glucosylceramide hydrolysis                    -> support_class=None
+          row 'sphingomyelin synthase 1 reaction              -> support_class=None
+          row 'ceramidase reaction                            -> support_class=None
+          row 'sphingomyelinase reaction                      -> support_class=None
+          row 'S1P phosphatase reaction                       -> support_class=None
+   [5] provenance              reactions=15  rows with NO lineage=9
+          SPT reaction                                 lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          KDSR reaction                                lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          Ceramide synthase reaction                   lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          serine palmitoyltransferase reaction         lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          ceramide synthase reaction                   lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          dihydroceramide desaturase reaction          lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          Sphingomyelin synthase reaction              lineage=0 origins=[] evidence=True rag_added=False
+          Glucosylceramide synthase reaction           lineage=0 origins=[] evidence=True rag_added=False
+          Sphingosine kinase reaction                  lineage=0 origins=[] evidence=True rag_added=False
+          Sphingomyelin hydrolysis                     lineage=0 origins=[] evidence=True rag_added=False
+          Glucosylceramide hydrolysis                  lineage=0 origins=[] evidence=True rag_added=False
+          sphingomyelin synthase 1 reaction            lineage=0 origins=[] evidence=True rag_added=False
+          ceramidase reaction                          lineage=0 origins=[] evidence=True rag_added=False
+          sphingomyelinase reaction                    lineage=0 origins=[] evidence=True rag_added=False
+          S1P phosphatase reaction                     lineage=0 origins=[] evidence=True rag_added=False
+   [7] driver simulation       today: error_count=10  ['post_normalization_contract_report(phase=audit_round, 10 errors)']
+                               with audit_round dropped: error_count=0  []
+   => IF ONLY THE STALE REPORT WERE DROPPED: STILL BLOCKED by pre_export (substantive)
+
+####################################################################################################
+PMC12071552/strict   [unseen(control)]   runs_verify/2026-09-06_1425
+   the pilot's only PWML -- must stay exportable
+   archived outcome: status=pass  pwml=['pathway.review_required.pwml']
+   [1] stage-3 gate            ok=True errors=0
+   [2] post_normalization      ok=True errors=0
+   [3] pre_export (FINAL)      raw_ok=False  errors=2 (of which 2 export-time metadata artifacts)  -> SUBSTANTIVE ok=True
+       ^ pwml_contract_report.ok is what run_pwml_export decides on
+          - /metadata/name pathway_missing_name Pathway is missing a name.  [instrument artifact]
+          - /metadata/subject pathway_missing_subject Pathway is missing a subject.  [instrument artifact]
+   [4] F-179 reaction_support  verdict=supported  issue=none
+          supported: 2
+          row 'DltA-catalyzed D-Alanine adenylation           -> support_class=target_paper
+          row 'DltA-catalyzed D-Serine adenylation            -> support_class=target_paper
+   [5] provenance              reactions=2  rows with NO lineage=0
+          DltA-catalyzed D-Alanine adenylation         lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+          DltA-catalyzed D-Serine adenylation          lineage=1 origins=['paper_stated'] evidence=True rag_added=False
+   [7] driver simulation       today: error_count=0  []
+                               with audit_round dropped: error_count=0  []
+   => IF ONLY THE STALE REPORT WERE DROPPED: WOULD EXPORT
+
+####################################################################################################
+PMC11172790/strict   [unseen(thin)]   runs_verify/2026-09-06_1425
+   0 reactions -- reported, not counted as a recovery
+   archived outcome: status=fail  pwml=none
+   [1] stage-3 gate            ok=True errors=0
+   [2] post_normalization      ok=True errors=0
+   [3] pre_export (FINAL)      raw_ok=False  errors=2 (of which 2 export-time metadata artifacts)  -> SUBSTANTIVE ok=True
+       ^ pwml_contract_report.ok is what run_pwml_export decides on
+          - /metadata/name pathway_missing_name Pathway is missing a name.  [instrument artifact]
+          - /metadata/subject pathway_missing_subject Pathway is missing a subject.  [instrument artifact]
+   [4] F-179 reaction_support  verdict=indeterminate  issue=none
+          supported: 0
+   [5] provenance              reactions=0  rows with NO lineage=0
+   [7] driver simulation       today: error_count=1  ['post_normalization_contract_report(phase=audit_round, 1 errors)']
+                               with audit_round dropped: error_count=0  []
+   => IF ONLY THE STALE REPORT WERE DROPPED: WOULD EXPORT
+
+====================================================================================================
+REPLAY SUMMARY
+====================================================================================================
+leg                   cohort                      rx    s3   pre                  F179  stale-dropped  would export?
+PMC12452463/strict    development                  3 False  True                 clean              0  NO -- stage-3 gate
+PMC12180156/strict    development                  1  True Falseno_defensible_reaction_support              0  NO -- pre_export (substantive), F-179 no_defensible_reaction_support
+PMC12452463/strict    development(T-107 archive)   5  True  True                 clean              0  YES
+PMC12180156/strict    development(T-107 archive)   1  True Falseno_defensible_reaction_support              0  NO -- pre_export (substantive), F-179 no_defensible_reaction_support
+PMC7232280/strict     unseen                       5  True  True                 clean              0  YES
+PMC8510960/strict     unseen                       5  True  True                 clean              0  YES
+PMC12376012/strict    unseen                      15  True False                 clean              0  NO -- pre_export (substantive)
+PMC12071552/strict    unseen(control)              2  True  True                 clean              0  YES
+PMC11172790/strict    unseen(thin)                 0  True  True                 clean              0  YES
+
+  development cases that WOULD export with the stale report dropped: 1 of 4
+  unseen substantive cases that WOULD export: 2 of 3
+
+  F-147's precondition is CLEARED only if the development count is 0 while the
+  unseen count is positive. Any development case that would export means the
+  precondition stands and the fix stays unsafe.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f732b9ea1dad22422a54a6c6cd955ff6c019bbc1  [git, worktree dirty=True]
+label                   : orch726-f147-safety-replay-v2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch726_f147_safety_replay.py .
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 806140 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.63 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  806152:python.exe
+descendants terminated  : 1  806152
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-726/02-safety-replay-v2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
