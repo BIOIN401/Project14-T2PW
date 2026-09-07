@@ -1,5 +1,55 @@
 # RESUME — next session handoff
 
+> ## ⚠ THE UNSEEN PILOT IS NOT REPRODUCIBLE FROM THE PRODUCTION SHA ALONE. `D-097`, 2026-09-07.
+>
+> **Retracted:** *"the pilot is reproducible from the production commit alone."* **False.**
+>
+> **Correct:**
+> **pilot state = production SHA `c4a97f6006cdfe2d3a30790072826d4f1eaa74de` + the patch
+> `evidence/repro/ORCH-724/streamlit_app.pilot.patch` (sha256 `b5afa243acd3ce6a…`) applied to
+> `src/t2pw/app/streamlit_app.py`.**
+>
+> Bundle, proof and instructions: **`evidence/repro/ORCH-724/README.md`**.
+> Reconstruction verified mechanically: **`reconstruction_exact: true`** (detached temp
+> worktree at the SHA → `git apply` → hash compare → worktree removed).
+>
+> | | sha256 | |
+> |---|---|---|
+> | committed blob at `c4a97f60` | `70299631b41762f7…` | object store, LF |
+> | pilot bytes, **LF** | `251122389a2d29e8…` | platform-independent content identity |
+> | pilot bytes, **CRLF** | `47e4fafa789d359d…` | what this Windows machine executed |
+>
+> **7,269 of the 8,279-byte difference is CRLF line endings; only 1,010 bytes are real
+> content** (35 insertions, 2 deletions). Quoting `47e4fafa…` alone is platform-dependent and
+> overstates the change eightfold.
+>
+> ### ⚠ `F-186` — the patch is NOT UI-only. It changed pipeline execution configuration.
+>
+> | | committed | what the pilot ran |
+> |---|---|---|
+> | Stage 1 (extraction) `max_tokens` | literal **24000** | env-driven → **16000** |
+> | Stage 2 (inference) `max_tokens` | literal **20000** | env-driven → **16000** |
+>
+> Consumed at `streamlit_app.py:5467` / `:5588` (the Stage-1 and Stage-2 LLM calls). It
+> reached the run because `batch/driver.py` sets only the two radios, the text area and the
+> buttons — **the token widget defaults executed.**
+>
+> **The pilot was handicapped, not flattered:** smaller budgets tend to *understate*
+> extraction. Two legs failed `failed to produce valid JSON`, a known symptom of a budget cut
+> mid-object — **circumstantial, a hypothesis, never to be reported as a cause** without a
+> re-run the charter forbids. **`F-185`'s ranking is not revisited on this basis:** it is a
+> required-field-gate outcome, the negative control refuses before extraction, and the
+> riboflavin recovery succeeded *despite* the smaller budget.
+>
+> **The modified file was deliberately NOT committed** — it is untouched at `47e4fafa…` and
+> still uncommitted. Committing it would promote a user-owned working-tree change into
+> production behaviour, which `D-090` freezes and which `D-097` does not authorize.
+> **If that behaviour should exist permanently it needs its own narrow authorization**, and
+> note its committed default (64000) differs from both the current literals and the `.env`
+> values — so merging it changes behaviour again for anyone without those variables set.
+
+
+
 ## 0. CURRENT — **ONE final bounded completeness pass, then fresh papers. The infrastructure phase is OVER.** 2026-09-03.
 
 > ## ▶ NEXT ACTION: one final bounded completeness pass

@@ -292,3 +292,75 @@ refused**.
   claim is false as written;
 - **complete the human review** in `PILOT-MANUAL-REVIEW.md` — every biological quality number
   in the manuscript depends on it, and none of them can be produced by this pass.
+
+---
+
+# 10. AMENDMENT — `D-097` / `F-186`, 2026-09-07. The reproducibility caveat is RESOLVED, and it was bigger than a hash.
+
+§ 3 and § 9 above flagged the uncommitted `streamlit_app.py` as an owed item and described it
+only as a hash mismatch. **That description was incomplete.** Investigating it produced a
+finding that belongs in the manuscript's limitations.
+
+## The reproducibility record is now correct
+
+**pilot state = production SHA `c4a97f60` + `evidence/repro/ORCH-724/streamlit_app.pilot.patch`
+(sha256 `b5afa243acd3ce6a…`).** Bundle, proof and instructions:
+`evidence/repro/ORCH-724/README.md`. Reconstruction verified mechanically —
+**`reconstruction_exact: true`**. The modified file was **not** committed; it remains
+untouched and uncommitted, because committing it would promote a user-owned working-tree
+change into frozen production under a task that does not authorize it.
+
+## Two corrections to numbers stated earlier in this report
+
+**(a) The change is 8× smaller than § 3 implied.** § 3 said the file "differs from its HEAD
+blob by ~8 KB". **7,269 of those 8,279 bytes are CRLF line endings**; the real content delta
+is **1,010 bytes — 35 insertions, 2 deletions.** And the hash quoted there, `47e4fafa…`, is
+**platform-dependent**: it is the CRLF working-tree hash on Windows. The
+platform-independent content identity is `251122389a2d29e8…`. Both are now pinned.
+
+**(b) The patch is not UI-only, and the pilot did not run the committed configuration.**
+
+| | committed | what the pilot ran |
+|---|---|---|
+| Stage 1 (extraction) `max_tokens` | literal **24000** | env-driven → **16000** |
+| Stage 2 (inference) `max_tokens` | literal **20000** | env-driven → **16000** |
+
+Consumed at `streamlit_app.py:5467` / `:5588` — the Stage-1 and Stage-2 LLM calls — and it
+reached the run because `batch/driver.py` sets only the two radios, the text area and the
+buttons, so the **widget defaults executed**.
+
+## What this does and does not change about the findings
+
+**The pilot was handicapped, not flattered.** Both budgets were *smaller* than the committed
+code would have used, which tends to **understate** extraction. **No result in this report is
+inflated by it**, and the reported recovery is if anything a floor.
+
+**`F-185` stands and is not re-ranked.** It is a **required-field-gate** outcome — proteins
+lacking UniProt/DrugBank identifiers — which is a mapping/identity property, not a
+generation-length one. Supporting evidence that the budget is not the driver: the negative
+control refused in 20.9 s **before extraction**, and the riboflavin pathway was recovered
+essentially complete **despite** the smaller budget.
+
+**One hypothesis, explicitly not a conclusion.** Two legs failed `failed to produce valid
+JSON`, a known symptom of a generation budget cut mid-object. Whether the reduced Stage-1
+budget caused those two failures **cannot be established without re-running them**, which the
+charter forbids absent an infrastructure fault. **It must not be reported as a cause.** If the
+manuscript needs that answer, the honest route is a separately-labelled diagnostic re-run of
+those two legs at the committed budgets — outside the frozen pilot.
+
+## `F-186` — registered, not fixed, not committed
+
+> The pilot executed a working-tree modification that changes Stage-1/Stage-2 generation
+> budgets and was never authorized as production behaviour.
+
+The change itself looks deliberate and reasonable — a bounded, validated, logged env-override
+helper. **Whether it should become production is a separate decision this task did not make.**
+Note if it is taken up: its committed default (**64000**) differs from both the current
+literals (24000/20000) and the `.env` values (16000/16000), so merging it changes behaviour a
+third way for anyone without those variables set.
+
+## The § 9 owed-item list is now one shorter
+
+- ~~resolve the `streamlit_app.py` uncommitted-modification caveat~~ → **DONE** (`D-097`).
+- **complete the human review** in `PILOT-MANUAL-REVIEW.md` — still owed, still the blocking
+  item, and every biological quality number depends on it.

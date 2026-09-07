@@ -17,3 +17,8 @@
 # introduces it. Do not generalise these lines.
 
 docs/pwml_recovery_sprint/evidence/c011_freeze_seam_before.json -text
+
+# ORCH-724 reproducibility bundle. The pilot patch is a BYTE-EXACT artifact: the
+# reproducibility record pins its sha256, and a CRLF checkout would change that hash
+# and break the reconstruction proof. Own entry, per the rule above.
+docs/pwml_recovery_sprint/evidence/repro/ORCH-724/streamlit_app.pilot.patch -text

@@ -1,0 +1,205 @@
+{
+  "bundle": "ORCH-724 evaluation reproducibility bundle",
+  "purpose": "Preserve the exact state that produced the twenty unseen-pilot legs WITHOUT committing user-owned working-tree changes into production.",
+  "generated_at_utc": "2026-09-07T16:09:11.130124+00:00",
+  "read_only": true,
+  "ran_no_pipeline_leg": true,
+  "REPRODUCIBILITY_STATEMENT": {
+    "pilot_state_equals": "<production SHA> + <streamlit pilot patch>",
+    "production_sha": "c4a97f6006cdfe2d3a30790072826d4f1eaa74de",
+    "streamlit_pilot_patch_sha256": "b5afa243acd3ce6a3d4b149f9d0f29eb00e0eeab4b659524a40c0d29f214321d",
+    "correct_claim": "The unseen pilot is reproducible from production SHA c4a97f6006cdfe2d3a30790072826d4f1eaa74de WITH the patch at docs/pwml_recovery_sprint/evidence/repro/ORCH-724/streamlit_app.pilot.patch applied to src/t2pw/app/streamlit_app.py. It is NOT reproducible from the production commit alone.",
+    "superseded_false_claim": "'the pilot is reproducible from the production commit alone' -- FALSE, corrected by this bundle."
+  },
+  "streamlit_app": {
+    "path": "src/t2pw/app/streamlit_app.py",
+    "committed_at_pilot_sha_sha256": "70299631b41762f7f1aa5c1cc35bcbdffd4b3711f83f69ab953f9f82f8713c50",
+    "working_tree_pilot_sha256_CRLF": "47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632",
+    "working_tree_pilot_sha256_LF": "251122389a2d29e80c157ee139837d06c6f82b7ad6e215d144ecc41b436933bf",
+    "committed_bytes": 353154,
+    "working_tree_bytes": 361433,
+    "byte_delta_total": 8279,
+    "byte_delta_from_line_endings": 7269,
+    "byte_delta_real_content": 1010,
+    "line_ending_note": "core.autocrlf=true is set globally and this path carries no `text` attribute, so the object store holds LF and the working tree holds CRLF (.gitattributes documents this). The CRLF hash is what THIS machine executed; the LF hash is the platform-independent content identity. 7,269 of the 8,279 total byte delta is line endings, not content.",
+    "patch": "docs/pwml_recovery_sprint/evidence/repro/ORCH-724/streamlit_app.pilot.patch",
+    "patch_sha256": "b5afa243acd3ce6a3d4b149f9d0f29eb00e0eeab4b659524a40c0d29f214321d",
+    "patch_bytes": 1942,
+    "patch_is_binary_safe_committed": "yes -- .gitattributes gives this path `-text` so checkout cannot CRLF-mangle it and change its pinned hash"
+  },
+  "SEMANTIC_IMPACT": {
+    "ui_only": false,
+    "alters_pipeline_execution_configuration": true,
+    "what_changes": [
+      "Stage 1 (extraction) LLM max_tokens: committed literal 24000 -> _bounded_env_int('OPENROUTER_EXTRACTION_MAX_TOKENS', 64000)",
+      "Stage 2 (inference) LLM max_tokens: committed literal 20000 -> _bounded_env_int('OPENROUTER_INFERENCE_MAX_TOKENS', 64000)"
+    ],
+    "consumed_at": [
+      "src/t2pw/app/streamlit_app.py:5467  max_tokens=int(extract_tokens)",
+      "src/t2pw/app/streamlit_app.py:5588  max_tokens=int(infer_tokens)"
+    ],
+    "reaches_the_pilot_because": "batch/driver.py drives the app through AppTest and sets ONLY the export-mode radio, the input-mode radio, the source text area and the buttons. It never sets the Stage 1 / Stage 2 max-token number inputs, so the widget DEFAULTS are what executed.",
+    "effective_values_during_the_pilot": {
+      "OPENROUTER_EXTRACTION_MAX_TOKENS": "16000",
+      "OPENROUTER_INFERENCE_MAX_TOKENS": "16000",
+      "committed_code_would_have_used": {
+        "stage1": 24000,
+        "stage2": 20000
+      }
+    },
+    "direction_of_effect": "The pilot ran with SMALLER generation budgets than the committed code would give (16000 vs 24000 for Stage 1; 16000 vs 20000 for Stage 2), so if this mattered it would tend to UNDER-state extraction, not flatter it.",
+    "evidence_consistent_but_not_proof": "Two pilot legs failed with 'failed to produce valid JSON', a known symptom of a generation budget cut mid-object. This is CIRCUMSTANTIAL. Proving causation would require re-running legs, which this task forbids and which the pilot charter forbids without an infrastructure fault."
+  },
+  "model_and_provider": {
+    "LLM_PROVIDER": "openrouter",
+    "OPENROUTER_MODEL": "deepseek/deepseek-v4-flash",
+    "LLM_TEMPERATURE": "0",
+    "per_stage_models": {
+      "OPENROUTER_MODEL": "deepseek/deepseek-v4-flash",
+      "OPENROUTER_PREPROCESSOR_MODEL": "deepseek/deepseek-v4-flash",
+      "OPENROUTER_EXTRACTION_MODEL": "deepseek/deepseek-v4-flash",
+      "OPENROUTER_INFERENCE_MODEL": "deepseek/deepseek-v4-flash",
+      "OPENROUTER_AUDIT_MODEL": "deepseek/deepseek-v4-flash",
+      "OPENROUTER_CURATOR_MODEL": "deepseek/deepseek-v4-flash",
+      "OPENROUTER_GAP_MODEL": "deepseek/deepseek-v4-flash",
+      "OPENROUTER_OVERWATCH_MODEL": "deepseek/deepseek-v4-flash",
+      "OPENROUTER_FINAL_COMPLETENESS_MODEL": "deepseek/deepseek-v4-flash"
+    },
+    "token_budgets": {
+      "LLM_MAX_TOKENS": "16000",
+      "OPENROUTER_PREPROCESSOR_MAX_TOKENS": "12000",
+      "OPENROUTER_EXTRACTION_MAX_TOKENS": "16000",
+      "OPENROUTER_INFERENCE_MAX_TOKENS": "16000"
+    },
+    "retries": "3"
+  },
+  "credentials_presence_only": {
+    "LOCAL_API_KEY": "present (len 9)",
+    "OPENROUTER_API_KEY": "present (len 73)",
+    "PATHBANK_DB_PASSWORD": "present (len 6)",
+    "RAG_EMBEDDING_API_KEY": "present (len 9)",
+    "NCBI_API_KEY": "present (len 36)"
+  },
+  "retrieval_and_index": {
+    "RAG_ENABLED": "true",
+    "RAG_VECTOR_BACKEND": "memory",
+    "RAG_INDEX_DIR": "data/rag_index",
+    "RAG_EMBEDDING_BASE_URL": "http://127.0.0.1:1234/v1",
+    "RAG_EMBEDDING_MODEL": "text-embedding-nomic-embed-text-v1.5",
+    "RAG_ACQUIRE_MAX_PAPERS": "20",
+    "RAG_SELECT_MAX_PAPERS": "8",
+    "RAG_RETRIEVE_TOP_K": "8",
+    "RAG_EXTRACT_REACTIONS": "true"
+  },
+  "environment_config_full_no_secrets": {
+    "LLM_PROVIDER": "openrouter",
+    "LOCAL_BASE_URL": "http://127.0.0.1:1234/v1",
+    "LOCAL_MODEL": "meta-llama-3.1-8b-instruct",
+    "OPENROUTER_BASE_URL": "https://openrouter.ai/api/v1",
+    "OPENROUTER_MODEL": "deepseek/deepseek-v4-flash",
+    "OPENROUTER_PREPROCESSOR_MODEL": "deepseek/deepseek-v4-flash",
+    "OPENROUTER_EXTRACTION_MODEL": "deepseek/deepseek-v4-flash",
+    "OPENROUTER_INFERENCE_MODEL": "deepseek/deepseek-v4-flash",
+    "OPENROUTER_AUDIT_MODEL": "deepseek/deepseek-v4-flash",
+    "OPENROUTER_CURATOR_MODEL": "deepseek/deepseek-v4-flash",
+    "OPENROUTER_GAP_MODEL": "deepseek/deepseek-v4-flash",
+    "OPENROUTER_OVERWATCH_MODEL": "deepseek/deepseek-v4-flash",
+    "OPENROUTER_FINAL_COMPLETENESS_MODEL": "deepseek/deepseek-v4-flash",
+    "LLM_TEMPERATURE": "0",
+    "LLM_MAX_TOKENS": "16000",
+    "LLM_MAX_RETRIES": "3",
+    "OPENROUTER_PREPROCESSOR_MAX_TOKENS": "12000",
+    "OPENROUTER_EXTRACTION_MAX_TOKENS": "16000",
+    "OPENROUTER_INFERENCE_MAX_TOKENS": "16000",
+    "PATHBANK_ID_SOURCE": "hybrid",
+    "PATHBANK_DB_HOST": "192.241.161.227",
+    "PATHBANK_DB_PORT": "3306",
+    "PATHBANK_DB_USER": "readonly",
+    "PATHBANK_DB_SCHEMA": "pathbank",
+    "PATHBANK_DB_CONNECT_TIMEOUT": "6",
+    "PATHBANK_DB_READ_TIMEOUT": "20",
+    "PATHBANK_DB_WRITE_TIMEOUT": "20",
+    "RAG_ENABLED": "true",
+    "RAG_VECTOR_BACKEND": "memory",
+    "RAG_INDEX_DIR": "data/rag_index",
+    "RAG_EMBEDDING_BASE_URL": "http://127.0.0.1:1234/v1",
+    "RAG_EMBEDDING_MODEL": "text-embedding-nomic-embed-text-v1.5",
+    "NCBI_EMAIL": "achahil@ualberta.ca",
+    "NCBI_TOOL": "Project14-T2PW",
+    "RAG_ACQUIRE_MAX_PAPERS": "20",
+    "RAG_SELECT_MAX_PAPERS": "8",
+    "RAG_RETRIEVE_TOP_K": "8",
+    "RAG_EXTRACT_REACTIONS": "true"
+  },
+  "prompt_surface_sha256_16": {
+    "src/t2pw/llm/prompts/enrichment_agentic_system.txt": "779ccc5e5339d844",
+    "src/t2pw/llm/prompts/pathway_curator_system.txt": "23b16b591be7f0d2",
+    "src/t2pw/llm/prompts/preprocess_system.txt": "87a59feae3e1c7ac",
+    "src/t2pw/llm/prompts/pwml_infer_system.txt": "20b32362d5de5658",
+    "src/t2pw/llm/prompts/pwml_system.txt": "a82fa2a6ef28f61b",
+    "src/t2pw/curation/prompt_payload_keys.py": "9787fe422fdade3e",
+    "src/t2pw/tools/pathwhiz_converter/prompts.py": "913b8f1379df3a19",
+    "src/t2pw/llm/__init__.py": "6c74888387626293",
+    "src/t2pw/llm/client.py": "966f4af473dc5252"
+  },
+  "evaluator_versions_sha256_16": {
+    "docs/pwml_recovery_sprint/evidence/orch724_pilot_summary.py": "e064223b34146919",
+    "docs/pwml_recovery_sprint/evidence/orch724_admission_audit.py": "9566d6730c656f5d",
+    "docs/pwml_recovery_sprint/evidence/orch724_freeze_manifest.py": "cbda4bab985a7628",
+    "docs/pwml_recovery_sprint/evidence/f179_repair_regression.py": "1ace9b8b289009da",
+    "docs/pwml_recovery_sprint/evidence/rd093_rag_metrics.py": "9496e744ce3efbe1",
+    "docs/pwml_recovery_sprint/evidence/bounded_run.py": "83d139543d4c01b3",
+    "docs/pwml_recovery_sprint/evidence/repro/ORCH-724/reconstruct_proof.py": "6dc371f01b240dae"
+  },
+  "unseen_paper_manifest": {
+    "topics_file": "topics_unseen_pilot.txt",
+    "topics_sha256": "2041ad8c3689f6441ec8ffaaf74f2c7271b23eb57ada744b7a3b0600c67b56cb",
+    "manifest_doc": "docs/pwml_recovery_sprint/UNSEEN-COHORT-MANIFEST.md",
+    "known_manifest_defect": "PMC3480714 carries the wrong organism (Salmonella enterica); the paper works in a recombinant E. coli host. Both its legs ended scope_conflict and the gate was correct. Recorded, not silently corrected."
+  },
+  "pilot_run": {
+    "run_dir": "runs_verify/2026-09-06_1425",
+    "leg_dirs": [
+      "runs_verify/2026-09-06_1425/papers/PMC11172790/research",
+      "runs_verify/2026-09-06_1425/papers/PMC11172790/strict",
+      "runs_verify/2026-09-06_1425/papers/PMC11405693/research",
+      "runs_verify/2026-09-06_1425/papers/PMC11405693/strict",
+      "runs_verify/2026-09-06_1425/papers/PMC12071552/research",
+      "runs_verify/2026-09-06_1425/papers/PMC12071552/strict",
+      "runs_verify/2026-09-06_1425/papers/PMC12326985/research",
+      "runs_verify/2026-09-06_1425/papers/PMC12326985/strict",
+      "runs_verify/2026-09-06_1425/papers/PMC12376012/research",
+      "runs_verify/2026-09-06_1425/papers/PMC12376012/strict",
+      "runs_verify/2026-09-06_1425/papers/PMC12542839/research",
+      "runs_verify/2026-09-06_1425/papers/PMC12542839/strict",
+      "runs_verify/2026-09-06_1425/papers/PMC13017326/research",
+      "runs_verify/2026-09-06_1425/papers/PMC13017326/strict",
+      "runs_verify/2026-09-06_1425/papers/PMC3480714/research",
+      "runs_verify/2026-09-06_1425/papers/PMC3480714/strict",
+      "runs_verify/2026-09-06_1425/papers/PMC7232280/research",
+      "runs_verify/2026-09-06_1425/papers/PMC7232280/strict",
+      "runs_verify/2026-09-06_1425/papers/PMC8510960/research",
+      "runs_verify/2026-09-06_1425/papers/PMC8510960/strict"
+    ],
+    "leg_count": 20,
+    "summary_json": "docs/pwml_recovery_sprint/evidence/orch724_pilot_summary.json",
+    "manual_review_package": "docs/pwml_recovery_sprint/PILOT-MANUAL-REVIEW.md",
+    "bounded_run_report": "docs/pwml_recovery_sprint/evidence/g11/ORCH-724/21-unseen-pilot.json",
+    "wall_clock_seconds": 34978.27,
+    "note": "Run directories are NOT tracked, following the precedent of every recent run (runs_verify/2026-09-02_2052 is likewise untracked). This bundle pins their paths and content hashes rather than committing 56 MB."
+  },
+  "reconstruction_proof": {
+    "instrument": "docs/pwml_recovery_sprint/evidence/repro/ORCH-724/reconstruct_proof.py",
+    "result": "docs/pwml_recovery_sprint/evidence/repro/ORCH-724/reconstruct_proof.json",
+    "method": "detached worktree at the production SHA in a temp dir -> git apply the preserved patch -> compare sha256 in both LF and CRLF normalizations -> remove the temp worktree. No pipeline leg re-run."
+  },
+  "scope_statement": {
+    "production_semantics_changed": false,
+    "gold_changed": false,
+    "pilot_outputs_changed": false,
+    "run_directories_changed": false,
+    "protected_working_tree_bytes_changed": false,
+    "main_touched": false,
+    "streamlit_app_still_uncommitted": true
+  }
+}

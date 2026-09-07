@@ -1,0 +1,30 @@
+{
+  "instrument": "orch724_reconstruct_proof",
+  "read_only_wrt_primary_checkout": true,
+  "ran_no_pipeline_leg": true,
+  "pilot_production_sha": "c4a97f6006cdfe2d3a30790072826d4f1eaa74de",
+  "patch_path": "docs/pwml_recovery_sprint/evidence/repro/ORCH-724/streamlit_app.pilot.patch",
+  "patch_sha256": "b5afa243acd3ce6a3d4b149f9d0f29eb00e0eeab4b659524a40c0d29f214321d",
+  "patch_bytes": 1942,
+  "expected": {
+    "committed_lf_sha256": "70299631b41762f7f1aa5c1cc35bcbdffd4b3711f83f69ab953f9f82f8713c50",
+    "pilot_lf_sha256": "251122389a2d29e80c157ee139837d06c6f82b7ad6e215d144ecc41b436933bf",
+    "pilot_crlf_sha256": "47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632"
+  },
+  "checked_out": {
+    "sha256_as_checked_out": "7c22c59ab20cf4762ec4879c5a76120be60b2c84e84f297b3aa76a2b56302fcd",
+    "sha256_lf_normalized": "70299631b41762f7f1aa5c1cc35bcbdffd4b3711f83f69ab953f9f82f8713c50",
+    "matches_committed_after_lf_normalization": true
+  },
+  "reconstructed": {
+    "sha256_as_written": "47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632",
+    "sha256_lf_normalized": "251122389a2d29e80c157ee139837d06c6f82b7ad6e215d144ecc41b436933bf",
+    "sha256_crlf_normalized": "47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632"
+  },
+  "verdict": {
+    "lf_identity_matches_pilot": true,
+    "crlf_bytes_match_what_the_pilot_executed": true
+  },
+  "reconstruction_exact": true,
+  "temp_worktree_removed": true
+}

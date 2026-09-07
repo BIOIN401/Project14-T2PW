@@ -1,0 +1,61 @@
+diff --git a/src/t2pw/app/streamlit_app.py b/src/t2pw/app/streamlit_app.py
+index 6b69e81f..9f4ab9e5 100644
+--- a/src/t2pw/app/streamlit_app.py
++++ b/src/t2pw/app/streamlit_app.py
+@@ -1982,6 +1982,29 @@ def _safe_dict(value: Any) -> Dict[str, Any]:
+ #: artifact hand-off in the app sat downstream of an ``st.stop()``.
+ logger = logging.getLogger(__name__)
+ 
++
++def _bounded_env_int(name: str, default: int, *, minimum: int, maximum: int) -> int:
++    """Read an integer UI default from the environment and keep it in range."""
++    raw = os.getenv(name)
++    if raw is None or not raw.strip():
++        return default
++    try:
++        value = int(raw)
++    except ValueError:
++        logger.warning("Ignoring invalid %s=%r; using %d.", name, raw, default)
++        return default
++    if value < minimum or value > maximum:
++        clamped = min(max(value, minimum), maximum)
++        logger.warning(
++            "Clamping %s=%d to the supported UI range %d..%d.",
++            name,
++            value,
++            minimum,
++            maximum,
++        )
++        return clamped
++    return value
++
+ EXTRACTION_DIAGNOSTICS_KEY = "extraction_diagnostics"
+ 
+ #: Session-state key holding the directory this invocation's artifacts were
+@@ -5216,14 +5239,24 @@ with st.form("pwml_pipeline"):
+         "Stage 1 max tokens",
+         min_value=500,
+         max_value=128000,
+-        value=24000,
++        value=_bounded_env_int(
++            "OPENROUTER_EXTRACTION_MAX_TOKENS",
++            64000,
++            minimum=500,
++            maximum=128000,
++        ),
+         step=100,
+     )
+     infer_tokens = col_tokens_2.number_input(
+         "Stage 2 max tokens",
+         min_value=500,
+         max_value=128000,
+-        value=20000,
++        value=_bounded_env_int(
++            "OPENROUTER_INFERENCE_MAX_TOKENS",
++            64000,
++            minimum=500,
++            maximum=128000,
++        ),
+         step=100,
+     )
+ 

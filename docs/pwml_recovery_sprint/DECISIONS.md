@@ -6211,3 +6211,93 @@ state.
 **PRODUCTION IS RE-FROZEN. `D-090` governs in full.** `D-095` and `D-095a` are spent and
 are **not** authority for a second admission change. A disappointing number on the unseen
 cohort does **not** reopen production — the product owner's stopping rule governs.
+
+---
+
+## D-097 — the pilot reproducibility record is CORRECTED; `F-186` registered: the pilot ran on UNAUTHORIZED production behaviour · 2026-09-07 · LOCKED
+
+**Reproducibility preservation only. No pipeline behaviour changed. Production stays frozen
+under `D-090`.**
+
+### 1. The false claim, and the true one
+
+**RETRACTED:** *"the pilot is reproducible from the production commit alone."*
+
+**CORRECT:**
+
+> **pilot state = production SHA `c4a97f60` + `streamlit_app.pilot.patch`
+> (sha256 `b5afa243acd3ce6a…`) applied to `src/t2pw/app/streamlit_app.py`.**
+
+Bundle: `evidence/repro/ORCH-724/` — patch, `BUNDLE.json`, generator, proof, README.
+Reconstruction proof: **`reconstruction_exact: true`**, verified in a detached temporary
+worktree that was removed afterwards.
+
+### 2. Line endings account for 8× the apparent change, and the record now says so
+
+| | sha256 | |
+|---|---|---|
+| committed blob at `c4a97f60` | `70299631b41762f7…` | object store, LF |
+| pilot bytes, **LF** | `251122389a2d29e8…` | platform-independent content identity |
+| pilot bytes, **CRLF** | `47e4fafa789d359d…` | what this Windows machine executed |
+
+`core.autocrlf=true` with no `text` attribute on the path: **7,269 of the 8,279-byte delta
+is line endings; only 1,010 bytes are real content** (35 insertions, 2 deletions). The
+earlier record pinned only `47e4fafa…`, which is platform-dependent and made the change look
+eight times larger than it is. Both hashes are now pinned. The patch artifact itself carries
+`-text` in `.gitattributes`, following that file's own instruction that a byte-exact fixture
+must add its own entry in the card that introduces it.
+
+### 3. `F-186` — REGISTERED, NOT FIXED, NOT COMMITTED. **The patch is not UI-only.**
+
+This is the finding, and it is more serious than a hash mismatch.
+
+| | committed | what the pilot ran |
+|---|---|---|
+| Stage 1 (extraction) `max_tokens` | literal **24000** | `_bounded_env_int("OPENROUTER_EXTRACTION_MAX_TOKENS", 64000)` → **16000** |
+| Stage 2 (inference) `max_tokens` | literal **20000** | `_bounded_env_int("OPENROUTER_INFERENCE_MAX_TOKENS", 64000)` → **16000** |
+
+Consumed at `streamlit_app.py:5467` and `:5588` — the Stage-1 and Stage-2 LLM calls.
+
+**It reached the pilot.** `batch/driver.py` drives the app through `AppTest` and sets only
+the export-mode radio, the input-mode radio, the source text area and the buttons; it never
+sets the token inputs, so the **widget defaults executed**. Verified by grep over `src/` and
+`tests/`: nothing overrides them anywhere.
+
+**Consequences, stated exactly:**
+
+- **The twenty pilot legs did not run the committed configuration.** They ran Stage-1 and
+  Stage-2 budgets of 16000, where the committed code gives 24000 and 20000.
+- **Direction: the pilot was HANDICAPPED, not flattered.** Smaller budgets tend to
+  *understate* extraction. No pilot conclusion is inflated by this.
+- **Circumstantial only:** two legs failed `failed to produce valid JSON`, a known symptom of
+  a budget cut mid-object. **This is a hypothesis and must never be reported as a cause** —
+  proving it needs a re-run, which the pilot charter forbids without an infrastructure fault.
+
+**`ORCH-724`'s findings survive.** `F-185` (identity resolution blocking strict export) is a
+required-field-gate outcome, not a generation-length outcome; the negative control's 20.9 s
+refusal happens before extraction; and the riboflavin recovery succeeded *despite* the
+smaller budget. **The `F-185` ranking is not revisited on this basis.**
+
+### 4. What was deliberately NOT done
+
+**The modified `streamlit_app.py` was NOT committed.** It is untouched at `47e4fafa…` and
+still uncommitted. It contains what looks like deliberate, reasonable engineering — a
+bounded, validated, logged env-override helper — but committing it here would **silently
+promote a user-owned working-tree change into production behaviour** under a task whose
+scope is reproducibility preservation. `D-090` freezes this file's package; **this task does
+not authorize that decision and does not make it.**
+
+**If that behaviour should exist permanently it needs its own narrow authorization**, and it
+should be judged on its merits, including the fact that its *committed* default (64000)
+differs from both the current literals (24000/20000) and the `.env` values (16000/16000) —
+so merging it changes behaviour again for anyone without those variables set.
+
+### 5. A correction to `orch724_freeze_manifest.py`'s redaction rule
+
+That instrument redacted every key whose **name** contains `TOKEN`, which swept up
+`OPENROUTER_*_MAX_TOKENS`. Those are not credentials — they are **generation-length limits
+that materially change pipeline behaviour**, and they are precisely the variables this patch
+made load-bearing. A rule meant for credentials hid part of the run's configuration.
+`build_bundle.py` matches credential-bearing names explicitly (`API_KEY`, `PASSWORD`,
+`SECRET`, `ACCESS_TOKEN`, `AUTH_TOKEN`) and records the budgets in full. **No secret value is
+recorded anywhere in the bundle** — credentials remain presence-plus-length only.
