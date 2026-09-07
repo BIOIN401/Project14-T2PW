@@ -1,0 +1,2800 @@
+{
+  "instrument": "orch724_pilot_summary",
+  "run_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425",
+  "evaluation_only": true,
+  "note": "release_ready is a runtime fact, not a biological verdict. review_required is NOT a failure. No gold set exists for these papers and none is invented.",
+  "totals": {
+    "legs": 20,
+    "pwml_generated": 1,
+    "graph_valid": 1,
+    "reactions": 72,
+    "rows_without_provenance": 1,
+    "release:(none)": 10,
+    "release:diagnostic_only": 9,
+    "release:review_required": 1
+  },
+  "legs": [
+    {
+      "paper": "PMC11172790",
+      "mode": "research",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11172790/research",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 3,
+      "process_row_count": 12,
+      "core_accepted_processes": 1,
+      "coverage_ratio": 0.117647,
+      "minimum_core_satisfied": false,
+      "quarantined_processes": 11,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [
+        "Pseudomonas aeruginosa"
+      ],
+      "entity_counts": {
+        "species": 1,
+        "subcellular_locations": 4,
+        "compounds": 13,
+        "proteins": 6,
+        "protein_complexes": 1
+      },
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 84,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11172790/research/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11172790/research/stage1_payload.json",
+      "reaction_list": [
+        {
+          "name": "PvdL reaction",
+          "inputs": [
+            "myristic acid",
+            "L-glutamate",
+            "L-tyrosine",
+            "L-2,4-diaminobutyrate"
+          ],
+          "outputs": [
+            "three-amino-acid product"
+          ],
+          "enzymes": [
+            "PvdL"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "pyoverdine backbone elongation and cyclization",
+          "inputs": [
+            "three-amino-acid product",
+            "L-Serine",
+            "L-Arginine",
+            "L-hydroxyornithine",
+            "L-Lysine",
+            "L-Threonine"
+          ],
+          "outputs": [
+            "pyoverdine backbone"
+          ],
+          "enzymes": [
+            "PvdI",
+            "PvdJ",
+            "PvdD"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "pyoverdine maturation in periplasm",
+          "inputs": [
+            "acylated ferribactin"
+          ],
+          "outputs": [
+            "pyoverdine",
+            "myristic acid"
+          ],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdE-mediated acylated ferribactin export into the periplasm",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdL interacts with PvdD",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdA interacts with PvdL",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdA interacts with PvdI",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdA interacts with PvdJ",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdA interacts with PvdD",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdL co-localizes with PvdI",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdL co-localizes with PvdJ",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdL co-localizes with PvdD",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        }
+      ],
+      "enzymes": [
+        "PvdD",
+        "PvdI",
+        "PvdJ",
+        "PvdL"
+      ],
+      "release_status_record": null,
+      "release_status": null,
+      "semantic_evaluation": null,
+      "strict_gates_passed": null,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [],
+      "run_status": "pass",
+      "failure_kind": "",
+      "issue_codes": [
+        "gate.protein_pvdl_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_pvdi_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_pvdj_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_pvdd_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_pvda_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_pvde_is_missing_a_uniprot_or_drugbank_identifier"
+      ],
+      "seconds": 1315.36,
+      "warnings": [
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_pvdl_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'PvdL' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_pvdi_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'PvdI' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_pvdj_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'PvdJ' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_pvdd_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'PvdD' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_pvda_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'PvdA' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_pvde_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'PvdE' is missing a UniProt or DrugBank identifier."
+      ],
+      "topic": "pyoverdine biosynthesis"
+    },
+    {
+      "paper": "PMC11172790",
+      "mode": "strict",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11172790/strict",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 3,
+      "core_accepted_processes": 2,
+      "coverage_ratio": 0.176471,
+      "minimum_core_satisfied": false,
+      "quarantined_processes": 6,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [
+        "Pseudomonas aeruginosa"
+      ],
+      "entity_counts": {
+        "compounds": 4,
+        "proteins": 0,
+        "protein_complexes": 0,
+        "species": 1,
+        "subcellular_locations": 1
+      },
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 63,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11172790/strict/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11172790/strict/stage1_payload.json",
+      "reaction_list": [
+        {
+          "name": "acylated ferribactin export",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdA interacts with PvdI",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PvdA interacts with PvdJ",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        }
+      ],
+      "enzymes": [],
+      "release_status_record": {
+        "status": "diagnostic_only",
+        "pipeline_executed": true,
+        "strict_gates_passed": false,
+        "semantic_evaluation": "failed",
+        "semantic_not_evaluated_reason": "",
+        "semantic_failed_checks": [
+          "requested_pathway_anchors_present"
+        ],
+        "semantic_check_evaluability": [
+          {
+            "check": "requested_pathway_anchors_present",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "organism_compatible",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "no_real_id_or_name_conflict",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "no_rejected_rag_reaction_reintroduced",
+            "applicable": false,
+            "inapplicable_reason": "no RAG admission report was supplied to this evaluation call, so a reintroduced claim is undetectable here. This describes THIS call only: the batch driver does persist rag_admission_report.json, and the offline scorer loads it and reaches a verdict"
+          },
+          {
+            "check": "actor_named_in_its_own_cited_span",
+            "applicable": false,
+            "inapplicable_reason": "no actor sub-entry on any retained reaction carries both a name with an identifying token and a cited evidence span, so no actor could be compared against its own span"
+          }
+        ],
+        "strict_acceptance_eligible": false,
+        "completeness": null,
+        "missing_anchors": [],
+        "retrieval_attempts": null,
+        "expansion_blocked_reason": "",
+        "coverage_evaluated": false,
+        "reasons": [
+          "strict_technical_gates_blocked_export"
+        ]
+      },
+      "release_status": "diagnostic_only",
+      "semantic_evaluation": "failed",
+      "strict_gates_passed": false,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [
+        "strict_technical_gates_blocked_export"
+      ],
+      "run_status": "fail",
+      "failure_kind": "contract",
+      "issue_codes": [
+        "gate.registry_validation_failed"
+      ],
+      "seconds": 1660.05,
+      "warnings": [
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/9/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/10/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/11/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/12/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/14/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/15/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/9/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/10/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): and 6 more finding(s); all of them are in contract_reports.json"
+      ],
+      "topic": "pyoverdine biosynthesis"
+    },
+    {
+      "paper": "PMC11405693",
+      "mode": "research",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11405693/research",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 6,
+      "process_row_count": 7,
+      "core_accepted_processes": 4,
+      "coverage_ratio": 0.416667,
+      "minimum_core_satisfied": false,
+      "quarantined_processes": 2,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [
+        "Arabidopsis thaliana"
+      ],
+      "entity_counts": {
+        "species": 1,
+        "compounds": 10,
+        "proteins": 3,
+        "protein_complexes": 0,
+        "subcellular_locations": 1
+      },
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 142,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11405693/research/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11405693/research/stage1_payload.json",
+      "reaction_list": [
+        {
+          "name": "PAL reaction",
+          "inputs": [
+            "phenylalanine"
+          ],
+          "outputs": [
+            "cinnamic acid"
+          ],
+          "enzymes": [
+            "PAL"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "C4H reaction",
+          "inputs": [
+            "cinnamic acid"
+          ],
+          "outputs": [
+            "p-coumaric acid"
+          ],
+          "enzymes": [
+            "cinnamate 4-hydroxylase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "4CL reaction",
+          "inputs": [
+            "p-coumaric acid",
+            "CoA-SH"
+          ],
+          "outputs": [
+            "p-coumaroyl-CoA"
+          ],
+          "enzymes": [
+            "4-Coumarate:CoA ligase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PAL reaction",
+          "inputs": [
+            "phenylalanine"
+          ],
+          "outputs": [
+            "cinnamic acid"
+          ],
+          "enzymes": [
+            "PAL"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "C4H reaction",
+          "inputs": [
+            "cinnamic acid"
+          ],
+          "outputs": [
+            "p-coumaric acid"
+          ],
+          "enzymes": [
+            "cinnamate 4-hydroxylase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "4CL reaction",
+          "inputs": [
+            "p-coumaric acid"
+          ],
+          "outputs": [
+            "p-coumaroyl-CoA"
+          ],
+          "enzymes": [
+            "4-Coumarate:CoA ligase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Piperonylic acid inactivates trans-cinnamate 4-hydroxylase",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        }
+      ],
+      "enzymes": [
+        "4-Coumarate:CoA ligase",
+        "PAL",
+        "cinnamate 4-hydroxylase"
+      ],
+      "release_status_record": null,
+      "release_status": null,
+      "semantic_evaluation": null,
+      "strict_gates_passed": null,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [],
+      "run_status": "pass",
+      "failure_kind": "",
+      "issue_codes": [
+        "gate.protein_pal_is_missing_a_uniprot_or_drugbank_identifier"
+      ],
+      "seconds": 1161.42,
+      "warnings": [
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_pal_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'PAL' is missing a UniProt or DrugBank identifier."
+      ],
+      "topic": "phenylpropanoid biosynthesis"
+    },
+    {
+      "paper": "PMC11405693",
+      "mode": "strict",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11405693/strict",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 6,
+      "process_row_count": 7,
+      "core_accepted_processes": 7,
+      "coverage_ratio": 0.636364,
+      "minimum_core_satisfied": true,
+      "quarantined_processes": 1,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [
+        "Arabidopsis thaliana"
+      ],
+      "entity_counts": {
+        "species": 1,
+        "compounds": 6,
+        "proteins": 3,
+        "protein_complexes": 3,
+        "subcellular_locations": 1
+      },
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 163,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11405693/strict/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11405693/strict/stage1_payload.json",
+      "reaction_list": [
+        {
+          "name": "PAL deamination",
+          "inputs": [
+            "phenylalanine"
+          ],
+          "outputs": [
+            "cinnamic acid"
+          ],
+          "enzymes": [
+            "PAL"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "C4H hydroxylation",
+          "inputs": [
+            "cinnamic acid"
+          ],
+          "outputs": [
+            "p-coumaric acid"
+          ],
+          "enzymes": [
+            "AtCYP73A5"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "4CL activation",
+          "inputs": [
+            "p-coumaric acid",
+            "CoA-SH"
+          ],
+          "outputs": [
+            "p-coumaroyl-CoA"
+          ],
+          "enzymes": [
+            "4-coumarate:CoA ligase complex"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "PAL reaction",
+          "inputs": [
+            "phenylalanine"
+          ],
+          "outputs": [
+            "cinnamic acid"
+          ],
+          "enzymes": [
+            "PAL"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "C4H reaction",
+          "inputs": [
+            "cinnamic acid"
+          ],
+          "outputs": [
+            "p-coumaric acid"
+          ],
+          "enzymes": [
+            "Cinnamate 4-hydroxylase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "4CL reaction",
+          "inputs": [
+            "p-coumaric acid"
+          ],
+          "outputs": [
+            "p-coumaroyl-CoA"
+          ],
+          "enzymes": [
+            "4-coumarate:CoA ligase complex"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "piperonylic acid inhibits C4H",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        }
+      ],
+      "enzymes": [
+        "4-coumarate:CoA ligase complex",
+        "AtCYP73A5",
+        "Cinnamate 4-hydroxylase",
+        "PAL"
+      ],
+      "release_status_record": null,
+      "release_status": null,
+      "semantic_evaluation": null,
+      "strict_gates_passed": null,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [],
+      "run_status": "fail",
+      "failure_kind": "contract",
+      "issue_codes": [
+        "reaction_enzyme_must_be_protein_complex"
+      ],
+      "seconds": 1389.54,
+      "warnings": [
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta."
+      ],
+      "topic": "phenylpropanoid biosynthesis"
+    },
+    {
+      "paper": "PMC12071552",
+      "mode": "research",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12071552/research",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 0,
+      "core_accepted_processes": null,
+      "coverage_ratio": null,
+      "minimum_core_satisfied": null,
+      "quarantined_processes": null,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [],
+      "entity_counts": {},
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 36,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12071552/research/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12071552/research/stage1_payload.json",
+      "reaction_list": [],
+      "enzymes": [],
+      "release_status_record": {
+        "status": "diagnostic_only",
+        "pipeline_executed": true,
+        "strict_gates_passed": false,
+        "semantic_evaluation": "not_evaluated",
+        "semantic_not_evaluated_reason": "no semantic verdict reached this classification: the caller passed no semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT a pass",
+        "semantic_failed_checks": [],
+        "semantic_check_evaluability": [],
+        "strict_acceptance_eligible": false,
+        "completeness": null,
+        "missing_anchors": [],
+        "retrieval_attempts": null,
+        "expansion_blocked_reason": "",
+        "coverage_evaluated": false,
+        "reasons": [
+          "stage0_scope_conflict_stopped_the_run_before_serialization",
+          "strict_technical_gates_blocked_export"
+        ]
+      },
+      "release_status": "diagnostic_only",
+      "semantic_evaluation": "not_evaluated",
+      "strict_gates_passed": false,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [
+        "stage0_scope_conflict_stopped_the_run_before_serialization",
+        "strict_technical_gates_blocked_export"
+      ],
+      "run_status": "scope_conflict",
+      "failure_kind": "",
+      "issue_codes": [
+        "scope_conflict"
+      ],
+      "seconds": 526.58,
+      "warnings": [],
+      "topic": "wall teichoic acid D-alanylation"
+    },
+    {
+      "paper": "PMC12071552",
+      "mode": "strict",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12071552/strict",
+      "pwml_generated": true,
+      "pwml_files": [
+        "pathway.review_required.pwml"
+      ],
+      "pwml_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12071552/strict/pathway.review_required.pwml",
+      "reaction_count": 2,
+      "process_row_count": 4,
+      "core_accepted_processes": 4,
+      "coverage_ratio": 0.4,
+      "minimum_core_satisfied": false,
+      "quarantined_processes": 0,
+      "graph_valid": true,
+      "graph_issue_count": 0,
+      "ir_valid": true,
+      "qa_ok": true,
+      "qa_errors": 0,
+      "qa_warnings": 4,
+      "species": [
+        "Staphylococcus aureus",
+        "Staphylococcus aureus (MRSA N315)"
+      ],
+      "entity_counts": {
+        "species": 2,
+        "subcellular_locations": 4,
+        "compounds": 4,
+        "proteins": 2,
+        "protein_complexes": 1
+      },
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 30,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12071552/strict/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12071552/strict/stage1_payload.json",
+      "reaction_list": [
+        {
+          "name": "DltA-catalyzed D-Alanine adenylation",
+          "inputs": [
+            "D-Alanine",
+            "Adenosine triphosphate"
+          ],
+          "outputs": [
+            "Pyrophosphate"
+          ],
+          "enzymes": [
+            "DltA complex"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "DltA-catalyzed D-Serine adenylation",
+          "inputs": [
+            "D-Serine",
+            "Adenosine triphosphate"
+          ],
+          "outputs": [
+            "Pyrophosphate"
+          ],
+          "enzymes": [
+            "DltA complex"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "D-Alanine transport from cytoplasmic state to cell wall state",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "D-Serine transport from cytoplasmic state to cell wall state",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        }
+      ],
+      "enzymes": [
+        "DltA complex"
+      ],
+      "release_status_record": {
+        "status": "review_required",
+        "pipeline_executed": true,
+        "strict_gates_passed": true,
+        "semantic_evaluation": "failed",
+        "semantic_not_evaluated_reason": "",
+        "semantic_failed_checks": [
+          "requested_pathway_anchors_present"
+        ],
+        "semantic_check_evaluability": [
+          {
+            "check": "requested_pathway_anchors_present",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "organism_compatible",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "no_real_id_or_name_conflict",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "no_rejected_rag_reaction_reintroduced",
+            "applicable": false,
+            "inapplicable_reason": "no RAG admission report was supplied to this evaluation call, so a reintroduced claim is undetectable here. This describes THIS call only: the batch driver does persist rag_admission_report.json, and the offline scorer loads it and reaches a verdict"
+          },
+          {
+            "check": "actor_named_in_its_own_cited_span",
+            "applicable": true,
+            "inapplicable_reason": ""
+          }
+        ],
+        "strict_acceptance_eligible": false,
+        "completeness": 0.4,
+        "missing_anchors": [
+          "wall teichoic acid (WTA)",
+          "lipoteichoic acid (LTA)",
+          "ATP",
+          "dlt operon products",
+          "DltC",
+          "DltB"
+        ],
+        "retrieval_attempts": 0,
+        "expansion_blocked_reason": "6 requested-core anchor(s) matched no admitted process: wall teichoic acid (WTA), lipoteichoic acid (LTA), ATP, dlt operon products, DltC, DltB",
+        "coverage_evaluated": true,
+        "reasons": [
+          "requested_core_coverage_below_minimum:0.400<0.500"
+        ],
+        "applied": true,
+        "review_reasons": [
+          "minimum_core:requested_core_coverage_below_minimum:0.400<0.500"
+        ],
+        "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+      },
+      "release_status": "review_required",
+      "semantic_evaluation": "failed",
+      "strict_gates_passed": true,
+      "completeness": 0.4,
+      "missing_anchors": [
+        "wall teichoic acid (WTA)",
+        "lipoteichoic acid (LTA)",
+        "ATP",
+        "dlt operon products",
+        "DltC",
+        "DltB"
+      ],
+      "release_reasons": [
+        "requested_core_coverage_below_minimum:0.400<0.500"
+      ],
+      "run_status": "pass",
+      "failure_kind": "",
+      "issue_codes": [],
+      "seconds": 1160.21,
+      "warnings": [
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/6/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/7/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/8/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/9/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/6/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/7/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/8/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/9/mapping_meta: Mapped entity with a name is missing mapping_meta."
+      ],
+      "topic": "wall teichoic acid D-alanylation"
+    },
+    {
+      "paper": "PMC12326985",
+      "mode": "research",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12326985/research",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 0,
+      "core_accepted_processes": null,
+      "coverage_ratio": null,
+      "minimum_core_satisfied": null,
+      "quarantined_processes": null,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [],
+      "entity_counts": {},
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 0,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12326985/research/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12326985/research/stage1_payload.json",
+      "reaction_list": [],
+      "enzymes": [],
+      "release_status_record": null,
+      "release_status": null,
+      "semantic_evaluation": null,
+      "strict_gates_passed": null,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [],
+      "run_status": "fail",
+      "failure_kind": "unknown",
+      "issue_codes": [],
+      "seconds": 183.68,
+      "warnings": [],
+      "topic": "siderophore biosynthesis"
+    },
+    {
+      "paper": "PMC12326985",
+      "mode": "strict",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12326985/strict",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 0,
+      "core_accepted_processes": null,
+      "coverage_ratio": null,
+      "minimum_core_satisfied": null,
+      "quarantined_processes": null,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [],
+      "entity_counts": {},
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 0,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12326985/strict/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12326985/strict/stage1_payload.json",
+      "reaction_list": [],
+      "enzymes": [],
+      "release_status_record": null,
+      "release_status": null,
+      "semantic_evaluation": null,
+      "strict_gates_passed": null,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [],
+      "run_status": "fail",
+      "failure_kind": "ambiguous_review_scope",
+      "issue_codes": [
+        "ambiguous_review_scope"
+      ],
+      "seconds": 20.93,
+      "warnings": [],
+      "topic": "siderophore biosynthesis"
+    },
+    {
+      "paper": "PMC12376012",
+      "mode": "research",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12376012/research",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 19,
+      "process_row_count": 22,
+      "core_accepted_processes": 15,
+      "coverage_ratio": 0.55,
+      "minimum_core_satisfied": true,
+      "quarantined_processes": 7,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [
+        "Homo sapiens"
+      ],
+      "entity_counts": {
+        "species": 1,
+        "subcellular_locations": 8,
+        "compounds": 21,
+        "proteins": 30,
+        "protein_complexes": 4
+      },
+      "rows_without_any_provenance": 1,
+      "rag_added_rows": 0,
+      "rag_accepted": 1,
+      "rag_rejected": 200,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12376012/research/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12376012/research/stage1_payload.json",
+      "reaction_list": [
+        {
+          "name": "SPT reaction",
+          "inputs": [
+            "L-serine",
+            "palmitoyl-CoA"
+          ],
+          "outputs": [
+            "3-ketodihydrosphingosine (3-KDS)"
+          ],
+          "enzymes": [
+            "SPT/ORMDL complex",
+            "Nogo B",
+            "SPTLC1",
+            "SPTLC2",
+            "SPTssa",
+            "ORMDL3"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "KDSR reaction",
+          "inputs": [
+            "3-ketodihydrosphingosine (3-KDS)"
+          ],
+          "outputs": [
+            "dihydrosphingosine (DHS)"
+          ],
+          "enzymes": [
+            "KDSR"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Ceramide synthase reaction",
+          "inputs": [
+            "dihydrosphingosine (DHS)"
+          ],
+          "outputs": [
+            "dihydroceramide"
+          ],
+          "enzymes": [
+            "ceramide synthase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Dihydroceramide desaturase reaction",
+          "inputs": [
+            "dihydroceramide"
+          ],
+          "outputs": [
+            "ceramide"
+          ],
+          "enzymes": [
+            "dihydroceramide Δ4-desaturase 1"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Sphingomyelin synthase reaction",
+          "inputs": [
+            "ceramide"
+          ],
+          "outputs": [
+            "sphingomyelin"
+          ],
+          "enzymes": [
+            "sphingomyelin synthase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Glucosylceramide synthesis",
+          "inputs": [
+            "ceramide"
+          ],
+          "outputs": [
+            "glucosylceramide"
+          ],
+          "enzymes": [
+            "glucosylceramide synthase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Galactosylceramide synthesis",
+          "inputs": [
+            "ceramide"
+          ],
+          "outputs": [
+            "galactosylceramide"
+          ],
+          "enzymes": [
+            "galactosylceramide synthase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Ceramide kinase reaction",
+          "inputs": [
+            "ceramide"
+          ],
+          "outputs": [
+            "ceramide-1-phosphate"
+          ],
+          "enzymes": [
+            "ceramide kinase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Sphingosine kinase reaction",
+          "inputs": [
+            "sphingosine"
+          ],
+          "outputs": [
+            "sphingosine-1-phosphate"
+          ],
+          "enzymes": [
+            "sphingosine kinase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "S1P lyase reaction",
+          "inputs": [
+            "sphingosine-1-phosphate"
+          ],
+          "outputs": [
+            "ethanolamine phosphate",
+            "hexadecenal"
+          ],
+          "enzymes": [
+            "sphingosine-1-phosphate (S1P) lyase",
+            "sphingosine 1-phosphate lyase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Ceramidase reaction",
+          "inputs": [
+            "ceramide"
+          ],
+          "outputs": [
+            "sphingosine",
+            "fatty acid"
+          ],
+          "enzymes": [
+            "ceramidases"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Sphingosine-1-phosphate phosphatase reaction",
+          "inputs": [
+            "sphingosine-1-phosphate"
+          ],
+          "outputs": [
+            "sphingosine"
+          ],
+          "enzymes": [
+            "sphingosine-1-phosphate (S1P) phosphatase",
+            "sphingosine-1-phosphate phosphatases"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Sphingomyelinase reaction",
+          "inputs": [
+            "sphingomyelin"
+          ],
+          "outputs": [
+            "ceramide"
+          ],
+          "enzymes": [
+            "sphingomyelinase",
+            "sphingomyelinases"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Glycosphingolipid hydrolysis (glucosylceramide)",
+          "inputs": [
+            "glucosylceramide"
+          ],
+          "outputs": [
+            "ceramide"
+          ],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Ceramide synthase acylation",
+          "inputs": [
+            "dihydrosphingosine (DHS)",
+            "fatty acyl-CoA"
+          ],
+          "outputs": [
+            "dihydroceramide"
+          ],
+          "enzymes": [
+            "ceramide synthase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Sphingosine phosphorylation",
+          "inputs": [
+            "sphingosine"
+          ],
+          "outputs": [
+            "sphingosine-1-phosphate"
+          ],
+          "enzymes": [
+            "sphingosine kinase-1"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "S1P dephosphorylation",
+          "inputs": [
+            "sphingosine-1-phosphate"
+          ],
+          "outputs": [
+            "sphingosine"
+          ],
+          "enzymes": [
+            "sphingosine-1-phosphate phosphatases"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "S1P lyase degradation",
+          "inputs": [
+            "sphingosine-1-phosphate"
+          ],
+          "outputs": [
+            "ethanolamine phosphate",
+            "hexadecenal"
+          ],
+          "enzymes": [
+            "sphingosine 1-phosphate lyase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Glycosphingolipid hydrolysis in lysosome",
+          "inputs": [
+            "glycosphingolipids"
+          ],
+          "outputs": [
+            "ceramide"
+          ],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "CERT-mediated ceramide transport",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Vesicular ceramide transport to trans-Golgi",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "SPTLC2 contains pyridoxyl phosphate",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": true
+        }
+      ],
+      "enzymes": [
+        "KDSR",
+        "Nogo B",
+        "ORMDL3",
+        "SPT/ORMDL complex",
+        "SPTLC1",
+        "SPTLC2",
+        "SPTssa",
+        "ceramidases",
+        "ceramide kinase",
+        "ceramide synthase",
+        "dihydroceramide Δ4-desaturase 1",
+        "galactosylceramide synthase",
+        "glucosylceramide synthase",
+        "sphingomyelin synthase",
+        "sphingomyelinase",
+        "sphingomyelinases",
+        "sphingosine 1-phosphate lyase",
+        "sphingosine kinase",
+        "sphingosine kinase-1",
+        "sphingosine-1-phosphate (S1P) lyase",
+        "sphingosine-1-phosphate (S1P) phosphatase",
+        "sphingosine-1-phosphate phosphatases"
+      ],
+      "release_status_record": null,
+      "release_status": null,
+      "semantic_evaluation": null,
+      "strict_gates_passed": null,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [],
+      "run_status": "pass",
+      "failure_kind": "",
+      "issue_codes": [
+        "gate.protein_ormdl1_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_ormdl2_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_ormdl3_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_glucosylceramide_synthase_is_missing_a_uniprot_or_drugba",
+        "gate.protein_galactosylceramide_synthase_is_missing_a_uniprot_or_drug",
+        "gate.protein_spt_ormdl_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_orm1_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_orm2_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_ormdl_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_ceramidases_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_sphingosine_phosphate_phosphatases_is_missing_a_uniprot_",
+        "gate.protein_sphingomyelinases_is_missing_a_uniprot_or_drugbank_ident",
+        "gate.protein_sphingomyelinase_is_missing_a_uniprot_or_drugbank_identi"
+      ],
+      "seconds": 3449.74,
+      "warnings": [
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/7/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/20/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/27/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/28/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/29/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/7/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/20/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/27/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/28/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/29/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_ormdl1_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'ORMDL1' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_ormdl2_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'ORMDL2' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_ormdl3_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'ORMDL3' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_glucosylceramide_synthase_is_missing_a_uniprot_or_drugba @ /entities/proteins/15: Protein 'glucosylceramide synthase' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_galactosylceramide_synthase_is_missing_a_uniprot_or_drug @ /entities/proteins/16: Protein 'galactosylceramide synthase' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_spt_ormdl_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/18: Protein 'SPT/ORMDL' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_orm1_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/19: Protein 'Orm1' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_orm2_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/20: Protein 'Orm2' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_ormdl_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/21: Protein 'ORMDL' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_ceramidases_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/23: Protein 'ceramidases' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): and 3 more gate error(s); all of them are in review_flags.json and the gate report files"
+      ],
+      "topic": "sphingolipid biosynthesis"
+    },
+    {
+      "paper": "PMC12376012",
+      "mode": "strict",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12376012/strict",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 15,
+      "process_row_count": 16,
+      "core_accepted_processes": 16,
+      "coverage_ratio": 0.6,
+      "minimum_core_satisfied": true,
+      "quarantined_processes": 1,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [
+        "Homo sapiens",
+        "Arabidopsis thaliana"
+      ],
+      "entity_counts": {
+        "species": 2,
+        "subcellular_locations": 5,
+        "compounds": 13,
+        "proteins": 8,
+        "protein_complexes": 8
+      },
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 1,
+      "rag_rejected": 200,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12376012/strict/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12376012/strict/stage1_payload.json",
+      "reaction_list": [
+        {
+          "name": "SPT reaction",
+          "inputs": [
+            "L-serine",
+            "palmitoyl-CoA"
+          ],
+          "outputs": [
+            "3-Dehydrosphinganine"
+          ],
+          "enzymes": [
+            "Serine Palmitoyltransferase complex"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "KDSR reaction",
+          "inputs": [
+            "3-Dehydrosphinganine"
+          ],
+          "outputs": [
+            "Sphinganine"
+          ],
+          "enzymes": [
+            "3-ketodihydrosphingosine reductase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Ceramide synthase reaction",
+          "inputs": [
+            "Sphinganine"
+          ],
+          "outputs": [
+            "ceramide"
+          ],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "serine palmitoyltransferase reaction",
+          "inputs": [
+            "palmitoyl-CoA",
+            "serine"
+          ],
+          "outputs": [
+            "3-Dehydrosphinganine"
+          ],
+          "enzymes": [
+            "Serine Palmitoyltransferase complex"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "ceramide synthase reaction",
+          "inputs": [
+            "Sphinganine"
+          ],
+          "outputs": [
+            "dihydroceramide"
+          ],
+          "enzymes": [
+            "ceramide synthase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "dihydroceramide desaturase reaction",
+          "inputs": [
+            "dihydroceramide"
+          ],
+          "outputs": [
+            "ceramide"
+          ],
+          "enzymes": [
+            "dihydroceramide Δ4-desaturase 1"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Sphingomyelin synthase reaction",
+          "inputs": [
+            "ceramide"
+          ],
+          "outputs": [
+            "sphingomyelin"
+          ],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Glucosylceramide synthase reaction",
+          "inputs": [
+            "ceramide"
+          ],
+          "outputs": [
+            "glucosylceramide"
+          ],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Sphingosine kinase reaction",
+          "inputs": [
+            "sphingosine"
+          ],
+          "outputs": [
+            "sphingosine-1-phosphate"
+          ],
+          "enzymes": [
+            "sphingosine kinase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Sphingomyelin hydrolysis",
+          "inputs": [
+            "sphingomyelin"
+          ],
+          "outputs": [
+            "ceramide"
+          ],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Glucosylceramide hydrolysis",
+          "inputs": [
+            "glucosylceramide"
+          ],
+          "outputs": [
+            "ceramide"
+          ],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "sphingomyelin synthase 1 reaction",
+          "inputs": [
+            "ceramide",
+            "phosphorylcholine"
+          ],
+          "outputs": [
+            "sphingomyelin"
+          ],
+          "enzymes": [
+            "sphingomyelin synthase 1"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "ceramidase reaction",
+          "inputs": [
+            "ceramide"
+          ],
+          "outputs": [
+            "sphingosine",
+            "fatty acid"
+          ],
+          "enzymes": [
+            "ceramidase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "sphingomyelinase reaction",
+          "inputs": [
+            "sphingomyelin"
+          ],
+          "outputs": [
+            "ceramide",
+            "phosphorylcholine"
+          ],
+          "enzymes": [
+            "sphingomyelinase"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "S1P phosphatase reaction",
+          "inputs": [
+            "sphingosine-1-phosphate"
+          ],
+          "outputs": [
+            "sphingosine"
+          ],
+          "enzymes": [
+            "S1P phosphatase complex"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "CERT-mediated ceramide transport from ER state to Golgi state",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        }
+      ],
+      "enzymes": [
+        "3-ketodihydrosphingosine reductase",
+        "S1P phosphatase complex",
+        "Serine Palmitoyltransferase complex",
+        "ceramidase",
+        "ceramide synthase",
+        "dihydroceramide Δ4-desaturase 1",
+        "sphingomyelin synthase 1",
+        "sphingomyelinase",
+        "sphingosine kinase"
+      ],
+      "release_status_record": {
+        "status": "diagnostic_only",
+        "pipeline_executed": true,
+        "strict_gates_passed": false,
+        "semantic_evaluation": "failed",
+        "semantic_not_evaluated_reason": "",
+        "semantic_failed_checks": [
+          "requested_pathway_anchors_present",
+          "actor_named_in_its_own_cited_span"
+        ],
+        "semantic_check_evaluability": [
+          {
+            "check": "requested_pathway_anchors_present",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "organism_compatible",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "no_real_id_or_name_conflict",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "no_rejected_rag_reaction_reintroduced",
+            "applicable": false,
+            "inapplicable_reason": "no RAG admission report was supplied to this evaluation call, so a reintroduced claim is undetectable here. This describes THIS call only: the batch driver does persist rag_admission_report.json, and the offline scorer loads it and reaches a verdict"
+          },
+          {
+            "check": "actor_named_in_its_own_cited_span",
+            "applicable": true,
+            "inapplicable_reason": ""
+          }
+        ],
+        "strict_acceptance_eligible": false,
+        "completeness": null,
+        "missing_anchors": [],
+        "retrieval_attempts": null,
+        "expansion_blocked_reason": "",
+        "coverage_evaluated": false,
+        "reasons": [
+          "strict_technical_gates_blocked_export"
+        ]
+      },
+      "release_status": "diagnostic_only",
+      "semantic_evaluation": "failed",
+      "strict_gates_passed": false,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [
+        "strict_technical_gates_blocked_export"
+      ],
+      "run_status": "fail",
+      "failure_kind": "contract",
+      "issue_codes": [
+        "gate.protein_ormdl1_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_ormdl2_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_ormdl3_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_dihydroceramide_desaturase_is_missing_species_organism",
+        "gate.protein_sphingosine_kinase_is_missing_species_organism",
+        "gate.protein_sphingomyelin_synthase_is_missing_species_organism",
+        "gate.protein_ceramide_kinase_is_missing_species_organism",
+        "gate.protein_ceramidase_is_missing_species_organism",
+        "gate.protein_sphingomyelinase_is_missing_species_organism",
+        "gate.protein_s1p_phosphatase_is_missing_species_organism"
+      ],
+      "seconds": 1943.61,
+      "warnings": [
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/14/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/9/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/10/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/11/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/12/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/13/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/14/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/15/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): and 10 more finding(s); all of them are in contract_reports.json"
+      ],
+      "topic": "sphingolipid biosynthesis"
+    },
+    {
+      "paper": "PMC12542839",
+      "mode": "research",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12542839/research",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 11,
+      "process_row_count": 14,
+      "core_accepted_processes": 9,
+      "coverage_ratio": 0.736842,
+      "minimum_core_satisfied": true,
+      "quarantined_processes": 5,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [
+        "Bacillus subtilis"
+      ],
+      "entity_counts": {
+        "species": 1,
+        "compounds": 13,
+        "nucleic_acids": 1,
+        "proteins": 9,
+        "protein_complexes": 0,
+        "subcellular_locations": 1
+      },
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 200,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12542839/research/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12542839/research/stage1_payload.json",
+      "reaction_list": [
+        {
+          "name": "GTP cyclohydrolase II reaction",
+          "inputs": [
+            "GTP"
+          ],
+          "outputs": [
+            "2,5-diamino-6-ribosylamino-4(3H)-pyrimidinone-5'-phosphate (DARPP)"
+          ],
+          "enzymes": [
+            "RibA"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "DARPP deaminase reaction",
+          "inputs": [
+            "2,5-diamino-6-ribosylamino-4(3H)-pyrimidinone-5'-phosphate (DARPP)"
+          ],
+          "outputs": [
+            "5-amino-6-ribitylamino-2,4(1H,3H)-pyrimidinedione-5'-phosphate (ArPP)"
+          ],
+          "enzymes": [
+            "RibG"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "ArPP dephosphorylation",
+          "inputs": [
+            "5-amino-6-ribitylamino-2,4(1H,3H)-pyrimidinedione-5'-phosphate (ArPP)"
+          ],
+          "outputs": [
+            "5-amino-6-ribitylamino-2,4(1H,3H)-pyrimidinedione (ArP)"
+          ],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "DHBP synthase reaction",
+          "inputs": [
+            "ribulose-5-phosphate (Ru5P)"
+          ],
+          "outputs": [
+            "3,4-dihydroxy-2-butanone-4-phosphate (DHBP)"
+          ],
+          "enzymes": [
+            "RibA"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "DRL synthase reaction",
+          "inputs": [
+            "5-amino-6-ribitylamino-2,4(1H,3H)-pyrimidinedione (ArP)",
+            "3,4-dihydroxy-2-butanone-4-phosphate (DHBP)"
+          ],
+          "outputs": [
+            "6,7-dimethyl-8-ribityllumazine (DRL)"
+          ],
+          "enzymes": [
+            "RibH"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "riboflavin synthase reaction",
+          "inputs": [
+            "6,7-dimethyl-8-ribityllumazine (DRL)"
+          ],
+          "outputs": [
+            "riboflavin",
+            "5-amino-6-ribitylamino-2,4(1H,3H)-pyrimidinedione-5'-phosphate (ArPP)"
+          ],
+          "enzymes": [
+            "RibB"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "riboflavin kinase reaction",
+          "inputs": [
+            "riboflavin"
+          ],
+          "outputs": [
+            "FMN"
+          ],
+          "enzymes": [
+            "RibFC",
+            "RibM",
+            "RibR"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "FAD synthetase reaction",
+          "inputs": [
+            "FMN",
+            "Adenosine triphosphate"
+          ],
+          "outputs": [
+            "FAD"
+          ],
+          "enzymes": [
+            "RibFC"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "FAD synthetase reaction",
+          "inputs": [
+            "FMN"
+          ],
+          "outputs": [
+            "FAD"
+          ],
+          "enzymes": [
+            "RibFC"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "RibFC riboflavin kinase reaction",
+          "inputs": [
+            "riboflavin",
+            "Adenosine triphosphate"
+          ],
+          "outputs": [
+            "FMN",
+            "Adenosine diphosphate"
+          ],
+          "enzymes": [
+            "RibFC",
+            "RibR"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "RibFC FAD synthetase reaction",
+          "inputs": [
+            "FMN",
+            "Adenosine triphosphate"
+          ],
+          "outputs": [
+            "FAD",
+            "Pyrophosphate"
+          ],
+          "enzymes": [
+            "RibFC"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "FMN binding to FMN riboswitch",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "FMN riboswitch binding regulates transcription",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "ribFMN riboswitch regulation",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        }
+      ],
+      "enzymes": [
+        "RibA",
+        "RibB",
+        "RibFC",
+        "RibG",
+        "RibH",
+        "RibM",
+        "RibR"
+      ],
+      "release_status_record": null,
+      "release_status": null,
+      "semantic_evaluation": null,
+      "strict_gates_passed": null,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [],
+      "run_status": "pass",
+      "failure_kind": "",
+      "issue_codes": [
+        "gate.protein_ribfc_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_ribm_is_missing_a_uniprot_or_drugbank_identifier"
+      ],
+      "seconds": 2641.07,
+      "warnings": [
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/11/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/12/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/11/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/12/mapping_meta/resolution: Mapping metadata must include a resolution object.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_ribfc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'RibFC' is missing a UniProt or DrugBank identifier.",
+        "strict gate error (research mode: review flag, not blocking): gate.protein_ribm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'RibM' is missing a UniProt or DrugBank identifier."
+      ],
+      "topic": "riboflavin biosynthesis"
+    },
+    {
+      "paper": "PMC12542839",
+      "mode": "strict",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12542839/strict",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 0,
+      "core_accepted_processes": null,
+      "coverage_ratio": null,
+      "minimum_core_satisfied": null,
+      "quarantined_processes": null,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [],
+      "entity_counts": {},
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 0,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12542839/strict/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC12542839/strict/stage1_payload.json",
+      "reaction_list": [],
+      "enzymes": [],
+      "release_status_record": null,
+      "release_status": null,
+      "semantic_evaluation": null,
+      "strict_gates_passed": null,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [],
+      "run_status": "timeout",
+      "failure_kind": "timeout",
+      "issue_codes": [],
+      "seconds": 3600.52,
+      "warnings": null,
+      "topic": "riboflavin biosynthesis"
+    },
+    {
+      "paper": "PMC13017326",
+      "mode": "research",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC13017326/research",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 0,
+      "core_accepted_processes": null,
+      "coverage_ratio": null,
+      "minimum_core_satisfied": null,
+      "quarantined_processes": null,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [],
+      "entity_counts": {},
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 0,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC13017326/research/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC13017326/research/stage1_payload.json",
+      "reaction_list": [],
+      "enzymes": [],
+      "release_status_record": null,
+      "release_status": null,
+      "semantic_evaluation": null,
+      "strict_gates_passed": null,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [],
+      "run_status": "timeout",
+      "failure_kind": "timeout",
+      "issue_codes": [],
+      "seconds": 3600.63,
+      "warnings": null,
+      "topic": "anthocyanin biosynthesis"
+    },
+    {
+      "paper": "PMC13017326",
+      "mode": "strict",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC13017326/strict",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 0,
+      "core_accepted_processes": null,
+      "coverage_ratio": null,
+      "minimum_core_satisfied": null,
+      "quarantined_processes": null,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [],
+      "entity_counts": {},
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 0,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC13017326/strict/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC13017326/strict/stage1_payload.json",
+      "reaction_list": [],
+      "enzymes": [],
+      "release_status_record": null,
+      "release_status": null,
+      "semantic_evaluation": null,
+      "strict_gates_passed": null,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [],
+      "run_status": "timeout",
+      "failure_kind": "timeout",
+      "issue_codes": [],
+      "seconds": 3600.55,
+      "warnings": null,
+      "topic": "anthocyanin biosynthesis"
+    },
+    {
+      "paper": "PMC3480714",
+      "mode": "research",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC3480714/research",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 0,
+      "core_accepted_processes": null,
+      "coverage_ratio": null,
+      "minimum_core_satisfied": null,
+      "quarantined_processes": null,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [],
+      "entity_counts": {},
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 73,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC3480714/research/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC3480714/research/stage1_payload.json",
+      "reaction_list": [],
+      "enzymes": [],
+      "release_status_record": {
+        "status": "diagnostic_only",
+        "pipeline_executed": true,
+        "strict_gates_passed": false,
+        "semantic_evaluation": "not_evaluated",
+        "semantic_not_evaluated_reason": "no semantic verdict reached this classification: the caller passed no semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT a pass",
+        "semantic_failed_checks": [],
+        "semantic_check_evaluability": [],
+        "strict_acceptance_eligible": false,
+        "completeness": null,
+        "missing_anchors": [],
+        "retrieval_attempts": null,
+        "expansion_blocked_reason": "",
+        "coverage_evaluated": false,
+        "reasons": [
+          "stage0_scope_conflict_stopped_the_run_before_serialization",
+          "strict_technical_gates_blocked_export"
+        ]
+      },
+      "release_status": "diagnostic_only",
+      "semantic_evaluation": "not_evaluated",
+      "strict_gates_passed": false,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [
+        "stage0_scope_conflict_stopped_the_run_before_serialization",
+        "strict_technical_gates_blocked_export"
+      ],
+      "run_status": "scope_conflict",
+      "failure_kind": "",
+      "issue_codes": [
+        "scope_conflict"
+      ],
+      "seconds": 1229.96,
+      "warnings": [],
+      "topic": "cobalamin biosynthesis"
+    },
+    {
+      "paper": "PMC3480714",
+      "mode": "strict",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC3480714/strict",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 0,
+      "core_accepted_processes": null,
+      "coverage_ratio": null,
+      "minimum_core_satisfied": null,
+      "quarantined_processes": null,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [],
+      "entity_counts": {},
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 200,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC3480714/strict/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC3480714/strict/stage1_payload.json",
+      "reaction_list": [],
+      "enzymes": [],
+      "release_status_record": {
+        "status": "diagnostic_only",
+        "pipeline_executed": true,
+        "strict_gates_passed": false,
+        "semantic_evaluation": "not_evaluated",
+        "semantic_not_evaluated_reason": "no semantic verdict reached this classification: the caller passed no semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT a pass",
+        "semantic_failed_checks": [],
+        "semantic_check_evaluability": [],
+        "strict_acceptance_eligible": false,
+        "completeness": null,
+        "missing_anchors": [],
+        "retrieval_attempts": null,
+        "expansion_blocked_reason": "",
+        "coverage_evaluated": false,
+        "reasons": [
+          "stage0_scope_conflict_stopped_the_run_before_serialization",
+          "strict_technical_gates_blocked_export"
+        ]
+      },
+      "release_status": "diagnostic_only",
+      "semantic_evaluation": "not_evaluated",
+      "strict_gates_passed": false,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [
+        "stage0_scope_conflict_stopped_the_run_before_serialization",
+        "strict_technical_gates_blocked_export"
+      ],
+      "run_status": "scope_conflict",
+      "failure_kind": "",
+      "issue_codes": [
+        "scope_conflict"
+      ],
+      "seconds": 795.15,
+      "warnings": [],
+      "topic": "cobalamin biosynthesis"
+    },
+    {
+      "paper": "PMC7232280",
+      "mode": "research",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC7232280/research",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 0,
+      "core_accepted_processes": null,
+      "coverage_ratio": null,
+      "minimum_core_satisfied": null,
+      "quarantined_processes": null,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [],
+      "entity_counts": {},
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 200,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC7232280/research/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC7232280/research/stage1_payload.json",
+      "reaction_list": [],
+      "enzymes": [],
+      "release_status_record": {
+        "status": "diagnostic_only",
+        "pipeline_executed": true,
+        "strict_gates_passed": false,
+        "semantic_evaluation": "not_evaluated",
+        "semantic_not_evaluated_reason": "no semantic verdict reached this classification: the caller passed no semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT a pass",
+        "semantic_failed_checks": [],
+        "semantic_check_evaluability": [],
+        "strict_acceptance_eligible": false,
+        "completeness": null,
+        "missing_anchors": [],
+        "retrieval_attempts": null,
+        "expansion_blocked_reason": "",
+        "coverage_evaluated": false,
+        "reasons": [
+          "stage0_scope_conflict_stopped_the_run_before_serialization",
+          "strict_technical_gates_blocked_export"
+        ]
+      },
+      "release_status": "diagnostic_only",
+      "semantic_evaluation": "not_evaluated",
+      "strict_gates_passed": false,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [
+        "stage0_scope_conflict_stopped_the_run_before_serialization",
+        "strict_technical_gates_blocked_export"
+      ],
+      "run_status": "scope_conflict",
+      "failure_kind": "",
+      "issue_codes": [
+        "scope_conflict"
+      ],
+      "seconds": 627.56,
+      "warnings": [],
+      "topic": "molybdenum cofactor biosynthesis"
+    },
+    {
+      "paper": "PMC7232280",
+      "mode": "strict",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC7232280/strict",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 5,
+      "process_row_count": 6,
+      "core_accepted_processes": 6,
+      "coverage_ratio": 0.733333,
+      "minimum_core_satisfied": true,
+      "quarantined_processes": 0,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [
+        "Neurospora crassa",
+        "Arabidopsis thaliana"
+      ],
+      "entity_counts": {
+        "species": 2,
+        "subcellular_locations": 3,
+        "compounds": 6,
+        "proteins": 2,
+        "protein_complexes": 5
+      },
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 200,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC7232280/strict/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC7232280/strict/stage1_payload.json",
+      "reaction_list": [
+        {
+          "name": "NIT-7A conversion of GTP to 3',8-cH2 GTP",
+          "inputs": [
+            "GTP"
+          ],
+          "outputs": [
+            "3',8-cH2 GTP"
+          ],
+          "enzymes": [
+            "NIT-7A"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "NIT-7B conversion of 3',8-cH2 GTP to cPMP",
+          "inputs": [
+            "3',8-cH2 GTP"
+          ],
+          "outputs": [
+            "cPMP"
+          ],
+          "enzymes": [
+            "NIT-7B"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "MPT synthase conversion of cPMP to MPT",
+          "inputs": [
+            "cPMP"
+          ],
+          "outputs": [
+            "MPT"
+          ],
+          "enzymes": [
+            "MPT synthase complex"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "NIT-9G adenylation of MPT to MPT-AMP",
+          "inputs": [
+            "MPT"
+          ],
+          "outputs": [
+            "MPT-AMP"
+          ],
+          "enzymes": [
+            "NIT-9G"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "NIT-9E conversion of MPT-AMP to Moco",
+          "inputs": [
+            "MPT-AMP"
+          ],
+          "outputs": [
+            "Moco"
+          ],
+          "enzymes": [
+            "NIT-9E"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "cPMP export from mitochondrial state to cytoplasmic state",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        }
+      ],
+      "enzymes": [
+        "MPT synthase complex",
+        "NIT-7A",
+        "NIT-7B",
+        "NIT-9E",
+        "NIT-9G"
+      ],
+      "release_status_record": {
+        "status": "diagnostic_only",
+        "pipeline_executed": true,
+        "strict_gates_passed": false,
+        "semantic_evaluation": "failed",
+        "semantic_not_evaluated_reason": "",
+        "semantic_failed_checks": [
+          "requested_pathway_anchors_present"
+        ],
+        "semantic_check_evaluability": [
+          {
+            "check": "requested_pathway_anchors_present",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "organism_compatible",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "no_real_id_or_name_conflict",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "no_rejected_rag_reaction_reintroduced",
+            "applicable": false,
+            "inapplicable_reason": "no RAG admission report was supplied to this evaluation call, so a reintroduced claim is undetectable here. This describes THIS call only: the batch driver does persist rag_admission_report.json, and the offline scorer loads it and reaches a verdict"
+          },
+          {
+            "check": "actor_named_in_its_own_cited_span",
+            "applicable": true,
+            "inapplicable_reason": ""
+          }
+        ],
+        "strict_acceptance_eligible": false,
+        "completeness": null,
+        "missing_anchors": [],
+        "retrieval_attempts": null,
+        "expansion_blocked_reason": "",
+        "coverage_evaluated": false,
+        "reasons": [
+          "strict_technical_gates_blocked_export"
+        ]
+      },
+      "release_status": "diagnostic_only",
+      "semantic_evaluation": "failed",
+      "strict_gates_passed": false,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [
+        "strict_technical_gates_blocked_export"
+      ],
+      "run_status": "fail",
+      "failure_kind": "contract",
+      "issue_codes": [
+        "gate.protein_nitg_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_nite_is_missing_a_uniprot_or_drugbank_identifier"
+      ],
+      "seconds": 1951.92,
+      "warnings": [
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta."
+      ],
+      "topic": "molybdenum cofactor biosynthesis"
+    },
+    {
+      "paper": "PMC8510960",
+      "mode": "research",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC8510960/research",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 0,
+      "process_row_count": 0,
+      "core_accepted_processes": null,
+      "coverage_ratio": null,
+      "minimum_core_satisfied": null,
+      "quarantined_processes": null,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [],
+      "entity_counts": {},
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 0,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC8510960/research/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC8510960/research/stage1_payload.json",
+      "reaction_list": [],
+      "enzymes": [],
+      "release_status_record": {
+        "status": "diagnostic_only",
+        "pipeline_executed": true,
+        "strict_gates_passed": false,
+        "semantic_evaluation": "not_evaluated",
+        "semantic_not_evaluated_reason": "no semantic verdict reached this classification: the caller passed no semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT a pass",
+        "semantic_failed_checks": [],
+        "semantic_check_evaluability": [],
+        "strict_acceptance_eligible": false,
+        "completeness": null,
+        "missing_anchors": [],
+        "retrieval_attempts": null,
+        "expansion_blocked_reason": "",
+        "coverage_evaluated": false,
+        "reasons": [
+          "stage0_scope_conflict_stopped_the_run_before_serialization",
+          "strict_technical_gates_blocked_export"
+        ]
+      },
+      "release_status": "diagnostic_only",
+      "semantic_evaluation": "not_evaluated",
+      "strict_gates_passed": false,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [
+        "stage0_scope_conflict_stopped_the_run_before_serialization",
+        "strict_technical_gates_blocked_export"
+      ],
+      "run_status": "scope_conflict",
+      "failure_kind": "",
+      "issue_codes": [
+        "scope_conflict"
+      ],
+      "seconds": 1115.65,
+      "warnings": [],
+      "topic": "terpenoid indole alkaloid biosynthesis"
+    },
+    {
+      "paper": "PMC8510960",
+      "mode": "strict",
+      "leg_dir": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC8510960/strict",
+      "pwml_generated": false,
+      "pwml_files": [],
+      "pwml_path": "",
+      "reaction_count": 5,
+      "process_row_count": 7,
+      "core_accepted_processes": 7,
+      "coverage_ratio": 0.5,
+      "minimum_core_satisfied": true,
+      "quarantined_processes": 8,
+      "graph_valid": null,
+      "graph_issue_count": null,
+      "ir_valid": null,
+      "qa_ok": null,
+      "qa_errors": 0,
+      "qa_warnings": 0,
+      "species": [
+        "Catharanthus roseus",
+        "Arabidopsis thaliana"
+      ],
+      "entity_counts": {
+        "cell_types": 4,
+        "species": 2,
+        "subcellular_locations": 5,
+        "compounds": 10,
+        "proteins": 3,
+        "protein_complexes": 5
+      },
+      "rows_without_any_provenance": 0,
+      "rag_added_rows": 0,
+      "rag_accepted": 0,
+      "rag_rejected": 0,
+      "final_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC8510960/strict/final_mapped.json",
+      "stage1_payload_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC8510960/strict/stage1_payload.json",
+      "reaction_list": [
+        {
+          "name": "TDC reaction",
+          "inputs": [
+            "tryptophan"
+          ],
+          "outputs": [
+            "tryptamine"
+          ],
+          "enzymes": [
+            "TDC complex"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "G10H reaction",
+          "inputs": [
+            "geraniol"
+          ],
+          "outputs": [
+            "10-hydroxygeraniol"
+          ],
+          "enzymes": [
+            "G10H"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "STR reaction",
+          "inputs": [
+            "secologanin",
+            "tryptamine"
+          ],
+          "outputs": [
+            "strictosidine"
+          ],
+          "enzymes": [
+            "STR"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "SGD reaction",
+          "inputs": [
+            "strictosidine"
+          ],
+          "outputs": [
+            "strictosidine aglycone"
+          ],
+          "enzymes": [
+            "SGD"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Catharanthine-vindoline coupling",
+          "inputs": [
+            "catharanthine",
+            "vindoline"
+          ],
+          "outputs": [
+            "anhydrovinblastine"
+          ],
+          "enzymes": [
+            "PRX1 complex"
+          ],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Strictosidine export from vacuole to cytosol",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        },
+        {
+          "name": "Catharanthine secretion to leaf surface",
+          "inputs": [],
+          "outputs": [],
+          "enzymes": [],
+          "rag_added": false,
+          "no_provenance": false
+        }
+      ],
+      "enzymes": [
+        "G10H",
+        "PRX1 complex",
+        "SGD",
+        "STR",
+        "TDC complex"
+      ],
+      "release_status_record": {
+        "status": "diagnostic_only",
+        "pipeline_executed": true,
+        "strict_gates_passed": false,
+        "semantic_evaluation": "failed",
+        "semantic_not_evaluated_reason": "",
+        "semantic_failed_checks": [
+          "requested_pathway_anchors_present"
+        ],
+        "semantic_check_evaluability": [
+          {
+            "check": "requested_pathway_anchors_present",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "organism_compatible",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "no_real_id_or_name_conflict",
+            "applicable": true,
+            "inapplicable_reason": ""
+          },
+          {
+            "check": "no_rejected_rag_reaction_reintroduced",
+            "applicable": false,
+            "inapplicable_reason": "no RAG admission report was supplied to this evaluation call, so a reintroduced claim is undetectable here. This describes THIS call only: the batch driver does persist rag_admission_report.json, and the offline scorer loads it and reaches a verdict"
+          },
+          {
+            "check": "actor_named_in_its_own_cited_span",
+            "applicable": true,
+            "inapplicable_reason": ""
+          }
+        ],
+        "strict_acceptance_eligible": false,
+        "completeness": null,
+        "missing_anchors": [],
+        "retrieval_attempts": null,
+        "expansion_blocked_reason": "",
+        "coverage_evaluated": false,
+        "reasons": [
+          "strict_technical_gates_blocked_export"
+        ]
+      },
+      "release_status": "diagnostic_only",
+      "semantic_evaluation": "failed",
+      "strict_gates_passed": false,
+      "completeness": null,
+      "missing_anchors": [],
+      "release_reasons": [
+        "strict_technical_gates_blocked_export"
+      ],
+      "run_status": "fail",
+      "failure_kind": "contract",
+      "issue_codes": [
+        "gate.protein_g10h_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_sgd_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_dat_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_crnpf2_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_crtpt2_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_crgata1_is_missing_a_uniprot_or_drugbank_identifier",
+        "gate.protein_crpif1_is_missing_a_uniprot_or_drugbank_identifier"
+      ],
+      "seconds": 2988.85,
+      "warnings": [
+        "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+        "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta."
+      ],
+      "topic": "terpenoid indole alkaloid biosynthesis"
+    }
+  ]
+}
