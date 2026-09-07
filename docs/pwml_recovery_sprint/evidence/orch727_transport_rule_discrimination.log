@@ -1,0 +1,165 @@
+================================================================================================
+ORCH-727 -- is the authorized transport-integrity rule constructible?
+================================================================================================
+
+------------------------------------------------------------------------------------------------
+TRANSPORT INVENTORY
+------------------------------------------------------------------------------------------------
+class       leg                     transport                                  transp                      from                      to
+objected    PMC12452463@2026-08-28  Enterobactin secretion                      False  Escherichia coli cytosol  Escherichia coli extra
+must_block  PMC12452463@2026-08-28  Ferri-enterobactin import via FepA           True  Escherichia coli extrace  Escherichia coli cytos
+objected    PMC12452463@2026-09-02  enterobactin secretion                      False         cytoplasmic state     extracellular state
+must_block  PMC12452463@2026-09-02  ferri-enterobactin import via FepA           True       extracellular state       cytoplasmic state
+must_export PMC7232280@2026-09-06   cPMP export from mitochondrial state to     False       mitochondrial state       cytoplasmic state
+must_export PMC8510960@2026-09-06   Strictosidine export from vacuole to cyt    False                   vacuole                 cytosol
+must_export PMC8510960@2026-09-06   Catharanthine secretion to leaf surface     False            __auto_state__            leaf surface
+control     PMC12071552@2026-09-06  D-Alanine transport from cytoplasmic sta     True         cytoplasmic state         cell wall state
+control     PMC12071552@2026-09-06  D-Serine transport from cytoplasmic stat     True         cytoplasmic state         cell wall state
+
+------------------------------------------------------------------------------------------------
+RULE VARIANTS -- a rule is USABLE only if it refuses every 'objected' row and no other
+------------------------------------------------------------------------------------------------
+
+  A  no transporter AND no locations at all  (AS AUTHORIZED)
+      refuses every objected transport : False
+      keeps every must-export/control  : True
+      => USABLE: False
+          kept     [objected   ] PMC12452463@2026-08-28  Enterobactin secretion
+          kept     [must_block ] PMC12452463@2026-08-28  Ferri-enterobactin import via FepA
+          kept     [objected   ] PMC12452463@2026-09-02  enterobactin secretion
+          kept     [must_block ] PMC12452463@2026-09-02  ferri-enterobactin import via FepA
+          kept     [must_export] PMC7232280@2026-09-06   cPMP export from mitochondrial state to cyto
+          kept     [must_export] PMC8510960@2026-09-06   Strictosidine export from vacuole to cytosol
+          kept     [must_export] PMC8510960@2026-09-06   Catharanthine secretion to leaf surface
+          kept     [control    ] PMC12071552@2026-09-06  D-Alanine transport from cytoplasmic state t
+          kept     [control    ] PMC12071552@2026-09-06  D-Serine transport from cytoplasmic state to
+
+  B  no transporter (alone)
+      refuses every objected transport : True
+      keeps every must-export/control  : False
+      => USABLE: False
+          REFUSED  [objected   ] PMC12452463@2026-08-28  Enterobactin secretion
+          kept     [must_block ] PMC12452463@2026-08-28  Ferri-enterobactin import via FepA
+          REFUSED  [objected   ] PMC12452463@2026-09-02  enterobactin secretion
+          kept     [must_block ] PMC12452463@2026-09-02  ferri-enterobactin import via FepA
+          REFUSED  [must_export] PMC7232280@2026-09-06   cPMP export from mitochondrial state to cyto
+          REFUSED  [must_export] PMC8510960@2026-09-06   Strictosidine export from vacuole to cytosol
+          REFUSED  [must_export] PMC8510960@2026-09-06   Catharanthine secretion to leaf surface
+          kept     [control    ] PMC12071552@2026-09-06  D-Alanine transport from cytoplasmic state t
+          kept     [control    ] PMC12071552@2026-09-06  D-Serine transport from cytoplasmic state to
+
+  C  no transporter OR incomplete locations
+      refuses every objected transport : True
+      keeps every must-export/control  : False
+      => USABLE: False
+          REFUSED  [objected   ] PMC12452463@2026-08-28  Enterobactin secretion
+          kept     [must_block ] PMC12452463@2026-08-28  Ferri-enterobactin import via FepA
+          REFUSED  [objected   ] PMC12452463@2026-09-02  enterobactin secretion
+          kept     [must_block ] PMC12452463@2026-09-02  ferri-enterobactin import via FepA
+          REFUSED  [must_export] PMC7232280@2026-09-06   cPMP export from mitochondrial state to cyto
+          REFUSED  [must_export] PMC8510960@2026-09-06   Strictosidine export from vacuole to cytosol
+          REFUSED  [must_export] PMC8510960@2026-09-06   Catharanthine secretion to leaf surface
+          kept     [control    ] PMC12071552@2026-09-06  D-Alanine transport from cytoplasmic state t
+          kept     [control    ] PMC12071552@2026-09-06  D-Serine transport from cytoplasmic state to
+
+  D  no transporter AND not both locations
+      refuses every objected transport : False
+      keeps every must-export/control  : False
+      => USABLE: False
+          kept     [objected   ] PMC12452463@2026-08-28  Enterobactin secretion
+          kept     [must_block ] PMC12452463@2026-08-28  Ferri-enterobactin import via FepA
+          kept     [objected   ] PMC12452463@2026-09-02  enterobactin secretion
+          kept     [must_block ] PMC12452463@2026-09-02  ferri-enterobactin import via FepA
+          kept     [must_export] PMC7232280@2026-09-06   cPMP export from mitochondrial state to cyto
+          kept     [must_export] PMC8510960@2026-09-06   Strictosidine export from vacuole to cytosol
+          REFUSED  [must_export] PMC8510960@2026-09-06   Catharanthine secretion to leaf surface
+          kept     [control    ] PMC12071552@2026-09-06  D-Alanine transport from cytoplasmic state t
+          kept     [control    ] PMC12071552@2026-09-06  D-Serine transport from cytoplasmic state to
+
+------------------------------------------------------------------------------------------------
+CANDIDATE INVARIANT: evidence span locatable in the archived source text
+------------------------------------------------------------------------------------------------
+  [objected   ] PMC12452463@2026-08-28  Enterobactin secretion                         verbatim=True
+  [must_block ] PMC12452463@2026-08-28  Ferri-enterobactin import via FepA             verbatim=True
+  [objected   ] PMC12452463@2026-09-02  enterobactin secretion                         verbatim=True
+  [must_block ] PMC12452463@2026-09-02  ferri-enterobactin import via FepA             verbatim=False
+  [must_export] PMC7232280@2026-09-06   cPMP export from mitochondrial state to cyto   verbatim=True
+  [must_export] PMC8510960@2026-09-06   Strictosidine export from vacuole to cytosol   verbatim=True
+  [must_export] PMC8510960@2026-09-06   Catharanthine secretion to leaf surface        verbatim=True
+  [control    ] PMC12071552@2026-09-06  D-Alanine transport from cytoplasmic state t   verbatim=True
+  [control    ] PMC12071552@2026-09-06  D-Serine transport from cytoplasmic state to   verbatim=True
+  => every objected transport's evidence IS verbatim in the paper: True
+     so a provenance rule cannot separate them.
+
+------------------------------------------------------------------------------------------------
+CANDIDATE INVARIANT: cargo produced/consumed by a retained reaction
+------------------------------------------------------------------------------------------------
+  [objected   ] PMC12452463@2026-08-28  Enterobactin secretion                     produced=True consumed=True
+  [must_block ] PMC12452463@2026-08-28  Ferri-enterobactin import via FepA         produced=True consumed=False
+  [objected   ] PMC12452463@2026-09-02  enterobactin secretion                     produced=False consumed=False
+  [must_block ] PMC12452463@2026-09-02  ferri-enterobactin import via FepA         produced=False consumed=False
+  [must_export] PMC7232280@2026-09-06   cPMP export from mitochondrial state to    produced=True consumed=True
+  [must_export] PMC8510960@2026-09-06   Strictosidine export from vacuole to cyt   produced=True consumed=True
+  [must_export] PMC8510960@2026-09-06   Catharanthine secretion to leaf surface    produced=False consumed=True
+  [control    ] PMC12071552@2026-09-06  D-Alanine transport from cytoplasmic sta   produced=False consumed=True
+  [control    ] PMC12071552@2026-09-06  D-Serine transport from cytoplasmic stat   produced=False consumed=True
+     => the objected transport is fully connected while control cargo is not produced:
+        the discriminator is INVERTED.
+
+------------------------------------------------------------------------------------------------
+SIBLING OBJECTION: complex component structure
+------------------------------------------------------------------------------------------------
+  [must_block ] PMC12452463@2026-08-28  enterobactin synthase complex                n=1 components=['Unknown']
+  [must_block ] PMC12452463@2026-08-28  Isochorismate synthase                       n=1 components=['EntC']
+  [must_block ] PMC12452463@2026-08-28  isochorismatase                              n=1 components=['EntB']
+  [must_block ] PMC12452463@2026-08-28  EntE complex                                 n=1 components=['EntE']
+  [must_block ] PMC12452463@2026-09-02  Isochorismate synthase                       n=1 components=['EntC']
+  [must_block ] PMC12452463@2026-09-02  isochorismatase                              n=1 components=['EntB']
+  [must_block ] PMC12452463@2026-09-02  EntE complex                                 n=1 components=['EntE']
+  [must_export] PMC7232280@2026-09-06   MPT synthase complex                         n=1 components=['NIT-8']
+  [must_export] PMC7232280@2026-09-06   NIT-7A                                       n=1 components=['Unknown']
+  [must_export] PMC7232280@2026-09-06   NIT-7B                                       n=1 components=['Unknown']
+  [must_export] PMC7232280@2026-09-06   NIT-9G                                       n=1 components=['Unknown']
+  [must_export] PMC7232280@2026-09-06   NIT-9E                                       n=1 components=['Unknown']
+  [must_export] PMC8510960@2026-09-06   TDC complex                                  n=1 components=['TDC']
+  [must_export] PMC8510960@2026-09-06   PRX1 complex                                 n=1 components=['PRX1']
+  [must_export] PMC8510960@2026-09-06   G10H                                         n=1 components=['Unknown']
+  [must_export] PMC8510960@2026-09-06   STR                                          n=1 components=['Unknown']
+  [must_export] PMC8510960@2026-09-06   SGD                                          n=1 components=['Unknown']
+  [control    ] PMC12071552@2026-09-06  DltA complex                                 n=1 components=['DltA']
+     => 'enterobactin synthase complex' (gold: forbidden_identifier) is the same
+        shape as G10H / STR / SGD / NIT-7A: one component, the Unknown sentinel.
+
+================================================================================================
+CONCLUSION
+================================================================================================
+  A usable structural transport rule exists on this evidence: False
+  The authorized change is NOT constructible as specified, and no neighbouring
+  structural, provenance or connectivity variant separates the cases.
+  DO NOT IMPLEMENT. Report to the product owner.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a6516ad8d5c04a0f882c40c861c728739c0b1763  [git, worktree dirty=True]
+label                   : orch727-transport-discrimination
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch727_transport_rule_discrimination.py .
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 813060 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.47 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 0
+descendants terminated  : 0
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-727/01-transport-discrimination.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
