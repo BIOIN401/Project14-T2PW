@@ -79,7 +79,7 @@ import time
 import traceback
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from t2pw.paths import PACKAGE_ROOT
 from t2pw.pipeline.export_mode import STRUCTURAL_GUARD_CODES
@@ -88,6 +88,9 @@ from t2pw.pipeline.gate_reports import (
     CANONICAL_PAYLOAD_KEY,
     FINAL_GATE_REPORT_KEY,
     INITIAL_GATE_REPORT_KEY,
+    PHASE_AUDIT_ROUND,
+    PHASE_FINAL_PRE_EXPORT,
+    PHASE_KEY,
     SOURCE_FAIL_CLOSED,
     blocking_findings,
     dedupe_findings,
@@ -352,6 +355,18 @@ _BLOCKING_SUFFIX = "_contract_report"
 #: the suffix it is stored under when the app also keeps it at the top level.
 _RUNTIME_SCHEMA_KEY = "runtime_schema_report"
 _RUNTIME_SCHEMA_SUFFIX = "_runtime_schema_report"
+
+#: The contract-report artifact keys that can SUPERSEDE an ``audit_round``
+#: snapshot. Both are written after the audit loop closes -- ``post_audit`` on the
+#: payload the loop settled on and ``post_remap`` on the payload Stage 6 produced
+#: from it -- so either one existing means a later boundary has spoken about this
+#: leg. Spelled out rather than discovered by suffix: "some other contract report
+#: exists" is not the same claim as "a LATER boundary exists", and only the second
+#: one licenses ignoring a snapshot.
+_LATER_CONTRACT_BOUNDARY_KEYS: Tuple[str, ...] = (
+    "post_audit_contract_report",
+    "post_remap_contract_report",
+)
 
 _ENTITY_COUNT_KEYS: Tuple[str, ...] = ("proteins", "compounds")
 
@@ -1023,6 +1038,134 @@ def _collect_reports(artifacts: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
     return reports
 
 
+def _report_phase(report: Any) -> str:
+    """The boundary a report says it describes, ``""`` when it says nothing.
+
+    A report that names no phase is NOT an ``audit_round`` report and is never
+    treated as one: an unstamped report is a report whose boundary this code
+    cannot identify, and the safe reading of "unidentified" is "live".
+    """
+
+    return _text(_safe_dict(report).get(PHASE_KEY))
+
+
+def _contract_report_items(artifacts: Dict[str, Any]):
+    """``(key, report)`` for every TOP-LEVEL ``*_contract_report``.
+
+    Exactly :func:`_blocking_reports`'s own selection rule, factored out so the
+    phase arithmetic below and the blocking scan cannot drift into two different
+    ideas of which objects are contract reports. Nested and standalone
+    ``runtime_schema_report`` objects are excluded here for the same reason they
+    are excluded there.
+    """
+
+    for key, value in (artifacts or {}).items():
+        if not isinstance(value, dict) or not value:
+            continue
+        if key.endswith(_RUNTIME_SCHEMA_SUFFIX) or not key.endswith(_BLOCKING_SUFFIX):
+            continue
+        yield key, value
+
+
+def _artifact_set_is_phase_stamped(artifacts: Dict[str, Any]) -> bool:
+    """``True`` when ANY top-level contract report carries a ``phase`` key.
+
+    The LEGACY discriminator, and it is a property of the SET, not of one report.
+    An artifact set whose contract reports carry no phase at all was produced
+    before ``stamp_report`` existed; it cannot distinguish a superseded snapshot
+    from a live verdict, so it keeps the pre-change arithmetic exactly and every
+    archived run keeps its recorded verdict. This is the contract-channel twin of
+    ``gate_reports.is_current_artifact_set``, and it fails in the same direction:
+    an unstamped set is judged by the old rules, never by the new ones.
+    """
+
+    return any(PHASE_KEY in report for _, report in _contract_report_items(artifacts))
+
+
+def _superseding_boundaries(artifacts: Dict[str, Any]) -> List[str]:
+    """The artifact keys of the LATER boundaries that have spoken about this leg.
+
+    ``[]`` means nothing in the set supersedes an ``audit_round`` snapshot -- and
+    then the snapshot IS the latest verdict available and must still block.
+    **Absence of a final boundary is never success**, which is the same rule
+    :func:`~t2pw.pipeline.gate_reports.gate_verdict` applies to the gate channel
+    when the final report is missing.
+
+    A candidate boundary stamped ``audit_round`` itself is not a boundary: it is
+    another snapshot, and a snapshot cannot supersede a snapshot (nor, therefore,
+    itself). The Stage-3 gate report counts only at
+    :data:`~t2pw.pipeline.gate_reports.PHASE_FINAL_PRE_EXPORT` -- the one phase
+    that describes the payload that shipped; a gate report parked under that key
+    at any other phase is exactly what ``gate_verdict`` fails closed on, and it
+    must not be able to license a contract exclusion either.
+    """
+
+    found: List[str] = []
+    for key in _LATER_CONTRACT_BOUNDARY_KEYS:
+        report = _safe_dict((artifacts or {}).get(key))
+        if report and _report_phase(report) != PHASE_AUDIT_ROUND:
+            found.append(key)
+    gate = _safe_dict((artifacts or {}).get(FINAL_GATE_REPORT_KEY))
+    if gate and _report_phase(gate) == PHASE_FINAL_PRE_EXPORT:
+        found.append(FINAL_GATE_REPORT_KEY)
+    return found
+
+
+def _superseded_contract_reports(artifacts: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """The ``audit_round`` snapshots a later boundary has superseded, described.
+
+    ``[]`` on every artifact set that has none -- which is every legacy set, every
+    set with no later boundary, and every run whose audit loop never re-stamped
+    ``post_normalization_contract_report``. On those, :func:`_blocking_reports`
+    below is byte-identical to what it always was.
+
+    WHY THIS EXISTS (C-119, ORCH-728 section 1). ``streamlit_app.py:4032-4039``
+    re-runs the post-normalization contract on each audit round's settled payload
+    and stamps it :data:`PHASE_AUDIT_ROUND`, saying in terms that it is *"still not
+    a verdict about what shipped -- the remap below moves the payload again"*. The
+    blocking scan read it as one anyway, so a leg whose ``post_audit`` and
+    ``post_remap`` boundaries were both clean and whose final pre-export Stage-3
+    gate passed was still filed FAIL and lost its PWML entirely. Measured on 4 of
+    the 6 evaluable strict legs of the unseen pilot, whose failing pointers
+    (``/entities/proteins/5``, ``/13``, ``/15``) address positions the shipped
+    protein lists (length 2, 3 and 8) cannot even host.
+
+    WHAT IS *NOT* DONE HERE. Nothing is repaired, no gate is relaxed and no
+    threshold moves. The finding does not disappear: it is returned, recorded as a
+    review reason on the release record, and named in the manifest row, so the leg
+    can only ever reach ``review_required`` -- never ``release_ready``. Only
+    :data:`PHASE_AUDIT_ROUND` is excluded; a report at any other phase, and a
+    report carrying no phase at all, blocks exactly as before.
+
+    Each descriptor answers the three questions a human asks afterwards: WHICH
+    report was superseded, at WHICH phase, and HOW MANY errors it carried.
+    """
+
+    if not _artifact_set_is_phase_stamped(artifacts):
+        return []
+    boundaries = _superseding_boundaries(artifacts)
+    if not boundaries:
+        return []
+    superseded: List[Dict[str, Any]] = []
+    for key, report in _contract_report_items(artifacts):
+        if _report_phase(report) != PHASE_AUDIT_ROUND:
+            continue
+        # The parent's own errors, the same slice ``_blocking_reports`` scans, so
+        # the count recorded for a human is the count that stopped blocking.
+        errors = _report_errors({k: v for k, v in report.items() if k != _RUNTIME_SCHEMA_KEY})
+        if not errors:
+            continue
+        superseded.append(
+            {
+                "report": str(key),
+                "phase": PHASE_AUDIT_ROUND,
+                "errors": len(errors),
+                "superseded_by": list(boundaries),
+            }
+        )
+    return sorted(superseded, key=lambda item: item["report"])
+
+
 def _blocking_reports(artifacts: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
     """Only the reports whose own ``errors`` may fail the run.
 
@@ -1042,13 +1185,26 @@ def _blocking_reports(artifacts: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
 
     The run had succeeded. Failing it on the nested report threw the research
     deliverable away, which is why that shape is a regression test.
+
+    PHASE AWARENESS (C-119). A report a LATER boundary has superseded is dropped
+    from this set as well, on exactly the terms
+    :func:`_superseded_contract_reports` states: only ``phase: audit_round``, only
+    when a ``post_audit`` / ``post_remap`` contract report or a
+    ``final_pre_export`` Stage-3 gate report exists to supersede it, and never in
+    an artifact set that predates the phase stamp. Every other report -- any other
+    phase, and every report carrying no phase -- keeps today's behaviour exactly.
+    The dropped finding is not lost: the caller records it as a review reason, and
+    the leg can then reach ``review_required`` but never ``release_ready``.
     """
 
+    excluded = {item["report"] for item in _superseded_contract_reports(artifacts)}
     reports: Dict[str, Dict[str, Any]] = {}
     for key, value in artifacts.items():
         if not isinstance(value, dict) or not value:
             continue
         if key.endswith(_RUNTIME_SCHEMA_SUFFIX) or not key.endswith(_BLOCKING_SUFFIX):
+            continue
+        if key in excluded:
             continue
         # The parent's own errors only: the nested report is dropped so it cannot
         # be mistaken for a second, failing boundary.
@@ -1664,7 +1820,43 @@ WARN_PWML_WITHHELD_DIAGNOSTIC_ONLY = (
 )
 
 
-def _frozen_release_record(pwml_result: Dict[str, Any]) -> Dict[str, Any]:
+#: C-119 / ORCH-728. Recorded on a strict leg that reached serialization while an
+#: ``audit_round`` contract snapshot still carried errors a later boundary has
+#: superseded. It rides in ``warnings``, which ``RunOutcome.to_dict`` writes into
+#: EVERY manifest row unconditionally -- so the finding survives even on the one
+#: path where there is no release record to append a reason to (an absent or
+#: uninterpretable frozen record, ``WARN_RELEASE_STATUS_UNAVAILABLE``). A
+#: superseded error silently vanishing from review metadata is exactly what
+#: ORCH-728 forbids, and a channel that only works when another channel works is
+#: not a guarantee.
+WARN_SUPERSEDED_INTERMEDIATE_PREFIX = (
+    "serialized with a superseded intermediate contract report: "
+)
+
+
+def _superseded_warning(superseded: Sequence[Dict[str, Any]]) -> str:
+    """One human line naming every superseded report, ``""`` when there are none."""
+
+    if not superseded:
+        return ""
+    parts = [
+        f"{item.get('report')} at phase {item.get('phase')} carried "
+        f"{item.get('errors')} error(s), superseded by "
+        f"{', '.join(str(name) for name in _safe_list(item.get('superseded_by'))) or '(nothing)'}"
+        for item in superseded
+    ]
+    return (
+        WARN_SUPERSEDED_INTERMEDIATE_PREFIX
+        + "; ".join(parts)
+        + ". The finding is NOT repaired and NOT dismissed: this leg is "
+        "review_required and can never be release_ready."
+    )
+
+
+def _frozen_release_record(
+    pwml_result: Dict[str, Any],
+    superseded: Sequence[Dict[str, Any]] = (),
+) -> Dict[str, Any]:
     """The classification the quarantine boundary FROZE, read from memory.
 
     ``pwml_result["quarantine_report"]["release"]`` and nothing else (D-038 2).
@@ -1714,11 +1906,28 @@ def _frozen_release_record(pwml_result: Dict[str, Any]) -> Dict[str, Any]:
     every seam publishes beside it does not, and does not need to (see
     ``prefreeze_review_reasons``). The CLI returns a PATH string under the report
     key, which ``_safe_dict`` renders ``{}``, so the fallback is what answers there.
+
+    THE SECOND THING APPLIED ON TOP (C-119, **ORCH-728**), and it is the same kind
+    of operation as the first, through the classifier module's own second monotone
+    cap ``release_status.cap_release_for_superseded_intermediate_report``. The
+    ordering fact is the mirror image of the prefreeze one: the boundary froze this
+    record inside the app, while "which contract boundary spoke last?" is a
+    question only the BATCH DRIVER can answer, from ``post_pipeline_artifacts``
+    after the app has finished. So the verdict reaches the frozen record rather
+    than the classifier call. It reads a status string and a list of report names,
+    phase labels and error counts; it reads, writes and repairs no biology; its
+    only transition is ``release_ready`` -> ``review_required``, so it can only
+    ever remove a strict success. Merge rule 8 forbids an exporter REPAIRING
+    biology after the freeze, and this is the opposite operation.
+
+    ``superseded`` defaults to ``()`` -- not recorded, so never a demotion -- which
+    is what keeps every existing caller byte-identical.
     """
 
     from t2pw.pipeline.release_status import (
         RELEASE_STATES,
         cap_release_for_prefreeze_declination,
+        cap_release_for_superseded_intermediate_report,
     )
 
     release = _safe_dict(_safe_dict(pwml_result.get("quarantine_report")).get("release"))
@@ -1727,7 +1936,10 @@ def _frozen_release_record(pwml_result: Dict[str, Any]) -> Dict[str, Any]:
     prefreeze = _safe_dict(pwml_result.get("prefreeze_resolution_report")) or _safe_dict(
         pwml_result.get("prefreeze_review_required")
     )
-    return cap_release_for_prefreeze_declination(release, prefreeze)
+    return cap_release_for_superseded_intermediate_report(
+        cap_release_for_prefreeze_declination(release, prefreeze),
+        list(superseded or ()),
+    )
 
 
 def _pwml_artifact_name(release: Dict[str, Any]) -> str:
@@ -1755,6 +1967,7 @@ def _add_strict_artifacts(
     artifacts: Dict[str, Any],
     pwml_result: Dict[str, Any],
     out: Dict[str, Any],
+    superseded: Sequence[Dict[str, Any]] = (),
 ) -> str:
     """Write the strict deliverables. Returns the PWML filename, ``""`` if none.
 
@@ -1764,10 +1977,15 @@ def _add_strict_artifacts(
     ``review_required`` fragment was indistinguishable from a release-ready
     pathway on disk. Structured status stays authoritative; the distinct names are
     the safe migration while those readers still exist.
+
+    ``superseded`` (C-119) is threaded to the SAME pure record function
+    ``_finalize_pwml_export`` uses, so the FILENAME and the MANIFEST ROW cannot
+    disagree about the capped status -- the identical reason C-087 put its cap
+    inside ``_frozen_release_record`` rather than at one consumer.
     """
 
     xml = _xml_bytes(pwml_result)
-    name = _pwml_artifact_name(_frozen_release_record(pwml_result)) if xml else ""
+    name = _pwml_artifact_name(_frozen_release_record(pwml_result, superseded)) if xml else ""
     if name:
         out[name] = xml
     ir = pwml_result.get("pwml_ir")
@@ -2204,6 +2422,7 @@ def _finalize_pwml_export(
     pwml_result: Dict[str, Any],
     joined: str,
     codes: List[str],
+    superseded: Sequence[Dict[str, Any]] = (),
 ) -> None:
     """Terminal path: strict mode produced PWML XML, so the leg is a pass.
 
@@ -2217,12 +2436,23 @@ def _finalize_pwml_export(
     ``_drive``: both helpers already receive ``pwml_result``, so a shared pure
     function costs nothing and keeps the sprint's second-largest hotspot at zero
     changed lines.
+
+    ``superseded`` (C-119) reaches the row on TWO independent channels, on purpose.
+    It is capped into the release record through ``_frozen_release_record`` above,
+    and it is ALSO stated as a warning here -- because the record channel has a
+    hole the warning channel does not: an absent or uninterpretable frozen record
+    yields ``{}``, and a reason appended to ``{}`` reaches no reader. ORCH-728's
+    rule is that a superseded error must never silently vanish from review
+    metadata, and ``warnings`` is written into every manifest row unconditionally.
     """
 
-    release = _frozen_release_record(pwml_result)
+    release = _frozen_release_record(pwml_result, superseded)
     name = _pwml_artifact_name(release)
     outcome.release_status = release or None
     outcome.pwml_artifact = name
+    superseded_warning = _superseded_warning(superseded)
+    if superseded_warning and superseded_warning not in outcome.warnings:
+        outcome.warnings.append(superseded_warning)
     if not release:
         # Fail loud. The leg is still a pass -- the pipeline ran and produced
         # bytes -- but it must never be summarised as a clean release-ready run,
@@ -2459,6 +2689,25 @@ def _drive(
     # from the top-level *_contract_report objects only, while runtime-schema
     # findings -- which RUNTIME_SCHEMA_MODE="report" records as parent warnings --
     # stay visible as warnings and can never fail the run.
+    # ONE derivation of the superseded set, taken HERE -- at the seam that decides
+    # whether the leg lives -- and threaded to the export path, so what the release
+    # record and the manifest row say was set aside is exactly what stopped
+    # blocking. Re-deriving it 200 lines below from the artifacts dict the app
+    # republishes after the PWML click would be a second source of truth for one
+    # fact, and the two could differ without anything noticing (C-119).
+    superseded_reports = _superseded_contract_reports(artifacts)
+    if superseded_reports:
+        # ON EVERY PATH, INCLUDING THE REFUSING ONES. ``counts`` is written into the
+        # manifest row unconditionally, and this key is written only when there is
+        # something to say -- so a leg with no superseded snapshot has a
+        # byte-identical row, and a leg that is still refused by the GATE channel
+        # (PMC12452463 @ 2026-09-02) does not lose the fact that its contract
+        # channel also carried superseded errors. Deliberately a NEUTRAL COUNT and
+        # not the export path's warning sentence: that sentence says the leg was
+        # serialized, which would be false here.
+        outcome.counts["superseded_contract_errors"] = sum(
+            int(item["errors"]) for item in superseded_reports
+        )
     blocking_reports = _blocking_reports(artifacts)
     codes, code_lines, error_count = _collect_issue_codes(blocking_reports)
     blocking_contract_issues = _report_issues(blocking_reports)
@@ -2678,7 +2927,7 @@ def _drive(
     joined, errors, exceptions = _collect_app_text(at)
     artifacts = _safe_dict(_ss(at, "post_pipeline_artifacts")) or artifacts
     source_key, pwml_result = _find_pwml_result(at, artifacts)
-    _add_strict_artifacts(artifacts, pwml_result, outcome.artifacts)
+    _add_strict_artifacts(artifacts, pwml_result, outcome.artifacts, superseded_reports)
 
     pwml_codes = list(codes)
     for report_key in ("required_gate_report", "stage3_contract_report", "pwml_contract_report"):
@@ -2735,6 +2984,7 @@ def _drive(
         pwml_result=pwml_result,
         joined=joined,
         codes=pwml_codes,
+        superseded=superseded_reports,
     )
 
 
@@ -2763,6 +3013,7 @@ __all__ = [
     "WARN_RELEASE_STATUS_UNAVAILABLE",
     "WARN_RESEARCH_GATE_PREFIX",
     "WARN_RUNTIME_SCHEMA_PREFIX",
+    "WARN_SUPERSEDED_INTERMEDIATE_PREFIX",
     "RunOutcome",
     "run_one",
 ]

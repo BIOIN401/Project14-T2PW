@@ -1,0 +1,108 @@
+{
+  "label": "rev119-affected-a",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/Users/Angad/AppData/Local/Temp/rev119a",
+    "tests/test_release_status_classification.py",
+    "tests/test_c072_incomplete_core_demotion.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py",
+    "tests/test_c088_extracted_not_serialized_disposition.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py",
+    "tests/test_c110_negative_control_status.py",
+    "tests/test_failure_detail.py",
+    "tests/test_batch_report.py"
+  ],
+  "cwd": "C:\\t\\c119",
+  "started_at": "2026-09-08T00:26:28+00:00",
+  "finished_at": "2026-09-08T00:27:14+00:00",
+  "duration_seconds": 45.84095360000083,
+  "timeout_seconds": 900.0,
+  "root_pid": 163080,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 163092,
+      "name": "python.exe",
+      "ppid": 163080
+    },
+    {
+      "pid": 163544,
+      "name": "git.exe",
+      "ppid": 163092
+    },
+    {
+      "pid": 163684,
+      "name": "git.exe",
+      "ppid": 163092
+    },
+    {
+      "pid": 163800,
+      "name": "git.exe",
+      "ppid": 163092
+    }
+  ],
+  "descendants_terminated": [
+    163092,
+    163544,
+    163684,
+    163800
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 29424,
+      "name": "python.exe"
+    },
+    {
+      "pid": 151132,
+      "name": "python.exe"
+    },
+    {
+      "pid": 162348,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-119/26-rev-affected-a.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c119\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c119",
+    "repo_head": "6746a8d31e993d8dc6968ad46534b4e48b9c7bee",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
