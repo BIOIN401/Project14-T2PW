@@ -9705,3 +9705,138 @@ path, so the artifacts become distinguishable without any tooling change.
 **The tooling fix is registered, not chartered:** record the measured tree's `git rev-parse HEAD`
 and worktree-dirty state in the pin verdict. That is a change to sprint orchestration tooling, not
 to `src/`, and no card owns that file today.
+
+---
+
+## `F-192` — an `audit_repair`-created element_location never gets the auto-state, so a leg whose Stage 1 emits no biological state loses `__auto_state__` to the unreferenced sweep
+
+**Class: `product_contract_violation`. PRE-EXISTING — not caused by `C-120`. Found by the
+`C-120` post-merge validation, on its CONTROL leg. REGISTERED, NOT CHARTERED.**
+
+`PRODUCT_CONTRACT` § 1 names *"an irrelevant degree-zero entity"* among the outcomes that may
+never end a run without a PWML. This is that shape, one level down: a state removed for having no
+referents, where the referents were never written.
+
+### The chain, traced through committed artifacts
+
+1. `ensure_autostates` (`process_normalizer.py:3122`) runs **unconditionally** inside
+   `normalize_process_payload` (`:5432`). It creates `__auto_state__` and assigns it to every
+   `element_locations.{compound,protein}_locations` row whose `biological_state` is empty.
+2. A **later** `audit_repair` pass creates or rewrites those location rows. The rows in the failing
+   payload carry `provenance_lineage: [{"stage": "audit_repair", "origin": "audit_modified"}]`,
+   `subcellular_location: "cell"`, and **no `biological_state` key at all**.
+3. `ensure_autostates` is **not re-run** after the audit repair.
+4. The quarantine sweep therefore finds `__auto_state__` with zero referents and removes it:
+   `removed_biological_states: [{"name": "__auto_state__", "reason":
+   "state_unreferenced_after_quarantine", "iteration": 1}]`.
+5. The PWML required-field gate fails with `no_biological_states` plus one
+   `visible_entity_missing_location_state` per orphaned row — **11 errors** on the observed leg.
+
+### Why it is usually invisible
+
+It only bites when **Stage 1 emits no biological state of its own**. When Stage 1 supplies one, the
+`audit_repair` rows inherit that real state and the chain holds — so the defect is masked by a
+draw, not by a guard.
+
+| leg | Stage-1 `biological_states` | location-row lineage | final states | outcome |
+|---|---:|---|---:|---|
+| ORCH-732 `PMC9544450` | **1** — `E. coli cytoplasm` | `audit_repair` | 1 | PWML, 39,686 B |
+| C-120 validation `PMC9544450` | **0** | `audit_repair` | **0** | **FAIL, 11 gate errors** |
+| C-120 validation `PMC10031235` | 0 | *(not audit-repaired)* | 2 | PWML, 48,401 B |
+
+**The same paper, the same configuration, the same code, opposite outcomes on consecutive runs —
+decided entirely by whether one Stage-1 draw emitted a biological state.**
+
+### Why `C-120` is excluded
+
+* `git diff 760c6d72 045447c8 -- src/` contains **zero** occurrences of `biological`,
+  `_auto_state` or `element_location`.
+* `src/t2pw/pipeline/` is **untouched** by the merge; `process_normalizer.py` is not in the diff.
+* **Within-run control:** the same code in the same run produced 2 states and a valid PWML for
+  `PMC10031235`.
+* The rung `C-120` added never fired on the failing leg — both proteins were admitted by the
+  **pre-existing** `exact_symbol_identity` rescue.
+
+**Not claimed:** that an indirect influence is *impossible*. `C-120` does change identity
+resolution, and what the auditor rewrites is downstream of that. The four points make it
+implausible; one leg cannot make it impossible.
+
+### Why this matters more than the leg it was found on
+
+This is a **silent PWML-yield killer** that is invisible to every existing gate until the
+required-field gate at the very end, and it destroys a leg whose biology, identity and reaction
+support are all sound — the failing leg had `blocking_issues = 0`, `gate_errors = 0`, 5 reactions
+and both enzymes correctly resolved. It is a plausible contributor to previously unexplained
+strict-export failures across the sprint's archived runs, and **that population has not been
+measured.**
+
+### Disposition
+
+**REGISTERED, NOT CHARTERED.** Production is re-frozen at `045447c8` under `D-098` and no further
+change is authorized. The obvious repair — re-assert the auto-state after the audit repair, or
+make the unreferenced sweep refuse to remove the last remaining state — touches
+`process_normalizer.py` and the quarantine sweep, neither of which any card owns today, and
+**merge rule 8 forbids an exporter repairing biology after the canonical graph is frozen**, so the
+fix belongs upstream of the freeze and needs its own charter.
+
+**A census should precede any charter**: count the archived legs whose Stage-1 payload carries
+zero `biological_states`, and of those, how many failed on `no_biological_states`. That is a
+read-only measurement over committed runs and it would size the defect before anyone writes code.
+
+---
+
+## `F-193` — Stage-1 empty completion with `finish_reason=length`: a sub-class distinct from `F-187`'s `finish_reason=stop`
+
+**Class: provider/LLM reliability. REGISTERED, NOT CHARTERED. `C-120` § 13 explicitly forbids
+touching Stage 1 under that card, and `D-098` does not charter this.**
+
+Observed on `PMC11487621` during the `C-120` post-merge validation:
+
+```
+Stage 1 extraction · attempts 1,2,3 · status=empty · content_chars=0 · finish_reason=length
+error: empty completion from deepseek/deepseek-v4-flash (finish_reason=length)
+terminal_reason: empty_after_retries -> identical_empty_response
+last_completed_stage: stage0_preprocess
+```
+
+Three consecutive empty completions on a 76,081-character paper, identical response hash
+`e3b0c44298fc1c14` — the sha256 of the empty string. The extraction ladder then behaved
+**correctly**, refusing to re-issue an identical prompt to the same model
+(`skip_cause: identical_prompt_same_model`).
+
+### It must not be merged with the `PMC7615680` class
+
+| | `PMC7615680` (ORCH-732 § 5.3) | `PMC11487621` (here) |
+|---|---|---|
+| `finish_reason` | **`stop`** | **`length`** |
+| `content_chars` | 2 | **0** |
+| reading | a complete, well-terminated, essentially empty response | the completion budget consumed while emitting nothing |
+
+Both are degenerate extraction; they are **different degeneracies** and a fix for one need not
+address the other.
+
+### What it is NOT
+
+**Not a token-budget finding.** `ORCH-731` A4 established that `max_tokens` is honoured to the
+token, that Stage 2 reached 55,660 characters on the same nominal 16000, and that genuine Stage-1
+truncation is **2 events in 2,675 attempts**. `D-097`'s prohibition on blaming token budget
+stands, and raising the budget is **not** proposed here.
+
+**Not a `C-120` regression.** The leg never reached any code `C-120` touches: Stage 0 succeeded,
+Stage 1 produced no payload, and the extraction prompt lives in the byte-identical
+`streamlit_app.py`.
+
+### Consequence for the `C-120` record
+
+`PMC11487621` is the paper mechanism A was chartered from. Because this leg never ran,
+**mechanism A has no live production evidence** — only the § 9 deterministic replay, which proves
+the gate predicates and cannot produce a file. Any future statement that `C-120` recovered that
+pathway must say so.
+
+### Disposition
+
+Two observations across two runs is not a rate and does not establish a pattern. A re-run of
+`PMC11487621` is available as a **separately labelled product-owner decision** — a new draw, whose
+output would not belong to the `C-120` validation dataset. It was deliberately **not** taken here:
+the frozen no-retry rule was written before execution and relaxing it in the direction that
+flatters this card is exactly what it exists to prevent.
