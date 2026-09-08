@@ -1,0 +1,172 @@
+{
+  "label": "c119-affected-c",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/Users/Angad/AppData/Local/Temp/c119tmp/c1",
+    "tests/test_batch_preflight.py",
+    "tests/test_c082_post_pipeline_seam.py",
+    "tests/test_c083_inner_timeout_row.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_c052_prefreeze_report_at_the_streamlit_seams.py",
+    "tests/test_prefreeze_third_export_seam.py",
+    "tests/test_streamlit_quarantine_boundary.py",
+    "tests/test_bench_acquisition_and_artifacts.py"
+  ],
+  "cwd": "C:\\t\\c119",
+  "started_at": "2026-09-08T00:02:45+00:00",
+  "finished_at": "2026-09-08T00:03:53+00:00",
+  "duration_seconds": 68.17185560000053,
+  "timeout_seconds": 2400.0,
+  "root_pid": 148952,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 133496,
+      "name": "python.exe",
+      "ppid": 148952
+    },
+    {
+      "pid": 147764,
+      "name": "python.exe",
+      "ppid": 149056
+    },
+    {
+      "pid": 149056,
+      "name": "python.exe",
+      "ppid": 133496
+    },
+    {
+      "pid": 149204,
+      "name": "python.exe",
+      "ppid": 149228
+    },
+    {
+      "pid": 149228,
+      "name": "python.exe",
+      "ppid": 133496
+    },
+    {
+      "pid": 149424,
+      "name": "python.exe",
+      "ppid": 133496
+    },
+    {
+      "pid": 128280,
+      "name": "python.exe",
+      "ppid": 133496
+    },
+    {
+      "pid": 149480,
+      "name": "python.exe",
+      "ppid": 128280
+    },
+    {
+      "pid": 148556,
+      "name": "python.exe",
+      "ppid": 133496
+    },
+    {
+      "pid": 148748,
+      "name": "python.exe",
+      "ppid": 148556
+    },
+    {
+      "pid": 148788,
+      "name": "python.exe",
+      "ppid": 148748
+    },
+    {
+      "pid": 148816,
+      "name": "python.exe",
+      "ppid": 148788
+    },
+    {
+      "pid": 148932,
+      "name": "python.exe",
+      "ppid": 133496
+    },
+    {
+      "pid": 149000,
+      "name": "python.exe",
+      "ppid": 148932
+    },
+    {
+      "pid": 148856,
+      "name": "python.exe",
+      "ppid": 148880
+    },
+    {
+      "pid": 148880,
+      "name": "python.exe",
+      "ppid": 149000
+    }
+  ],
+  "descendants_terminated": [
+    128280,
+    133496,
+    147764,
+    148556,
+    148748,
+    148788,
+    148816,
+    148856,
+    148880,
+    148932,
+    149000,
+    149056,
+    149204,
+    149228,
+    149424,
+    149480
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 29424,
+      "name": "python.exe"
+    },
+    {
+      "pid": 148624,
+      "name": "python.exe"
+    },
+    {
+      "pid": 148640,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-119/12-c119-affected-c.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c119\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c119",
+    "repo_head": "6746a8d31e993d8dc6968ad46534b4e48b9c7bee",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

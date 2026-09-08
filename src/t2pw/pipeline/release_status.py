@@ -197,6 +197,28 @@ PREFREEZE_RESOLUTION_STAGE = "prefreeze_resolution"
 #: authority.
 REASON_PREFREEZE_REVIEW_REQUIRED = "prefreeze_resolution_review_required"
 
+#: C-119 / **ORCH-728 section 1**. A stage contract report that finished with
+#: errors was found to have been SUPERSEDED by a later boundary: it is stamped
+#: ``phase: audit_round`` -- the app's own words for it are *"not a verdict about
+#: what shipped -- the remap below moves the payload again"* -- and a
+#: ``post_audit`` / ``post_remap`` contract report or a ``final_pre_export``
+#: Stage-3 gate report has since spoken about the payload that actually shipped.
+#:
+#: WHAT IT IS. The evidence that a leg reached serialization *carrying an
+#: intermediate finding that no live boundary restates*. The offending
+#: ``<report>@<phase>=<error count>`` triples are appended after a ``:`` so the
+#: record says WHICH report, at WHICH boundary, with HOW MANY errors -- exactly as
+#: ``semantic_evaluation_failed`` names its checks and
+#: ``prefreeze_resolution_review_required`` names its declinations. A human reading
+#: the record afterwards can open that report and see what was set aside.
+#:
+#: WHAT IT IS NOT. It is not a claim that the biology is wrong, and it is not a
+#: relaxation of anything: no gate moves, no threshold moves, F-179 and the
+#: connected-core floor remain part of the serialization FLOOR and are unreachable
+#: from here. It can only ever REMOVE a strict success. A leg carrying this reason
+#: is ``review_required`` at best and can never be ``release_ready``.
+REASON_SUPERSEDED_INTERMEDIATE_REPORT = "superseded_intermediate_contract_report"
+
 #: C-088 / F-107, **D-065 (LOCKED)**. The one release DISPOSITION this module
 #: recognizes: *a defensible pathway core was extracted, and a correct scope guard
 #: stopped the run before audit, DB mapping, freeze and PWML serialization.*
@@ -663,6 +685,67 @@ def prefreeze_review_reasons(prefreeze: Any) -> Tuple[str, ...]:
     ))
 
 
+def superseded_report_reasons(superseded: Any) -> Tuple[str, ...]:
+    """The superseded intermediate contract reports, normalized to reason strings.
+
+    ``()`` means "no superseded report reached this call", and it is the answer for
+    every input that is not one -- ``None``, an empty sequence, a mapping with no
+    usable entries. **Not recorded is not a failure** (the D-038 rule), which is
+    what keeps every caller that hands this nothing byte-identical to the record it
+    produced before this parameter existed.
+
+    THE SHAPE production publishes is a list of descriptors, each answering the
+    three questions a human asks afterwards::
+
+        {"report": "post_normalization_contract_report",
+         "phase": "audit_round",
+         "errors": 2}
+
+    ``t2pw.batch.driver._superseded_contract_reports`` builds exactly that, and it
+    is the only producer today. A single descriptor handed in on its own is
+    accepted as a one-element sequence, and a plain string is accepted verbatim, so
+    a record rebuilt from JSON keeps its reasons instead of flattening to "not
+    recorded".
+
+    THE RETURNED STRINGS are ``"<report>@<phase>=<errors>"`` -- SORTED, so the
+    reason line a run records does not depend on artifact-dict insertion order. A
+    descriptor naming no report is dropped: an error count with nothing behind it
+    is not a stated finding. A descriptor whose ``errors`` is absent or unparseable
+    keeps the report and the phase and records the count as ``?`` rather than
+    inventing a number.
+
+    NO GATE IS READ HERE and none can be. This function sees a report NAME, a phase
+    LABEL and a COUNT; it never sees a payload, an entity, a reaction or a
+    threshold, so it cannot relax one.
+    """
+
+    if superseded is None:
+        return ()
+    if isinstance(superseded, (str, Mapping)):
+        items: Sequence[Any] = [superseded]
+    elif isinstance(superseded, Sequence):
+        items = list(superseded)
+    else:
+        return ()
+
+    reasons: List[str] = []
+    for entry in items:
+        if isinstance(entry, str):
+            text = entry.strip()
+            if text:
+                reasons.append(text)
+            continue
+        if not isinstance(entry, Mapping):
+            continue
+        report = str(entry.get("report") or "").strip()
+        if not report:
+            continue
+        phase = str(entry.get("phase") or "").strip() or "(no phase)"
+        count = _as_measured_int(entry.get("errors"))
+        reasons.append(f"{report}@{phase}={'?' if count is None else count}")
+    return tuple(sorted(dict.fromkeys(reasons)))
+
+
 def _as_measured_int(value: Any) -> Optional[int]:
     """An integer that was actually MEASURED, or ``None``.
 
@@ -888,6 +971,7 @@ def classify_release_status(
     min_connected_core_reactions: int = MIN_CONNECTED_CORE_REACTIONS,
     single_reaction_scope_requested: bool = False,
     prefreeze_review_required: Any = None,
+    superseded_intermediate_report: Any = None,
     required_connected_reactions: Optional[int] = None,
 ) -> ReleaseStatus:
     """Classify one run from its coverage verdict and its technical outcome.
@@ -959,6 +1043,29 @@ def classify_release_status(
     declined rename stays declined, and nothing merges** (merge rule 7, D-068's
     *"useful intact biology remains available"*); never applied to a status the chain
     already lowered; and it can only ever REMOVE a strict success.
+
+    Then the SUPERSEDED-INTERMEDIATE-REPORT cap (C-119 arm, **ORCH-728**), a sixth
+    cap of exactly the same shape. When a leg reached serialization while a stage
+    contract report stamped ``phase: audit_round`` still carried errors that a
+    later boundary -- ``post_audit``, ``post_remap``, or the ``final_pre_export``
+    Stage-3 gate -- has since superseded, ``release_ready`` is not available. It is
+    a CAP on all four counts like the five above: only from ``release_ready``;
+    exactly one step, to ``review_required``, never ``diagnostic_only``; never
+    applied to a status the chain already lowered; and it can only ever REMOVE a
+    strict success. ``superseded_intermediate_report`` defaults to ``None`` -- not
+    recorded, so never a demotion -- which is what keeps every pre-C-119 caller
+    byte-identical, and it is read only through :func:`superseded_report_reasons`.
+
+    THE ONE PLACE THIS CAP DIFFERS from the four completeness caps above, and it is
+    deliberate: its reason is RECORDED WHENEVER THE CARRIER IS PRESENT, cap or no
+    cap -- the same convention ``semantic_failed_checks`` already follows here for
+    the same reason. ORCH-728's rule is that a superseded error must never silently
+    vanish from review metadata, and in every leg it was derived from the chain had
+    ALREADY lowered the status on ordinary caps, so recording from ``release_ready``
+    only would drop the finding exactly where it exists. The C-072 objection to
+    recording on a lowered status does not reach it: this reason states a fact about
+    the ARTIFACT SET's audit trail, not a completeness or biological verdict, so it
+    cannot restate a technical refusal as a biological one.
 
     Because a cap is monotone it can only ever **remove** strict successes, never
     create one -- no new strict success without measured evidence.
@@ -1215,6 +1322,35 @@ def classify_release_status(
             f"{REASON_PREFREEZE_REVIEW_REQUIRED}:{','.join(prefreeze_reasons)}"
         )
 
+    # THE SUPERSEDED INTERMEDIATE REPORT (C-119 arm, ORCH-728 section 1). A SIXTH
+    # cap, same shape again, and the one no gate above can express: it is a fact
+    # about the ARTIFACT SET -- which boundary spoke last -- not about coverage,
+    # connectivity, serializability, semantics or canonicalization.
+    #
+    # WHAT IT IS FOR. ``batch/driver.py::_blocking_reports`` stopped counting an
+    # ``audit_round`` snapshot's errors as a reason to destroy a leg whose LIVE
+    # boundaries are all clean; this is the other half of that change, and without
+    # it the leg would simply be released with the finding nowhere on the record.
+    # The finding therefore travels to the classification instead of disappearing.
+    #
+    # WHAT IS NOT DONE. No payload, graph, entity, reaction or threshold is read or
+    # touched -- the input is a list of report NAMES, phase LABELS and error COUNTS.
+    # The serialization FLOOR is untouched and unreachable from here: F-179's
+    # ``reaction_support_issue``, the final live Stage-3 gate,
+    # ``reaction_enzyme_must_be_protein_complex`` and the connected-core floor all
+    # refuse BEFORE any status exists to cap, and a cap can only ever lower one.
+    #
+    # RECORDED WHENEVER PRESENT, capped only from ``release_ready``. See the
+    # docstring above for why this one records on a lowered status when the four
+    # completeness caps deliberately do not.
+    superseded_reasons = superseded_report_reasons(superseded_intermediate_report)
+    if superseded_reasons:
+        reasons.append(
+            f"{REASON_SUPERSEDED_INTERMEDIATE_REPORT}:{','.join(superseded_reasons)}"
+        )
+        if status == RELEASE_READY:
+            status = REVIEW_REQUIRED
+
     # THE D-065 DISPOSITION (C-088 arm, F-107). NOT a cap, not a gate and not a
     # sixth rule: every branch above has already run and the status it produced is
     # returned UNCHANGED below, whatever this evaluates to. What it adds is the
@@ -1379,6 +1515,70 @@ def cap_release_for_prefreeze_declination(
     return record
 
 
+def cap_release_for_superseded_intermediate_report(
+    release: Any,
+    superseded: Any = None,
+) -> Dict[str, Any]:
+    """Apply the C-119 cap to a release record that was ALREADY FROZEN.
+
+    THE SAME RULE AS :func:`classify_release_status`'s sixth cap, reached through
+    the same :func:`superseded_report_reasons`, applied to the serialized record
+    instead of to classifier inputs -- the exact arrangement C-087/D-068 already
+    uses for the pre-freeze declination, and for the same ORDERING reason. The
+    release classification is frozen at the quarantine boundary
+    (``strict_quarantine.py`` -> :func:`classify_release_status`); the question
+    "which contract boundary spoke last?" is answered by the BATCH DRIVER, reading
+    ``post_pipeline_artifacts`` after the app has finished. Nothing in ``src``
+    holds both at once at classification time, so the verdict has to reach the
+    frozen record instead of the classifier call.
+
+    THIS IS NOT A RE-CLASSIFICATION. Re-deriving the classification downstream
+    would be an exporter answering a biological question after the freeze, which
+    **merge rule 8 forbids outright** and which
+    ``batch/driver.py::_frozen_release_record`` already refuses by name. What
+    happens here instead:
+
+    * it is **MONOTONE**. The only transition is ``release_ready`` ->
+      ``review_required``. No other status is reachable from any input, so it can
+      only ever REMOVE a strict success and can never manufacture one. A
+      ``diagnostic_only`` record keeps its status -- it is never PROMOTED, which
+      would be this function inventing a PWML the chain said does not exist;
+    * it **reads no biology**. No payload, graph, entity, reaction, name,
+      identifier or threshold is read, written, added, removed, resolved or
+      reinterpreted. The only inputs are a status string and a list of report
+      names, phase labels and error counts another stage already measured;
+    * it **repairs nothing**. The superseded findings stay superseded and stay
+      *stated*; nothing merges and nothing is dropped (merge rule 7);
+    * ``strict_acceptance_eligible`` is forced to ``False`` on the demoted record,
+      preserving the invariant ``strict_acceptance_eligible == (status ==
+      release_ready)``. It is only ever set to ``False`` here, never to ``True``
+      (TRAP-1 / ``PRODUCT_CONTRACT`` 13).
+
+    THE REASON IS APPENDED WHATEVER THE STATUS, which is the one place this differs
+    from :func:`cap_release_for_prefreeze_declination`. ORCH-728 requires that a
+    superseded error never silently vanish from review metadata, and on every leg
+    it was derived from the frozen record ALREADY read ``review_required`` -- so
+    appending only on a demotion would drop the finding in exactly the cases it
+    exists for. Appending it changes no status and no eligibility flag.
+
+    Returns a NEW dict; the record handed in is never mutated. A record whose
+    ``status`` is absent or outside :data:`RELEASE_STATES` is returned as a plain
+    copy: this function interprets a classification, it does not invent one.
+    """
+
+    record: Dict[str, Any] = dict(release) if isinstance(release, Mapping) else {}
+    reasons = superseded_report_reasons(superseded)
+    if not reasons or str(record.get("status") or "") not in RELEASE_STATES:
+        return record
+    existing = [str(reason) for reason in (record.get("reasons") or ())]
+    existing.append(f"{REASON_SUPERSEDED_INTERMEDIATE_REPORT}:{','.join(reasons)}")
+    record["reasons"] = list(dict.fromkeys(existing))
+    if str(record.get("status") or "") == RELEASE_READY:
+        record["status"] = REVIEW_REQUIRED
+        record["strict_acceptance_eligible"] = False
+    return record
+
+
 __all__ = [
     "RELEASE_READY", "REVIEW_REQUIRED", "DIAGNOSTIC_ONLY", "RELEASE_STATES",
     "SEMANTIC_PASSED", "SEMANTIC_FAILED", "SEMANTIC_NOT_EVALUATED",
@@ -1395,10 +1595,12 @@ __all__ = [
     "MIN_CONNECTED_CORE_REACTIONS", "REASON_CONNECTED_CORE_BELOW_FLOOR",
     "REASON_REQUESTED_PATHWAY_NOT_STATED",
     "PREFREEZE_RESOLUTION_STAGE", "REASON_PREFREEZE_REVIEW_REQUIRED",
+    "REASON_SUPERSEDED_INTERMEDIATE_REPORT",
     "DISPOSITION_EXTRACTED_NOT_SERIALIZED", "NO_DISPOSITION",
     "RELEASE_DISPOSITIONS", "SCOPE_GUARD_STOP_REASON",
     "CoverageVerdict", "ReleaseStatus",
     "coverage_verdict", "classify_release_status", "semantic_verdict", "describe",
     "prefreeze_review_reasons", "cap_release_for_prefreeze_declination",
+    "superseded_report_reasons", "cap_release_for_superseded_intermediate_report",
     "release_disposition",
 ]
