@@ -1,0 +1,74 @@
+========================================================================================
+ORCH-731 -- provider behaviour under the Stage-1 budget
+========================================================================================
+model    : deepseek/deepseek-v4-flash
+base_url : https://openrouter.ai/api/v1
+api key  : present (never printed)
+Stage-1 OPENROUTER_EXTRACTION_MAX_TOKENS = 16000
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\orch731_provider_limit_probe.py:54: PydanticDeprecatedSince211: Accessing the 'model_computed_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+  value = getattr(usage, key)
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\orch731_provider_limit_probe.py:54: PydanticDeprecatedSince211: Accessing the 'model_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+  value = getattr(usage, key)
+----------------------------------------------------------------------------------------
+A. deliberately over-long output, full Stage-1 budget   requested max_tokens=16000
+  finish_reason        : 'length'   native='length'
+  model echoed by API  : 'deepseek/deepseek-v4-flash'   provider='AtlasCloud'
+  content chars        : 38462
+  reasoning chars      : 1327
+  usage                : {"completion_tokens": 16000, "completion_tokens_details": "CompletionTokensDetails(accepted_prediction_tokens=None, audio_tokens=0, reasoning_tokens=337, rejected_prediction_tokens=None, text_tokens=None, image_tokens=0)", "model_computed_fields": {}, "model_config": {"extra": "allow", "defer_build": true}, "model_extra": {"cost": 0.0044424072, "is_byok": false, "cost_details": {"upstream_inference_cost": 0.00448728, "upstream_inference_prompt_cost": 7.28e-06, "upstream_inference_completions_cost": 0.00448}}, "model_fields": {"completion_tokens": "annotation=int required=True", "prompt_tokens": "annotation=int required=True", "total_tokens": "annotation=int required=True", "completion_tokens_details": "annotation=Union[CompletionTokensDetails, NoneType] required=False default=None", "prompt_tokens_details": "annotation=Union[PromptTokensDetails, NoneType] required=False default=None"}, "model_fields_set": "{'is_byok', 'cost', 'prompt_tokens_details', 'prompt_tokens', 'total_tokens', 'completion_tokens', 'cost_details', 'completion_tokens_details'}", "prompt_tokens": 52, "prompt_tokens_details": "PromptTokensDetails(audio_tokens=0, cache_write_tokens=0, cached_tokens=0, image_tokens=None, text_tokens=None, video_tokens=0)", "total_tokens": 16052}
+  completion_tokens vs requested : 16000 / 16000  (AT/OVER THE CAP)
+----------------------------------------------------------------------------------------
+B. trivial output, same budget   requested max_tokens=16000
+  finish_reason        : 'stop'   native='stop'
+  model echoed by API  : 'deepseek/deepseek-v4-flash'   provider='GMICloud'
+  content chars        : 12
+  reasoning chars      : 119
+  usage                : {"completion_tokens": 33, "completion_tokens_details": "CompletionTokensDetails(accepted_prediction_tokens=None, audio_tokens=0, reasoning_tokens=27, rejected_prediction_tokens=None, text_tokens=None, image_tokens=0)", "model_computed_fields": {}, "model_config": {"extra": "allow", "defer_build": true}, "model_extra": {"cost": 7.56756e-06, "is_byok": false, "cost_details": {"upstream_inference_cost": 7.644e-06, "upstream_inference_prompt_cost": 1.638e-06, "upstream_inference_completions_cost": 6.006e-06}}, "model_fields": {"completion_tokens": "annotation=int required=True", "prompt_tokens": "annotation=int required=True", "total_tokens": "annotation=int required=True", "completion_tokens_details": "annotation=Union[CompletionTokensDetails, NoneType] required=False default=None", "prompt_tokens_details": "annotation=Union[PromptTokensDetails, NoneType] required=False default=None"}, "model_fields_set": "{'is_byok', 'cost', 'prompt_tokens_details', 'prompt_tokens', 'total_tokens', 'completion_tokens', 'cost_details', 'completion_tokens_details'}", "prompt_tokens": 18, "prompt_tokens_details": "PromptTokensDetails(audio_tokens=0, cache_write_tokens=0, cached_tokens=0, image_tokens=None, text_tokens=None, video_tokens=0)", "total_tokens": 51}
+  completion_tokens vs requested : 33 / 16000  (BELOW THE CAP)
+----------------------------------------------------------------------------------------
+C. over-long output, max_tokens=256 (control)   requested max_tokens=256
+  finish_reason        : 'length'   native='length'
+  model echoed by API  : 'deepseek/deepseek-v4-flash'   provider='GMICloud'
+  content chars        : 170
+  reasoning chars      : 728
+  usage                : {"completion_tokens": 256, "completion_tokens_details": "CompletionTokensDetails(accepted_prediction_tokens=None, audio_tokens=0, reasoning_tokens=189, rejected_prediction_tokens=None, text_tokens=None, image_tokens=0)", "model_computed_fields": {}, "model_config": {"extra": "allow", "defer_build": true}, "model_extra": {"cost": 5.081076e-05, "is_byok": false, "cost_details": {"upstream_inference_cost": 5.1324e-05, "upstream_inference_prompt_cost": 4.732e-06, "upstream_inference_completions_cost": 4.6592e-05}}, "model_fields": {"completion_tokens": "annotation=int required=True", "prompt_tokens": "annotation=int required=True", "total_tokens": "annotation=int required=True", "completion_tokens_details": "annotation=Union[CompletionTokensDetails, NoneType] required=False default=None", "prompt_tokens_details": "annotation=Union[PromptTokensDetails, NoneType] required=False default=None"}, "model_fields_set": "{'is_byok', 'cost', 'prompt_tokens_details', 'prompt_tokens', 'total_tokens', 'completion_tokens', 'cost_details', 'completion_tokens_details'}", "prompt_tokens": 52, "prompt_tokens_details": "PromptTokensDetails(audio_tokens=0, cache_write_tokens=0, cached_tokens=0, image_tokens=None, text_tokens=None, video_tokens=0)", "total_tokens": 308}
+  completion_tokens vs requested : 256 / 256  (AT/OVER THE CAP)
+
+========================================================================================
+READING THE RESULT
+========================================================================================
+  A consumed 16000 of 16000 -- OUR OWN max_tokens is the
+  binding limit. The response was cut by the value we sent.
+  Reasoning content present (1327 chars): reasoning tokens are
+  billed against max_tokens but never appear in message.content -- which is how
+  finish_reason=length can arrive with ZERO content characters.
+
+  NOTE: this probe uses its own prompts. It measures the PROVIDER, not the paper.
+  report: .\docs/pwml_recovery_sprint/evidence/orch731_provider_probe.json
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a2a9412fe95f4ef8056482ae84b1726f3db32246  [git, worktree dirty=True]
+label                   : orch731-provider-probe-v2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch731_provider_limit_probe.py .
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 326616 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 142.71 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  325724:python.exe
+descendants terminated  : 1  325724
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-731/02-provider-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
