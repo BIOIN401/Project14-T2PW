@@ -1,0 +1,26 @@
+# ORCH-730 — post-C-119 PWML VALIDATION. Three strict legs. 2026-09-07.
+#
+# THIS IS NOT ORCH-724 AND MUST NEVER BE MERGED INTO IT.
+# The unseen pilot (runs_verify/2026-09-06_1425) stands unchanged and read-only.
+# These three legs are a separately-labelled post-fix validation dataset, authorized
+# by the product owner as F-187 option 2, run against frozen production c7a0663e.
+#
+# STRICT MODE ONLY. Research is diagnostic by design (acceptance.py:125) and cannot
+# produce a PWML.
+#
+# NO FAVOURABLE-DRAW RETRIES. A leg is re-run only for an objectively invalid
+# infrastructure execution. A failing leg is diagnosed and reported, never re-rolled.
+#
+# Stage-1 max_tokens = 16000, Stage-2 max_tokens = 16000 -- CHOSEN, not inherited.
+# See ORCH-730-VALIDATION-FREEZE.md section 2 for why.
+#
+# Rows are copied VERBATIM from topics_unseen_pilot.txt so the request text is
+# identical to the pilot's; only the cohort membership differs.
+#
+# PMC7232280  -- recovered by C-119, must now serialize
+# PMC8510960  -- recovered by C-119, must now serialize
+# PMC12071552 -- KNOWN POSITIVE CONTROL, shipped a PWML in the pilot
+
+PMC7232280  | molybdenum cofactor biosynthesis        | Neurospora crassa
+PMC8510960  | terpenoid indole alkaloid biosynthesis  | Catharanthus roseus
+PMC12071552 | wall teichoic acid D-alanylation        | Staphylococcus aureus
