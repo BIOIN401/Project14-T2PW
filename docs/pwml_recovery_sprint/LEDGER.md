@@ -10226,3 +10226,28 @@ recorded as a benchmark pass or fail**.
 | unseen cohort | **FROZEN**, staged, 20 legs planned |
 | production | **STILL FROZEN.** `D-090` governs; `D-095` expires with `C-118` and production **re-freezes on merge** |
 | SMOKE | **508** at base and tip. `TEST_MATRIX.md` records 503; that drift is **pre-existing** and was NOT edited away |
+
+---
+
+## `C-119` — MERGED, production RE-FROZEN · 2026-09-07
+
+Authorized by the product owner on `ORCH-728` evidence. Superseded `audit_round` contract
+state no longer destroys a final canonical pathway whose live gates all pass; such a leg
+serializes as `review_required`, never `release_ready`. Full record:
+[`C-119-MERGE-AND-REFREEZE.md`](C-119-MERGE-AND-REFREEZE.md).
+
+### State at this entry
+
+| item | state |
+|---|---|
+| `C-119` | **MERGED** `--no-ff`, branch @ `ce319e88`, base `6746a8d3`; `src/` = exactly 2 files |
+| `REV-119` | two rounds; round 1 `CORRECTION` (1 BLOCKING, test-harness defect), round 2 **`APPROVE WITH FINDINGS`** |
+| production | **RE-FROZEN at `c7a0663e`.** `D-090`'s `c4a97f60` expired with this card. No further production change authorized |
+| `F-147` | **CLOSED by `C-119`** — the superseded-report block is gone; the finding is preserved on three channels |
+| `F-185` | stands as a **quality** limitation, not a delivery one (`ORCH-725`) |
+| SMOKE | **508**, exit 0, post-merge. `C-119` delta = **0**. `TEST_MATRIX.md` still records 503; drift pre-existing, NOT edited |
+| REV-119 finding 3 | seam 1 is **mode-blind**; research legs are in scope and the count reaches their row. **Number affected NOT measured** |
+| REV-119 finding 4 | `_artifact_set_is_phase_stamped` vs `is_current_artifact_set` asymmetry — candidate hardening for a future authorized `driver.py` touch. Judged NOT required |
+| REV-119 findings 5-8 | recorded, safe to carry. **Do not cite `test_no_archived_leg_becomes_release_ready` as the no-promotion proof — it is vacuous** |
+| biological review | **STILL OWED.** `PILOT-MANUAL-REVIEW.md`. Merging shipped two pathways no human has reviewed |
+| next | **STOP ENGINEERING.** Generate PWMLs deterministically, manual review, manuscript analysis |
