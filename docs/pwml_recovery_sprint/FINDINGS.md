@@ -9531,3 +9531,73 @@ not been measured against and nothing in the output said so.
 work and it is stated rather than implied.
 
 ---
+
+---
+
+## `F-187` — the recovered PWMLs cannot be generated from archived payloads; the export controls are locked to the run
+
+- **Severity** MEDIUM · **Class** `product_contract_violation` (informational) · **Registered 2026-09-07 from ORCH-729, after `C-119` merged**
+- Evidence: `evidence/orch729_generate_pwml.py` / `.log` · `evidence/orch729_generation_report.json` · `evidence/g11/ORCH-729/01-generate.json`
+
+### What was attempted, and why it is not a re-run
+
+`C-119` made `PMC7232280/strict` and `PMC8510960/strict` serializable. The obvious next step is
+to produce the bytes **without re-running anything**: the canonical payloads are on disk, and
+`streamlit_app.run_pwml_export` is a plain function on the **gated** path — it runs
+`validate_pre_export`, and therefore **F-179**, at `:4788` before `DeterministicPwmlBuilder` at
+`:5003`. The CLI (`writer.run_pwml_pipeline_export`) was deliberately **not** used: `F-183`
+established it is not protected by the F-179 rule, so producing a deliverable through it would
+bypass the anti-invention floor.
+
+### The result: all five legs refused, including the control
+
+| leg | expected | got |
+|---|---|---|
+| `PMC7232280/strict` | a `review_required` PWML | **refused** |
+| `PMC8510960/strict` | a `review_required` PWML | **refused** |
+| `PMC12071552/strict` *(control — really shipped one in the pilot)* | a PWML | **refused** |
+| `PMC12376012/strict`, `PMC12180156/strict` *(negative controls)* | refused | refused |
+
+**The control failing is the finding.** The refusal is not C-119's and is not a gate C-119
+touched:
+
+> `PWML export stopped: quarantine decision controls changed since the boundary ran`
+> `(requested_pathway_context). The stored decision was taken under different rules and`
+> `cannot authorize this export. Re-run the pipeline to take a fresh decision.`
+
+`streamlit_app.py:4665-4695`. The archived `quarantine_report` records only the **derived**
+`decision_inputs.pathway_context_core` — a normalized token list. The **raw** `pathway_context`
+the boundary was handed is archived **nowhere**: it appears in no leg artifact, only in the
+live session. Reconstructing it from the derived core would be inferring an input from its
+output, and the guard's own comment forecloses the alternative: *"The controls are locked for
+the run; changing one requires a new run."* Dropping the quarantine report instead would force
+a **fresh** decision over an already strict-reduced graph, which the same comment names as the
+failure mode it exists to prevent.
+
+**This guard is correct and was not worked around.**
+
+### What it means for `C-119`
+
+**`C-119` is not weakened and is not in question.** That a leg *serializes* is proven three
+ways — the driver/record/filename path, the G9 end-to-end test through `run_one`, and the
+nine archived-leg regressions. What `F-187` establishes is narrower and it matters for the
+manuscript: **the two recovered PWMLs do not exist as files, and cannot be made to exist
+without re-running those two legs.**
+
+### Disposition — REGISTERED, NOT CHARTERED
+
+Producing them needs a re-run of exactly two strict legs, which is a fresh LLM draw and a
+product-owner decision, not an engineering one. Three honest options, for the record:
+
+1. **Report the recovery as measured-but-not-materialized.** The manuscript says C-119 makes
+   3 of 6 evaluable strict legs serializable, and states that two were verified by
+   deterministic replay rather than by a shipped file. Costs nothing; no new run.
+2. **Re-run those two legs at the committed budgets**, separately labelled, outside the frozen
+   pilot — the same shape `D-097` prescribed for the two JSON-failure legs. Produces real
+   files; is a new run with a new draw, and its output is not the pilot's.
+3. **Archive the raw `pathway_context`** so future archived payloads are replayable. A
+   production change, out of scope, and it cannot help the legs already run.
+
+**Do not treat option 2 as a formality.** A re-run is a new draw: it may not reproduce the
+payload C-119 was measured on, and `PMC12452463`'s two disagreeing archives are the standing
+warning about exactly that.
