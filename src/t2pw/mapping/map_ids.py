@@ -3453,9 +3453,16 @@ def _abbreviated_binomial_parts(name: str) -> Tuple[str, str]:
     return match.group(1), match.group(2)
 
 
-def _species_alias_donors(rows: List[Any]) -> List[Dict[str, str]]:
-    """Rows that already carry a full binomial plus a usable taxonomy identity."""
-    donors: List[Dict[str, str]] = []
+def _species_alias_donors(rows: List[Any]) -> List[Dict[str, Any]]:
+    """Rows that already carry a full binomial plus a usable taxonomy identity.
+
+    Each donor records whether its own NAME is rank-qualified -- a strain,
+    sub-species or collection-code suffix beyond the bare binomial. That flag is
+    load-bearing: such a row's ``taxonomy_id`` is a **strain-rank** id, and an
+    abbreviated binomial is a **species-rank** reference, so the two are not
+    interchangeable however confidently the binomials match.
+    """
+    donors: List[Dict[str, Any]] = []
     for row in rows:
         if not isinstance(row, dict):
             continue
@@ -3480,14 +3487,24 @@ def _species_alias_donors(rows: List[Any]) -> List[Dict[str, str]]:
                 "epithet": epithet,
                 "taxonomy_id": taxonomy_id,
                 "classification": classification,
+                # True when the name says more than the binomial does: a rank
+                # marker fired, or the binomial reduction dropped tokens.
+                "rank_qualified": bool(_STRAIN_SUFFIX_RE.search(name))
+                or _normalize_name(binomial) != _normalize_name(name),
             }
         )
     return donors
 
 
+def _canonical_binomial_text(genus: str, epithet: str) -> str:
+    """``Genus epithet`` in the conventional binomial casing, so the expansion a
+    row is audited against does not echo a donor's incidental capitalisation."""
+    return f"{genus[:1].upper()}{genus[1:].casefold()} {epithet.casefold()}"
+
+
 def _compatible_alias_donors(
-    donors: List[Dict[str, str]], initial: str, epithet: str
-) -> List[Dict[str, str]]:
+    donors: List[Dict[str, Any]], initial: str, epithet: str
+) -> List[Dict[str, Any]]:
     """Donors whose genus initial and epithet both match the abbreviation."""
     folded_initial = initial.casefold()
     folded_epithet = epithet.casefold()
@@ -3501,7 +3518,7 @@ def _compatible_alias_donors(
 
 def _species_alias_expansion(
     name: str,
-    donors: List[Dict[str, str]],
+    donors: List[Dict[str, Any]],
     *,
     client: Optional[HttpClient],
     enable_ncbi: bool,
@@ -3521,12 +3538,20 @@ def _species_alias_expansion(
     # Two different genera share the initial and the epithet -> we may not pick.
     if len({_normalize_name(donor["binomial"]) for donor in compatible}) != 1:
         return {}
-    expanded = compatible[0]["binomial"]
-    donor_names = sorted({donor["name"] for donor in compatible})
+    expanded = _canonical_binomial_text(compatible[0]["genus"], compatible[0]["epithet"])
+    donor_names = sorted({str(donor["name"]) for donor in compatible})
 
     taxonomy_ids = {donor["taxonomy_id"] for donor in compatible}
     classifications = {donor["classification"] for donor in compatible}
-    if len(taxonomy_ids) == 1 and len(classifications) == 1:
+    # A rank-qualified donor carries a STRAIN-rank id. The abbreviation is a
+    # species-rank reference, so that id may not be reused however well the
+    # binomials match -- doing so ships a taxon no source ever asserted for this
+    # name, and the required-field gate would then pass it. Such a set routes to
+    # tier 2 or stays unresolved; it never takes the offline shortcut. Keyed on
+    # the DONOR'S OWN RANK, not on disagreement between donors: a single
+    # strain-rank donor disagrees with nobody (REV-120 B1).
+    any_rank_qualified = any(bool(donor.get("rank_qualified")) for donor in compatible)
+    if not any_rank_qualified and len(taxonomy_ids) == 1 and len(classifications) == 1:
         # Tier 1 -- offline reuse. Deterministic, no network.
         return {
             "source": "pathway_alias_reuse",
@@ -3537,9 +3562,11 @@ def _species_alias_expansion(
             "donors": donor_names,
         }
 
-    # Tier 2 -- the donors describe the same organism at different ranks. The
-    # abbreviation is species-rank, so resolve the EXPANDED binomial through the
-    # existing lookup rather than choosing between the donors' ids.
+    # Tier 2 -- the donors either disagree on the id or at least one of them is
+    # itself rank-qualified. Either way no donor id is a safe species-rank
+    # answer, so resolve the EXPANDED binomial through the existing lookup
+    # rather than choosing among them. With NCBI disabled this returns {} and
+    # the row stays unresolved, which is the correct fail-closed outcome.
     if not enable_ncbi or client is None:
         return {}
     record = _ncbi_taxonomy_lookup(client, expanded)

@@ -288,6 +288,86 @@ def test_a2_tier2_leaves_the_row_unresolved_when_ncbi_is_disabled() -> None:
     assert report["unresolved"] == ["B. subtilis"]
 
 
+def test_a2_sole_strain_rank_donor_never_lends_its_id_offline() -> None:
+    """NEW ACCEPTANCE TEST (REV-120 B1: strain-rank leakage).
+
+    The gap the first round missed: a strain-qualified row as the SOLE donor.
+    One donor means no disagreement to detect, so a fork keyed only on
+    conflicting ids would take the offline shortcut and stamp a STRAIN-rank
+    taxon onto a species-rank abbreviation -- a claim no source made, which the
+    required-field gate would then happily pass.
+
+    This is the real ``PMC11487621`` hazard: the strain-rank row came from
+    PathBank via ``gap_resolver_llm`` and the plain binomial from NCBI backfill,
+    so a payload where only the former lands hits exactly this branch.
+
+    Passes at BASE too (base resolves nothing at all), by design.
+    """
+    payload = _species_payload([RESOLVED_STRAIN_ROW, UNRESOLVED_ABBREVIATION_ROW])
+    report = backfill_species_taxonomy(payload, client=None, enable_ncbi=False)
+
+    row = _species_row(payload, 1)
+    assert "taxonomy_id" not in row
+    assert "classification" not in row
+    assert "mapping_meta" not in row
+    assert "alias_reuse" not in report
+    assert report["unresolved"] == ["B. subtilis"]
+
+
+def test_a2_sole_strain_rank_donor_routes_to_the_lookup_not_to_reuse() -> None:
+    """NEW ACCEPTANCE TEST (REV-120 B1).
+
+    The same sole strain-rank donor, with a client available: the expanded
+    binomial goes through the lookup, and the strain-rank id is not copied.
+    """
+    client = _StubTaxonomyClient()
+    payload = _species_payload([RESOLVED_STRAIN_ROW, UNRESOLVED_ABBREVIATION_ROW])
+    backfill_species_taxonomy(payload, client=client, enable_ncbi=True)
+
+    row = _species_row(payload, 1)
+    # Asserted on the VALUE first, so the base arm fails on a wrong value rather
+    # than on an absent payload key.
+    assert row.get("taxonomy_id") == _StubTaxonomyClient.STUB_TAXID
+    assert row.get("taxonomy_id") != "224308"
+    meta = row["mapping_meta"]["taxonomy_backfill"]
+    assert meta["source"] == "pathway_alias_expansion_ncbi"
+    assert meta["expanded_to"] == "Bacillus subtilis"
+
+
+def test_a2_expansion_text_uses_canonical_binomial_casing() -> None:
+    """NEW ACCEPTANCE TEST (REV-120 N5).
+
+    ``expanded_to`` is the canonical binomial, not the donor's incidental
+    capitalisation. The taxonomy copied is the donor's either way.
+    """
+    payload = _species_payload(
+        [_row("bacillus subtilis", "1423", "Prokaryote"), UNRESOLVED_ABBREVIATION_ROW]
+    )
+    backfill_species_taxonomy(payload, client=None, enable_ncbi=False)
+
+    row = _species_row(payload, 1)
+    assert row.get("taxonomy_id") == "1423"
+    meta = row["mapping_meta"]["taxonomy_backfill"]
+    assert meta["expanded_to"] == "Bacillus subtilis"
+    assert meta["donors"] == ["bacillus subtilis"]
+
+
+def test_a2_strain_code_donor_is_also_rank_qualified() -> None:
+    """NEW ACCEPTANCE TEST (REV-120 B1, the no-rank-marker shape).
+
+    ``"Bacillus subtilis 168"`` carries no rank word for ``_STRAIN_SUFFIX_RE`` to
+    find, but the binomial reduction still drops a token, so it is rank-qualified
+    just the same and may not lend its id offline.
+    """
+    payload = _species_payload(
+        [_row("Bacillus subtilis 168", "224308", "Prokaryote"), UNRESOLVED_ABBREVIATION_ROW]
+    )
+    report = backfill_species_taxonomy(payload, client=None, enable_ncbi=False)
+
+    assert "taxonomy_id" not in _species_row(payload, 1)
+    assert "alias_reuse" not in report
+
+
 def test_a2_no_compatible_donor_stays_unresolved() -> None:
     """NEW ACCEPTANCE TEST (safety: species over-expansion)."""
     payload = _species_payload([_row("Homo sapiens", "9606", "Eukaryote"), UNRESOLVED_ABBREVIATION_ROW])
