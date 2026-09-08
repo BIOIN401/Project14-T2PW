@@ -1,0 +1,77 @@
+# FINAL EXPECTED-WORKING RELIABILITY SMOKE COHORT -- 2026-09-08, ORCH-734.
+#
+# PURPOSE: the last reliability check before development moves to RAG v2 /
+#   literature-expanded pathway reconstruction. The only question:
+#
+#     When the user gives the production system a reasonable biological pathway
+#     paper, does the system actually produce a usable PWML?
+#
+# This is NOT an adversarial benchmark and NOT a negative-control exercise.
+# SUCCESS = a PWML on disk. release_ready is NOT required; a
+# pathway.review_required.pwml counts as successful PWML generation.
+#
+# A NEW dataset with its own identity: runs_smoke/<this timestamp>. It is NOT
+# the ORCH-724 unseen pilot, NOT the ORCH-730 validation, NOT the C-120
+# validation and NOT ORCH-732. Its numbers may never be merged into any of those
+# denominators, and it does not rescore any of them. Twelve papers is a smoke
+# cohort, not a population rate.
+#
+# SELECTION RULE (product owner): ordinary, reasonable pathway papers with clear
+# pathway identity, a known organism, several reactions or strong pathway
+# anchors, named enzymes and named substrates/products. NO pathological papers.
+# Deliberately NOT chosen: case reports, resistome surveys, pure omics
+# enrichment, inhibitor-only screening, negative/context-only papers,
+# multi-organism ambiguity traps, and documents made huge solely to stress
+# Stage 1.
+#
+# NO OVERLAP: every id below was checked mechanically against the 33 paper ids
+# reachable from the gold set, every runs*/ directory and every topics*.txt in
+# the repository -- development gold, the ORCH-724 unseen pilot, ORCH-730,
+# ORCH-732 and the C-119/C-120 validations. Eleven are unseen. The twelfth is
+# the single deliberate CONTROL, marked below.
+#
+# TOPIC EXCLUSIONS carried forward from ORCH-732, plus this sprint's own used
+# topics: enterobactin, lipid A, heme (the F-179 glycine->heme trap),
+# cholesterol biosynthesis, molybdenum cofactor, terpenoid indole alkaloid,
+# wall teichoic acid, pyoverdine, sphingolipid/ORMDL, menaquinone (control
+# only), thiamine, coenzyme A, riboflavin, L-serine, coenzyme Q.
+#
+# ORGANISM MIX, against the requested ~3/3/3/3:
+#   bacterial            4  (incl. the control)
+#   human/mammalian      3
+#   plant                4
+#   fungal               1
+#
+# Scope is MANDATORY. A bare pinned id stages a scopeless, invalid run in which
+# every downstream reader sees an empty requested pathway. Each scope string
+# below is taken from the paper's own language to avoid a Stage-0
+# scope_conflict.
+
+# --- bacterial ---------------------------------------------------------------
+PMC9200736   | acarbose biosynthesis                | Actinoplanes sp. SE50/110
+PMC10269868  | ADP-heptose biosynthesis             | Helicobacter pylori
+PMC6112128   | tubercidin biosynthesis              | Streptomyces tubercidicus
+
+# --- human / mammalian -------------------------------------------------------
+PMC11016064  | carnitine biosynthesis               | Homo sapiens
+PMC10055903  | sialic acid biosynthesis             | Homo sapiens
+PMC8211424   | corticosteroid biosynthesis          | Homo sapiens
+
+# --- plant -------------------------------------------------------------------
+PMC13184244  | nicotine biosynthesis                | Nicotiana tabacum
+PMC11961743  | furochromone biosynthesis            | Saposhnikovia divaricata
+PMC7910490   | steroidal glycoalkaloid biosynthesis | Solanum tuberosum
+PMC7402084   | cyanogenic glucoside biosynthesis    | Phaseolus lunatus
+
+# --- fungal ------------------------------------------------------------------
+PMC4471609   | cycloclavine biosynthesis            | Aspergillus japonicus
+
+# --- CONTROL -----------------------------------------------------------------
+# The one deliberately re-used paper. It produced a 39,686-byte
+# pathway.review_required.pwml in ORCH-732 and then failed on F-192
+# (no_biological_states) in the C-120 post-merge validation. F-192's population
+# is currently ONE leg in 336 and the standing instruction is not to fix it
+# unless a second independent instance appears. This leg is the sentinel that
+# asks whether it does. It is not chosen because it is pathological -- it is an
+# ordinary E. coli menaquinone paper that has already produced a PWML once.
+PMC9544450   | menaquinone biosynthesis             | Escherichia coli
