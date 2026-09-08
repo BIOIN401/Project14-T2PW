@@ -1,0 +1,103 @@
+{
+  "label": "f179-stagecontracts-tip-pinned",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/c045_pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/c120-identity",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/pin/C-120/17-f179-stagecontracts-tip-pinned.pin.json",
+    "-q",
+    "--tb=line",
+    "--basetemp=C:/t/c120/17-f179-stagecontracts-tip-pinned",
+    "tests/test_f179_reaction_support.py",
+    "tests/test_stage_contracts.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\c120-identity",
+  "started_at": "2026-09-08T17:51:36+00:00",
+  "finished_at": "2026-09-08T17:51:37+00:00",
+  "duration_seconds": 0.9631325999944238,
+  "timeout_seconds": 1200.0,
+  "root_pid": 685248,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 685868,
+      "name": "python.exe",
+      "ppid": 685248
+    }
+  ],
+  "descendants_terminated": [
+    685868
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 661052,
+      "name": "streamlit.exe"
+    },
+    {
+      "pid": 662260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 662500,
+      "name": "python.exe"
+    },
+    {
+      "pid": 670796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 670816,
+      "name": "python.exe"
+    },
+    {
+      "pid": 677324,
+      "name": "python.exe"
+    },
+    {
+      "pid": 685292,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/C-120/17-f179-stagecontracts-tip-pinned.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "650ea1436dcb2787d68ca2e938b6102a6d712a51",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-120",
+    "token": "C-120:685292:bed71565931a8e5f",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
