@@ -1,0 +1,130 @@
+{
+  "label": "orch730-validation-3legs",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "topics_orch730_validation.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "runs_validation",
+    "--timeout",
+    "3600",
+    "--deadline",
+    "5"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-09-08T01:29:44+00:00",
+  "finished_at": "2026-09-08T02:59:37+00:00",
+  "duration_seconds": 5392.731460700001,
+  "timeout_seconds": 15000.0,
+  "root_pid": 199944,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 199956,
+      "name": "python.exe",
+      "ppid": 199944
+    },
+    {
+      "pid": 199976,
+      "name": "python.exe",
+      "ppid": 199956
+    },
+    {
+      "pid": 199996,
+      "name": "python.exe",
+      "ppid": 199976
+    },
+    {
+      "pid": 200500,
+      "name": "python.exe",
+      "ppid": 199956
+    },
+    {
+      "pid": 200544,
+      "name": "python.exe",
+      "ppid": 200500
+    },
+    {
+      "pid": 202888,
+      "name": "python.exe",
+      "ppid": 227464
+    },
+    {
+      "pid": 227464,
+      "name": "python.exe",
+      "ppid": 199956
+    },
+    {
+      "pid": 232060,
+      "name": "python.exe",
+      "ppid": 199956
+    },
+    {
+      "pid": 232772,
+      "name": "python.exe",
+      "ppid": 232060
+    }
+  ],
+  "descendants_terminated": [
+    199956,
+    199976,
+    199996,
+    200500,
+    200544,
+    202888,
+    227464,
+    232060,
+    232772
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 175172,
+      "name": "python.exe"
+    },
+    {
+      "pid": 175512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 190044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 195824,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/ORCH-730/02-validation-run.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "a91e4a89950434ed5925b14f0b8f69cc139afd36",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

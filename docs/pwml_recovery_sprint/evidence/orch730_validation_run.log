@@ -1,0 +1,63 @@
+[19:29:45]   resume check     : resuming 2026-09-07_1929: the newest run, last touched 0.0h ago, with 3 pair(s) still pending
+[19:29:45] CONTINUING the incomplete run 2026-09-07_1929 (no --fresh given)
+[19:29:45]   already recorded : 0 paper+mode run(s) -- these are skipped
+[19:29:45]   still to do      : 3 paper+mode run(s)
+[19:29:45] running 3 paper+mode pair(s) sequentially
+[19:29:45] whole-night deadline : 5.0h from now
+[19:29:45] [1/3] PMC7232280 / strict -> starting (timeout 3600s)
+[20:14:56] [1/3] PMC7232280 / strict -> PASS WITH WARNINGS in 2709.8s (45m09s)
+[20:14:56]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0: Expected a string.
+[20:14:56]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0/pathbank_protein_id: Expected a string.
+[20:14:56]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/1: Expected a string.
+[20:14:56]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/1/pathbank_protein_id: Expected a string.
+[20:14:56]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:14:56]     ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0: Expected a string.
+[20:14:56]     ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0/pathbank_protein_id: Expected a string.
+[20:14:56]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0: Expected a string.
+[20:14:56]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0/pathbank_protein_id: Expected a string.
+[20:14:56]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/1: Expected a string.
+[20:14:56]     ! runtime-schema finding (informational, not blocking): and 6 more finding(s); all of them are in contract_reports.json
+[20:14:56]     ! serialized with a superseded intermediate contract report: post_normalization_contract_report at phase audit_round carried 2 error(s), superseded by post_audit_contract_report, post_remap_contract_report, final_stage3_gate_report. The finding is NOT repaired and NOT dismissed: this leg is review_required and can never be release_ready.
+[20:14:56]     1/3 done | strict 1 pass | research 0 pass | 1 NO DELIVERABLE
+[20:14:56] [2/3] PMC8510960 / strict -> starting (timeout 3600s)
+[20:26:03] [2/3] PMC8510960 / strict -> FAIL (unknown) in 667.1s (11m07s)
+[20:26:03]     2/3 done | strict 1 pass 1 fail | research 0 pass | 1 NO DELIVERABLE
+[20:26:03] [3/3] PMC12071552 / strict -> starting (timeout 3600s)
+[20:59:36] [3/3] PMC12071552 / strict -> FAIL (contract) in 2012.6s (33m32s)
+[20:59:36]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:59:36]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:59:36]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/7/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:59:36]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:59:36]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:59:36]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/7/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:59:36]     3/3 done | strict 1 pass 2 fail | research 0 pass | 1 NO DELIVERABLE
+[20:59:36] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_validation\2026-09-07_1929
+[20:59:36] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_validation\2026-09-07_1929\SUMMARY.txt
+[20:59:36] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_validation\2026-09-07_1929\failures_by_code.txt
+[20:59:36] FAILURES: 2 of 3 paper+mode run(s) did not pass
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a91e4a89950434ed5925b14f0b8f69cc139afd36  [git, worktree dirty=True]
+label                   : orch730-validation-3legs
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u scripts/batch_run.py --topics topics_orch730_validation.txt --modes strict --out runs_validation --timeout 3600 --deadline 5
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 199944 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 15000 s
+duration                : 5392.73 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 9  199956:python.exe, 199976:python.exe, 199996:python.exe, 200500:python.exe, 200544:python.exe, 202888:python.exe, 227464:python.exe, 232060:python.exe, 232772:python.exe
+descendants terminated  : 9  199956, 199976, 199996, 200500, 200544, 202888, 227464, 232060, 232772
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-730/02-validation-run.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

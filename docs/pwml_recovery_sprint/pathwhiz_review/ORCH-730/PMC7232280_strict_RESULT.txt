@@ -1,0 +1,67 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC7232280
+title      : (unknown)
+slug       : PMC7232280
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 2709.8s (45m09s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0: Expected a string.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0/pathbank_protein_id: Expected a string.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/1: Expected a string.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/1/pathbank_protein_id: Expected a string.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0: Expected a string.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0/pathbank_protein_id: Expected a string.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0: Expected a string.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/0/pathbank_protein_id: Expected a string.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/protein_complexes/0/components/1: Expected a string.
+  ! runtime-schema finding (informational, not blocking): and 6 more finding(s); all of them are in contract_reports.json
+  ! serialized with a superseded intermediate contract report: post_normalization_contract_report at phase audit_round carried 2 error(s), superseded by post_audit_contract_report, post_remap_contract_report, final_stage3_gate_report. The finding is NOT repaired and NOT dismissed: this leg is review_required and can never be release_ready.
+
+message    : strict run completed; pathway.review_required.pwml is 45054 bytes
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 6
+  entities = 19
+  gate_errors = 0
+  proteins = 4
+  pwml = {'compounds': 6, 'proteins': 2, 'reactions': 4, 'edges': 14}
+  pwml_bytes = 45054
+  reactions = 5
+  runtime_schema_findings = 16
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  superseded_contract_errors = 2
+  transports = 1
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1169 B)
+  - contract_reports.json  (28504 B)
+  - coverage_diagnostics.json  (3166 B)
+  - coverage_summary.json  (3100 B)
+  - final_mapped.json  (148904 B)
+  - final_stage3_gate_report.json  (2802 B)
+  - gap_iteration_summary.json  (63195 B)
+  - gate_fail_report.json  (30782 B)
+  - graph_closure_iterations.json  (1750 B)
+  - initial_stage3_gate_report.json  (30782 B)
+  - merged_payload.json  (72170 B)
+  - pathway.review_required.pwml  (45054 B)
+  - pwml_ir.json  (54427 B)
+  - pwml_ir_report.json  (850 B)
+  - pwml_ir_validation.json  (234 B)
+  - pwml_qa.json  (350 B)
+  - pwml_required_field_gate_report.json  (3585 B)
+  - pwml_validation_report.json  (19586 B)
+  - quarantine_report.json  (23947 B)
+  - rag_admission_report.json  (71160 B)
+  - removed_entity_report.json  (1406 B)
+  - stage1_payload.json  (21175 B)
