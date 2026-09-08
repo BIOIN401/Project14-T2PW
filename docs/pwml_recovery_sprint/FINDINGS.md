@@ -9840,3 +9840,41 @@ Two observations across two runs is not a rate and does not establish a pattern.
 output would not belong to the `C-120` validation dataset. It was deliberately **not** taken here:
 the frozen no-retry rule was written before execution and relaxing it in the direction that
 flatters this card is exactly what it exists to prevent.
+
+### Census result, 2026-09-08 — `F-192-CENSUS.md`, 144 legs, read-only
+
+**It does not repeat: 1 occurrence in 144 legs, and 0 in the 142 legs predating the run where it
+was found.** The stated bar for chartering was repetition across multiple legs. That bar is **not
+met**, and the disposition stays REGISTERED, NOT CHARTERED.
+
+| question | answer |
+|---|---|
+| auto-state created then removed | **32 / 144 legs (22 %)** — routine, and `state_unreferenced_after_quarantine` is the **only** removal reason in the corpus |
+| of those, harmless | **31** — a real state remained. The sweep is not the defect |
+| legs blocked | **1** — `PMC9544450`, `runs_validation/c120/2026-09-08_1240` |
+| would have had a viable core | **yes** — 5 reactions, `gate_errors 0`, `blocking_issues 0`, both enzymes resolved |
+| always the same ordering? | **cannot be claimed, n = 1.** The *sufficient* condition is a three-way conjunction, and each condition alone is survivable |
+| entity types | **both** `compound_locations` (8) and `protein_locations` (2) — not type-specific |
+
+**The conjunction, measured.** Stage 1 emits no biological state: **13** legs, **12 survive**.
+`__auto_state__` removed: **32** legs, **31 survive**. Location rows written by `audit_repair`:
+**2** of the 13 at-risk legs, and **one of those two survived**. All three co-occur **once**.
+
+**What would change the judgement:** a second independent instance (re-run
+`evidence/f192_census.py` — detection is now cheap), or a product-owner decision to weight
+severity over frequency, since the one instance lost a complete, correctly identified pathway in
+its entirety. That is a product call, not one the data makes.
+
+**If chartered, the invariant as worded is right** — *after any audit/remap mutation that can
+rewrite element-location rows, required auto-generated biological states must be re-established
+before quarantine / final export validation.* It moves no threshold and relaxes no gate. Two
+cautions: it belongs **upstream of the freeze** (merge rule 8 forbids an exporter repairing
+biology afterwards), and the regression surface is the **31 masked legs** — the auto-state must
+not survive where it is currently swept correctly, or their graph hashes move.
+
+**A defect in the census itself, disclosed.** Its first version used a fixed-depth glob,
+`*/papers/*/*`, which silently missed `runs_validation/c120/<stamp>/papers/…` — the only tree
+containing the defect — and reported `blocked = 0`, i.e. "never happens". It scanned 142 legs
+while 144 `final_mapped.json` exist and did not notice. Corrected to match on shape rather than
+depth and reconciled against an independent count. **The same fixed-depth assumption exists in
+other sprint tooling and has never been checked against a nested run family.**
