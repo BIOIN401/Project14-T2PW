@@ -1,0 +1,20 @@
+# POST-C-120 PWML VALIDATION -- 2026-09-08.
+#
+# A separately labelled validation of the C-120 identity-resolution merge.
+# NOT a benchmark. NOT a re-score of ORCH-724, ORCH-730 or ORCH-732; all three
+# remain read-only and none of their denominators may absorb these numbers.
+#
+# Two legs are the papers C-120 was chartered from, both blocked in ORCH-732 by
+# a single identity issue each. The third is an ORCH-732 SUCCESS, included as a
+# CONTROL: it must still produce a PWML. A control that regresses is the finding.
+#
+# One draw each. Strict only. NO favourable-draw retries -- a leg is re-run only
+# for an objectively invalid infrastructure execution.
+#
+# PMC7615680 is deliberately EXCLUDED. It failed on a degenerate 2-character
+# Stage-1 completion with finish_reason=stop, a separate provider/LLM reliability
+# class that C-120 does not touch and must not be confounded with.
+#
+PMC11487621  | coenzyme A biosynthesis   | Bacillus subtilis
+PMC10031235  | L-serine biosynthesis     | Homo sapiens
+PMC9544450   | menaquinone biosynthesis  | Escherichia coli

@@ -80,6 +80,11 @@ class _ArchivedTaxonomyClient:
         return self._Resp(text="")
 
 
+def _normalized(value: Any) -> str:
+    """Whitespace-collapsed, case-folded form, for comparing two payload names."""
+    return " ".join(str(value or "").split()).casefold()
+
+
 def _load(paper: str, name: str) -> Dict[str, Any]:
     with open(RUN / paper / "strict" / name, encoding="utf-8") as handle:
         return json.load(handle)
@@ -199,11 +204,24 @@ def part_b() -> Dict[str, Any]:
 
     # Reproduce the blocking gate on the pre-fallback payload, then apply the
     # identity the ladder now verifies and ask the same gate again.
+    #
+    # READ THIS BEFORE READING THE NUMBERS. The archived ``final_mapped.json`` is
+    # the payload AFTER the Unknown fallback already fired: ``proteins[1]`` is the
+    # PathBank 9659 sentinel and ``protein_complexes[1]`` is the "PSAT" wrapper
+    # built around it. The gate that actually blocked this leg ran EARLIER, on
+    # the pre-fallback payload, at ``post_normalization_contract_report`` --
+    # ``RESULT.txt`` records ``blocking_issues = 1``, ``gate_errors = 0``, the one
+    # issue being ``gate.protein_psat_is_missing_a_uniprot_or_drugbank_identifier
+    # @ /entities/proteins/1``.
+    #
+    # So the pre-fallback payload is RECONSTRUCTED here: the archived ``PSAT`` row
+    # is put back at ``proteins[1]`` **and** the wrapper the fallback built is
+    # removed, because production would never have built it had the identity
+    # verified. Reconstructing only the first half leaves a state that never
+    # existed -- a bare resolved PSAT beside a sentinel-backed complex -- and
+    # emits a ``component_protein_unresolved`` that is an artifact of the
+    # reconstruction, not a finding about the paper.
     payload = _load("PMC10031235", "final_mapped.json")
-    proteins = payload.get("entities", {}).get("proteins", [])
-    before = deepcopy(payload)
-    if len(proteins) > 1:
-        before["entities"]["proteins"][1] = deepcopy(psat)
 
     def _protein_errors(doc: Dict[str, Any]) -> List[Dict[str, Any]]:
         report = validate_required_pwml_contract(doc, strict_db=True)
@@ -213,6 +231,30 @@ def part_b() -> Dict[str, Any]:
             if isinstance(entry, dict) and "protein" in str(entry.get("code", ""))
         ]
 
+    # The baseline, so a reader can see what the untouched archive says.
+    out["gate_errors_unmodified_archive"] = [
+        {"code": entry.get("code"), "pointer": entry.get("pointer")}
+        for entry in validate_required_pwml_contract(payload, strict_db=True).get("errors", [])
+        if isinstance(entry, dict)
+    ]
+
+    def _reconstruct_pre_fallback(doc: Dict[str, Any]) -> Dict[str, Any]:
+        rebuilt = deepcopy(doc)
+        entities = rebuilt.setdefault("entities", {})
+        proteins = entities.get("proteins") or []
+        if len(proteins) > 1:
+            proteins[1] = deepcopy(psat)
+        entities["protein_complexes"] = [
+            row
+            for row in (entities.get("protein_complexes") or [])
+            if not (
+                isinstance(row, dict)
+                and _normalized(row.get("name")) == _normalized(psat.get("name"))
+            )
+        ]
+        return rebuilt
+
+    before = _reconstruct_pre_fallback(payload)
     out["gate_protein_errors_before"] = _protein_errors(before)
 
     after = deepcopy(before)
@@ -227,6 +269,10 @@ def part_b() -> Dict[str, Any]:
                 row["pathbank_protein_id"] = candidate.get("pathbank_protein_id")
     out["gate_protein_errors_after"] = _protein_errors(after)
     out["applied_identity"] = verified["accession"] if verified else None
+    out["reconstruction_note"] = (
+        "proteins[1] restored from gate_fail_report and the fallback's PSAT wrapper "
+        "removed; production would not have built that wrapper had the identity verified"
+    )
     return out
 
 
