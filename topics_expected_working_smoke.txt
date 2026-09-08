@@ -1,0 +1,45 @@
+# EXPECTED-WORKING-PWML-SMOKE -- 2026-09-07, ORCH-732.
+#
+# PURPOSE: a practical yield check, NOT a benchmark and NOT a re-score of anything.
+#   The only question: given reasonable pathway papers, does the current product
+#   actually write PWML files?
+# This is a NEW dataset with its own identity. Its numbers may never be merged into
+# the ORCH-724 pilot denominators, nor into the ORCH-730 validation.
+#
+# SUCCESS = a PWML on disk. release_ready is NOT required; pathway.review_required.pwml
+# counts as a usable output.
+#
+# SELECTION RULE (from the product owner): ordinary, well-characterized metabolic
+# pathways; explicit reaction descriptions; named enzymes; clear substrates and
+# products; bounded scope; organisms with strong UniProt/PathBank coverage.
+# NO adversarial papers. NO negative controls. NO organism traps. NO multi-organism
+# systems. NO review or omics-association papers.
+#
+# NO OVERLAP: every id below was checked against the 39 papers already used by
+# development, the gold set, the ORCH-724 unseen pilot and ORCH-730. No known
+# control is included -- the product owner did not ask for one.
+#
+# TOPIC EXCLUSIONS (used already, or a known trap):
+#   enterobactin, lipid A, heme (F-179 glycine->heme trap), cholesterol,
+#   molybdenum cofactor, terpenoid indole alkaloid, wall teichoic acid,
+#   pyoverdine, sphingolipid/ORMDL.
+#
+# REJECTED after abstract review, and why -- recorded so the selection is auditable:
+#   PMC12704756  biotin/BioE     -- Elizabethkingia + Chryseobacterium, rare pathogens,
+#                                   multi-organism. Fails the organism rule.
+#   PMC8303990   menaquinone     -- two lactobacilli plus synthetic operons and knockouts.
+#                                   Fails the multi-organism and constructs rules.
+#   PMC13181364  DHPS/DHFR       -- medicinal chemistry, not a pathway paper.
+#   PMC4504715   purine/glioma   -- omics association paper.
+#   PMC13361465  tryptophan      -- strain engineering, not pathway mechanism.
+#   PMC12657337  vitamin K2      -- ALREADY USED (exclusion set).
+#
+# Scope is MANDATORY. A bare pinned id stages a scopeless, invalid run: every
+# downstream reader sees an empty requested pathway. The scope strings below are
+# chosen to match each paper's own language, to avoid a Stage-0 scope_conflict.
+PMC9544450   | menaquinone biosynthesis  | Escherichia coli
+PMC4725005   | thiamine biosynthesis     | Escherichia coli
+PMC11487621  | coenzyme A biosynthesis   | Bacillus subtilis
+PMC12051542  | riboflavin biosynthesis   | Aquifex aeolicus
+PMC10031235  | L-serine biosynthesis     | Homo sapiens
+PMC7615680   | coenzyme Q biosynthesis   | Homo sapiens
