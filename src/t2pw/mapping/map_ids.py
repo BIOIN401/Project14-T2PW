@@ -3461,6 +3461,18 @@ def _species_alias_donors(rows: List[Any]) -> List[Dict[str, Any]]:
     load-bearing: such a row's ``taxonomy_id`` is a **strain-rank** id, and an
     abbreviated binomial is a **species-rank** reference, so the two are not
     interchangeable however confidently the binomials match.
+
+    **Known residual (REV-120 R1), accepted deliberately.** The flag reads the
+    donor's NAME, not the rank of its id. A row whose name is the bare
+    unqualified binomial but whose ``taxonomy_id`` is nonetheless strain-rank is
+    therefore *not* flagged, and tier 1 will lend that id to an abbreviation of
+    the same name. This fabricates nothing new: the payload already asserts, on
+    its own row, that the unqualified name carries that taxon, so the pass only
+    propagates an existing assertion to a synonym of that same unqualified name
+    -- and if the id is wrong, the payload was already exporting it under that
+    name. Detecting it would mean asking NCBI for the rank of the donor's id,
+    which tier 1 is required to be fully deterministic and offline and so may
+    not do.
     """
     donors: List[Dict[str, Any]] = []
     for row in rows:
