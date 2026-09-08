@@ -10251,3 +10251,85 @@ serializes as `review_required`, never `release_ready`. Full record:
 | REV-119 findings 5-8 | recorded, safe to carry. **Do not cite `test_no_archived_leg_becomes_release_ready` as the no-promotion proof — it is vacuous** |
 | biological review | **STILL OWED.** `PILOT-MANUAL-REVIEW.md`. Merging shipped two pathways no human has reviewed |
 | next | **STOP ENGINEERING.** Generate PWMLs deterministically, manual review, manuscript analysis |
+
+---
+
+## `C-120` — identity-resolution reliability. DISPATCHED · 2026-09-08
+
+Narrow product-owner unfreeze of production for **one** identity-resolution reliability card,
+justified by `ORCH-732`. Not authorization for general mapper refactoring. `D-090` is suspended
+for exactly the two seams below and for nothing else.
+
+Diagnosis committed at `e02c0308`: `evidence/c120_identity_replay.py`, cleanup report
+`evidence/g11/C-120/01-identity-replay.json` (`FINAL SURVIVING COUNT : 0`). Card:
+[`prompts/C-120.md`](prompts/C-120.md).
+
+### Both ORCH-732 identity failures were replayed through the production functions
+
+Neither is an inference. Both were measured on the archived `runs_smoke/2026-09-07_2323`
+payloads.
+
+**A — `PMC11487621`.** `final_stage3_gate_report.json` is **clean** (`errors: []`). The sole
+export blocker is `pwml_required_field_gate_report.json`, two errors, both on
+`/entities/species/1` = `B. subtilis`: `species_missing_taxonomy` and
+`species_missing_classification`.
+
+The third species row's malformed name is **produced by our own code**, not by the LLM:
+
+```
+_deterministic_species_name("Bacillus subtilis (strain 168)") -> "Bacillus subtilis (strain"
+_deterministic_species_name("Escherichia coli (strain K-12)") -> "Escherichia coli (strain"
+```
+
+`pwml/ir.py`'s rank-marker test compares a bracket-prefixed token against
+`_STRAIN_RANK_MARKERS` and never matches; the trailing strain-code stripper then eats `"168)"`
+and halts on `"(strain"`, leaving the bracket unbalanced. **General to the whole `(strain …)`
+family.** It is a name-quality defect, and it is *not* what blocked this export.
+
+**B — `PMC10031235`.** `PSAT` @ *Homo sapiens* had exactly one candidate and it was correct:
+PathBank `796`, gene `PSAT1`, `Q9Y617`, *Homo sapiens*, score `0.65`. Replayed through
+`verify_real_protein_identity`:
+
+```
+verified: false   reason: implausible_name_match   verification_status: rejected
+checks: {identifier_resolution: ok, candidate_evidence: ok, entity_type: ok,
+         species: ok, name: reject}
+name_gate: {verdict: reject, reason: no_shared_meaningful_token}
+```
+
+**Rungs 1–3 pass. Rung 4, the name gate, rejects**, because
+`_normalize_name("PSAT") != _normalize_name("PSAT1")` and the display name
+"Phosphoserine aminotransferase" shares no token with `PSAT`. Score (`0.65 ≥ 0.5`) and margin
+(no rival) are never reached.
+
+> **The ORCH-732 framing is corrected here.** No fallback overwrote an already-resolved
+> identity. The correct identity was **refused at rung 4**, after which
+> `pathbank_unknown_protein_fallback` fired legitimately as the terminal path and wrote the
+> literal `Unknown`. The invariant is satisfied by stopping rung 4 refusing a
+> species-consistent gene-symbol-family match — **not** by reordering or weakening the
+> fallback. This distinction is load-bearing: the opposite reading would have chartered a
+> change to the sentinel policy, which § 6 of the charter forbids.
+
+### Scope
+
+| seam | change |
+|---|---|
+| `pwml/ir.py::_deterministic_species_name` | bracket-aware strain truncation; never emit an unbalanced fragment |
+| `map_ids.py::backfill_species_taxonomy` | new fail-closed pass: an unresolved single-letter abbreviated binomial may reuse a confidently resolved in-payload taxon, or re-look-up the expanded binomial. Applied **only** to rows the existing loop leaves unresolved, so it is inert on everything that resolves today |
+| `map_ids.py::_name_gate_verdict` | one new `gene_symbol_family_identity` rescue, protein-only, beside the existing `exact_symbol_identity` rescue |
+
+**The species rung runs at position 3, before the name gate at position 4.** That ordering is
+why the new rescue cannot re-admit the human `P10515` candidate against a *Staphylococcus*
+request — it is rejected as `species_mismatch` before rung 4 is reached. The reviewer must
+confirm this rather than take it on trust.
+
+### State at this entry
+
+| item | state |
+|---|---|
+| integration | `e02c0308`, pushed, local = `origin` = `ls-remote` |
+| implementation branch | `card/C-120-identity-reliability` @ `760c6d72`, worktree `.claude/worktrees/c120-identity` |
+| production | **UNFROZEN for these two seams only.** Re-freezes on merge under a new decision |
+| protected `streamlit_app.py` | uncommitted, `sha256:47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632`, verified intact after the diagnosis commit |
+| G9 | base failures are **value** failures on existing symbols, provable at `760c6d72` |
+| review | independent review REQUIRED before merge; `PMC7615680`'s degenerate Stage-1 completion is a **separate** class and is out of scope |
