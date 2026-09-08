@@ -10333,3 +10333,26 @@ confirm this rather than take it on trust.
 | protected `streamlit_app.py` | uncommitted, `sha256:47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632`, verified intact after the diagnosis commit |
 | G9 | base failures are **value** failures on existing symbols, provable at `760c6d72` |
 | review | independent review REQUIRED before merge; `PMC7615680`'s degenerate Stage-1 completion is a **separate** class and is out of scope |
+
+---
+
+## `C-120` — MERGED, RE-FROZEN, VALIDATED · 2026-09-08
+
+Full record: [`C-120-VALIDATION-RESULT.md`](C-120-VALIDATION-RESULT.md) · `D-098` · `HANDOFF.md`.
+
+### State at this entry
+
+| item | state |
+|---|---|
+| `C-120` | **MERGED** `--no-ff` at `045447c8`; branch tip `be9ff3e1`; `src/` = exactly 2 files, 5 deleted lines |
+| `REV-120` | two rounds; round 1 `CORRECTION REQUIRED` (**B1**, a strain-rank taxon copied onto an unqualified abbreviation — reproduced by the integration authority before routing), round 2 **`APPROVE WITH FINDINGS`** |
+| production | **RE-FROZEN at `045447c8`.** `D-090` governs again in full. `D-096`'s `c7a0663e` superseded. No further change authorized |
+| validation | **1 PWML from 3 legs.** Mechanism B proved in production; mechanism A **never tested** (Stage-1 empty completion); **the control regressed on `F-192`, not on `C-120`** |
+| deliverable | `runs_validation/c120/2026-09-08_1240/papers/PMC10031235/strict/pathway.review_required.pwml`, 48,401 B — **UNTRACKED, single-disk**, same exposure as `F-187` |
+| `F-188`–`F-191` | registered by `REV-120`, **none fixed**. `F-188` accepted deliberately and recorded in the production docstring |
+| **`F-192`** | **the most valuable finding of the card, and NOT `C-120`'s.** A silent PWML-yield killer. **Population across archived runs NOT measured** — census before charter |
+| `F-193` | Stage-1 empty completion with `finish_reason=length`; a sub-class **distinct** from `PMC7615680`'s `finish_reason=stop`. Not chartered |
+| SMOKE | **508** post-merge. `C-120` delta = **0** |
+| gold-readers | **462 / 0 / 11 / 0** — the 3-test difference from the documented 465/0/8/0 is **environmental**, confirmed independently. Documented number NOT edited |
+| `F-185` | **NOT closed.** `C-120` fixed two members of the class; ORCH-725's Type-3 population is untouched |
+| next | **STOP ENGINEERING.** `F-192` census (read-only) · manual PathWhiz review of the 4 PWMLs now on disk · manuscript |

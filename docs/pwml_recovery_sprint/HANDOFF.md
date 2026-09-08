@@ -652,3 +652,150 @@ are **PRE-EXISTING**, A/B-proved by stashing the patch and re-running: both fail
 ### PRODUCTION IS RE-FROZEN
 
 `D-094` § 7. `D-090` governs again in full. **Do not continue into F-180/F-181 cleanup.**
+
+---
+
+## `C-120` — identity resolution reliability. MERGED, production RE-FROZEN, validated · 2026-09-08
+
+**Authority: `D-098`.** `D-090` stands again in full. Exactly one seam pair was opened and both
+are closed. `F-188` through `F-193` were registered; **none was fixed**.
+
+### Production files changed — the entire diff
+
+| file | change |
+|---|---|
+| `src/t2pw/pwml/ir.py` | `_deterministic_species_name` + 2 private helpers. Bracket-aware strain truncation |
+| `src/t2pw/mapping/map_ids.py` | `backfill_species_taxonomy` + 5 private helpers, and `_name_gate_verdict` + 1 |
+
+Plus `tests/test_c120_identity.py`, new, 42 tests. **Five deleted lines across `src/`.**
+`streamlit_app.py` is PROTECTED and was **read but never modified** — sha256
+`47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632`, unchanged from session start
+and verified after every commit. No gold, no cache, no run directory, no `main`.
+
+### The two rules
+
+1. **A species name may not be truncated into an unbalanced bracket fragment.** The rank-marker
+   test is bracket-aware, and any trailing token that would leave a bracket open is dropped down to
+   the genus+epithet floor.
+2. **A known identity may not be lost to representation.** An unresolved single-letter abbreviated
+   binomial may reuse a confidently resolved in-payload taxon, or re-look-up the expanded binomial
+   — fail-closed at every step, and applied **only** to rows the existing loop already left
+   unresolved, so it is inert on everything that resolves today. And a protein whose name is the
+   gene-symbol family stem of a species-consistent candidate is admitted at rung 4 instead of being
+   refused into the `Unknown` sentinel.
+
+### What was NOT touched
+
+`_REAL_PROTEIN_MIN_SCORE` · `_REAL_PROTEIN_MIN_MARGIN` · the species, score and margin rungs ·
+`_resolve_ambiguous_protein_candidates` · `pathbank_unknown_protein_fallback` and the sentinel
+policy · `reaction_support.py` (`F-179`) · `batch/driver.py` and `release_status.py` (`C-119`) ·
+`rag/admission.py` · `stage_contracts.py` · extraction prompts · Stage-1 retry policy · token
+budgets. **No biological gate was weakened. Both gates this card moved are lexical.**
+
+### THE CORRECTION THAT SHAPED THE CARD
+
+`ORCH-732` § 5.2 reads as *"a resolved protein degraded to Unknown"*, implying a fallback
+overwrote a good identity. **The replay shows it did not.** `PSAT` had exactly one candidate and
+it was correct; rungs 1-3 passed and **rung 4, the name gate, refused it** because
+`_normalize_name("PSAT") != _normalize_name("PSAT1")`. Score and margin were never reached. Only
+then did the Unknown fallback fire, as the legitimate terminal path.
+
+> **Measure the mechanism before chartering the fix.** The other reading would have chartered a
+> change to fallback ordering or to the Unknown-sentinel policy — both of which the charter § 6
+> forbids. The whole card turned on replaying the archived payload through the production
+> functions instead of trusting a prior report's framing.
+
+### Review — two rounds, and round 1 was right to refuse
+
+`REV-120` returned **`CORRECTION REQUIRED`** on **B1**: a **strain-rank** taxonomy id was copied
+onto an **unqualified** abbreviation whenever the strain-qualified row was the *sole* compatible
+donor. The tier fork keyed on donors *disagreeing* about an id — and a single donor disagrees with
+nobody. **The integration authority reproduced it independently before routing it**
+(`evidence/g11/C-120/21-b1-verify.json`) rather than acting on the report.
+
+Round 2 **`APPROVE WITH FINDINGS`** after the fix keyed on the donor's own rank and closed the
+class under 20 attacked donor shapes.
+
+### Gates
+
+focused **42** at tip / **9 failed, 33 passed** at base, every base failure a **value** comparison ·
+affected 7-file selection **217 / 3 skipped**, delta **0** · SMOKE **508** post-merge ·
+gold-readers **462 / 0 / 11 / 0**, identical at base and tip · **no pin moved** · G11 41 `C-120`
+reports plus the `REV-120` set, all committed, `check` exits 0 on both task ids, zero survivors on
+every job.
+
+**gold-readers is 462/0/11/0 here, not the documented 465/0/8/0.** Same total, 473. Three tests
+skip in a clean worktree because they `rglob` for ≥20 `final_mapped.json` that only the primary
+checkout's **uncommitted** run corpus supplies. **Environmental**, confirmed by an independent
+base-worktree run with byte-identical skip reasons. The documented number was **not** edited.
+
+### Post-merge validation — 1 PWML from 3 legs. Read this before quoting the card.
+
+Full record: [`C-120-VALIDATION-RESULT.md`](C-120-VALIDATION-RESULT.md).
+
+| paper | role | outcome |
+|---|---|---|
+| `PMC10031235` | mechanism B | **PWML, 48,401 B, `review_required`.** `PSAT` → `Q9Y617` via `gene_symbol_family_identity`; `Unknown` appears **zero** times in the file |
+| `PMC11487621` | mechanism A | **NULL.** Stage 1 returned three empty completions (`finish_reason=length`, `content_chars=0`); the leg never reached any `C-120` code |
+| `PMC9544450` | **CONTROL** | **REGRESSED** — on `F-192`, not on `C-120` |
+
+**Three things a successor must not misquote:**
+
+1. **Mechanism A has NO live production evidence.** Only the § 9 deterministic replay, which
+   proves the gate **predicates** and cannot produce a file. Do not write that `C-120` recovered
+   the *B. subtilis* pathway.
+2. **Leg 2 is not a same-payload A/B.** It drew 3 reactions where the archived leg had 6. The
+   identity is directly attributable — the `name_gate` reason names the new rule on the exact
+   entity that previously degraded — but **no yield claim follows from one leg.**
+3. **The control failure is `F-192`, and `C-120` is excluded on evidence**: the merge diff has zero
+   occurrences of `biological`, `_auto_state` or `element_location`; `src/t2pw/pipeline/` is
+   untouched; the same code in the same run produced 2 states and a PWML for `PMC10031235`; and the
+   new rung never fired on the failing leg. **Not claimed to be impossible** — one leg cannot prove
+   that.
+
+### `F-192` is the most valuable thing this card found, and it is NOT `C-120`'s
+
+`ensure_autostates` creates `__auto_state__` and assigns it to `element_location` rows — but a
+**later** `audit_repair` pass rewrites those rows without a `biological_state` and
+`ensure_autostates` is not re-run, so the quarantine sweep removes the state as unreferenced and
+the required-field gate fails with `no_biological_states`. **It only bites when Stage 1 emits no
+biological state of its own**, which is why the same paper exported in ORCH-732 and failed here.
+
+A **silent PWML-yield killer**, invisible to every gate until the last one, destroying a leg whose
+biology, identity and reaction support were all sound (`blocking_issues = 0`, `gate_errors = 0`,
+5 reactions, both enzymes resolved). **Its population across the archived runs has not been
+measured.** A read-only census — how many archived legs have zero Stage-1 `biological_states`, and
+how many of those failed on `no_biological_states` — should precede any charter.
+
+### Deliverable preserved for manual review
+
+```
+runs_validation/c120/2026-09-08_1240/papers/PMC10031235/strict/pathway.review_required.pwml
+```
+
+48,401 bytes, well-formed XML, `super-pathway-visualization` root. **UNTRACKED and resting on a
+single-disk artifact**, the same exposure `F-187` recorded. Back it up before relying on it.
+
+### PRODUCTION IS RE-FROZEN
+
+`D-098` § 9, at **`045447c86f1a0288ce87c444de4854b2eb2ef943`**. `D-090` governs again in full.
+**No further production change is authorized, and no second optimization card automatically
+follows.**
+
+### Traps this card paid for
+
+1. **A prior report's *framing* can be wrong even when its *facts* are right.** `ORCH-732`'s two
+   failure tables were accurate; its causal sentence about mechanism B was not, and it pointed at a
+   seam the charter forbids touching. Replay the payload; do not inherit the narrative.
+2. **A pinned-pytest artifact certifies which CHECKOUT, not which REVISION** — `F-191`. Base and
+   tip arms in one directory are indistinguishable, and this already produced one false measurement
+   inside this card. **Base arms now run in a physically separate worktree.**
+3. **Reproduce a blocking review finding yourself before routing it.** B1 was real; had it not
+   been, routing it unverified would have cost a correction round for nothing.
+4. **Reconstructing half a payload manufactures findings.** The first § 9 replay restored the
+   pre-fallback protein row but left the fallback's wrapper in place, and emitted an error that was
+   an artifact of the reconstruction. Corrected, with the unmodified archive's baseline recorded
+   beside it — and four residual findings in that replay are **still** artifacts and are labelled
+   as such.
+5. **A no-retry rule is only worth what it costs to keep.** Leg 1 never exercised the code under
+   test, which is the most tempting possible case for a re-run. It was not re-run.
