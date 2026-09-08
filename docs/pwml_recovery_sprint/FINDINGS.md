@@ -9878,3 +9878,53 @@ containing the defect — and reported `blocked = 0`, i.e. "never happens". It s
 while 144 `final_mapped.json` exist and did not notice. Corrected to match on shape rather than
 depth and reconciled against an independent count. **The same fixed-depth assumption exists in
 other sprint tooling and has never been checked against a nested run family.**
+
+---
+
+## `F-194` — the multi-example-review guard is all-or-nothing and non-deterministic
+
+**Class: `policy_disagreement`. Registered by the `ORCH-733` H/I/J adjudication. NOT chartered.**
+
+When Stage 0 detects a multi-example review with no selected example it emits
+
+```
+multi_example_review detected with no selected_example.
+Extraction skipped to prevent mixed-pathway output.
+```
+
+and **skips extraction entirely** — no scoped retry, no single-example fallback, no partial
+output. Contrast rung 3 of the extraction ladder, which exists precisely to offer *"narrower
+section-based extraction"*; this guard does not reach for it.
+
+**It is also non-deterministic on the same paper.** `PMC13278307` fired the guard on 3 legs across
+2 runs while `2026-07-28_0919/strict` extracted **14 canonical processes**; `PMC12444477` fired it
+once in the first run and never again, while `2026-07-28_0919/strict` extracted **29**.
+
+### Population — 7 legs, and only ONE is a defensible loss
+
+| paper | legs | verdict |
+|---|---:|---|
+| `PMC12444477` | 1 | **defensible loss.** Gold: `mechanistic_relevance: core`, *"the enzyme roster and reaction order are fully extractable"* |
+| `PMC13278307` | 3 | **UNADJUDICABLE, and deliberately not counted as a loss.** A review of mcr resistance genes, not in gold; the leg that "succeeded" shipped a bare `pathway.pwml` under the pre-`F-179` regime. A 14-reaction pathway from a resistance-gene review is plausibly the mixed-pathway output the guard exists to prevent |
+| `PMC12935629` ×2, `PMC12326985` ×1 | 3 | correct — never yielded a pathway in any run |
+
+### Disposition
+
+**REGISTERED, NOT CHARTERED.** One defensible loss does not clear the bar, production is re-frozen
+under `D-098`, and **merge rule 6 forbids weakening a biological gate to increase PWML
+production** — which is what relaxing this guard would risk.
+
+If it is ever chartered the shape is *"a multi-example review with no selected example should fall
+back to scoped single-example extraction, not to no extraction"*. **It must be measured against
+the `PMC13278307` question first**, because the guard may be preventing exactly the fabrication
+class `F-179` was written for. A biology review of that leg's 14 reactions is the precondition,
+not the code.
+
+### The larger finding this sits inside
+
+**11 of the 19 `H` legs are papers that are not pathway papers at all** — a resistome survey, a
+Fournier's-gangrene case report, a high-throughput screening strategy, a bioinformatics analysis.
+Stage 1 returning no `processes` container is the correct description of them. **The defect is
+acquisition, not extraction**, and `ORCH-732` § 2 reached the same conclusion from the staging
+side: the eligibility screen *"screens for pathway **terms**, so an inhibitor paper and an omics
+paper score well"*. That is a screening-criteria question for the product owner.

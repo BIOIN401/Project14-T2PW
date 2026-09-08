@@ -1,0 +1,1574 @@
+{
+ "summary": {
+  "reconciliation": {
+   "legs_discovered": 336,
+   "independent_artifact_counts": {
+    "RESULT.txt": 334,
+    "stage1_payload.json": 230,
+    "LEG_TRACE.jsonl": 72,
+    "extraction_boundary_report.json": 74,
+    "final_mapped.json": 144
+   },
+   "same_counts_via_discovered_legs": {
+    "RESULT.txt": 334,
+    "stage1_payload.json": 230,
+    "LEG_TRACE.jsonl": 72,
+    "extraction_boundary_report.json": 74,
+    "final_mapped.json": 144
+   },
+   "mismatches": {},
+   "reconciled": true
+  },
+  "leg_level": {
+   "legs_discovered": 336,
+   "legs_with_RESULT_txt": 334,
+   "legs_without_RESULT_txt": [
+    "runs/2026-07-27_2129/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+    "runs_verify/2026-08-21_1743/papers/PMC12444477/research"
+   ],
+   "legs_reaching_or_past_stage1": 332,
+   "terminal_stage1_failures": 49,
+   "distinct_papers_affected": 22,
+   "by_family": {
+    "runs": 26,
+    "runs_smoke": 1,
+    "runs_validation": 2,
+    "runs_verify": 20
+   },
+   "status_stage_matrix": {
+    "pass | research_report": 72,
+    "error | init": 56,
+    "fail | stage1": 48,
+    "scope_conflict | stage1": 48,
+    "fail | post_pipeline": 47,
+    "pass | pwml_export": 39,
+    "timeout | unknown": 12,
+    "fail | pwml_export": 7,
+    "error | post_pipeline": 2,
+    "timeout | input": 2,
+    "timeout | stage1": 1
+   }
+  },
+  "mechanism_table": {
+   "H_valid_json_missing_required_container": {
+    "terminal_legs": 19,
+    "papers": [
+     "PMC11946230__a-high-throughput-screening-strategy-for-lt-i-g",
+     "PMC12312563",
+     "PMC12452463",
+     "PMC12782028",
+     "PMC12898691__cladeoscope-gsa-revealing-evolutionary-associat",
+     "PMC12971581__ochrobactrum-anthropi-causing-fournier-s-gangre",
+     "PMC13139079__environmental-resistome-of-culturable-gram-nega",
+     "PMC13231680",
+     "PMC13231680__mechanistic-insights-into-phthalylsulfacetamide",
+     "PMC13233763__glycine-the-missing-link-between-carbohydrate-a",
+     "PMC13264790__comprehensive-bioinformatics-and-experimental-a",
+     "PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g"
+    ],
+    "paper_count": 12,
+    "stage1_attempts_in_those_legs": 4
+   },
+   "I_valid_extraction_zero_processes": {
+    "terminal_legs": 14,
+    "papers": [
+     "PMC12180156",
+     "PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th",
+     "PMC13231680"
+    ],
+    "paper_count": 3,
+    "stage1_attempts_in_those_legs": 30
+   },
+   "J_extraction_skipped_by_guard": {
+    "terminal_legs": 7,
+    "papers": [
+     "PMC12326985",
+     "PMC12444477__the-regulation-of-lipid-a-biosynthesis",
+     "PMC12935629__microbial-biofortification-of-fermented-foods-a",
+     "PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g"
+    ],
+    "paper_count": 4,
+    "stage1_attempts_in_those_legs": 0
+   },
+   "B_tiny_completion_stop": {
+    "terminal_legs": 4,
+    "papers": [
+     "PMC12444477",
+     "PMC12782028",
+     "PMC12856317",
+     "PMC7615680"
+    ],
+    "paper_count": 4,
+    "stage1_attempts_in_those_legs": 9
+   },
+   "C_truncated_json_length": {
+    "terminal_legs": 2,
+    "papers": [
+     "PMC12444477",
+     "PMC8510960"
+    ],
+    "paper_count": 2,
+    "stage1_attempts_in_those_legs": 6
+   },
+   "A_empty_completion_length": {
+    "terminal_legs": 1,
+    "papers": [
+     "PMC11487621"
+    ],
+    "paper_count": 1,
+    "stage1_attempts_in_those_legs": 3
+   },
+   "T_leg_timeout_not_stage1_delivery": {
+    "terminal_legs": 1,
+    "papers": [
+     "PMC12444477"
+    ],
+    "paper_count": 1,
+    "stage1_attempts_in_those_legs": 6
+   },
+   "D_malformed_json_not_truncated": {
+    "terminal_legs": 1,
+    "papers": [
+     "PMC12326985"
+    ],
+    "paper_count": 1,
+    "stage1_attempts_in_those_legs": 3
+   }
+  },
+  "attempt_level": {
+   "coverage_note": "LEG_TRACE.jsonl exists for a SUBSET of legs; this is not the whole corpus",
+   "legs_with_trace": 72,
+   "legs_total": 336,
+   "all_stages": {
+    "attempts": 2988,
+    "finish_stop": 1903,
+    "finish_length": 1081,
+    "finish_other": 4,
+    "status_counts": {
+     "ok": 2005,
+     "empty": 983
+    },
+    "empty_content": 983,
+    "tiny_content_1_200": 820,
+    "empty_and_length": 982,
+    "sizeable_and_length": 74
+   },
+   "stage1_only": {
+    "attempts": 116,
+    "finish_stop": 103,
+    "finish_length": 12,
+    "finish_other": 1,
+    "status_counts": {
+     "ok": 107,
+     "empty": 9
+    },
+    "empty_content": 9,
+    "tiny_content_1_200": 10,
+    "empty_and_length": 9,
+    "sizeable_and_length": 3
+   },
+   "stage1_content_char_buckets": {
+    "2001-10000": 54,
+    ">10000": 30,
+    "201-2000": 13,
+    "1-200": 10,
+    "0": 9
+   }
+  }
+ },
+ "terminal_stage1_legs": [
+  {
+   "path": "runs/2026-07-27_1623/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+   "paper": "PMC12444477__the-regulation-of-lipid-a-biosynthesis",
+   "mode": "strict",
+   "family": "runs",
+   "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+   "failure_kind": "ambiguous_review_scope",
+   "classification": {
+    "mechanism": "J_extraction_skipped_by_guard",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-27_1623/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/research",
+   "paper": "PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g",
+   "mode": "research",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include a processes object.",
+   "failure_kind": "llm",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-27_1623/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g",
+   "mode": "strict",
+   "family": "runs",
+   "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+   "failure_kind": "ambiguous_review_scope",
+   "classification": {
+    "mechanism": "J_extraction_skipped_by_guard",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_0919/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict",
+   "paper": "PMC13231680__mechanistic-insights-into-phthalylsulfacetamide",
+   "mode": "strict",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include a processes object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/research",
+   "paper": "PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g",
+   "mode": "research",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include a processes object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC11946230__a-high-throughput-screening-strategy-for-lt-i-g/research",
+   "paper": "PMC11946230__a-high-throughput-screening-strategy-for-lt-i-g",
+   "mode": "research",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include a processes object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC11946230__a-high-throughput-screening-strategy-for-lt-i-g/strict",
+   "paper": "PMC11946230__a-high-throughput-screening-strategy-for-lt-i-g",
+   "mode": "strict",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include a processes object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/strict",
+   "paper": "PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th",
+   "mode": "strict",
+   "family": "runs",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC12898691__cladeoscope-gsa-revealing-evolutionary-associat/research",
+   "paper": "PMC12898691__cladeoscope-gsa-revealing-evolutionary-associat",
+   "mode": "research",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include a processes object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC12898691__cladeoscope-gsa-revealing-evolutionary-associat/strict",
+   "paper": "PMC12898691__cladeoscope-gsa-revealing-evolutionary-associat",
+   "mode": "strict",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include a processes object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC12935629__microbial-biofortification-of-fermented-foods-a/research",
+   "paper": "PMC12935629__microbial-biofortification-of-fermented-foods-a",
+   "mode": "research",
+   "family": "runs",
+   "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+   "failure_kind": "ambiguous_review_scope",
+   "classification": {
+    "mechanism": "J_extraction_skipped_by_guard",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC12935629__microbial-biofortification-of-fermented-foods-a/strict",
+   "paper": "PMC12935629__microbial-biofortification-of-fermented-foods-a",
+   "mode": "strict",
+   "family": "runs",
+   "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+   "failure_kind": "ambiguous_review_scope",
+   "classification": {
+    "mechanism": "J_extraction_skipped_by_guard",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC12971581__ochrobactrum-anthropi-causing-fournier-s-gangre/research",
+   "paper": "PMC12971581__ochrobactrum-anthropi-causing-fournier-s-gangre",
+   "mode": "research",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include an entities object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC12971581__ochrobactrum-anthropi-causing-fournier-s-gangre/strict",
+   "paper": "PMC12971581__ochrobactrum-anthropi-causing-fournier-s-gangre",
+   "mode": "strict",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include an entities object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC13139079__environmental-resistome-of-culturable-gram-nega/research",
+   "paper": "PMC13139079__environmental-resistome-of-culturable-gram-nega",
+   "mode": "research",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include an entities object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC13139079__environmental-resistome-of-culturable-gram-nega/strict",
+   "paper": "PMC13139079__environmental-resistome-of-culturable-gram-nega",
+   "mode": "strict",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include an entities object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research",
+   "paper": "PMC13231680__mechanistic-insights-into-phthalylsulfacetamide",
+   "mode": "research",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include a processes object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/strict",
+   "paper": "PMC13233763__glycine-the-missing-link-between-carbohydrate-a",
+   "mode": "strict",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include an entities object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC13264790__comprehensive-bioinformatics-and-experimental-a/research",
+   "paper": "PMC13264790__comprehensive-bioinformatics-and-experimental-a",
+   "mode": "research",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include a processes object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC13264790__comprehensive-bioinformatics-and-experimental-a/strict",
+   "paper": "PMC13264790__comprehensive-bioinformatics-and-experimental-a",
+   "mode": "strict",
+   "family": "runs",
+   "message": "Extraction boundary failed: Payload must include a processes object.",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/research",
+   "paper": "PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g",
+   "mode": "research",
+   "family": "runs",
+   "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+   "failure_kind": "ambiguous_review_scope",
+   "classification": {
+    "mechanism": "J_extraction_skipped_by_guard",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-07-28_2122/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+   "paper": "PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g",
+   "mode": "strict",
+   "family": "runs",
+   "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+   "failure_kind": "ambiguous_review_scope",
+   "classification": {
+    "mechanism": "J_extraction_skipped_by_guard",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-08-02_2130/papers/PMC12312563/strict",
+   "paper": "PMC12312563",
+   "mode": "strict",
+   "family": "runs",
+   "message": "Extraction boundary failed and could not be recovered: 2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes",
+     "contract_failed_after_cleaning"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 1,
+    "finish_reasons": {
+     "stop": 1
+    },
+    "statuses": {
+     "ok": 1
+    },
+    "content_chars": [
+     2
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 1,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-08-02_2130/papers/PMC12452463/strict",
+   "paper": "PMC12452463",
+   "mode": "strict",
+   "family": "runs",
+   "message": "Extraction boundary failed and could not be recovered: 2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes",
+     "contract_failed_after_cleaning"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 1,
+    "finish_reasons": {
+     "stop": 1
+    },
+    "statuses": {
+     "ok": 1
+    },
+    "content_chars": [
+     2
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 1,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-08-02_2130/papers/PMC12782028/research",
+   "paper": "PMC12782028",
+   "mode": "research",
+   "family": "runs",
+   "message": "Extraction boundary failed and could not be recovered: 2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes",
+     "contract_failed_after_cleaning"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 1,
+    "finish_reasons": {
+     "stop": 1
+    },
+    "statuses": {
+     "ok": 1
+    },
+    "content_chars": [
+     2
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 1,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs/2026-08-02_2130/papers/PMC13231680/research",
+   "paper": "PMC13231680",
+   "mode": "research",
+   "family": "runs",
+   "message": "Extraction boundary failed and could not be recovered: 1 post-extraction contract error(s) remain (first: processes_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row",
+   "failure_kind": "contract",
+   "classification": {
+    "mechanism": "H_valid_json_missing_required_container",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes",
+     "contract_failed_after_cleaning"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 1,
+    "finish_reasons": {
+     "stop": 1
+    },
+    "statuses": {
+     "ok": 1
+    },
+    "content_chars": [
+     1653
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_smoke/2026-09-07_2323/papers/PMC7615680/strict",
+   "paper": "PMC7615680",
+   "mode": "strict",
+   "family": "runs_smoke",
+   "message": "Extraction failed: Chunk 1 failed to produce valid JSON.",
+   "failure_kind": "unknown",
+   "classification": {
+    "mechanism": "B_tiny_completion_stop",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "LEG_TRACE",
+    "stage1_attempts_seen": 2,
+    "finish_reasons": {
+     "stop": 2
+    },
+    "statuses": {
+     "ok": 2
+    },
+    "content_chars": [
+     2,
+     2
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 2,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": [
+     "identical_empty_response"
+    ]
+   }
+  },
+  {
+   "path": "runs_validation/2026-09-07_1929/papers/PMC8510960/strict",
+   "paper": "PMC8510960",
+   "mode": "strict",
+   "family": "runs_validation",
+   "message": "Extraction failed: Chunk 2 failed to produce valid JSON.",
+   "failure_kind": "unknown",
+   "classification": {
+    "mechanism": "C_truncated_json_length",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "invalid_json",
+     "semantic_guard_failed",
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "LEG_TRACE",
+    "stage1_attempts_seen": 4,
+    "finish_reasons": {
+     "length": 2,
+     "stop": 2
+    },
+    "statuses": {
+     "ok": 3,
+     "empty": 1
+    },
+    "content_chars": [
+     0,
+     1159,
+     1267,
+     9501
+    ],
+    "empty_length_attempts": 1,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 1,
+    "looks_truncated_json": true,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_validation/c120/2026-09-08_1240/papers/PMC11487621/strict",
+   "paper": "PMC11487621",
+   "mode": "strict",
+   "family": "runs_validation",
+   "message": "Extraction failed: Chunk 1 failed to produce valid JSON.",
+   "failure_kind": "unknown",
+   "classification": {
+    "mechanism": "A_empty_completion_length",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "empty_completion",
+     "invalid_json"
+    ],
+    "attempt_source": "LEG_TRACE",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "length": 3
+    },
+    "statuses": {
+     "empty": 3
+    },
+    "content_chars": [
+     0,
+     0,
+     0
+    ],
+    "empty_length_attempts": 3,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": [
+     "empty_after_retries",
+     "identical_empty_response"
+    ]
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-04_1306/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "ok"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "stop": 3
+    },
+    "statuses": {
+     "ok": 3
+    },
+    "content_chars": [
+     2378,
+     4155,
+     5562
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-04_1754/papers/PMC12782028/strict",
+   "paper": "PMC12782028",
+   "mode": "strict",
+   "family": "runs_verify",
+   "message": "Extraction failed: Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.",
+   "failure_kind": "unknown",
+   "classification": {
+    "mechanism": "B_tiny_completion_stop",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 2,
+    "finish_reasons": {
+     "stop": 2
+    },
+    "statuses": {
+     "ok": 2
+    },
+    "content_chars": [
+     2,
+     2
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 2,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-21_1743/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "mode": "strict",
+   "family": "runs_verify",
+   "message": "Extraction failed: Chunk 1 failed to produce valid JSON.",
+   "failure_kind": "unknown",
+   "classification": {
+    "mechanism": "C_truncated_json_length",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "invalid_json",
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 2,
+    "finish_reasons": {
+     "length": 2
+    },
+    "statuses": {
+     "ok": 2
+    },
+    "content_chars": [
+     40537,
+     60802
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 2,
+    "looks_truncated_json": true,
+    "terminal_reason": [
+     "attempt_cap_reached"
+    ]
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-21_2239/papers/PMC13231680/research",
+   "paper": "PMC13231680",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "stop": 3
+    },
+    "statuses": {
+     "ok": 3
+    },
+    "content_chars": [
+     1510,
+     1680,
+     4758
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-21_2239/papers/PMC13231680/strict",
+   "paper": "PMC13231680",
+   "mode": "strict",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "stop": 3
+    },
+    "statuses": {
+     "ok": 3
+    },
+    "content_chars": [
+     1160,
+     1467,
+     2367
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-22_2147/papers/PMC12444477/strict",
+   "paper": "PMC12444477",
+   "mode": "strict",
+   "family": "runs_verify",
+   "message": "audit and DB mapping did not finish inside the time budget",
+   "failure_kind": "timeout",
+   "classification": {
+    "mechanism": "T_leg_timeout_not_stage1_delivery",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "ok",
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 6,
+    "finish_reasons": {
+     "stop": 6
+    },
+    "statuses": {
+     "ok": 6
+    },
+    "content_chars": [
+     729,
+     2741,
+     11024,
+     13613,
+     15180,
+     22795
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-24_1203/papers/PMC13231680/research",
+   "paper": "PMC13231680",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "stop": 3
+    },
+    "statuses": {
+     "ok": 3
+    },
+    "content_chars": [
+     826,
+     831,
+     1558
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-24_1428/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "ok"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "stop": 3
+    },
+    "statuses": {
+     "ok": 3
+    },
+    "content_chars": [
+     2463,
+     2656,
+     3805
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-24_1428/papers/PMC13231680/research",
+   "paper": "PMC13231680",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "stop": 3
+    },
+    "statuses": {
+     "ok": 3
+    },
+    "content_chars": [
+     360,
+     776,
+     1634
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-24_1428/papers/PMC13231680/strict",
+   "paper": "PMC13231680",
+   "mode": "strict",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "stop": 3
+    },
+    "statuses": {
+     "ok": 3
+    },
+    "content_chars": [
+     729,
+     1166,
+     1198
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-25_1216/papers/PMC12856317/research",
+   "paper": "PMC12856317",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "Extraction failed: Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts. The escalation ladder issued 2 model attempt(s) of a permitted 3; stop reason: identical_empty_response.",
+   "failure_kind": "unknown",
+   "classification": {
+    "mechanism": "B_tiny_completion_stop",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 2,
+    "finish_reasons": {
+     "stop": 2
+    },
+    "statuses": {
+     "ok": 2
+    },
+    "content_chars": [
+     2,
+     2
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 2,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": [
+     "identical_empty_response"
+    ]
+   }
+  },
+  {
+   "path": "runs_verify/2026-08-28_1816/papers/PMC13231680/strict",
+   "paper": "PMC13231680",
+   "mode": "strict",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "ok"
+    ],
+    "attempt_source": "boundary_attempt_log",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "stop": 3
+    },
+    "statuses": {
+     "ok": 3
+    },
+    "content_chars": [
+     300,
+     1959,
+     3595
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-09-01_1612/papers/PMC13231680/research",
+   "paper": "PMC13231680",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "ok"
+    ],
+    "attempt_source": "LEG_TRACE",
+    "stage1_attempts_seen": 1,
+    "finish_reasons": {
+     "stop": 1
+    },
+    "statuses": {
+     "ok": 1
+    },
+    "content_chars": [
+     2856
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-09-01_1612/papers/PMC13231680/strict",
+   "paper": "PMC13231680",
+   "mode": "strict",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "LEG_TRACE",
+    "stage1_attempts_seen": 1,
+    "finish_reasons": {
+     "stop": 1
+    },
+    "statuses": {
+     "ok": 1
+    },
+    "content_chars": [
+     1724
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-09-02_2052/papers/PMC12180156/research",
+   "paper": "PMC12180156",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "ok"
+    ],
+    "attempt_source": "LEG_TRACE",
+    "stage1_attempts_seen": 1,
+    "finish_reasons": {
+     "stop": 1
+    },
+    "statuses": {
+     "ok": 1
+    },
+    "content_chars": [
+     3223
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-09-02_2052/papers/PMC12444477/research",
+   "paper": "PMC12444477",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "Extraction failed: Chunk 2 failed to produce valid JSON.",
+   "failure_kind": "unknown",
+   "classification": {
+    "mechanism": "B_tiny_completion_stop",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "ok",
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "LEG_TRACE",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "stop": 3
+    },
+    "statuses": {
+     "ok": 3
+    },
+    "content_chars": [
+     2,
+     2,
+     16527
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 2,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": [
+     "identical_empty_response"
+    ]
+   }
+  },
+  {
+   "path": "runs_verify/2026-09-02_2052/papers/PMC13231680/research",
+   "paper": "PMC13231680",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "LEG_TRACE",
+    "stage1_attempts_seen": 2,
+    "finish_reasons": {
+     "stop": 2
+    },
+    "statuses": {
+     "ok": 2
+    },
+    "content_chars": [
+     2,
+     1653
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 1,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-09-02_2052/papers/PMC13231680/strict",
+   "paper": "PMC13231680",
+   "mode": "strict",
+   "family": "runs_verify",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "failure_kind": "no_reactions",
+   "classification": {
+    "mechanism": "I_valid_extraction_zero_processes",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "LEG_TRACE",
+    "stage1_attempts_seen": 1,
+    "finish_reasons": {
+     "stop": 1
+    },
+    "statuses": {
+     "ok": 1
+    },
+    "content_chars": [
+     1653
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-09-06_1425/papers/PMC12326985/research",
+   "paper": "PMC12326985",
+   "mode": "research",
+   "family": "runs_verify",
+   "message": "Extraction failed: Chunk 2 failed to produce valid JSON.",
+   "failure_kind": "unknown",
+   "classification": {
+    "mechanism": "D_malformed_json_not_truncated",
+    "boundary_report_present": true,
+    "boundary_outcomes": [
+     "valid_json_zero_processes"
+    ],
+    "attempt_source": "LEG_TRACE",
+    "stage1_attempts_seen": 3,
+    "finish_reasons": {
+     "stop": 3
+    },
+    "statuses": {
+     "ok": 3
+    },
+    "content_chars": [
+     1278,
+     1299,
+     1538
+    ],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  },
+  {
+   "path": "runs_verify/2026-09-06_1425/papers/PMC12326985/strict",
+   "paper": "PMC12326985",
+   "mode": "strict",
+   "family": "runs_verify",
+   "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+   "failure_kind": "ambiguous_review_scope",
+   "classification": {
+    "mechanism": "J_extraction_skipped_by_guard",
+    "boundary_report_present": false,
+    "boundary_outcomes": [],
+    "attempt_source": "none",
+    "stage1_attempts_seen": 0,
+    "finish_reasons": {},
+    "statuses": {},
+    "content_chars": [],
+    "empty_length_attempts": 0,
+    "tiny_stop_attempts": 0,
+    "sizeable_length_attempts": 0,
+    "looks_truncated_json": false,
+    "terminal_reason": []
+   }
+  }
+ ]
+}
