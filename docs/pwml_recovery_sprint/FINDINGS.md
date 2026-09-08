@@ -9601,3 +9601,107 @@ product-owner decision, not an engineering one. Three honest options, for the re
 **Do not treat option 2 as a formality.** A re-run is a new draw: it may not reproduce the
 payload C-119 was measured on, and `PMC12452463`'s two disagreeing archives are the standing
 warning about exactly that.
+
+---
+
+## `F-188` — the species alias donor's rank is read from its NAME, not from its taxonomy id
+
+**Class: `policy_disagreement`. Registered by `REV-120` R1, ACCEPTED deliberately under `D-098`,
+recorded in the production docstring itself.**
+
+`map_ids.py::_species_alias_donors` flags a donor `rank_qualified` when `_STRAIN_SUFFIX_RE` fires
+on its name or when `_normalize_name(_binomial_from_organism(name)) != _normalize_name(name)`.
+Both tests read the **name**. A row whose name is the bare unqualified binomial but whose
+`taxonomy_id` is nonetheless **strain-rank** is therefore not flagged, and tier 1 lends that id to
+an abbreviation of the same name:
+
+```python
+[{"name": "Bacillus subtilis", "taxonomy_id": "224308", "classification": "Prokaryote"},
+ {"name": "B. subtilis"}]        # -> B. subtilis takes 224308
+```
+
+**Why it is accepted rather than fixed.** It fabricates nothing new. The payload already asserts,
+on its own row, that the unqualified name *Bacillus subtilis* carries taxon `224308`; the pass
+propagates that existing assertion to a synonym of the very same unqualified name. If the id is
+wrong, the payload was already shipping it under that name and PWML was already exporting it.
+
+**This is categorically different from `REV-120` B1, which was BLOCKING and was fixed.** B1 took
+an id attached to a name that *explicitly said* "strain 168" and re-attached it to a name that
+says no such thing. `F-188` re-states a claim the payload had already made.
+
+**Why it is not fixable inside the tier's charter.** Detecting it requires asking NCBI for the
+**rank** of the donor's id — a network call, inside a tier `C-120` requires be fully deterministic
+and offline. It is not detectable from the payload by any deterministic means.
+
+---
+
+## `F-189` — the gene-symbol-family rescue's organism guard is inert when the candidate names no organism
+
+**Class: `policy_disagreement`. Registered by `REV-120` R1. NOT chartered. Defence-in-depth only.**
+
+`map_ids.py::_name_gate_verdict`'s new rescue tests `_uniprot_organism_matches` only when **both**
+the request and the candidate row name an organism; `organism_agrees` otherwise defaults `True`.
+Measured in isolation: entity `DltA` @ *S. aureus* against a candidate carrying
+`gene_name "DLTA1"` and **no** `organism` returns `reject` at base and **`keep`** at tip.
+
+**Unreachable in production.** `verify_real_protein_identity`'s species rung is position 3 and
+returns `identity_evidence_missing` on `species: unknown` before the name gate at position 4; the
+other two `_name_gate_verdict` call sites cannot pass `kind="protein"`. Measured identical at base
+and tip through the full ladder.
+
+It matches the card's own wording and mirrors the pre-existing alias rescue, which has the same
+shape. Recorded so a future card that changes the ladder's ordering knows this guard is not
+load-bearing on its own.
+
+---
+
+## `F-190` — the margin rung's rival scan does not know about the gene-symbol-family rescue
+
+**Class: `policy_disagreement`. Registered by `REV-120` R1. NOT chartered — the charter forbids
+touching the margin rung.**
+
+The rival filter inside `verify_real_protein_identity` admits a rival only when it shares a
+meaningful token with the entity name **or** exactly matches one of its symbols. A rival that the
+new family rescue *would* verify is therefore not counted as a rival, so the margin is computed
+against a smaller field than the ladder would now accept. This **widens a pre-existing asymmetry**
+in the permissive direction; it does not create one.
+
+**The backstop holds.** `_resolve_ambiguous_protein_candidates` re-runs the **full** ladder per
+candidate, so it does see the rescue: two candidates with different accessions both verifying
+yields `multiple_candidates_passed_identity_verification` and nothing ships.
+
+**Do not fix this under a card that has not been authorized to touch the margin rung.**
+
+---
+
+## `F-191` — a pinned-pytest artifact certifies WHICH CHECKOUT, not WHICH REVISION
+
+**Class: `product_contract_violation` against `TEST_MATRIX.md` § 0 rule 10's intent. Registered by
+`REV-120` R2. Process finding; the standing practice is changed by `D-098` § 8.**
+
+`c045_pinned_pytest.py` proves, from inside the pytest process, that the imported `t2pw` resolves
+inside the tree under measurement, and writes a pin verdict. **It says nothing about which commit
+that tree was on.** A base arm and a tip arm run in the same directory therefore produce
+artifacts that are **indistinguishable** — same `expect-tree`, same `cwd`, same resolved
+`t2pw.__file__`, same `T2PW:` line.
+
+**This is not theoretical; it has already produced a false measurement.** During `C-120` an agent
+ran `git checkout HEAD -- src/` to return from a base A/B while `HEAD` was still the *pre-fix*
+commit, silently reverting the fix. Report `evidence/g11/C-120/28-focused-tip-r3.json` was
+therefore measured against **unfixed production** while carrying a tip-shaped label and a valid
+pin verdict. It was caught only because the numbers looked wrong, and was disclosed unprompted.
+
+`REV-120` corroborated the boundary from artifact **timestamps** — `0ac96def` committed
+18:19:55 UTC, reports `21`-`29` started 18:13:58-18:18:46, reports `30`-`36` at 18:20:09-18:22:50
+— and independently reproduced report `28`'s `4 failed / 38 passed` by running the final test file
+against unfixed production. **Timestamps corroborate; they do not prove.**
+
+### Disposition
+
+**Standing practice, effective immediately (`D-098` § 8): base arms run in a physically separate
+worktree.** A worktree at a different SHA gives a different `expect-tree` and a different resolved
+path, so the artifacts become distinguishable without any tooling change.
+
+**The tooling fix is registered, not chartered:** record the measured tree's `git rev-parse HEAD`
+and worktree-dirty state in the pin verdict. That is a change to sprint orchestration tooling, not
+to `src/`, and no card owns that file today.

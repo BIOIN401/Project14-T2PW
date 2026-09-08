@@ -6301,3 +6301,193 @@ made load-bearing. A rule meant for credentials hid part of the run's configurat
 `build_bundle.py` matches credential-bearing names explicitly (`API_KEY`, `PASSWORD`,
 `SECRET`, `ACCESS_TOKEN`, `AUTH_TOKEN`) and records the budgets in full. **No secret value is
 recorded anywhere in the bundle** — credentials remain presence-plus-length only.
+
+---
+
+## D-098 — `C-120` MERGED on `REV-120`'s `APPROVE WITH FINDINGS`; PRODUCTION RE-FROZEN at `045447c8`; `F-188` registered, NOT fixed · 2026-09-08 · LOCKED
+
+**Authority.** The product owner's narrow unfreeze for **one identity-resolution reliability
+card**, justified by `ORCH-732`. `D-090` was suspended for exactly two seams and is now restored
+in full. Exactly one seam pair was opened and both are closed again.
+
+### 1. What was merged
+
+Merge commit **`045447c86f1a0288ce87c444de4854b2eb2ef943`**, `--no-ff`, three commits on base
+`760c6d72`. `src/` is exactly **two** files.
+
+| file | function | change |
+|---|---|---|
+| `src/t2pw/pwml/ir.py` | `_deterministic_species_name` | bracket-aware strain truncation |
+| `src/t2pw/mapping/map_ids.py` | `backfill_species_taxonomy` | one fail-closed alias-reuse pass |
+| `src/t2pw/mapping/map_ids.py` | `_name_gate_verdict` | one `gene_symbol_family_identity` rescue |
+
+Plus `tests/test_c120_identity.py`, new, 42 tests. **Five deleted lines across `src/`**, all
+five inspected by the reviewer.
+
+### 2. The two mechanisms, as MEASURED — and one correction to the `ORCH-732` record
+
+Both were replayed through the production functions on the archived `ORCH-732` payloads before
+any code was written (`evidence/c120_identity_replay.py`).
+
+**A.** `_deterministic_species_name("Bacillus subtilis (strain 168)")` returned
+`"Bacillus subtilis (strain"`. The rank-marker test compared a **bracket-prefixed** token against
+`_STRAIN_RANK_MARKERS` and never matched; the trailing strain-code stripper then consumed `"168)"`
+and halted on `"(strain"`. General to the whole `(strain …)` family —
+`"Escherichia coli (strain K-12)"` truncated identically. The malformed name is **produced by our
+own code**, not by the LLM.
+
+`PMC11487621`'s `final_stage3_gate_report.json` was **clean**. Its sole export blocker was
+`pwml_required_field_gate_report.json`, two errors, both on `/entities/species/1` = `B. subtilis`.
+
+**B — this corrects `ORCH-732` § 5.2.** That report reads as *"a resolved protein degraded to
+Unknown"*, implying a fallback overwrote a good identity. **It did not.** `PSAT` @ *Homo sapiens*
+had exactly one candidate and it was correct — PathBank `796`, gene `PSAT1`, `Q9Y617`,
+*Homo sapiens*, score `0.65`. The replayed verdict:
+
+```
+verified: false   reason: implausible_name_match   verification_status: rejected
+checks: {identifier_resolution: ok, candidate_evidence: ok, entity_type: ok,
+         species: ok, name: reject}
+name_gate: {verdict: reject, reason: no_shared_meaningful_token}
+```
+
+Rungs 1-3 pass. **Rung 4, the name gate, refuses**, because
+`_normalize_name("PSAT") != _normalize_name("PSAT1")` and the display name
+*"Phosphoserine aminotransferase"* shares no token with `PSAT`. Score (`0.65 ≥ 0.5`) and margin
+(no rival) are **never reached**. Only then does `pathbank_unknown_protein_fallback` fire, as the
+legitimate terminal path, writing the literal `Unknown`.
+
+> **The distinction is load-bearing and is why this card did not touch the sentinel.** The other
+> reading would have chartered a change to fallback ordering or to the Unknown-sentinel policy,
+> which the charter § 6 forbids. `PMC10031235`'s `RESULT.txt` records `blocking_issues = 1`,
+> `gate_errors = 0` — one issue, the identity.
+
+### 3. What was NOT changed
+
+Bit-for-bit unchanged, verified from the diff's five deleted lines rather than from a report:
+`_REAL_PROTEIN_MIN_SCORE` · `_REAL_PROTEIN_MIN_MARGIN` · the species rung · the score rung · the
+margin rung · `_names_share_meaningful_token` · `_name_gate_tokens` · `_candidate_display_names` ·
+`_candidate_symbol_names` · `_resolve_ambiguous_protein_candidates` ·
+`pathbank_unknown_protein_fallback` and the sentinel policy · `reaction_support.py` (`F-179`) ·
+`batch/driver.py` and `release_status.py` (`C-119`) · `rag/admission.py` (`C-118`) ·
+`stage_contracts.py`.
+
+**No biological gate was weakened.** Both gates this card moves are **lexical**.
+
+**The ordering that makes it safe.** The species rung is position **3** of
+`verify_real_protein_identity`; the name gate is position **4**. All three `_name_gate_verdict`
+call sites were read: `map_ids.py:5341` sits directly after the species rung, which returns on
+both `mismatch` and `unknown`; `:5601` and `:5830` are behind `if kind == "protein": … return` and
+are compounds-only, and the new rescue is additionally guarded on `kind == "protein"`. **No path
+that decides a protein identity reaches the name gate without a preceding species check**, so the
+human `P10515` candidate against a *Staphylococcus aureus* request is still refused as
+`species_mismatch` — measured identical at base and tip.
+
+### 4. Review — two rounds, and the first one was right to refuse
+
+**Round 1: `CORRECTION REQUIRED`.** `REV-120` found **B1**: a **strain-rank** taxonomy id was
+copied onto an **unqualified** abbreviation whenever the strain-qualified row was the *sole*
+compatible donor. The tier-1/tier-2 fork keyed on whether donors *disagreed* on an id, not on
+whether a donor was itself rank-qualified — and a single donor disagrees with nobody. The
+integration authority reproduced it independently before routing it
+(`evidence/g11/C-120/21-b1-verify.json`) rather than accepting the report.
+
+That is a **fabricated biological claim** — a species-rank name shipped with a strain-rank taxon
+no source asserted — which then *satisfies* `pwml_required_field_gate` and exports. Not
+hypothetical: in the real `PMC11487621` payload the `224308` row came from PathBank sp. 100 via
+`gap_resolver_llm` while the plain binomial came from NCBI backfill.
+
+**Round 2: `APPROVE WITH FINDINGS`.** The fix keys on the donor's own rank and closed the class,
+not the instance: 20 attacked donor shapes — regex-detected, reduction-detected, `168`, `natto`,
+`2`, nbsp, en-dash, trailing punctuation, `Candidatus …` — all refuse offline.
+
+### 5. `F-188` — REGISTERED, NOT FIXED, and deliberately accepted
+
+**`F-188` (`policy_disagreement`).** The `rank_qualified` flag reads the donor's **name**, not the
+rank of its **id**. A row whose name is the bare unqualified binomial but whose `taxonomy_id` is
+nonetheless strain-rank is not flagged, and tier 1 lends that id to an abbreviation of the same
+name.
+
+Accepted, for reasons recorded **in the code itself**: it fabricates nothing new — the payload
+already asserts on its own row that the unqualified name carries that taxon, so the pass
+propagates an existing assertion to a synonym of that same unqualified name, and if the id is
+wrong the payload was already exporting it under that name. Detecting it would require asking
+NCBI for the rank of the donor's id, inside a tier required to be deterministic and offline.
+
+Also registered, **not** chartered:
+
+* **`F-189`** — the family rescue's organism guard is inert when the candidate row names no
+  organism. **Unreachable in production**: the ladder's species rung returns
+  `identity_evidence_missing` on `species: unknown` before rung 4, and the other two gate call
+  sites cannot pass `kind="protein"`. Loss of defence-in-depth only.
+* **`F-190`** — the margin rung's rival scan filters rivals on shared-token or exact-symbol only,
+  so a rival the new rescue would verify is not counted as a rival. Widens a **pre-existing**
+  asymmetry in the permissive direction. `_resolve_ambiguous_protein_candidates` re-runs the full
+  ladder per candidate and is the fail-closed backstop. The charter forbids touching the margin
+  rung; **do not fix under this card**.
+
+### 6. Gates
+
+| gate | result |
+|---|---|
+| focused `test_c120_identity.py` | **42 passed** at tip; **9 failed / 33 passed** at base, every base failure a **value** comparison — no `KeyError`/`ImportError`/`AttributeError` |
+| affected 7-file selection | **217 passed / 3 skipped** at base **and** tip. **Delta 0** |
+| SMOKE, 22 files | **508**, post-merge on the integration tree (merge gate 10) |
+| gold-readers, 22 files | **462 / 0 / 11 / 0**, identical at base and tip |
+| pins moved | **none** |
+| G11 | 41 `C-120` reports + the `REV-120` set, all committed, `check` exits 0 on both task ids; every job `FINAL SURVIVING COUNT : 0` |
+
+**The gold-readers number is 462/0/11/0 here, not the documented 465/0/8/0.** Same total, 473.
+Three tests skip in a clean worktree — `test_c081_cofactor_role_identity.py:575` and
+`test_c089_participant_schema.py:357`/`:385` — because they `rglob` for `final_mapped.json` and
+need ≥20, which only the primary checkout's **uncommitted** `runs_smoke/`/`runs_validation/`
+supply. Confirmed **environmental** by an independent base-worktree run with byte-identical skip
+reasons. **Not attributable to this diff**, and the documented number was not edited.
+
+### 7. `G9`
+
+Both headline proofs were re-derived by the reviewer independently of the branch's own tests, at
+base and at tip:
+
+| probe | base `760c6d72` | tip |
+|---|---|---|
+| `_deterministic_species_name("Bacillus subtilis (strain 168)")` | `'Bacillus subtilis (strain'` | `'Bacillus subtilis'` |
+| `_name_gate_verdict("PSAT", …)` | `reject` / `no_shared_meaningful_token` | `keep` / `gene_symbol_family_identity` |
+| `verify_real_protein_identity` | `verified=false`, `implausible_name_match` | `verified=true`, all six rungs `ok` |
+
+Every test labelled a **safety regression passes at base** — those properties genuinely pre-exist
+and are now pinned, rather than manufactured. The alias-reuse pass is new capability and is
+labelled `NEW ACCEPTANCE TEST`; the correction round's four tests fail against the **defective**
+tip `05614c21` with the defect's own values, which is a stronger proof than the base arm.
+
+### 8. Process findings carried forward
+
+* **`F-191` (process).** `c045_pinned_pytest.py` certifies **which checkout**, not **which
+  revision**. Base and tip arms run in one directory therefore produce **indistinguishable**
+  artifacts. That is exactly what let a `git checkout HEAD -- src/` silently revert a fix and be
+  measured as a result (`C-120` report `28`). **Standing practice from here: base arms run in a
+  physically separate worktree.** The reviewer re-measured every gate in three separate trees, so
+  the merge is unaffected.
+* Superseded and measurement-failure reports were **kept, not tidied away** — `C-120` `02` and
+  `REV-120` `07` are exit-98 `T2PW_MEASUREMENT_TREE_REFUSED`; `C-120` `22`-`29` predate the
+  correction commit. Only `30`-`41` are scored.
+
+### 9. PRODUCTION IS RE-FROZEN
+
+**Frozen at `045447c86f1a0288ce87c444de4854b2eb2ef943`.** `D-090` governs again in full;
+`D-096`'s `c7a0663e` is superseded. **No further production change is authorized.**
+
+**No second optimization card automatically follows.** `PMC7615680`'s degenerate 2-character
+Stage-1 completion (`finish_reason=stop`) is a separate provider/LLM reliability class and is
+**not** chartered by this decision.
+
+### 10. What this decision does NOT establish
+
+* **That either paper exports a PWML.** The § 9 archived replay proves the two blocking
+  **predicates** clear; it cannot prove a file. The separately labelled post-merge validation
+  (`C-120-VALIDATION-FREEZE.md`) is what settles that, and its result is recorded separately.
+* **A yield rate.** Three legs is not a rate, and `ORCH-731` established that identity failures
+  are deterministic while their *impact* is stochastic, gated by which reactions Stage 1 draws.
+* **That `F-185` is closed.** `ORCH-725`'s Type-3 population — the margin rule's reviewed-entry
+  rejections, the `Cr` plant prefix, the strain parenthetical in UniProt queries — is untouched.
+  `C-120` fixed two members of the class, not the class.
