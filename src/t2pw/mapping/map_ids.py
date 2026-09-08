@@ -3422,6 +3422,180 @@ def _ncbi_taxonomy_lookup(client: HttpClient, name: str) -> Dict[str, str]:
     return {}
 
 
+# ── C-120: contextual alias reuse for abbreviated binomials ───────────────────
+# One organism can reach the species section under both its full binomial and a
+# single-letter abbreviation of it ("Bacillus subtilis" and "B. subtilis"). The
+# full name resolves; the abbreviation resolves against nothing, because no
+# taxonomy service indexes it -- and the PWML required-field gate then refuses
+# the whole export on species_missing_taxonomy / species_missing_classification.
+#
+# The pass below reuses what the SAME payload already established, and is
+# fail-closed at every step: only a single-letter abbreviated binomial is
+# eligible, only an already-resolved donor row may lend anything, the donors
+# must agree on exactly one binomial, and a taxonomy id is copied only when the
+# donors agree on that too. Where they disagree (a species-rank id and a
+# strain-rank id for the same binomial) nothing is copied: the abbreviation is a
+# species-rank reference, so the expanded binomial goes through the existing
+# NCBI lookup instead, or the row stays unresolved. Display text is never
+# rewritten -- the expansion is for lookup and identity only.
+
+#: A single letter, an optional period, whitespace, then a lowercase epithet.
+#: Deliberately narrow: a multi-letter prefix, a bare genus or a strain-qualified
+#: name is NOT an eligible abbreviation and is never expanded.
+_ABBREVIATED_BINOMIAL_RE = re.compile(r"^([A-Za-z])\.?\s+([a-z][a-z-]*)$")
+
+
+def _abbreviated_binomial_parts(name: str) -> Tuple[str, str]:
+    """``('B', 'subtilis')`` for an abbreviated binomial, ``('', '')`` otherwise."""
+    match = _ABBREVIATED_BINOMIAL_RE.match(_canonical_name(name))
+    if not match:
+        return "", ""
+    return match.group(1), match.group(2)
+
+
+def _species_alias_donors(rows: List[Any]) -> List[Dict[str, Any]]:
+    """Rows that already carry a full binomial plus a usable taxonomy identity.
+
+    Each donor records whether its own NAME is rank-qualified -- a strain,
+    sub-species or collection-code suffix beyond the bare binomial. That flag is
+    load-bearing: such a row's ``taxonomy_id`` is a **strain-rank** id, and an
+    abbreviated binomial is a **species-rank** reference, so the two are not
+    interchangeable however confidently the binomials match.
+
+    **Known residual (REV-120 R1), accepted deliberately.** The flag reads the
+    donor's NAME, not the rank of its id. A row whose name is the bare
+    unqualified binomial but whose ``taxonomy_id`` is nonetheless strain-rank is
+    therefore *not* flagged, and tier 1 will lend that id to an abbreviation of
+    the same name. This fabricates nothing new: the payload already asserts, on
+    its own row, that the unqualified name carries that taxon, so the pass only
+    propagates an existing assertion to a synonym of that same unqualified name
+    -- and if the id is wrong, the payload was already exporting it under that
+    name. Detecting it would mean asking NCBI for the rank of the donor's id,
+    which tier 1 is required to be fully deterministic and offline and so may
+    not do.
+    """
+    donors: List[Dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        taxonomy_id = _canonical_name(str(row.get("taxonomy_id") or row.get("taxonomy-id") or ""))
+        classification = _canonical_name(str(row.get("classification") or ""))
+        if not taxonomy_id or classification not in _SPECIES_CLASSIFICATIONS:
+            continue
+        name = _canonical_name(str(row.get("name") or ""))
+        binomial = _binomial_from_organism(name)
+        parts = binomial.split(" ")
+        if len(parts) != 2:
+            continue
+        genus, epithet = parts
+        # A donor whose own genus is an abbreviation cannot expand anything.
+        if len(genus.rstrip(".")) < 2 or not epithet:
+            continue
+        donors.append(
+            {
+                "name": name,
+                "binomial": binomial,
+                "genus": genus,
+                "epithet": epithet,
+                "taxonomy_id": taxonomy_id,
+                "classification": classification,
+                # True when the name says more than the binomial does: a rank
+                # marker fired, or the binomial reduction dropped tokens.
+                "rank_qualified": bool(_STRAIN_SUFFIX_RE.search(name))
+                or _normalize_name(binomial) != _normalize_name(name),
+            }
+        )
+    return donors
+
+
+def _canonical_binomial_text(genus: str, epithet: str) -> str:
+    """``Genus epithet`` in the conventional binomial casing, so the expansion a
+    row is audited against does not echo a donor's incidental capitalisation."""
+    return f"{genus[:1].upper()}{genus[1:].casefold()} {epithet.casefold()}"
+
+
+def _compatible_alias_donors(
+    donors: List[Dict[str, Any]], initial: str, epithet: str
+) -> List[Dict[str, Any]]:
+    """Donors whose genus initial and epithet both match the abbreviation."""
+    folded_initial = initial.casefold()
+    folded_epithet = epithet.casefold()
+    return [
+        donor
+        for donor in donors
+        if donor["genus"][:1].casefold() == folded_initial
+        and donor["epithet"].casefold() == folded_epithet
+    ]
+
+
+def _species_alias_expansion(
+    name: str,
+    donors: List[Dict[str, Any]],
+    *,
+    client: Optional[HttpClient],
+    enable_ncbi: bool,
+) -> Dict[str, Any]:
+    """Resolve one abbreviated species name from the payload's own donors.
+
+    Returns ``{}`` whenever anything is ambiguous, unsupported or unavailable.
+    Never invents a taxonomy and never copies a strain-rank id onto an
+    unqualified species-rank name.
+    """
+    initial, epithet = _abbreviated_binomial_parts(name)
+    if not initial or not epithet:
+        return {}
+    compatible = _compatible_alias_donors(donors, initial, epithet)
+    if not compatible:
+        return {}
+    # Two different genera share the initial and the epithet -> we may not pick.
+    if len({_normalize_name(donor["binomial"]) for donor in compatible}) != 1:
+        return {}
+    expanded = _canonical_binomial_text(compatible[0]["genus"], compatible[0]["epithet"])
+    donor_names = sorted({str(donor["name"]) for donor in compatible})
+
+    taxonomy_ids = {donor["taxonomy_id"] for donor in compatible}
+    classifications = {donor["classification"] for donor in compatible}
+    # A rank-qualified donor carries a STRAIN-rank id. The abbreviation is a
+    # species-rank reference, so that id may not be reused however well the
+    # binomials match -- doing so ships a taxon no source ever asserted for this
+    # name, and the required-field gate would then pass it. Such a set routes to
+    # tier 2 or stays unresolved; it never takes the offline shortcut. Keyed on
+    # the DONOR'S OWN RANK, not on disagreement between donors: a single
+    # strain-rank donor disagrees with nobody (REV-120 B1).
+    any_rank_qualified = any(bool(donor.get("rank_qualified")) for donor in compatible)
+    if not any_rank_qualified and len(taxonomy_ids) == 1 and len(classifications) == 1:
+        # Tier 1 -- offline reuse. Deterministic, no network.
+        return {
+            "source": "pathway_alias_reuse",
+            "taxonomy_id": next(iter(taxonomy_ids)),
+            "classification": next(iter(classifications)),
+            "expanded_from": name,
+            "expanded_to": expanded,
+            "donors": donor_names,
+        }
+
+    # Tier 2 -- the donors either disagree on the id or at least one of them is
+    # itself rank-qualified. Either way no donor id is a safe species-rank
+    # answer, so resolve the EXPANDED binomial through the existing lookup
+    # rather than choosing among them. With NCBI disabled this returns {} and
+    # the row stays unresolved, which is the correct fail-closed outcome.
+    if not enable_ncbi or client is None:
+        return {}
+    record = _ncbi_taxonomy_lookup(client, expanded)
+    taxonomy_id = _canonical_name(str(record.get("taxonomy_id") or ""))
+    classification = _canonical_name(str(record.get("classification") or ""))
+    if not taxonomy_id or classification not in _SPECIES_CLASSIFICATIONS:
+        return {}
+    return {
+        "source": "pathway_alias_expansion_ncbi",
+        "taxonomy_id": taxonomy_id,
+        "classification": classification,
+        "expanded_from": name,
+        "expanded_to": expanded,
+        "donors": donor_names,
+    }
+
+
 def backfill_species_taxonomy(
     payload: Dict[str, Any],
     *,
@@ -3444,7 +3618,9 @@ def backfill_species_taxonomy(
         "unresolved": [],
     }
     entities = _safe_dict(payload.get("entities"))
-    for row in _safe_list(entities.get("species")):
+    species_rows = _safe_list(entities.get("species"))
+    still_unresolved: List[Tuple[str, Dict[str, Any]]] = []
+    for row in species_rows:
         if not isinstance(row, dict):
             continue
         name = _canonical_name(str(row.get("name") or ""))
@@ -3472,6 +3648,55 @@ def backfill_species_taxonomy(
                 }
         else:
             report["unresolved"].append(name)
+            still_unresolved.append((name, row))
+
+    # C-120 -- one additional deterministic pass, over ONLY the rows the loop
+    # above left unresolved. Inert on every row that already resolves.
+    if still_unresolved:
+        donors = _species_alias_donors(species_rows)
+        if donors:
+            for name, row in still_unresolved:
+                if _canonical_name(str(row.get("taxonomy_id") or row.get("taxonomy-id") or "")):
+                    # Partly-resolved: it already claims a taxon. Filling a
+                    # classification from a donor with another id would invent a
+                    # combination no source ever stated.
+                    continue
+                expansion = _species_alias_expansion(
+                    name, donors, client=client, enable_ncbi=bool(enable_ncbi)
+                )
+                if not expansion:
+                    continue
+                # Display text is preserved -- row["name"] is deliberately untouched.
+                row["taxonomy_id"] = expansion["taxonomy_id"]
+                row["classification"] = expansion["classification"]
+                meta = row.setdefault("mapping_meta", {})
+                if isinstance(meta, dict):
+                    meta["taxonomy_backfill"] = {
+                        "source": expansion["source"],
+                        "taxonomy_id": expansion["taxonomy_id"],
+                        "classification": expansion["classification"],
+                        "expanded_from": expansion["expanded_from"],
+                        "expanded_to": expansion["expanded_to"],
+                        "donors": expansion["donors"],
+                    }
+                report["resolved"] += 1
+                # The audit block appears ONLY when this pass actually did
+                # something. A report whose rows the pass left alone stays byte-
+                # identical to what it was before C-120, which is what keeps the
+                # pinned map_payload golden valid without moving it.
+                audit = report.setdefault("alias_reuse", {"resolved": 0, "rows": []})
+                audit["resolved"] += 1
+                audit["rows"].append(
+                    {
+                        "name": name,
+                        "source": expansion["source"],
+                        "expanded_to": expansion["expanded_to"],
+                        "taxonomy_id": expansion["taxonomy_id"],
+                        "donors": expansion["donors"],
+                    }
+                )
+                if name in report["unresolved"]:
+                    report["unresolved"].remove(name)
     return report
 
 
@@ -4583,6 +4808,33 @@ def _is_pathbank_protein_identity(candidate: Any, source: str) -> bool:
     return not row and str(source or "").strip().casefold() == "db"
 
 
+def _gene_symbol_family_match(left: str, right: str) -> bool:
+    """True when two NORMALIZED symbols differ only by a trailing run of digits.
+
+    A paper routinely names an enzyme by the gene-symbol *family stem* while the
+    database row carries the numbered family member. The two strings share no
+    meaningful token and are not equal, so neither the token rung nor the exact
+    symbol rescue can see the identity that is plainly there.
+
+    Fail-closed by construction:
+
+    * one string must be the other plus a suffix that is **entirely digits**, so
+      two different numbered members of the same family (neither a prefix of the
+      other) never match;
+    * the shorter string must end in a **letter**, so a stem that is itself
+      already numbered cannot absorb another digit;
+    * the shorter stem must be at least 3 characters, so a one- or two-letter
+      fragment cannot claim a family.
+    """
+    if not left or not right or left == right:
+        return False
+    shorter, longer = (left, right) if len(left) < len(right) else (right, left)
+    if len(shorter) < 3 or not shorter[-1].isalpha() or not longer.startswith(shorter):
+        return False
+    suffix = longer[len(shorter):]
+    return bool(suffix) and suffix.isdigit()
+
+
 def _name_gate_verdict(
     entity_name: str,
     *,
@@ -4600,8 +4852,8 @@ def _name_gate_verdict(
     match: a gate that rejects on missing evidence is worse than the defect it is
     meant to fix.
 
-    Two rescues exist for matches that are lexically unrecognisable yet genuinely
-    correct, both taken from real payloads:
+    Three rescues exist for matches that are lexically unrecognisable yet
+    genuinely correct, all taken from real payloads:
 
     * exact symbol identity -- 'YejM' resolves to UniProt "Inner membrane protein
       PbgA" (the protein was renamed); the entity name is exactly one of the
@@ -4615,6 +4867,13 @@ def _name_gate_verdict(
       from re-admitting 'mcr genes' -> P08235: its alias 'mcr' does equal the
       human gene symbol MCR, but P08235's organism is Homo sapiens while the
       entity's organism is Escherichia coli.
+    * gene-symbol family identity (C-120) -- a paper names an enzyme by the
+      gene-symbol family stem while the database row carries the numbered family
+      member, so the display names share nothing and the exact-symbol rescue
+      cannot fire either. Kept only when the two normalized symbols differ by a
+      trailing run of digits (see :func:`_gene_symbol_family_match`) and the
+      organisms agree; two different numbered members of one family are still
+      refused, because neither is a prefix of the other.
     """
     gate: Dict[str, Any] = {
         "verdict": "skip",
@@ -4678,6 +4937,25 @@ def _name_gate_verdict(
             gate["reason"] = "exact_symbol_identity"
             gate["matched_symbol"] = symbol
             return gate
+
+    # C-120 -- gene-symbol family identity. Sits beside the exact-symbol rescue,
+    # changes no other rung, threshold or ordering, and carries the same organism
+    # guard the alias rescue uses. Multiplicity stays fail-closed downstream: if
+    # this admits two candidates with different accessions,
+    # _resolve_ambiguous_protein_candidates still refuses the pair.
+    if kind == "protein" and normalized_entity:
+        candidate_row = _safe_dict(candidate)
+        candidate_organism = str(candidate_row.get("organism") or "").strip()
+        organism_agrees = True
+        if organism and candidate_organism:
+            organism_agrees = _uniprot_organism_matches(candidate_row, organism)
+        if organism_agrees:
+            for symbol in symbols:
+                if _gene_symbol_family_match(normalized_entity, _normalize_name(symbol)):
+                    gate["verdict"] = "keep"
+                    gate["reason"] = "gene_symbol_family_identity"
+                    gate["matched_symbol"] = symbol
+                    return gate
 
     alias = str(_safe_dict(candidate).get("matched_alias") or "").strip()
     alias_source = str(_safe_dict(candidate).get("alias_source") or "").strip().casefold()

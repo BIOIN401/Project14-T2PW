@@ -976,6 +976,28 @@ _STRAIN_RANK_MARKERS = frozenset(
 )
 
 
+#: Bracket pairs a species name may legitimately carry. Used only to reject an
+#: *unbalanced* truncation, never to strip a balanced group.
+_SPECIES_BRACKET_PAIRS = (("(", ")"), ("[", "]"), ("{", "}"))
+
+#: Punctuation that may wrap a rank marker in a parenthesised qualifier, e.g.
+#: ``"(strain"``. Stripped for the marker test only; the token itself is not
+#: rewritten.
+_SPECIES_BRACKET_CHARS = "()[]{}"
+
+
+def _species_rank_marker_token(token: str) -> str:
+    """The rank-marker form of ``token``: bracket punctuation and a trailing
+    period removed, case-folded. ``"(strain"`` -> ``"strain"``, ``"subsp."`` ->
+    ``"subsp"``. Returns the folded token unchanged when it carries no bracket."""
+    return token.strip(_SPECIES_BRACKET_CHARS).casefold().rstrip(".")
+
+
+def _species_brackets_balanced(text: str) -> bool:
+    """True when every bracket opened in ``text`` is also closed in it."""
+    return all(text.count(opener) == text.count(closer) for opener, closer in _SPECIES_BRACKET_PAIRS)
+
+
 def _deterministic_species_name(name: Any) -> str:
     """Return a run-stable canonical species name.
 
@@ -994,13 +1016,20 @@ def _deterministic_species_name(name: Any) -> str:
         return ""
     tokens = text.split(" ")
     cut = len(tokens)
-    # (a) truncate at the first infix strain/sub-species rank marker.
+    # (a) truncate at the first infix strain/sub-species rank marker. The marker
+    #     test is bracket-aware (C-120): a parenthesised qualifier writes the
+    #     marker as "(strain", which never matched the bare marker set, so the
+    #     whole "(strain ...)" family fell through to (b) and was cut mid-bracket.
     for idx in range(2, len(tokens)):
-        if tokens[idx].casefold().rstrip(".") in _STRAIN_RANK_MARKERS:
+        if _species_rank_marker_token(tokens[idx]) in _STRAIN_RANK_MARKERS:
             cut = idx
             break
     # (b) strip a trailing run of strain-code tokens (collection numbers, codes).
     while cut > 2 and _looks_like_strain_token(tokens[cut - 1]):
+        cut -= 1
+    # (c) never emit an unbalanced bracket fragment. Any trailing token that
+    #     leaves a bracket open is dropped, down to the genus + epithet floor.
+    while cut > 2 and not _species_brackets_balanced(" ".join(tokens[:cut])):
         cut -= 1
     return " ".join(tokens[:cut])
 
