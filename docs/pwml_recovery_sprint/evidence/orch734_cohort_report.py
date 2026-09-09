@@ -101,6 +101,33 @@ def _blob(leg: Path) -> str:
     return "\n".join(parts)
 
 
+def _stage_census(leg: Path) -> Dict[str, int]:
+    """Per-stage count of NON-EMPTY completions in this leg's trace.
+
+    Answers "how far did this leg actually get" without trusting the terminal
+    stage label, which reads ``unknown`` on a killed leg.
+    """
+
+    trace = leg / "LEG_TRACE.jsonl"
+    if not trace.exists():
+        return {}
+    out: Dict[str, int] = {}
+    for line in trace.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            r = json.loads(line)
+        except Exception:  # noqa: BLE001
+            continue
+        stage = str(r.get("stage") or "")
+        if not stage:
+            continue
+        if str(r.get("content_chars")) not in ("0", "None"):
+            out[stage] = out.get(stage, 0) + 1
+    return out
+
+
 def _classify(row: Dict[str, Any], leg: Path) -> Dict[str, Any]:
     """One dominant mechanism per no-PWML leg. Earliest stage wins."""
 
@@ -116,6 +143,44 @@ def _classify(row: Dict[str, Any], leg: Path) -> Dict[str, Any]:
         found = [n for n in needles if n in hay]
         ev.extend(found)
         return bool(found)
+
+    # 0. LEG WALL-CLOCK TIMEOUT. Checked FIRST and reported as its own thing.
+    #    ORCH-733 classified this as class T and was explicit that it is "recorded
+    #    at stage1, not a delivery failure". A leg killed at the ceiling may have
+    #    sailed through Stage 1 and died deep in the audit/gap/RAG loops, and
+    #    filing that under stage1_provider_delivery would invent a Stage-1 problem
+    #    the trace refutes. It lands in the charter's "other" bucket -- the
+    #    ten-way vocabulary has no timeout term -- but carries a sub_mechanism and
+    #    the stage census so the aggregate can never read as an opaque unknown.
+    if "timeout" in fk or (row.get("status") or "").lower() == "timeout":
+        stages = _stage_census(leg)
+        reached = [k for k in ("Stage 1 extraction", "Stage 2 inference") if stages.get(k)]
+        return {
+            "mechanism": "other",
+            "sub_mechanism": "leg_wall_clock_timeout",
+            "evidence": [
+                f"killed at the per-leg ceiling after {row.get('seconds')}s",
+                "stages that produced usable output: " + (", ".join(reached) or "none"),
+                "trace stage census: " + json.dumps(stages),
+            ],
+        }
+
+    # 0b. SCOPE CONFLICT. Checked BEFORE the delivery rules, on the issue code and
+    #     the status rather than on the stage name. Stage 0 forms the verdict but
+    #     the leg records it at stage "stage1", so a stage-name test misses it and
+    #     the delivery rule then claims it -- which is what happened on the first
+    #     scoring pass here: PMC7910490's operator-authored scope string was
+    #     reported as stage1_provider_delivery, manufacturing a Stage-1 problem on
+    #     a leg where the provider was never asked to extract anything.
+    if "scope_conflict" in codes or (row.get("status") or "").lower() == "scope_conflict":
+        return {
+            "mechanism": "scope_or_guard_refusal",
+            "sub_mechanism": "stage0_scope_conflict",
+            "evidence": [
+                "Stage 0 read a pathway that contradicts the manifest's requested scope",
+                (row.get("message") or "")[:220],
+            ],
+        }
 
     # 1. Stage-1 DELIVERY: the provider did not hand back usable text at all.
     #    ORCH-733's classes A-D. Distinguished from content failure by the shape

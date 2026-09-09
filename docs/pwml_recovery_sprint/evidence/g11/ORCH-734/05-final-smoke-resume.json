@@ -1,0 +1,177 @@
+{
+  "label": "final-smoke-resume",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "topics_final_reliability_smoke.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "runs_smoke",
+    "--timeout",
+    "3600",
+    "--deadline",
+    "13"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-09-09T00:53:15+00:00",
+  "finished_at": "2026-09-09T04:02:44+00:00",
+  "duration_seconds": 11368.6793579,
+  "timeout_seconds": 50400.0,
+  "root_pid": 31664,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 31596,
+      "name": "python.exe",
+      "ppid": 31664
+    },
+    {
+      "pid": 31216,
+      "name": "python.exe",
+      "ppid": 31688
+    },
+    {
+      "pid": 31688,
+      "name": "python.exe",
+      "ppid": 31596
+    },
+    {
+      "pid": 17880,
+      "name": "python.exe",
+      "ppid": 31596
+    },
+    {
+      "pid": 31252,
+      "name": "python.exe",
+      "ppid": 17880
+    },
+    {
+      "pid": 13372,
+      "name": "python.exe",
+      "ppid": 31596
+    },
+    {
+      "pid": 14960,
+      "name": "python.exe",
+      "ppid": 13372
+    },
+    {
+      "pid": 4612,
+      "name": "python.exe",
+      "ppid": 31596
+    },
+    {
+      "pid": 29964,
+      "name": "python.exe",
+      "ppid": 4612
+    },
+    {
+      "pid": 46472,
+      "name": "python.exe",
+      "ppid": 31596
+    },
+    {
+      "pid": 48096,
+      "name": "python.exe",
+      "ppid": 46472
+    },
+    {
+      "pid": 12112,
+      "name": "python.exe",
+      "ppid": 31596
+    },
+    {
+      "pid": 58008,
+      "name": "python.exe",
+      "ppid": 12112
+    },
+    {
+      "pid": 56768,
+      "name": "python.exe",
+      "ppid": 31596
+    },
+    {
+      "pid": 70416,
+      "name": "python.exe",
+      "ppid": 56768
+    }
+  ],
+  "descendants_terminated": [
+    4612,
+    12112,
+    13372,
+    14960,
+    17880,
+    29964,
+    31216,
+    31252,
+    31596,
+    31688,
+    46472,
+    48096,
+    56768,
+    58008,
+    70416
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 19292,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24336,
+      "name": "python.exe"
+    },
+    {
+      "pid": 25268,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30876,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/ORCH-734/05-final-smoke-resume.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "432a4f8c4816aebb8b2962fd8a93840f31d65468",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-734",
+    "token": "ORCH-734:30876:b2a1c08d25b9f4b8",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
