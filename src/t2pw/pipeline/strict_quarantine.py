@@ -83,6 +83,7 @@ from t2pw.pipeline.process_normalizer import (  # noqa: E402
     _canonical,
     _entity_name_norms,
     _normalize,
+    restore_autostates_if_required,
 )
 
 logger = logging.getLogger(__name__)
@@ -1925,10 +1926,31 @@ def _prune_biological_states(
     """Drop states nothing surviving references.
 
     Left last in the round: it reads the post-prune processes and locations, so a
-    state only disappears once every row that pointed at it has already gone. The
-    export requires at least one state (``no_biological_states``), which the
-    coverage check backstops -- a payload with no surviving process fails there
-    first.
+    state only disappears once every row that pointed at it has already gone.
+
+    **The removal policy is CORRECT and does not move.** A state removed here
+    genuinely was unreferenced, and ``C-121`` changed nothing about which rows
+    this drops.
+
+    **F-192 falsified this docstring's former claim, which said the coverage check
+    backstops ``no_biological_states`` -- "a payload with no surviving process
+    fails there first."** It does not. The two are independent: coverage counts
+    surviving PROCESSES, this counts referenced STATES, and a payload can have
+    plenty of the first and none of the second. One archived leg reached the
+    required-field gate with **10** surviving reactions and zero states, and a
+    second with **4** -- both refused on ``no_biological_states``, both with
+    ``removed_locations: []``, so there was never a row for the coverage check to
+    notice. Paper identifiers are deliberately absent: no PMC id and no benchmark
+    pathway name belongs in ``src/``, and the five legs are enumerated in
+    ``DECISIONS.md`` D-099 section 5. Their ``__auto_state__`` was created by
+    :func:`~t2pw.pipeline.process_normalizer.ensure_autostates` with
+    ``n_entities_assigned_to_autostate: 0`` and swept here, correctly, for being
+    exactly as unreferenced as that number says.
+
+    What backstops it instead is
+    :func:`~t2pw.pipeline.process_normalizer.restore_autostates_if_required`, run
+    once by :func:`quarantine_and_close` after the closure loop converges and
+    before the freeze -- not a re-run of the sweep, and not a weakening of it.
     """
 
     states = payload.get("biological_states")
@@ -2482,6 +2504,43 @@ def quarantine_and_close(
     process_snapshot: Dict[str, Any] = deepcopy(_safe_dict(working.get("processes")))
     _drop_quarantined_processes(working, admissions)
     lock_accounting = _reconcile_locked_reactions(working, admissions, originals)
+
+    # ── F-192: re-establish the compartment placeholder the sweep orphaned ────
+    #
+    # THE RESTORATION POINT (C-121, D-099). Here and nowhere else: the closure
+    # loop has converged, ``_drop_quarantined_processes`` has run so
+    # ``working["processes"]`` holds the SURVIVING processes and nothing else, and
+    # the coverage check, the invariant block and the semantic pass below have not
+    # read the payload yet. It is upstream of ``freeze_canonical_payload``, so
+    # PRODUCT_CONTRACT 5 and merge rule 8 hold by construction -- no exporter
+    # repairs biology after the canonical graph is frozen, because this is not the
+    # exporter and the graph is not yet frozen.
+    #
+    # It could not go in ``run_quarantine_boundary``: that lives in
+    # ``streamlit_app.py``, which is PROTECTED under D-097.
+    #
+    # WHAT IT IS NOT. Not a second sweep and not a change to the sweep: the
+    # removal policy above is correct and drops exactly what it dropped before.
+    # Not a relaxation of ``no_biological_states`` or
+    # ``visible_entity_missing_location_state`` -- both still refuse, which is why
+    # this raises no PWML count by making a gate quieter (merge rule 6). Not
+    # unconditional: an unguarded re-run would perturb 40 archived legs, six of
+    # them legs that export today, and the guard inside the callee is the entire
+    # difference. Not biology: the placeholder admits no process and adds no
+    # entity, and the five firing legs' reaction counts are identical to their
+    # archived payloads.
+    #
+    # Nothing is recorded on ``quarantine_report`` for it, deliberately. That
+    # report's ``schema_version`` bumps on every additive key by house rule, and
+    # a version move is a wider blast radius than this seam owns; the effect is
+    # already visible in ``resulting_payload_hash``, and the log line below names
+    # it for a reader of the run log. C-074 arm A set the same precedent.
+    if restore_autostates_if_required(working):
+        logger.info(
+            "quarantine_and_close: re-established the compartment placeholder "
+            "after closure (F-192); states now %d",
+            len(_safe_list(working.get("biological_states"))),
+        )
 
     coverage = evaluate_core_coverage(
         working,

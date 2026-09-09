@@ -3190,6 +3190,122 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
     return payload
 
 
+#: ``element_locations`` buckets whose rows the PWML required-field gate treats as
+#: VISIBLE entities and therefore demands a ``biological_state`` on -- the gate's
+#: own ``location_fields`` keys (``pwml/ir.py``, the
+#: ``visible_entity_missing_location_state`` check). Duplicated here rather than
+#: imported so this module keeps importing nothing from the exporter; the two are
+#: locked together by a test that reads the gate's own table, so they cannot drift
+#: apart silently.
+_VISIBLE_LOCATION_BUCKETS: Tuple[str, ...] = (
+    "compound_locations",
+    "protein_locations",
+    "nucleic_acid_locations",
+    "element_collection_locations",
+)
+
+#: Process buckets whose presence means the payload still carries something worth
+#: exporting. Read in the same three-bucket form the strict seam's own content
+#: test uses, so "exportable content survives" means one thing in this codebase.
+_EXPORTABLE_PROCESS_BUCKETS: Tuple[str, ...] = ("reactions", "transports", "interactions")
+
+
+def autostate_restoration_required(payload: Mapping[str, Any]) -> bool:
+    """Does this payload still need the compartment placeholder re-established?
+
+    **F-192.** :func:`ensure_autostates` runs exactly once, from
+    :func:`normalize_process_payload`. The strict quarantine sweep runs later and
+    ``_prune_biological_states`` removes every state nothing surviving references
+    -- correctly, by its own policy -- and ``audit_repair`` can add an
+    element-location row *after* the one pass that would have assigned one. Either
+    way nothing re-establishes the placeholder, and the PWML required-field gate
+    then refuses a payload whose biology, identity and reaction support are all
+    sound.
+
+    The predicate is the authorized **disjunction** (``D-099`` § 3), not a
+    row-scoped rule::
+
+        exportable content survives
+        AND ( zero biological_states
+              OR some surviving visible element-location row carries no
+                 biological_state )
+
+    It is not row-scoped because the two ORCH-734 blockers have **zero** surviving
+    element-location rows: a row-scoped invariant has nothing to act on and
+    repairs neither of them. Their single gate error is ``no_biological_states``,
+    which clause 1 catches; clause 2 is the ``audit_repair`` shape, an **absent**
+    reference rather than a dangling one. A dangling one cannot occur --
+    ``_prune_biological_states`` removes a state only when nothing references it,
+    so a surviving row cannot point at a removed state.
+
+    **Why the guard is the whole fix and not a nicety.** Re-running
+    :func:`ensure_autostates` unconditionally at the strict seam changes the
+    payload on 40 archived production legs where this predicate is quiet, six of
+    them legs that produce a PWML today: each would gain a spurious
+    ``__auto_state__`` and a ``cell`` subcellular location and every graph hash
+    would move. Measured against every archived leg's committed required-field
+    gate report, this predicate fires on exactly the five legs that failed on an
+    F-192 code and on no others -- no false positives, no false negatives.
+
+    ``content`` is checked FIRST and is not a formality. An empty graph must stay
+    empty: a payload with nothing to export is a refusal upstream of here, and
+    manufacturing a state for it would dress a dead run as a serializable one.
+    """
+
+    processes = _safe_dict(payload.get("processes"))
+    content = any(
+        _safe_list(processes.get(bucket)) for bucket in _EXPORTABLE_PROCESS_BUCKETS
+    )
+    if not content:
+        return False
+    states = [
+        row
+        for row in _safe_list(payload.get("biological_states"))
+        if isinstance(row, dict)
+    ]
+    if not states:
+        return True
+    element_locations = _safe_dict(payload.get("element_locations"))
+    for bucket in _VISIBLE_LOCATION_BUCKETS:
+        for row in _safe_list(element_locations.get(bucket)):
+            if not isinstance(row, dict):
+                continue
+            if not _canonical(str(row.get("biological_state") or "")):
+                return True
+    return False
+
+
+def restore_autostates_if_required(
+    payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None
+) -> bool:
+    """Re-establish the compartment placeholder, and **only** where it is required.
+
+    Returns ``True`` when it acted. When
+    :func:`autostate_restoration_required` is False this **changes nothing at all**
+    -- not one byte of ``payload`` -- which is the property that makes the fix
+    inert on the 40 archived legs an unguarded re-run would perturb.
+
+    The body is :func:`ensure_autostates` itself rather than a narrower
+    reimplementation, deliberately. The placeholder's name, its ``cell``
+    subcellular location and the transport ``from``/``to`` fallbacks are one
+    lifecycle, and a second copy of them here would be free to drift from the
+    Stage-3 pass that every payload already went through -- the exact class of
+    defect F-083 is. What restoration adds is **presentation scaffolding, not
+    biology**: it admits no process, changes no participant, role, direction or
+    stoichiometry, and adds no entity to the pathway. Reaction counts on all five
+    firing legs are identical to the archived payload, which is the measurement
+    that says so rather than the assertion.
+
+    ``ensure_autostates`` is idempotent, so a caller may run this more than once
+    without compounding anything.
+    """
+
+    if not autostate_restoration_required(payload):
+        return False
+    ensure_autostates(payload, report=report)
+    return True
+
+
 def backfill_reaction_compartments(
     payload: Dict[str, Any],
     *,
