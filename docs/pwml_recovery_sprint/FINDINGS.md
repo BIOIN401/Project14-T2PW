@@ -9975,6 +9975,26 @@ chartered.**
 > files used to validate the import checker — the three ORCH-732 PWMLs and the C-120 PSAT file —
 > carry **zero** transports. *A validation set that never exercises a feature cannot certify it.*
 
+### THIRD INSTANCE, and it is OLDER than the two above · `ORCH-739`, 2026-09-09
+
+```
+PMC7232280    transport-compound-visualization -> compound-location-id 30, 34
+```
+
+`runs_validation/2026-09-07_1929` (`ORCH-730`), *Neurospora crassa*, Moco biosynthesis, 45,054 B,
+4 reactions, 80 internal references checked, `IMPORT FAIL -- no_broken_references`. Parent element
+confirmed by XML walk: both refs sit in `transport-compound-visualization` under
+`transport_compound_visualizations`. **Byte-identical shape.**
+
+**The population is now 3 papers, and this one predates the run that discovered the defect** — so
+it was never a regression introduced by `ORCH-734`'s cohort. Re-verified independently with
+`evidence/orch734_pathwhiz_import_check.py`; report `evidence/g11/ORCH-739/02-c121-import-check.json`.
+
+**Still NOT fixed and still not chartered**, per the standing instruction. The file is committed as
+`pathwhiz_review/IMPORT-SET/ORCH730_PMC7232280.F195.pwml` and is to be imported **last**, with the
+other two. **The live PathWhiz import decides whether `F-195` is a checker limitation or a real
+importability blocker. No pre-emptive fix.**
+
 ## `F-196` — the batch tally reports `NO DELIVERABLE` for legs that produced a deliverable · ORCH-734
 
 `report.py:446` defines `warned` as `bool(self.passed and (self.warnings or self.file_errors))` —
@@ -10001,3 +10021,141 @@ on a leg where the provider was never asked to extract anything.**
 
 Affects analysis tooling, not production. Classifiers must key on the `scope_conflict` issue code
 and status instead.
+
+---
+
+## `F-198` — `chat_with_tools` emits no `LEG_TRACE` rows, so every tool-calling model call is invisible · ORCH-739
+
+**Class: observability. REGISTERED, NOT CHARTERED. No production behaviour is affected.**
+
+`_publish_attempt` (`client.py:304`) is the only writer of `model_attempt` rows into
+`LEG_TRACE.jsonl`, and it is called from exactly one place: `CompletionDiagnostics.note`
+(`client.py:412`). `chat_detailed` builds a `CompletionDiagnostics` and calls `.note()` on every
+attempt. **`chat_with_tools` (`client.py:837`) builds none and calls it never.**
+
+Its callers are `curation/pathway_curator.py:316` (`stage_name="curator"`) and
+`curation/gap_resolver.py:2733` (final synthesis). Neither appears in any leg trace in the corpus,
+in any run, ever.
+
+**The proof that these calls happen anyway** is `PMC9200736`'s own `RESULT.txt` stderr tail:
+
+```
+LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash,
+finish_reason=length, tools_sent=True) on attempt 1/3; retrying as a transient.
+```
+
+`curator` appears nowhere in that leg's 151 traced calls.
+
+### Consequence
+
+**Every model-call count derived from `LEG_TRACE.jsonl` is a floor, not a total** — including
+`ORCH-733`'s 2,988 corpus-wide attempts, its 116 Stage-1 attempts, and `ORCH-739`'s 1,384. The
+undercount is concentrated in the tool-calling path, and `RESULT.txt` holds only a stderr tail, so
+the size of the gap **cannot be recovered from the archives**. It can only be closed going forward.
+
+The seam is the same one `ORCH-733` § 4 named for provider persistence: a `CompletionDiagnostics`
+in `chat_with_tools` beside the existing mirror at `:899`. **Diagnosis only. Nothing implemented.**
+
+---
+
+## `F-199` — reasoning-token budget exhaustion. The measured root cause of `F-193` · ORCH-739
+
+**Class: provider/model delivery. CHARTER CANDIDATE — meets all three of `ORCH-739` § 16 C's
+conditions. Not implemented; the Lead Orchestrator does not author patches.**
+
+`deepseek/deepseek-v4-flash` spends its **entire `max_tokens` completion allowance on reasoning
+tokens**, which are billed against that budget and never appear in `message.content`. The provider
+answers HTTP 200 and correctly reports `finish_reason=length` with zero content. **This is not a
+provider outage, not a rate limit, and not a truncation of our answer.**
+
+`ORCH-731` A4 named this mechanism as one of two candidates and could not separate them from the
+archives. **It is now separated by direct measurement.**
+
+### Reproduced on demand — `evidence/orch739_budget_model_probe.py`
+
+Own prompts, no paper text, no pipeline. The `hard` profile is an ambiguous non-model-organism
+alias question of the shape `mapping/map_ids.py:403` actually asks at `max_tokens=300`.
+
+| model | budget | request | empty |
+|---|---:|---|---:|
+| `deepseek/deepseek-v4-flash` | 300 | production, verbatim | **5 / 5** |
+| `deepseek/deepseek-v4-flash` | 1,500 | production, verbatim | **3 / 5** |
+| `google/gemini-3.8-flash` | 300 | production, verbatim | 0 / 5 |
+| `google/gemini-3.8-flash` | 1,500 | production, verbatim | 0 / 5 |
+
+Every deepseek empty carries `reasoning_tokens` equal to the whole budget — 294–301 of 300,
+1,499–1,500 of 1,500. **That is `F-193`'s signature exactly.**
+
+### The remedy, and the one that fails
+
+Same model, prompt, budget and temperature; one request parameter differs.
+
+| control | 300 | 1,500 |
+|---|---:|---:|
+| none (production today) | **5/5 empty** | **3/5 empty** |
+| `reasoning: {max_tokens: budget/4}` | **5/5 empty** | **3/5 empty** — **the cap is silently ignored**; asked for 75, the backends returned 291, 299, 305, 300 |
+| **`reasoning: {enabled: false}`** | **0/5 empty** | **0/5 empty** |
+
+Disabling reasoning also cut completion tokens to 84–199 and latency to 1.3–8.4 s, and held across
+**ten different backends**. **The cap was tested before either was proposed, and it would have
+looked principled and done nothing.**
+
+### It is a model property, not a routing property
+
+`deepseek/deepseek-v4-flash` was served by **fourteen** backends across 39 probe calls. Baidu
+returned one empty and one good answer on the same prompt and budget; the empty result appeared on
+seven different backends; and with reasoning disabled all ten backends delivered. **Provider pinning
+would not fix this**, and the corpus cannot attribute blame by backend anyway because production
+still does not persist `provider` (`ORCH-733` § 4, re-confirmed).
+
+### Leg-level cost — the unit that matters
+
+Across 27 legs in the five recent cohorts, **716 of 1,384 traced calls (51.7 %) returned zero
+content**, consuming an upper-bound **44.9 % of 13.63 h of leg wall clock**. Legs that produced a
+PWML lost a median **29.3 %** of their runtime to it; legs that produced none lost **50.2 %**. Both
+wall-clock timeouts were delivery-dominated (90 and 71 empties; 57 % and 46 %).
+
+**Stated as `contributed materially`, never `caused`.**
+
+### Where it bites, and where it does not
+
+The empty rate tracks the completion budget. **Stage 1 is among the healthiest stages in the
+pipeline** and no case is made for touching it.
+
+| stage | `max_tokens` | empty % |
+|---|---:|---:|
+| `chat` — `map_ids` alias + `stoich` classifier | **300** | **79.7 %** |
+| `rag_prose_extraction` | 1,500 | 54.4 % |
+| `gap resolver` | 450–900 | 31.3 % |
+| Stage 2 inference | 16,000 | 17.1 % |
+| Stage 1 extraction | 16,000 | 16.3 % |
+| `preprocessor` | 12,000 | **0.0 %** |
+
+### `D-097` is NOT overturned
+
+`D-097` retired the "raise `max_tokens`" reflex for Stage-1 **truncation at 16,000**, where the
+budget was measured non-binding. **That ruling stands.** This is a different class — **zero** content
+at **300**, where the budget is binding by construction. **Raising `max_tokens` is not proposed
+here**; those budgets are literals in frozen production source and the candidate fix does not touch
+them.
+
+### Why configuration cannot reach it
+
+Three independent reasons, each sufficient. (1) `client.py` builds its request from `model`,
+`messages`, `temperature`, `max_tokens`, `timeout` and an optional `response_format` — there is **no
+`extra_body`, no `reasoning` parameter and no provider block** anywhere in the file. (2) The
+reasoning cap does not work, so an exposed knob of that shape would be inert. (3) Every model-swap
+lever also changes biology: `OPENROUTER_GAP_MODEL` governs the gap resolver's candidate *selection*,
+`OPENROUTER_RAG_EXTRACT_MODEL` governs reaction extraction from literature prose, and
+`stoich/classifier.py` has **no per-stage variable at all**, so reaching it means moving the global
+`OPENROUTER_MODEL` and with it Stage 1 and Stage 2.
+
+### What is NOT established
+
+**Nothing about biological quality.** A model that delivers bytes is not thereby a better biologist,
+and disabling a reasoning model's reasoning is a real quality risk on calls where reasoning
+currently *succeeds*. The argument is narrower: at `max_tokens=300` the current configuration
+returns nothing four times in five, so there is no quality there to lose. **A quality cohort is an
+obligation of the card, after the patch, not a claim of this finding.**
+
+Full record: [`ORCH-739-RUNTIME-PROVIDER-RELIABILITY.md`](ORCH-739-RUNTIME-PROVIDER-RELIABILITY.md).

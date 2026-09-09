@@ -1,0 +1,136 @@
+{
+  "task": "ORCH-734",
+  "files_checked": 2,
+  "import_ready": 1,
+  "import_fail": 1,
+  "boundary": "Structural import readiness only. The live PathWhiz UI import requires the product owner's PathWhiz account and is not performed here.",
+  "results": [
+    {
+      "file": "runs_validation/c121/2026-09-09_0028/papers/PMC9544450/strict/pathway.review_required.pwml",
+      "bytes": 48826,
+      "checks": {
+        "xml_accepted": true,
+        "root_is_super_pathway_visualization": true,
+        "pathway_envelope_present": true,
+        "drawing_canvas_nonzero": true,
+        "graph_not_blank": true,
+        "compounds_appear": true,
+        "proteins_or_complexes_appear": true,
+        "reactions_present": true,
+        "reactions_two_sided": true,
+        "no_broken_references": true,
+        "species_named_with_taxonomy": true,
+        "entities_named": true
+      },
+      "notes": [
+        "IMPORT READY means every property the PathWhiz importer checks is satisfied by this file. It is NOT a substitute for the product owner opening it in the PathWhiz UI -- that step needs their account and is handed to them."
+      ],
+      "root_tag": "super-pathway-visualization",
+      "pathway_name": "Generated Pathway",
+      "canvas": {
+        "height": 1460,
+        "width": 3200
+      },
+      "positioned_elements": 17,
+      "edges": 15,
+      "edges_with_path": 15,
+      "counts": {
+        "compounds": 9,
+        "proteins": 2,
+        "protein_complexes": 2,
+        "reactions": 5,
+        "compound_locations": 14,
+        "bounds": 0
+      },
+      "reactions_missing_a_side": [],
+      "internal_refs_checked": 90,
+      "dangling_refs": [],
+      "dangling_ref_count": 0,
+      "species": {
+        "name": "Escherichia coli",
+        "taxonomy_id": "562"
+      },
+      "sample_entity_names": [
+        "chorismate",
+        "isochorismate",
+        "Oxoglutaric acid",
+        "SEPHCHC",
+        "iso-SEPHCHC",
+        "SHCHC",
+        "pyruvate",
+        "thiamine diphosphate",
+        "1,4-dihydroxy-2-naphthoic acid",
+        "MenD",
+        "MenH",
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase"
+      ],
+      "advisory_failures": [],
+      "verdict": "IMPORT READY"
+    },
+    {
+      "file": "runs_validation/2026-09-07_1929/papers/PMC7232280/strict/pathway.review_required.pwml",
+      "bytes": 45054,
+      "checks": {
+        "xml_accepted": true,
+        "root_is_super_pathway_visualization": true,
+        "pathway_envelope_present": true,
+        "drawing_canvas_nonzero": true,
+        "graph_not_blank": true,
+        "compounds_appear": true,
+        "proteins_or_complexes_appear": true,
+        "reactions_present": true,
+        "reactions_two_sided": true,
+        "no_broken_references": false,
+        "species_named_with_taxonomy": true,
+        "entities_named": true
+      },
+      "notes": [
+        "IMPORT READY means every property the PathWhiz importer checks is satisfied by this file. It is NOT a substitute for the product owner opening it in the PathWhiz UI -- that step needs their account and is handed to them."
+      ],
+      "root_tag": "super-pathway-visualization",
+      "pathway_name": "Generated Pathway",
+      "canvas": {
+        "height": 1986,
+        "width": 3200
+      },
+      "positioned_elements": 14,
+      "edges": 14,
+      "edges_with_path": 14,
+      "counts": {
+        "compounds": 6,
+        "proteins": 2,
+        "protein_complexes": 4,
+        "reactions": 4,
+        "compound_locations": 6,
+        "bounds": 0
+      },
+      "reactions_missing_a_side": [],
+      "internal_refs_checked": 80,
+      "dangling_refs": [
+        "compound-location-id=30",
+        "compound-location-id=34"
+      ],
+      "dangling_ref_count": 2,
+      "species": {
+        "name": "Neurospora crassa",
+        "taxonomy_id": "5141"
+      },
+      "sample_entity_names": [
+        "GTP",
+        "3',8-cH2 GTP",
+        "cPMP",
+        "MPT",
+        "MPT-AMP",
+        "Moco",
+        "NIT-8",
+        "Unknown",
+        "MPT synthase complex",
+        "NIT-7A",
+        "NIT-9G",
+        "NIT-9E"
+      ],
+      "advisory_failures": [],
+      "verdict": "IMPORT FAIL -- no_broken_references"
+    }
+  ]
+}

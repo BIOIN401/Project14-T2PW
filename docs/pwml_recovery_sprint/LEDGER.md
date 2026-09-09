@@ -10356,3 +10356,32 @@ Full record: [`C-120-VALIDATION-RESULT.md`](C-120-VALIDATION-RESULT.md) · `D-09
 | gold-readers | **462 / 0 / 11 / 0** — the 3-test difference from the documented 465/0/8/0 is **environmental**, confirmed independently. Documented number NOT edited |
 | `F-185` | **NOT closed.** `C-120` fixed two members of the class; ORCH-725's Type-3 population is untouched |
 | next | **STOP ENGINEERING.** `F-192` census (read-only) · manual PathWhiz review of the 4 PWMLs now on disk · manuscript |
+
+---
+
+## `ORCH-739` — runtime / provider delivery reliability. **DECISION: `ONE FINAL RUNTIME CARD REQUIRED`** · 2026-09-09
+
+Full record: [`ORCH-739-RUNTIME-PROVIDER-RELIABILITY.md`](ORCH-739-RUNTIME-PROVIDER-RELIABILITY.md).
+Read-only census plus 58 live micro-probe calls. **No production code modified**; `git diff 24dd4342
+HEAD -- src/` empty. `main` untouched. No paper re-run, no cohort launched, no worktree pruned.
+
+### State at this entry
+
+| item | state |
+|---|---|
+| primary question | **ANSWERED YES — but not at Stage 1.** Delivery failure consumes **44.9 %** of leg wall clock across 27 legs / 1,384 traced calls; **716 (51.7 %) return zero content**; **zero** provider exceptions, timeouts or rate limits in the whole corpus |
+| leg-level split | PWML legs lose a median **29.3 %** of runtime to it; no-PWML legs **50.2 %**. Median empties **11** vs **26**. Both wall-clock timeouts delivery-dominated (90 and 71 empties) — stated as **`contributed materially`**, never `caused` |
+| **`F-199`** | **root cause, measured not inferred.** The primary model spends its whole `max_tokens` on reasoning tokens and returns no content. **5/5 empty at 300 tokens; 0/5 with `reasoning: {enabled: false}`.** The `reasoning.max_tokens` cap is **silently ignored** and was tested before either was proposed |
+| where it bites | empty rate tracks the completion budget: `chat` (300 tok) **79.7 %** · `rag_prose_extraction` (1,500) 54.4 % · Stage 2 (16,000) 17.1 % · **Stage 1 (16,000) 16.3 %** · preprocessor (12,000) **0.0 %**. **`ORCH-733` was right that Stage 1 is a small tail; nothing here overturns it** |
+| backend | **not a routing property.** 14 backends served the primary across 39 probe calls; the same backend gave both outcomes; all 10 delivered with reasoning off. **Option D rejected on evidence.** `provider` still not persisted in production (`ORCH-733` § 4 seam unchanged) |
+| fallback | `OPENROUTER_EXTRACTION_FALLBACK_MODEL = google/gemini-3.8-flash` **is live in `.env`** and has **issued zero calls, ever** — all 1,384 traced calls are `deepseek/deepseek-v4-flash`. Correctly configured and correctly gated; **pointed at a stage that is not bleeding, and gated on a shape the bleeding does not take** (a wholly empty completion cannot set `saw_empty_payload`). **No change requested** |
+| options A–D | **all REJECTED**, each on evidence — see § 7. Configuration cannot reach `F-199`: no env var exposes it, the cap is inert, and **every model-swap lever also changes biology** |
+| **decision** | **`ONE FINAL RUNTIME CARD REQUIRED`.** All three of § 16 C's conditions hold. Boundary: `client.py`, the two request builders only, small-budget calls only. Stage 1 / Stage 2 at 16,000 **explicitly out of scope**. G9 proof already on disk (`g11/ORCH-739/04` vs `06`) |
+| **not implemented** | correct per `CLAUDE.md` — the Lead Orchestrator does not author patches and never approves its own work. Production stays frozen at `24dd4342`; **unfreezing is the product owner's call, not a consequence of this measurement** |
+| `C-119` / `C-120` / `C-121` | **NOT reopened.** No finding here touches them and none is claimed |
+| identity (`§ 12`) | **NO card recommended. `n = 1` on the only arguable shape.** Two legs share the error string and `species_mismatch` check but **not the defect**: the tobacco leg refused *human* UGT1/MATE1 for a *N. tabacum* pathway — **the gate working correctly**, and chartering on it would have broken a safeguard. Only `DmaW` (*A. japonicus*, refused an *A. fumigatus* congeneric orthologue of the right function) is even arguable, and that is a **biological policy question for the product owner**, not a code defect |
+| **`F-195`** | **third instance found — `PMC7232280`, and it PREDATES the run that discovered the defect.** Population now 3 papers. **Not fixed**, per standing instruction; the live import decides |
+| **`F-198`** | **`chat_with_tools` emits no `LEG_TRACE` rows**, so every `curator` and gap-synthesis call is invisible. **All call counts anywhere in the sprint are floors**, including `ORCH-733`'s and this task's. Observability only. REGISTERED |
+| PathWhiz set | **13 files committed and hash-pinned**, `sha256sum -c` all `OK`. `ORCH-735` committed 11; this task added the 2 still untracked on one disk (`C121_PMC9544450`, `ORCH730_PMC7232280.F195`). **Copies only, `cmp`-verified byte-identical; sources preserved.** 10 READY / 3 FAIL, the 3 all `F-195` |
+| G11 | six bounded jobs, **all `FINAL SURVIVING COUNT : 0` / `cleanup : success`**. Heavy lock free before and after. Pre-existing processes reported, never killed |
+| next | **the product owner's two decisions, in either order:** (1) import the PWML set by hand — the step this phase has been waiting on, and the only thing that decides `F-195`; (2) rule on the `F-199` card. **`RAG v2` does not begin until reliability closes**, and `F-199` matters more to it than to mode A — mode C issues LLM calls per frontier node, so a 45 % wall-clock tax compounds |

@@ -1,5 +1,26 @@
 # PathWhiz import set — the files the product owner imports by hand
 
+> ## UPDATED `ORCH-739`, 2026-09-09 — **thirteen** files, not eleven.
+>
+> Two deliverables were still untracked on a single disk, the same `F-187` exposure this directory
+> exists to close. Both are now here, **copies only, each `cmp`-verified byte-identical to its
+> source run tree, which is preserved unchanged**:
+>
+> | file | source | bytes | sha256 (first 16) | verdict |
+> |---|---|---:|---|---|
+> | `C121_PMC9544450.pwml` | `runs_validation/c121/2026-09-09_0028` | 48,826 | `57efe6e2fdf3fa12` | **IMPORT READY** |
+> | `ORCH730_PMC7232280.F195.pwml` | `runs_validation/2026-09-07_1929` | 45,054 | `f9b5b80b053df3a1` | **IMPORT FAIL** |
+>
+> `C121_PMC9544450` is the **`C-121` live-validation control** — the leg that proved the `F-192`
+> seam fires in production. 5 reactions; its `cytoplasmic state` survived the quarantine sweep.
+>
+> `ORCH730_PMC7232280` is a **third `F-195` instance**, dangling `compound-location-id` 30 and 34
+> from `transport-compound-visualization`. **It predates the run that discovered `F-195`**, so the
+> defect was never introduced by the `ORCH-734` cohort. Import it **last**, with the other two.
+>
+> Totals are now **10 IMPORT READY · 3 IMPORT FAIL**, the three failures all `F-195`.
+> `SHA256SUMS.txt` regenerated over all thirteen and verified with `sha256sum -c`: every line `OK`.
+
 **2026-09-08, `ORCH-735`.** Eleven PWML files, copied byte-for-byte out of their run trees and
 **committed**. That is the point of this directory: until now every one of them existed as a single
 untracked copy on one disk — the `F-187` exposure `ORCH-734` § 7 flagged and asked to have fixed.
@@ -40,8 +61,9 @@ pair is worth importing together for exactly that reason.
 |---|---|---:|---|
 | `ORCH734_PMC11016064.F195.pwml` | `runs_smoke/2026-09-08_1528` | 107,951 | `no_broken_references` — `transport-compound-visualization` names `compound-location-id` 66 and 77, neither declared |
 | `ORCH734_PMC6112128.F195.pwml` | `runs_smoke/2026-09-08_1528` | 78,492 | `no_broken_references` — names `compound-location-id` 55; the document declares 88 to 101 |
+| `ORCH730_PMC7232280.F195.pwml` | `runs_validation/2026-09-07_1929` | 45,054 | `no_broken_references` — names `compound-location-id` 30 and 34, neither declared. **`ORCH-739`; third instance, and the oldest** |
 
-**Both exported successfully and both count as `ORCH-734` successes.** `F-195` is an
+**All three exported successfully and each counts as a success in its own cohort.** `F-195` is an
 import-validity defect, invisible to every pipeline gate, and it is **not** part of `C-121`.
 
 Their outcome is what settles the question, and the rule was written before the test:
