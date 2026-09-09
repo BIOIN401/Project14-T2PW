@@ -22,3 +22,31 @@ docs/pwml_recovery_sprint/evidence/c011_freeze_seam_before.json -text
 # reproducibility record pins its sha256, and a CRLF checkout would change that hash
 # and break the reconstruction proof. Own entry, per the rule above.
 docs/pwml_recovery_sprint/evidence/repro/ORCH-724/streamlit_app.pilot.patch -text
+
+# ORCH-735 PathWhiz import set. Eleven BYTE-EXACT deliverables: the manifest pins each
+# file's sha256, the product owner imports these exact bytes into PathWhiz by hand, and a
+# CRLF checkout would change every one of those hashes. All eleven are LF-only on disk, so
+# without these entries a fresh clone gets different bytes than the machine that made them
+# and `git diff` stays empty while the manifest silently stops being true.
+#
+# Eleven explicit paths and no wildcard, per this file's own rule. A future PWML added to
+# this directory needs its own line -- do not generalise to `*.pwml`, which would also
+# capture the `reference/` fixtures and every run-tree snapshot.
+#
+# The pre-existing ORCH-730 PWML in the sibling directory has NO entry and is therefore
+# exposed to exactly this hazard. It is left alone deliberately: it is another card's
+# artifact, its blob and worktree agree only because it has not been re-checked-out since
+# it was added, and changing how a committed artifact is stored is not ORCH-735's call.
+# Recorded so the next reader knows it is a known gap and not an oversight.
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C120_PMC10031235_PSAT.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH732_PMC12051542.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH732_PMC4725005.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH732_PMC9544450.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH734_PMC10055903.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH734_PMC10269868.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH734_PMC11016064.F195.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH734_PMC6112128.F195.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH734_PMC7402084.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH734_PMC8211424.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH734_PMC9544450.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/SHA256SUMS.txt -text
