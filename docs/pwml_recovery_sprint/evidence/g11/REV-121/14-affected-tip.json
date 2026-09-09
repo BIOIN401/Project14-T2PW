@@ -1,0 +1,228 @@
+{
+  "label": "rev121-affected-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c121",
+    "--pin-verdict",
+    "C:/t/c121/docs/pwml_recovery_sprint/evidence/g11/pin/REV-121/14-affected-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/revbt/14",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c082_species_rename_declination.py",
+    "tests/test_d088_coverage_diagnostics.py",
+    "tests/test_entity_type_gate.py",
+    "tests/test_process_normalizer.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_strict_quarantine_lineage.py",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_streamlit_stage8_export_contract.py",
+    "tests/test_f179_reaction_support.py",
+    "tests/test_c119_release_status_superseded_cap.py",
+    "tests/test_c119_superseded_intermediate_report.py",
+    "tests/test_c119_g9_base_failure_proof.py",
+    "tests/test_c120_identity.py"
+  ],
+  "cwd": "C:\\t\\c121",
+  "started_at": "2026-09-09T05:56:31+00:00",
+  "finished_at": "2026-09-09T05:57:09+00:00",
+  "duration_seconds": 38.25118999999904,
+  "timeout_seconds": 3600.0,
+  "root_pid": 181968,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 183996,
+      "name": "python.exe",
+      "ppid": 181968
+    },
+    {
+      "pid": 185284,
+      "name": "git.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 176016,
+      "name": "git.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 178664,
+      "name": "python.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 183504,
+      "name": "python.exe",
+      "ppid": 178664
+    },
+    {
+      "pid": 181752,
+      "name": "python.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 183776,
+      "name": "python.exe",
+      "ppid": 181752
+    },
+    {
+      "pid": 184392,
+      "name": "git.exe",
+      "ppid": 183776
+    },
+    {
+      "pid": 81000,
+      "name": "python.exe",
+      "ppid": 184284
+    },
+    {
+      "pid": 184284,
+      "name": "python.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 176972,
+      "name": "python.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 184180,
+      "name": "python.exe",
+      "ppid": 176972
+    },
+    {
+      "pid": 182940,
+      "name": "python.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 183984,
+      "name": "python.exe",
+      "ppid": 182940
+    },
+    {
+      "pid": 178632,
+      "name": "python.exe",
+      "ppid": 179844
+    },
+    {
+      "pid": 179844,
+      "name": "python.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 178364,
+      "name": "git.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 182948,
+      "name": "git.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 184364,
+      "name": "git.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 185108,
+      "name": "git.exe",
+      "ppid": 183996
+    },
+    {
+      "pid": 183600,
+      "name": "git.exe",
+      "ppid": 183996
+    }
+  ],
+  "descendants_terminated": [
+    81000,
+    176016,
+    176972,
+    178364,
+    178632,
+    178664,
+    179844,
+    181752,
+    182940,
+    182948,
+    183504,
+    183600,
+    183776,
+    183984,
+    183996,
+    184180,
+    184284,
+    184364,
+    184392,
+    185108,
+    185284
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 101700,
+      "name": "python.exe"
+    },
+    {
+      "pid": 102020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 130224,
+      "name": "python.exe"
+    },
+    {
+      "pid": 184412,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c121/docs/pwml_recovery_sprint/evidence/g11/REV-121/14-affected-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c121\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c121",
+    "repo_head": "74fd6f7cf1c761112f27f3beed9f7ce1c3df9813",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-121",
+    "token": "REV-121:184412:42082a098e96c4c5",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -140,9 +140,34 @@ a time. No `nohup`, no `&`, no detached job, no `taskkill /IM`.
 
 ### 3.2 The census result
 
-**The guard fires on exactly 5 production legs, and no leg outside those 5 changed by a single
-byte.** 154 legs scanned (`.pytest_tmp_baseline` and worktrees excluded), cross-tabulated
-against each leg's own committed `pwml_required_field_gate_report.json`:
+**The guard fires on exactly 5 production legs, and no leg outside those 5 changed** — and
+that sentence is only worth anything with the measurement attached, which is what `REV-121`
+was right to press on even though its own number was wrong.
+
+**Under which measurement it is true.** `ORCH-737` verified it at the **production call site**:
+`quarantine_and_close` driven over all 154 archived legs in both trees, **each leg in its own
+export mode** — `research` for a `/research/` leg, `pathwhiz` for a `/strict/` one — comparing
+the resulting payloads. **5 payloads moved, 0 legs changed their reaction set, 0 changed their
+quarantine `ok`.** The five are the `D-099` § 5 population.
+
+**Where my own census was weaker, and I am not defending it.** `c121_impl_census.py` evaluates
+the predicate on the raw committed `final_mapped.json` rather than at the call site — as did the
+orchestrator's pre-dispatch census. That method happened to return the right five here; it is
+not the same measurement, and it should not be quoted as if it were.
+
+**The trap, recorded so the next reader does not repeat it.** A naive probe returns **7**.
+`REV-121` reached that number by driving two `/research/` legs through **strict** quarantine,
+which production never does: research mode runs every decision and applies none of them, so such
+a leg pushed down the strict path loses states production would have kept and then fires clause
+1. In the mode production actually runs them in, `ORCH-737` measured both as **NOT MOVED**. The
+same trap is reachable the other way, by evaluating the predicate on a payload read off disk.
+Both extra legs are measurement artifacts, not firings. This is now stated in
+`autostate_restoration_required`'s own docstring, not only here.
+
+**The cross-tab qualifier is narrower than the firing count** and must not be quoted without it.
+`no false positives, no false negatives` is a cross-tabulation against each leg's **committed**
+`pwml_required_field_gate_report.json`, and **99 of the 154 legs carry no such report**. Over
+the 55 that do, the split is exact:
 
 | | failed on an F-192 code | did not |
 |---|---:|---:|
@@ -153,7 +178,8 @@ The five: `runs_smoke/2026-09-08_1528/…/PMC11961743`, `…/PMC4471609`,
 `runs_validation/c120/2026-09-08_1240/…/PMC9544450`,
 `runs_verify/2026-08-21_2014/…/PMC12312563`, `runs_verify/2026-08-24_1203/…/PMC13231680` —
 the `D-099` § 5 population, unchanged. **40** quiet legs would have been perturbed by an
-unguarded re-run; the guarded entry point perturbed **0** of them. The census reproduces the
+unguarded re-run; the guarded entry point perturbed **0** of them (payload-level census; the
+call-site confirmation is `ORCH-737` above). The census reproduces the
 orchestrator's pre-dispatch numbers exactly, measured against the **shipped** predicate rather
 than a copy of it, and it additionally asserts that `autostate_restoration_required`,
 `restore_autostates_if_required`'s return value and actual byte change agree on all 154 legs
@@ -226,7 +252,34 @@ the pin no longer carries: a code leaving is a reviewed outcome, a code *appeari
 in the fragment loop. **Flagging this for the orchestrator as the one place my diff left its
 declared boundary, deliberately and for a stated reason.**
 
-## 6. Process lifecycle — 28 jobs, every one clean
+## 5.4 Correction round (`REV-121` / `ORCH-737`), applied 2026-09-09
+
+Two text corrections, no behaviour change, no test-expectation change:
+
+1. `autostate_restoration_required`'s docstring now states the **conditions** the "exactly
+   five" figure was measured under — call site, per-leg export mode, and the 55-of-154 scope of
+   the gate-report cross-tab — and records both ways a naive probe returns 7. §3.2 above was
+   corrected the same way.
+2. `_VISIBLE_LOCATION_BUCKETS` now documents the **scanned-vs-assigned asymmetry**: the guard
+   scans four buckets, `ensure_autostates` assigns to two, so a payload whose only unassigned
+   visible row is a nucleic-acid or element-collection row would fire the guard, be mutated and
+   still fail the gate. Left unfixed on instruction — narrowing the guard or widening
+   `ensure_autostates` are both behaviour changes and neither is authorized — with the hazard
+   named: `test_the_visible_location_buckets_are_the_gates_own_buckets` locks the tuple to the
+   gate's table, so a fifth gate bucket would widen the scan without widening the assignment and
+   green tests would say nothing.
+
+**One number I could not reproduce, reported rather than copied.** The correction brief gives
+the archived population of those two buckets as 3 and 7 legs. Measured over all 154 production
+legs (`evidence/c121_bucket_gap_census.py`, reports `35` and `36`) I get
+**`nucleic_acid_locations` on 4 legs and `element_collection_locations` on 10**, and no scope I
+sliced reproduces 3 and 7 — strict-only is 2 and 5, research-only is 2 and 5, and legs with a
+committed gate report are 0 and 3. **The conclusion is unaffected and is what the docstring
+rests on: 0 legs in either bucket carry a row missing a state, so the gap is latent.** The
+docstring records my measured 4 and 10 with the scope named. Worth a glance in case the brief's
+numbers came from a slice I have not thought of.
+
+## 6. Process lifecycle — 31 jobs, every one clean
 
 Every job: `FINAL SURVIVING COUNT : 0` and `cleanup : success`. Reports `06`–`33` under
 `docs/pwml_recovery_sprint/evidence/g11/C-121/`; 21 pin verdicts under `g11/pin/C-121/`, all
