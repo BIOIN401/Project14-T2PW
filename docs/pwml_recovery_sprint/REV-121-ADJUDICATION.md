@@ -94,8 +94,18 @@ The guard scans four `element_locations` buckets, matching the gate's own table.
 `ensure_autostates` assigns a state to **two** of them. A payload whose only unassigned row is a
 nucleic-acid or element-collection row would fire the guard, be mutated, and still fail the gate.
 
-Measured as latent, not live: 3 archived legs carry `nucleic_acid_locations` rows and 7 carry
-`element_collection_locations` rows, and **none has such a row missing a state.**
+Measured as latent, not live. **`REV-121` gave this population as 3 and 7; both are wrong, and I
+passed them into the correction brief without checking.** The implementer re-measured, flagged the
+discrepancy rather than copying my figure, and is right: over the 154 production legs it is
+**4** legs with `nucleic_acid_locations` rows and **10** with `element_collection_locations` rows.
+I have since confirmed both numbers independently. No slice of the corpus reproduces 3 and 7.
+
+**The conclusion is unaffected, and it is the conclusion that carries the finding: ZERO legs in
+either bucket have a row missing a state.** The gap is latent either way.
+
+That an implementer refused a number handed down by its orchestrator, measured it, and reported the
+disagreement is the behaviour this sprint wants. It is also the FOURTH count in this card's cycle
+that was wrong on first telling.
 
 **Neither narrowing the guard nor widening `ensure_autostates` is authorized under `D-099`**, and
 either would be a behaviour change requiring the whole verification run again. The asymmetry is
