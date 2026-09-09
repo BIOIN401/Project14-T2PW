@@ -1,0 +1,92 @@
+{
+  "label": "final-cleanup",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c121",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-121/34-final-cleanup.pin.json",
+    "-q",
+    "--basetemp=C:/t/tmp121/f34",
+    "tests/test_c121_autostate_lifecycle.py",
+    "tests/test_f179_reaction_support.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py"
+  ],
+  "cwd": "C:\\t\\c121",
+  "started_at": "2026-09-09T05:36:50+00:00",
+  "finished_at": "2026-09-09T05:37:14+00:00",
+  "duration_seconds": 23.647817100001703,
+  "timeout_seconds": 1200.0,
+  "root_pid": 174156,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 176348,
+      "name": "python.exe",
+      "ppid": 174156
+    }
+  ],
+  "descendants_terminated": [
+    176348
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 101700,
+      "name": "python.exe"
+    },
+    {
+      "pid": 102020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 176268,
+      "name": "python.exe"
+    },
+    {
+      "pid": 176444,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-121/34-final-cleanup.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c121\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c121",
+    "repo_head": "79cde13c4056d52c1fc06096980089c43dfa53ee",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-121",
+    "token": "C-121:176268:c1cdbb3e7709b19c",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
