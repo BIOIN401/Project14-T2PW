@@ -1,0 +1,34 @@
+# C-121 POST-MERGE LIVE VALIDATION -- 2026-09-09, D-099 section 15.
+#
+# THREE legs, strict mode, ONE DRAW EACH. No favourable-draw retries.
+#
+# PURPOSE. Everything C-121 has proved so far is deterministic replay of archived
+# payloads and unit tests. This is the only arm that exercises the merged seam in
+# a live pipeline. It is NOT a benchmark, NOT a rate, and its three numbers may
+# never be merged into ORCH-732's, ORCH-734's or any other denominator.
+#
+# WHAT WOULD MAKE IT INFORMATIVE. Both F-192 papers reached the required-field
+# gate with a sound core and were refused on no_biological_states. If they now
+# serialize, the fix works in production. If Stage 1 fails first, the leg never
+# reaches the seam and proves NOTHING either way -- that is to be reported
+# honestly, not re-run until it cooperates.
+#
+# WHY A CONTROL. PMC9544450 exported 49,436 B in ORCH-734 and is the paper that
+# proved F-192's trigger is draw-dependent: it FAILED on F-192 in the C-120
+# validation and PASSED in ORCH-734, same code, different draw. It is here to
+# catch a regression the two subjects cannot -- if the control breaks, the fix
+# did something the deterministic evidence missed.
+#
+# THE CONTROL CANNOT BE SCORED ON BYTE EQUALITY. A new draw is a new extraction;
+# the archived 49,436 B is not a target and any comparison to it is qualitative.
+# What matters is that it still produces a PWML at all.
+#
+# The three lines are copied VERBATIM from topics_final_reliability_smoke.txt
+# (lines 62, 67, 77) so the requested pathway and organism strings are identical
+# to the run that found the defect. A reworded scope string is a different
+# experiment -- ORCH-734 lost PMC7910490 to exactly that operator error.
+
+PMC11961743  | furochromone biosynthesis            | Saposhnikovia divaricata
+PMC4471609   | cycloclavine biosynthesis            | Aspergillus japonicus
+
+PMC9544450   | menaquinone biosynthesis             | Escherichia coli
