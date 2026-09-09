@@ -6603,3 +6603,70 @@ archived-payload replays, not production deliverables.
 Production is **re-frozen on merge** at the new tip. `D-090` governs again in full. **No second
 production card automatically follows** — the next task is manual PathWhiz import validation, and
 `RAG v2` does not begin until reliability closes under the § 19 rule.
+
+---
+
+## D-099 AMENDMENT 1 — the population of 5 is RE-VERIFIED at the production call site, and the method that produced it was imprecise · 2026-09-09 · LOCKED
+
+`D-099` § 5 and § 6 both said **5**, and both were measured by evaluating
+`autostate_restoration_required` on the raw committed `final_mapped.json`. **The number is right and
+the method was not the production one.** `REV-121` caught that and inferred the number must
+therefore be wrong; it is not, but the challenge was correct to make and the record has to say
+under what conditions 5 is true.
+
+### Re-measured at the call site
+
+`quarantine_and_close` driven over all **154** archived production legs in both the base tree and
+the tip tree, **each leg in its own export mode** — `research` for a `/research/` path, `pathwhiz`
+for a `/strict/` one — comparing the resulting payloads:
+
+| | |
+|---|---:|
+| **legs whose post-quarantine payload MOVED** | **5** |
+| legs with any reaction-set change | **0** |
+| legs whose quarantine `ok` moved | **0** |
+
+The five are the § 5 population unchanged. Evidence: `evidence/g11/ORCH-737/01` and `02`.
+
+### The two ways to get 7, both artifacts
+
+`REV-121` measured **7**, naming `PMC12452463/research` (`runs_verify/2026-08-22_2147`) and
+`PMC12782028/research` (`runs_verify/2026-08-24_1428`). Both are **`/research/` legs driven through
+STRICT quarantine.** `quarantine_and_close`'s own docstring: research mode *"runs every decision
+and applies none of them."* Isolated in both modes on both trees (`ORCH-737/03`, `04`), **neither
+leg moves in the mode production runs it in.**
+
+So a count of 7 comes from either evaluating the predicate on the raw archived payload, or pushing
+a research leg down the strict path. Neither is a firing.
+
+### What is now required of any statement of this number
+
+**A corpus count carries its measurement conditions or it is not a measurement.** Any future
+statement of this population must say: measured at the production call site, each leg in its own
+export mode; and the "no false positives, no false negatives" qualifier holds over the **55** legs
+that carry a committed required-field gate report, because **99 of the 154 do not.**
+
+`autostate_restoration_required`'s docstring is amended to state exactly that, and to record both
+artifact paths so the next reader who runs the naive probe finds the discrepancy already explained
+instead of concluding the docstring lies.
+
+### The `40`-leg comparand is NOT re-verified and is now labelled
+
+`D-099` § 6's *"40 legs an unguarded re-run would perturb"* is a raw-artifact number by the same
+method. Its call-site equivalent has **never been measured.** It is a counterfactual about a design
+that was rejected, it is load-bearing for nothing in the merged diff, and it stays in the record
+labelled as what it is rather than being quietly restated as a seam measurement.
+
+### Third instance of one failure mode
+
+The `F-192` census undercounted with a fixed-depth glob and disclosed it. `ORCH-732` read a refusal
+as an overwrite. `REV-121` measured the right predicate on the wrong object. **All three are a
+correct-looking measurement taken under conditions nobody wrote down**, and two of the three were
+caught only because someone re-derived a number instead of quoting it. That is the practice this
+amendment exists to keep.
+
+### Disposition unchanged
+
+`REV-121`'s **APPROVE WITH FINDINGS** stands. Its blocking finding is **NOT SUSTAINED** as a defect
+in the patch. Merge proceeds on the two text corrections recorded in `REV-121-ADJUDICATION.md`
+§ 2 and § 4 — no source-behaviour change, no test-expectation change, no threshold moved.
