@@ -6491,3 +6491,115 @@ Stage-1 completion (`finish_reason=stop`) is a separate provider/LLM reliability
 * **That `F-185` is closed.** `ORCH-725`'s Type-3 population — the margin rule's reviewed-entry
   rejections, the `Cr` plant prefix, the strain parenthetical in UniProt queries — is untouched.
   `C-120` fixed two members of the class, not the class.
+
+---
+
+## D-099 — `C-121` is AUTHORIZED: the auto-state lifecycle seam is narrowly unfrozen, and `F-192`'s population is FIVE legs, not three · 2026-09-08 · LOCKED
+
+**The product owner has unfrozen production for this seam and this seam only.** `C-121` was
+`CHARTERED, NOT AUTHORIZED` under `D-098` § 9. It is now authorized, and the authorization is
+narrower than the card as chartered because a pre-dispatch measurement contradicted the card in
+three places.
+
+Governing documents: `prompts/C-121-f192-autostate-lifecycle.md` (the card) and
+`C-121-PREDISPATCH-MEASUREMENT.md` (what the measurement changed). **Where they disagree, the
+measurement wins** — it was taken against production functions on `bcbf62ab`, and the card's own
+§ 6 demanded it be taken before a line was written.
+
+### 1. What is authorized
+
+> Prevent a valid pathway from failing PWML export solely because the biological state a
+> surviving payload requires was created once, before later mutation, and was never
+> re-established before final validation.
+
+One seam: the auto-state lifecycle restoration point, after the quarantine closure loop and
+before the canonical freeze. Nothing else.
+
+### 2. What is NOT authorized, restated so no future reader has to infer it
+
+Preserving every auto-state · weakening quarantine's removal policy · any biological threshold ·
+`F-179` / `reaction_support.py` · extraction · identity resolution · RAG · `F-195` · Stage-1
+delivery · `streamlit_app.py` (**PROTECTED**, `D-097`) · exporter-side repair (**merge rule 8**) ·
+making `no_biological_states` non-blocking (**merge rule 6** — the card § 6 names this trap and it
+remains a reject).
+
+**No result becomes `release_ready` because of this fix.** `C-121` repairs serialization
+validity. `D-089`'s incomplete-core cap and every release gate stand unchanged.
+
+### 3. THE INVARIANT IS RESTATED — the version in the authorizing prompt does not fix the legs it cites
+
+The authorization worded the invariant as *"every surviving element-location row that requires a
+biological state must reference a valid biological state."* **Both ORCH-734 blockers have ZERO
+surviving element-location rows**, one error each — `no_biological_states` — and
+`removed_locations: []`. A row-scoped invariant has nothing to act on and repairs neither leg.
+
+**The authorized predicate is the disjunction:**
+
+```
+exportable content survives
+AND ( zero biological_states
+      OR some surviving visible element-location row carries no biological_state )
+```
+
+The second clause is the `audit_repair` shape: a row created **after** `ensure_autostates`, which
+therefore never received an assignment. It is an **absent** reference, not a dangling one.
+
+### 4. The prompt's fixtures A and B are UNREACHABLE and are not owed
+
+`_prune_biological_states` removes a state **only when nothing references it**, so a surviving row
+cannot dangle at a removed state. The shape is excluded by construction. **The G9 proofs are owed
+on the two reachable shapes** in § 3, both of which exist in the archive. The prompt's fixture C —
+a genuinely unreferenced auto-state that must still disappear — **is owed unchanged and is the
+most important of the three.**
+
+### 5. `F-192`'s population is FIVE archived legs
+
+| leg | run | shape | destroyed |
+|---|---|---|---:|
+| `PMC11961743` | `runs_smoke/2026-09-08_1528` | zero states | 10 rx |
+| `PMC4471609` | `runs_smoke/2026-09-08_1528` | zero states | 4 rx |
+| `PMC9544450` | `runs_validation/c120/2026-09-08_1240` | both | 5 rx |
+| **`PMC12312563`** | **`runs_verify/2026-08-21_2014`** | rows unassigned | 1 rx |
+| **`PMC13231680`** | **`runs_verify/2026-08-24_1203`** | rows unassigned | 1 rx |
+
+The last two are new. In both, `__auto_state__` **survived**, so a census keyed on auto-state
+*removal* could not see them. **They are also the two OLDEST instances in the corpus** — three
+weeks before the run that named `F-192`. Any statement that the defect is recent is retracted.
+
+### 6. The guard separates the corpus perfectly, and the unguarded fix is a REJECT
+
+Over the **154** production legs, cross-tabulated against each leg's committed required-field gate
+report: **5 fire, 0 false positives, 0 false negatives.**
+
+An **unguarded** `ensure_autostates` re-run changes **40** legs where the guard is quiet, including
+**6 of the 8 ORCH-734 legs that produce a PWML today.** Every one of their graph hashes would move.
+**The guard is the entire difference between the fix and a corpus-wide mutation.** The earlier
+census's *"31 harmless removals"* understated the comparand: it is 40, because `ensure_autostates`
+also appends `cell` and backfills species onto every state.
+
+### 7. The fix must deliver files, and the archive says it can
+
+All five payloads driven through the real export sequence serialize with **zero tree errors** and
+**unchanged reaction counts** — 101,095 · 80,048 · 43,794 · 23,098 · 17,295 bytes. Two
+currently-passing controls come out **byte-identical**. Reaction counts not moving is the
+measurement that says no biology was admitted, rather than the assertion that none was.
+
+**Replay outputs are NOT committed and must never enter the PathWhiz import set.** They are
+archived-payload replays, not production deliverables.
+
+### 8. Gates, in addition to the standing merge rules and the card's § 5
+
+1. A G9 behavioural proof per reachable shape, failing on `bcbf62ab` **on values**.
+2. Fixture C: a genuinely unreferenced auto-state still disappears.
+3. All five archived payloads serialize; reaction counts identical to the archived payload.
+4. `reaction_support.py` byte-identical; `evaluate_reaction_support` returns the same verdict on
+   every archived leg.
+5. The eight ORCH-734 PWML-producing legs and the 40-leg quiet set: **no payload change at all.**
+6. Integration smoke (465) and the gold-readers set pass; no pin moves.
+7. Independent review of the actual diff, on the eight points the authorization § 13 lists.
+
+### 9. Re-freeze
+
+Production is **re-frozen on merge** at the new tip. `D-090` governs again in full. **No second
+production card automatically follows** — the next task is manual PathWhiz import validation, and
+`RAG v2` does not begin until reliability closes under the § 19 rule.
