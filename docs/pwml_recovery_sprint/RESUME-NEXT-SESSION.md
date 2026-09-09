@@ -1480,3 +1480,72 @@ branch, the lock or a worktree.**
 it flagged eight committed G11 files as uncommitted, then traced its own report to a **torn
 `git status` read taken while another session was mutating the tree**. The other (F-153) was right
 and valuable. Neither was taken on trust.
+
+---
+
+# `C-121` MERGED AND RE-FROZEN · 2026-09-09 · `D-100`
+
+**Production is frozen at `24dd4342`.** `main` untouched at `03f1af56`. Streamlit protected hash
+`47e4fafa789d359d` intact.
+
+## The one thing to do next is not a card
+
+**Import the nine `IMPORT READY` PWML files into PathWhiz by hand.** They are committed and
+hash-pinned at [`pathwhiz_review/IMPORT-SET/`](pathwhiz_review/IMPORT-SET/) with `MANIFEST.md` and
+`SHA256SUMS.txt` — previously they existed as single untracked copies on one disk, the `F-187`
+exposure `ORCH-734` flagged. Nothing was modified to make an import succeed.
+
+**Import the two `F-195` files last.** The rule was written before the test: if PathWhiz accepts and
+renders them, `F-195` is a limitation of our structural checker and closes with no code; if it
+rejects them, `F-195` is a real importability defect and may justify one separate narrow card. **No
+pre-emptive `F-195` engineering either way.**
+
+`RELIABILITY PHASE COMPLETE` cannot be declared until that import happens. No automated task in this
+sprint can perform it.
+
+## What `C-121` did, and what it did NOT do
+
+**Did:** `quarantine_and_close` re-establishes the compartment placeholder after the closure loop,
+under a guard that fires on 5 archived legs and perturbs nothing else. Upstream of the freeze, so
+merge rule 8 holds by construction. `F-192`'s population turned out to be **five** archived legs,
+not three — two of them the **oldest** in the corpus and previously unattributed. All five clear the
+gate on replay with **identical reaction counts**. Release classification identical on 154/154 legs.
+
+**Proved live:** `PMC4471609`'s own artifacts say the sweep removed `__auto_state__` *and* the final
+payload contains it. At base nothing can put it back. The control swept the auto-state, kept the
+guard quiet, and exported 48,826 B `IMPORT READY`.
+
+**Did NOT:** raise the PWML count on either `F-192` paper. `PMC11961743` timed out before reaching
+the seam and proves nothing — **not re-run**, per `D-099` § 15. `PMC4471609` cleared `F-192` and
+then failed at the **stage-3 contract gate** on eight ergot proteins with no UniProt or DrugBank
+identifier. That is identity resolution, out of scope, and a fix that had made it pass would have
+been the wrong fix.
+
+## `F-193` is now the biggest threat to PWML yield, and it is not a code defect
+
+**58 %, 59 % and 63 % of all model attempts return empty**, nearly all `finish_reason=length`,
+measured over whole legs rather than Stage 1. `PMC11961743` was already at 58 % and 2,298 s of a
+3,600 s budget in `ORCH-734` — always one bad draw from the wall — and crossed it here.
+
+The extraction ladder behaves **correctly**. This is a provider and model-selection question.
+**REGISTERED, NOT CHARTERED.** A card that "fixes" it by loosening retry or budget policy would be
+the merge-rule-6 direction in a new costume.
+
+## Corrections this cycle made to earlier records
+
+* **The chartered invariant was wrong.** The row-scoped rule repairs neither `ORCH-734` blocker —
+  both have **zero** surviving element-location rows. The shipped predicate is a disjunction, and
+  the prompt's fixtures A and B were unreachable by construction.
+* **SMOKE is 508**, not the 465 in `CLAUDE.md` or the 503 in `TEST_MATRIX.md`. Merge rule 10 is a
+  live gate and was mis-instructing every merge; both corrected under `ORCH-736`.
+* **`REV-121`'s blocking finding was an artifact of its own probe** — it drove research-mode legs
+  through strict quarantine. `ORCH-737`.
+* **Four counts in this cycle were wrong on first telling**, each caught only because someone
+  re-derived a number instead of quoting it. The rule that falls out: **a corpus count carries its
+  measurement conditions or it is not a measurement.**
+
+## Do not
+
+Begin `RAG v2` — its requirements are recorded in `RAG-V2-HANDOFF-REQUIREMENTS.md`, which is
+**explicitly not a charter**. Fix `F-195`. Charter `F-193`. Touch `main`. Prune worktrees. Commit
+caches or run directories. Re-run a live leg to get a better draw.

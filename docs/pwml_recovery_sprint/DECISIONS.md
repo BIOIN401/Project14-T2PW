@@ -6670,3 +6670,95 @@ amendment exists to keep.
 `REV-121`'s **APPROVE WITH FINDINGS** stands. Its blocking finding is **NOT SUSTAINED** as a defect
 in the patch. Merge proceeds on the two text corrections recorded in `REV-121-ADJUDICATION.md`
 § 2 and § 4 — no source-behaviour change, no test-expectation change, no threshold moved.
+
+---
+
+## D-100 — `C-121` MERGED, production RE-FROZEN, and `F-193` is registered as a LARGER yield risk than the defect just fixed · 2026-09-09 · LOCKED
+
+`C-121` merged at `24dd4342` on `REV-121`'s **APPROVE WITH FINDINGS**, its one blocking finding
+adjudicated **NOT SUSTAINED** under `ORCH-737`, both non-blocking findings acted on, and live
+validation run under `ORCH-738`. **Production is RE-FROZEN.** `D-090` governs again in full.
+
+### 1. Frozen SHA
+
+Production is frozen at the merge commit **`24dd4342`**. `main` is untouched at
+`03f1af56`. The protected `streamlit_app.py` still hashes `47e4fafa789d359d` (CRLF, `D-097`).
+
+### 2. What was fixed, and what it is worth
+
+`quarantine_and_close` re-establishes the compartment placeholder after the closure loop converges,
+when and only when exportable content survives **and** either zero biological states remain or a
+surviving visible element-location row carries none. Upstream of `freeze_canonical_payload`, so
+**merge rule 8 holds by construction**.
+
+**`F-192` destroyed five archived legs, two of them the oldest in the corpus and previously
+unattributed.** All five clear the gate on replay with reaction counts identical to their archived
+payloads. **Nothing became `release_ready`**; release classification is identical on 154 of 154
+legs.
+
+### 3. The live proof is one leg, and it needs no replay
+
+`PMC4471609`'s `removed_entity_report.json` records `__auto_state__` removed
+`state_unreferenced_after_quarantine`; its `final_mapped.json` contains `__auto_state__`. **At base
+nothing can put it back** — the only write to `payload["biological_states"]` in
+`strict_quarantine.py` is inside `_prune_biological_states` and only ever shrinks the list. The same
+paper ended with zero states and `no_biological_states` in `ORCH-734`.
+
+The control `PMC9544450` swept the auto-state **and the guard stayed quiet**, then exported
+48,826 B `IMPORT READY`. One leg demonstrates removal-policy-unchanged, placeholder-not-immortal and
+healthy-leg-untouched, live.
+
+### 4. NO PWML IS CLAIMED FOR EITHER `F-192` PAPER
+
+`PMC11961743` timed out before the seam and **proves nothing**; it was **not** re-run.
+`PMC4471609` cleared `F-192` and then failed at the **stage-3 contract gate** on eight ergot
+proteins with no UniProt or DrugBank identifier — identity resolution, out of scope, and a fix that
+had made it pass would have been the wrong fix.
+
+**`C-121` repaired serialization validity. It did not raise the PWML count on these two papers, and
+that is the honest result.**
+
+### 5. `F-193` is now the top PWML-yield risk, and it is NOT a code defect
+
+Measured over whole legs rather than Stage 1 alone: **58 %, 59 % and 63 %** of all model attempts
+return empty, almost all `finish_reason=length`. `PMC11961743` was already at 58 % and 2,298 s of a
+3,600 s budget in `ORCH-734` — always one bad draw from the wall — and crossed it here.
+
+**This is a larger threat to yield than `F-192` was.** The extraction ladder behaves **correctly**,
+refusing to re-issue an identical prompt to the same model. **REGISTERED, NOT CHARTERED**: it is a
+provider and model-selection question and **nothing here authorizes a code change for it.** A card
+that "fixes" `F-193` by loosening retry or budget policy would be the merge-rule-6 direction in a
+new costume.
+
+### 6. Findings unchanged and unfixed
+
+`F-195` (dangling transport reference, 2 of 3 transport-carrying PWMLs) · `F-196` (reproduced
+exactly this run: the tally printed `NO DELIVERABLE` for the leg that wrote a 48,826-byte PWML) ·
+`F-197` · `F-186` · `F-187` (partly addressed — the eleven deliverables are now committed and
+hash-pinned) · the `C-121` bucket asymmetry (guard scans four `element_locations` buckets,
+`ensure_autostates` assigns two; latent, documented in code, **not** authorized to fix).
+
+### 7. A discarded measurement, recorded as discarded
+
+The attempted `merged_payload.json` counterfactual **does not reconstruct the live leg** — 0
+surviving reactions against the live 6. Its reports are committed and its script renamed `_INVALID`
+with a banner. **A replay that does not reproduce what it replays is worth nothing.** Same
+discipline that killed `REV-121`'s blocking finding.
+
+### 8. Reliability is NOT declared complete
+
+`D-099` § 19 needs representative clean PWMLs to **import and render** in PathWhiz. That needs the
+product owner's account and no automated task in this sprint can do it. **The next task is manual
+import**, not another card:
+
+* nine `IMPORT READY` files, committed and hash-pinned at
+  `pathwhiz_review/IMPORT-SET/` with `MANIFEST.md` and `SHA256SUMS.txt`;
+* the two `F-195` files last — **their outcome decides whether `F-195` becomes a card or a closed
+  checker limitation**, and that rule was written before the test;
+* the new control PWML from this run, `runs_validation/c121/2026-09-09_0028`, may be added.
+
+### 9. No production card automatically follows
+
+As `D-098` § 9 before it. `RAG v2` does **not** begin until reliability closes; its handoff
+requirements are recorded in `RAG-V2-HANDOFF-REQUIREMENTS.md`, which is **explicitly not a
+charter**.
