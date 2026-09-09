@@ -43,7 +43,7 @@ frozen cohort in `tests/data/baseline_cohort_manifest.json`, unchanged:
 That is the whole delta: one cohort leg,
 `runs/2026-08-02_2130/papers/PMC12096016/strict`, moves from refused to admitted
 and clears every later stage (39 legs; 28 admitted / 11 refused; 28/28 Stage 3;
-9/28 required contract; 9/9 IR; 9/28 exportable; by leg 19/19/4, by row 27/27/4).
+9/28 required contract; 9/9 IR; 9/28 exportable; by leg 19/19, by row 27/27).
 The residual codes below do not move; that leg contributes none.
 
 ---
@@ -207,7 +207,7 @@ on the strength of Stage 3 alone. Measured full-stack across the 39 cached legs:
 
 The 19 failures are one class, and quarantine is the wrong place to fix it:
 `species_missing_classification` (19 legs, 27 rows), `species_missing_taxonomy`
-(19 legs, 27 rows), `no_biological_states` (4 legs, 4 rows). The gate wants a numeric
+(19 legs, 27 rows). The gate wants a numeric
 taxonomy id and a Prokaryote/Eukaryote classification on every species row because
 a species with no reference-DB identity is created fresh in Rails; the archived
 payloads carry species rows with neither. Inventing them inside quarantine would
@@ -215,6 +215,16 @@ be fabricating database identity, so this is recorded as **the next pipeline
 defect** — species-metadata resolution — rather than repaired here.
 `test_stage_three_recovery_is_not_strict_exportability` pins both halves and will
 fail if the gap closes upstream, so the claim cannot drift from the measurement.
+
+> **C-121 / F-192 removed a third code from this list, 2026-09-08.**
+> `no_biological_states` was `(4 legs, 4 rows)` here. `quarantine_and_close` now
+> re-establishes the compartment placeholder after the closure loop converges, so a
+> payload that still carries exportable content no longer reaches the required-field
+> gate with zero biological states. **No leg's verdict moved:** all four also carry
+> `species_missing_*`, so `required contract` stays 9 / 28 and `fully exportable`
+> stays 9 / 28 — one error code stopped being emitted, and nothing was exported that
+> was not exported before. The species-metadata class is untouched at 19 legs / 27
+> rows and remains the next pipeline defect.
 
 **Also recorded, not fixed.** The app's post-mapping Stage 3 revalidation is
 mode-blind and always has been (unchanged at HEAD). A research run whose enzyme

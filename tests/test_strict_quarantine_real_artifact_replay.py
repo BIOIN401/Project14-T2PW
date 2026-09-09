@@ -816,10 +816,15 @@ def test_stage_three_recovery_is_not_strict_exportability() -> None:
     )
     # Every residual failure is the species-metadata class -- not a dangling
     # reference, not a degree-zero entity, not anything quarantine touches.
+    #
+    # ``no_biological_states`` was in this set until C-121 / F-192. It is removed
+    # rather than left in as harmless slack: on the base tree four cohort legs
+    # emitted it, and leaving it listed would let the code come back without this
+    # test noticing. The residual class is now the species-metadata class and
+    # nothing else, which is what the docstring above has always claimed.
     assert set(codes) <= {
         "species_missing_classification",
         "species_missing_taxonomy",
-        "no_biological_states",
     }, dict(codes)
 
 
@@ -865,15 +870,39 @@ FULL_STACK_BASELINE: Dict[str, int] = {
 #: Different numbers for the same defect -- a leg with two undeclared species
 #: contributes one to the first and two to the second -- and conflating them is
 #: how "19 legs" turns into "19 rows" in a report.
+#:
+#: **MOVED by C-121 / F-192, 2026-09-08, and the delta is exactly one code.**
+#: ``no_biological_states`` was ``4`` legs / ``4`` rows and is now **absent**:
+#: ``quarantine_and_close`` re-establishes the compartment placeholder after the
+#: closure loop converges, so a payload that still carries exportable content no
+#: longer reaches the required-field gate with zero biological states. Four cohort
+#: legs were hitting that, which is the same defect the five archived production
+#: legs D-099 § 5 lists were hitting.
+#:
+#: ``FULL_STACK_BASELINE`` above does **not** move, and that is the load-bearing
+#: half of this delta: all four of those legs also carry ``species_missing_*``, so
+#: closing ``no_biological_states`` does not make any of them pass the required
+#: contract. ``required_contract_pass`` stays ``9``, ``exportable`` stays ``9``,
+#: and no leg's verdict changed -- one error code stopped being emitted, and
+#: nothing was exported that was not exported before. A move that had raised
+#: ``exportable`` would have been the merge-rule-6 direction and a reject.
+#:
+#: The species-metadata class is untouched: 19 legs / 27 rows before and after.
+#:
+#: ``docs/change_log.md`` moved with it, in the same commit, because
+#: ``test_the_change_log_baseline_table_agrees_with_the_pinned_values`` renders its
+#: fragments straight out of these dicts and fails if the two disagree. Two lines
+#: there: the one-line restatement (``by leg 19/19, by row 27/27``) and the residual
+#: code list. The edit is scripted at
+#: ``docs/pwml_recovery_sprint/evidence/c121_changelog_edit.py`` so a reviewer reads
+#: the three exact substitutions rather than an in-place rewrite.
 RESIDUAL_CODES_BY_LEG: Dict[str, int] = {
     "species_missing_classification": 19,
     "species_missing_taxonomy": 19,
-    "no_biological_states": 4,
 }
 RESIDUAL_CODES_BY_ROW: Dict[str, int] = {
     "species_missing_classification": 27,
     "species_missing_taxonomy": 27,
-    "no_biological_states": 4,
 }
 
 _REMEASURE = (
@@ -1068,6 +1097,28 @@ def test_the_frozen_manifest_is_internally_consistent_and_fully_resolvable() -> 
     assert _legs() == [ROOT / path for path in paths]
 
 
+#: The order the log's one-line restatement renders the residual codes in.
+#:
+#: Indexed by NAME and rendered only for codes the pin still carries. C-121 removed
+#: ``no_biological_states`` from both pinned dicts, and the previous form of this
+#: test subscripted that key directly -- so a code LEAVING crashed the test with a
+#: ``KeyError`` instead of measuring the log. A residual code disappearing is a
+#: legitimate, reviewed outcome: it means the defect closed upstream. A residual code
+#: APPEARING still fails, in the fragment loop below, because the log will not carry
+#: its ``(n legs, n rows)`` line.
+_RESIDUAL_LOG_ORDER: Tuple[str, ...] = (
+    "species_missing_classification",
+    "species_missing_taxonomy",
+    "no_biological_states",
+)
+
+
+def _render_residuals(pin: Dict[str, int]) -> str:
+    """``19/19`` -- the pinned residual counts, in the log's own order."""
+
+    return "/".join(str(pin[code]) for code in _RESIDUAL_LOG_ORDER if code in pin)
+
+
 def test_the_change_log_baseline_table_agrees_with_the_pinned_values() -> None:
     """The table in the log and the pin in this module cannot drift apart again.
 
@@ -1103,10 +1154,8 @@ def test_the_change_log_baseline_table_agrees_with_the_pinned_values() -> None:
         f"{FULL_STACK_BASELINE['required_contract_pass']}/{admitted} required contract; "
         f"{FULL_STACK_BASELINE['ir_pass']}/{FULL_STACK_BASELINE['reached_ir']} IR; "
         f"{FULL_STACK_BASELINE['exportable']}/{admitted} exportable; "
-        f"by leg {by_leg['species_missing_classification']}/"
-        f"{by_leg['species_missing_taxonomy']}/{by_leg['no_biological_states']}, "
-        f"by row {by_row['species_missing_classification']}/"
-        f"{by_row['species_missing_taxonomy']}/{by_row['no_biological_states']})",
+        f"by leg {_render_residuals(by_leg)}, "
+        f"by row {_render_residuals(by_row)})",
     ]
     # Legs and rows are different numbers for the same defect; the log has to say
     # both, because reporting one as the other is the error this pin was born from.
