@@ -799,3 +799,100 @@ follows.**
    as such.
 5. **A no-retry rule is only worth what it costs to keep.** Leg 1 never exercised the code under
    test, which is the most tempting possible case for a re-run. It was not re-run.
+
+---
+
+## `ORCH-734` — FINAL RELIABILITY SMOKE. 7 PWML from 12. **Reliability is NOT closed.** · 2026-09-08
+
+Full record: [`ORCH-734-FINAL-RELIABILITY-RESULT.md`](ORCH-734-FINAL-RELIABILITY-RESULT.md).
+Freeze, written before execution: [`ORCH-734-FINAL-RELIABILITY-FREEZE.md`](ORCH-734-FINAL-RELIABILITY-FREEZE.md).
+
+**Configuration change only.** `git diff 045447c8 HEAD -- src/` is **empty**. Production remains
+frozen at `045447c8`. `streamlit_app.py` unchanged at `47e4fafa…`. `main` untouched.
+
+### The numbers, and the split that matters more than the headline
+
+`runs_smoke/2026-09-08_1528` — **a new dataset. Never merge it into the ORCH-724 pilot, ORCH-730,
+ORCH-732 or the C-120 validation.**
+
+| | |
+|---|---:|
+| papers attempted | 12 |
+| **meaningful cores** | **10** |
+| **PWML files** | **7** |
+| serialization yield | 7 / 10 |
+| structurally import-ready | 5 / 7 |
+
+**Extraction is not the bottleneck.** Ten of twelve papers produced a defensible core; three of
+those cores died downstream. **F-179 returned `supported` on every leg that produced a payload —
+zero `no_defensible_core`.** It blocked nothing and admitted no fabrication.
+
+### THE STOPPING RULE IS NOT SATISFIED. `RELIABILITY PHASE COMPLETE` was NOT declared.
+
+Two of the five § 13 criteria fail, both on **one** mechanism:
+
+* ❌ failures are **not** distributed across isolated/stochastic mechanisms
+* ❌ a single deterministic mechanism **does** repeatedly destroy otherwise-valid cores
+
+### `F-192` is that mechanism — second and third independent instances, with a measured root cause
+
+`PMC11961743` (*S. divaricata*, plant) lost **10 reactions**; `PMC4471609` (*A. japonicus*,
+fungal) lost **4**. Byte-identical signature, `gate_errors = 0`, F-179 `supported`, killed only at
+the required-field gate on `no_biological_states`.
+
+**Root cause:** `ensure_autostates` is called exactly once (`process_normalizer.py:5432`); the
+`pre_export_strict_quarantine` sweep later removes states that became unreferenced; **nothing
+re-runs it**; the gate then fails.
+
+> **The control earned its slot.** `PMC9544450` **failed** on F-192 in the C-120 validation and
+> **passed** here — same paper, same code, different draw. The **mechanism is deterministic; the
+> TRIGGER is draw-dependent.** So *"1 blocked leg in 144"* measured how often the trigger fired in
+> one archive, **not this defect's rate**. Do not quote it as one.
+
+### `C-121` — CHARTERED, NOT AUTHORIZED
+
+[`prompts/C-121-f192-autostate-lifecycle.md`](prompts/C-121-f192-autostate-lifecycle.md).
+**Do not dispatch it** until the product owner unfreezes this seam. The orchestrator does not
+implement patches (`CLAUDE.md`), `D-098` § 9 forbids an automatic follow-on card, and the fourth
+stopping-rule condition — *narrowly fixable without weakening F-179* — is **plausible but
+unproven**. Chartering on three-of-four is right; merging on three-of-four is not.
+
+**The card names the trap explicitly:** do NOT make `no_biological_states` non-blocking. That
+raises the PWML count instantly and is a direct violation of merge rule 6.
+
+### Findings registered, none fixed
+
+| id | finding |
+|---|---|
+| **F-194** | F-192's second/third instances + root cause. Deterministic mechanism, stochastic trigger |
+| **F-195** | `transport-compound-visualization` can emit a `compound-location-id` the document never declares — 2 of 3 transport-carrying PWMLs, invisible to every gate, would break a real import. Does **not** suppress generation, so it does not meet the § 13 bar. *All four known-good files used to validate the checker carry zero transports, so the baseline could never have found it* |
+| **F-196** | The batch tally prints `N NO DELIVERABLE` for legs that **did** produce one — `report.py:446` defines `warned` as *passed and (warnings or file_errors)*. **A reader trusting the runner's own tally would score this cohort at 0 with 7 PWMLs on disk.** ORCH-732's published 3/6 counted files and stands |
+| **F-197** | A Stage-0 `scope_conflict` is recorded at stage `stage1`, so a stage-keyed classifier calls it a Stage-1 delivery failure |
+
+### One miss is MINE, and is not scored against the system
+
+`PMC7910490` failed `scope_conflict` because **I** wrote a scope string the paper does not use.
+Stage 0 read it correctly and refused. **It was not re-run with corrected wording** — that would
+launder an operator error into a success. It stays in the denominator with its cause named.
+
+### The Stage-1 alternate-model rung is live, and fired zero times
+
+`OPENROUTER_EXTRACTION_FALLBACK_MODEL = google/gemini-3.8-flash` (`.env`, gitignored, zero `src/`
+diff). Six-phase liveness proof passes, including a base arm that reproduces the corpus's
+`strategy_not_materially_different` refusal. **Zero rung-3 calls in twelve legs, and that is
+correct** — no leg suffered a recoverable class B/C/D delivery failure. **No reliability
+improvement is claimed from the activation.**
+
+### PathWhiz
+
+**9 of 11 files structurally import-ready** (7 new + 3 ORCH-732 + C-120 PSAT). The 2 failures are
+F-195. **`IMPORT READY` is not `IMPORT PASS`** — the live UI import needs the product owner's
+account and is the one checklist item this task could not perform. Five recommended files are
+listed in the result § 7. **All are UNTRACKED on a single disk — the `F-187` exposure. Back them
+up.**
+
+### The next decision is the product owner's
+
+Either charter `C-121` and then close reliability, or accept 7/12 with F-192 registered and
+characterized and move to RAG v2 with a known, non-fabricating defect. **What is not defensible is
+declaring the phase complete while a criterion the charter wrote down is failing.**

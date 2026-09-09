@@ -9928,3 +9928,76 @@ Stage 1 returning no `processes` container is the correct description of them. *
 acquisition, not extraction**, and `ORCH-732` § 2 reached the same conclusion from the staging
 side: the eligibility screen *"screens for pathway **terms**, so an inhibitor paper and an omics
 paper score well"*. That is a screening-criteria question for the product owner.
+
+---
+
+## `F-194` — `F-192` has its second and third independent instances, and a measured root cause · ORCH-734, 2026-09-08
+
+**The mechanism is deterministic; the TRIGGER is draw-dependent.** `ensure_autostates`
+(`process_normalizer.py:3122`) is called exactly once, at `:5432`. The
+`pre_export_strict_quarantine` sweep runs later and removes states that became unreferenced
+(`state_unreferenced_after_quarantine`). Nothing re-runs it, and the PWML required-field gate
+fails on `no_biological_states`.
+
+| leg | run | reactions destroyed |
+|---|---|---:|
+| `PMC11961743` *S. divaricata* | `runs_smoke/2026-09-08_1528` | **10** |
+| `PMC4471609` *A. japonicus* | `runs_smoke/2026-09-08_1528` | **4** |
+| `PMC9544450` *E. coli* | `runs_validation/c120/2026-09-08_1240` | 5 |
+
+Both ORCH-734 legs: Stage-1 `biological_states` **0** · `initial n_autostate_created` **1** ·
+`n_entities_assigned_to_autostate` **0** · `__auto_state__` swept · `final n_autostate_created`
+**0** · F-179 `supported` · `gate_errors` **0**.
+
+> **`PMC9544450` failed on this in the C-120 validation and PASSED in ORCH-734** — same paper, same
+> code, different draw. **`1 blocked leg in 144` is therefore NOT this defect's rate**; it measured
+> how often the trigger fired in one archive. Do not quote it as a rate.
+
+**Chartered as `C-121`, NOT authorized.** Meets 3 of the 4 stopping-rule conditions outright;
+the fourth (*narrowly fixable without weakening F-179*) is plausible and unproven.
+
+## `F-195` — a transport visualization can reference a compound-location the document never declares · ORCH-734
+
+```
+PMC6112128    transport-compound-visualization -> compound-location-id 55   (declared: 88-101)
+PMC11016064   transport-compound-visualization -> compound-location-id 66, 77
+```
+
+**Transports are necessary but NOT sufficient:** `PMC10055903` carries two transport
+visualizations and dangles nothing. 2 of the 3 transport-carrying PWMLs are affected.
+
+**Invisible to every gate** — both files exported successfully and count as PWML successes — but a
+real importer resolving that reference would reject or drop the transport. **It does NOT suppress
+PWML generation, so it does not meet § 13's bar for the one permitted narrow fix. REGISTERED, not
+chartered.**
+
+> **The instrument's own validation corpus could never have caught this.** All four known-good
+> files used to validate the import checker — the three ORCH-732 PWMLs and the C-120 PSAT file —
+> carry **zero** transports. *A validation set that never exercises a feature cannot certify it.*
+
+## `F-196` — the batch tally reports `NO DELIVERABLE` for legs that produced a deliverable · ORCH-734
+
+`report.py:446` defines `warned` as `bool(self.passed and (self.warnings or self.file_errors))` —
+*"passed with any warning at all"* — and `:1113` prints it as `N NO DELIVERABLE`, `:712` as
+`pass, no deliv.`, `:453` as `PASS (no research deliverable)`.
+
+Every ORCH-734 leg carrying only the **informational, explicitly non-blocking**
+`entity_missing_mapping_meta` runtime-schema finding was counted this way. **The progress line read
+`7 NO DELIVERABLE` while 7 PWML files sat on disk.**
+
+**Reporting defect only; no production behaviour is affected.** ORCH-732's published 3/6 counted
+files on disk and **stands**. **REGISTERED, not fixed** — it is outside the frozen production seam
+and outside ORCH-734's scope.
+
+**The standing note for any successor:** *count `.pwml` files on disk. Never take PWML yield from
+the runner's own summary line.*
+
+## `F-197` — a Stage-0 `scope_conflict` is recorded at stage `stage1` · ORCH-734
+
+The leg's `stage` field reads `stage1` while the verdict is Stage 0's, so any classifier keying on
+the stage name files it as a Stage-1 delivery failure. This happened in ORCH-734's own scorer on
+its first pass and was caught before publication — it would have **manufactured a Stage-1 problem
+on a leg where the provider was never asked to extract anything.**
+
+Affects analysis tooling, not production. Classifiers must key on the `scope_conflict` issue code
+and status instead.
