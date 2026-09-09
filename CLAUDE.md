@@ -49,7 +49,10 @@ No patch merges unless **all** of these hold:
    **symbol absence is not proof**. A genuinely new capability or module instead carries an
    **explicitly labelled new acceptance test** and needs no fabricated base failure.
    Mislabelling a regression as new functionality is a reject.
-10. The integration smoke suite (465 tests, ~40 s) passes after the merge.
+10. The integration smoke suite (**508** tests, ~40 s) passes after the merge.
+    465 was stale from `C-054`; `C-067` moved it to 473, `C-106` to 503, and 508 is the
+    number `D-098` merge gate 10 and `ORCH-724` actually measured. `TEST_MATRIX.md`
+    still says 503 in three places; corrected in place there under `ORCH-736`.
 11. **Test-process lifecycle holds.** Every test, benchmark, pipeline leg and LLM-backed
     command ran through the bounded foreground wrapper, and the cleanup report shows
     **zero surviving owned processes**. A run with survivors is an *infrastructure

@@ -256,7 +256,7 @@ C-010's allowlist is unverifiable in an isolated worktree.
 ## Commands
 
 ```bash
-# SMOKE (every merge) — expect 503 passed  (22 files; C-106 added the last two, +14 +16)
+# SMOKE (every merge) — expect 508 passed  (22 files; 503 was stale, see line 514)
 .venv/Scripts/python.exe -m pytest -q --basetemp=<tmp>/smoke \
   tests/test_reference_repair.py tests/test_strict_quarantine.py \
   tests/test_strict_quarantine_contract_alignment.py \
@@ -511,8 +511,8 @@ different Stage-1 draws at temperature 0 in this repository.
 
 ## Baseline to preserve (filled by INIT-001)
 
-Full suite per-chunk counts - smoke **503** (457 at INIT-001; 457->460 C-010, 460->465 C-054, 465->473 C-067,
-473->503 C-106, each an exact documented delta) - chunk A **134** - chunk D 187 -
+Full suite per-chunk counts - smoke **508** (457 at INIT-001; 457->460 C-010, 460->465 C-054, 465->473 C-067,
+473->503 C-106, 503->508 (ORCH-723, the docs fix), each an exact documented delta) - chunk A **134** - chunk D 187 -
 `runs/2026-08-02_2130` · `FULL_STACK_BASELINE` and `RESIDUAL_CODES_BY_{LEG,ROW}` as
 currently pinned. See `BASELINE.md`.
 
@@ -790,7 +790,7 @@ nothing. **Correcting the numbers is not the fix; it drifts again.** The anchors
 | Purpose | Anchor |
 |---|---|
 | chunk membership | the first markdown table under the **`## Chunks`** heading; rows `**A**` `**B**` `**C**` `**D-core**` `**D-apptest**` `**E**` |
-| the SMOKE selection | the `bash` block under **`## Commands`** beginning `# SMOKE (every merge) — expect 503 passed` |
+| the SMOKE selection | the `bash` block under **`## Commands`** beginning `# SMOKE (every merge) — expect 508 passed` |
 | Chunk D's file list | `evidence/chunk_d_gate.py`'s **`CORE`** / **`S8`** / **`QB`** / **`MONOLITHIC`** symbols |
 
 **An anchor replaces a *locator*, not a *provenance pin*.** Keep the commit SHA or evidence
