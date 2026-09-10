@@ -1,0 +1,79 @@
+# C-122 FINAL RELIABILITY SMOKE COHORT -- 2026-09-10.
+#
+# PURPOSE: the last reliability check before development moves to RAG v2. The
+#   only question, unchanged from ORCH-734:
+#
+#     When the user gives the production system a reasonable biological pathway
+#     paper, does the system actually produce a usable PWML?
+#
+# SUCCESS = a PWML on disk. release_ready is NOT required; a
+# pathway.review_required.pwml counts as successful PWML generation.
+#
+# A NEW dataset with its own identity: runs_smoke/<this timestamp>. It is NOT
+# ORCH-732, NOT ORCH-734, NOT the ORCH-724 pilot, NOT the C-120 or C-121
+# validations. Its numbers may never be merged into any of those denominators
+# and it rescores none of them. Twelve papers is a smoke cohort, not a
+# population rate.
+#
+# ALL TWELVE ARE FRESH. Every id was checked mechanically against the 75
+# distinct PMC ids reachable from the gold set, every runs*/ tree and every
+# topics*.txt in the repository. None has been run before, in any mode.
+# There is no control leg: ORCH-734's control (PMC9544450) is deliberately NOT
+# carried forward, because F-192 -- the defect it was sentinel for -- was fixed
+# and live-validated under C-121.
+#
+# SELECTION: docs/pwml_recovery_sprint/evidence/c122_cohort_candidates.py, run
+# twice (reports g11/C-122/03 and 04), 90 full texts fetched, 62 passing
+# candidates recorded. The tool scores and refuses; it does not choose. These
+# twelve were chosen by hand from the passing list, and heterologous metabolic-
+# engineering papers were excluded even where they passed -- a pathway assembled
+# in a yeast or E. coli host from foreign genes is the multi-organism ambiguity
+# trap the selection rule already refuses.
+#
+# EVERY SCOPE STRING BELOW IS TAKEN FROM THE PAPER'S OWN ABSTRACT. That is not a
+# style note: ORCH-734 lost a leg to a Stage-0 scope_conflict because the
+# operator wrote "steroidal glycoalkaloid biosynthesis" where the paper said
+# "potato solanidanes". Scope is mandatory and a bare id stages an invalid run.
+#
+# ORGANISM MIX, and an honest warning about it:
+#   bacterial   4     plant   4     fungal   3     mammalian   1
+# ORCH-734's mix was bacterial 4 / human 3 / plant 4 / fungal 1. This cohort is
+# HEAVIER on fungal and LIGHTER on mammalian, because recent open-access
+# literature titled "biosynthesis" is dominated by microbial and plant natural
+# products; a targeted mammalian search returned largely the same microbial set.
+# ORCH-725 measured protein resolution by organism group -- human 67%, plants
+# 53%, bacteria 39%, fungi 20%. This mix therefore biases measured yield
+# DOWNWARD. Its number is a conservative estimate and must NOT be compared
+# like-for-like against ORCH-734's 7/12.
+#
+# C-122's collapse surface in this run, measured before execution: the mapping
+# cache holds 526 stale multi-candidate api-v7 rows, none carrying
+# primary_gene_names, concentrated in Escherichia coli (103) and Homo sapiens
+# (63) -- organisms this cohort does not contain. So these twelve resolve
+# largely uncached, which is where the C-122 collapse can fire at all.
+
+# --- bacterial ---------------------------------------------------------------
+PMC13314799  | tyrocidine biosynthesis                    | Brevibacillus brevis
+PMC13488460  | mevalonate pathway                         | Borrelia burgdorferi
+PMC13438895  | methionine biosynthesis                    | Mycobacterium tuberculosis
+PMC12707518  | branched-chain amino acid biosynthesis     | Streptococcus suis
+
+# --- plant -------------------------------------------------------------------
+PMC13084691  | calycosin biosynthesis                     | Astragalus membranaceus
+PMC13123502  | steroidal saponin biosynthesis             | Paris polyphylla
+PMC13474689  | glucomoringin biosynthesis                 | Moringa oleifera
+PMC13398565  | camptothecin biosynthesis                  | Ophiorrhiza pumila
+
+# --- fungal ------------------------------------------------------------------
+PMC13089919  | phosphatidylcholine biosynthesis           | Rhizopus microsporus
+PMC12914822  | ent-acu-dioxomorpholine A biosynthesis     | Aspergillus aculeatus
+PMC13474940  | fumonisin biosynthesis                     | Fusarium proliferatum
+
+# --- mammalian ---------------------------------------------------------------
+# The only mammalian paper the search could supply. Its subject is ferroptosis
+# protection, with steroid biosynthesis as the pathway found to be protective,
+# so it is thinner on explicit reactions than the others. It is included rather
+# than dropped: it is an ordinary paper of the kind a user would upload, and
+# excluding every mammalian leg because one might be thin would be exactly the
+# cohort manipulation section 19 forbids.
+PMC13405594  | steroid biosynthesis                       | Mus musculus
