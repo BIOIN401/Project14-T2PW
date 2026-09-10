@@ -3914,12 +3914,21 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
             if submission_full:
                 submission_values.append(submission_full)
         gene_names: List[str] = []
+        # The PRIMARY symbols, kept apart from the synonyms. ``gene_names`` below
+        # is ``sorted(set(...))``, which destroys the distinction UniProt drew --
+        # and that distinction is load-bearing: two paralogs routinely share a
+        # family SYNONYM ("ORMDL" on both ORMDL1 and ORMDL2) while their primary
+        # symbols differ, and only the primary symbol says which gene a record is
+        # actually about. See :func:`_is_same_protein_record_duplicate`.
+        primary_gene_names: List[str] = []
         for gene_obj in _safe_list(item.get("genes")):
             if not isinstance(gene_obj, dict):
                 continue
             primary = _safe_dict(gene_obj.get("geneName")).get("value")
             if isinstance(primary, str) and primary.strip():
                 gene_names.append(primary.strip())
+                if primary.strip() not in primary_gene_names:
+                    primary_gene_names.append(primary.strip())
             for synonym in _safe_list(gene_obj.get("synonyms")):
                 syn = _safe_dict(synonym).get("value")
                 if isinstance(syn, str) and syn.strip():
@@ -3967,6 +3976,8 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
         }
         if taxonomy_id:
             parsed["taxonomy_id"] = taxonomy_id
+        if primary_gene_names:
+            parsed["primary_gene_names"] = primary_gene_names[:8]
         out.append(parsed)
     out.sort(key=lambda item: item.get("score", 0.0), reverse=True)
     return out
@@ -5230,44 +5241,102 @@ def _candidate_gene_symbols(candidate: Any) -> Set[str]:
     }
 
 
+def _candidate_primary_gene_symbols(candidate: Any) -> Set[str]:
+    """Normalized PRIMARY gene symbols of a candidate row.
+
+    ``_extract_uniprot_candidates`` stamps ``primary_gene_names`` for exactly
+    this reason -- its ``gene_names`` is ``sorted(set(...))`` and no longer says
+    which symbol UniProt listed as the gene's own name. For a row from any other
+    provider, "primary" is the first symbol the row declares, which is the same
+    convention PathBank's single ``gene_name`` already follows.
+    """
+
+    row = _safe_dict(candidate)
+    declared = [
+        value
+        for value in _safe_list(row.get("primary_gene_names"))
+        if isinstance(value, str) and value.strip()
+    ]
+    if not declared:
+        symbols = _candidate_symbol_names(candidate)
+        declared = symbols[:1]
+    return {norm for norm in (_normalize_name(value) for value in declared) if norm}
+
+
 def _is_same_protein_record_duplicate(judged: Any, other: Any) -> bool:
-    """Whether ``other`` is another UniProt RECORD of the protein ``judged`` names.
+    """Whether ``other`` is a redundant UniProt RECORD of the protein ``judged`` names.
 
-    UniProt stores one gene in one organism more than once: a reviewed
-    Swiss-Prot entry plus one or more unreviewed TrEMBL entries, or a plain
-    record duplication. Query ``OPCL1`` in *Arabidopsis thaliana* and it answers
-    with Q84P21 (reviewed), F4HST9 and A0A1P8AUM2 -- three accessions, one
-    protein. Counted as three independent candidates they drive the rung-6
-    margin to 0.03 and a REVIEWED identity is thrown out as ambiguous. ORCH-725
-    measured 12 such "margin rejects of reviewed entries".
+    UniProt stores one gene in one organism more than once: a curated
+    Swiss-Prot entry plus one or more unreviewed TrEMBL entries carrying the same
+    gene. Query ``OPCL1`` in *Arabidopsis thaliana* and it answers with Q84P21
+    (reviewed), F4HST9 and A0A1P8AUM2 (both unreviewed) -- three accessions, one
+    protein. Counted as three independent candidates they drive the rung-6 margin
+    to 0.03 and a REVIEWED identity is thrown out as ambiguous. ORCH-725 measured
+    12 such "margin rejects of reviewed entries".
 
-    They are the same record only when BOTH hold:
+    FOUR conditions, all required. The first two are what keeps this from being a
+    "highest score wins" adjudicator wearing a different hat:
 
-    * the two rows share at least one gene symbol. An empty symbol list on
-      either side is silence, not agreement, and never matches. Different
-      symbols are different proteins -- ORMDL1 and ORMDL2, PSAT1 and PSAT2 are
-      paralogs and stay rivals.
-    * they are the SAME organism, decided by the existing
-      :func:`_candidate_species_verdict` and only on its strongest verdict.
-      ``genus_level`` and ``unknown`` are refused: "same genus" once accepted
-      *Escherichia coli* for *Escherichia fergusonii*.
+    1. **The Swiss-Prot superset relation.** ``judged`` must be
+       ``reviewed is True`` and ``other`` must be ``reviewed is False``. Only the
+       curated record may absorb an uncurated one, and only ever in that
+       direction. Two records that are BOTH curated are two curated claims and
+       the ladder must refuse both; two records that are both uncurated -- or a
+       pair that never declared review status at all -- assert nothing that lets
+       one stand in for the other. This is the condition that keeps
+       ``tests/test_rag_typed_resolution_integrity.py``'s EnzX pair (P12345 and
+       Q99999, both claiming to BE EnzX in *Pseudomonas putida*, 0.02 apart,
+       neither reviewed) refused, which it must be: that fixture exists to pin
+       the case "a 'highest score wins' adjudicator would have resolved, wrongly
+       and confidently."
 
-    A disagreeing pair of NCBI taxon ids vetoes the collapse outright, even when
-    the organism strings read alike. This can only ever keep two rows apart, so
-    it strengthens the safeguard and cannot relax it.
+    2. **A shared PRIMARY gene symbol.** The two symbol sets must intersect AND
+       the intersection must contain a *primary* symbol of at least one side.
+       A shared symbol alone is not enough, because ``gene_names`` is built from
+       UniProt gene SYNONYMS as well as gene names: ORMDL1 and ORMDL2 both carry
+       the family synonym "ORMDL" and are different proteins. Requiring a primary
+       symbol in the intersection is what separates "the same gene under two
+       accessions" from "two genes of one family". The subset rule considered
+       instead -- collapsed symbols must be a subset of the judged row's -- was
+       rejected on evidence: on the live OPCL1 records F4HST9 carries the
+       submission name "OPC-8:0 CoA ligase1" as a gene synonym and Q84P21 does
+       not, so subset is false for the very case this exists to fix.
+       An empty symbol list on either side is silence, not agreement.
+
+    3. **The same organism**, decided by the existing
+       :func:`_candidate_species_verdict` and only on its strongest verdict.
+       ``genus_level`` and ``unknown`` are refused: "same genus" once accepted
+       *Escherichia coli* for *Escherichia fergusonii*.
+
+    4. **No disagreeing taxon ids.** When both rows carry an NCBI taxon id and
+       the ids differ, the collapse is vetoed even if the organism strings read
+       alike. This can only ever keep two rows apart.
 
     This narrows what counts as a *rival*. It never admits a candidate, never
     reaches across organisms, and never touches a threshold.
     """
 
-    judged_symbols = _candidate_gene_symbols(judged)
-    other_symbols = _candidate_gene_symbols(other)
-    if not judged_symbols or not other_symbols:
-        return False
-    if not (judged_symbols & other_symbols):
+    judged_row = _safe_dict(judged)
+    other_row = _safe_dict(other)
+
+    # 1. Swiss-Prot superset. ``is True`` / ``is False`` on purpose: a row that
+    #    never declared its review status is not an uncurated duplicate, it is a
+    #    row that said nothing, and silence may not license a collapse.
+    if judged_row.get("reviewed") is not True or other_row.get("reviewed") is not False:
         return False
 
-    judged_row = _safe_dict(judged)
+    judged_symbols = _candidate_gene_symbols(judged)
+    other_symbols = _candidate_gene_symbols(other)
+    shared = judged_symbols & other_symbols
+    if not shared:
+        return False
+
+    # 2. The shared symbol has to be a primary one somewhere, not a family
+    #    synonym both paralogs happen to list.
+    if not (shared & (_candidate_primary_gene_symbols(judged) | _candidate_primary_gene_symbols(other))):
+        return False
+
+    # 3. Same organism, on the strongest verdict only.
     judged_organism = _canonical_name(
         str(judged_row.get("organism") or judged_row.get("species") or "")
     )
@@ -5276,8 +5345,8 @@ def _is_same_protein_record_duplicate(judged: Any, other: Any) -> bool:
     if _candidate_species_verdict(other, judged_organism) != "ok":
         return False
 
+    # 4. Taxon ids, when both sides carry one, must agree.
     judged_taxon = str(judged_row.get("taxonomy_id") or judged_row.get("taxon_id") or "").strip()
-    other_row = _safe_dict(other)
     other_taxon = str(other_row.get("taxonomy_id") or other_row.get("taxon_id") or "").strip()
     if judged_taxon and other_taxon and judged_taxon != other_taxon:
         return False
@@ -9938,7 +10007,16 @@ def map_payload(
                     _api_result = deepcopy(_fb_cached)
                 else:
                     _api_result = map_protein_uniprot(client, _p_name, _p_org, cache=cache)
-                    cache.set("proteins", _fb_key, deepcopy(_api_result))
+                    # A transport failure is NOT memoized. ``map_protein_uniprot``
+                    # reports an unreachable UniProt as
+                    # ``reason='network_error:...'`` with ``status='unmapped'``,
+                    # and this cache is persistent -- storing it would turn one
+                    # outage into a permanent, silent "no such protein" for that
+                    # (name, organism) on every later run. PRODUCT_CONTRACT S8: a
+                    # lookup failure is not evidence that an accession is false.
+                    # Same rule the alias memo already follows.
+                    if not str(_api_result.get("reason") or "").startswith("network_error:"):
+                        cache.set("proteins", _fb_key, deepcopy(_api_result))
                 # Same ladder as the main protein loop. This fallback is where run
                 # 2026-07-28_0919 first wrote UniProt P08235 (human
                 # mineralocorticoid receptor) onto the E. coli entity 'mcr genes';

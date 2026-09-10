@@ -38,11 +38,15 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from unittest.mock import patch
 
+import pytest
+
+from t2pw.mapping import map_ids
 from t2pw.mapping.map_ids import (
     MappingCache,
     _ai_protein_synonym_lookup,
     _extract_uniprot_candidates,
     _map_protein_with_strategy,
+    map_payload,
     map_protein_uniprot,
     verify_real_protein_identity,
 )
@@ -390,6 +394,207 @@ def test_c_empty_gene_symbol_list_is_not_a_match() -> None:
 
 
 # ---------------------------------------------------------------------------
+# C2. The two shapes REV-C122 round 1 found the first predicate could not tell
+#     apart from OPCL1. Both pass at base SHA 9cf64677 and both failed at the
+#     round-1 tip, which is what makes them guards rather than decoration.
+# ---------------------------------------------------------------------------
+
+
+def _enzx_style_candidates(reviewed: Any) -> List[Dict[str, Any]]:
+    """Two INDEPENDENTLY CLAIMED accessions for one name, 0.02 apart.
+
+    The shape of ``_AMBIGUOUS_CANDIDATES`` in
+    ``tests/test_rag_typed_resolution_integrity.py``: both rows assert they ARE
+    the entity, in the same organism, with the same gene symbol. ``reviewed`` is
+    applied to BOTH rows -- the point is that neither row stands above the other.
+    """
+
+    rows: List[Dict[str, Any]] = [
+        {
+            "accession": "P12345",
+            "protein_name": "EnzX",
+            "gene_names": ["EnzX"],
+            "primary_gene_names": ["EnzX"],
+            "organism": "Pseudomonas putida",
+            "taxonomy_id": "303",
+            "score": 0.92,
+        },
+        {
+            "accession": "Q99999",
+            "protein_name": "EnzX",
+            "gene_names": ["EnzX"],
+            "primary_gene_names": ["EnzX"],
+            "organism": "Pseudomonas putida",
+            "taxonomy_id": "303",
+            "score": 0.90,
+        },
+    ]
+    if reviewed is not None:
+        for row in rows:
+            row["reviewed"] = reviewed
+    return rows
+
+
+@pytest.mark.parametrize(
+    "reviewed, label",
+    [
+        (None, "neither row declares a review status"),
+        (False, "both rows are unreviewed"),
+        (True, "both rows are curated Swiss-Prot"),
+    ],
+)
+def test_c2_two_independent_claims_on_one_name_stay_rivals(reviewed: Any, label: str) -> None:
+    """REGRESSION GUARD / SAFETY (no base failure claimed).
+
+    Same gene symbol, same organism, and NO Swiss-Prot superset relation between
+    them. These are two independent claims to be the same protein, not one
+    protein stored twice, and the ladder must confirm NEITHER. This is the
+    property ``tests/test_rag_typed_resolution_integrity.py::
+    test_an_insufficient_margin_leaves_both_accessions_unwritten`` pins, restated
+    on this card's own predicate so a future edit to the predicate breaks here
+    first.
+    """
+
+    candidates = _enzx_style_candidates(reviewed)
+    verdict = verify_real_protein_identity(
+        "EnzX",
+        candidates=copy.deepcopy(candidates),
+        mapped_ids={"uniprot": candidates[0]["accession"]},
+        organism="Pseudomonas putida",
+        source="uniprot",
+        resolved_name="EnzX",
+        result={"confidence": candidates[0]["score"]},
+    )
+
+    assert verdict["verified"] is False, (label, verdict)
+    assert verdict["reason"] == "ambiguous_insufficient_margin", label
+    assert verdict["checks"]["margin"].startswith("insufficient:"), label
+    assert verdict["competing_accessions"] == ["q99999"], label
+    assert not verdict.get("collapsed_duplicate_accessions"), label
+
+
+#: Two paralogs that share only the FAMILY SYNONYM. This is the shape
+#: ``_extract_uniprot_candidates`` really produces: ``gene_names`` is fed from
+#: UniProt gene synonyms as well as gene names, so the two rows' symbol sets
+#: intersect at "ORMDL" while their primary symbols differ.
+ORMDL_UNIPROT_PAYLOAD: Dict[str, Any] = {
+    "results": [
+        {
+            "primaryAccession": "Q9P0S3",
+            "entryType": "UniProtKB reviewed (Swiss-Prot)",
+            "proteinDescription": {
+                "recommendedName": {
+                    "fullName": {"value": "ORMDL sphingolipid biosynthesis regulator 1"}
+                }
+            },
+            "genes": [{"geneName": {"value": "ORMDL1"}, "synonyms": [{"value": "ORMDL"}]}],
+            "organism": {"scientificName": "Homo sapiens", "taxonId": 9606},
+        },
+        {
+            "primaryAccession": "Q53FV1",
+            "entryType": "UniProtKB unreviewed (TrEMBL)",
+            "proteinDescription": {
+                "submissionNames": [
+                    {"fullName": {"value": "ORMDL sphingolipid biosynthesis regulator 2"}}
+                ]
+            },
+            "genes": [{"geneName": {"value": "ORMDL2"}, "synonyms": [{"value": "ORMDL"}]}],
+            "organism": {"scientificName": "Homo sapiens", "taxonId": 9606},
+        },
+    ]
+}
+
+
+def test_c2_paralogs_sharing_only_a_family_synonym_stay_rivals() -> None:
+    """REGRESSION GUARD / SAFETY (no base failure claimed).
+
+    ORMDL1 (reviewed) and ORMDL2 (unreviewed) in one organism. The Swiss-Prot
+    superset relation HOLDS here, so condition 1 does not save this case: it is
+    condition 2, the shared symbol having to be a PRIMARY symbol somewhere, that
+    keeps two different genes apart.
+
+    Driven through the real parser so the symbol sets are the ones production
+    builds, synonyms included, rather than a hand-written pair of singletons.
+    """
+
+    candidates = _extract_uniprot_candidates(
+        copy.deepcopy(ORMDL_UNIPROT_PAYLOAD), query_name="ORMDL", organism="Homo sapiens"
+    )
+
+    # The premise of the test, stated only in terms production already had at
+    # base: the two symbol sets really do intersect, and only on the synonym.
+    symbol_sets = [{name.casefold() for name in row["gene_names"]} for row in candidates]
+    assert symbol_sets[0] & symbol_sets[1] == {"ormdl"}
+    assert candidates[0]["reviewed"] is True and candidates[1]["reviewed"] is False
+
+    verdict = verify_real_protein_identity(
+        "ORMDL",
+        candidates=copy.deepcopy(candidates),
+        mapped_ids={"uniprot": str(candidates[0]["accession"])},
+        organism="Homo sapiens",
+        source="uniprot",
+        resolved_name=str(candidates[0]["protein_name"]),
+        result={"confidence": candidates[0]["score"]},
+    )
+
+    assert verdict["verified"] is False, verdict
+    assert verdict["reason"] == "ambiguous_insufficient_margin"
+    assert verdict["checks"]["margin"].startswith("insufficient:")
+    assert not verdict.get("collapsed_duplicate_accessions")
+
+
+def test_c2_parser_separates_primary_symbols_from_synonyms() -> None:
+    """NEW-CAPABILITY ACCEPTANCE TEST.
+
+    ``gene_names`` is ``sorted(set(...))`` and cannot say which symbol UniProt
+    listed as the gene's own name; ``primary_gene_names`` is what carries that,
+    in declaration order. No base failure is claimed -- the field did not exist.
+    """
+
+    ormdl = _extract_uniprot_candidates(
+        copy.deepcopy(ORMDL_UNIPROT_PAYLOAD), query_name="ORMDL", organism="Homo sapiens"
+    )
+    assert [row["primary_gene_names"] for row in ormdl] == [["ORMDL1"], ["ORMDL2"]]
+    # The synonym is in gene_names and is NOT a primary symbol on either side.
+    for row in ormdl:
+        assert "ORMDL" in row["gene_names"]
+        assert "ORMDL" not in row["primary_gene_names"]
+
+    opcl1 = _opcl1_candidates()
+    # On the live reviewed record OPCL1 is a SYNONYM; 4CLL5 is the primary
+    # symbol. On the unreviewed records OPCL1 is the primary symbol. That
+    # asymmetry is exactly why the rule asks for a primary symbol on EITHER side.
+    by_accession = {row["accession"]: row for row in opcl1}
+    assert by_accession["Q84P21"]["primary_gene_names"] == ["4CLL5"]
+    assert by_accession["F4HST9"]["primary_gene_names"] == ["OPCL1"]
+
+
+def test_c2_the_three_sorting_cases_are_decided_by_the_predicate_itself() -> None:
+    """NEW-CAPABILITY ACCEPTANCE TEST -- the predicate, stated as a truth table.
+
+    The predicate is new, so no base failure is claimed for this one; it exists
+    so a reader can check the rule sorts all three shapes in one place.
+
+    One place a reader can check that the rule sorts all three shapes, without
+    having to reconstruct the ladder around it.
+    """
+
+    opcl1 = _opcl1_candidates()
+    ormdl = _extract_uniprot_candidates(
+        copy.deepcopy(ORMDL_UNIPROT_PAYLOAD), query_name="ORMDL", organism="Homo sapiens"
+    )
+    enzx = _enzx_style_candidates(None)
+
+    # One protein stored three times: reviewed absorbs unreviewed.
+    assert map_ids._is_same_protein_record_duplicate(opcl1[0], opcl1[1]) is True
+    assert map_ids._is_same_protein_record_duplicate(opcl1[2], opcl1[0]) is False  # wrong direction
+    # Two genes of one family sharing a synonym.
+    assert map_ids._is_same_protein_record_duplicate(ormdl[0], ormdl[1]) is False
+    # Two independent claims on one name.
+    assert map_ids._is_same_protein_record_duplicate(enzx[0], enzx[1]) is False
+
+
+# ---------------------------------------------------------------------------
 # D. Wrong-organism safety.
 # ---------------------------------------------------------------------------
 
@@ -705,3 +910,98 @@ def test_change3_parsed_candidate_carries_the_taxonomy_id() -> None:
     assert candidates, "fixture must parse"
     for row in candidates:
         assert row["taxonomy_id"] == "3702", row
+
+
+# ---------------------------------------------------------------------------
+# H. The Phase-2 fallback memo must not store a transport failure.
+# ---------------------------------------------------------------------------
+
+
+def _run_fallback_leg(tmp_path: Path, api_result: Dict[str, Any]) -> Dict[str, Any]:
+    """Drive map_payload so the Phase-2 api_uniprot_fallback leg runs once.
+
+    ``_map_protein_with_strategy`` is pinned to ``unmapped`` so the protein
+    reaches the fallback, and ``map_protein_uniprot`` is pinned to whatever
+    answer the caller wants to test. Returns the persisted cache file content.
+    """
+
+    cache_path = tmp_path / "id_mapping_cache.json"
+    payload = {
+        "entities": {
+            "proteins": [{"name": "Zzz widget synthase", "organism": "Homo sapiens"}],
+            "compounds": [],
+        },
+        "processes": {"reactions": []},
+    }
+
+    with patch(
+        "t2pw.mapping.map_ids.hydrate_species_references",
+        return_value={"hydrated": 0, "matched": 0, "novel": 0},
+    ), patch(
+        "t2pw.mapping.map_ids._rewrite_reaction_protein_enzymes_to_complexes",
+        return_value={"summary": {}, "actions": []},
+    ), patch(
+        "t2pw.mapping.map_ids._map_protein_with_strategy",
+        return_value={
+            "status": "unmapped",
+            "reason": "no_match",
+            "source": "api",
+            "provider": "UniProt",
+            "candidates": [],
+        },
+    ), patch(
+        "t2pw.mapping.map_ids.map_protein_uniprot",
+        return_value=copy.deepcopy(api_result),
+    ):
+        map_payload(payload, cache_path=cache_path, id_source="api")
+
+    return json.loads(cache_path.read_text(encoding="utf-8"))
+
+
+def _fallback_keys(cache_data: Dict[str, Any]) -> List[str]:
+    return [k for k in (cache_data.get("proteins") or {}) if k.startswith("api-fallback-v1::")]
+
+
+def test_h_a_transport_failure_is_never_written_to_the_persistent_cache(tmp_path: Path) -> None:
+    """NEW-CAPABILITY ACCEPTANCE TEST (Change 2c, safety half).
+
+    The fallback memo is new on this branch, so no base failure is claimed.
+    What is pinned is that it fails OPEN: ``data/id_mapping_cache.json`` outlives
+    the run, and one unreachable UniProt must not become a permanent silent
+    "no such protein" for that (name, organism). PRODUCT_CONTRACT S8 -- a lookup
+    failure is not evidence that an accession is false.
+    """
+
+    cache_data = _run_fallback_leg(
+        tmp_path,
+        {
+            "status": "unmapped",
+            "reason": "network_error:HTTP request failed after retries",
+            "provider": "UniProt",
+            "candidates": [],
+        },
+    )
+
+    assert _fallback_keys(cache_data) == [], cache_data.get("proteins")
+
+
+def test_h_a_real_negative_answer_is_written(tmp_path: Path) -> None:
+    """NEW-CAPABILITY ACCEPTANCE TEST (Change 2c).
+
+    The counterpart: a lookup that COMPLETED and found nothing is a real answer
+    and is memoized, which is the repetition this leg exists to stop.
+    """
+
+    cache_data = _run_fallback_leg(
+        tmp_path,
+        {
+            "status": "unmapped",
+            "reason": "no_match",
+            "provider": "UniProt",
+            "candidates": [],
+        },
+    )
+
+    keys = _fallback_keys(cache_data)
+    assert keys == ["api-fallback-v1::zzz widget synthase::homo sapiens"], keys
+    assert cache_data["proteins"][keys[0]]["reason"] == "no_match"
