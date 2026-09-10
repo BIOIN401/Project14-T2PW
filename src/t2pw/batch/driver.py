@@ -81,6 +81,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+from t2pw.batch.scope_compat import partition_specialization_conflicts
 from t2pw.paths import PACKAGE_ROOT
 from t2pw.pipeline.export_mode import STRUCTURAL_GUARD_CODES
 from t2pw.pipeline.failure_detail import headline as _detail_headline
@@ -185,6 +186,20 @@ WARN_SCOPE_CONFLICT_PREFIX = "stage-0 scope conflict (recorded, run continued): 
 
 #: Artifact naming the requested vs Stage-0-observed scope and the conflicts.
 SCOPE_CONFLICT_NAME = "scope_conflict.json"
+
+#: Warning text for a conflict that :mod:`t2pw.batch.scope_compat` withdrew --
+#: Stage 0 read a strictly NARROWER statement of the requested pathway, so the run
+#: proceeds (C-125). It is a warning and not silence on purpose: nothing about the
+#: run is broken, but "the guard fired and was overruled by the specialization
+#: rule" must be visible in the manifest row and RESULT.txt without opening the
+#: code, exactly as :data:`WARN_SCOPE_CONFLICT_PREFIX` makes the downgraded
+#: conflict visible.
+WARN_SCOPE_SPECIALIZATION_PREFIX = "stage-0 scope specialization admitted: "
+
+#: Count key for the same event, so an aggregator can find these runs without
+#: parsing warning prose. Absent (not zero) on a run that had none, so an
+#: unaffected manifest row stays byte-identical to before.
+COUNT_SCOPE_SPECIALIZATIONS = "stage0_scope_specializations"
 
 #: Why an aborted Stage-0 scope conflict has no PWML (D-062, C-077). Named HERE
 #: and not in ``pipeline.release_status``: that module is the classifier and this
@@ -625,6 +640,34 @@ def _reconcile_stage0_scope(at: Any, paper: Any, outcome: RunOutcome) -> bool:
     broken. Set ``RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS=false`` to annotate and
     carry on instead.
 
+    WHY A NARROWER STAGE-0 READING IS NOT A CONFLICT (C-125)
+    --------------------------------------------------------
+    "Different pathway" and "same pathway, said more precisely" are not the same
+    event, and the eligibility comparison cannot tell them apart -- it asks only
+    whether the two names are the same lexicon entry. Measured in the C-122 final
+    smoke, that cost two of twelve papers their entire run: PMC13474940 asked for
+    ``fumonisin biosynthesis`` and Stage 0 read ``fumonisin B1 biosynthesis``;
+    PMC13123502 asked for ``steroidal saponin biosynthesis`` and Stage 0 read
+    ``steroidal saponin (polyphyllin) biosynthesis in Paris polyphylla, focusing
+    on UGT-mediated 3-O-glucosylation``. Same pathway, same paper, zero reactions,
+    no biological judgement ever made.
+
+    So the conflict list is partitioned through
+    :func:`~t2pw.batch.scope_compat.partition_specialization_conflicts` before it
+    is acted on, and only conflicts that survive stop the run. The rule is
+    token-structural and one-way: the process kind must agree exactly, and every
+    subject token of the REQUEST must still be present in the Stage-0 scope, so
+    Stage 0 may add detail and may never drop or replace it. It is NOT a substring
+    test -- ``heme biosynthesis inhibitor screening`` contains ``heme
+    biosynthesis`` and is refused, because its process-kind set is
+    ``{biosynthesis, inhibition}``. A request that is MORE specific than what
+    Stage 0 read stays a conflict: that is a different, unproven claim.
+
+    Nothing downstream is relaxed. This decides only whether the run PROCEEDS; a
+    withdrawn conflict is recorded as a warning and a count so the overrule is
+    auditable, and a surviving conflict keeps its artifact, reason code and
+    operator message exactly as before.
+
     Returns ``True`` when the caller should stop driving this run.
     """
     scope = _requested_scope(paper)
@@ -635,6 +678,18 @@ def _reconcile_stage0_scope(at: Any, paper: Any, outcome: RunOutcome) -> bool:
         return False  # Stage 0 said nothing readable; nothing to reconcile
 
     unchanged, observed, conflicts = apply_stage0_observation(scope, stage0)
+    # C-125. ``apply_stage0_observation`` reports a conflict whenever the two
+    # pathway names are not the same lexicon entry, which is right for a DIFFERENT
+    # pathway and wrong for a NARROWER STATEMENT OF THE SAME ONE. Withdraw only
+    # the second kind, by the token-structure rule in ``batch.scope_compat``: same
+    # process kind, and no subject term of the request dropped. Nothing else in
+    # this function changes -- a conflict that survives the partition takes the
+    # unchanged path below, artifact, reason code and message included.
+    conflicts, specializations = partition_specialization_conflicts(
+        conflicts,
+        requested_pathway=scope.requested_pathway,
+        observed_pathways=observed.observed_pathways,
+    )
     outcome.observed_context = observed.to_dict()
     # Recorded, and asserted: the request that comes back is the request that went
     # in. If this ever trips, something rewrote the batch's scope.
@@ -647,6 +702,10 @@ def _reconcile_stage0_scope(at: Any, paper: Any, outcome: RunOutcome) -> bool:
         )
     outcome.counts["stage0_observed_pathways"] = len(observed.observed_pathways)
     outcome.counts["stage0_observed_organisms"] = len(observed.observed_organisms)
+    if specializations:
+        outcome.counts[COUNT_SCOPE_SPECIALIZATIONS] = len(specializations)
+        for note in specializations:
+            outcome.warnings.append(f"{WARN_SCOPE_SPECIALIZATION_PREFIX}{note}")
     if not conflicts:
         return False
 
