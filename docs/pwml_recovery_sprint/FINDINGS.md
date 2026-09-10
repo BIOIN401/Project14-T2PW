@@ -10271,7 +10271,53 @@ edited two `300` literals in code that has never run.
 
 ---
 
-## `F-202` — a spurious second species is stamped into exported PWMLs, and it lands on pathway enzymes · C-122 final smoke
+## `F-202` — a spurious second species is stamped into exported PWMLs · C-122 final smoke
+
+> ## ⚠ ADJUDICATED AND DOWNGRADED, `C-123`, 2026-09-10. **SENTINEL-ONLY. Not a correctness defect.**
+> ## The heading and body below were WRONG on the point that mattered and are corrected here.
+>
+> **Retracted:** *"it lands on pathway enzymes"* and *"all three pathway enzymes carry the PLANT"*.
+> **False.** `AauA`, `AauB` and `AauC` are **sentinel-backed wrapper complexes**, not resolved
+> proteins. I classified them by their NAMES, which is precisely the mistake `ORCH-725` warned about
+> when it recorded *"Eleven became Unknown-backed functional complexes."*
+>
+> **The audit**, `evidence/c123_sentinel_audit.py`, report `g11/C-123/01`, classifies every
+> Arabidopsis-stamped row by the only predicate that decides the question — **does the row carry a
+> real UniProt or DrugBank accession** — and never by its name:
+>
+> | | |
+> |---|---:|
+> | legs with an Arabidopsis-stamped row | **34** |
+> | rows that are the `Unknown` sentinel or a wrapper around one | **129** |
+> | rows unresolved, carrying no identifier | 3 |
+> | **resolved rows carrying a real accession on a non-plant pathway** | **0** |
+>
+> The only `resolved_with_identifier` rows anywhere are on `PMC11405693`, **whose pathway genuinely
+> is *Arabidopsis thaliana***. Those are correct.
+>
+> **`pathbank_species_id 4` is the species attached to the PathBank `Unknown` sentinel.** It is a
+> technical placeholder that asserts no biology, and no biology is mislabelled by it.
+>
+> ### Consequence
+> **No production change is warranted, and none was made.** The correct fix is to the *evaluation*:
+> sentinel and sentinel-backed rows are **excluded from biological organism-accuracy claims**, and
+> `c123_sentinel_audit.py` is the committed instrument that draws that line. A future organism claim
+> that counts these rows is measuring the placeholder, not the pathway.
+>
+> **`F-202` therefore does NOT outrank `F-195`** — the opposite of what the body below says. A
+> dangling transport reference still breaks an import; this does not.
+>
+> **The `release_ready` question is also closed.** `PMC12914822` reaching `release_ready` with
+> sentinel-backed wrappers is the disposition logic working on placeholder rows, not `C-122`
+> shipping false biology. The file was committed as `C122_PMC12914822.WRONG-SPECIES.pwml` and has
+> been **renamed to `C122_PMC12914822.pwml`**; that label was my error.
+>
+> What remains open is only a **product** question nobody has asked yet: whether the sentinel should
+> carry a plant species at all, or a neutral one. Cosmetic, and not chartered.
+
+<details><summary>Original F-202 text, kept for the record — its counts are right, its interpretation is not</summary>
+
+
 
 **Class: biological correctness in the exported artifact. REGISTERED, NOT CHARTERED. PRE-EXISTING —
 `C-122` neither caused it nor touched species resolution.**
@@ -10326,6 +10372,8 @@ The live PathWhiz import. If the spurious species appears in the UI or attaches 
 it is a data-integrity defect and needs a card. If PathWhiz ignores an unreferenced species
 declaration, it is an export artifact and closes cheaply. **No pre-emptive fix**, on the same rule
 `F-195` is held to.
+
+</details>
 
 ---
 

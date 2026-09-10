@@ -10,8 +10,24 @@
 > | `C122_PMC13474689.pwml` | glucomoringin, *M. oleifera* | 60,767 | 7 | |
 > | `C122_PMC13084691.pwml` | calycosin, *A. membranaceus* | 67,552 | 6 | |
 > | `C122_PMC12707518.pwml` | branched-chain amino acid, *S. suis* | 63,894 | 4 | |
-> | `C122_PMC12914822.WRONG-SPECIES.pwml` | *ent*-acu-dioxomorpholine A, *A. aculeatus* | 35,078 | 3 | **do not import as a showcase — see below** |
+> | `C122_PMC12914822.pwml` | *ent*-acu-dioxomorpholine A, *A. aculeatus* | 35,078 | 3 | `release_ready`; import normally |
 >
+> ### `F-202` — a spurious second species in 10 of 17 files. **ADJUDICATED: SENTINEL-ONLY, harmless.**
+>
+> **This warning previously said "a WRONG ORGANISM is declared". That was wrong and is corrected.**
+> An audit of 34 legs (`evidence/c123_sentinel_audit.py`) classified every Arabidopsis-stamped row by
+> whether it carries a real UniProt/DrugBank accession: **129 are the PathBank `Unknown` sentinel or
+> a wrapper around one, and ZERO resolved proteins are mislabelled.** `pathbank_species_id 4` is the
+> species attached to that sentinel — a technical placeholder that asserts no biology.
+>
+> `C122_PMC12914822.pwml`'s `AauA`/`AauB`/`AauC` are sentinel-backed wrappers, not resolved enzymes.
+> **The file has been renamed from `C122_PMC12914822.WRONG-SPECIES.pwml`; that label was an error,
+> and the file is a normal deliverable you can import like any other.**
+>
+> Nothing here needs fixing before import, and `F-202` does **not** outrank `F-195`.
+
+<details><summary>Superseded wording, kept for the record</summary>
+
 > ### ⚠ `F-202` — a WRONG ORGANISM is declared in **10 of these 17 files**
 >
 > A spurious second species, almost always *Arabidopsis thaliana* (`pathbank_species_id 4`), is
@@ -31,6 +47,8 @@
 > **When you import, please check specifically whether the spurious species appears in the PathWhiz
 > UI or attaches to the enzymes.** That single observation decides whether `F-202` is a real
 > data-integrity defect needing a card, or an export artifact PathWhiz ignores.
+
+</details>
 
 > ## UPDATED `ORCH-739`, 2026-09-09 — **thirteen** files, not eleven.
 >

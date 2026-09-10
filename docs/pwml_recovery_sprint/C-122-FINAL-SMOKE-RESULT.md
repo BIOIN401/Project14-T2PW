@@ -30,8 +30,11 @@ holds**, and it is not close.
 **Three mechanisms repeat across independent papers**, where § 23 asks for none:
 `identity_resolution` ×2 · `f179` ×2 · `scope_or_guard_refusal` ×2.
 
-And the smoke surfaced a **fourth** defect, pre-existing and worse than any of them, which every
-prior cohort's biological spot check missed: **`F-202`**, § 5.
+The smoke also surfaced `F-202`, a spurious second species in 10 of 17 exported PWMLs. **It was
+adjudicated the same day and is SENTINEL-ONLY** — every affected row is the PathBank `Unknown`
+placeholder or a wrapper around one, and no resolved protein is mislabelled. It is not a defect and
+it does not bear on this decision. § 5 carries the retraction; my original framing of it as a
+correctness defect was wrong.
 
 **This is a long way from 80 % and I am not going to present it as anything else.** The honest
 readings that soften it are in § 4, and none of them reaches the bar.
@@ -68,7 +71,7 @@ tuned to these results. F-179 verdicts are **recomputed** from each leg's own `f
 | `PMC12707518` | *S. suis* | branched-chain amino acid | 4 | 4 | **YES** | 63,894 | `review_required` | |
 | `PMC13084691` | *A. membranaceus* | calycosin | 6 | 6 | **YES** | 67,552 | `review_required` | |
 | `PMC13474689` | *M. oleifera* | glucomoringin | 7 | 7 | **YES** | 60,767 | `review_required` | |
-| `PMC12914822` | *A. aculeatus* | *ent*-acu-dioxomorpholine A | 3 | 3 | **YES** | 35,078 | **`release_ready`** | see § 5 |
+| `PMC12914822` | *A. aculeatus* | *ent*-acu-dioxomorpholine A | 3 | 3 | **YES** | 35,078 | **`release_ready`** | |
 | `PMC13089919` | *R. microsporus* | phosphatidylcholine | 5 | 5 | NO | — | `diagnostic_only` | `identity_resolution` — `ChoC`, `Cho2` |
 | `PMC13488460` | *B. burgdorferi* | mevalonate | 1 | 1 | NO | — | `fail` | `identity_resolution` — `species_missing_taxonomy` |
 | `PMC13438895` | *M. tuberculosis* | methionine | 4 | 1 | NO | — | `fail` | `f179` — `no_defensible_reaction_support` |
@@ -149,6 +152,21 @@ answered four of eight. **The reported number is 4 of 12.**
 ---
 
 # 5. `F-202` — a WRONG ORGANISM is stamped into 10 of 17 exported PWMLs, and every prior spot check missed it
+
+> ## ⚠ SECTION 5 IS RETRACTED ON ITS CENTRAL CLAIM. `C-123`, 2026-09-10.
+>
+> **`F-202` is SENTINEL-ONLY. No resolved protein carries a false organism, and this section's
+> heading and its "wrong organism on a pathway enzyme" framing are wrong.**
+>
+> `AauA`/`AauB`/`AauC` are **sentinel-backed wrapper complexes**, not resolved enzymes. I classified
+> them by name. An audit across 34 legs found **129** sentinel or wrapper rows and **0** resolved
+> rows mislabelled (`evidence/c123_sentinel_audit.py`, `g11/C-123/01`).
+>
+> **The counts below are correct; the interpretation is not.** `F-202` does not outrank `F-195`, no
+> production change is warranted, and the `release_ready` question is closed — the disposition
+> logic was operating on placeholder rows. The remaining question is cosmetic and unchartered:
+> whether the sentinel should carry a plant species at all.
+
 
 The `release_ready` file `PMC12914822` declares two species:
 
