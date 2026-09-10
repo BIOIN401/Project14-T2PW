@@ -1,0 +1,660 @@
+{
+  "tool": "c122_coverage_probe.py",
+  "fields": "accession,protein_name,gene_names,organism_name,reviewed,organism_id",
+  "verdicts": {
+    "query_construction": 3,
+    "coverage": 11,
+    "error": 0
+  },
+  "cases": [
+    {
+      "label": "C121/PMC4471609",
+      "name": "DmaW",
+      "organism": "Aspergillus japonicus",
+      "archived": "refused: A. fumigatus Q50EL0",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "Q50EL0",
+          "protein_name": "Tryptophan dimethylallyltransferase",
+          "genes": [
+            "dmaW",
+            "fgaPT2"
+          ],
+          "organism": "Aspergillus fumigatus (strain ATCC MYA-4609 / CBS 101355 / FGSC A1100 / Af293)",
+          "taxon_id": 330879,
+          "reviewed": true
+        },
+        {
+          "accession": "Q12594",
+          "protein_name": "Tryptophan dimethylallyltransferase",
+          "genes": [
+            "dmaW"
+          ],
+          "organism": "Claviceps fusiformis",
+          "taxon_id": 40602,
+          "reviewed": true
+        },
+        {
+          "accession": "P0CT20",
+          "protein_name": "Tryptophan dimethylallyltransferase 1",
+          "genes": [
+            "dmaW",
+            "cpd1",
+            "dmaW1"
+          ],
+          "organism": "Claviceps purpurea",
+          "taxon_id": 5111,
+          "reviewed": true
+        }
+      ],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"DmaW\" OR gene:\"DmaW\") AND organism_name:\"Aspergillus japonicus\""
+    },
+    {
+      "label": "C121/PMC4471609",
+      "name": "EasF",
+      "organism": "Aspergillus japonicus",
+      "archived": "refused: Epichloe A2TBU2",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "A2TBU2",
+          "protein_name": "4-dimethylallyltryptophan N-methyltransferase easF",
+          "genes": [
+            "easF"
+          ],
+          "organism": "Epichloe festucae var. lolii",
+          "taxon_id": 73839,
+          "reviewed": true
+        },
+        {
+          "accession": "A8C7S0",
+          "protein_name": "4-dimethylallyltryptophan N-methyltransferase easF",
+          "genes": [
+            "easF"
+          ],
+          "organism": "Claviceps fusiformis",
+          "taxon_id": 40602,
+          "reviewed": true
+        },
+        {
+          "accession": "Q5G5T6",
+          "protein_name": "4-dimethylallyltryptophan N-methyltransferase easF",
+          "genes": [
+            "easF",
+            "orfB"
+          ],
+          "organism": "Claviceps purpurea",
+          "taxon_id": 5111,
+          "reviewed": true
+        }
+      ],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"EasF\" OR gene:\"EasF\") AND organism_name:\"Aspergillus japonicus\""
+    },
+    {
+      "label": "C121/PMC4471609",
+      "name": "EasE",
+      "organism": "Aspergillus japonicus",
+      "archived": "refused: Epichloe A2TBU3",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "A2TBU3",
+          "protein_name": "FAD-linked oxidoreductase easE",
+          "genes": [
+            "easE"
+          ],
+          "organism": "Epichloe festucae var. lolii",
+          "taxon_id": 73839,
+          "reviewed": true
+        },
+        {
+          "accession": "A8C7R9",
+          "protein_name": "FAD-linked oxidoreductase easE",
+          "genes": [
+            "easE"
+          ],
+          "organism": "Claviceps fusiformis",
+          "taxon_id": 40602,
+          "reviewed": true
+        },
+        {
+          "accession": "Q4WZ61",
+          "protein_name": "FAD-linked oxidoreductase easE",
+          "genes": [
+            "easE"
+          ],
+          "organism": "Aspergillus fumigatus (strain ATCC MYA-4609 / CBS 101355 / FGSC A1100 / Af293)",
+          "taxon_id": 330879,
+          "reviewed": true
+        }
+      ],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"EasE\" OR gene:\"EasE\") AND organism_name:\"Aspergillus japonicus\""
+    },
+    {
+      "label": "C121/PMC4471609",
+      "name": "EasC",
+      "organism": "Aspergillus japonicus",
+      "archived": "refused: E. nidulans C8VPT2",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "C8VPT2",
+          "protein_name": "Acyltransferase easC",
+          "genes": [
+            "easC"
+          ],
+          "organism": "Emericella nidulans (strain FGSC A4 / ATCC 38163 / CBS 112.46 / NRRL 194 / M139)",
+          "taxon_id": 227321,
+          "reviewed": true
+        },
+        {
+          "accession": "Q4WZ63",
+          "protein_name": "Catalase easC",
+          "genes": [
+            "easC"
+          ],
+          "organism": "Aspergillus fumigatus (strain ATCC MYA-4609 / CBS 101355 / FGSC A1100 / Af293)",
+          "taxon_id": 330879,
+          "reviewed": true
+        },
+        {
+          "accession": "M1WA44",
+          "protein_name": "Catalase easC",
+          "genes": [
+            "easC",
+            "cpcat2"
+          ],
+          "organism": "Claviceps purpurea (strain 20.1)",
+          "taxon_id": 1111077,
+          "reviewed": true
+        }
+      ],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"EasC\" OR gene:\"EasC\") AND organism_name:\"Aspergillus japonicus\""
+    },
+    {
+      "label": "C121/PMC4471609",
+      "name": "EasD",
+      "organism": "Aspergillus japonicus",
+      "archived": "refused: A. benhamiae D4AK45",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "D4AK45",
+          "protein_name": "Chanoclavine-I dehydrogenase easD",
+          "genes": [
+            "easD"
+          ],
+          "organism": "Arthroderma benhamiae (strain ATCC MYA-4681 / CBS 112371)",
+          "taxon_id": 663331,
+          "reviewed": true
+        },
+        {
+          "accession": "Q4WZ66",
+          "protein_name": "Chanoclavine-I dehydrogenase easD",
+          "genes": [
+            "easD",
+            "fgaDH"
+          ],
+          "organism": "Aspergillus fumigatus (strain ATCC MYA-4609 / CBS 101355 / FGSC A1100 / Af293)",
+          "taxon_id": 330879,
+          "reviewed": true
+        },
+        {
+          "accession": "Q5BA81",
+          "protein_name": "Acyl-CoA ligase easD",
+          "genes": [
+            "easD"
+          ],
+          "organism": "Emericella nidulans (strain FGSC A4 / ATCC 38163 / CBS 112.46 / NRRL 194 / M139)",
+          "taxon_id": 227321,
+          "reviewed": true
+        }
+      ],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"EasD\" OR gene:\"EasD\") AND organism_name:\"Aspergillus japonicus\""
+    },
+    {
+      "label": "C121/PMC4471609",
+      "name": "EasA",
+      "organism": "Aspergillus japonicus",
+      "archived": "refused: E. nidulans C8VPS9",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "C8VPS9",
+          "protein_name": "Nonribosomal peptide synthetase easA",
+          "genes": [
+            "easA"
+          ],
+          "organism": "Emericella nidulans (strain FGSC A4 / ATCC 38163 / CBS 112.46 / NRRL 194 / M139)",
+          "taxon_id": 227321,
+          "reviewed": true
+        },
+        {
+          "accession": "Q4WZ70",
+          "protein_name": "Chanoclavine-I aldehyde reductase easA",
+          "genes": [
+            "easA",
+            "fgaOx3"
+          ],
+          "organism": "Aspergillus fumigatus (strain ATCC MYA-4609 / CBS 101355 / FGSC A1100 / Af293)",
+          "taxon_id": 330879,
+          "reviewed": true
+        },
+        {
+          "accession": "Q6ZXC1",
+          "protein_name": "Probable inactive dehydrogenase easA",
+          "genes": [
+            "easA",
+            "cpox3"
+          ],
+          "organism": "Claviceps purpurea",
+          "taxon_id": 5111,
+          "reviewed": true
+        }
+      ],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"EasA\" OR gene:\"EasA\") AND organism_name:\"Aspergillus japonicus\""
+    },
+    {
+      "label": "C121/PMC4471609",
+      "name": "EasG",
+      "organism": "Aspergillus japonicus",
+      "archived": "refused: A. fumigatus Q4WZ69",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "Q4WZ69",
+          "protein_name": "Festuclavine dehydrogenase easG",
+          "genes": [
+            "easG",
+            "fgaFS"
+          ],
+          "organism": "Aspergillus fumigatus (strain ATCC MYA-4609 / CBS 101355 / FGSC A1100 / Af293)",
+          "taxon_id": 330879,
+          "reviewed": true
+        },
+        {
+          "accession": "A2TBU1",
+          "protein_name": "Agroclavine dehydrogenase",
+          "genes": [
+            "easG"
+          ],
+          "organism": "Epichloe festucae var. lolii",
+          "taxon_id": 73839,
+          "reviewed": true
+        },
+        {
+          "accession": "P0CT21",
+          "protein_name": "Agroclavine dehydrogenase",
+          "genes": [
+            "easG",
+            "orfA"
+          ],
+          "organism": "Claviceps purpurea",
+          "taxon_id": 5111,
+          "reviewed": true
+        }
+      ],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"EasG\" OR gene:\"EasG\") AND organism_name:\"Aspergillus japonicus\""
+    },
+    {
+      "label": "C121/PMC4471609",
+      "name": "EasH",
+      "organism": "Aspergillus japonicus",
+      "archived": "refused: Epichloe A2TBT9",
+      "restricted_status": 200,
+      "restricted_hits": 1,
+      "restricted_rows": [
+        {
+          "accession": "A0A1L1QK38",
+          "protein_name": "Alpha-ketoglutarate-dependent non-heme iron oxygenase EasH",
+          "genes": [],
+          "organism": "Aspergillus japonicus",
+          "taxon_id": 34381,
+          "reviewed": false
+        }
+      ],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 5,
+      "unrestricted_rows": [
+        {
+          "accession": "A2TBT9",
+          "protein_name": "Dioxygenase easH",
+          "genes": [
+            "easH"
+          ],
+          "organism": "Epichloe festucae var. lolii",
+          "taxon_id": 73839,
+          "reviewed": true
+        },
+        {
+          "accession": "G8GV69",
+          "protein_name": "Dioxygenase easH",
+          "genes": [
+            "easH",
+            "easH1",
+            "orfC"
+          ],
+          "organism": "Claviceps purpurea (strain 20.1)",
+          "taxon_id": 1111077,
+          "reviewed": true
+        },
+        {
+          "accession": "S5SNK8",
+          "protein_name": "EasH",
+          "genes": [
+            "easH"
+          ],
+          "organism": "Epichloe typhina x Neotyphodium lolii",
+          "taxon_id": 1915362,
+          "reviewed": false
+        }
+      ],
+      "verdict": "query_construction",
+      "query_restricted": "(protein_name:\"EasH\" OR gene:\"EasH\") AND organism_name:\"Aspergillus japonicus\""
+    },
+    {
+      "label": "ORCH734/PMC13184244",
+      "name": "UGT1",
+      "organism": "Nicotiana tabacum",
+      "archived": "refused: HUMAN Q9HAW9",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "Q9HAW9",
+          "protein_name": "UDP-glucuronosyltransferase 1A8",
+          "genes": [
+            "UGT1A8",
+            "GNT1",
+            "UGT1"
+          ],
+          "organism": "Homo sapiens",
+          "taxon_id": 9606,
+          "reviewed": true
+        },
+        {
+          "accession": "Q64637",
+          "protein_name": "UDP-glucuronosyltransferase 1A3",
+          "genes": [
+            "Ugt1a3",
+            "Ugt1"
+          ],
+          "organism": "Rattus norvegicus",
+          "taxon_id": 10116,
+          "reviewed": true
+        },
+        {
+          "accession": "Q9HAW7",
+          "protein_name": "UDP-glucuronosyltransferase 1A7",
+          "genes": [
+            "UGT1A7",
+            "GNT1",
+            "UGT1"
+          ],
+          "organism": "Homo sapiens",
+          "taxon_id": 9606,
+          "reviewed": true
+        }
+      ],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"UGT1\" OR gene:\"UGT1\") AND organism_name:\"Nicotiana tabacum\""
+    },
+    {
+      "label": "ORCH734/PMC13184244",
+      "name": "MATE1",
+      "organism": "Nicotiana tabacum",
+      "archived": "refused: HUMAN Q96FL8",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "Q96FL8",
+          "protein_name": "Multidrug and toxin extrusion protein 1",
+          "genes": [
+            "SLC47A1",
+            "MATE1"
+          ],
+          "organism": "Homo sapiens",
+          "taxon_id": 9606,
+          "reviewed": true
+        },
+        {
+          "accession": "Q5I0E9",
+          "protein_name": "Multidrug and toxin extrusion protein 1",
+          "genes": [
+            "Slc47a1",
+            "Mate1"
+          ],
+          "organism": "Rattus norvegicus",
+          "taxon_id": 10116,
+          "reviewed": true
+        },
+        {
+          "accession": "Q8K0H1",
+          "protein_name": "Multidrug and toxin extrusion protein 1",
+          "genes": [
+            "Slc47a1",
+            "Mate1"
+          ],
+          "organism": "Mus musculus",
+          "taxon_id": 10090,
+          "reviewed": true
+        }
+      ],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"MATE1\" OR gene:\"MATE1\") AND organism_name:\"Nicotiana tabacum\""
+    },
+    {
+      "label": "ORCH734/PMC13184244",
+      "name": "\u03b2-GD1",
+      "organism": "Nicotiana tabacum",
+      "archived": "no_match, 0 queries tried",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 0,
+      "unrestricted_rows": [],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"\u03b2-GD1\" OR gene:\"\u03b2-GD1\") AND organism_name:\"Nicotiana tabacum\""
+    },
+    {
+      "label": "card-12A",
+      "name": "PSAT",
+      "organism": "Homo sapiens",
+      "archived": "RESOLVES today -> Q9Y617 (C-120 rung)",
+      "restricted_status": 200,
+      "restricted_hits": 1,
+      "restricted_rows": [
+        {
+          "accession": "Q9Y617",
+          "protein_name": "Phosphoserine aminotransferase",
+          "genes": [
+            "PSAT1",
+            "PSA"
+          ],
+          "organism": "Homo sapiens",
+          "taxon_id": 9606,
+          "reviewed": true
+        }
+      ],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "Q9Y617",
+          "protein_name": "Phosphoserine aminotransferase",
+          "genes": [
+            "PSAT1",
+            "PSA"
+          ],
+          "organism": "Homo sapiens",
+          "taxon_id": 9606,
+          "reviewed": true
+        },
+        {
+          "accession": "Q99K85",
+          "protein_name": "Phosphoserine aminotransferase",
+          "genes": [
+            "Psat1",
+            "Psa",
+            "Psat"
+          ],
+          "organism": "Mus musculus",
+          "taxon_id": 10090,
+          "reviewed": true
+        },
+        {
+          "accession": "Q4VCM1",
+          "protein_name": "Phospholipid--sterol O-acyltransferase",
+          "genes": [
+            "PSAT",
+            "LCAT2",
+            "PSAT1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "taxon_id": 3702,
+          "reviewed": true
+        }
+      ],
+      "verdict": "query_construction",
+      "query_restricted": "(protein_name:\"PSAT\" OR gene:\"PSAT\") AND organism_name:\"Homo sapiens\""
+    },
+    {
+      "label": "card-12B",
+      "name": "OPC-8:CoA ligase 1 (OPCL1)",
+      "organism": "Arabidopsis thaliana",
+      "archived": "manual failure, no archived leg",
+      "restricted_status": 200,
+      "restricted_hits": 0,
+      "restricted_rows": [],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 0,
+      "unrestricted_rows": [],
+      "verdict": "coverage",
+      "query_restricted": "(protein_name:\"OPC-8:CoA ligase 1 (OPCL1)\" OR gene:\"OPC-8:CoA ligase 1 (OPCL1)\") AND organism_name:\"Arabidopsis thaliana\""
+    },
+    {
+      "label": "card-12B",
+      "name": "OPCL1",
+      "organism": "Arabidopsis thaliana",
+      "archived": "the parenthetical symbol alone",
+      "restricted_status": 200,
+      "restricted_hits": 3,
+      "restricted_rows": [
+        {
+          "accession": "Q84P21",
+          "protein_name": "Peroxisomal OPC-8:0-CoA ligase 1",
+          "genes": [
+            "4CLL5",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "taxon_id": 3702,
+          "reviewed": true
+        },
+        {
+          "accession": "F4HST9",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "genes": [
+            "OPCL1",
+            "OPC-8:0 CoA ligase1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "taxon_id": 3702,
+          "reviewed": false
+        },
+        {
+          "accession": "A0A1P8AUM2",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "genes": [
+            "OPCL1",
+            "OPC-8:0 CoA ligase1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "taxon_id": 3702,
+          "reviewed": false
+        }
+      ],
+      "unrestricted_status": 200,
+      "unrestricted_hits": 10,
+      "unrestricted_rows": [
+        {
+          "accession": "Q84P21",
+          "protein_name": "Peroxisomal OPC-8:0-CoA ligase 1",
+          "genes": [
+            "4CLL5",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "taxon_id": 3702,
+          "reviewed": true
+        },
+        {
+          "accession": "D7KJ24",
+          "protein_name": "Opc-8:0 CoA ligase1",
+          "genes": [
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis lyrata subsp. lyrata",
+          "taxon_id": 81972,
+          "reviewed": false
+        },
+        {
+          "accession": "A0ABD3DFF9",
+          "protein_name": "4-coumarate--CoA ligase-like 5",
+          "genes": [
+            "OPCL1"
+          ],
+          "organism": "Castilleja foliolosa",
+          "taxon_id": 1961234,
+          "reviewed": false
+        }
+      ],
+      "verdict": "query_construction",
+      "query_restricted": "(protein_name:\"OPCL1\" OR gene:\"OPCL1\") AND organism_name:\"Arabidopsis thaliana\""
+    }
+  ]
+}
