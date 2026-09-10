@@ -6170,8 +6170,20 @@ def _map_protein_with_strategy(
     base_key = f"{_normalize_name(name)}::{_normalize_name(organism)}::{pathbank_id}::{json.dumps(row_ids, sort_keys=True)}"
     db_key = f"db::{base_key}"
     alias_key = json.dumps(protein_aliases, sort_keys=True)
-    api_key = f"api-v7::{base_key}::{alias_key}"
+    # v8: the PARSED CANDIDATE SHAPE changed. ``_extract_uniprot_candidates`` now
+    # stamps ``taxonomy_id`` and ``primary_gene_names``, and a row written under
+    # v7 carries neither -- so ``_is_same_protein_record_duplicate`` falls back to
+    # the alphabetically-first entry of ``gene_names`` and cannot see the shared
+    # PRIMARY symbol. Measured on the live cache: 1325 protein entries, 557 with
+    # two or more candidates, ZERO carrying ``primary_gene_names``; the card's own
+    # OPCL1 case still refused with ``ambiguous_insufficient_margin`` when served
+    # from a v7 row. Bumping the version is this module's established answer to a
+    # changed candidate shape -- v2, v4, v5, v6 and v7 are all already below --
+    # and nothing is deleted: a v7 entry is still READ when no v8 entry exists,
+    # then rewritten forward under the new key by the existing legacy path.
+    api_key = f"api-v8::{base_key}::{alias_key}"
     legacy_api_keys = [
+        f"api-v7::{base_key}::{alias_key}",
         f"api-v6::{base_key}::{alias_key}",
         base_key,
     ]

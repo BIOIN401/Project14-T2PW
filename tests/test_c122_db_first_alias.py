@@ -1005,3 +1005,185 @@ def test_h_a_real_negative_answer_is_written(tmp_path: Path) -> None:
     keys = _fallback_keys(cache_data)
     assert keys == ["api-fallback-v1::zzz widget synthase::homo sapiens"], keys
     assert cache_data["proteins"][keys[0]]["reason"] == "no_match"
+
+
+# ---------------------------------------------------------------------------
+# I. The api-v7 -> api-v8 protein cache key bump (round 3).
+#
+# REV-C122 round 2 measured the round-2 fix inert on the existing cache:
+# data/id_mapping_cache.json holds 1325 protein entries, 557 with two or more
+# candidates, and ZERO carrying `primary_gene_names`. A candidate written before
+# round 2 has neither `primary_gene_names` nor `taxonomy_id`, so
+# `_candidate_primary_gene_symbols` falls back to the alphabetically-first entry
+# of `gene_names` -- "4cll5" on Q84P21, "opc80 coa ligase1" on F4HST9 -- neither
+# of which is the shared symbol, and the collapse never fires.
+# ---------------------------------------------------------------------------
+
+
+def _legacy_shaped(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """A candidate as a pre-round-2 (api-v7) cache entry stored it."""
+
+    return [
+        {k: v for k, v in row.items() if k not in ("primary_gene_names", "taxonomy_id")}
+        for row in rows
+    ]
+
+
+def test_i_a_legacy_shaped_cached_candidate_cannot_satisfy_the_collapse() -> None:
+    """CHARACTERIZATION GUARD -- NO base failure and NO failure at 2493cd09.
+
+    This does not fail at the round-2 tip ``2493cd09``: the round-2 predicate
+    already returns False for a legacy-shaped pair, which is precisely the defect
+    REV-C122 round 2 measured. The test exists to PIN that asymmetry so the
+    reason for the key bump is written down in executable form, and so a later
+    edit that quietly made the fallback lenient would break here.
+
+    Both halves are asserted together: the same two records collapse when parsed
+    fresh and do NOT collapse when replayed from the old cache shape.
+    """
+
+    fresh = _opcl1_candidates()
+    legacy = _legacy_shaped(fresh)
+
+    # Same accessions, same scores, same organism strings on both sides.
+    assert [r["accession"] for r in fresh] == [r["accession"] for r in legacy]
+    assert [r["score"] for r in fresh] == [r["score"] for r in legacy]
+    assert all("primary_gene_names" not in row for row in legacy)
+    assert all("taxonomy_id" not in row for row in legacy)
+
+    assert map_ids._is_same_protein_record_duplicate(fresh[0], fresh[1]) is True
+    assert map_ids._is_same_protein_record_duplicate(legacy[0], legacy[1]) is False
+
+    def _ladder(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+        return verify_real_protein_identity(
+            OPCL1_ENTITY_NAME,
+            candidates=copy.deepcopy(rows),
+            mapped_ids={"uniprot": str(rows[0]["accession"])},
+            organism=OPCL1_ORGANISM,
+            source="uniprot",
+            resolved_name=str(rows[0]["protein_name"]),
+            result={"confidence": rows[0]["score"]},
+        )
+
+    fresh_verdict = _ladder(fresh)
+    legacy_verdict = _ladder(legacy)
+
+    assert fresh_verdict["verified"] is True
+    assert fresh_verdict["checks"]["margin"] == "no_competing_candidate"
+
+    assert legacy_verdict["verified"] is False
+    assert legacy_verdict["reason"] == "ambiguous_insufficient_margin"
+    assert legacy_verdict["checks"]["margin"] == "insufficient:0.03<0.1"
+
+
+def _run_api_strategy(
+    cache: "MappingCache", client: _StubUniProtClient, name: str, organism: str
+) -> None:
+    with patch(
+        "t2pw.mapping.map_ids.lookup_literature_protein_aliases",
+        side_effect=_no_literature_aliases,
+    ), patch("t2pw.mapping.map_ids._ai_protein_synonym_lookup", return_value=[]):
+        _map_protein_with_strategy(
+            id_source="api",
+            db=None,
+            client=client,
+            cache=cache,
+            name=name,
+            organism=organism,
+            protein_row={"name": name},
+        )
+
+
+def test_i_the_api_protein_cache_key_is_v8_and_older_versions_stay_readable(
+    tmp_path: Path,
+) -> None:
+    """NEW-CAPABILITY ACCEPTANCE TEST (round 3). FAILS at 2493cd09 on the value.
+
+    At ``2493cd09`` the key is ``api-v7::`` and this asserts ``api-v8::``, so the
+    failure is on a string value, not on a missing symbol. Nothing is deleted:
+    v7, v6 and the bare base key all remain in the legacy read chain, in that
+    order, exactly as v6 and earlier were handled before.
+    """
+
+    cache = MappingCache(tmp_path / "cold.json", enabled=True)
+    client = _StubUniProtClient(copy.deepcopy(OPCL1_UNIPROT_PAYLOAD))
+    _run_api_strategy(cache, client, OPCL1_ENTITY_NAME, OPCL1_ORGANISM)
+
+    api_keys = [k for k in cache.data["proteins"] if k.startswith("api-")]
+    assert len(api_keys) == 1, api_keys
+    assert api_keys[0].startswith("api-v8::"), api_keys[0]
+
+    # A cold miss really did re-parse, and the new shape is what got stored.
+    candidates = cache.data["proteins"][api_keys[0]]["candidates"]
+    assert candidates
+    assert all("primary_gene_names" in row for row in candidates), candidates
+    assert all("taxonomy_id" in row for row in candidates), candidates
+
+    # The read chain still names the older versions, newest first.
+    source = Path(map_ids.__file__).read_text(encoding="utf-8")
+    chain = source[source.index("legacy_api_keys = ["):]
+    chain = chain[: chain.index("]")]
+    assert "api-v7::" in chain and "api-v6::" in chain and "base_key," in chain
+
+
+def test_i_a_pre_existing_v7_entry_is_promoted_forward_WITHOUT_being_re_parsed(
+    tmp_path: Path,
+) -> None:
+    """NEW-CAPABILITY ACCEPTANCE TEST -- and it pins a LIMITATION, deliberately.
+
+    **The key bump does not refresh an entry that already exists under v7.**
+    The legacy read chain finds the v7 row, ``_promote_cached_uniprot_result``
+    carries it forward, and it is written under ``api-v8::`` with the SAME stale
+    candidates -- zero HTTP calls, no re-parse, still no ``primary_gene_names``.
+
+    So for the 557 multi-candidate protein entries REV-C122 measured in
+    ``data/id_mapping_cache.json``, the bump changes the key those rows are filed
+    under and nothing else: the collapse stays inert on them until something
+    invalidates or re-resolves them. Round 3 was explicitly authorized to keep
+    the fallback read order and to add no invalidation logic, so this is recorded
+    rather than fixed. It is asserted here so no later reader can mistake the
+    version bump for a repair of the cached population.
+    """
+
+    # Learn the real key shape from the code rather than rebuilding it.
+    probe_cache = MappingCache(tmp_path / "probe.json", enabled=True)
+    probe_client = _StubUniProtClient(copy.deepcopy(OPCL1_UNIPROT_PAYLOAD))
+    _run_api_strategy(probe_cache, probe_client, OPCL1_ENTITY_NAME, OPCL1_ORGANISM)
+    v8_key = next(k for k in probe_cache.data["proteins"] if k.startswith("api-v8::"))
+    v7_key = v8_key.replace("api-v8::", "api-v7::", 1)
+
+    legacy_candidates = _legacy_shaped(_opcl1_candidates())
+    cache_path = tmp_path / "with_v7.json"
+    cache_path.write_text(
+        json.dumps(
+            {
+                "proteins": {
+                    v7_key: {
+                        "status": "unmapped",
+                        "reason": "ambiguous",
+                        "provider": "UniProt",
+                        "source": "api",
+                        "query": OPCL1_ENTITY_NAME,
+                        "candidates": legacy_candidates,
+                    }
+                },
+                "compounds": {},
+                "complexes": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    cache = MappingCache(cache_path, enabled=True)
+    client = _StubUniProtClient(copy.deepcopy(OPCL1_UNIPROT_PAYLOAD))
+    _run_api_strategy(cache, client, OPCL1_ENTITY_NAME, OPCL1_ORGANISM)
+
+    # Nothing was re-fetched.
+    assert client.queries == [], client.queries
+    # The v7 row is NOT deleted, and a v8 row now exists beside it.
+    assert v7_key in cache.data["proteins"]
+    assert v8_key in cache.data["proteins"]
+    # And the v8 row carries the STALE shape, which is the limitation.
+    promoted = cache.data["proteins"][v8_key]["candidates"]
+    assert promoted, promoted
+    assert not any("primary_gene_names" in row for row in promoted), promoted
