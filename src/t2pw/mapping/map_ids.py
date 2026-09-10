@@ -3746,8 +3746,28 @@ def _species_alias_expansion(
 #   * the unresolved name must be a bare 'Genus epithet' binomial -- a
 #     species-rank reference. A strain-qualified name is refused: a species-rank
 #     id is not the taxon such a name states.
-#   * the synonym must be asserted by a row that IS a local database record
-#     (it carries a PathBank species id); an unresolved row asserts nothing;
+#   * the synonym must be asserted by a row whose OWN NAME came out of the
+#     database. REV-124 F1: carrying a PathBank id is only a structural proxy
+#     for that, and three routes satisfy the proxy without a lookup ever
+#     happening -- a fabricated id in the caller's payload, a non-numeric id, and
+#     an id an LLM gap-resolver proposed, which ``_resolve_species_hint`` stamps
+#     ``status:"matched"`` under ``reason:"explicit_species_id_unverified"``.
+#     The id and the classification are NCBI-only either way, but WHICH NAME is
+#     asked would not be, and the card admits no LLM anywhere on this path. So
+#     the row must additionally carry a ``mapping_meta.species_resolution`` that
+#     reports a real lookup: ``status:"matched"``, a DB-routed ``source``, and NO
+#     ``reason`` -- ``_species_ref_from_candidate`` (the only builder fed by
+#     ``db.find_species*``) sets none, while every unverified route sets one;
+#   * the spelling that carries the assertion must be ``common_name``, a genuine
+#     PathBank column (REV-124 F2). ``raw_name`` and ``aliases`` are dormant at
+#     this point today, but ``raw_name`` means "the extraction spelling that was
+#     queried" elsewhere in this project and ``find_species`` matches with LIKE
+#     plus a jaccard score -- so the day any stage records species provenance
+#     that way, a FUZZY match would become a "database assertion";
+#   * the PathBank ``Unknown`` sentinel is never a donor (REV-124 F3). It is a
+#     technical placeholder, and this session's audit established it must never
+#     supply a species identity. Unreachable today only because that record sets
+#     no ``common_name``; the exclusion makes it true by construction;
 #   * the asserting row's name is reduced to its binomial through the existing
 #     ``_binomial_from_organism`` before anything is asked, because at THIS point
 #     in the pipeline a DB-matched species row still carries the database's own
@@ -3771,11 +3791,29 @@ def _species_alias_expansion(
 _BARE_BINOMIAL_RE = re.compile(r"^[A-Z][a-z-]+ [a-z][a-z-]+$")
 
 #: Where a species row records a spelling of itself that is not its ``name``.
-_SPECIES_SYNONYM_KEYS: Tuple[str, ...] = ("common_name", "raw_name")
+#: ``common_name`` ONLY -- REV-124 F2. It is a real PathBank column; ``raw_name``
+#: and ``aliases`` are not, and are written by name-canonicalization stages.
+_SPECIES_SYNONYM_KEYS: Tuple[str, ...] = ("common_name",)
 
-#: PathBank identity keys that make a species row a local DATABASE record rather
-#: than an extraction artifact. Only such a row may assert a synonym.
+#: PathBank identity keys a species row may carry its database id under. Presence
+#: is necessary and NOT sufficient -- see ``_is_db_routed_species_row``.
 _SPECIES_DB_ID_KEYS: Tuple[str, ...] = ("pathbank_species_id", "species_id", "pw_species_id")
+
+#: ``mapping_meta.species_resolution.source`` values whose NAME was produced by an
+#: actual ``PathBankDbResolver`` lookup, i.e. is a database column value.
+#:
+#: Deliberately NOT ``_SOURCE_SUPPORTED_SPECIES_SOURCES``, which answers a
+#: different question -- "is this species evidence ABOUT THIS ROW?" -- and so
+#: excludes ``single_pathway_species`` on REV-099 grounds that have nothing to do
+#: with where the name came from. What matters here is only whether the database
+#: produced the string, and for all three of these it did.
+#:
+#: ``gap_resolver_llm`` is excluded and must stay excluded: it is an LLM's choice
+#: of organism, and the card admits no LLM anywhere on this path.
+#: ``novel_species`` is excluded because it records the ABSENCE of a source.
+_DB_ROUTED_SPECIES_SOURCES = frozenset(
+    {"explicit_entity_species", "biological_state_species", "single_pathway_species"}
+)
 
 #: MappingCache section for NCBI taxonomy answers. Keyed by the organism name,
 #: so one name's answer is never served for another's.
@@ -3791,6 +3829,10 @@ def _valid_species_taxonomy(record: Dict[str, Any]) -> Dict[str, str]:
     taxonomy_id = _canonical_name(str(_safe_dict(record).get("taxonomy_id") or ""))
     classification = _canonical_name(str(_safe_dict(record).get("classification") or ""))
     if not taxonomy_id.isdigit() or int(taxonomy_id) <= 0:
+        return {}
+    # REV-124 F5. NCBI cannot emit a zero-padded taxid, so a leading zero can only
+    # have come from the hand-edit channel the cache file is exposed to.
+    if taxonomy_id.startswith("0"):
         return {}
     if classification not in _SPECIES_CLASSIFICATIONS:
         return {}
@@ -3810,9 +3852,16 @@ def _lookup_species_taxonomy(
     half answer, so a name that missed today is asked again tomorrow.
     """
     if cache is not None:
-        cached = _valid_species_taxonomy(cache.get(_SPECIES_TAXONOMY_CACHE_SECTION, _species_taxonomy_cache_key(name)) or {})
-        if cached:
-            return dict(cached)
+        entry = _safe_dict(
+            cache.get(_SPECIES_TAXONOMY_CACHE_SECTION, _species_taxonomy_cache_key(name)) or {}
+        )
+        # REV-124 F4. ``data/id_mapping_cache.json`` is tracked and hand-editable,
+        # so an entry is served only when it says the writer below put it there.
+        # An unstamped entry is not a memo of an NCBI answer.
+        if _canonical_name(str(entry.get("source") or "")) == "ncbi":
+            cached = _valid_species_taxonomy(entry)
+            if cached:
+                return dict(cached)
     result = _ncbi_taxonomy_lookup_result(client, name)
     if result.get("status") != _NCBI_RESOLVED:
         return {}
@@ -3836,6 +3885,36 @@ def _is_bare_binomial(name: str) -> bool:
     if not _BARE_BINOMIAL_RE.match(text):
         return False
     return not _STRAIN_SUFFIX_RE.search(text)
+
+
+def _is_db_routed_species_row(row: Dict[str, Any]) -> bool:
+    """True when this row's NAME was produced by a real PathBank lookup.
+
+    REV-124 F1. Three things must hold together, because each alone is a proxy
+    something else can satisfy:
+
+    1. a NUMERIC, positive PathBank species id (a non-numeric id is not a record);
+    2. it is not the ``Unknown`` sentinel, which is a technical placeholder and
+       never a species identity (REV-124 F3);
+    3. its own ``mapping_meta.species_resolution`` reports a completed database
+       lookup -- ``status:"matched"``, a DB-routed ``source``, and no ``reason``.
+       ``_species_ref_from_candidate``, the only builder ``db.find_species*``
+       feeds, sets no ``reason``; ``_novel_species_ref`` always sets one, which is
+       how an id an LLM proposed (``explicit_species_id_unverified``, stamped
+       ``matched`` with confidence 0.9) is told apart from one the database
+       returned.
+    """
+    sid = _to_positive_int(
+        next((row.get(key) for key in _SPECIES_DB_ID_KEYS if row.get(key) not in (None, "")), None)
+    )
+    if sid is None or sid == _PATHBANK_UNKNOWN_SPECIES_ID:
+        return False
+    resolution = _safe_dict(_safe_dict(row.get("mapping_meta")).get("species_resolution"))
+    if _canonical_name(str(resolution.get("status") or "")) != "matched":
+        return False
+    if _canonical_name(str(resolution.get("source") or "")) not in _DB_ROUTED_SPECIES_SOURCES:
+        return False
+    return not _canonical_name(str(resolution.get("reason") or ""))
 
 
 def _binomial_parts(name: str) -> Tuple[str, str]:
@@ -3872,8 +3951,8 @@ def _db_asserted_species_synonym(rows: List[Any], name: str) -> Dict[str, Any]:
     for row in rows:
         if not isinstance(row, dict):
             continue
-        if not any(_canonical_name(str(row.get(key) or "")) for key in _SPECIES_DB_ID_KEYS):
-            continue  # not a local database record -- it asserts nothing
+        if not _is_db_routed_species_row(row):
+            continue  # its own name is not a database value -- it asserts nothing
         scientific = _canonical_name(str(row.get("name") or ""))
         if not scientific:
             continue
@@ -3888,8 +3967,9 @@ def _db_asserted_species_synonym(rows: List[Any], name: str) -> Dict[str, Any]:
             continue
         if donor_genus.casefold() == genus.casefold():
             continue
+        # REV-124 F2: ``common_name`` and nothing else. ``aliases`` used to be
+        # read here too and is not a database column.
         spellings = [str(row.get(key) or "") for key in _SPECIES_SYNONYM_KEYS]
-        spellings.extend(str(alias or "") for alias in _safe_list(row.get("aliases")))
         if target not in {_normalize_name(spelling) for spelling in spellings if spelling}:
             continue
         terms[_normalize_name(binomial)] = binomial
@@ -4006,6 +4086,9 @@ def backfill_species_taxonomy(
                     # classification from a donor with another id would invent a
                     # combination no source ever stated.
                     continue
+                # C-124's taxonomy memo is deliberately NOT wired in here
+                # (REV-124 F7): leaving C-120's tier-2 lookup uncached is what
+                # keeps this pass byte-identical to what it was at merge.
                 expansion = _species_alias_expansion(
                     name, donors, client=client, enable_ncbi=bool(enable_ncbi)
                 )

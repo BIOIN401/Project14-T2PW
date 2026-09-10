@@ -52,7 +52,7 @@ from __future__ import annotations
 import copy
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import pytest
 
@@ -459,6 +459,168 @@ def test_d3_offline_the_pass_creates_nothing() -> None:
         assert set(_gate_error_codes(payload)) == SPECIES_GATE_CODES
 
 
+def _db_routed_donor(name: str, common_name: str, species_id: Any) -> Dict[str, Any]:
+    """A species row shaped the way a completed PathBank lookup leaves one.
+
+    ``_species_ref_from_candidate`` -- the only ref builder ``db.find_species*``
+    feeds -- produces ``status:"matched"`` with the hint's source and NO
+    ``reason``, and ``_merge_species_record`` compacts that onto the row. The
+    fixture's own donor carries exactly this shape.
+    """
+    return {
+        "name": name,
+        "common_name": common_name,
+        "pathbank_species_id": species_id,
+        "species_id": species_id,
+        "mapping_meta": {
+            "species_resolution": {
+                "name": name,
+                "pathbank_species_id": species_id,
+                "common_name": common_name,
+                "source": "explicit_entity_species",
+                "status": "matched",
+                "confidence": 1.0,
+            }
+        },
+    }
+
+
+def _donor_shaped_rows(payload: Dict[str, Any]) -> Tuple[str, str, Any]:
+    """``(blocking name, donor name, donor id)`` -- all read from the fixture."""
+    blocking = str(_unresolved_row(payload)["name"])
+    donor = _donor_row(payload)
+    return blocking, str(donor["name"]), donor.get("pathbank_species_id")
+
+
+# ===========================================================================
+# REV-124 -- the review round. Each arm fails ON A VALUE at 22552314, where
+# the precondition it adds did not exist.
+# ===========================================================================
+
+
+def test_rev124_f1_an_unverified_llm_proposed_id_is_not_a_database_assertion() -> None:
+    """NEW-CAPABILITY ACCEPTANCE (REV-124 F1).
+
+    A PathBank id alone is a structural proxy. ``_resolve_species_hint`` stamps an
+    id it never looked up as ``status:"matched"`` with
+    ``reason:"explicit_species_id_unverified"``, and ``curation/gap_resolver.py``
+    -- an LLM stage -- is one of the things that proposes such an id. The card
+    admits no LLM anywhere on this path, and WHICH NAME is asked is exactly what
+    such a row would decide. At 22552314 every one of these fires.
+    """
+    payload = _payload()
+    blocking, donor_name, species_id = _donor_shaped_rows(payload)
+    good = _db_routed_donor(donor_name, blocking, species_id)
+    assert map_ids._db_asserted_species_synonym([good], blocking)["term"] == donor_name
+
+    def with_resolution(**changes: Any) -> Dict[str, Any]:
+        row = copy.deepcopy(good)
+        row["mapping_meta"]["species_resolution"].update(changes)
+        return row
+
+    # An id nothing verified, however confidently it is stamped "matched".
+    assert map_ids._db_asserted_species_synonym(
+        [with_resolution(reason="explicit_species_id_unverified", confidence=0.9)], blocking
+    ) == {}
+    # An organism an LLM chose.
+    assert map_ids._db_asserted_species_synonym(
+        [with_resolution(source="gap_resolver_llm")], blocking
+    ) == {}
+    # A row that records the absence of a source.
+    assert map_ids._db_asserted_species_synonym(
+        [with_resolution(status="novel", reason="no_db_match")], blocking
+    ) == {}
+    # No resolution record at all -- nothing says a lookup ever happened.
+    stripped = copy.deepcopy(good)
+    stripped["mapping_meta"] = {}
+    assert map_ids._db_asserted_species_synonym([stripped], blocking) == {}
+    # A non-numeric id is not a database record.
+    assert map_ids._db_asserted_species_synonym(
+        [dict(good, pathbank_species_id="x", species_id="x")], blocking
+    ) == {}
+
+
+def test_rev124_f2_only_common_name_carries_a_database_assertion() -> None:
+    """NEW-CAPABILITY ACCEPTANCE (REV-124 F2).
+
+    ``common_name`` is a real PathBank column. ``raw_name`` and ``aliases`` are
+    written by name-canonicalization stages -- and ``raw_name`` means "the
+    extraction spelling that was queried" elsewhere in this project, while
+    ``find_species`` matches with LIKE plus a jaccard score. Accepting either
+    would let a FUZZY match become a database assertion. At 22552314 both fire.
+    """
+    payload = _payload()
+    blocking, donor_name, species_id = _donor_shaped_rows(payload)
+    good = _db_routed_donor(donor_name, blocking, species_id)
+
+    by_raw_name = dict(good, common_name="", raw_name=blocking)
+    assert map_ids._db_asserted_species_synonym([by_raw_name], blocking) == {}
+
+    by_alias = dict(good, common_name="", aliases=[blocking])
+    assert map_ids._db_asserted_species_synonym([by_alias], blocking) == {}
+
+    # The real column still works, so the fix narrows nothing that matters.
+    assert map_ids._db_asserted_species_synonym([good], blocking)["term"] == donor_name
+
+
+def test_rev124_f3_the_pathbank_unknown_sentinel_is_never_a_donor() -> None:
+    """NEW-CAPABILITY ACCEPTANCE (REV-124 F3).
+
+    The ``Unknown`` sentinel is a technical placeholder for entities with no
+    identity; this session's audit established it must never supply a species
+    identity. It was excluded only by the coincidence that its record sets no
+    ``common_name``. At 22552314 a sentinel row that does carry one fires.
+    """
+    payload = _payload()
+    blocking, donor_name, _ = _donor_shaped_rows(payload)
+    sentinel_id = map_ids._PATHBANK_UNKNOWN_SPECIES_ID
+    sentinel = _db_routed_donor(donor_name, blocking, sentinel_id)
+    assert map_ids._db_asserted_species_synonym([sentinel], blocking) == {}
+
+    # Same row, any other database id: the exclusion is about the sentinel and
+    # nothing else.
+    assert map_ids._db_asserted_species_synonym(
+        [_db_routed_donor(donor_name, blocking, sentinel_id + 1)], blocking
+    )["term"] == donor_name
+
+
+def test_rev124_f4_an_unstamped_cache_entry_is_not_served(tmp_path: Path) -> None:
+    """NEW-CAPABILITY ACCEPTANCE (REV-124 F4 / F5).
+
+    ``data/id_mapping_cache.json`` is tracked and hand-editable, so a memo is
+    honoured only when it says the writer put it there. At 22552314 the reader
+    validates the values and never looks at ``source``, so a hand-written entry
+    is served verbatim with no NCBI call at all.
+    """
+    payload = _pathway_header(_payload())
+    organism = str(_unresolved_row(payload)["name"])
+    donor_name = str(_donor_row(payload)["name"])
+    key = map_ids._species_taxonomy_cache_key(donor_name)
+
+    def run(entry: Dict[str, Any]) -> Dict[str, Any]:
+        fresh = _pathway_header(_payload())
+        cache = MappingCache(tmp_path / "id_mapping_cache.json", enabled=True)
+        cache.data[map_ids._SPECIES_TAXONOMY_CACHE_SECTION] = {key: entry}
+        # A client that answers nothing: anything the row gains came from the memo.
+        backfill_species_taxonomy(fresh, client=_StubTaxonomyClient({}), enable_ncbi=True, cache=cache)
+        return _unresolved_row_by_name(fresh, organism)
+
+    # (a) no provenance stamp -> refused.
+    assert run({"taxonomy_id": "777001", "classification": "Eukaryote"}).get("taxonomy_id") is None
+    # (b) some other stamp -> refused.
+    assert run(
+        {"taxonomy_id": "777001", "classification": "Eukaryote", "source": "hand"}
+    ).get("taxonomy_id") is None
+    # (c) F5: stamped, but zero-padded -- NCBI cannot emit that.
+    assert run(
+        {"taxonomy_id": "0777001", "classification": "Eukaryote", "source": "ncbi"}
+    ).get("taxonomy_id") is None
+    # (d) a memo this code wrote is still served, so the check costs nothing.
+    served = run({"taxonomy_id": "777001", "classification": "Eukaryote", "source": "ncbi"})
+    assert served.get("taxonomy_id") == "777001"
+    assert served.get("classification") == "Eukaryote"
+
+
 def test_d4_a_disagreeing_or_unqualified_assertion_is_refused() -> None:
     """NEW-CAPABILITY ACCEPTANCE (D). The eligibility rules, exercised directly
     on the synonym resolver so each refusal is visible on its own. This one
@@ -475,8 +637,7 @@ def test_d4_a_disagreeing_or_unqualified_assertion_is_refused() -> None:
     def rows(*entries: Dict[str, Any]) -> List[Any]:
         return list(entries)
 
-    good = {"name": donor_name, "pathbank_species_id": donor.get("pathbank_species_id"),
-            "common_name": blocking}
+    good = _db_routed_donor(donor_name, blocking, donor.get("pathbank_species_id"))
     assert map_ids._db_asserted_species_synonym(rows(good), blocking)["term"] == donor_name
 
     # (a) the asserting row is not a database record -> it asserts nothing.
