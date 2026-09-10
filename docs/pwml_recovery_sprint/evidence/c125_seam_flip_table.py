@@ -7,6 +7,11 @@ base SHA, once at the tip -- and join the two outputs::
 
     <py> docs/pwml_recovery_sprint/evidence/bounded_run.py --label flip-base       --timeout 600 --json <report> -- <py> -u <this file>
 
+Run it a THIRD time against the previous tip as well. Round 2 of this card closed
+the round-1 flips with a rule that opened a new false-accept class, and only a
+base / previous-tip / tip comparison shows a pair moving refuse -> accept between
+two accepted versions.
+
 Every PROCEED-at-tip that is not one of the two target rescues, a documented
 narrowing, or a documented residual open-world case is a regression.
 """
@@ -38,6 +43,26 @@ CASES = [
     (FUM, "loss of fumonisin B1 biosynthesis"),
     (FUM, "review of fumonisin B1 biosynthesis"),
     ("siderophore uptake", "siderophore efflux"),
+    (FUM, "fumonisin B1 biosynthesis turnover and clearance"),
+    # round-2 reviewer flips: compound and activity names a PREFIX test ate
+    ("nonribosomal peptide biosynthesis", "antimicrobial peptide biosynthesis"),
+    ("nonribosomal peptide biosynthesis", "antifungal peptide biosynthesis in Bacillus"),
+    ("antifungal polyketide biosynthesis", "antitumor polyketide biosynthesis"),
+    ("antimycin biosynthesis in Streptomyces", "antitumor biosynthesis in Streptomyces"),
+    ("methyl nonanoate biosynthesis", "methyl nonadecanoate biosynthesis"),
+    ("nonulosonic acid biosynthesis", "nonanoate acid biosynthesis"),
+    (
+        "nonribosomal peptide biosynthesis",
+        "nonribosomal peptide (tyrocidine) biosynthesis in Brevibacillus brevis",
+    ),
+    # inflections closed in round 3
+    ("heme biosynthesis", "heme biosynthesis inhibited"),
+    ("heme biosynthesis", "defective heme biosynthesis"),
+    ("heme biosynthesis", "heme biosynthesis dysregulation"),
+    ("heme biosynthesis", "heme biosynthesis downregulated"),
+    # the documented NON-MONOTONE consequence of the study-design family
+    ("screen heme biosynthesis", "review heme biosynthesis"),
+    ("review article biosynthesis", "survey article biosynthesis"),
     # neighbours of those, same shapes
     (FUM, "fumonisin B1 biosynthesis inhibitor screening"),
     (FUM, "attenuation of fumonisin B1 biosynthesis"),
@@ -67,6 +92,9 @@ CASES = [
     (FUM, "mathematical modelling of fumonisin B1 biosynthesis"),
     (FUM, "evolutionary origin of fumonisin B1 biosynthesis"),
     (FUM, "in vitro reconstitution of fumonisin B1 biosynthesis"),
+    (FUM, "prevention of fumonisin B1 biosynthesis"),
+    (FUM, "editorial on fumonisin B1 biosynthesis"),
+    (FUM, "fumonisin B1 biosynthesis eliminated by fungicide treatment"),
 ]
 
 

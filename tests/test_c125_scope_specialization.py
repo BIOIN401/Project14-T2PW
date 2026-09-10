@@ -359,9 +359,15 @@ def test_g9_base_failure_a_rescued_run_is_not_filed_as_unclean() -> None:
 
     ``status`` is forced to ``pass`` because the driver records the leg status
     further down; what is under test is what the REPORT makes of a row that
-    carries this rescue. At 4d417e4f the same forced row fails on a VALUE: no
-    ``scope_specialization.json`` is ever written, so the artifact assertion below
-    fails on a list that does not contain it.
+    carries this rescue.
+
+    WHICH HALF IS PROVABLE AGAINST THE BASE, precisely: the ARTIFACT assertion is.
+    At 4d417e4f no ``scope_specialization.json`` is ever written, so that
+    assertion fails on a list that does not contain it -- a value failure.
+    ``run.warned is False`` does NOT fail at the base and is not claimed to: there
+    is no rescue there, so there is nothing to announce and no warning to set it.
+    That assertion is a REGRESSION GUARD riding inside a base-failure arm, pinning
+    the channel that round-1 review found misfiling every rescued run.
     """
     from t2pw.batch import report as batch_report
 
@@ -560,14 +566,15 @@ RULE_TABLE: List[Tuple[str, str, bool, str, str]] = [
         "antifungal agents that abolish fumonisin B1 biosynthesis",
         False,
         REASON_KIND_MISMATCH,
-        "round-1 flip 8: 'antifungal' is negation-bearing, 'abolish' is inhibition",
+        "round-1 flip 8: refused on 'abolish' ALONE -- 'antifungal' is an ordinary "
+        "subject token, and round 2's prefix test on it was the round-2 regression",
     ),
     (
         FUMONISIN_REQUESTED,
         "non-fumonisin B1 biosynthesis",
         False,
         REASON_KIND_MISMATCH,
-        "round-1 flip 9: the negation prefix is a KIND, never a subject token",
+        "round-1 flip 9: the BARE token 'non' is a KIND; tokenize splits the hyphen",
     ),
     (
         FUMONISIN_REQUESTED,
@@ -603,6 +610,119 @@ RULE_TABLE: List[Tuple[str, str, bool, str, str]] = [
         True,
         REASON_SPECIALIZES,
         "the transport split still admits a genuine narrowing within one direction",
+    ),
+    # -- ROUND-2 REVIEW: the compound and activity names a PREFIX test ate ----
+    # Round 2 closed the round-1 flips with a rule that fired on any token
+    # starting with anti/non. That deleted these tokens from BOTH subject sets and
+    # ADMITTED pairs the base tree and round 1 both refused -- a new false-accept
+    # class arriving through the remedy. The prefix test is gone; only the bare
+    # words 'anti' and 'non' are kind-bearing. Each row is a reviewer-reproduced
+    # seam flip.
+    (
+        "nonribosomal peptide biosynthesis",
+        "antimicrobial peptide biosynthesis",
+        False,
+        REASON_SUBJECT_DROPPED,
+        "round-2 regression 1: NRPS is a flagship topic in this corpus",
+    ),
+    (
+        "nonribosomal peptide biosynthesis",
+        "antifungal peptide biosynthesis in Bacillus",
+        False,
+        REASON_SUBJECT_DROPPED,
+        "round-2 regression 2",
+    ),
+    (
+        "antifungal polyketide biosynthesis",
+        "antitumor polyketide biosynthesis",
+        False,
+        REASON_SUBJECT_DROPPED,
+        "round-2 regression 3: two different activities, one subject token apart",
+    ),
+    (
+        "antimycin biosynthesis in Streptomyces",
+        "antitumor biosynthesis in Streptomyces",
+        False,
+        REASON_SUBJECT_DROPPED,
+        "round-2 regression 4: antimycin is a COMPOUND name",
+    ),
+    (
+        "methyl nonanoate biosynthesis",
+        "methyl nonadecanoate biosynthesis",
+        False,
+        REASON_SUBJECT_DROPPED,
+        "round-2 regression 5: two different fatty acid esters",
+    ),
+    (
+        "nonulosonic acid biosynthesis",
+        "nonanoate acid biosynthesis",
+        False,
+        REASON_SUBJECT_DROPPED,
+        "round-2 regression 6",
+    ),
+    (
+        "nonribosomal peptide biosynthesis",
+        "nonribosomal peptide (tyrocidine) biosynthesis in Brevibacillus brevis",
+        True,
+        REASON_SPECIALIZES,
+        "and the genuine NRPS narrowing still passes: nothing was traded for the fix",
+    ),
+    # -- the round-1 flip round 2 dropped from the corpus instead of closing --
+    (
+        FUMONISIN_REQUESTED,
+        "fumonisin B1 biosynthesis turnover and clearance",
+        False,
+        REASON_KIND_MISMATCH,
+        "named in round 1, missing from the round-2 corpus; closed on both words",
+    ),
+    # -- inflections of words already listed: consistency, not open-world ----
+    (
+        "heme biosynthesis",
+        "heme biosynthesis inhibited",
+        False,
+        REASON_KIND_MISMATCH,
+        "refusing 'suppressed' while admitting 'inhibited' was the rule disagreeing "
+        "with itself",
+    ),
+    (
+        "heme biosynthesis",
+        "defective heme biosynthesis",
+        False,
+        REASON_KIND_MISMATCH,
+        "the loss-of-function noun group",
+    ),
+    (
+        "heme biosynthesis",
+        "heme biosynthesis dysregulation",
+        False,
+        REASON_KIND_MISMATCH,
+        "dys- forms of regulation are filed under REGULATION, and still refused",
+    ),
+    (
+        "heme biosynthesis",
+        "heme biosynthesis downregulated",
+        False,
+        REASON_KIND_MISMATCH,
+        "the -ed form of a word whose -ation form was already listed",
+    ),
+    # -- THE NON-MONOTONE CONSEQUENCE, admitted rather than described --------
+    # These two are ADMITTED, and they were REFUSED in round 1. A lexicon entry
+    # removes its token from both SUBJECT sets, so it can turn a refusal into an
+    # acceptance; the study-design family did exactly that here. Kept visible as
+    # table rows because the honest statement of the rule needs them.
+    (
+        "screen heme biosynthesis",
+        "review heme biosynthesis",
+        True,
+        REASON_SPECIALIZES,
+        "non-monotone: 'screen' and 'review' both left the subject sets",
+    ),
+    (
+        "review article biosynthesis",
+        "survey article biosynthesis",
+        True,
+        REASON_SPECIALIZES,
+        "the same effect with no negation involved at all",
     ),
     # -- a different subject entirely ---------------------------------------
     (
@@ -783,9 +903,22 @@ def test_new_capability_one_bad_pathway_among_several_still_conflicts() -> None:
 #: For such a phrase the module degenerates to the substring acceptance the card
 #: forbids -- which is why this is asserted rather than described.
 RESIDUAL_OPEN_WORLD_CASES: List[Tuple[str, str]] = [
+    # The mild three: papers that arguably ARE about the pathway.
     (FUMONISIN_REQUESTED, "mathematical modelling of fumonisin B1 biosynthesis"),
     (FUMONISIN_REQUESTED, "evolutionary origin of fumonisin B1 biosynthesis"),
     (FUMONISIN_REQUESTED, "in vitro reconstitution of fumonisin B1 biosynthesis"),
+    # The ones that should alarm a reader, and are the point of this arm. Each is
+    # a phrase whose framing word is simply not in the lexicon, so rule 1 never
+    # fires and rule 2 waves the extra tokens through as subject additions.
+    # ``prevention`` is an inhibition claim; ``editorial`` is a document type the
+    # study-design family happens not to name; ``eliminated`` is the loss-of-
+    # function event whose synonyms (abolished, ablation, loss) ARE listed.
+    (FUMONISIN_REQUESTED, "prevention of fumonisin B1 biosynthesis"),
+    (FUMONISIN_REQUESTED, "editorial on fumonisin B1 biosynthesis"),
+    (
+        FUMONISIN_REQUESTED,
+        "fumonisin B1 biosynthesis eliminated by fungicide treatment",
+    ),
 ]
 
 
@@ -803,10 +936,17 @@ def test_new_capability_the_residual_open_world_exposure_is_real(
     add its row to ``RULE_TABLE`` -- rather than as a surprise.
 
     Note also what the rule is NOT judging: whether the paper is a mechanism
-    study. That is the eligibility gate's question, not this one. These arms are
-    about scope only, and admitting them is not by itself a product defect; a
-    lexicon that refused every unfamiliar framing verb would also refuse the two
-    papers this card exists to rescue.
+    study. That is the eligibility gate's question, not this one. The first three
+    rows are arguably fine on those grounds. The last three are not: ``prevention
+    of X`` is an inhibition claim, ``editorial on X`` is a document type, and
+    ``X eliminated by fungicide treatment`` is a loss-of-function result -- and
+    all three are admitted today, purely because those particular words are not in
+    the list. Round-2 review asked for exactly this: state the exposure a reader
+    would be alarmed by, not the mildest three.
+
+    ``X inhibited by Y`` was on that list and is NOT here, because round 3 closed
+    ``inhibited`` as an inflection of words already present. That is the intended
+    lifecycle of a row in this table.
     """
     assert compare_scope(requested, observed).compatible is True, (
         "if this now FAILS the lexicon grew, which is fine -- move the row into "
@@ -815,16 +955,47 @@ def test_new_capability_the_residual_open_world_exposure_is_real(
 
 
 @new_capability
-def test_new_capability_extending_the_lexicon_can_only_refuse_more() -> None:
-    """NEW-CAPABILITY ACCEPTANCE -- why a lexicon patch is a safe fix.
+def test_new_capability_a_lexicon_addition_is_monotone_only_on_the_kind_half() -> None:
+    """NEW-CAPABILITY ACCEPTANCE -- what a lexicon patch actually does. BOTH halves.
 
-    A new PROCESS_KINDS entry can only ADD a family to one side's kind set, and
-    rule 1 is set EQUALITY, so a pair that was refused cannot become admitted by
-    an entry the request does not also carry. Demonstrated on the word that
-    closed round-1 flip 1: it moves 'suppression of X' from admitted to refused
-    and leaves the two rescue cases untouched.
+    Round 2 of this card carried a test called
+    ``..._extending_the_lexicon_can_only_refuse_more`` whose body checked four
+    unrelated verdicts. The name asserted an invariant that is FALSE and the body
+    never exercised it, which is worse than having no test: a false safety claim
+    with a green tick beside it.
+
+    The truth has two halves, and both are asserted here:
+
+    * **KIND half -- monotone.** A new entry puts its token into one or both kind
+      sets, and rule 1 is set EQUALITY, so a pair the request does not also frame
+      that way can only move toward refusal. ``suppression`` did that to round-1
+      flip 1.
+    * **SUBJECT half -- NOT monotone.** The same entry REMOVES its token from both
+      subject sets, and a term that has left the request subject can no longer be
+      reported missing. So an addition CAN turn a refusal into an acceptance --
+      shown below on the study-design family, with no negation involved.
+
+    Which is why the real drift guard is not an argument but a corpus:
+    ``RULE_TABLE`` above, and ``evidence/c125_seam_flip_table.py`` at the seam,
+    run against base AND against the previous tip.
     """
+    # KIND half: the word that closed round-1 flip 1, and the rescues it did not
+    # touch.
     assert kind_of("suppression") == KIND_INHIBITION
     assert kind_of("fumonisin") == ""
+    assert (
+        compare_scope(FUMONISIN_REQUESTED, "suppression of fumonisin B1 biosynthesis")
+        .compatible
+        is False
+    )
     assert compare_scope(FUMONISIN_REQUESTED, FUMONISIN_STAGE0).compatible is True
     assert compare_scope(SAPONIN_REQUESTED, SAPONIN_STAGE0).compatible is True
+
+    # SUBJECT half: the counterexample. Both words are study_design now, so both
+    # left the subject sets and the pair is ADMITTED -- it was refused before the
+    # family existed.
+    counterexample = compare_scope("screen heme biosynthesis", "review heme biosynthesis")
+    assert counterexample.compatible is True
+    assert counterexample.requested_subject == frozenset({"heme"})
+    assert counterexample.observed_subject == frozenset({"heme"})
+    assert kind_of("screen") == kind_of("review")

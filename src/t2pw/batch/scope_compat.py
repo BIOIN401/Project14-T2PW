@@ -109,10 +109,14 @@ TWO RECORDED PROPERTIES THAT ARE NOT DEFECTS TODAY
   it at the seam: no decision changes, because ``apply_stage0_observation`` raises
   no conflict for those pairs at the base SHA either, so the pair never reaches
   this rule. Latent, recorded, not repaired here.
-* A request whose every token is a process word or a negation prefix (``'antibiotic
-  biosynthesis'``) has an empty SUBJECT and is refused by
-  :data:`REASON_NO_REQUEST_SUBJECT`. That is a refusal, i.e. the pre-C-125
-  behaviour, so it can only cost a rescue -- never grant one.
+* ``review`` is a process token, so ``'review of X biosynthesis'`` can never be
+  rescued even though a review of the requested pathway is arguably the same
+  scope. ``meta`` is worse: it collides with **meta-cleavage**, the standard name
+  for the aromatic ring-fission route, so ``'meta-cleavage pathway degradation'``
+  can never be rescued either -- and unlike ``review`` that is a collision with a
+  ROUTE NAME rather than with a document type. Both fail closed in both
+  directions, so both cost only rescues; both are yield costs a product ruling
+  could reverse by deleting the entry.
 
 WHAT THIS MODULE DOES NOT DO
 ----------------------------
@@ -153,10 +157,22 @@ KIND_STUDY_DESIGN = "study_design"
 #: THIS LIST IS THE GUARD. It is closed and the world is not, and an unlisted
 #: process word does NOT fail safe: :func:`subject_tokens` files it as a subject
 #: token, rule 2 permits subject additions, and the pair is admitted. See the
-#: module docstring, "RULE 1 IS THE WHOLE GUARD, AND IT IS OPEN-WORLD". Adding a
-#: family or a synonym here only ever makes the rule refuse MORE, so a new entry
-#: cannot loosen the gate -- which is why extending it is the correct response to
-#: an admitted-but-wrong phrase found in a run.
+#: module docstring, "RULE 1 IS THE WHOLE GUARD, AND IT IS OPEN-WORLD".
+#:
+#: **AN ADDITION HERE IS MONOTONE ON THE KIND HALF ONLY.** Adding a token puts it
+#: into one or both kind sets, which can only make rule 1 refuse more -- but it
+#: also REMOVES that token from both SUBJECT sets, and a token that has left the
+#: request subject can no longer be missing from the Stage-0 subject. So an
+#: addition CAN turn a refusal into an acceptance, and it needs no negation to do
+#: it. From this module own study-design family::
+#:
+#:     screen X biosynthesis   vs   review X biosynthesis
+#:         round 1: REFUSED   (the request subject term "screen" was dropped)
+#:         now:     ADMITTED  (both are study_design; both subjects are {x})
+#:
+#: Every extension is therefore MEASURED against a fixed corpus rather than
+#: reasoned about: ``RULE_TABLE`` in the test file for the rule, and
+#: ``evidence/c125_seam_flip_table.py`` for the seam.
 #:
 #: Every entry is written in the singular form produced by :func:`_singular`.
 PROCESS_KINDS: Mapping[str, str] = {
@@ -179,6 +195,11 @@ PROCESS_KINDS: Mapping[str, str] = {
     "decomposition": KIND_DEGRADATION,
     "depolymerization": KIND_DEGRADATION,
     "depolymerisation": KIND_DEGRADATION,
+    # Round-1 review listed "X biosynthesis turnover and clearance" among the
+    # flips; round 2 dropped it from the corpus instead of closing it. Closed
+    # here, and back in both the rule table and the seam flip table.
+    "turnover": KIND_DEGRADATION,
+    "clearance": KIND_DEGRADATION,
     # -- acting AGAINST the process rather than running it -------------------
     # Everything that turns the pathway DOWN, off, or away, whether chemically,
     # genetically or descriptively. Round-1 review reproduced eight seam flips in
@@ -217,6 +238,18 @@ PROCESS_KINDS: Mapping[str, str] = {
     "impairment": KIND_INHIBITION,
     "impaired": KIND_INHIBITION,
     "loss": KIND_INHIBITION,
+    # Inflections of words already listed above. Their absence was an
+    # INCONSISTENCY, not open-world residue: refusing "X biosynthesis suppressed"
+    # while admitting "X biosynthesis inhibited" is one rule disagreeing with
+    # itself. ``defect`` / ``dysfunction`` are the loss-of-function nouns of the
+    # same event; ``dysregulation`` is filed under REGULATION instead, because it
+    # is the dys- form of regulation rather than a loss of the pathway.
+    "inhibited": KIND_INHIBITION,
+    "antagonistic": KIND_INHIBITION,
+    "defect": KIND_INHIBITION,
+    "defective": KIND_INHIBITION,
+    "dysfunction": KIND_INHIBITION,
+    "dysfunctional": KIND_INHIBITION,
     # -- how the paper was DONE, rather than what the pathway is -------------
     # A screen for something and the thing itself are different scopes, and a
     # review of a pathway is a different document from a study of it. Both are
@@ -252,22 +285,26 @@ PROCESS_KINDS: Mapping[str, str] = {
     "regulation": KIND_REGULATION,
     "regulatory": KIND_REGULATION,
     "upregulation": KIND_REGULATION,
+    "upregulated": KIND_REGULATION,
     "downregulation": KIND_REGULATION,
+    "downregulated": KIND_REGULATION,
+    "dysregulation": KIND_REGULATION,
+    "dysregulated": KIND_REGULATION,
     "detoxification": KIND_DETOXIFICATION,
     "detoxication": KIND_DETOXIFICATION,
     "fermentation": KIND_FERMENTATION,
 }
 
-#: Prefixes that NEGATE or oppose whatever follows them. Kind-bearing rather than
-#: subject-bearing: ``'non-fumonisin B1 biosynthesis'`` and ``'antifungal agents
-#: that abolish ...'`` are not narrower statements of ``'fumonisin
-#: biosynthesis'``, and treating ``non`` / ``antifungal`` as ordinary subject
-#: tokens is precisely how both were admitted in round 1.
+#: Standalone negation words. Kind-bearing rather than subject-bearing:
+#: ``'non-fumonisin B1 biosynthesis'`` is not a narrower statement of
+#: ``'fumonisin biosynthesis'``, and :func:`tokenize` splits the hyphen, so the
+#: BARE token is what reaches :func:`kind_of`.
 #:
-#: They are symmetric: a request that itself says ``'antibiotic biosynthesis'``
-#: carries the same family, so this can only refuse a pair the request did not
-#: also frame that way.
-NEGATION_PREFIXES: Tuple[str, ...] = ("anti", "non")
+#: **Matched whole, never as a prefix.** See :func:`kind_of` for the regression a
+#: prefix test caused and for why an allow-list is not the remedy. ``'antifungal
+#: agents that abolish X'`` is refused with no help from this list at all:
+#: ``abolish`` is an inhibition token.
+NEGATION_WORDS: Tuple[str, ...] = ("anti", "non")
 
 #: Grammatical glue and framing verbs. Dropped from the SUBJECT of either side
 #: because they carry no identity.
@@ -369,13 +406,20 @@ def kind_of(token: str) -> str:
     listed = PROCESS_KINDS.get(token)
     if listed:
         return listed
-    if token in NEGATION_PREFIXES:
+    if token in NEGATION_WORDS:
         return KIND_NEGATION
-    # ``antifungal``, ``nonribosomal``: the prefix is fused to the word, so the
-    # tokenizer cannot split it. Length-guarded so ``anti``/``non`` inside a short
-    # token cannot fire on something unrelated.
-    if len(token) > 4 and token.startswith(NEGATION_PREFIXES):
-        return KIND_NEGATION
+    # DELIBERATELY NOT a prefix test. Round 2 of this card fired on any token
+    # starting with ``anti``/``non``, which deleted ``nonribosomal``,
+    # ``antimicrobial``, ``antimycin``, ``nonanoate``, ``antiport`` and a dozen
+    # other COMPOUND AND ACTIVITY NAMES from both subject sets, and thereby
+    # ADMITTED pairs the base tree and round 1 both refused -- among them
+    # 'nonribosomal peptide biosynthesis' vs 'antimicrobial peptide biosynthesis',
+    # against a corpus that contains NRPS papers. An allow-list of "safe" anti*
+    # words is not the fix either: which ``anti*`` tokens are activities and which
+    # are compound names cannot be enumerated, and every entry is another chance
+    # to delete a real subject token. Only the BARE tokens count, which is exactly
+    # what ``tokenize`` produces for the hyphenated forms this was needed for
+    # (``non-fumonisin`` -> ``("non", "fumonisin")``).
     return ""
 
 
@@ -552,7 +596,7 @@ __all__ = [
     "KIND_TRANSPORT",
     "KIND_TRANSPORT_EFFLUX",
     "KIND_TRANSPORT_UPTAKE",
-    "NEGATION_PREFIXES",
+    "NEGATION_WORDS",
     "PATHWAY_CONFLICT_PREFIX",
     "PROCESS_KINDS",
     "REASON_EMPTY_OBSERVED",
