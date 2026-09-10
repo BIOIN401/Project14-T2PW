@@ -1,0 +1,249 @@
+{
+  "label": "c122-final-smoke-12legs",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "topics_c122_final_smoke.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "runs_smoke",
+    "--timeout",
+    "3600",
+    "--deadline",
+    "7.5"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-09-10T17:35:30+00:00",
+  "finished_at": "2026-09-10T20:32:29+00:00",
+  "duration_seconds": 10619.5554979,
+  "timeout_seconds": 28800.0,
+  "root_pid": 442148,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 437640,
+      "name": "python.exe",
+      "ppid": 442148
+    },
+    {
+      "pid": 433212,
+      "name": "python.exe",
+      "ppid": 439376
+    },
+    {
+      "pid": 439376,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 435336,
+      "name": "python.exe",
+      "ppid": 443116
+    },
+    {
+      "pid": 443116,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 448932,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 448952,
+      "name": "python.exe",
+      "ppid": 448932
+    },
+    {
+      "pid": 402628,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 450380,
+      "name": "python.exe",
+      "ppid": 402628
+    },
+    {
+      "pid": 454764,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 450140,
+      "name": "python.exe",
+      "ppid": 454764
+    },
+    {
+      "pid": 399692,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 458016,
+      "name": "python.exe",
+      "ppid": 399692
+    },
+    {
+      "pid": 462032,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 463052,
+      "name": "python.exe",
+      "ppid": 462032
+    },
+    {
+      "pid": 467664,
+      "name": "python.exe",
+      "ppid": 467700
+    },
+    {
+      "pid": 467700,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 470824,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 472632,
+      "name": "python.exe",
+      "ppid": 470824
+    },
+    {
+      "pid": 474180,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 471832,
+      "name": "python.exe",
+      "ppid": 474180
+    },
+    {
+      "pid": 455764,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 476100,
+      "name": "python.exe",
+      "ppid": 455764
+    },
+    {
+      "pid": 477044,
+      "name": "python.exe",
+      "ppid": 437640
+    },
+    {
+      "pid": 481328,
+      "name": "python.exe",
+      "ppid": 477044
+    },
+    {
+      "pid": 480324,
+      "name": "python.exe",
+      "ppid": 482528
+    },
+    {
+      "pid": 482528,
+      "name": "python.exe",
+      "ppid": 437640
+    }
+  ],
+  "descendants_terminated": [
+    399692,
+    402628,
+    433212,
+    435336,
+    437640,
+    439376,
+    443116,
+    448932,
+    448952,
+    450140,
+    450380,
+    454764,
+    455764,
+    458016,
+    462032,
+    463052,
+    467664,
+    467700,
+    470824,
+    471832,
+    472632,
+    474180,
+    476100,
+    477044,
+    480324,
+    481328,
+    482528
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 439344,
+      "name": "python.exe"
+    },
+    {
+      "pid": 440368,
+      "name": "python.exe"
+    },
+    {
+      "pid": 440796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 440836,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-122/60-final-smoke-run.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "e93bedcb8aae08b6ac20d01b6500d60faa73cb40",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-122",
+    "token": "C-122:440368:7992dee6cf209868",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

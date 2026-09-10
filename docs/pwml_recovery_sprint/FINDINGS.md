@@ -10268,3 +10268,102 @@ with reasoning disabled are all unaffected — they were measured from the trace
 probes, not from the attribution. **What changes is which file a fix would touch**, and that is
 exactly the kind of error worth correcting loudly: acting on the wrong attribution would have
 edited two `300` literals in code that has never run.
+
+---
+
+## `F-202` — a spurious second species is stamped into exported PWMLs, and it lands on pathway enzymes · C-122 final smoke
+
+**Class: biological correctness in the exported artifact. REGISTERED, NOT CHARTERED. PRE-EXISTING —
+`C-122` neither caused it nor touched species resolution.**
+
+`pathbank_species_id: 4` (*Arabidopsis thaliana*) behaves as a **fallback species for entities whose
+own species did not resolve**, and it reaches the exported PWML as a declared species.
+
+### Measured population — 10 of 17 committed PWMLs
+
+| cohort | affected files |
+|---|---|
+| `ORCH-730` | `PMC7232280` (*N. crassa*) |
+| `ORCH-732` | `PMC12051542` (*A. aeolicus*), `PMC4725005` (*E. coli*) |
+| `ORCH-734` | `PMC10269868` (*H. pylori*), `PMC6112128` (*S. tubercidicus*), `PMC11016064` (**three** species: *H. sapiens*, *M. musculus*, *A. thaliana*) |
+| `C-122` smoke | all four: `PMC12707518`, `PMC13084691`, `PMC13474689`, `PMC12914822` |
+
+Six of the ten predate `C-122`, across three independent cohorts, so the defect is long-standing.
+
+### The worst instance, and it is `release_ready`
+
+`PMC12914822` (*Aspergillus aculeatus*, *ent*-acu-dioxomorpholine A) declares
+`Aspergillus aculeatus` / tax 5053 **and** `Arabidopsis thaliana` / tax 3702 with
+`classification nil`. All three pathway enzymes carry the plant:
+
+```
+protein_complexes  AauA / AauB / AauC   species "Arabidopsis thaliana"  pathbank_species_id 4
+proteins           Unknown              species "Arabidopsis thaliana"  pathbank_species_id 4
+```
+
+This is the **first `release_ready` PWML of the sprint** — `ORCH-734` § 1 recorded that all seven of
+its files were `review_required`. **Whether `C-122`'s identity changes contributed to this leg
+clearing the release bar with plant-stamped fungal enzymes is NOT established**; separating it would
+need a base re-run the charter does not authorize. Recorded as an open question, not a conclusion.
+
+### Why every previous check missed it
+
+`ORCH-734` § 8 concluded *"The organism and taxonomy id are correct in every case."* **That was true
+and insufficient.** It verified the *primary* species and never asked whether a *second* had been
+appended. A check that reads the head of a list cannot see what was added to its tail. Four of that
+cohort's own seven files were affected while it said so.
+
+### Why it outranks `F-195`
+
+A dangling transport reference (`F-195`) **breaks an import** — loud, and the structural checker
+catches it. A wrong organism on a pathway enzyme **imports cleanly and is biologically false**, and
+no gate in the pipeline objects. It is invisible to the import checker, which validates references
+and structure, not species coherence.
+
+### What would settle its severity
+
+The live PathWhiz import. If the spurious species appears in the UI or attaches to the enzymes there,
+it is a data-integrity defect and needs a card. If PathWhiz ignores an unreferenced species
+declaration, it is an export artifact and closes cheaply. **No pre-emptive fix**, on the same rule
+`F-195` is held to.
+
+---
+
+## `F-203` — Stage 0 refuses a requested scope that is a strict GENERALIZATION of what it read · C-122 final smoke
+
+**Class: scope guard over-refusal. REGISTERED, NOT CHARTERED. 2 independent papers, deterministic.**
+
+```
+PMC13123502  requested 'steroidal saponin biosynthesis'
+             Stage 0 read 'steroidal saponin (polyphyllin) biosynthesis in Paris polyphylla,
+                           focusing on UGT-mediated 3-O-glucosylation'
+PMC13474940  requested 'fumonisin biosynthesis'
+             Stage 0 read 'fumonisin B1 biosynthesis'
+```
+
+Both legs died at Stage 0 with **0 reactions**. Nothing about either paper was ever judged.
+
+### It is NOT the `ORCH-734` scope defect and must not be filed with it
+
+`ORCH-734`'s `PMC7910490` asked for *"steroidal glycoalkaloid biosynthesis"* against a paper about
+*"potato solanidanes"* — **a different pathway**, correctly refused. **Here the requested scope is a
+strict generalization of the scope Stage 0 itself read from the same paper.** *"fumonisin
+biosynthesis"* versus *"fumonisin B1 biosynthesis"* is one pathway, refused on a substring.
+
+### Operator share, stated plainly
+
+Both scope strings were taken from each paper's **abstract**, while Stage 0 reads the **full text**
+and produces a richer phrasing. Writing *"fumonisin B1 biosynthesis"* would have passed. So this is
+partly a manifest defect — but a guard that refuses a superset of its own reading will do this to any
+operator, and it did it to two independent papers in one twelve-leg cohort.
+
+**Neither leg was re-run.** Editing the input after seeing the result is the favourable rerun the
+charter forbids and would launder an operator error into a success. Both stay in the denominator
+with the cause named.
+
+### Disposition
+
+The cheapest and narrowest of the three repeated mechanisms in that cohort, and the only one that is
+a genuine defect rather than a safeguard behaving correctly (`f179` ×2) or a database coverage gap
+(`identity_resolution` ×2). Candidate for one narrow card **if the product owner reopens
+reliability**; nothing here charters it.

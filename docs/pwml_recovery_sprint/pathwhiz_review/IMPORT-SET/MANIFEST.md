@@ -1,5 +1,37 @@
 # PathWhiz import set — the files the product owner imports by hand
 
+> ## UPDATED `C-122`, 2026-09-10 — **seventeen** files, and a defect that affects TEN of them.
+>
+> The `C-122` final smoke added four. All four are **IMPORT READY with zero `F-195` dangling
+> references** — the first cohort with none.
+>
+> | file | pathway / organism | bytes | rxn | note |
+> |---|---|---:|---:|---|
+> | `C122_PMC13474689.pwml` | glucomoringin, *M. oleifera* | 60,767 | 7 | |
+> | `C122_PMC13084691.pwml` | calycosin, *A. membranaceus* | 67,552 | 6 | |
+> | `C122_PMC12707518.pwml` | branched-chain amino acid, *S. suis* | 63,894 | 4 | |
+> | `C122_PMC12914822.WRONG-SPECIES.pwml` | *ent*-acu-dioxomorpholine A, *A. aculeatus* | 35,078 | 3 | **do not import as a showcase — see below** |
+>
+> ### ⚠ `F-202` — a WRONG ORGANISM is declared in **10 of these 17 files**
+>
+> A spurious second species, almost always *Arabidopsis thaliana* (`pathbank_species_id 4`), is
+> stamped onto entities whose own species did not resolve, and it reaches the exported PWML.
+> **It is PRE-EXISTING**: six of the ten were generated before `C-122`, across `ORCH-730`,
+> `ORCH-732` and `ORCH-734`. `PMC11016064` carries three species.
+>
+> **The worst instance is `C122_PMC12914822`**, which is also the **first `release_ready` PWML of
+> the sprint**: all three of its pathway enzymes (`AauA`, `AauB`, `AauC`) are stamped
+> *Arabidopsis thaliana* rather than *Aspergillus aculeatus*. Import it to **see** `F-202`, not to
+> judge the system's output quality.
+>
+> **This is why `F-202` outranks `F-195`.** A dangling reference breaks an import loudly and the
+> structural checker catches it. A wrong organism on an enzyme **imports cleanly and is
+> biologically false**, and no gate in the pipeline objects.
+>
+> **When you import, please check specifically whether the spurious species appears in the PathWhiz
+> UI or attaches to the enzymes.** That single observation decides whether `F-202` is a real
+> data-integrity defect needing a card, or an export artifact PathWhiz ignores.
+
 > ## UPDATED `ORCH-739`, 2026-09-09 — **thirteen** files, not eleven.
 >
 > Two deliverables were still untracked on a single disk, the same `F-187` exposure this directory

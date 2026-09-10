@@ -10416,3 +10416,32 @@ untouched. 40 live calls, production's own prompt, reasoning left enabled throug
 | next experiment | § 10 names it — **reasoning-disabled auxiliary calls**. **NOT implemented here** and not proposed as this card's decision. An intermediate budget is noted and not recommended: the productive reasoning draws used 1,114–1,823 completion tokens, so the cost is intrinsic rather than an artifact of the ceiling |
 | G11 | two bounded jobs, both `FINAL SURVIVING COUNT : 0` / `cleanup : success`. Heavy lock free before and after. Pre-existing processes reported, never killed |
 | independent review | **not required** — § 13 conditions it on production code or configuration changing. Neither did |
+
+---
+
+## `C-122` — MERGED, RE-FROZEN, and the final smoke says **RELIABILITY IS NOT COMPLETE** · 2026-09-10
+
+Full record: [`C-122-FINAL-SMOKE-RESULT.md`](C-122-FINAL-SMOKE-RESULT.md).
+
+### State at this entry
+
+| item | state |
+|---|---|
+| `C-122` | **MERGED** `--no-ff` at `04cc1908`; branch tip `a4235bee`; `src/` = **exactly one file**, `map_ids.py`, 274 insertions / 22 deletions |
+| production | **RE-FROZEN at `04cc1908`.** `D-090` governs again in full. No further change authorized |
+| review | **3 rounds.** Round 1 **`CORRECTION REQUIRED`** — the first predicate collapsed two INDEPENDENTLY CLAIMED accessions, breaking `test_rag_typed_resolution_integrity.py`, which is green at base and pins exactly *"the case a highest score wins adjudicator would have resolved, wrongly and confidently"*. Merge rule 6. Rounds 2 and 3 **`APPROVE WITH FINDINGS`**, every fix reproduced by the reviewer rather than taken from the report |
+| the fix | the **Swiss-Prot superset relation** — judged `reviewed is True`, collapsed `reviewed is False`, identity comparison not truthiness — plus a shared **primary** gene symbol, exact same organism, and a disagreeing-taxon-id veto. Sorts all three cases alone: OPCL1 collapses, the EnzX pair stays rivals, ORMDL paralogs stay rivals |
+| **the implementer refused two of my instructions and was right twice** | "first-listed symbol" is unrecoverable — `gene_names` is `sorted(set(...))` upstream, and the sorted heads are `4CLL5` / `OPC-8:0 CoA ligase1`, neither the shared symbol, so a literal reading would have broken the case it exists to fix. The subset alternative refuses the intended collapse, measured. Both refutations verified by review |
+| measured | 4 LLM alias calls → **1**; G9 base failure **on values** (a REVIEWED Q84P21 at score 1.0 rejected at margin 0.03 by its own gene's unreviewed records); transport failures no longer cached as permanent negatives |
+| **NOT claimed** | **no recovery count.** Production identity yield UNMEASURED. The archived unresolved proteins are **not recovered and cannot be** — 11 of 14 verified against live UniProt to have no record for the requested organism. `organism_id` does **not** revive the exact-taxon branch (nothing stamps `requested_taxonomy_id`). The `api-v8` bump is **not a repair**: a v7 entry is promoted forward with stale candidates, 0 HTTP calls, pinned by test |
+| gate 10 | **SMOKE 508** on the merged tree, zero survivors |
+| **final smoke** | `runs_smoke/2026-09-10_1135`, **12 fresh papers**, one strict run each, no favourable reruns, 2 h 57 m, **zero timeouts** |
+| **yield** | **4 PWML / 12 papers = 33 %.** Meaningful cores **6**; serialization 4/6. **All 4 IMPORT READY, zero `F-195`** — the first cohort with none |
+| **decision** | **`RELIABILITY PHASE IS NOT COMPLETE`.** § 23 needs ~80 % **or** isolated/stochastic misses. 33 %, and **three** mechanisms repeat: `identity_resolution` ×2, `f179` ×2, `scope_or_guard_refusal` ×2 |
+| the repeats, classified | `f179` ×2 is **the safeguard working** on two phenotype/knockout papers — a refusal to fabricate is a product success, not a defect. `identity_resolution` ×2 includes a **new** shape: `B. burgdorferi` failed `species_missing_taxonomy` — the ORGANISM is absent from the local species table, not the protein. `scope_or_guard_refusal` ×2 is **`F-203`** |
+| **`F-202`** | **the most serious finding of the run.** A spurious second species (*A. thaliana*, `pathbank_species_id 4`) is stamped into **10 of 17** committed PWMLs across **four** cohorts. In the `release_ready` `PMC12914822` all three pathway enzymes carry the PLANT, not the fungus. **PRE-EXISTING — 6 of the 10 predate `C-122`, which touched no species resolution.** `ORCH-734` § 8's *"organism and taxonomy id correct in every case"* was true and insufficient: it checked the PRIMARY species only, while 4 of its own 7 files were affected |
+| **`F-203`** | Stage 0 refuses a scope that is a strict GENERALIZATION of what it read — *"fumonisin biosynthesis"* vs its own *"fumonisin B1 biosynthesis"*. **Not** the `ORCH-734` scope defect, which was a genuinely different pathway. Partly my manifest (scopes taken from abstracts, Stage 0 reads full text); both legs died with 0 reactions. **Neither re-run** — editing the input after seeing the result is the favourable rerun the charter forbids |
+| `release_ready` | `PMC12914822` is the **first of the sprint**. Whether `C-122` contributed to it clearing the bar with plant-stamped enzymes is **NOT established** and would need a base re-run this charter does not authorize. Open question, committed as `C122_PMC12914822.WRONG-SPECIES.pwml`, **not recommended for import** except to demonstrate `F-202` |
+| import set | **17 files**, hash-pinned, `sha256sum -c` all OK, every copy `cmp`-verified byte-identical to source |
+| **`RAG v2`** | **DOES NOT BEGIN.** § 23's bar is not met and `RAG-V2-HANDOFF-REQUIREMENTS.md` § 6 conditions it on closure |
+| next | the product owner's call. (1) **Import the four files by hand** — the step this phase has waited on, and the only thing that decides `F-195` and `F-202`. (2) `F-203`, the cheapest genuine defect of the three repeats. (3) `F-202`, the most serious. (4) `F-199` still stands for the provider class that killed `PMC13398565` |
