@@ -1,0 +1,73 @@
+{
+  "label": "c122-uniprot-field-probe",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-c",
+    "\nimport json, requests\nFIELDS='accession,protein_name,gene_names,organism_name,reviewed,organism_id'\nr=requests.get('https://rest.uniprot.org/uniprotkb/search',params={'query':'(protein_name:\"OPCL1\" OR gene:\"OPCL1\") AND organism_name:\"Arabidopsis thaliana\"','format':'json','size':10,'fields':FIELDS},timeout=30)\nprint('status',r.status_code)\nif r.status_code==200:\n    for it in r.json().get('results',[]):\n        print(it.get('primaryAccession'), it.get('entryType'), it.get('organism',{}).get('taxonId'), [g.get('geneName',{}).get('value') for g in it.get('genes',[])])\nelse:\n    print(r.text[:400])\n"
+  ],
+  "cwd": "C:\\t\\c122",
+  "started_at": "2026-09-10T16:43:46+00:00",
+  "finished_at": "2026-09-10T16:43:47+00:00",
+  "duration_seconds": 1.2833882000122685,
+  "timeout_seconds": 300.0,
+  "root_pid": 407880,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 420424,
+      "name": "python.exe",
+      "ppid": 407880
+    }
+  ],
+  "descendants_terminated": [
+    420424
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 410076,
+      "name": "python.exe"
+    },
+    {
+      "pid": 410116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 413664,
+      "name": "python.exe"
+    },
+    {
+      "pid": 416956,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-122/10-uniprot-field-probe.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c122\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c122",
+    "repo_head": "9cf64677ed8e46afc4b032e5324f799ff37605a6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

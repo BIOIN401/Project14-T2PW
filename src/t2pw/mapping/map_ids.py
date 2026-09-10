@@ -372,13 +372,49 @@ def lookup_literature_protein_aliases(
     }
 
 
-def _ai_protein_synonym_lookup(name: str, organism: str) -> List[Dict[str, str]]:
+#: Version tag on the memoized alias question. The key is the QUESTION -- the
+#: normalized protein name and the normalized organism -- and nothing else. The
+#: organism is not optional in it: a human alias decision replayed for a plant or
+#: a bacterium is exactly the cross-organism identity error the ladder exists to
+#: prevent, so the two must never share a slot.
+_AI_ALIAS_CACHE_PREFIX = "alias-v1"
+
+
+def _ai_alias_cache_key(name: str, organism: str) -> str:
+    return f"{_AI_ALIAS_CACHE_PREFIX}::{_normalize_name(name)}::{_normalize_name(organism)}"
+
+
+def _ai_protein_synonym_lookup(
+    name: str,
+    organism: str,
+    cache: Optional["MappingCache"] = None,
+) -> List[Dict[str, str]]:
     """Ask the LLM for alternate names/gene symbols for a protein that failed UniProt lookup.
 
     Returns a list of alias dicts with keys 'alias' and 'source', same format as
     lookup_literature_protein_aliases. Never returns hallucinated UniProt IDs — only
     name strings that will be fed back into the UniProt search API.
+
+    ``cache`` is the run's existing :class:`MappingCache`, threaded down from the
+    caller rather than reached for globally. The answer is memoized in its
+    ``proteins`` section under :func:`_ai_alias_cache_key`. **A negative answer is
+    stored too**: "this protein has no other names" is the common case, and it is
+    the repeat of that question -- once per unresolved row, run after run -- that
+    the memo exists to stop. A transport or parse failure is NOT stored; a dead
+    provider is not evidence that a protein has no synonyms.
     """
+    cache_key = _ai_alias_cache_key(name, organism)
+    if cache is not None:
+        memo = cache.get("proteins", cache_key)
+        if memo is not None:
+            out: List[Dict[str, str]] = []
+            for entry in _safe_list(memo.get("aliases")):
+                alias = str(_safe_dict(entry).get("alias") or "")
+                source = str(_safe_dict(entry).get("source") or "ai_synonym") or "ai_synonym"
+                if alias:
+                    out.append({"alias": alias, "source": source})
+            return out
+
     try:
         from t2pw.llm.client import chat  # pylint: disable=import-outside-toplevel
     except ImportError:
@@ -415,8 +451,18 @@ def _ai_protein_synonym_lookup(name: str, organism: str) -> List[Dict[str, str]]
             source = _canonical_name(str(_safe_dict(entry).get("source") or "ai_synonym")) or "ai_synonym"
             if alias and len(alias) <= 96:
                 result.append({"alias": alias, "source": source})
-        return result[:6]
+        answer = result[:6]
+        if cache is not None:
+            cache.set(
+                "proteins",
+                cache_key,
+                {"query": _canonical_name(name), "organism": _canonical_name(organism), "aliases": answer},
+            )
+        return answer
     except Exception:  # noqa: BLE001
+        # Deliberately NOT memoized. This branch covers a provider timeout and a
+        # malformed response as well as an empty one, and caching it would turn a
+        # transient outage into a permanent "no synonyms exist" for that protein.
         return []
 
 
@@ -3824,6 +3870,16 @@ def _entity_locations(payload: Dict[str, Any], location_key: str, name_key: str)
     return out
 
 
+#: Return fields asked of the UniProtKB search API. One definition, because the
+#: same string was written out at three call sites and drifted out of reach of
+#: any single edit. ``organism_id`` is the NCBI taxon id UniProt already holds
+#: for every record: requesting it lets ``_extract_uniprot_candidates`` stamp
+#: ``taxonomy_id`` onto an API candidate, which is the only exact-identity
+#: signal a species check has. It STRENGTHENS the species safeguard and never
+#: relaxes it -- ids that disagree are still a mismatch.
+_UNIPROT_SEARCH_FIELDS = "accession,protein_name,gene_names,organism_name,reviewed,organism_id"
+
+
 def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organism: str) -> List[Dict[str, Any]]:
     results = _safe_list(payload.get("results"))
     out: List[Dict[str, Any]] = []
@@ -3868,7 +3924,13 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
                 syn = _safe_dict(synonym).get("value")
                 if isinstance(syn, str) and syn.strip():
                     gene_names.append(syn.strip())
-        organism_name = _safe_dict(item.get("organism")).get("scientificName", "")
+        organism_row = _safe_dict(item.get("organism"))
+        organism_name = organism_row.get("scientificName", "")
+        # UniProt answers with the taxon id in the same organism object. Carrying
+        # it is what makes ``_candidate_species_verdict``'s exact-taxon branch
+        # reachable for an API candidate at all; without it the species check has
+        # only the organism *string* to work with.
+        taxonomy_id = str(organism_row.get("taxonId") or "").strip()
         entry_type = str(item.get("entryType", "")).lower()
         reviewed = "reviewed" in entry_type and "unreviewed" not in entry_type
 
@@ -3895,16 +3957,17 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
             base_score = 0.35 * best_name_score
         score = min(1.0, base_score + organism_score + reviewed_score)
 
-        out.append(
-            {
-                "accession": accession,
-                "protein_name": fullname or (submission_values[0] if submission_values else ""),
-                "gene_names": sorted(set(gene_names))[:8],
-                "organism": organism_name if isinstance(organism_name, str) else "",
-                "reviewed": reviewed,
-                "score": round(score, 4),
-            }
-        )
+        parsed: Dict[str, Any] = {
+            "accession": accession,
+            "protein_name": fullname or (submission_values[0] if submission_values else ""),
+            "gene_names": sorted(set(gene_names))[:8],
+            "organism": organism_name if isinstance(organism_name, str) else "",
+            "reviewed": reviewed,
+            "score": round(score, 4),
+        }
+        if taxonomy_id:
+            parsed["taxonomy_id"] = taxonomy_id
+        out.append(parsed)
     out.sort(key=lambda item: item.get("score", 0.0), reverse=True)
     return out
 
@@ -4026,6 +4089,8 @@ def map_protein_uniprot(
     name: str,
     organism: str,
     aliases: Optional[List[Dict[str, str]]] = None,
+    *,
+    cache: Optional["MappingCache"] = None,
 ) -> Dict[str, Any]:
     alias_entries = _protein_alias_entries(name, None)
     for entry in aliases or []:
@@ -4112,7 +4177,7 @@ def map_protein_uniprot(
             "query": query,
             "format": "json",
             "size": 10,
-            "fields": "accession,protein_name,gene_names,organism_name,reviewed",
+            "fields": _UNIPROT_SEARCH_FIELDS,
         }
         try:
             resp = client.get("https://rest.uniprot.org/uniprotkb/search", params=params)
@@ -4184,7 +4249,7 @@ def map_protein_uniprot(
                 "query": query,
                 "format": "json",
                 "size": 10,
-                "fields": "accession,protein_name,gene_names,organism_name,reviewed",
+                "fields": _UNIPROT_SEARCH_FIELDS,
             }
             try:
                 resp = client.get("https://rest.uniprot.org/uniprotkb/search", params=params)
@@ -4214,9 +4279,11 @@ def map_protein_uniprot(
     # Third-tier fallback: ask the LLM for alternate names/gene symbols when both
     # the direct UniProt search and the EuropePMC literature lookup found nothing.
     if not aggregated:
-        ai_aliases = _ai_protein_synonym_lookup(name, organism)
-        if not ai_aliases and organism:
-            ai_aliases = _ai_protein_synonym_lookup(name, "")
+        # ONE call per resolution. The organism-less retry that used to follow
+        # this line asked the same model the same question with the species
+        # deleted -- the one piece of context that keeps the answer on the right
+        # organism -- and doubled the tier's cost to do it.
+        ai_aliases = _ai_protein_synonym_lookup(name, organism, cache=cache)
 
         start_idx = len(query_plan)
         for entry in ai_aliases:
@@ -4247,7 +4314,7 @@ def map_protein_uniprot(
                 "query": query,
                 "format": "json",
                 "size": 10,
-                "fields": "accession,protein_name,gene_names,organism_name,reviewed",
+                "fields": _UNIPROT_SEARCH_FIELDS,
             }
             try:
                 resp = client.get("https://rest.uniprot.org/uniprotkb/search", params=params)
@@ -5153,6 +5220,70 @@ def _candidate_species_verdict(candidate: Any, organism: str) -> str:
     return "mismatch"
 
 
+def _candidate_gene_symbols(candidate: Any) -> Set[str]:
+    """Normalized gene symbols a candidate row carries, as a set."""
+
+    return {
+        norm
+        for norm in (_normalize_name(symbol) for symbol in _candidate_symbol_names(candidate))
+        if norm
+    }
+
+
+def _is_same_protein_record_duplicate(judged: Any, other: Any) -> bool:
+    """Whether ``other`` is another UniProt RECORD of the protein ``judged`` names.
+
+    UniProt stores one gene in one organism more than once: a reviewed
+    Swiss-Prot entry plus one or more unreviewed TrEMBL entries, or a plain
+    record duplication. Query ``OPCL1`` in *Arabidopsis thaliana* and it answers
+    with Q84P21 (reviewed), F4HST9 and A0A1P8AUM2 -- three accessions, one
+    protein. Counted as three independent candidates they drive the rung-6
+    margin to 0.03 and a REVIEWED identity is thrown out as ambiguous. ORCH-725
+    measured 12 such "margin rejects of reviewed entries".
+
+    They are the same record only when BOTH hold:
+
+    * the two rows share at least one gene symbol. An empty symbol list on
+      either side is silence, not agreement, and never matches. Different
+      symbols are different proteins -- ORMDL1 and ORMDL2, PSAT1 and PSAT2 are
+      paralogs and stay rivals.
+    * they are the SAME organism, decided by the existing
+      :func:`_candidate_species_verdict` and only on its strongest verdict.
+      ``genus_level`` and ``unknown`` are refused: "same genus" once accepted
+      *Escherichia coli* for *Escherichia fergusonii*.
+
+    A disagreeing pair of NCBI taxon ids vetoes the collapse outright, even when
+    the organism strings read alike. This can only ever keep two rows apart, so
+    it strengthens the safeguard and cannot relax it.
+
+    This narrows what counts as a *rival*. It never admits a candidate, never
+    reaches across organisms, and never touches a threshold.
+    """
+
+    judged_symbols = _candidate_gene_symbols(judged)
+    other_symbols = _candidate_gene_symbols(other)
+    if not judged_symbols or not other_symbols:
+        return False
+    if not (judged_symbols & other_symbols):
+        return False
+
+    judged_row = _safe_dict(judged)
+    judged_organism = _canonical_name(
+        str(judged_row.get("organism") or judged_row.get("species") or "")
+    )
+    if not judged_organism:
+        return False
+    if _candidate_species_verdict(other, judged_organism) != "ok":
+        return False
+
+    judged_taxon = str(judged_row.get("taxonomy_id") or judged_row.get("taxon_id") or "").strip()
+    other_row = _safe_dict(other)
+    other_taxon = str(other_row.get("taxonomy_id") or other_row.get("taxon_id") or "").strip()
+    if judged_taxon and other_taxon and judged_taxon != other_taxon:
+        return False
+    return True
+
+
 def _candidate_identifies_result_choice(candidate: Any, result: Dict[str, Any]) -> bool:
     """Whether ``result``'s own ``mapped_ids`` name this exact candidate.
 
@@ -5242,6 +5373,10 @@ def verify_real_protein_identity(
        it has already had to pass name and species on its own evidence.
     6. ``margin`` -- at least :data:`_REAL_PROTEIN_MIN_MARGIN` over the best
        rival candidate that also passed 2-4 and names a *different* accession.
+       Further UniProt *records of the same protein* -- same gene symbol, same
+       organism -- are not rivals and are excluded from the margin, listed in
+       ``collapsed_duplicate_accessions``. See
+       :func:`_is_same_protein_record_duplicate`.
     """
 
     # Imported at call time on purpose. This function and
@@ -5420,6 +5555,11 @@ def verify_real_protein_identity(
         checks["score"] = "ok"
 
     rivals: List[Tuple[float, str]] = []
+    #: Rows set aside as further UniProt records of the protein the judged
+    #: candidate already names -- same gene symbol, same organism. Recorded, not
+    #: discarded: the reader of a verdict must be able to see which accessions
+    #: were collapsed and therefore why the margin is what it is.
+    collapsed_duplicates: List[str] = []
     shipped_accession = str(real_ids.get("uniprot") or real_ids.get("drugbank") or "").casefold()
     for other in _safe_list(candidates):
         if not isinstance(other, dict) or other is candidate:
@@ -5438,7 +5578,16 @@ def verify_real_protein_identity(
             for symbol in _candidate_symbol_names(other)
         ):
             continue
+        if _is_same_protein_record_duplicate(candidate, other):
+            # One gene, one organism, several accessions. Not a biological
+            # rival, so it may not contest the margin -- see
+            # _is_same_protein_record_duplicate for what "same record" requires.
+            collapsed_duplicates.append(accession)
+            continue
         rivals.append((_candidate_score(other, {}), accession))
+
+    if collapsed_duplicates:
+        verdict["collapsed_duplicate_accessions"] = sorted(set(collapsed_duplicates))[:8]
 
     if rivals:
         best_rival = max(score_value for score_value, _ in rivals)
@@ -6018,7 +6167,7 @@ def _map_protein_with_strategy(
             if legacy is not None:
                 api_result = _promote_cached_uniprot_result(legacy, organism)
             else:
-                api_result = map_protein_uniprot(client, name, organism, aliases=protein_aliases)
+                api_result = map_protein_uniprot(client, name, organism, aliases=protein_aliases, cache=cache)
             api_result.setdefault("provider", "UniProt")
             api_result.setdefault("source", "api")
             if api_result.get("status") == "mapped":
@@ -9776,7 +9925,20 @@ def map_payload(
             if not _p_name or not _p_org:
                 continue
             try:
-                _api_result = map_protein_uniprot(client, _p_name, _p_org)
+                # Consult the run's own cache before issuing work. This leg is
+                # the LAST place an unresolved protein is asked about, so the
+                # same (name, organism) arrives here once per row that failed
+                # DB mapping -- and until now it re-ran the whole UniProt ladder
+                # AND the LLM alias tier every single time, with a live cache
+                # object sitting in scope. The path itself is unchanged; only
+                # the repetition is removed.
+                _fb_key = f"api-fallback-v1::{_normalize_name(_p_name)}::{_normalize_name(_p_org)}"
+                _fb_cached = cache.get("proteins", _fb_key)
+                if _fb_cached is not None:
+                    _api_result = deepcopy(_fb_cached)
+                else:
+                    _api_result = map_protein_uniprot(client, _p_name, _p_org, cache=cache)
+                    cache.set("proteins", _fb_key, deepcopy(_api_result))
                 # Same ladder as the main protein loop. This fallback is where run
                 # 2026-07-28_0919 first wrote UniProt P08235 (human
                 # mineralocorticoid receptor) onto the E. coli entity 'mcr genes';
