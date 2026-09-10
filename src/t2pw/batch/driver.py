@@ -187,17 +187,27 @@ WARN_SCOPE_CONFLICT_PREFIX = "stage-0 scope conflict (recorded, run continued): 
 #: Artifact naming the requested vs Stage-0-observed scope and the conflicts.
 SCOPE_CONFLICT_NAME = "scope_conflict.json"
 
-#: Warning text for a conflict that :mod:`t2pw.batch.scope_compat` withdrew --
+#: Artifact recording a conflict that :mod:`t2pw.batch.scope_compat` withdrew --
 #: Stage 0 read a strictly NARROWER statement of the requested pathway, so the run
-#: proceeds (C-125). It is a warning and not silence on purpose: nothing about the
-#: run is broken, but "the guard fired and was overruled by the specialization
-#: rule" must be visible in the manifest row and RESULT.txt without opening the
-#: code, exactly as :data:`WARN_SCOPE_CONFLICT_PREFIX` makes the downgraded
-#: conflict visible.
-WARN_SCOPE_SPECIALIZATION_PREFIX = "stage-0 scope specialization admitted: "
+#: proceeds (C-125). The HUMAN channel for that event, deliberately NOT
+#: :attr:`RunOutcome.warnings`: a warning on a passing run sets
+#: ``report.ModeRun.warned`` (``report.py:448``), which renders the verdict as
+#: ``PASS (no research deliverable)`` (``:451-455``) and files the run under
+#: "!! PASSED BUT PRODUCED NO DELIVERABLE !! ... This is NOT a clean night."
+#: (``:806-822``). Every run this card RESCUES would then be reported to the
+#: operator as having produced nothing -- the exact opposite of what happened.
+#: :data:`WARN_SCOPE_CONFLICT_PREFIX` is not a precedent for it: that one fires
+#: only on the non-default ``stage0_conflict_aborts=false`` path, where the run
+#: genuinely is unclean.
+#:
+#: An artifact instead: it lands in the paper folder, in the manifest row's
+#: ``files`` list and in ``RESULT.txt``'s FILES WRITTEN block, and it sets no
+#: verdict anywhere. Named to sit beside :data:`SCOPE_CONFLICT_NAME` so the pair
+#: reads as the two halves of one decision.
+SCOPE_SPECIALIZATION_NAME = "scope_specialization.json"
 
 #: Count key for the same event, so an aggregator can find these runs without
-#: parsing warning prose. Absent (not zero) on a run that had none, so an
+#: opening the artifact. Absent (not zero) on a run that had none, so an
 #: unaffected manifest row stays byte-identical to before.
 COUNT_SCOPE_SPECIALIZATIONS = "stage0_scope_specializations"
 
@@ -664,9 +674,10 @@ def _reconcile_stage0_scope(at: Any, paper: Any, outcome: RunOutcome) -> bool:
     Stage 0 read stays a conflict: that is a different, unproven claim.
 
     Nothing downstream is relaxed. This decides only whether the run PROCEEDS; a
-    withdrawn conflict is recorded as a warning and a count so the overrule is
-    auditable, and a surviving conflict keeps its artifact, reason code and
-    operator message exactly as before.
+    withdrawn conflict is recorded as :data:`SCOPE_SPECIALIZATION_NAME` plus a
+    count so the overrule is auditable WITHOUT marking a healthy run unclean, and
+    a surviving conflict keeps its artifact, reason code and operator message
+    exactly as before.
 
     Returns ``True`` when the caller should stop driving this run.
     """
@@ -704,8 +715,17 @@ def _reconcile_stage0_scope(at: Any, paper: Any, outcome: RunOutcome) -> bool:
     outcome.counts["stage0_observed_organisms"] = len(observed.observed_organisms)
     if specializations:
         outcome.counts[COUNT_SCOPE_SPECIALIZATIONS] = len(specializations)
-        for note in specializations:
-            outcome.warnings.append(f"{WARN_SCOPE_SPECIALIZATION_PREFIX}{note}")
+        outcome.artifacts[SCOPE_SPECIALIZATION_NAME] = _json_text(
+            {
+                "requested": scope.to_dict(),
+                "observed": observed.to_dict(),
+                "withdrawn_conflicts": list(specializations),
+                "stage0_context": {
+                    key: stage0.get(key)
+                    for key in ("pathway_name", "likely_organism", "document_type")
+                },
+            }
+        )
     if not conflicts:
         return False
 
