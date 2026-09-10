@@ -3394,7 +3394,21 @@ def _classification_from_taxonomy(division: str, lineage: str) -> str:
     return ""
 
 
-def _ncbi_esearch_taxid(client: HttpClient, term: str) -> str:
+#: C-124. The three shapes one NCBI question can come back in. ``resolved`` and
+#: ``no_match`` are ANSWERS from the authority; ``network_error`` is the ABSENCE
+#: of an answer -- an exception, a non-200, an unreadable body -- and must never
+#: be read as one. PRODUCT_CONTRACT S8 states the rule for accessions and it is
+#: the same rule here: a lookup failure is not evidence that the species does
+#: not exist, so a ``network_error`` is never memoized.
+_NCBI_RESOLVED = "resolved"
+_NCBI_NO_MATCH = "no_match"
+_NCBI_NETWORK_ERROR = "network_error"
+
+
+def _ncbi_esearch_taxid_result(client: HttpClient, term: str) -> Tuple[str, str]:
+    """``(taxid, status)`` for one esearch. The taxid half is what
+    :func:`_ncbi_esearch_taxid` has always returned; the status half is new and
+    separates "NCBI says nothing matches" from "NCBI was not reached"."""
     _ncbi_throttle()
     try:
         resp = client.get(
@@ -3402,21 +3416,28 @@ def _ncbi_esearch_taxid(client: HttpClient, term: str) -> str:
             params=_ncbi_eutils_params({"db": "taxonomy", "term": term, "retmode": "json", "retmax": 1}),
         )
     except Exception:  # noqa: BLE001
-        return ""
+        return "", _NCBI_NETWORK_ERROR
     if resp.status_code != 200:
-        return ""
+        # 429 included, and deliberately: HttpClient retries only 5xx, so a rate
+        # limit arrives here as a bare non-200. It is a refusal to answer.
+        return "", _NCBI_NETWORK_ERROR
     try:
         data = resp.json()
     except ValueError:
-        return ""
+        return "", _NCBI_NETWORK_ERROR
     for value in _safe_list(_safe_dict(data.get("esearchresult")).get("idlist")):
         taxid = _canonical_name(str(value))
         if taxid.isdigit():
-            return taxid
-    return ""
+            return taxid, _NCBI_RESOLVED
+    return "", _NCBI_NO_MATCH
 
 
-def _ncbi_fetch_taxonomy_record(client: HttpClient, taxid: str) -> Dict[str, str]:
+def _ncbi_esearch_taxid(client: HttpClient, term: str) -> str:
+    return _ncbi_esearch_taxid_result(client, term)[0]
+
+
+def _ncbi_fetch_taxonomy_record_result(client: HttpClient, taxid: str) -> Tuple[Dict[str, str], str]:
+    """``(record, status)`` for one efetch, with the same split as esearch."""
     _ncbi_throttle()
     try:
         resp = client.get(
@@ -3424,22 +3445,31 @@ def _ncbi_fetch_taxonomy_record(client: HttpClient, taxid: str) -> Dict[str, str
             params=_ncbi_eutils_params({"db": "taxonomy", "id": taxid, "retmode": "xml"}),
         )
     except Exception:  # noqa: BLE001
-        return {}
+        return {}, _NCBI_NETWORK_ERROR
     if resp.status_code != 200 or not resp.text.strip():
-        return {}
+        return {}, _NCBI_NETWORK_ERROR
     try:
         root = ElementTree.fromstring(resp.text)
     except ElementTree.ParseError:
-        return {}
+        # Bytes arrived but could not be read. That is a failed transfer, not a
+        # statement about the taxon.
+        return {}, _NCBI_NETWORK_ERROR
     taxon = root.find("Taxon")
     if taxon is None:
-        return {}
+        return {}, _NCBI_NO_MATCH
     division = (taxon.findtext("Division") or "").strip()
     lineage = (taxon.findtext("Lineage") or "").strip()
-    return {
-        "taxonomy_id": (taxon.findtext("TaxId") or taxid).strip(),
-        "classification": _classification_from_taxonomy(division, lineage),
-    }
+    return (
+        {
+            "taxonomy_id": (taxon.findtext("TaxId") or taxid).strip(),
+            "classification": _classification_from_taxonomy(division, lineage),
+        },
+        _NCBI_RESOLVED,
+    )
+
+
+def _ncbi_fetch_taxonomy_record(client: HttpClient, taxid: str) -> Dict[str, str]:
+    return _ncbi_fetch_taxonomy_record_result(client, taxid)[0]
 
 
 def _ncbi_taxonomy_lookup(client: HttpClient, name: str) -> Dict[str, str]:
@@ -3449,9 +3479,28 @@ def _ncbi_taxonomy_lookup(client: HttpClient, name: str) -> Dict[str, str]:
     full name first, then the 'Genus species' binomial for strain-level names
     (e.g. 'Herbaspirillum huttiense IAM 15032' -> 'Herbaspirillum huttiense').
     """
+    result = _ncbi_taxonomy_lookup_result(client, name)
+    if result.get("status") != _NCBI_RESOLVED:
+        return {}
+    return {
+        "taxonomy_id": result.get("taxonomy_id", ""),
+        "classification": result.get("classification", ""),
+    }
+
+
+def _ncbi_taxonomy_lookup_result(client: HttpClient, name: str) -> Dict[str, str]:
+    """:func:`_ncbi_taxonomy_lookup` plus the reason it came back empty.
+
+    Same ladder, same order, same fail-safe behaviour. The extra ``status`` key
+    reports which of the three shapes the empty answer had, so a caller can tell
+    a species NCBI does not index from a species it was never asked about
+    because the transfer failed. Any transport failure anywhere in the ladder
+    makes the whole lookup ``network_error``: the ladder was not completed, so
+    "no match" would be a claim the run did not earn.
+    """
     organism = _canonical_name(name)
     if not organism:
-        return {}
+        return {"status": _NCBI_NO_MATCH}
     terms: List[str] = [organism]
     binomial = _binomial_from_organism(organism)
     if binomial and _normalize_name(binomial) != _normalize_name(organism):
@@ -3459,13 +3508,25 @@ def _ncbi_taxonomy_lookup(client: HttpClient, name: str) -> Dict[str, str]:
     # Prefer exact scientific-name matches (strain first, then the binomial) before
     # any loose full-text search, which can collide on shared name tokens.
     queries = [f"{term}[Scientific Name]" for term in terms] + terms
+    status = _NCBI_NO_MATCH
     for query in queries:
-        taxid = _ncbi_esearch_taxid(client, query)
-        if taxid:
-            record = _ncbi_fetch_taxonomy_record(client, taxid)
-            if record.get("taxonomy_id"):
-                return record
-    return {}
+        taxid, esearch_status = _ncbi_esearch_taxid_result(client, query)
+        if esearch_status == _NCBI_NETWORK_ERROR:
+            status = _NCBI_NETWORK_ERROR
+            continue
+        if not taxid:
+            continue
+        record, fetch_status = _ncbi_fetch_taxonomy_record_result(client, taxid)
+        if fetch_status == _NCBI_NETWORK_ERROR:
+            status = _NCBI_NETWORK_ERROR
+            continue
+        if record.get("taxonomy_id"):
+            return {
+                "taxonomy_id": record.get("taxonomy_id", ""),
+                "classification": record.get("classification", ""),
+                "status": _NCBI_RESOLVED,
+            }
+    return {"status": status}
 
 
 # ── C-120: contextual alias reuse for abbreviated binomials ───────────────────
@@ -3642,11 +3703,216 @@ def _species_alias_expansion(
     }
 
 
+# -- C-124: creating a species the local table simply does not have ----------
+# PMC13488460 (Borrelia burgdorferi, mevalonate) produced a sound one-reaction
+# core and then lost the whole export at the required-field gate on
+# species_missing_taxonomy / species_missing_classification. PathWhiz can create
+# a species it has never seen, but only when handed a scientific name, a numeric
+# taxonomy id and a Prokaryote|Eukaryote classification -- and the organism was
+# absent from the local PathBank species table, so the row reached the gate with
+# none of them.
+#
+# The NCBI ladder above is the authority that supplies those facts, and it is
+# already wired into this stage. What that run measured is the ladder coming
+# back EMPTY for the paper's own spelling of the organism while answering, in
+# the same leg and seconds later, for the reclassified spelling
+# ('Borreliella burgdorferi') that the local DB record carries. So the missing
+# step is not another taxonomy client: it is asking the authority about the
+# name the local database itself asserts is the same organism.
+#
+# Fail-closed at every step, copying C-120's discipline:
+#   * the unresolved name must be a bare 'Genus epithet' binomial -- a
+#     species-rank reference. A strain-qualified name is refused: a species-rank
+#     id is not the taxon such a name states.
+#   * the synonym must be asserted by a row that IS a local database record
+#     (it carries a PathBank species id); an unresolved row asserts nothing;
+#   * the asserting row's name is reduced to its binomial through the existing
+#     ``_binomial_from_organism`` before anything is asked, because at THIS point
+#     in the pipeline a DB-matched species row still carries the database's own
+#     strain-qualified name ('... (strain ATCC 35210 / ... / B31)'); the pre-freeze
+#     species stage has not run yet. Reducing it is what keeps the question, and
+#     therefore the answer, at species rank -- the rank the unresolved name is;
+#   * the two must be a GENUS-level synonym: the same specific epithet under a
+#     different genus, which is what a reclassification is and what a local
+#     ``common_name`` can vouch for. A shared genus with a different epithet, a
+#     serovar spelling or a vernacular is refused, because the answer for one
+#     would not be the taxon the other names;
+#   * the donors must agree on exactly one binomial, or nothing happens;
+#   * NCBI, and only NCBI, supplies the taxonomy id and the classification. The
+#     donor's own id is never copied -- it is a strain-rank id as often as not,
+#     which is exactly what C-120 refused to do;
+#   * anything short of a numeric id AND a real classification leaves the row
+#     unresolved and the gate refuses exactly as it does today.
+
+#: 'Genus epithet', nothing else. No strain code, no sub-species marker, no
+#: parenthesised qualifier, no abbreviation (C-120 owns that shape).
+_BARE_BINOMIAL_RE = re.compile(r"^[A-Z][a-z-]+ [a-z][a-z-]+$")
+
+#: Where a species row records a spelling of itself that is not its ``name``.
+_SPECIES_SYNONYM_KEYS: Tuple[str, ...] = ("common_name", "raw_name")
+
+#: PathBank identity keys that make a species row a local DATABASE record rather
+#: than an extraction artifact. Only such a row may assert a synonym.
+_SPECIES_DB_ID_KEYS: Tuple[str, ...] = ("pathbank_species_id", "species_id", "pw_species_id")
+
+#: MappingCache section for NCBI taxonomy answers. Keyed by the organism name,
+#: so one name's answer is never served for another's.
+_SPECIES_TAXONOMY_CACHE_SECTION = "species_taxonomy"
+
+
+def _species_taxonomy_cache_key(name: str) -> str:
+    return f"ncbi-taxonomy-v1::{_normalize_name(name)}"
+
+
+def _valid_species_taxonomy(record: Dict[str, Any]) -> Dict[str, str]:
+    """``{taxonomy_id, classification}`` when BOTH are present and well formed."""
+    taxonomy_id = _canonical_name(str(_safe_dict(record).get("taxonomy_id") or ""))
+    classification = _canonical_name(str(_safe_dict(record).get("classification") or ""))
+    if not taxonomy_id.isdigit() or int(taxonomy_id) <= 0:
+        return {}
+    if classification not in _SPECIES_CLASSIFICATIONS:
+        return {}
+    return {"taxonomy_id": taxonomy_id, "classification": classification}
+
+
+def _lookup_species_taxonomy(
+    client: HttpClient, name: str, *, cache: Optional[MappingCache] = None
+) -> Dict[str, str]:
+    """The existing NCBI lookup, memoized in the EXISTING MappingCache.
+
+    Returns exactly what :func:`_ncbi_taxonomy_lookup` returns, so every caller
+    keeps its own application rules. The cache only ever holds a COMPLETE
+    resolved answer: a transport failure is not stored (C-122's lesson, and
+    PRODUCT_CONTRACT S8 -- one outage would otherwise become a permanent silent
+    "no such species" for that organism), and neither is a ``no_match`` or a
+    half answer, so a name that missed today is asked again tomorrow.
+    """
+    if cache is not None:
+        cached = _valid_species_taxonomy(cache.get(_SPECIES_TAXONOMY_CACHE_SECTION, _species_taxonomy_cache_key(name)) or {})
+        if cached:
+            return dict(cached)
+    result = _ncbi_taxonomy_lookup_result(client, name)
+    if result.get("status") != _NCBI_RESOLVED:
+        return {}
+    record = {
+        "taxonomy_id": result.get("taxonomy_id", ""),
+        "classification": result.get("classification", ""),
+    }
+    if cache is not None:
+        storable = _valid_species_taxonomy(record)
+        if storable:
+            cache.set(
+                _SPECIES_TAXONOMY_CACHE_SECTION,
+                _species_taxonomy_cache_key(name),
+                {"name": _canonical_name(name), "source": "ncbi", **storable},
+            )
+    return record
+
+
+def _is_bare_binomial(name: str) -> bool:
+    text = _canonical_name(name)
+    if not _BARE_BINOMIAL_RE.match(text):
+        return False
+    return not _STRAIN_SUFFIX_RE.search(text)
+
+
+def _binomial_parts(name: str) -> Tuple[str, str]:
+    """``('Genus', 'epithet')`` for a bare binomial, ``('', '')`` otherwise."""
+    text = _canonical_name(name)
+    if not _is_bare_binomial(text):
+        return "", ""
+    genus, epithet = text.split(" ")
+    return genus, epithet
+
+
+def _db_asserted_species_synonym(rows: List[Any], name: str) -> Dict[str, Any]:
+    """The species-rank binomial the payload's own DATABASE rows give ``name``.
+
+    Returns ``{"term": <binomial>, "donors": [...]}`` only when exactly one such
+    binomial is asserted, and ``{}`` for everything else -- no assertion, an
+    assertion by a row that is not a database record, a rank-qualified
+    unresolved name, an assertion that is not a genus-level synonym, or two
+    database rows claiming the same spelling for two different organisms.
+    """
+    genus, epithet = _binomial_parts(name)
+    if not genus:
+        return {}
+    target = _normalize_name(_canonical_name(name))
+    terms: Dict[str, str] = {}
+    donors: List[str] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        if not any(_canonical_name(str(row.get(key) or "")) for key in _SPECIES_DB_ID_KEYS):
+            continue  # not a local database record -- it asserts nothing
+        scientific = _canonical_name(str(row.get("name") or ""))
+        if not scientific:
+            continue
+        # The database's own name is strain-qualified at this point in the
+        # pipeline. Reduce it to the species-rank binomial the unresolved name is.
+        binomial = _binomial_from_organism(scientific)
+        donor_genus, donor_epithet = _binomial_parts(binomial)
+        if not donor_genus or _normalize_name(binomial) == target:
+            continue
+        # A genus-level synonym and nothing else: same epithet, different genus.
+        if donor_epithet.casefold() != epithet.casefold():
+            continue
+        if donor_genus.casefold() == genus.casefold():
+            continue
+        spellings = [str(row.get(key) or "") for key in _SPECIES_SYNONYM_KEYS]
+        spellings.extend(str(alias or "") for alias in _safe_list(row.get("aliases")))
+        if target not in {_normalize_name(spelling) for spelling in spellings if spelling}:
+            continue
+        terms[_normalize_name(binomial)] = binomial
+        donors.append(scientific)
+    if len(terms) != 1:
+        return {}
+    return {"term": next(iter(terms.values())), "donors": sorted(set(donors))}
+
+
+def _create_species_from_db_synonym(
+    row: Dict[str, Any],
+    name: str,
+    species_rows: List[Any],
+    *,
+    client: Optional[HttpClient],
+    enable_ncbi: bool,
+    cache: Optional[MappingCache],
+) -> Dict[str, Any]:
+    """Resolve one unresolved species row through its DB-asserted synonym.
+
+    ``{}`` whenever anything is missing, ambiguous or unavailable. The returned
+    taxonomy id is the one NCBI answered with for the synonym; no id is ever
+    read off the donor row.
+    """
+    if not enable_ncbi or client is None:
+        return {}
+    if _canonical_name(str(row.get("taxonomy_id") or row.get("taxonomy-id") or "")):
+        # Partly resolved: it already claims a taxon. Completing it from a
+        # lookup of a different name could pair an id with a classification no
+        # source ever stated together.
+        return {}
+    synonym = _db_asserted_species_synonym(species_rows, name)
+    if not synonym:
+        return {}
+    record = _valid_species_taxonomy(_lookup_species_taxonomy(client, synonym["term"], cache=cache))
+    if not record:
+        return {}
+    return {
+        "source": "ncbi_db_synonym",
+        "taxonomy_id": record["taxonomy_id"],
+        "classification": record["classification"],
+        "resolved_as": synonym["term"],
+        "donors": synonym["donors"],
+    }
+
+
 def backfill_species_taxonomy(
     payload: Dict[str, Any],
     *,
     client: Optional[HttpClient] = None,
     enable_ncbi: bool = False,
+    cache: Optional[MappingCache] = None,
 ) -> Dict[str, Any]:
     """Fill missing taxonomy-id / classification on species entities via NCBI.
 
@@ -3676,7 +3942,7 @@ def backfill_species_taxonomy(
             continue
         report["checked"] += 1
         if report["enabled"] and name:
-            result = _ncbi_taxonomy_lookup(client, name)  # type: ignore[arg-type]
+            result = _lookup_species_taxonomy(client, name, cache=cache)  # type: ignore[arg-type]
             if result.get("taxonomy_id") and not taxonomy_id:
                 row["taxonomy_id"] = result["taxonomy_id"]
                 taxonomy_id = result["taxonomy_id"]
@@ -3743,6 +4009,53 @@ def backfill_species_taxonomy(
                 )
                 if name in report["unresolved"]:
                     report["unresolved"].remove(name)
+
+    # C-124 -- the last pass, over ONLY what is still unresolved after both of
+    # the passes above. Inert unless the payload's own database rows name this
+    # organism under another spelling AND the authority answers for it.
+    if still_unresolved and enable_ncbi and client is not None:
+        for name, row in still_unresolved:
+            if _valid_species_taxonomy(row):
+                continue  # an earlier pass already resolved it
+            creation = _create_species_from_db_synonym(
+                row,
+                name,
+                species_rows,
+                client=client,
+                enable_ncbi=bool(enable_ncbi),
+                cache=cache,
+            )
+            if not creation:
+                continue
+            # Display text is preserved -- row["name"] is deliberately untouched.
+            row["taxonomy_id"] = creation["taxonomy_id"]
+            row["classification"] = creation["classification"]
+            meta = row.setdefault("mapping_meta", {})
+            if isinstance(meta, dict):
+                meta["taxonomy_backfill"] = {
+                    "source": creation["source"],
+                    "taxonomy_id": creation["taxonomy_id"],
+                    "classification": creation["classification"],
+                    "resolved_as": creation["resolved_as"],
+                    "donors": creation["donors"],
+                }
+            report["resolved"] += 1
+            # Present only when this pass actually did something, so a report it
+            # left alone stays byte-identical to what it was before C-124.
+            audit = report.setdefault("species_creation", {"resolved": 0, "rows": []})
+            audit["resolved"] += 1
+            audit["rows"].append(
+                {
+                    "name": name,
+                    "source": creation["source"],
+                    "resolved_as": creation["resolved_as"],
+                    "taxonomy_id": creation["taxonomy_id"],
+                    "classification": creation["classification"],
+                    "donors": creation["donors"],
+                }
+            )
+            if name in report["unresolved"]:
+                report["unresolved"].remove(name)
     return report
 
 
@@ -3753,6 +4066,7 @@ def hydrate_species_references(
     use_llm: bool = True,
     client: Optional[HttpClient] = None,
     enable_ncbi: bool = False,
+    cache: Optional[MappingCache] = None,
 ) -> Dict[str, Any]:
     """Hydrate protein/protein-complex species before ID mapping.
 
@@ -3840,7 +4154,7 @@ def hydrate_species_references(
             )
 
     report["taxonomy_backfill"] = backfill_species_taxonomy(
-        payload, client=client, enable_ncbi=enable_ncbi
+        payload, client=client, enable_ncbi=enable_ncbi, cache=cache
     )
     return report
 
@@ -9625,7 +9939,12 @@ def map_payload(
     species_llm_enabled = str(os.getenv("T2PW_SPECIES_LLM", "1")).strip().lower() not in {"0", "false", "no", "off"}
     species_ncbi_enabled = str(os.getenv("T2PW_SPECIES_NCBI", "1")).strip().lower() not in {"0", "false", "no", "off"}
     species_report = hydrate_species_references(
-        mapped, db=db, use_llm=species_llm_enabled, client=client, enable_ncbi=species_ncbi_enabled
+        mapped,
+        db=db,
+        use_llm=species_llm_enabled,
+        client=client,
+        enable_ncbi=species_ncbi_enabled,
+        cache=cache,
     )
 
     global_organism = _extract_global_organism(mapped)

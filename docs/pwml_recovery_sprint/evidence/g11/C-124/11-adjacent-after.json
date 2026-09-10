@@ -1,0 +1,96 @@
+{
+  "label": "adjacent-after",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-124/11-adjacent-after.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt/c124",
+    "tests/test_c055_rag_loop_wiring.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c095_wrapper_superset_identity.py",
+    "tests/test_c122_db_first_alias.py",
+    "tests/test_db_resolver_primitives.py",
+    "tests/test_entity_identity_contracts.py",
+    "tests/test_paper_eligibility_corrections.py",
+    "tests/test_pathbank_unknown_fallback.py",
+    "tests/test_protein_export_policy.py",
+    "tests/test_rag_acquire.py",
+    "tests/test_rag_synthesize.py",
+    "tests/test_stage2_mapping_boundary.py"
+  ],
+  "cwd": "C:\\t\\c124",
+  "started_at": "2026-09-10T23:20:56+00:00",
+  "finished_at": "2026-09-10T23:21:15+00:00",
+  "duration_seconds": 18.695506000018213,
+  "timeout_seconds": 900.0,
+  "root_pid": 537012,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 524456,
+      "name": "python.exe",
+      "ppid": 537012
+    },
+    {
+      "pid": 531108,
+      "name": "git.exe",
+      "ppid": 524456
+    }
+  ],
+  "descendants_terminated": [
+    524456,
+    531108
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 523840,
+      "name": "python.exe"
+    },
+    {
+      "pid": 523936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 530672,
+      "name": "python.exe"
+    },
+    {
+      "pid": 532444,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-124/11-adjacent-after.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c124\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c124",
+    "repo_head": "4d417e4f4fff98207c8cd1ed78ecfa56b9fea397",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
