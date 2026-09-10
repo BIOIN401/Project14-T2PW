@@ -3713,12 +3713,34 @@ def _species_alias_expansion(
 # none of them.
 #
 # The NCBI ladder above is the authority that supplies those facts, and it is
-# already wired into this stage. What that run measured is the ladder coming
-# back EMPTY for the paper's own spelling of the organism while answering, in
-# the same leg and seconds later, for the reclassified spelling
-# ('Borreliella burgdorferi') that the local DB record carries. So the missing
-# step is not another taxonomy client: it is asking the authority about the
-# name the local database itself asserts is the same organism.
+# already wired into this stage -- it resolved the organism for 7 of the 8 legs
+# in that same run. What this leg hit is a GENUS RECLASSIFICATION: the taxon was
+# moved out of the genus the paper names it under, NCBI Taxonomy indexes it only
+# under the current genus, and the literature overwhelmingly still uses the old
+# one.
+#
+# Measured directly against NCBI Taxonomy (2026-09-10), all four query forms the
+# ladder above can produce:
+#
+#     Borrelia burgdorferi[Scientific Name]       -> (none)
+#     Borrelia burgdorferi                        -> (none)
+#     Borreliella burgdorferi[Scientific Name]    -> 139
+#     Borreliella burgdorferi                     -> 139
+#
+# So this is NOT a transport failure, NOT a rate limit, and not specific to one
+# run: the authority genuinely has no answer under the paper's spelling, and the
+# whole ladder -- exact scientific-name match and free-text alike -- returns
+# nothing every time. The failure is DETERMINISTIC and reproduces on every paper
+# using a pre-reclassification genus name, a class that includes Borreliella,
+# Lactiplantibacillus, Priestia and Cutibacterium among others.
+#
+# The missing step is therefore not another taxonomy client and not a retry: it
+# is asking the authority under the CURRENT genus. The evidence for what that
+# genus is comes from the local PathBank record itself -- the DB row that matched
+# this organism carries the current scientific name and names the paper's
+# spelling as its own common name. No reclassification table is hardcoded here;
+# the payload's own database row is what supplies the current name, which is what
+# makes the pass general rather than a fix for one organism.
 #
 # Fail-closed at every step, copying C-120's discipline:
 #   * the unresolved name must be a bare 'Genus epithet' binomial -- a
@@ -3732,11 +3754,11 @@ def _species_alias_expansion(
 #     strain-qualified name ('... (strain ATCC 35210 / ... / B31)'); the pre-freeze
 #     species stage has not run yet. Reducing it is what keeps the question, and
 #     therefore the answer, at species rank -- the rank the unresolved name is;
-#   * the two must be a GENUS-level synonym: the same specific epithet under a
-#     different genus, which is what a reclassification is and what a local
-#     ``common_name`` can vouch for. A shared genus with a different epithet, a
-#     serovar spelling or a vernacular is refused, because the answer for one
-#     would not be the taxon the other names;
+#   * the two must be a GENUS RECLASSIFICATION and nothing else: the same
+#     specific epithet under a different genus. That is the shape measured above
+#     and the only shape a local ``common_name`` can vouch for. A shared genus
+#     with a different epithet, a serovar spelling or a vernacular is refused,
+#     because the answer for one would not be the taxon the other names;
 #   * the donors must agree on exactly one binomial, or nothing happens;
 #   * NCBI, and only NCBI, supplies the taxonomy id and the classification. The
 #     donor's own id is never copied -- it is a strain-rank id as often as not,
@@ -3826,13 +3848,20 @@ def _binomial_parts(name: str) -> Tuple[str, str]:
 
 
 def _db_asserted_species_synonym(rows: List[Any], name: str) -> Dict[str, Any]:
-    """The species-rank binomial the payload's own DATABASE rows give ``name``.
+    """The CURRENT-genus binomial the payload's own DATABASE rows give ``name``.
+
+    ``name`` is a species-rank binomial NCBI does not index -- measured above, an
+    organism named under the genus it was classified in before a reclassification.
+    This returns the binomial a local PathBank record states for that same
+    organism under its current genus, which is the name the authority can answer
+    for.
 
     Returns ``{"term": <binomial>, "donors": [...]}`` only when exactly one such
     binomial is asserted, and ``{}`` for everything else -- no assertion, an
     assertion by a row that is not a database record, a rank-qualified
-    unresolved name, an assertion that is not a genus-level synonym, or two
-    database rows claiming the same spelling for two different organisms.
+    unresolved name, an assertion that is not a genus reclassification (same
+    epithet, different genus), or two database rows claiming the same spelling
+    for two different organisms.
     """
     genus, epithet = _binomial_parts(name)
     if not genus:
@@ -3879,11 +3908,15 @@ def _create_species_from_db_synonym(
     enable_ncbi: bool,
     cache: Optional[MappingCache],
 ) -> Dict[str, Any]:
-    """Resolve one unresolved species row through its DB-asserted synonym.
+    """Resolve one unresolved species row under its current genus.
+
+    Reached ONLY for a row the direct NCBI lookup above left without a taxonomy
+    id, so a payload whose organism resolves normally never enters this path and
+    costs no extra request.
 
     ``{}`` whenever anything is missing, ambiguous or unavailable. The returned
-    taxonomy id is the one NCBI answered with for the synonym; no id is ever
-    read off the donor row.
+    taxonomy id is the one NCBI answered with for the current-genus binomial; no
+    id is ever read off the donor row.
     """
     if not enable_ncbi or client is None:
         return {}

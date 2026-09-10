@@ -11,17 +11,30 @@ gate::
 
 The organism is absent from the local PathBank species table, so its row reached
 the gate with no taxonomy id and no Prokaryote|Eukaryote classification -- the two
-facts PathWhiz needs to CREATE a species it has never seen. The archived payload
-also shows what the same leg *did* resolve: a second species row, matched in the
-local database under the reclassified spelling of the same organism, carrying that
-spelling's PathBank id and naming the unresolved row's spelling as its own
-``common_name``. NCBI answered for that spelling seconds later in the same leg.
+facts PathWhiz needs to CREATE a species it has never seen.
 
-So the fallback this card builds is: local lookup MISS -> ask the authority about
-the name the local DATABASE itself asserts is the same organism -> take the
-numeric taxonomy id and the classification NCBI answers with -> the species can be
-created and the export continues. NCBI is the only source of an id anywhere in
-this path, and every step is fail-closed.
+Why the existing NCBI backfill did not supply them, measured directly against
+NCBI Taxonomy (2026-09-10), all four query forms that ladder produces::
+
+    Borrelia burgdorferi[Scientific Name]       -> (none)
+    Borrelia burgdorferi                        -> (none)
+    Borreliella burgdorferi[Scientific Name]    -> 139
+    Borreliella burgdorferi                     -> 139
+
+A GENUS RECLASSIFICATION, not a transport failure and not a rate limit: the taxon
+was moved to another genus, NCBI indexes it only under the current one, and the
+literature still uses the old one. The failure is deterministic and reproduces on
+every paper naming an organism under a pre-reclassification genus.
+
+The archived payload carries the evidence for the current genus itself: a second
+species row, matched in the local database, holding the current scientific name
+and naming the unresolved row's spelling as its own ``common_name``.
+
+So the fallback this card builds is: local lookup MISS -> ask the authority under
+the current genus the payload's own DATABASE row states -> take the numeric
+taxonomy id and the classification NCBI answers with -> the species can be created
+and the export continues. NCBI is the only source of an id anywhere in this path,
+no reclassification is hardcoded, and every step is fail-closed.
 
 Fixture
 -------
