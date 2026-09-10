@@ -10122,9 +10122,14 @@ wall-clock timeouts were delivery-dominated (90 and 71 empties; 57 % and 46 %).
 The empty rate tracks the completion budget. **Stage 1 is among the healthiest stages in the
 pipeline** and no case is made for touching it.
 
+> **CORRECTED by `ORCH-740`: the `chat` row is `map_ids.py:406` ALONE.** The `stoich`
+> classifier is unreachable in batch (behind the `use_stoich_agent` checkbox) and contributed
+> no call to the 469. See the correction entry at the end of this file. Every number in this
+> table is unaffected; only the attribution was wrong.
+
 | stage | `max_tokens` | empty % |
 |---|---:|---:|
-| `chat` — `map_ids` alias + `stoich` classifier | **300** | **79.7 %** |
+| `chat` — `map_ids` alias lookup (**corrected**) | **300** | **79.7 %** |
 | `rag_prose_extraction` | 1,500 | 54.4 % |
 | `gap resolver` | 450–900 | 31.3 % |
 | Stage 2 inference | 16,000 | 17.1 % |
@@ -10159,3 +10164,107 @@ returns nothing four times in five, so there is no quality there to lose. **A qu
 obligation of the card, after the patch, not a claim of this finding.**
 
 Full record: [`ORCH-739-RUNTIME-PROVIDER-RELIABILITY.md`](ORCH-739-RUNTIME-PROVIDER-RELIABILITY.md).
+
+---
+
+## `F-200` — 40 distinct alias questions cost 469 model calls · ORCH-740
+
+**Class: runtime amplification. REGISTERED, NOT CHARTERED.** `ORCH-740` § 12 restricts that card
+to one variable and this is a different one.
+
+The 469 calls in the `chat` bucket of the `ORCH-739` census come from **40 distinct request
+hashes** — **11.7 calls per distinct question.**
+
+| paper | `chat` calls | distinct requests | calls per request |
+|---|---:|---:|---:|
+| `PMC6112128` | 41 | 2 | **20.5** |
+| `PMC9200736` (timed out at the wall) | 78 | 4 | **19.5** |
+| `PMC13184244` | 34 | 2 | **17.0** |
+| `PMC12071552` | 71 | 6 | 11.8 |
+| `PMC11961743` (ORCH-734) | 69 | 6 | 11.5 |
+| `PMC7232280` | 44 | 4 | 11.0 |
+| `PMC11487621` | 55 | 6 | 9.2 |
+| `PMC11961743` (C-121) | 77 | 10 | 7.7 |
+| **total** | **469** | **40** | **11.7** |
+
+`LLM_MAX_RETRIES` is **3**, and the client's retry loop can account for at most ~2.07 attempts per
+invocation at the measured 65 % empty rate. **The residual factor of roughly 5.6 is the caller
+re-asking the same question**, on top of the client's own retries.
+
+### Why it matters more than the budget
+
+`ORCH-740` measured that raising the budget to 2000 multiplies the cost of every call in this loop
+by **2.33×** while leaving the loop itself untouched. **Forty questions should not cost 469 calls
+at any budget.** Shortening the loop is a strictly larger lever than making each of its iterations
+succeed more often, and the two are independent.
+
+### What is NOT established
+
+**Which loop.** The re-asks could be an outer retry in the identity-mapping caller, the same
+protein re-queried at successive pipeline stages, or several distinct proteins whose prompts happen
+to collide on one hash. The request hash cannot distinguish these, and **no cause is asserted.**
+Naming the loop needs a read of the `map_ids` caller graph that this card did not perform.
+
+Full record: [`ORCH-740-AUX-BUDGET-2000-EXPERIMENT.md`](ORCH-740-AUX-BUDGET-2000-EXPERIMENT.md) § 5.
+
+---
+
+## `F-201` — the stoich agent bypasses the LLM client, and an empty completion silently becomes `"uncertain"` · ORCH-740
+
+**Class: provider delivery + observability. REGISTERED, NOT CHARTERED. LATENT — the path has
+never executed in a measured leg.**
+
+`stoich/agent.py:568` and `:596` call `_client.chat.completions.create` **directly** at
+`max_tokens=300`, bypassing `t2pw.llm.client` entirely. They therefore get **no retry loop, no
+empty-completion handling, and no `LEG_TRACE` row.** The reply is consumed as:
+
+```python
+av = _parse_json_from_text(audit_response.choices[0].message.content or "").get("verdict", "uncertain")
+```
+
+**An empty completion becomes `"uncertain"`** — indistinguishable from the model genuinely being
+unsure, and nothing anywhere records that the provider never answered.
+
+`ORCH-740` measured this exact model at this exact budget returning empty **65 %** of the time. A
+run with the stoich agent enabled would therefore have its biochemical input/output audit degrade
+silently to no-opinion on most compounds. Since `"uncertain"` leaves the compound in place, the
+audit would appear to confirm additions it never actually judged.
+
+### Why it is latent, and why it is registered anyway
+
+`run_stoich_agent` is reached only from `streamlit_app.py:4277`, guarded by the
+`use_stoich_agent` checkbox. **The batch driver never sets it** — it sets only the two radios, the
+text area and the buttons — so no archived leg executed this code.
+
+It is registered because **anyone acting on an instruction to "raise the 300-token budgets" would
+have edited these two literals**, changing a path that has never run, on the mistaken belief that
+it was part of the measured failure population. It is not. See the `F-199` correction below.
+
+---
+
+## Correction to `F-199` and `ORCH-739` § 3 — the `chat` bucket is ONE call site, not two · ORCH-740
+
+**`ORCH-739` § 3 and `F-199`'s stage table attribute the untagged `chat` bucket to
+*"`map_ids` alias + `stoich` classifier"*. The `stoich` half is WRONG.**
+
+`stoich/classifier.py:136` is reached only from `stoich/agent.py:420`, inside `run_stoich_agent`,
+behind the `use_stoich_agent` checkbox the batch driver never sets. **It cannot have contributed a
+single call to the measured 469.**
+
+**The corrected attribution: the `chat` bucket is `mapping/map_ids.py:406`,
+`_ai_protein_synonym_lookup`, alone** — the protein alias lookup that runs when UniProt fails to
+match a protein by its primary name.
+
+| ruled out | reason |
+|---|---|
+| `stoich/classifier.py:136` | unreachable in batch (checkbox) |
+| `stoich/agent.py:568`, `:596` | bypass the client; emit no trace row; also unreachable |
+| `extraction/extract.py:18` | `run_demo()`, hard-coded glutathione text behind two `__main__` guards |
+| `map_ids.py:3267` / `gap_resolver.py:298` | `infer_entity_species` passes `stage_name="gap resolver"` — measured, but in the `gap resolver` bucket at 31.3 %, not in `chat` |
+
+**Nothing else in `F-199` changes.** The 79.7 % empty rate, the 469-call count, the budget/empty
+relationship across stages, the reproduction at 5/5, the ignored reasoning cap and the 0/5 result
+with reasoning disabled are all unaffected — they were measured from the trace and from live
+probes, not from the attribution. **What changes is which file a fix would touch**, and that is
+exactly the kind of error worth correcting loudly: acting on the wrong attribution would have
+edited two `300` literals in code that has never run.

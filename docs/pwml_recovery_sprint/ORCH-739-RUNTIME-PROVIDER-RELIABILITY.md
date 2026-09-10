@@ -130,6 +130,21 @@ more than half.** The single cleanest leg, `PMC10269868` at 5 %, produced a PWML
 
 # 3. Where the empties actually are — and it is not Stage 1
 
+> ## ⚠ CORRECTED by `ORCH-740`, 2026-09-09 — the `chat` bucket is ONE call site, not two.
+>
+> This section attributes `chat` to *"`map_ids` alias + `stoich` classifier"*. **The `stoich`
+> half is wrong.** `stoich/classifier.py:136` is reached only from `stoich/agent.py:420`,
+> inside `run_stoich_agent`, behind a Streamlit checkbox the batch driver never sets. It
+> contributed **no call** to the 469. `stoich/agent.py`'s own two 300-token calls bypass the
+> client entirely and emit no trace row.
+>
+> **The bucket is `mapping/map_ids.py:406`, `_ai_protein_synonym_lookup`, alone.**
+>
+> **Every measurement in this section stands** — the rates came from the trace, not from the
+> attribution. What was wrong is *which file a fix would touch*, and acting on it would have
+> edited two literals in code that has never run. See
+> [`ORCH-740-AUX-BUDGET-2000-EXPERIMENT.md`](ORCH-740-AUX-BUDGET-2000-EXPERIMENT.md) § 1.1.
+
 | stage | `max_tokens` | calls | normal | **empty** | **empty %** |
 |---|---:|---:|---:|---:|---:|
 | `chat` — `map_ids` alias + `stoich` classifier | **300** | 469 | 3 | **374** | **79.7 %** |

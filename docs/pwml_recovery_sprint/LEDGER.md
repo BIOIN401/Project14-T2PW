@@ -10385,3 +10385,34 @@ HEAD -- src/` empty. `main` untouched. No paper re-run, no cohort launched, no w
 | PathWhiz set | **13 files committed and hash-pinned**, `sha256sum -c` all `OK`. `ORCH-735` committed 11; this task added the 2 still untracked on one disk (`C121_PMC9544450`, `ORCH730_PMC7232280.F195`). **Copies only, `cmp`-verified byte-identical; sources preserved.** 10 READY / 3 FAIL, the 3 all `F-195` |
 | G11 | six bounded jobs, **all `FINAL SURVIVING COUNT : 0` / `cleanup : success`**. Heavy lock free before and after. Pre-existing processes reported, never killed |
 | next | **the product owner's two decisions, in either order:** (1) import the PWML set by hand — the step this phase has been waiting on, and the only thing that decides `F-195`; (2) rule on the `F-199` card. **`RAG v2` does not begin until reliability closes**, and `F-199` matters more to it than to mode A — mode C issues LLM calls per frontier node, so a 45 % wall-clock tax compounds |
+
+---
+
+## `ORCH-740` — auxiliary budget `300 → 2000`, reasoning enabled. **DECISION: `REJECT 2000`** · 2026-09-09
+
+Full record: [`ORCH-740-AUX-BUDGET-2000-EXPERIMENT.md`](ORCH-740-AUX-BUDGET-2000-EXPERIMENT.md).
+**No production code changed and no experimental diff was ever written**, so none had to be
+reverted. `git diff 24dd4342 HEAD -- src/` empty. `main` untouched. Stage 1 and Stage 2 budgets
+untouched. 40 live calls, production's own prompt, reasoning left enabled throughout.
+
+### State at this entry
+
+| item | state |
+|---|---|
+| **decision** | **`REJECT 2000`.** `2000 + reasoning enabled` does not solve the measured mechanism |
+| the hypothesis | **half CONFIRMED, and that is reported rather than buried.** `300` genuinely is too small for a reasoning model: a reasoning backend returns nothing **93 %** of the time at 300 and **47 %** at 2000, and 2000 produced three useful alias sets 300 cannot produce at any draw |
+| why it is still rejected | **the arithmetic goes the wrong way.** Per production call **2.33×** the cost (9.18 s → 21.39 s); per *successful* answer **1.77×** (12.65 s → 22.35 s). The motivating problem was empty retries eating 44.9 % of leg wall clock; a change that raises wall clock per answer relocates that problem rather than solving it |
+| raw result, 20 calls per arm | empty **65 % → 35 %** · usable 7 → 11 · **productive (`aliases>0`) 2 → 4** · malformed **0 → 2** · median latency **4.3 s → 17.6 s** |
+| `usable` must not be quoted alone | `{"aliases": []}` passes production's own predicate and resolves no identity. **Six of the eleven `usable` answers at 2000 are exactly that**, 15 characters long |
+| **the confound is larger than the effect** | outcome is governed by whether the backend runs the model in reasoning mode, not by the budget. `reasoning_tokens == 0` → **0 % empty at BOTH budgets**, answers in 0.3–6.2 s (11 of 40 calls). **Both** productive answers at 300 came from non-reasoning backends |
+| § 9 success criteria | **2 of 4 hold.** The wall-clock criterion — the one the exercise exists to satisfy — fails |
+| § 10 reject criteria | **3 of 5 met outright**: 7 of 20 calls burned exactly 2,000 reasoning tokens and returned nothing · latency up 4.1× median · malformed up 0 → 2 |
+| paper-level validation | **NOT run, per § 8**, which conditions it on the call-level result being *"clearly better."* It is not. Running it would have required writing the production diff § 14 then orders discarded |
+| **`F-199` CORRECTED** | `ORCH-739` § 3 attributed the `chat` bucket to *"`map_ids` alias + `stoich` classifier"*. **The `stoich` half is wrong** — unreachable in batch behind the `use_stoich_agent` checkbox, and its own two 300-token calls bypass the client entirely. **The bucket is `mapping/map_ids.py:406` ALONE.** Every measured rate in `F-199` stands; only the attribution was wrong. Banners added at both landing points |
+| **why that correction mattered** | a search-and-replace of `300` would have edited **three call sites that have never run**, plus one (`infer_entity_species`, 450) that is measured in a different bucket. § 2 of the charter forbade exactly that |
+| **`F-200`** | **40 distinct alias questions cost 469 model calls — 11.7 per question**, against `LLM_MAX_RETRIES=3`. `PMC9200736` spent 78 calls on 4 questions before hitting the wall. The residual ~5.6× is the caller re-asking. **A larger lever than the budget**, and untouched by it. REGISTERED, NOT CHARTERED — one variable per § 12 |
+| **`F-201`** | `stoich/agent.py:568`/`:596` bypass the LLM client at `max_tokens=300`; an empty completion silently becomes `"uncertain"`, indistinguishable from genuine doubt. **LATENT** — behind the checkbox, never executed in a measured leg. REGISTERED, NOT CHARTERED |
+| `F-199` status | **unchanged and still the standing charter candidate.** This result strengthens it: the budget lever cannot substitute for the reasoning lever |
+| next experiment | § 10 names it — **reasoning-disabled auxiliary calls**. **NOT implemented here** and not proposed as this card's decision. An intermediate budget is noted and not recommended: the productive reasoning draws used 1,114–1,823 completion tokens, so the cost is intrinsic rather than an artifact of the ceiling |
+| G11 | two bounded jobs, both `FINAL SURVIVING COUNT : 0` / `cleanup : success`. Heavy lock free before and after. Pre-existing processes reported, never killed |
+| independent review | **not required** — § 13 conditions it on production code or configuration changing. Neither did |
