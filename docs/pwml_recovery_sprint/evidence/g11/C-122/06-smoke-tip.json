@@ -1,0 +1,164 @@
+{
+  "label": "c122-smoke-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-122/06-smoke-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt/c122",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\c122",
+  "started_at": "2026-09-10T16:41:58+00:00",
+  "finished_at": "2026-09-10T16:42:36+00:00",
+  "duration_seconds": 38.7710003000102,
+  "timeout_seconds": 900.0,
+  "root_pid": 418340,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 417832,
+      "name": "python.exe",
+      "ppid": 418340
+    },
+    {
+      "pid": 418476,
+      "name": "python.exe",
+      "ppid": 419608
+    },
+    {
+      "pid": 419608,
+      "name": "python.exe",
+      "ppid": 417832
+    },
+    {
+      "pid": 418672,
+      "name": "python.exe",
+      "ppid": 419572
+    },
+    {
+      "pid": 419572,
+      "name": "python.exe",
+      "ppid": 417832
+    },
+    {
+      "pid": 418100,
+      "name": "python.exe",
+      "ppid": 417832
+    },
+    {
+      "pid": 419816,
+      "name": "python.exe",
+      "ppid": 418100
+    },
+    {
+      "pid": 419960,
+      "name": "python.exe",
+      "ppid": 417832
+    },
+    {
+      "pid": 419980,
+      "name": "python.exe",
+      "ppid": 419960
+    },
+    {
+      "pid": 388252,
+      "name": "git.exe",
+      "ppid": 417832
+    },
+    {
+      "pid": 409660,
+      "name": "git.exe",
+      "ppid": 417832
+    },
+    {
+      "pid": 410024,
+      "name": "git.exe",
+      "ppid": 417832
+    }
+  ],
+  "descendants_terminated": [
+    388252,
+    409660,
+    410024,
+    417832,
+    418100,
+    418476,
+    418672,
+    419572,
+    419608,
+    419816,
+    419960,
+    419980
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 410076,
+      "name": "python.exe"
+    },
+    {
+      "pid": 410116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 417940,
+      "name": "python.exe"
+    },
+    {
+      "pid": 418972,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-122/06-smoke-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c122\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c122",
+    "repo_head": "9cf64677ed8e46afc4b032e5324f799ff37605a6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
