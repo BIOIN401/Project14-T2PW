@@ -6905,3 +6905,100 @@ moved. That is the `runs_verify/2026-08-18_1328` failure mode the driver's own `
 docstring cites: **two records shipping, disagreeing, both surviving.** The corrected `C-126`
 docstring and this amendment now state the same four, and the path from three to four is on the
 record.
+
+---
+
+## D-102 — `C-126` MERGED, production RE-FROZEN at `5f6a7aa3` · 2026-09-10 · LOCKED
+
+`C-126` merged `--no-ff` on `REV-126`'s **APPROVE** (round 3), after one round-1 blocking finding
+closed by `D-101`, one round-2 `CORRECTION` closed by `D-101 AMENDMENT 1` and the tip `9e9bcd0f`.
+**Production is RE-FROZEN.** `D-090` governs again in full, as amended by `D-101`.
+
+### 1. Frozen SHA
+
+| | |
+|---|---|
+| **NEW FROZEN PRODUCTION SHA** | **`5f6a7aa34cd2850ef017e3059fb691cb14e9f945`** |
+| previous frozen SHA | `24dd4342` (`D-100`), expired with this card |
+| merge | `--no-ff` of `card/C-126-final-contract-authority` @ `9e9bcd0f`, base `c6159bc2` |
+| `src/` files changed | **exactly one** — `batch/driver.py`, 185 insertions / 21 deletions |
+| post-merge SMOKE (gate 10) | **508 passed**, exit 0, 39.54 s, `FINAL SURVIVING COUNT : 0` |
+| `main` | **untouched** |
+| `src/t2pw/app/streamlit_app.py` | unmodified and uncommitted; `D-097` CRLF pin `47e4fafa789d359d…` **re-verified at merge time** |
+
+### 2. What changed, in one paragraph
+
+`_superseded_contract_reports` gained two conditions. A contract report is now set aside only when
+it declares `effect_on_failure: "feed_audit"` — its own statement that its errors are the audit
+loop's input — **and** its phase is one of the two `gate_reports` defines as non-authoritative. The
+executable change is four predicate lines plus one descriptor line; the descriptor now reports the
+report's **actual** phase rather than a hard-coded constant. Because that function is the single
+source for the blocking exclusion, the release-status cap, the review warning and the PWML filename,
+all four follow without a second path. **No gate, threshold, contract function or biological
+predicate changed.**
+
+### 3. Why it is subtractive
+
+**The authoritative final contract verdict already existed and already blocked export fail-closed**,
+in `run_pwml_export`'s Stage-3 revalidation through `_validate_stage8_export_payload`, which re-runs
+the same gate suite and the same `validate_post_normalization` on the payload about to serialize and
+refuses unless `ok` is explicitly true. `REV-126` verified there is **no route to serialization that
+bypasses it**. `C-126` stops a pre-Stage-3 snapshot vetoing a payload that boundary has already
+judged. **No `contract_verdict()` abstraction was built, and `D-101` § 3 forbade one.**
+
+### 4. The product owner's fail-closed requirement, checked clause by clause
+
+`D-101` § 1 requires the leg to stay blocked when the authoritative report is *absent*, *ambiguous*,
+*cannot be shown to correspond to the final payload*, or *itself contains errors*. `REV-126` verified
+all four against the diff, each with a named test:
+
+| clause | proof |
+|---|---|
+| absent | `test_a_missing_final_stage3_gate_report_fails_closed` |
+| ambiguous | `test_a_final_gate_report_at_the_wrong_phase_is_not_a_superseding_boundary` |
+| correspondence | the fixture's two canonical digests re-derived inside the test |
+| contains errors | `test_a_dirty_final_pre_export_gate_report_still_blocks_via_gate_verdict` |
+
+**The implementation satisfies the authorization as written, not as summarized.**
+
+### 5. Review record — `REV-126`, three rounds
+
+**Round 1 `APPROVE WITH FINDINGS`.** One blocking item, and it was on the **orchestrator, not the
+branch**: no `D-101` existed while `D-090` § 5 still read *"F-147 stays registered and unchartered"*
+and production was frozen. Closed by `D-101`. The reviewer proved the anti-negation test is not
+vacuous by simulating the negated implementation and showing **12 of 13** parameters break it.
+
+**Round 2 `CORRECTION`.** A census sentence in the new docstring was factually wrong. **The error
+originated in the reviewer's own round-1 report**, was relayed verbatim by the orchestrator, and was
+transcribed in good faith by the implementer — carried by three readers because none re-derived it.
+Corrected in the docstring, in **both** C-126 test modules, and in the locked record by
+`D-101 AMENDMENT 1`. The implementer additionally found a **fourth** occurrence nobody had named, in
+its own round-1 text, and disclosed it rather than including it silently.
+
+**Round 3 `APPROVE`.** Every correction round was proved comment-only by AST comparison with
+docstring slots normalized, verified independently by the orchestrator and by the reviewer, the
+latter adding a **positive control** (base → tip, `AST-identical=False`, +9 statements) so the result
+is not vacuous.
+
+### 6. What this does NOT establish
+
+- **No PWML is claimed for any leg.** The G9 end-to-end test stubs the export result and says so, so
+  the real fail-closed boundary is **not exercised** by it and remains free to refuse the same
+  payloads. **Eligibility is not export.**
+- **The biological content of any newly-eligible pathway has been reviewed by nobody.**
+- Chunk D and the full suite were not run; `REV-126` states this as outside its coverage.
+- No live pipeline leg or LLM draw was taken by either agent. Every measurement is an archived replay.
+
+### 7. Carried, not fixed
+
+`_superseding_boundaries` remains asymmetric, and `_finalize_gate_failure`'s message still names the
+boundary that passed — it now fires on strictly fewer legs. Both **registered, not chartered**, in
+`D-101` § 5.
+
+**New:** a **citation sweep** is registered. Five `streamlit_app.py` line citations in `driver.py`
+belong to other cards and drift in **both** directions by hundreds of lines, landing on a `break`, a
+`return`, and a blank line. Two of them carry a **reachability claim** resting on a line number that
+points at a blank line, so the sweep must **re-prove** that claim rather than re-cite it. A uniform
+offset would silently "fix" them into new wrong places. **Registered, not chartered.**
+
+**Production re-freezes here. No further production change is authorized.**
