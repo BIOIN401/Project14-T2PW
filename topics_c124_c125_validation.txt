@@ -1,0 +1,29 @@
+# C-124 / C-125 post-merge live validation -- 2026-09-10.
+#
+# THREE legs, one strict run each, no favourable reruns. This is fix validation,
+# not a yield cohort: its numbers belong to no denominator and rescore nothing.
+#
+# THE SCOPE STRINGS ARE COPIED VERBATIM FROM topics_c122_final_smoke.txt. That is
+# the whole point. C-125 claims a request may be more GENERAL than what Stage 0
+# reads; editing these strings to match Stage 0 would test nothing and would be
+# exactly the input-editing the charter forbids.
+#
+# PMC13474940  C-125: Stage 0 read 'fumonisin B1 biosynthesis' against this
+#              request and refused. Must now PROCEED past Stage 0.
+# PMC13123502  C-125: Stage 0 read 'steroidal saponin (polyphyllin) biosynthesis
+#              in Paris polyphylla, focusing on UGT-mediated 3-O-glucosylation'.
+#              Must now PROCEED past Stage 0.
+# PMC13488460  C-124: died on species_missing_taxonomy / species_missing_
+#              classification. NCBI has no record for the paper's spelling
+#              (measured) and answers 139 for the reclassified Borreliella.
+#              Must now reach the required-field gate with a species carrying a
+#              numeric taxon id and a classification.
+#
+# WHAT SUCCESS IS, stated before the run: for the two C-125 legs, passing Stage 0.
+# For the C-124 leg, a resolved species. A PWML from any of them is a bonus, NOT
+# the claim -- each may still fail later on something neither card touches, and
+# that would not refute either fix.
+
+PMC13474940  | fumonisin biosynthesis                    | Fusarium proliferatum
+PMC13123502  | steroidal saponin biosynthesis            | Paris polyphylla
+PMC13488460  | mevalonate pathway                        | Borrelia burgdorferi

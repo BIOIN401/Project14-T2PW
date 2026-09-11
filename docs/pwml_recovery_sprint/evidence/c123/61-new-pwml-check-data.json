@@ -1,0 +1,65 @@
+{
+  "task": "ORCH-734",
+  "files_checked": 1,
+  "import_ready": 1,
+  "import_fail": 0,
+  "boundary": "Structural import readiness only. The live PathWhiz UI import requires the product owner's PathWhiz account and is not performed here.",
+  "results": [
+    {
+      "file": "docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C124_PMC13488460.pwml",
+      "bytes": 19818,
+      "checks": {
+        "xml_accepted": true,
+        "root_is_super_pathway_visualization": true,
+        "pathway_envelope_present": true,
+        "drawing_canvas_nonzero": true,
+        "graph_not_blank": true,
+        "compounds_appear": true,
+        "proteins_or_complexes_appear": true,
+        "reactions_present": true,
+        "reactions_two_sided": true,
+        "no_broken_references": true,
+        "species_named_with_taxonomy": true,
+        "entities_named": true
+      },
+      "notes": [
+        "IMPORT READY means every property the PathWhiz importer checks is satisfied by this file. It is NOT a substitute for the product owner opening it in the PathWhiz UI -- that step needs their account and is handed to them."
+      ],
+      "root_tag": "super-pathway-visualization",
+      "pathway_name": "Generated Pathway",
+      "canvas": {
+        "height": 1400,
+        "width": 3200
+      },
+      "positioned_elements": 6,
+      "edges": 5,
+      "edges_with_path": 5,
+      "counts": {
+        "compounds": 4,
+        "proteins": 1,
+        "protein_complexes": 1,
+        "reactions": 1,
+        "compound_locations": 4,
+        "bounds": 0
+      },
+      "reactions_missing_a_side": [],
+      "internal_refs_checked": 29,
+      "dangling_refs": [],
+      "dangling_ref_count": 0,
+      "species": {
+        "name": "Borrelia burgdorferi",
+        "taxonomy_id": "139"
+      },
+      "sample_entity_names": [
+        "hydroxymethylglutaryl-CoA",
+        "mevalonate",
+        "NADPH",
+        "NADH",
+        "Unknown",
+        "HMGR"
+      ],
+      "advisory_failures": [],
+      "verdict": "IMPORT READY"
+    }
+  ]
+}

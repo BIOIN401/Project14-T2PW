@@ -1,21 +1,28 @@
 # PathWhiz import inventory — every PWML currently on disk, ready for you to import
 
-**2026-09-10.** Seventeen files, all committed and hash-pinned under
+**2026-09-10.** Eighteen files, all committed and hash-pinned under
 [`pathwhiz_review/IMPORT-SET/`](pathwhiz_review/IMPORT-SET/), every one `cmp`-verified byte-identical
-to its source run tree, which is preserved unchanged. `sha256sum -c` passes on all seventeen.
+to its source run tree, which is preserved unchanged. `sha256sum -c` passes on all eighteen.
 Verified by [`evidence/orch734_pathwhiz_import_check.py`](evidence/orch734_pathwhiz_import_check.py),
 report `evidence/g11/C-123/02-import-inventory.json`, `FINAL SURVIVING COUNT : 0`.
 
 | | |
 |---|---:|
-| **structurally clean — import these** | **14** |
+| **structurally clean — import these** | **15** |
 | **`F-195` dangling transport reference — import last** | **3** |
+
+> **UPDATED after the `C-124`/`C-125` live validation.** `C124_PMC13488460.pwml` joins the clean set:
+> *Borrelia burgdorferi* mevalonate pathway, 19,818 B, 1 reaction, **IMPORT READY**, no transports.
+> It is the paper that previously died on `species_missing_taxonomy`, and it is the first PWML the
+> system has produced for an organism the local database does not contain. Its species carries
+> taxon **139** from NCBI with the paper's own spelling preserved. Small, but it is the direct
+> product of a fix and worth importing to confirm a created species renders.
 
 **Nothing here was modified to make an import succeed.** If one fails, the file is the evidence.
 
 ---
 
-# 1. The fourteen clean files
+# 1. The fifteen clean files
 
 Ordered by reaction count, largest first. `T` = transport visualizations, `sha256` = first 16 hex.
 
@@ -35,6 +42,7 @@ Ordered by reaction count, largest first. `T` = transport visualizations, `sha25
 | `C120_PMC10031235_PSAT.pwml` | *Homo sapiens* — PSAT | 9606 | 3 | 8 | 2 | 2 | 15 | 48,401 | 0 | `6f17819ce7ed1f48` |
 | `ORCH734_PMC7402084.pwml` | *Phaseolus lunatus* — cyanogenic glucoside | 3884 | 3 | 6 | 4 | 4 | 12 | 40,294 | 0 | `368f9e7ea0ff673d` |
 | `ORCH734_PMC8211424.pwml` | *Homo sapiens* — corticosteroid | 9606 | 2 | 4 | 1 | 1 | 6 | 22,859 | 0 | `e893778e21718dea` |
+| `C124_PMC13488460.pwml` | *Borrelia burgdorferi* — mevalonate | **139** | 1 | 4 | 1 | 1 | 5 | 19,818 | 0 | see `SHA256SUMS.txt` |
 
 ## Two things worth knowing before you start
 
@@ -106,8 +114,9 @@ references resolve, and the species carries a numeric taxonomy id. **`IMPORT REA
 # 4. Provenance
 
 Every file is a byte-for-byte copy of a production run's own output. No file was edited, repaired,
-regenerated or selected for flattering content. Six cohorts are represented — `ORCH-730`, `ORCH-732`,
-`ORCH-734`, the `C-120` and `C-121` validations, and the `C-122` final smoke — and their numbers are
+regenerated or selected for flattering content. Seven cohorts are represented — `ORCH-730`, `ORCH-732`,
+`ORCH-734`, the `C-120`, `C-121` and `C-124`/`C-125` validations, and the `C-122` final smoke — and
+their numbers are
 **never merged into one denominator**; each cohort's yield belongs to that cohort alone.
 
 The run trees that produced them are preserved unchanged and untracked
