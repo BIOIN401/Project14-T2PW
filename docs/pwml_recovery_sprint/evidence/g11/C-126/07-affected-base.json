@@ -1,0 +1,180 @@
+{
+  "label": "affected-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "-q",
+    "--basetemp=C:/t/bt126/affb",
+    "tests/test_c119_g9_base_failure_proof.py",
+    "tests/test_c119_release_status_superseded_cap.py",
+    "tests/test_c119_superseded_intermediate_report.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_batch_run.py",
+    "tests/test_batch_report.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py"
+  ],
+  "cwd": "C:\\t\\b126",
+  "started_at": "2026-09-11T02:20:57+00:00",
+  "finished_at": "2026-09-11T02:21:41+00:00",
+  "duration_seconds": 42.890945599996485,
+  "timeout_seconds": 1800.0,
+  "root_pid": 595184,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 596264,
+      "name": "python.exe",
+      "ppid": 595184
+    },
+    {
+      "pid": 586416,
+      "name": "python.exe",
+      "ppid": 596264
+    },
+    {
+      "pid": 599132,
+      "name": "python.exe",
+      "ppid": 586416
+    },
+    {
+      "pid": 600504,
+      "name": "taskkill.exe",
+      "ppid": 596264
+    },
+    {
+      "pid": 599124,
+      "name": "python.exe",
+      "ppid": 596264
+    },
+    {
+      "pid": 600568,
+      "name": "python.exe",
+      "ppid": 599124
+    },
+    {
+      "pid": 594656,
+      "name": "python.exe",
+      "ppid": 595904
+    },
+    {
+      "pid": 595904,
+      "name": "python.exe",
+      "ppid": 596264
+    },
+    {
+      "pid": 584936,
+      "name": "python.exe",
+      "ppid": 596264
+    },
+    {
+      "pid": 596860,
+      "name": "python.exe",
+      "ppid": 584936
+    },
+    {
+      "pid": 595372,
+      "name": "python.exe",
+      "ppid": 596264
+    },
+    {
+      "pid": 597420,
+      "name": "python.exe",
+      "ppid": 595372
+    },
+    {
+      "pid": 594816,
+      "name": "python.exe",
+      "ppid": 596264
+    },
+    {
+      "pid": 598800,
+      "name": "python.exe",
+      "ppid": 594816
+    },
+    {
+      "pid": 598332,
+      "name": "python.exe",
+      "ppid": 596264
+    },
+    {
+      "pid": 598624,
+      "name": "python.exe",
+      "ppid": 598332
+    },
+    {
+      "pid": 596688,
+      "name": "python.exe",
+      "ppid": 596264
+    }
+  ],
+  "descendants_terminated": [
+    584936,
+    586416,
+    594656,
+    594816,
+    595372,
+    595904,
+    596264,
+    596688,
+    596860,
+    597420,
+    598332,
+    598624,
+    598800,
+    599124,
+    599132,
+    600504,
+    600568
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 552792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 558496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 597828,
+      "name": "python.exe"
+    },
+    {
+      "pid": 598088,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c126/docs/pwml_recovery_sprint/evidence/g11/C-126/07-affected-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\b126\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\b126",
+    "repo_head": "c6159bc27989f5bc865d4b6946b0e8eb93fb5c12",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

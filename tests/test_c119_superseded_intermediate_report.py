@@ -46,7 +46,6 @@ from t2pw.pipeline.gate_reports import (  # noqa: E402
     FINAL_GATE_REPORT_KEY,
     PHASE_AUDIT_ROUND,
     PHASE_FINAL_PRE_EXPORT,
-    PHASE_INITIAL_POST_NORMALIZATION,
     gate_verdict,
 )
 from t2pw.pipeline.reaction_support import (  # noqa: E402
@@ -106,18 +105,26 @@ def test_the_g9_proof_module_is_pinned_to_the_real_constants() -> None:
         "post_mapping",
         "post_audit",
         "post_remap",
-        PHASE_INITIAL_POST_NORMALIZATION,
         PHASE_FINAL_PRE_EXPORT,
         "some_phase_that_does_not_exist_yet",
     ],
 )
 def test_a_live_report_at_any_other_phase_still_blocks(phase: str) -> None:
-    """C-119 section 3.4. ONLY ``audit_round`` is excluded. Nothing else is.
+    """C-119 section 3.4, **as amended by C-126.** An authoritative or unrecognised
+    phase is still excluded from the exclusion.
 
-    Note ``initial_post_normalization`` in the list. It is the PRE-audit snapshot
-    and the app documents it in almost the same words -- but the card excludes one
-    phase and one phase only, and widening the exclusion is a product decision
-    nobody has taken.
+    **BASELINE MOVED, DELIBERATELY (C-126, product owner 2026-09-10).** This list
+    used to carry :data:`PHASE_INITIAL_POST_NORMALIZATION` as well, on the reasoning
+    that *"the card excludes one phase and one phase only, and widening the exclusion
+    is a product decision nobody has taken"*. ``F-147-RECURRENCE-DIAGNOSIS.md``
+    measured the cost of that on four papers across three cohorts -- the phase is the
+    OTHER one ``gate_reports.py`` defines as non-authoritative, and a leg keeps it
+    precisely when its audit round correctly declined to invent an identifier -- and
+    the decision was taken. That one parameter moved to
+    ``tests/test_c126_final_contract_authority.py::
+    test_the_initial_post_normalization_phase_is_now_superseded_too``, which asserts
+    the same mutation on the same archive with the opposite expectation. **Exactly
+    one parameter changed; the other six are untouched and still assert a block.**
     """
 
     artifacts = _artifacts("PMC7232280_strict_2026-09-06")

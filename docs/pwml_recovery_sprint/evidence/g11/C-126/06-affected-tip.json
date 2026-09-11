@@ -1,0 +1,182 @@
+{
+  "label": "affected-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "-q",
+    "--basetemp=C:/t/bt126/aff",
+    "tests/test_c119_g9_base_failure_proof.py",
+    "tests/test_c119_release_status_superseded_cap.py",
+    "tests/test_c119_superseded_intermediate_report.py",
+    "tests/test_c126_g9_base_failure_proof.py",
+    "tests/test_c126_final_contract_authority.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_batch_run.py",
+    "tests/test_batch_report.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py"
+  ],
+  "cwd": "C:\\t\\c126",
+  "started_at": "2026-09-11T02:19:59+00:00",
+  "finished_at": "2026-09-11T02:20:36+00:00",
+  "duration_seconds": 37.04410960001405,
+  "timeout_seconds": 1800.0,
+  "root_pid": 580864,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 586372,
+      "name": "python.exe",
+      "ppid": 580864
+    },
+    {
+      "pid": 593092,
+      "name": "python.exe",
+      "ppid": 586372
+    },
+    {
+      "pid": 596812,
+      "name": "python.exe",
+      "ppid": 593092
+    },
+    {
+      "pid": 559240,
+      "name": "taskkill.exe",
+      "ppid": 586372
+    },
+    {
+      "pid": 580860,
+      "name": "python.exe",
+      "ppid": 586372
+    },
+    {
+      "pid": 594500,
+      "name": "python.exe",
+      "ppid": 596676
+    },
+    {
+      "pid": 596676,
+      "name": "python.exe",
+      "ppid": 586372
+    },
+    {
+      "pid": 580900,
+      "name": "python.exe",
+      "ppid": 586372
+    },
+    {
+      "pid": 594132,
+      "name": "python.exe",
+      "ppid": 580900
+    },
+    {
+      "pid": 595500,
+      "name": "python.exe",
+      "ppid": 596128
+    },
+    {
+      "pid": 596128,
+      "name": "python.exe",
+      "ppid": 586372
+    },
+    {
+      "pid": 596196,
+      "name": "python.exe",
+      "ppid": 596496
+    },
+    {
+      "pid": 596496,
+      "name": "python.exe",
+      "ppid": 586372
+    },
+    {
+      "pid": 596144,
+      "name": "python.exe",
+      "ppid": 586372
+    },
+    {
+      "pid": 596644,
+      "name": "python.exe",
+      "ppid": 596144
+    },
+    {
+      "pid": 593992,
+      "name": "python.exe",
+      "ppid": 596160
+    },
+    {
+      "pid": 596160,
+      "name": "python.exe",
+      "ppid": 586372
+    }
+  ],
+  "descendants_terminated": [
+    559240,
+    580860,
+    580900,
+    586372,
+    593092,
+    593992,
+    594132,
+    594500,
+    595500,
+    596128,
+    596144,
+    596160,
+    596196,
+    596496,
+    596644,
+    596676,
+    596812
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 552792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 558496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 595292,
+      "name": "python.exe"
+    },
+    {
+      "pid": 596980,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-126/06-affected-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c126\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c126",
+    "repo_head": "c6159bc27989f5bc865d4b6946b0e8eb93fb5c12",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
