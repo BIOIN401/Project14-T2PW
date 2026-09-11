@@ -6762,3 +6762,77 @@ import**, not another card:
 As `D-098` § 9 before it. `RAG v2` does **not** begin until reliability closes; its handoff
 requirements are recorded in `RAG-V2-HANDOFF-REQUIREMENTS.md`, which is **explicitly not a
 charter**.
+
+---
+
+## D-101 — reliability reopens NARROWLY for the recurring `F-147` contract-verdict defect; `C-126` chartered · 2026-09-10 · LOCKED
+
+**This entry exists because `REV-126` refused to let the merge proceed without it, and it was
+right to.** `D-090` § 5 states *"F-147 stays registered and unchartered"*, and `D-100` re-froze
+production at `24dd4342` with `D-090` governing in full. `C-126` changes frozen production and
+moves a pinned `C-119` baseline. The authorization was given in the product owner's own words and
+had been recorded only in a prompt file. **A card prompt is not the append-only product record.**
+
+### 1. The authorization, verbatim
+
+> **PRODUCT OWNER DECISION FOR THE CURRENT FIX**
+>
+> Reliability is authorized to reopen narrowly for the recurring `F-147` contract-verdict defect.
+>
+> Preferred architecture: the payload that is actually about to serialize should be judged by one
+> authoritative final contract verdict. Earlier reports remain diagnostics/history. They should not
+> independently kill a final payload once the pathway has changed and an authoritative final
+> boundary says the shipped payload is valid.
+>
+> **DO NOT IMPLEMENT A LOOSE "LATER PASS ALWAYS WINS."** The solution must fail closed. A random
+> later `ok=True` report is not sufficient by itself. If that authoritative final report is absent,
+> is ambiguous, cannot be shown to correspond to the final payload, or itself contains errors, the
+> leg must remain blocked.
+
+### 2. What this supersedes, and only this
+
+`D-090` § 5's *"F-147 stays registered and unchartered"* is **superseded for `F-147` alone**, on the
+evidence of `F-147-RECURRENCE-DIAGNOSIS.md`: four papers across three independent cohorts, one
+deterministic mechanism, and the qualifying condition the product owner set — *only a repeated major
+deterministic PWML blocker can reopen reliability.*
+
+`D-090` governs in full in every other respect. `F-174` node 2 stays OPEN. `T-109` stands
+`NOT ACCEPTED`. `D-087`, `D-088`, `D-089`, `D-094`, `D-095`, `D-099` and `D-100` are untouched.
+
+### 3. What the charter does NOT authorize
+
+Not `RAG`, `F-179`, `C-119`/`C-120`/`C-121`/`C-122`/`C-124`/`C-125`, protein thresholds, Stage-1
+models, `F-195`, taxonomy handling, the Unknown-sentinel protein policy, or `main`. Not a new
+`contract_verdict()` abstraction — **the authoritative final contract verdict already exists**, in
+`run_pwml_export`'s fail-closed Stage-3 revalidation through `_validate_stage8_export_payload`, and
+the correction is subtractive: it stops a pre-Stage-3 snapshot vetoing a payload that boundary has
+already judged.
+
+Not a PWML count. `F-147-IS-LIVE.md` § 4 and the card both state it: **eligibility is not export**,
+and no PWML number may be quoted for any affected leg.
+
+### 4. The one pinned baseline authorized to move
+
+`tests/test_c119_superseded_intermediate_report.py::test_a_live_report_at_any_other_phase_still_blocks`
+loses its `initial_post_normalization` parameter, 7 → 6. `C-119`'s own comment said *"widening the
+exclusion is a product decision nobody has taken."* **This entry is that decision.** The parameter is
+replaced, not deleted, by a test applying the identical mutation to the identical archive with the
+opposite expectation. `REV-126` confirmed the delta is **exactly one node ID** and nothing else moved.
+
+### 5. Registered here so it is not lost
+
+**The archived reach is NINE strict legs, not the four the card diagnosed.** `REV-126` measured it
+over all 188 archived legs. Three of the five additional legs carry stale findings of a **broader
+class** than protein-identifier pointers. **None of the nine becomes `release_ready`**; all nine were
+already `review_required` at base and stay there. The card's evidence base understated the reach and
+this entry records the measured number.
+
+**`_superseding_boundaries` remains asymmetric** — it admits a candidate boundary whose phase is
+merely not `audit_round`, while `C-126` now calls `initial_post_normalization` non-authoritative.
+`REV-126` established it is unreachable in production and blocked on its own account by the
+`effect_on_failure` condition. **Registered, not chartered.**
+
+**`_finalize_gate_failure`'s message names the boundary that PASSED.** It fires on strictly fewer
+legs after `C-126` and a complete fix needs a value from the call site. **Registered, not chartered.**
+
+**Production re-freezes on merge.** No further production change is authorized by this entry.

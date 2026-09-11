@@ -91,7 +91,7 @@ two that its own module documents as non-authoritative.**
 
 ## Why the phase is never `audit_round` in these legs
 
-`streamlit_app.py:4041` guards the re-stamp:
+The audit loop's re-stamp in `streamlit_app.py` (committed `:4019`) is guarded:
 
 ```python
 if settled_payload_changed:
@@ -111,7 +111,7 @@ to act — correctly, in its own words:
 > `PMC13123502` — 13 patches proposed, **13 rejected**, 0 accepted.
 
 So the re-stamp never fires, and the report keeps the `initial_post_normalization` stamp it got
-at `streamlit_app.py:3626`.
+at the initial post-normalization contract call (committed `streamlit_app.py:3603`).
 
 **The better the audit behaves, the more certainly `C-119` fails to protect the leg.** An audit
 that invents an identifier gets the leg rescued; an audit that refuses to invent one does not.
@@ -156,7 +156,7 @@ contained no instance of. `tests/fixtures/c119/` should gain one.
 This is the most important finding, and it changes the shape of the fix from *build an
 abstraction* to *stop pre-empting the one we have*.
 
-`run_pwml_export` (`streamlit_app.py:4738`) already does exactly what the product owner
+`run_pwml_export` (committed `streamlit_app.py:4715`) already does exactly what the product owner
 described:
 
 ```python
@@ -166,7 +166,7 @@ if not bool(stage3_contract_report.get("ok", False)):
             revalidation; Stage 8 did not repair the payload.", ...}
 ```
 
-`_validate_stage8_export_payload` (`:4594`) runs, **on the exact payload about to serialize**:
+`_validate_stage8_export_payload` (committed `:4571`) runs, **on the exact payload about to serialize**:
 
 * `run_strict_post_normalization_gates(payload, enforce_all_proteins_connected=True)` — the
   same suite, including the same `Protein '<x>' is missing a UniProt or DrugBank identifier`
@@ -248,6 +248,15 @@ At the tip: same payload, same biology, same final gates, the stale report **sti
 and the leg bounded to `review_required`.
 
 ## What is NOT claimed
+
+> **MEASURED REACH, added after `REV-126`, 2026-09-10.** This document diagnosed the defect on
+> **four** papers. An independent base-vs-tip census over all **188** archived legs found the fix
+> moves **nine** strict legs, and **zero** of 75 research legs. The five beyond the four named here
+> are `PMC10031235` (`runs_smoke/2026-09-07_2323`), `PMC12452463` (`runs_verify/2026-08-24_1203`
+> and `2026-09-01_1612`), `PMC12444477` (`2026-08-25_1216`) and `PMC12096016` (`2026-08-27_1341`).
+> Three of them carry stale findings of a **broader class** than protein-identifier pointers, such
+> as a registry `unknown entity` error. **None of the nine becomes `release_ready`** — all nine were
+> already `review_required` at base and stay there. **The reach is nine, not four.**
 
 **Not that any of the four produces a PWML.** All four have substantive final payloads —
 reactions 4 / 5 / 5 / 6, biological states present, compounds 13 / 8 / 5 / 10 — so they are
