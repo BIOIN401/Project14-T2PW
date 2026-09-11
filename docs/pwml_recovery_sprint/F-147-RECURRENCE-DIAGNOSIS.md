@@ -204,8 +204,17 @@ Two independent conditions, both asserted by production itself:
 
 * **`phase`** — `gate_reports.py` documents `initial_post_normalization` as *"never a verdict
   about what shipped"*, `audit_round` as *"not authoritative either"*, and `final_pre_export` as
-  *"THE authoritative phase."* The excluded set becomes "not `final_pre_export`" rather than a
-  growing list of names, which is what makes this a unification and not a second ad hoc path.
+  *"THE authoritative phase."* The excluded set becomes **the closed allow-list of those two
+  non-authoritative phases**, not a growing list of report names, which is what makes this a
+  unification and not a second ad hoc path.
+
+  > **CORRECTION, 2026-09-10.** An earlier revision of this line proposed expressing the set as
+  > *"not `final_pre_export`"*. **That was wrong and `prompts/C-126.md` § 3 states the correct
+  > rule.** A negated test silently enrols every future phase name, every typo and every
+  > malformed string into the excluded set — the one direction this seam must never fail in, and
+  > the opposite of `_report_phase`'s own doctrine that an unidentified phase reads as *live*.
+  > The `C-126` implementer followed the card over this document and flagged the contradiction;
+  > that was the right call. **The card outranks this document wherever they disagree.**
 * **`effect_on_failure`** — `"feed_audit"` is set by exactly one contract,
   `validate_post_normalization` (`stage_contracts.py:219`); every other contract uses `"abort"`.
   **The batch driver never reads this field at all** (`grep` finds it in `streamlit_app.py`,
