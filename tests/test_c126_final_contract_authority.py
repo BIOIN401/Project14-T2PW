@@ -16,6 +16,15 @@ conditions on top of C-119's two:
    ``annotate_only`` in research mode;
 4. its ``phase`` must be in the CLOSED allow-list ``_NON_AUTHORITATIVE_PHASES``.
 
+MEASURED REACH (REV-126). The card diagnosed the defect on four papers; a base-vs-tip
+census over all 188 archived legs on disk finds it moves **nine** strict legs and
+**zero** of the 75 research legs, and that three of the nine carry a wider
+stale-finding class than the card described. **No leg becomes ``release_ready``** and
+no PWML is claimed for any of them. The nine are enumerated in
+``driver._superseded_contract_reports``'s docstring;
+:func:`test_no_archived_leg_becomes_release_ready` below pins the release-status half
+of that claim over the committed fixtures.
+
 **CONDITION 4 IS AN ALLOW-LIST, DELIBERATELY NOT ``!= PHASE_FINAL_PRE_EXPORT``.** The
 negated form would silently enrol every future phase name, every typo and every
 malformed string into the excluded set, against ``_report_phase``'s own stated

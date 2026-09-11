@@ -422,7 +422,7 @@ _NON_AUTHORITATIVE_PHASES: FrozenSet[str] = frozenset(
 #: ``validate_post_normalization``; every other contract in that module uses
 #: ``"abort"`` (``:80``, ``:105``, ``:119``, ``:241``, ``:334``, ``:347``), and
 #: ``validate_post_normalization`` itself ESCALATES to ``"abort"`` and raises when
-#: ``_validate_payload_container`` fails (``:221-224``) -- so a surviving
+#: ``_validate_payload_container`` fails (``:219-224``) -- so a surviving
 #: ``feed_audit`` report cannot be concealing structural garbage.
 #:
 #: ``export_mode.relax_report:186`` rewrites this field to ``"annotate_only"`` (or
@@ -1265,26 +1265,58 @@ def _superseded_contract_reports(artifacts: Dict[str, Any]) -> List[Dict[str, An
     continue``, which is one of the two phases its own module documents as
     non-authoritative -- so a ``post_normalization_contract_report`` left stamped
     :data:`PHASE_INITIAL_POST_NORMALIZATION` still failed the leg. That stamp is
-    *not* an anomaly: ``streamlit_app.py:4041`` re-stamps to
-    :data:`PHASE_AUDIT_ROUND` only ``if settled_payload_changed``, so the legs
-    C-119 could never rescue are exactly the legs whose audit round correctly
-    declined to invent data. Measured on four papers across three independent
-    cohorts (``PMC13184244``, ``PMC13089919``, ``PMC13123502``, ``PMC4471609``); in
-    each, that report was the ONLY failing report in the artifact set, and it had
-    validated the PRE-REMAP payload -- the one the Unknown-backed-complex policy
-    has since replaced, whose ``/entities/proteins/N`` pointers the shipped list
-    cannot host. See ``docs/pwml_recovery_sprint/F-147-RECURRENCE-DIAGNOSIS.md``.
+    *not* an anomaly: the app's audit loop re-stamps to :data:`PHASE_AUDIT_ROUND`
+    only ``if settled_payload_changed`` (``streamlit_app.py``, the
+    ``post_normalization_contract_report = _contract(..., phase=PHASE_AUDIT_ROUND)``
+    block inside that guard), so the legs C-119 could never rescue are exactly the
+    legs whose audit round correctly declined to invent data.
+
+    MEASURED REACH -- DIAGNOSED ON FOUR PAPERS, MOVES NINE ARCHIVED LEGS. The four
+    the card names (``PMC13184244``, ``PMC13089919``, ``PMC13123502``,
+    ``PMC4471609``, across three independent cohorts) are where the defect was
+    diagnosed; a base-vs-tip census over all 188 archived legs on disk found **nine
+    strict legs** whose contract ``error_count`` drops to 0, the other five being
+    ``PMC10031235`` (``runs_smoke/2026-09-07_2323``), ``PMC12452463``
+    (``runs_verify/2026-08-24_1203`` and ``2026-09-01_1612``), ``PMC12444477``
+    (``2026-08-25_1216``) and ``PMC12096016`` (``2026-08-27_1341``). **Zero
+    research legs move** -- all 75 carry ``annotate_only``, never ``feed_audit``.
+
+    THE STALE-FINDING CLASS IS WIDER THAN THE CARD'S EVIDENCE BASE DESCRIBED. On
+    the card's four it is only ``/entities/proteins/N`` missing-identifier
+    pointers. Three of the other five (both ``PMC12452463`` archives and
+    ``PMC12444477``) also carry ``missing species/organism`` on proteins and on
+    generated protein complexes, and a ``/processes`` registry-validation failure
+    naming an unknown entity (e.g. ``/processes/interactions/6/entity_2 unknown
+    entity: outer membran``). Every one of those is still a ``feed_audit``
+    ``validate_post_normalization`` finding about the PRE-REMAP payload, every one
+    re-runs at the authoritative boundary below, and on all nine the
+    ``final_pre_export`` Stage-3 gate passed on the payload that actually shipped
+    (``gate_verdict(...).failed is False``).
+
+    **NONE OF THE NINE BECOMES ``release_ready``, AND NONE IS CLAIMED TO PRODUCE A
+    PWML.** All nine were ALREADY ``review_required`` at the base SHA for reasons
+    this seam does not touch; each gains one extra review reason naming the
+    superseded snapshot, and all nine keep ``strict_acceptance_eligible=False`` and
+    the ``pathway.review_required.pwml`` name. Eligibility is not export. See
+    ``docs/pwml_recovery_sprint/F-147-RECURRENCE-DIAGNOSIS.md``.
 
     THIS REMOVES A REDUNDANT EARLY VETO, IT ADDS NO PERMISSION. The authoritative
     final contract verdict already exists and already blocks export fail-closed:
-    ``streamlit_app.py:4738`` re-runs ``_validate_stage8_export_payload`` -- the
-    same gate suite and the same ``validate_post_normalization`` -- on the exact
-    payload about to serialize and refuses unless ``ok`` is explicitly true, and
-    ``pwml/ir.py:2619`` enforces the same protein invariant a third time. What this
-    seam stops is a PRE-Stage-3 snapshot vetoing a payload that boundary has
-    already judged.
+    ``run_pwml_export``'s pre-export Stage-3 revalidation calls
+    ``_validate_stage8_export_payload`` -- the same gate suite and the same
+    ``validate_post_normalization`` -- on the exact payload about to serialize and
+    returns ``ok=False`` unless that contract report's ``ok`` is explicitly true,
+    and ``pwml.ir``'s ``protein_missing_external_identity`` check enforces the same
+    protein invariant a third time. What this seam stops is a PRE-Stage-3 snapshot
+    vetoing a payload that boundary has already judged.
 
-    WHY THIS EXISTS (C-119, ORCH-728 section 1). ``streamlit_app.py:4032-4039``
+    CITATIONS HERE ARE SYMBOLIC ON PURPOSE (REV-126). The line numbers this
+    docstring used to carry for ``streamlit_app.py`` were read out of a working
+    copy carrying 35 uncommitted user-owned insertions and were 22-23 lines off
+    committed source, so a reader on a clean checkout landed in the wrong place.
+    Name the function and what it does; numbers in a 5000-line file drift.
+
+    WHY THIS EXISTS (C-119, ORCH-728 section 1). The app's audit loop
     re-runs the post-normalization contract on each audit round's settled payload
     and stamps it :data:`PHASE_AUDIT_ROUND`, saying in terms that it is *"still not
     a verdict about what shipped -- the remap below moves the payload again"*. The

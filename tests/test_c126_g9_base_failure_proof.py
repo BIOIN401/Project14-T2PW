@@ -34,19 +34,32 @@ exactly one of the two phases ``gate_reports.py`` DEFINES as non-authoritative::
         continue
 
 A ``post_normalization_contract_report`` left stamped
-``initial_post_normalization`` -- which is what ``streamlit_app.py:4041`` leaves it as
+``initial_post_normalization`` -- which is what the app's audit loop leaves it as
 whenever ``settled_payload_changed`` is false, i.e. whenever the audit round correctly
 declines to invent an identifier -- still failed the leg, even though its
 ``post_audit``, ``post_remap`` and ``final_pre_export`` boundaries were ALL clean and
 the errors it carried addressed a PRE-REMAP protein list the shipped payload can no
-longer host. Measured on four papers across three independent cohorts; see
-``docs/pwml_recovery_sprint/F-147-RECURRENCE-DIAGNOSIS.md``.
+longer host.
+
+MEASURED REACH (REV-126). The defect was DIAGNOSED on four papers across three
+independent cohorts, but a base-vs-tip census over all 188 archived legs on disk finds
+it moves **nine** strict legs, three of which also carry a wider stale-finding class
+than the card's four (``missing species/organism``, and ``/processes`` registry
+validation naming an unknown entity). **Zero research legs move. None of the nine
+becomes ``release_ready``** -- all nine were already ``review_required`` at base -- and
+no PWML is claimed for any of them. See
+``docs/pwml_recovery_sprint/F-147-RECURRENCE-DIAGNOSIS.md`` and
+``_superseded_contract_reports``'s own docstring, which carries the full list.
 
 NOTHING IS REPAIRED AND NOTHING IS PROMOTED. The stale report stays in
 ``contract_reports.json``, stays named in the review metadata, and the leg is bounded
-to ``review_required``. The authoritative verdict on those same checks still lives at
-``streamlit_app.py:4738`` (``_validate_stage8_export_payload``, fail-closed) and at
-``pwml/ir.py:2619``; this seam only stops a PRE-Stage-3 snapshot from pre-empting it.
+to ``review_required``. The authoritative verdict on those same checks still lives in
+``run_pwml_export``'s fail-closed pre-export Stage-3 revalidation, via
+``_validate_stage8_export_payload``, and in ``pwml.ir``'s
+``protein_missing_external_identity`` check; this seam only stops a PRE-Stage-3
+snapshot from pre-empting it. Citations are symbolic because the ``streamlit_app.py``
+line numbers this file used to carry were read from a working copy 22-23 lines ahead
+of committed source.
 
 NO PIPELINE LEG RUNS HERE, no LLM draw is taken, no cache is touched and no network is
 reached. Everything is a replay over one archived artifact set.
@@ -193,9 +206,9 @@ def test_g9_end_to_end_the_refused_leg_is_no_longer_refused_by_the_contract_chan
     **THIS DOES NOT CLAIM THE REAL LEG PRODUCES A PWML.** The export result here is a
     STUB: the fixture app hands the driver an ``ok=True`` export, because what is
     under test is the BATCH DRIVER's contract channel, not ``run_pwml_export``. The
-    real authoritative boundary (``streamlit_app.py:4738``, fail-closed) is not
-    exercised by this test and is free to refuse the same payload. Eligibility is not
-    export.
+    real authoritative boundary (``run_pwml_export``'s fail-closed pre-export Stage-3
+    revalidation) is not exercised by this test and is free to refuse the same
+    payload. Eligibility is not export.
 
     NOTHING IS PROMOTED. The status is ``review_required`` -- the archived quarantine
     record already said so, for an independent reason
