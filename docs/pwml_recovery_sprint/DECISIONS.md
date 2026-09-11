@@ -6836,3 +6836,72 @@ merely not `audit_round`, while `C-126` now calls `initial_post_normalization` n
 legs after `C-126` and a complete fix needs a value from the call site. **Registered, not chartered.**
 
 **Production re-freezes on merge.** No further production change is authorized by this entry.
+
+---
+
+## D-101 AMENDMENT 1 — the broader-class count is FOUR, not three, and the two classes are disjoint sets · 2026-09-10 · LOCKED
+
+**`D-101` § 5 states that *three* of the five additional legs carry stale findings of a broader class
+than protein-identifier pointers. The correct figure is four, and § 5's phrasing also conflates two
+finding classes that land on different legs.** Corrected here rather than edited in place, following
+`D-080 AMENDMENT 1`.
+
+Re-derived from each leg's own `contract_reports.json`, by the Lead Orchestrator and independently by
+`REV-126`, with matching results:
+
+| leg | `species`/`organism` | `/processes` registry | missing identifier | total |
+|---|---:|---:|---:|---:|
+| `PMC12452463` @ `2026-08-24_1203` | **3** | **1** | 1 | 5 |
+| `PMC12452463` @ `2026-09-01_1612` | **3** | **1** | 2 | 6 |
+| `PMC12096016` @ `2026-08-27_1341` | **3** | 0 | 1 | 4 |
+| `PMC12444477` @ `2026-08-25_1216` | 0 | **1** | 9 | 10 |
+| `PMC10031235` @ `2026-09-07_2323` | 0 | 0 | 1 | 1 |
+
+**The union of legs carrying anything beyond the missing-identifier class is FOUR.** The two classes
+are disjoint in one direction each: `PMC12444477` carries **no** species/organism finding, and
+`PMC12096016` carries **no** `/processes` finding. Stated correctly:
+
+* `missing species/organism` — both `PMC12452463` archives **and `PMC12096016`**.
+* `/processes` registry validation — both `PMC12452463` archives **and `PMC12444477`**.
+
+The registry strings, verbatim and untruncated, since `D-101` and the `C-126` docstring both quoted
+one truncated mid-word:
+
+```
+PMC12444477: /processes/interactions/6/entity_2  unknown entity: outer membrane (OM)
+             /processes/interactions/10/entity_2 unknown entity: FabI
+PMC12452463: /processes/interactions/0/entity_2  unknown entity: ent operon
+```
+
+### Why the original number was wrong, stated precisely because the mechanism generalises
+
+**The error originated in `REV-126`'s round-1 report, not in the implementation.** In the reviewer's
+own words: it *"had dumped `PMC12444477` and `PMC12452463 @ 2026-09-01` in full and only spot-checked
+the rest, then generalized from the two I had looked at hardest."* The Lead Orchestrator relayed that
+sentence verbatim to the implementer; the implementer transcribed a reviewer's assertion in good
+faith into the `C-126` docstring. **There is no implementer defect here, and the record should not
+read as one.**
+
+The reviewer caught it one round later for a reason worth keeping: **restating the claim as a census
+result obliged it to be checked as one**, rather than as the passing remark it had been. A number
+that travels from a spot check into a locked record acquires an authority its method never earned.
+
+### What is unchanged
+
+**The argument is unchanged and slightly strengthened.** `D-101` § 5 exists to record that the
+archived reach is nine legs rather than the four diagnosed, and that the stale-finding class is wider
+than `F-147-RECURRENCE-DIAGNOSIS.md` described. **Both remain true**, and the second is now *more*
+true: the wider class touches four legs, not three. **Nine** is re-verified and unchanged. **None of
+the nine becomes `release_ready`** is re-verified and unchanged.
+
+No gate, threshold or predicate rests on the corrected sentence. `C-126`'s safety argument is
+untouched.
+
+### Why this is an amendment and not an edit
+
+`DECISIONS.md` is append-only. Had § 5 been edited in place, the locked product record and the
+production docstring would have been silently reconciled with no trace that a measured number had
+moved. That is the `runs_verify/2026-08-18_1328` failure mode the driver's own `_finalize_gate_failure`
+docstring cites: **two records shipping, disagreeing, both surviving.** The corrected `C-126`
+docstring and this amendment now state the same four, and the path from three to four is on the
+record.
