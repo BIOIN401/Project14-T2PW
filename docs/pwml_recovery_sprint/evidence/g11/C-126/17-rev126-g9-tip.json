@@ -1,0 +1,76 @@
+{
+  "label": "rev126-g9-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/c126/docs/pwml_recovery_sprint/evidence/g11/pin/C-126/17-rev126-g9-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt126/r2",
+    "tests/test_c126_g9_base_failure_proof.py"
+  ],
+  "cwd": "C:\\t\\c126",
+  "started_at": "2026-09-11T02:53:06+00:00",
+  "finished_at": "2026-09-11T02:53:09+00:00",
+  "duration_seconds": 1.9624460999912117,
+  "timeout_seconds": 900.0,
+  "root_pid": 626520,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 626436,
+      "name": "python.exe",
+      "ppid": 626520
+    }
+  ],
+  "descendants_terminated": [
+    626436
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 552792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 558496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 626012,
+      "name": "python.exe"
+    },
+    {
+      "pid": 626048,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-126/17-rev126-g9-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c126\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c126",
+    "repo_head": "e9e80b18be93a645150a37140790f3c0c0ae43ac",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

@@ -1,0 +1,188 @@
+{
+  "label": "affected-base-pin",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/c126/docs/pwml_recovery_sprint/evidence/g11/pin/C-126/13-affected-base-pin.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt126/p5",
+    "tests/test_c119_g9_base_failure_proof.py",
+    "tests/test_c119_release_status_superseded_cap.py",
+    "tests/test_c119_superseded_intermediate_report.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_batch_run.py",
+    "tests/test_batch_report.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py"
+  ],
+  "cwd": "C:\\t\\b126",
+  "started_at": "2026-09-11T02:26:27+00:00",
+  "finished_at": "2026-09-11T02:27:06+00:00",
+  "duration_seconds": 38.48308000000543,
+  "timeout_seconds": 1800.0,
+  "root_pid": 599352,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 603428,
+      "name": "python.exe",
+      "ppid": 599352
+    },
+    {
+      "pid": 593456,
+      "name": "python.exe",
+      "ppid": 603768
+    },
+    {
+      "pid": 603768,
+      "name": "python.exe",
+      "ppid": 603428
+    },
+    {
+      "pid": 604468,
+      "name": "taskkill.exe",
+      "ppid": 603428
+    },
+    {
+      "pid": 604716,
+      "name": "python.exe",
+      "ppid": 603428
+    },
+    {
+      "pid": 604740,
+      "name": "python.exe",
+      "ppid": 604716
+    },
+    {
+      "pid": 559224,
+      "name": "python.exe",
+      "ppid": 603428
+    },
+    {
+      "pid": 604400,
+      "name": "python.exe",
+      "ppid": 559224
+    },
+    {
+      "pid": 604928,
+      "name": "python.exe",
+      "ppid": 603428
+    },
+    {
+      "pid": 605080,
+      "name": "python.exe",
+      "ppid": 604928
+    },
+    {
+      "pid": 605952,
+      "name": "python.exe",
+      "ppid": 603428
+    },
+    {
+      "pid": 606032,
+      "name": "python.exe",
+      "ppid": 605952
+    },
+    {
+      "pid": 606112,
+      "name": "python.exe",
+      "ppid": 603428
+    },
+    {
+      "pid": 606132,
+      "name": "python.exe",
+      "ppid": 606112
+    },
+    {
+      "pid": 606164,
+      "name": "python.exe",
+      "ppid": 603428
+    },
+    {
+      "pid": 606188,
+      "name": "python.exe",
+      "ppid": 606164
+    },
+    {
+      "pid": 605264,
+      "name": "python.exe",
+      "ppid": 603428
+    },
+    {
+      "pid": 605304,
+      "name": "python.exe",
+      "ppid": 605264
+    }
+  ],
+  "descendants_terminated": [
+    559224,
+    593456,
+    603428,
+    603768,
+    604400,
+    604468,
+    604716,
+    604740,
+    604928,
+    605080,
+    605264,
+    605304,
+    605952,
+    606032,
+    606112,
+    606132,
+    606164,
+    606188
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 552792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 558496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 597360,
+      "name": "python.exe"
+    },
+    {
+      "pid": 599588,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c126/docs/pwml_recovery_sprint/evidence/g11/C-126/13-affected-base-pin.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\b126\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\b126",
+    "repo_head": "c6159bc27989f5bc865d4b6946b0e8eb93fb5c12",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

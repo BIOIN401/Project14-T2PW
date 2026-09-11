@@ -79,7 +79,7 @@ import time
 import traceback
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, FrozenSet, List, Optional, Sequence, Tuple
 
 from t2pw.batch.scope_compat import partition_specialization_conflicts
 from t2pw.paths import PACKAGE_ROOT
@@ -91,6 +91,7 @@ from t2pw.pipeline.gate_reports import (
     INITIAL_GATE_REPORT_KEY,
     PHASE_AUDIT_ROUND,
     PHASE_FINAL_PRE_EXPORT,
+    PHASE_INITIAL_POST_NORMALIZATION,
     PHASE_KEY,
     SOURCE_FAIL_CLOSED,
     blocking_findings,
@@ -392,6 +393,46 @@ _LATER_CONTRACT_BOUNDARY_KEYS: Tuple[str, ...] = (
     "post_audit_contract_report",
     "post_remap_contract_report",
 )
+
+#: C-126 / F-147. The CLOSED set of phases ``t2pw.pipeline.gate_reports`` DEFINES as
+#: non-authoritative, in its own words: ``initial_post_normalization`` is *"the gate
+#: run inside normalize_process_payload, before any audit round has seen the payload
+#: ... never a verdict about what shipped"*, and ``audit_round`` is *"progress
+#: evidence; not authoritative either, because a later round -- or the remap that
+#: follows every round -- can move the payload again"*. The third and only other
+#: phase the module defines, :data:`PHASE_FINAL_PRE_EXPORT`, is *"THE authoritative
+#: phase"* and is deliberately absent here.
+#:
+#: **AN ALLOW-LIST, NEVER ``!= PHASE_FINAL_PRE_EXPORT``.** ``_report_phase``'s own
+#: docstring states the doctrine this set obeys: *"an unstamped report is a report
+#: whose boundary this code cannot identify, and the safe reading of 'unidentified'
+#: is 'live'."* A negated test would silently enrol every future phase name, every
+#: typo and every malformed string into the excluded set -- the one direction in
+#: which this seam must never fail. The set is complete BY CONSTRUCTION (the module
+#: defines exactly three phases), not a list that grows: a fourth phase added to
+#: ``gate_reports`` reads as live here until someone decides otherwise, which is the
+#: correct default for a predicate that can stop a finding from blocking.
+_NON_AUTHORITATIVE_PHASES: FrozenSet[str] = frozenset(
+    {PHASE_INITIAL_POST_NORMALIZATION, PHASE_AUDIT_ROUND}
+)
+
+#: C-126 / F-147. The report field that states a contract's OWN view of what its
+#: failure means, and the one value that says "this is the audit loop's input".
+#: ``stage_contracts.py:219`` sets it on exactly one contract,
+#: ``validate_post_normalization``; every other contract in that module uses
+#: ``"abort"`` (``:80``, ``:105``, ``:119``, ``:241``, ``:334``, ``:347``), and
+#: ``validate_post_normalization`` itself ESCALATES to ``"abort"`` and raises when
+#: ``_validate_payload_container`` fails (``:219-224``) -- so a surviving
+#: ``feed_audit`` report cannot be concealing structural garbage.
+#:
+#: ``export_mode.relax_report:186`` rewrites this field to ``"annotate_only"`` (or
+#: ``"abort"`` when a structural guard still blocks), so a RESEARCH-mode report
+#: never carries ``feed_audit`` and this predicate is inert there by construction.
+#:
+#: Before C-126 the batch driver never read this field at all: production stated the
+#: report's role and the consumer ignored it.
+_EFFECT_ON_FAILURE_KEY = "effect_on_failure"
+_EFFECT_FEED_AUDIT = "feed_audit"
 
 _ENTITY_COUNT_KEYS: Tuple[str, ...] = ("proteins", "compounds")
 
@@ -1128,6 +1169,19 @@ def _report_phase(report: Any) -> str:
     return _text(_safe_dict(report).get(PHASE_KEY))
 
 
+def _report_effect_on_failure(report: Any) -> str:
+    """What the contract itself says its own failure MEANS, ``""`` when it is silent.
+
+    The twin of :func:`_report_phase`, and it fails in the same direction: a report
+    that states no effect states nothing this code may act on, so the safe reading
+    of "unstated" is "blocking". Only the one literal value
+    :data:`_EFFECT_FEED_AUDIT` -- which exactly one contract in
+    ``stage_contracts.py`` ever writes -- can license setting a finding aside.
+    """
+
+    return _text(_safe_dict(report).get(_EFFECT_ON_FAILURE_KEY))
+
+
 def _contract_report_items(artifacts: Dict[str, Any]):
     """``(key, report)`` for every TOP-LEVEL ``*_contract_report``.
 
@@ -1191,14 +1245,100 @@ def _superseding_boundaries(artifacts: Dict[str, Any]) -> List[str]:
 
 
 def _superseded_contract_reports(artifacts: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """The ``audit_round`` snapshots a later boundary has superseded, described.
+    """The non-authoritative snapshots a later boundary has superseded, described.
 
     ``[]`` on every artifact set that has none -- which is every legacy set, every
-    set with no later boundary, and every run whose audit loop never re-stamped
-    ``post_normalization_contract_report``. On those, :func:`_blocking_reports`
-    below is byte-identical to what it always was.
+    set with no later boundary, every set whose only failing contract reports are
+    ``abort`` contracts, and every research-mode set (``relax_report`` restamps
+    ``effect_on_failure``). On those, :func:`_blocking_reports` below is
+    byte-identical to what it always was.
 
-    WHY THIS EXISTS (C-119, ORCH-728 section 1). ``streamlit_app.py:4032-4039``
+    FOUR CONDITIONS, ALL REQUIRED, ALL ASSERTED BY PRODUCTION ITSELF.
+
+    1. the artifact set is phase-stamped at all (:func:`_artifact_set_is_phase_stamped`);
+    2. a later boundary has spoken (:func:`_superseding_boundaries` is non-empty);
+    3. the report declares ``effect_on_failure: "feed_audit"`` -- *its own* statement
+       that its errors are the audit loop's input (:data:`_EFFECT_FEED_AUDIT`);
+    4. its ``phase`` is in the CLOSED allow-list :data:`_NON_AUTHORITATIVE_PHASES`.
+
+    C-126 / F-147 ADDED 3 AND 4. C-119 shipped with ``phase != PHASE_AUDIT_ROUND:
+    continue``, which is one of the two phases its own module documents as
+    non-authoritative -- so a ``post_normalization_contract_report`` left stamped
+    :data:`PHASE_INITIAL_POST_NORMALIZATION` still failed the leg. That stamp is
+    *not* an anomaly: the app's audit loop re-stamps to :data:`PHASE_AUDIT_ROUND`
+    only ``if settled_payload_changed`` (``streamlit_app.py``, the
+    ``post_normalization_contract_report = _contract(..., phase=PHASE_AUDIT_ROUND)``
+    block inside that guard), so the legs C-119 could never rescue are exactly the
+    legs whose audit round correctly declined to invent data.
+
+    MEASURED REACH -- DIAGNOSED ON FOUR PAPERS, MOVES NINE ARCHIVED LEGS. The four
+    the card names (``PMC13184244``, ``PMC13089919``, ``PMC13123502``,
+    ``PMC4471609``, across three independent cohorts) are where the defect was
+    diagnosed; a base-vs-tip census over all 188 archived legs on disk found **nine
+    strict legs** whose contract ``error_count`` drops to 0, the other five being
+    ``PMC10031235`` (``runs_smoke/2026-09-07_2323``), ``PMC12452463``
+    (``runs_verify/2026-08-24_1203`` and ``2026-09-01_1612``), ``PMC12444477``
+    (``2026-08-25_1216``) and ``PMC12096016`` (``2026-08-27_1341``). **Zero
+    research legs move** -- all 75 carry ``annotate_only``, never ``feed_audit``.
+
+    THE STALE-FINDING CLASS IS WIDER THAN THE CARD'S EVIDENCE BASE DESCRIBED. On
+    the card's four -- and on ``PMC10031235`` -- every stale error is a
+    ``/entities/proteins/N`` missing-identifier pointer. **FOUR of the other five
+    carry something else, and the two extra classes land on two DIFFERENT sets:**
+
+    * ``missing species/organism`` -- both ``PMC12452463`` archives and
+      ``PMC12096016``, three findings each, on a protein, on the generated protein
+      complex built from it, and on that complex's component row::
+
+          Protein 'enterobactin synthase' is missing species/organism.
+          Generated protein complex 'enterobactin synthase complex' is missing
+              species/organism.
+          Generated protein complex 'enterobactin synthase complex' component
+              protein 'enterobactin synthase' is missing species/organism.
+
+    * a ``/processes`` registry-validation failure naming unknown entities -- both
+      ``PMC12452463`` archives and ``PMC12444477``. Verbatim, in full::
+
+          PMC12444477  Registry validation failed: Registry validation failed:
+                       /processes/interactions/6/entity_2 unknown entity: outer membrane (OM)
+                       /processes/interactions/10/entity_2 unknown entity: FabI
+          PMC12452463  Registry validation failed: Registry validation failed:
+                       /processes/interactions/0/entity_2 unknown entity: ent operon
+
+    ``PMC12444477`` carries NO species/organism finding (9 of its 10 are
+    missing-identifier) and ``PMC12096016`` carries NO ``/processes`` finding, so
+    the two sets overlap only on ``PMC12452463``. Their union is four legs.
+
+    Every one of those findings is still a ``feed_audit``
+    ``validate_post_normalization`` finding about the PRE-REMAP payload, every one
+    re-runs at the authoritative boundary below, and on all nine legs the
+    ``final_pre_export`` Stage-3 gate passed on the payload that actually shipped
+    (``gate_verdict(...).failed is False``).
+
+    **NONE OF THE NINE BECOMES ``release_ready``, AND NONE IS CLAIMED TO PRODUCE A
+    PWML.** All nine were ALREADY ``review_required`` at the base SHA for reasons
+    this seam does not touch; each gains one extra review reason naming the
+    superseded snapshot, and all nine keep ``strict_acceptance_eligible=False`` and
+    the ``pathway.review_required.pwml`` name. Eligibility is not export. See
+    ``docs/pwml_recovery_sprint/F-147-RECURRENCE-DIAGNOSIS.md``.
+
+    THIS REMOVES A REDUNDANT EARLY VETO, IT ADDS NO PERMISSION. The authoritative
+    final contract verdict already exists and already blocks export fail-closed:
+    ``run_pwml_export``'s pre-export Stage-3 revalidation calls
+    ``_validate_stage8_export_payload`` -- the same gate suite and the same
+    ``validate_post_normalization`` -- on the exact payload about to serialize and
+    returns ``ok=False`` unless that contract report's ``ok`` is explicitly true,
+    and ``pwml.ir``'s ``protein_missing_external_identity`` check enforces the same
+    protein invariant a third time. What this seam stops is a PRE-Stage-3 snapshot
+    vetoing a payload that boundary has already judged.
+
+    CITATIONS HERE ARE SYMBOLIC ON PURPOSE (REV-126). The line numbers this
+    docstring used to carry for ``streamlit_app.py`` were read out of a working
+    copy carrying 35 uncommitted user-owned insertions and were 22-23 lines off
+    committed source, so a reader on a clean checkout landed in the wrong place.
+    Name the function and what it does; a line number in that file drifts.
+
+    WHY THIS EXISTS (C-119, ORCH-728 section 1). The app's audit loop
     re-runs the post-normalization contract on each audit round's settled payload
     and stamps it :data:`PHASE_AUDIT_ROUND`, saying in terms that it is *"still not
     a verdict about what shipped -- the remap below moves the payload again"*. The
@@ -1212,9 +1352,11 @@ def _superseded_contract_reports(artifacts: Dict[str, Any]) -> List[Dict[str, An
     WHAT IS *NOT* DONE HERE. Nothing is repaired, no gate is relaxed and no
     threshold moves. The finding does not disappear: it is returned, recorded as a
     review reason on the release record, and named in the manifest row, so the leg
-    can only ever reach ``review_required`` -- never ``release_ready``. Only
-    :data:`PHASE_AUDIT_ROUND` is excluded; a report at any other phase, and a
-    report carrying no phase at all, blocks exactly as before.
+    can only ever reach ``review_required`` -- never ``release_ready``. Only the two
+    phases in :data:`_NON_AUTHORITATIVE_PHASES`, and only on a ``feed_audit``
+    report, are excluded; a report at :data:`PHASE_FINAL_PRE_EXPORT`, at any
+    unrecognised phase, at no phase at all, or with any other
+    ``effect_on_failure``, blocks exactly as before.
 
     Each descriptor answers the three questions a human asks afterwards: WHICH
     report was superseded, at WHICH phase, and HOW MANY errors it carried.
@@ -1227,7 +1369,19 @@ def _superseded_contract_reports(artifacts: Dict[str, Any]) -> List[Dict[str, An
         return []
     superseded: List[Dict[str, Any]] = []
     for key, report in _contract_report_items(artifacts):
-        if _report_phase(report) != PHASE_AUDIT_ROUND:
+        # CONDITION 4 (C-126). An ALLOW-LIST of the two phases ``gate_reports``
+        # DEFINES as non-authoritative -- see ``_NON_AUTHORITATIVE_PHASES``. Never
+        # ``!= PHASE_FINAL_PRE_EXPORT``: an unrecognised, future or malformed phase
+        # string must read as LIVE, not be enrolled into the excluded set.
+        phase = _report_phase(report)
+        if phase not in _NON_AUTHORITATIVE_PHASES:
+            continue
+        # CONDITION 3 (C-126). The report's OWN declaration that its errors are the
+        # audit loop's input rather than a verdict. Every ``abort`` contract still
+        # blocks at every phase, which is what keeps a structural finding -- and
+        # every research-mode relaxed report, which ``relax_report`` restamps
+        # ``annotate_only`` -- exactly where it was.
+        if _report_effect_on_failure(report) != _EFFECT_FEED_AUDIT:
             continue
         # The parent's own errors, the same slice ``_blocking_reports`` scans, so
         # the count recorded for a human is the count that stopped blocking.
@@ -1236,8 +1390,15 @@ def _superseded_contract_reports(artifacts: Dict[str, Any]) -> List[Dict[str, An
             continue
         superseded.append(
             {
+                # The report's ACTUAL phase, never a hard-coded one. C-119 wrote
+                # ``PHASE_AUDIT_ROUND`` here because it was the only phase that
+                # could reach this line; with two phases reachable, a constant
+                # would make the release reason and the manifest row NAME THE WRONG
+                # BOUNDARY as superseded -- the review metadata would lie about
+                # which snapshot was set aside, which is the one thing ORCH-728
+                # forbids this descriptor to do.
                 "report": str(key),
-                "phase": PHASE_AUDIT_ROUND,
+                "phase": phase,
                 "errors": len(errors),
                 "superseded_by": list(boundaries),
             }
@@ -1265,15 +1426,18 @@ def _blocking_reports(artifacts: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
     The run had succeeded. Failing it on the nested report threw the research
     deliverable away, which is why that shape is a regression test.
 
-    PHASE AWARENESS (C-119). A report a LATER boundary has superseded is dropped
-    from this set as well, on exactly the terms
-    :func:`_superseded_contract_reports` states: only ``phase: audit_round``, only
-    when a ``post_audit`` / ``post_remap`` contract report or a
-    ``final_pre_export`` Stage-3 gate report exists to supersede it, and never in
-    an artifact set that predates the phase stamp. Every other report -- any other
-    phase, and every report carrying no phase -- keeps today's behaviour exactly.
-    The dropped finding is not lost: the caller records it as a review reason, and
-    the leg can then reach ``review_required`` but never ``release_ready``.
+    PHASE AWARENESS (C-119, widened by C-126). A report a LATER boundary has
+    superseded is dropped from this set as well, on exactly the terms
+    :func:`_superseded_contract_reports` states: only a report whose own
+    ``effect_on_failure`` is ``feed_audit``, only at one of the two phases
+    ``gate_reports`` defines as non-authoritative, only when a ``post_audit`` /
+    ``post_remap`` contract report or a ``final_pre_export`` Stage-3 gate report
+    exists to supersede it, and never in an artifact set that predates the phase
+    stamp. Every other report -- ``final_pre_export``, an unrecognised phase, no
+    phase at all, or any ``abort`` contract at any phase -- keeps today's behaviour
+    exactly. The dropped finding is not lost: the caller records it as a review
+    reason, and the leg can then reach ``review_required`` but never
+    ``release_ready``.
     """
 
     excluded = {item["report"] for item in _superseded_contract_reports(artifacts)}
