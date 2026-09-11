@@ -50,3 +50,35 @@ docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH734_PMC7402084.pwml -te
 docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH734_PMC8211424.pwml -text
 docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH734_PMC9544450.pwml -text
 docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/SHA256SUMS.txt -text
+
+# C-126, 2026-09-10. NINE MORE PATHS, AND THE GAP WAS NOT NOTICED FOR THREE CARDS.
+#
+# The eleven entries above were added by ORCH-735 and the rule was stated plainly:
+# "A future PWML added to this directory needs its own line." That did not happen.
+# C-121, C-122, C-124 and the ORCH-730 copy all landed in IMPORT-SET afterwards with
+# no entry, and C-126 added two more. PATHWHIZ-IMPORT-INVENTORY.md meanwhile grew to
+# claim `sha256sum -c` passes on all of them -- true on THIS machine, and that is
+# exactly the failure the block above warns about: the manifest silently stops being
+# true on a fresh clone while `git diff` stays empty.
+#
+# MEASURED BEFORE ADDING THESE, so the entries are protection and not a repair: all
+# nine already agree byte-for-byte between HEAD and the worktree, so no recorded
+# hash in SHA256SUMS.txt is currently wrong. Two of them survive by a different
+# route than the first eleven -- the newer PWMLs are CRLF on disk rather than
+# LF-only, so autocrlf happens to round-trip them. That is an accident of this
+# machine's configuration, not a property of the artifacts, and a clone with
+# `core.autocrlf=false` would still get different bytes. These entries remove the
+# dependency on the clone's configuration entirely.
+#
+# The ORCH-730 file is no longer "in the sibling directory" as the block above says;
+# it was copied into IMPORT-SET and is pinned by the same manifest, so the reason
+# ORCH-735 gave for leaving it alone no longer applies.
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C121_PMC9544450.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C122_PMC12707518.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C122_PMC12914822.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C122_PMC13084691.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C122_PMC13474689.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C124_PMC13488460.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C126_PMC13123502.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C126_PMC9544450.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH730_PMC7232280.F195.pwml -text

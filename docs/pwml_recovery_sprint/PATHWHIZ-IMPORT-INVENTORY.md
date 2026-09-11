@@ -8,8 +8,24 @@ report `evidence/g11/C-123/02-import-inventory.json`, `FINAL SURVIVING COUNT : 0
 
 | | |
 |---|---:|
-| **structurally clean — import these** | **15** |
+| **structurally clean — import these** | **17** |
 | **`F-195` dangling transport reference — import last** | **3** |
+
+> **UPDATED AGAIN after the `C-126` live validation, 2026-09-10.** Two more clean files, both
+> `review_required`, both `IMPORT READY`, both with **zero** transports and so **not** `F-195`
+> candidates. Twenty files now; `sha256sum -c` passes on all twenty.
+>
+> | file | pathway organism | rxn | cpd | prot | cplx | edges | bytes | sha256 |
+> |---|---|---:|---:|---:|---:|---:|---:|---|
+> | `C126_PMC13123502.pwml` | *Paris polyphylla* — steroidal saponin | 2 | 5 | 1 | 4 | 13 | 36,756 | `14fbe1b041f6d3ba` |
+> | `C126_PMC9544450.pwml` | *Escherichia coli* — menaquinone | 4 | 8 | 2 | 2 | 12 | 40,689 | `dddbfb0eac22ffb5` |
+>
+> **`C126_PMC13123502` is the one to look at first.** It is the paper `F-147` had been killing: a
+> leg whose final gate passed clean while a superseded pre-remap report failed it. Its four
+> unresolved UGTs ship as Unknown-backed complexes, so it is also the clearest live specimen of the
+> placeholder policy. **`C126_PMC9544450` is the `C-126` control** and is this paper's *fourth*
+> independent draw — 4, 5, 6 and now 4 reactions — so the four together remain the best available
+> demonstration of draw dependence.
 
 > **UPDATED after the `C-124`/`C-125` live validation.** `C124_PMC13488460.pwml` joins the clean set:
 > *Borrelia burgdorferi* mevalonate pathway, 19,818 B, 1 reaction, **IMPORT READY**, no transports.
