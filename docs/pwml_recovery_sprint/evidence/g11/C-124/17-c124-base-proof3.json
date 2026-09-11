@@ -1,0 +1,77 @@
+{
+  "label": "c124-base-proof3",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/bt/c124b",
+    "tests/test_c124_species_creation.py::test_g9_a_blocking_species_is_created_from_the_db_asserted_synonym",
+    "tests/test_c124_species_creation.py::test_g9_a2_the_database_row_is_reduced_to_species_rank_before_asking"
+  ],
+  "cwd": "C:\\t\\c124base",
+  "started_at": "2026-09-10T23:25:20+00:00",
+  "finished_at": "2026-09-10T23:25:21+00:00",
+  "duration_seconds": 0.8406674999860115,
+  "timeout_seconds": 900.0,
+  "root_pid": 537292,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 532068,
+      "name": "python.exe",
+      "ppid": 537292
+    }
+  ],
+  "descendants_terminated": [
+    532068
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 523840,
+      "name": "python.exe"
+    },
+    {
+      "pid": 523936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 533936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 537236,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c124/docs/pwml_recovery_sprint/evidence/g11/C-124/17-c124-base-proof3.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c124base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "",
+    "repo_head": "",
+    "repo_source": "not_a_repository",
+    "wrapper_vs_head": "unknown",
+    "repo_tracked_files_dirty": null,
+    "repo_error": "fatal: not a git repository (or any of the parent directories): .git"
+  },
+  "heavy_lock": {}
+}
