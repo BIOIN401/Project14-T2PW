@@ -1282,14 +1282,36 @@ def _superseded_contract_reports(artifacts: Dict[str, Any]) -> List[Dict[str, An
     research legs move** -- all 75 carry ``annotate_only``, never ``feed_audit``.
 
     THE STALE-FINDING CLASS IS WIDER THAN THE CARD'S EVIDENCE BASE DESCRIBED. On
-    the card's four it is only ``/entities/proteins/N`` missing-identifier
-    pointers. Three of the other five (both ``PMC12452463`` archives and
-    ``PMC12444477``) also carry ``missing species/organism`` on proteins and on
-    generated protein complexes, and a ``/processes`` registry-validation failure
-    naming an unknown entity (e.g. ``/processes/interactions/6/entity_2 unknown
-    entity: outer membran``). Every one of those is still a ``feed_audit``
+    the card's four -- and on ``PMC10031235`` -- every stale error is a
+    ``/entities/proteins/N`` missing-identifier pointer. **FOUR of the other five
+    carry something else, and the two extra classes land on two DIFFERENT sets:**
+
+    * ``missing species/organism`` -- both ``PMC12452463`` archives and
+      ``PMC12096016``, three findings each, on a protein, on the generated protein
+      complex built from it, and on that complex's component row::
+
+          Protein 'enterobactin synthase' is missing species/organism.
+          Generated protein complex 'enterobactin synthase complex' is missing
+              species/organism.
+          Generated protein complex 'enterobactin synthase complex' component
+              protein 'enterobactin synthase' is missing species/organism.
+
+    * a ``/processes`` registry-validation failure naming unknown entities -- both
+      ``PMC12452463`` archives and ``PMC12444477``. Verbatim, in full::
+
+          PMC12444477  Registry validation failed: Registry validation failed:
+                       /processes/interactions/6/entity_2 unknown entity: outer membrane (OM)
+                       /processes/interactions/10/entity_2 unknown entity: FabI
+          PMC12452463  Registry validation failed: Registry validation failed:
+                       /processes/interactions/0/entity_2 unknown entity: ent operon
+
+    ``PMC12444477`` carries NO species/organism finding (9 of its 10 are
+    missing-identifier) and ``PMC12096016`` carries NO ``/processes`` finding, so
+    the two sets overlap only on ``PMC12452463``. Their union is four legs.
+
+    Every one of those findings is still a ``feed_audit``
     ``validate_post_normalization`` finding about the PRE-REMAP payload, every one
-    re-runs at the authoritative boundary below, and on all nine the
+    re-runs at the authoritative boundary below, and on all nine legs the
     ``final_pre_export`` Stage-3 gate passed on the payload that actually shipped
     (``gate_verdict(...).failed is False``).
 
@@ -1314,7 +1336,7 @@ def _superseded_contract_reports(artifacts: Dict[str, Any]) -> List[Dict[str, An
     docstring used to carry for ``streamlit_app.py`` were read out of a working
     copy carrying 35 uncommitted user-owned insertions and were 22-23 lines off
     committed source, so a reader on a clean checkout landed in the wrong place.
-    Name the function and what it does; numbers in a 5000-line file drift.
+    Name the function and what it does; a line number in that file drifts.
 
     WHY THIS EXISTS (C-119, ORCH-728 section 1). The app's audit loop
     re-runs the post-normalization contract on each audit round's settled payload

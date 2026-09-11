@@ -43,9 +43,10 @@ longer host.
 
 MEASURED REACH (REV-126). The defect was DIAGNOSED on four papers across three
 independent cohorts, but a base-vs-tip census over all 188 archived legs on disk finds
-it moves **nine** strict legs, three of which also carry a wider stale-finding class
+it moves **nine** strict legs, four of which also carry a wider stale-finding class
 than the card's four (``missing species/organism``, and ``/processes`` registry
-validation naming an unknown entity). **Zero research legs move. None of the nine
+validation naming unknown entities -- two classes on two different, overlapping sets;
+see ``_superseded_contract_reports``). **Zero research legs move. None of the nine
 becomes ``release_ready``** -- all nine were already ``review_required`` at base -- and
 no PWML is claimed for any of them. See
 ``docs/pwml_recovery_sprint/F-147-RECURRENCE-DIAGNOSIS.md`` and

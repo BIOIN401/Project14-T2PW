@@ -18,9 +18,10 @@ conditions on top of C-119's two:
 
 MEASURED REACH (REV-126). The card diagnosed the defect on four papers; a base-vs-tip
 census over all 188 archived legs on disk finds it moves **nine** strict legs and
-**zero** of the 75 research legs, and that three of the nine carry a wider
+**zero** of the 75 research legs, and that four of the nine carry a wider
 stale-finding class than the card described. **No leg becomes ``release_ready``** and
-no PWML is claimed for any of them. The nine are enumerated in
+no PWML is claimed for any of them. The nine, and the two extra finding classes with
+the different sets they land on, are enumerated in
 ``driver._superseded_contract_reports``'s docstring;
 :func:`test_no_archived_leg_becomes_release_ready` below pins the release-status half
 of that claim over the committed fixtures.
