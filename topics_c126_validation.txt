@@ -1,0 +1,66 @@
+# C-126 post-merge live validation -- 2026-09-10. Merged tree 5f6a7aa3 (D-102).
+#
+# THREE legs, ONE STRICT RUN EACH, NO FAVOURABLE RERUNS. This is fix validation,
+# not a yield cohort: its numbers belong to no denominator and rescore nothing.
+#
+# EVERY SCOPE STRING IS COPIED VERBATIM from the cohort that originally ran it:
+#   PMC13089919, PMC13123502  <- topics_c122_final_smoke.txt
+#   PMC9544450                <- topics_c121_live_validation.txt / topics_c120_validation.txt
+# Editing an input after seeing a result is the favourable rerun the charter
+# forbids, and it would make a pass unattributable to the fix.
+#
+# ---------------------------------------------------------------------------
+# PMC13089919  RECURRENCE LEG. C-122 final smoke. Its archived
+#              post_normalization_contract_report is phase=initial_post_normalization,
+#              effect_on_failure=feed_audit, ok=false, TWO errors (ChoC, Cho2),
+#              and it is the ONLY failing report in the set. Archived
+#              final_stage3_gate_report: phase=final_pre_export, ok=true, 0 errors.
+#              Smallest of the four recurrence legs. Previously 16m56s.
+#
+# PMC13123502  RECURRENCE LEG. C-125 validation. Same shape, FOUR errors
+#              (UGT91BP2, UGT703R1/R2/R3). Already passed Stage 0 after C-125 and
+#              ran 39m01s to the stage-3 gate, so it exercises the seam at the
+#              end of a full-length leg.
+#
+# PMC9544450   CONTROL, deliberately unaffected. Its archived contract reports
+#              carry NO initial_post_normalization failure, so C-126's predicate
+#              cannot fire on it. Exported a PWML in ORCH-732 (39,686 B),
+#              ORCH-734 (49,436 B) and C-121 (48,826 B) -- three draws at 4, 5
+#              and 6 reactions. If C-126 broke anything general, this is where it
+#              shows.
+# ---------------------------------------------------------------------------
+#
+# WHAT SUCCESS IS, STATED BEFORE EXECUTION:
+#
+#   RECURRENCE LEGS -- the claim is NARROW and it is the only thing being tested:
+#     the leg must NOT fail with failure_kind=contract on a
+#     post_normalization_contract_report stamped initial_post_normalization while
+#     its own final_stage3_gate_report reads ok=true.
+#     That is the entire seam. A PWML is a BONUS, NOT THE CLAIM.
+#
+#   CONTROL -- must still produce a PWML, and its disposition must not move.
+#
+# WHAT WOULD *NOT* REFUTE C-126:
+#   - a recurrence leg refused later by F-179, the required-field gate, the
+#     fail-closed pre-export Stage-3 revalidation, or any biological floor.
+#     C-126 removes ONE veto; every other gate is untouched and still refuses
+#     first. Eligibility is not export.
+#   - a leg that fails UPSTREAM (Stage 1 empty completions, provider variance,
+#     timeout) and never reaches the seam. Stage 1 is stochastic; a leg that
+#     never arrives proves nothing either way and MUST be reported as such
+#     rather than re-run.
+#
+# WHAT WOULD REFUTE C-126:
+#   - a recurrence leg still failing on the stale initial_post_normalization
+#     report with a clean final gate;
+#   - the control losing its PWML, or any leg reaching release_ready that did
+#     not before.
+#
+# THE DETERMINISTIC ARCHIVED PROOF REMAINS THE PRIMARY SEAM EVIDENCE.
+# REV-126 verified it over all 188 archived legs. This run is confirmation in
+# production, not the proof of record, and stochastic upstream behaviour cannot
+# weaken the archived result.
+
+PMC13089919  | phosphatidylcholine biosynthesis           | Rhizopus microsporus
+PMC13123502  | steroidal saponin biosynthesis             | Paris polyphylla
+PMC9544450   | menaquinone biosynthesis                   | Escherichia coli
