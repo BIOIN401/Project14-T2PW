@@ -10445,3 +10445,32 @@ Full record: [`C-122-FINAL-SMOKE-RESULT.md`](C-122-FINAL-SMOKE-RESULT.md).
 | import set | **17 files**, hash-pinned, `sha256sum -c` all OK, every copy `cmp`-verified byte-identical to source |
 | **`RAG v2`** | **DOES NOT BEGIN.** § 23's bar is not met and `RAG-V2-HANDOFF-REQUIREMENTS.md` § 6 conditions it on closure |
 | next | the product owner's call. (1) **Import the four files by hand** — the step this phase has waited on, and the only thing that decides `F-195` and `F-202`. (2) `F-203`, the cheapest genuine defect of the three repeats. (3) `F-202`, the most serious. (4) `F-199` still stands for the provider class that killed `PMC13398565` |
+
+---
+
+## `ORCH-741` — ten-paper production verification run. **7 / 10 PWML** · 2026-09-17
+
+Full record: [`ORCH-741-VERIFICATION-RUN-RESULT.md`](ORCH-741-VERIFICATION-RUN-RESULT.md).
+**No production code changed, proposed or dispatched.** `git diff 5f6a7aa3 HEAD -- src/` empty,
+`main` untouched, protected `streamlit_app.py` intact at 35 ins / 2 del `sha256:47e4fafa…`.
+
+### State at this entry
+
+| item | state |
+|---|---|
+| **yield** | **7 PWML / 10 papers = 70 %.** Meaningful cores **9**; serialization 7/9 = 78 %. **IMPORT READY 6/7**, the seventh an `F-195`. Zero timeouts |
+| **NOT a claim of improvement** | **Computed, not asserted.** Clopper-Pearson 95 % CI **34.8–93.3 %** against `C-122`'s **9.9–65.1 %**; the intervals overlap across 34.8–65.1 % and **Fisher exact gives `p = 0.198`**. I corrected my own draft here: I had written that this CI *contains* `C-122`'s 33 %, and it does **not** — the lower bound is 34.8 %. The cohort was **disclosed as easier BEFORE the run** (mix 3/3/2/2 vs `C-122`'s 4/4/3/1; `ORCH-725` rates human 67 % / fungi 20 %). Two cohorts, two denominators, never merged |
+| **the misses do not repeat** | **Three misses, three DIFFERENT mechanisms, `n = 1` each**, where `C-122` had three mechanisms repeating **twice each**. That is the one genuinely encouraging structural fact in the run, and it is the § 23 condition that matters more than the percentage |
+| **`F-204`** NEW | `PMC13418202` lost at `post_pipeline` to `PREFREEZE_CONNECTIVITY_BROKEN` with a meaningful core (2 rxn, 3 prot, 6 cpd) and correct scope/organism. **The guard is fail-closed and correct.** Two halves: the *preservation* question (lose the leg vs `review_required` with the rename declined) is a **`policy_disagreement`** for the product owner; the *observability* half is a real defect — the exception's `first_divergence` and `rename_map` reach **nothing**, and the row records `issue_codes: []`. **REGISTERED, NOT CHARTERED** |
+| **`F-205`** NEW | `PMC13534948` failed `final_pre_export_gate_lifecycle` on **`final_gate_report_missing`** (`gate.gate_lifecycle`), also with a meaningful core. Wrote initial + fail gate reports, **no final one**. Adjacent to the `C-119`/`C-126` lifecycle area but visibly **not** the `F-147` seam. Candidate `product_contract_violation`, **NOT established. REGISTERED, NOT CHARTERED** |
+| `F-199` | `PMC12860957` died at Stage 1, *"Chunk 2 failed to produce valid JSON"*, zero reactions, never reached a gate. Known delivery-failure class. **NOT re-run**, per the frozen manifest. **Now present in two consecutive cohorts** (`C-122` lost `PMC13398565` the same way) and still the standing card candidate |
+| `F-195` | **fourth instance**, `PMC13486683` — 2 dangling `compound-location-id` refs of 192. Signature verified **identical in shape** to `ORCH730_PMC7232280.F195` by running the same checker over both. Not fixed; the live import decides |
+| `F-202` | re-observed in **5 of 7**, still **sentinel-only**: *A. thaliana* appears once per file, **referenced by no protein and no complex**. Matches the `C-122` § 5 adjudication. No resolved protein mislabelled. Not a new finding |
+| **coordinates** | **`edges_with_path` == `edges` on all seven** — every connector routed. Every primary species carries the correct NCBI taxon, checked by hand against each paper. Canvas scales with graph size (1,400 → 3,330 high). **Structural only: legibility is NOT claimed and is the product owner's call in the UI** |
+| reaction drops | `PMC12369002` 7→4 and `PMC12983300` 3→2 are the **strict quarantine working**, every removal named in `removed_entity_report.json` as `unreferenced_after_quarantine` / `degree_zero_after_quarantine`. Not a defect, no card |
+| biggest artifacts | `ORCH741_PMC13364408` — **8 reactions / 34 edges, the largest graph the sprint has produced**. `ORCH741_PMC13486683` carries **36 edges**, the most on disk |
+| `release_ready` | **zero.** All seven `review_required`, which is a SUCCESS under the frozen criterion. `C-122`'s `PMC12914822` remains the sprint's only `release_ready` |
+| import set | **27 files**, hash-pinned, `sha256sum -c` all OK from the repo root, every new copy `cmp`-verified byte-identical to its source run tree |
+| G11 | eight bounded jobs, **all `FINAL SURVIVING COUNT : 0` / `cleanup : success`**; the run job terminated **23 descendants** and left none. Heavy lock acquired and released. Four pre-existing VS Code language servers reported, **never killed**. SMOKE **508 passed** on the frozen tree before the cohort |
+| **decision** | **NONE TAKEN. The reliability-closure call is the product owner's.** 70 % is not § 23's ~80 %; the misses **are** isolated (`n = 1` each) but **two of the three are deterministic, not stochastic**, so the alternative condition is only half met. I am not pre-empting it |
+| next | (1) **import the six clean files and check coordinates** — start with `ORCH741_PMC13364408`, import `ORCH741_PMC13486683.F195` **last**; (2) `F-204`'s observability half is cheap and self-contained; (3) `F-205` needs adjudication first; (4) `F-199` still stands |

@@ -139,3 +139,36 @@ The run trees that produced them are preserved unchanged and untracked
 (`runs_smoke/`, `runs_validation/`, `runs_verify/`), which is the standing `F-187` exposure. These
 seventeen are the committed, hash-pinned copies — they are on `origin`, so a disk failure no longer
 loses them.
+
+---
+
+> **UPDATED after the `ORCH-741` verification run, 2026-09-17.** **Seven more files, 27 total**;
+> `sha256sum -c` passes on all 27 **from the repository root** (the manifest stores repo-root-relative
+> paths, so running it inside this directory reports all files unreadable — that is a path artefact,
+> not corruption). Six are `IMPORT READY`, one is an `F-195` specimen. Every copy is
+> `cmp`-verified byte-identical to `runs_verify/2026-09-16_2152`, which is preserved unchanged.
+>
+> | file | pathway organism | taxon | rxn | cpd | prot | cplx | edges | bytes | sha256 |
+> |---|---|---:|---:|---:|---:|---:|---:|---:|---|
+> | `ORCH741_PMC13364408.pwml` | *Apium graveolens* — furanocoumarin | 4045 | 8 | 16 | 1 | 4 | 34 | 90,583 | `12e494c945651709` |
+> | `ORCH741_PMC12059215.pwml` | *Mus musculus* — testosterone | 10090 | 7 | 6 | 4 | 4 | 26 | 70,630 | `6489cbfa14c62880` |
+> | `ORCH741_PMC13170813.pwml` | *Hordeum vulgare* — hordatine | 4513 | 5 | 8 | 3 | 5 | 19 | 56,634 | `f2fa3aa1f35e556d` |
+> | `ORCH741_PMC12369002.pwml` | *Campylobacter jejuni* — CDP-d-fucofuranose | 197 | 4 | 10 | 1 | 3 | 18 | 52,920 | `27ff15850ed1992b` |
+> | `ORCH741_PMC12505894.pwml` | *Candida albicans* — farnesol | 5476 | 4 | 6 | 4 | 4 | 15 | 49,471 | `02a458dae1e40d05` |
+> | `ORCH741_PMC12983300.pwml` | *Penicillium polonicum* — verrucofortine | 60169 | 2 | 5 | 1 | 2 | 8 | 27,126 | `92eacae0fe769183` |
+> | `ORCH741_PMC13486683.F195.pwml` | *Petunia hybrida* — benzyl alcohol | 4102 | 5 | 10 | 1 | 7 | 36 | 96,351 | `a09bc1598d897224` |
+>
+> **`ORCH741_PMC13364408` is the one to open first.** At 8 reactions and 34 edges it is the
+> **largest graph the sprint has produced**, so a layout problem shows there before anywhere else.
+> **`ORCH741_PMC13486683.F195` should be imported LAST** — it carries two dangling
+> `compound-location-id` references (66, 82), the same defect shape as `ORCH730_PMC7232280.F195`,
+> and it is the fourth known `F-195` instance.
+>
+> **Coordinates were checked structurally and passed on all seven:** `edges_with_path` equals
+> `edges` in every file, so every connector is routed rather than left as a bare reference, and
+> every primary species carries the correct NCBI taxonomy id. **Legibility — overlap, crossing
+> connectors, label collisions — was NOT examined and is what the UI import is for.**
+>
+> Five of the seven carry the `F-202` *A. thaliana* placeholder species, once each, **referenced by
+> no protein and no complex**, matching the `C-122` § 5 sentinel-only adjudication. No resolved
+> protein is mislabelled in any of the seven.

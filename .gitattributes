@@ -82,3 +82,15 @@ docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C124_PMC13488460.pwml -text
 docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C126_PMC13123502.pwml -text
 docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/C126_PMC9544450.pwml -text
 docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH730_PMC7232280.F195.pwml -text
+
+# ORCH-741 (2026-09-17). Same reason as the block above: these seven are
+# byte-exact generated artifacts whose sha256 is pinned in SHA256SUMS.txt and
+# quoted in PATHWHIZ-IMPORT-INVENTORY.md. Without `-text` the recorded hash holds
+# only on a clone whose `core.autocrlf` happens to match this machine's.
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH741_PMC12059215.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH741_PMC12369002.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH741_PMC12505894.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH741_PMC12983300.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH741_PMC13170813.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH741_PMC13364408.pwml -text
+docs/pwml_recovery_sprint/pathwhiz_review/IMPORT-SET/ORCH741_PMC13486683.F195.pwml -text

@@ -1,0 +1,226 @@
+{
+  "label": "orch741-verify-10legs",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "topics_orch741_verify.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "runs_verify",
+    "--timeout",
+    "3600",
+    "--deadline",
+    "9",
+    "--fresh"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-09-17T03:52:52+00:00",
+  "finished_at": "2026-09-17T07:52:26+00:00",
+  "duration_seconds": 14373.036926,
+  "timeout_seconds": 36000.0,
+  "root_pid": 62176,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 60740,
+      "name": "python.exe",
+      "ppid": 62176
+    },
+    {
+      "pid": 58440,
+      "name": "python.exe",
+      "ppid": 63048
+    },
+    {
+      "pid": 63048,
+      "name": "python.exe",
+      "ppid": 60740
+    },
+    {
+      "pid": 59360,
+      "name": "python.exe",
+      "ppid": 60740
+    },
+    {
+      "pid": 62504,
+      "name": "python.exe",
+      "ppid": 59360
+    },
+    {
+      "pid": 77052,
+      "name": "python.exe",
+      "ppid": 60740
+    },
+    {
+      "pid": 77432,
+      "name": "python.exe",
+      "ppid": 77052
+    },
+    {
+      "pid": 79616,
+      "name": "python.exe",
+      "ppid": 60740
+    },
+    {
+      "pid": 84672,
+      "name": "python.exe",
+      "ppid": 79616
+    },
+    {
+      "pid": 90092,
+      "name": "python.exe",
+      "ppid": 60740
+    },
+    {
+      "pid": 90984,
+      "name": "python.exe",
+      "ppid": 90092
+    },
+    {
+      "pid": 105352,
+      "name": "python.exe",
+      "ppid": 106388
+    },
+    {
+      "pid": 106388,
+      "name": "python.exe",
+      "ppid": 60740
+    },
+    {
+      "pid": 112544,
+      "name": "python.exe",
+      "ppid": 113668
+    },
+    {
+      "pid": 113668,
+      "name": "python.exe",
+      "ppid": 60740
+    },
+    {
+      "pid": 120516,
+      "name": "python.exe",
+      "ppid": 128104
+    },
+    {
+      "pid": 128104,
+      "name": "python.exe",
+      "ppid": 60740
+    },
+    {
+      "pid": 136096,
+      "name": "python.exe",
+      "ppid": 60740
+    },
+    {
+      "pid": 134432,
+      "name": "python.exe",
+      "ppid": 136096
+    },
+    {
+      "pid": 141484,
+      "name": "python.exe",
+      "ppid": 60740
+    },
+    {
+      "pid": 143628,
+      "name": "python.exe",
+      "ppid": 141484
+    },
+    {
+      "pid": 139576,
+      "name": "python.exe",
+      "ppid": 147060
+    },
+    {
+      "pid": 147060,
+      "name": "python.exe",
+      "ppid": 60740
+    }
+  ],
+  "descendants_terminated": [
+    58440,
+    59360,
+    60740,
+    62504,
+    63048,
+    77052,
+    77432,
+    79616,
+    84672,
+    90092,
+    90984,
+    105352,
+    106388,
+    112544,
+    113668,
+    120516,
+    128104,
+    134432,
+    136096,
+    139576,
+    141484,
+    143628,
+    147060
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 57644,
+      "name": "python.exe"
+    },
+    {
+      "pid": 57684,
+      "name": "python.exe"
+    },
+    {
+      "pid": 60840,
+      "name": "python.exe"
+    },
+    {
+      "pid": 62172,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/ORCH-741/06-live-run.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "cd73cdbf295ea5ca141a36a00fadeff8562ac88f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-741",
+    "token": "ORCH-741:60840:68b651ab993ed57d",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
