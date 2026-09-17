@@ -1,0 +1,173 @@
+# ORCH-741 PRODUCTION VERIFICATION COHORT -- 2026-09-16.
+#
+# Production tree frozen at 5f6a7aa3 (D-102, after the C-126 merge). No code
+# change is proposed, dispatched or implied by this run. It is a MEASUREMENT.
+#
+# THE ONLY QUESTION, unchanged from ORCH-734 and C-122:
+#
+#     When the user gives the production system a reasonable biological pathway
+#     paper, does the system actually produce a usable PWML?
+#
+# SUCCESS = a PWML on disk. release_ready is NOT required; a
+# pathway.review_required.pwml counts as successful PWML generation.
+#
+# TEN papers, ONE STRICT LEG EACH, NO FAVOURABLE RERUNS. A NEW dataset with its
+# own identity under runs_verify/<this timestamp>. It is NOT C-122, NOT
+# ORCH-734, NOT ORCH-732, NOT the C-126 validation. Its numbers may never be
+# merged into any of those denominators and it rescores none of them. Ten papers
+# is a verification cohort, not a population rate.
+#
+# ---------------------------------------------------------------------------
+# FRESHNESS -- measured, not claimed
+# ---------------------------------------------------------------------------
+# All ten ids were checked mechanically against the sprint exclusion set built
+# by evidence/c122_cohort_candidates.py::used_pmcids -- every PMC id reachable
+# from the gold set, from any runs*/ tree, or from any topics_*.txt in the
+# repository. Exclusion set size 73 at selection time. COLLISIONS: 0.
+# None of these ten has been run before, in any mode. No pathway below has been
+# run before either, so the cohort is fresh at the PATHWAY level and not merely
+# at the paper level.
+#
+# ---------------------------------------------------------------------------
+# SELECTION
+# ---------------------------------------------------------------------------
+# Tool: evidence/c122_cohort_candidates.py, unmodified, run FOUR times with four
+# different Europe PMC queries (G11 reports ORCH-741/01-04). 180 full texts
+# fetched, 118 passing candidates recorded across the four searches. The tool
+# scores and refuses; IT DOES NOT CHOOSE. These ten were chosen by hand from the
+# passing list.
+#
+# Selecting on the tool's score alone would optimise the cohort against the
+# metric it is supposed to measure, which C-122 section 19 forbids. The hand
+# criterion applied instead was the standing selection rule: an ordinary paper
+# that states pathway chemistry -- named enzymes, named substrates, named
+# products -- for an organism the paper itself names.
+#
+# DELIBERATELY EXCLUDED, even where the tool passed them:
+#   - heterologous metabolic-engineering papers (a pathway assembled in a yeast
+#     or E. coli host from foreign genes) -- the multi-organism ambiguity trap;
+#     the search queries themselves refuse TITLE:"engineering"/"engineered"/
+#     "de novo"/"production"/"heterologous" for this reason;
+#   - nanoparticle "biosynthesis" papers, which the title filter passes and
+#     which contain no enzymology at all;
+#   - papers whose abstract names no organism (PMC12715798 ammosamide,
+#     PMC12707348 biphenomycin, PMC13454174 Iridaceae isoflavone were all
+#     passing candidates and were dropped for exactly this -- a bare family or
+#     "bacterial" cannot become a requested_organism).
+#
+# EVERY PAPER WAS VERIFIED FETCHABLE THROUGH THE PROJECT'S OWN
+# t2pw.rag.acquire.fetch_full_text -- the same code path the run uses -- so no
+# leg can fail for an acquisition reason selection could have caught. All ten
+# returned 36k-99k chars. Evidence: evidence/orch741_cohort_fetch_verify.py,
+# data evidence/orch741/07-fetch-verify-data.json, G11 report ORCH-741/07.
+# (ORCH-741/05 is the same job's first attempt, which died in 0.25s on a tool
+# bug -- fetch_full_text takes a CandidatePaper, not a string. It is kept on the
+# record rather than overwritten, per the G11 sequence rule.)
+#
+# ---------------------------------------------------------------------------
+# ORGANISM MIX, and an honest warning that it biases the number UPWARD
+# ---------------------------------------------------------------------------
+#   bacterial 3   plant 3   fungal 2   mammalian 2
+#
+# C-122's mix was bacterial 4 / plant 4 / fungal 3 / mammalian 1; ORCH-734's was
+# 4 / 3 / 4 / 1. This cohort is LIGHTER on fungal and HEAVIER on mammalian.
+# ORCH-725 measured protein resolution by organism group at human 67%, plants
+# 53%, bacteria 39%, fungi 20%. So this mix should be EASIER than C-122's, and
+# its yield must NOT be compared like-for-like against C-122's 4/12. Two
+# different cohorts, two denominators, never merged. This is stated BEFORE
+# execution, not after seeing the result.
+#
+# ---------------------------------------------------------------------------
+# SCOPE STRINGS
+# ---------------------------------------------------------------------------
+# Every scope string below is the pathway name the PAPER ITSELF uses, taken from
+# its own title or abstract, and every organism is the one the paper names.
+# Nothing is reconstructed and nothing is broadened.
+#
+# STANDING TRAP, F-203: Stage 0 refuses a scope that is a strict GENERALIZATION
+# of what it reads in the full text -- C-122 lost PMC13474940 to exactly this
+# ("fumonisin biosynthesis" vs the paper's own "fumonisin B1 biosynthesis").
+# Scopes below are therefore written as specifically as the abstract states
+# them. Should a leg still die on scope_conflict, IT WILL NOT BE RE-RUN WITH AN
+# EDITED SCOPE: editing the input after seeing the result is the favourable
+# rerun the charter forbids.
+#
+# ---------------------------------------------------------------------------
+# WHAT WOULD NOT BE A DEFECT
+# ---------------------------------------------------------------------------
+#   - an F-179 refusal on a paper with no defensible reaction support. That is
+#     the safeguard working. C-122 counted two such refusals as misses and said
+#     so; this run will classify them the same way and not call them bugs.
+#   - a review_required PWML. That is a SUCCESS, per the success line above.
+#   - a stochastic Stage-1 miss on a single leg. Identical legs give materially
+#     different Stage-1 draws at temperature 0.
+#
+# A benchmark or yield failure does not by itself justify a code change. Each
+# miss is to be classified product_contract_violation / gold_data_defect /
+# policy_disagreement before any card is proposed. Only the first justifies code.
+# ---------------------------------------------------------------------------
+
+# --- bacterial ---------------------------------------------------------------
+# PMC12369002  C. jejuni HS:41 capsular sugars. Five enzymes named and ordered
+#              in the abstract (HS41.21, .20, .19, .18, .17) with explicit
+#              substrates and products at every step. The densest unambiguous
+#              reaction text in the pool.
+PMC12369002  | CDP-d-fucofuranose biosynthesis             | Campylobacter jejuni
+
+# PMC13418202  Benzoic acid -> benzohydroxamic acid by SaHAT, ATP- and
+#              Mg2+-dependent, with SaAmOx-AS and SaAmOx. A SHORT pathway,
+#              deliberately included: most of the sprint's exported PWMLs are
+#              1-8 reactions and a small native pathway is an ordinary case.
+PMC13418202  | benzohydroxamic acid biosynthesis           | Streptomyces angustmyceticus
+
+# PMC13534948  HapC condenses MAP analogs with MBC to form prodiginines. One
+#              enzyme, many products -- tests whether a single well-evidenced
+#              catalytic step survives a structural/mechanistic paper.
+PMC13534948  | prodiginine biosynthesis                    | Hahella chejuensis
+
+# --- plant -------------------------------------------------------------------
+# PMC13364408  Prenyltransferase AgPT1, cyclases AgCOC1/PpCOC1/PpCOC2,
+#              methyltransferases AgOMT1/AgOMT2. DISCLOSED RISK: the paper
+#              characterizes enzymes from TWO species (Apium graveolens and
+#              Peucedanum praeruptorum). The requested organism is the one in
+#              the title. A species_mismatch refusal on the Pp enzymes would be
+#              the gate working correctly, not a defect.
+PMC13364408  | furanocoumarin biosynthesis                 | Apium graveolens
+
+# PMC13170813  p-coumaroyl-CoA + agmatine -> p-coumaroylagmatine by agmatine
+#              coumaroyltransferase, named as the first committed step, plus a
+#              laccase at the last. Clean two-anchor plant pathway.
+PMC13170813  | hordatine biosynthesis                      | Hordeum vulgare
+
+# PMC13486683  Two NADPH-dependent benzaldehyde reductases -> benzyl alcohol,
+#              then benzyl benzoate and methyl salicylate. Longest full text in
+#              the cohort (98,747 chars) and compartment-aware, so it also
+#              exercises subcellular location handling.
+PMC13486683  | benzyl alcohol biosynthesis                 | Petunia hybrida
+
+# --- fungal ------------------------------------------------------------------
+# PMC12983300  NRPS VftPS assembles the cyclodipeptide scaffold, then
+#              prenyltransferase VftPT and acetyltransferase VftAT modify it.
+#              Three ordered steps, gene deletion plus recombinant protein.
+PMC12983300  | verrucofortine biosynthesis                 | Penicillium polonicum
+
+# PMC12505894  Cwh8 converts farnesyl pyrophosphate to farnesyl phosphate, named
+#              in the abstract as the FIRST STEP of farnesol biosynthesis.
+#              DISCLOSED: the paper is largely genetic/transcriptomic around one
+#              enzymatic conversion, so it is thinner on chemistry than the rest
+#              of this cohort. It is included rather than dropped because it is
+#              an ordinary paper of the kind a user would upload.
+PMC12505894  | farnesol biosynthesis                       | Candida albicans
+
+# --- mammalian ---------------------------------------------------------------
+# PMC12860957  GnT-IX branches O-Man glycans; B4GALT1, B4GALT4 and CHST1 then
+#              elongate them. Four named enzymes with assayed activities, in
+#              mouse brain. The strongest mammalian candidate in the pool.
+PMC12860957  | keratan sulfate biosynthesis                | Mus musculus
+
+# PMC12059215  HSD17B3, HSD17B12 and HSD17B7 converting androstenedione to
+#              testosterone, established by knockout and in vitro. NOTE: this is
+#              NOT the consumed "steroid biosynthesis" or "corticosteroid" topic
+#              -- it is a distinct pathway with distinct enzymes, and both of
+#              those legs are in different cohorts that this one never rescores.
+PMC12059215  | testosterone biosynthesis                   | Mus musculus

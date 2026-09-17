@@ -1,0 +1,553 @@
+{
+  "tool": "c122_cohort_candidates.py",
+  "query": "TITLE:\"biosynthesis\" AND OPEN_ACCESS:Y AND SRC:MED AND (PUB_TYPE:\"Journal Article\") NOT (PUB_TYPE:\"Review\") AND (ABSTRACT:\"human\" OR ABSTRACT:\"mice\" OR ABSTRACT:\"mouse\" OR ABSTRACT:\"hepatocyte\" OR ABSTRACT:\"HEK293\") AND (ABSTRACT:\"enzyme\" OR ABSTRACT:\"catalyzes\") NOT TITLE:\"engineering\" NOT TITLE:\"engineered\" NOT TITLE:\"de novo\" NOT TITLE:\"production\"",
+  "used_excluded": 73,
+  "verified": 45,
+  "passing": 28,
+  "candidates": [
+    {
+      "pmcid": "PMC13393713",
+      "title": "Dynamic alterations in labile heme levels and heme biosynthesis during inflammatory activation of macrophages.",
+      "ok": false,
+      "refused": "excluded_topic:heme"
+    },
+    {
+      "pmcid": "PMC13516573",
+      "title": "&lt;i&gt;Radix Bupleuri Chinensis&lt;/i&gt; Extract Ameliorates Doxorubicin-Induced Spermatogenic Dysfunction: Involvement of the GnRHR Signaling Pathway and Taurine Biosynthesis.",
+      "journal": "",
+      "year": "2026",
+      "chars": 31680,
+      "reaction_cue_hits": 1,
+      "enzyme_word_hits": 26,
+      "ok": false,
+      "refused": "weak_reaction_cues:1"
+    },
+    {
+      "pmcid": "PMC13483364",
+      "title": "Gut metaproteomics reveals activated arginine catabolism and impaired arginine biosynthesis in systemic lupus erythematosus.",
+      "journal": "",
+      "year": "2026",
+      "chars": 51069,
+      "reaction_cue_hits": 15,
+      "enzyme_word_hits": 69,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC13303184",
+      "title": "Disruption of Histidine Biosynthesis Impairs Outer Membrane Stability and Intracellular Survival of &lt;i&gt;Brucella melitensis&lt;/i&gt;, Resulting in Attenuated Virulence.",
+      "journal": "",
+      "year": "2026",
+      "chars": 52261,
+      "reaction_cue_hits": 8,
+      "enzyme_word_hits": 69,
+      "ok": false,
+      "refused": "weak_reaction_cues:8"
+    },
+    {
+      "pmcid": "PMC13189854",
+      "title": "An environmentally relevant mixture of organophosphate esters induces cholesterol biosynthesis in THP-1 macrophages.",
+      "ok": false,
+      "refused": "excluded_topic:cholesterol"
+    },
+    {
+      "pmcid": "PMC13188917",
+      "title": "An indole dimer antifungal metabolite from a rice seed endophyte inhibits ergosterol biosynthesis in fungal pathogens.",
+      "journal": "",
+      "year": "2026",
+      "chars": 60564,
+      "reaction_cue_hits": 3,
+      "enzyme_word_hits": 56,
+      "ok": false,
+      "refused": "weak_reaction_cues:3"
+    },
+    {
+      "pmcid": "PMC13179323",
+      "title": "SHP-1 agonist SC-43 limits methicillin-resistant Staphylococcus aureus infection through inhibition of heme biosynthesis.",
+      "ok": false,
+      "refused": "excluded_topic:heme"
+    },
+    {
+      "pmcid": "PMC13132386",
+      "title": "Methyltransferase complex subunit METTL3 maintains genome stability of erythroid cells via MTHFD1-mediated nucleotide biosynthesis.",
+      "journal": "",
+      "year": "2026",
+      "chars": 66552,
+      "reaction_cue_hits": 11,
+      "enzyme_word_hits": 89,
+      "ok": false,
+      "refused": "weak_reaction_cues:11"
+    },
+    {
+      "pmcid": "PMC13110176",
+      "title": "Tandem MADS-Box Genes FUL2 and MADS1 Form a Regulatory Module to Repress Serotonin Biosynthesis via Direct ASMT5 Activation in Tomato Fruit.",
+      "journal": "",
+      "year": "2026",
+      "chars": 41485,
+      "reaction_cue_hits": 24,
+      "enzyme_word_hits": 156,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC13120822",
+      "title": "B cell expression of an enzymatic intermediary in ether lipid biosynthesis promotes antibody responses and germinal center size.",
+      "journal": "",
+      "year": "2026",
+      "chars": 167361,
+      "reaction_cue_hits": 43,
+      "enzyme_word_hits": 190,
+      "ok": false,
+      "refused": "too_long:167361"
+    },
+    {
+      "pmcid": "PMC13000937",
+      "title": "Aryl hydrocarbon receptor impairs HK2-controlled flux of the hexosamine biosynthesis pathway to suppress NETosis in an N-glycosylation-dependent manner.",
+      "journal": "",
+      "year": "2026",
+      "chars": 45411,
+      "reaction_cue_hits": 18,
+      "enzyme_word_hits": 25,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC13012113",
+      "title": "Origin of eukaryotic plasmalogen biosynthesis by horizontal gene transfer from myxobacteria.",
+      "journal": "",
+      "year": "2026",
+      "chars": 45157,
+      "reaction_cue_hits": 8,
+      "enzyme_word_hits": 93,
+      "ok": false,
+      "refused": "weak_reaction_cues:8"
+    },
+    {
+      "pmcid": "PMC13046986",
+      "title": "Clemizole inhibits CrtN-driven staphyloxanthin biosynthesis in Staphylococcus aureus to enhance host immune clearance.",
+      "journal": "",
+      "year": "2026",
+      "chars": 78578,
+      "reaction_cue_hits": 20,
+      "enzyme_word_hits": 69,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC13490428",
+      "title": "NAPRT-mediated deamidated NAD biosynthesis enhances colon tissue resiliency and suppresses tumorigenesis.",
+      "journal": "",
+      "year": "2026",
+      "chars": 118624,
+      "reaction_cue_hits": 14,
+      "enzyme_word_hits": 158,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12848013",
+      "title": "The AHCY-adenosine complex rewires mRNA methylation to enhance fatty acid biosynthesis and tumorigenesis.",
+      "ok": false,
+      "refused": "no_fulltext:HTTPError: HTTP Error 500: "
+    },
+    {
+      "pmcid": "PMC12860957",
+      "title": "Enzymatic basis of branching and extension of O-Man glycans for keratan sulfate biosynthesis.",
+      "journal": "",
+      "year": "2026",
+      "chars": 60821,
+      "reaction_cue_hits": 103,
+      "enzyme_word_hits": 145,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC13364563",
+      "title": "Brusatol suppresses meningioma progression via targeting HMGCR to restrict the cholesterol biosynthesis and inhibit PI3K/AKT signaling pathway.",
+      "ok": false,
+      "refused": "excluded_topic:cholesterol"
+    },
+    {
+      "pmcid": "PMC13017889",
+      "title": "Gatm ablation disrupts spermatogenesis by impairing ribosome biogenesis and coupling defective steroid biosynthesis to immunoglobulin silencing.",
+      "journal": "",
+      "year": "2026",
+      "chars": 40038,
+      "reaction_cue_hits": 5,
+      "enzyme_word_hits": 137,
+      "ok": false,
+      "refused": "weak_reaction_cues:5"
+    },
+    {
+      "pmcid": "PMC12898085",
+      "title": "Melatonin Biosynthesis, Receptors, and the Microbiota-Tryptophan-Melatonin Axis: A Shared Dysbiosis Signature Across Cardiac Arrhythmias, Epilepsy, Malignant Proliferation, and Cognitive Trajectories.",
+      "journal": "",
+      "year": "2026",
+      "chars": 28882,
+      "reaction_cue_hits": 10,
+      "enzyme_word_hits": 31,
+      "ok": false,
+      "refused": "weak_reaction_cues:10"
+    },
+    {
+      "pmcid": "PMC12894677",
+      "title": "Maternal cariprazine exposure effects on lactating offspring sterol biosynthesis.",
+      "journal": "",
+      "year": "2026",
+      "chars": 27736,
+      "reaction_cue_hits": 4,
+      "enzyme_word_hits": 10,
+      "ok": false,
+      "refused": "weak_reaction_cues:4"
+    },
+    {
+      "pmcid": "PMC12911291",
+      "title": "ppAT drives glutamine-dependent purine biosynthesis and malignant progression in hepatocellular carcinoma.",
+      "journal": "",
+      "year": "2026",
+      "chars": 54990,
+      "reaction_cue_hits": 16,
+      "enzyme_word_hits": 76,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12838201",
+      "title": "GSNOR is essential for nitric oxide homeostasis and involved in aflatoxin biosynthesis and pathogenicity in &lt;i&gt;Aspergillus flavus&lt;/i&gt;.",
+      "journal": "",
+      "year": "2026",
+      "chars": 44441,
+      "reaction_cue_hits": 16,
+      "enzyme_word_hits": 112,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12807718",
+      "title": "MITE: the Minimum Information about a Tailoring Enzyme database for capturing specialized metabolite biosynthesis.",
+      "journal": "",
+      "year": "2026",
+      "chars": 38732,
+      "reaction_cue_hits": 85,
+      "enzyme_word_hits": 78,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12707348",
+      "title": "Biosynthesis of the Biphenomycin Family of Potent Antibiotics.",
+      "journal": "",
+      "year": "2025",
+      "chars": 41819,
+      "reaction_cue_hits": 73,
+      "enzyme_word_hits": 94,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12749881",
+      "title": "Human plasma-derived eNAMPT-containing extracellular vesicles promote NAD&lt;sup&gt;+&lt;/sup&gt; biosynthesis and thermogenesis in mice.",
+      "journal": "",
+      "year": "2025",
+      "chars": 38175,
+      "reaction_cue_hits": 6,
+      "enzyme_word_hits": 58,
+      "ok": false,
+      "refused": "weak_reaction_cues:6"
+    },
+    {
+      "pmcid": "PMC12637403",
+      "title": "Benzotriazole derivatives as alternate &lt;i&gt;O-&lt;/i&gt;acetylserine sulfhydrylase substrates to impair cysteine biosynthesis in gram-negative bacteria.",
+      "journal": "",
+      "year": "2025",
+      "chars": 99863,
+      "reaction_cue_hits": 117,
+      "enzyme_word_hits": 87,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12523804",
+      "title": "Evaluation of molecular mechanisms of (Z)-3-(pentadec-10'-enyl)-catechol (litreol) and synthetic derivatives as inhibitors of human leukotriene biosynthesis.",
+      "ok": false,
+      "refused": "refused_shape:\\bmechanisms of\\b"
+    },
+    {
+      "pmcid": "PMC12608088",
+      "title": "Vascular Endothelial NAMPT-Mediated NAD&lt;sup&gt;+&lt;/sup&gt; Biosynthesis Regulates Angiogenesis and Cardiometabolic Functions in Male Mice.",
+      "journal": "",
+      "year": "2025",
+      "chars": 65926,
+      "reaction_cue_hits": 14,
+      "enzyme_word_hits": 125,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12574845",
+      "title": "Influenza virus infection reprograms cholesterol biosynthesis to facilitate virus replication by the TAK1-ROR\u03b3 axis.",
+      "ok": false,
+      "refused": "excluded_topic:cholesterol"
+    },
+    {
+      "pmcid": "PMC12505894",
+      "title": "Cwh8 moonlights as a farnesyl pyrophosphate phosphatase and is essential for farnesol biosynthesis in &lt;i&gt;Candida albicans&lt;/i&gt;.",
+      "journal": "",
+      "year": "2025",
+      "chars": 59193,
+      "reaction_cue_hits": 23,
+      "enzyme_word_hits": 205,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12493134",
+      "title": "Cgm1 is a \u03b2-galactoside \u03b1-(1 \u2192 4)-mannosyltransferase involved in the biosynthesis of capsular glucuronoxylomannogalactan in Cryptococcus neoformans.",
+      "journal": "",
+      "year": "2025",
+      "chars": 46859,
+      "reaction_cue_hits": 100,
+      "enzyme_word_hits": 104,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12408371",
+      "title": "Deciphering phenylalanine-derived salicylic acid biosynthesis in plants.",
+      "journal": "",
+      "year": "2025",
+      "chars": 72542,
+      "reaction_cue_hits": 65,
+      "enzyme_word_hits": 183,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12369002",
+      "title": "Biosynthesis of CDP-\u03b1-d-fucofuranose and CDP-\u03b2-l-6-deoxy-altrofuranose for the Capsular Polysaccharides of &lt;i&gt;Campylobacter jejuni&lt;/i&gt;.",
+      "journal": "",
+      "year": "2025",
+      "chars": 42695,
+      "reaction_cue_hits": 134,
+      "enzyme_word_hits": 93,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12292393",
+      "title": "Natural CCD2 Variants and RNA Interference for Boosting Crocin Biosynthesis in Tomato.",
+      "journal": "",
+      "year": "2025",
+      "chars": 25400,
+      "reaction_cue_hits": 15,
+      "enzyme_word_hits": 53,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12297799",
+      "title": "Copy number amplification of TTPAL promotes cholesterol biosynthesis and esophageal squamous cell carcinoma progression via elevating NSUN2-mediated m5C modification of SREBP2 mRNA.",
+      "ok": false,
+      "refused": "excluded_topic:cholesterol"
+    },
+    {
+      "pmcid": "PMC12282279",
+      "title": "Natural variation of the streptococcal group A carbohydrate biosynthesis genes impacts host-pathogen interaction.",
+      "journal": "",
+      "year": "2025",
+      "chars": 34986,
+      "reaction_cue_hits": 5,
+      "enzyme_word_hits": 136,
+      "ok": false,
+      "refused": "weak_reaction_cues:5"
+    },
+    {
+      "pmcid": "PMC12232530",
+      "title": "Comparing Soy and Milk Protein Regulation of Hepatic Omega-3 Fatty Acid Biosynthesis.",
+      "journal": "",
+      "year": "2025",
+      "chars": 35891,
+      "reaction_cue_hits": 16,
+      "enzyme_word_hits": 34,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12278337",
+      "title": "Biosynthesis of Ephedrine Initiated by Pyridoxal Phosphate-Dependent Formation of Cathinone.",
+      "journal": "",
+      "year": "2025",
+      "chars": 9541,
+      "reaction_cue_hits": 29,
+      "enzyme_word_hits": 19,
+      "ok": false,
+      "refused": "too_short:9541"
+    },
+    {
+      "pmcid": "PMC12292240",
+      "title": "Targeting iNAMPT and NAD Biosynthesis to Break the Obesity-Associated Liver Cancer Link.",
+      "journal": "",
+      "year": "2025",
+      "chars": 43032,
+      "reaction_cue_hits": 5,
+      "enzyme_word_hits": 38,
+      "ok": false,
+      "refused": "weak_reaction_cues:5"
+    },
+    {
+      "pmcid": "PMC12143016",
+      "title": "Alkylglycerol monooxygenase represses prostanoid biosynthesis in a sex-dependent manner.",
+      "journal": "",
+      "year": "2025",
+      "chars": 52003,
+      "reaction_cue_hits": 21,
+      "enzyme_word_hits": 53,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12120702",
+      "title": "Conjugated Lithocholic Acid Activates Hepatic TGR5 to Promote Lipotoxicity and MASLD-MASH Transition by Disrupting Carnitine Biosynthesis.",
+      "ok": false,
+      "refused": "excluded_topic:carnitine"
+    },
+    {
+      "pmcid": "PMC12053025",
+      "title": "Eco-friendly biosynthesis of silver nanoparticles using marine-derived Fusarium exquisite: optimization, characterization, and evaluation of antimicrobial, antioxidant, and cytotoxic activities.",
+      "journal": "",
+      "year": "2025",
+      "chars": 41463,
+      "reaction_cue_hits": 16,
+      "enzyme_word_hits": 34,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12086407",
+      "title": "Impaired 11\u03b2-Hydroxysteroid Dehydrogenase Type 2 Activity in Kidney Disease Disrupts 11-Oxygenated Androgen Biosynthesis.",
+      "journal": "",
+      "year": "2025",
+      "chars": 59401,
+      "reaction_cue_hits": 39,
+      "enzyme_word_hits": 43,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12059215",
+      "title": "Functional Analysis of HSD17B3-Deficient Male Mice Reveals Roles for HSD17B7 and HSD17B12 in Testosterone Biosynthesis.",
+      "journal": "",
+      "year": "2025",
+      "chars": 64038,
+      "reaction_cue_hits": 41,
+      "enzyme_word_hits": 116,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12024545",
+      "title": "Hydroxyzine Effects on Post-Lanosterol Biosynthesis in Smith-Lemli-Opitz Syndrome (SLOS) Models.",
+      "journal": "",
+      "year": "2025",
+      "chars": 31747,
+      "reaction_cue_hits": 38,
+      "enzyme_word_hits": 34,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC11929427",
+      "title": "Semirational Design of SenC to Enhance Organic Selenium Biosynthesis.",
+      "journal": "",
+      "year": "2025",
+      "chars": 37293,
+      "reaction_cue_hits": 62,
+      "enzyme_word_hits": 100,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC11906770",
+      "title": "Homologous relationship between FabG involved in fatty acid biosynthesis and SDR on chromosome II in the multi-chromosome pathogen Vibrio anguillarum.",
+      "journal": "",
+      "year": "2025",
+      "chars": 44554,
+      "reaction_cue_hits": 70,
+      "enzyme_word_hits": 130,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12333353",
+      "title": "Evolution of Small Molecule Inhibitors of &lt;i&gt;Mycobacterium tuberculosis&lt;/i&gt; Menaquinone Biosynthesis.",
+      "ok": false,
+      "refused": "excluded_topic:menaquinone"
+    },
+    {
+      "pmcid": "PMC11880921",
+      "title": "Correlation of GD2 Biosynthesis Enzymes With Cancer Stem Cell Markers in Human Breast Cancer.",
+      "journal": "",
+      "year": "2025",
+      "chars": 22307,
+      "reaction_cue_hits": 10,
+      "enzyme_word_hits": 49,
+      "ok": false,
+      "refused": "weak_reaction_cues:10"
+    },
+    {
+      "pmcid": "PMC11871226",
+      "title": "ACSS2 drives senescence-associated secretory phenotype by limiting purine biosynthesis through PAICS acetylation.",
+      "journal": "",
+      "year": "2025",
+      "chars": 67241,
+      "reaction_cue_hits": 17,
+      "enzyme_word_hits": 122,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC12832909",
+      "title": "Tricyclazole alleviates &lt;i&gt;Fonsecaea pedrosoi&lt;/i&gt;-induced immune suppression of neutrophils by inhibiting DHN-melanin biosynthesis.",
+      "journal": "",
+      "year": "2025",
+      "chars": 35965,
+      "reaction_cue_hits": 6,
+      "enzyme_word_hits": 25,
+      "ok": false,
+      "refused": "weak_reaction_cues:6"
+    },
+    {
+      "pmcid": "PMC12689973",
+      "title": "Melatonin mitigates cadmium-induced oxidative damage and modulates polysaccharide biosynthesis in &lt;i&gt;Bletilla striata&lt;/i&gt;.",
+      "journal": "",
+      "year": "2025",
+      "chars": 54499,
+      "reaction_cue_hits": 16,
+      "enzyme_word_hits": 99,
+      "ok": true,
+      "refused": ""
+    },
+    {
+      "pmcid": "PMC11768096",
+      "title": "Biotechnological Phytocomplex of <i>Zanthoxylum piperitum</i> (L.) DC. Enhances Collagen Biosynthesis In Vitro and Improves Skin Elasticity In Vivo.",
+      "journal": "",
+      "year": "2025",
+      "chars": 60063,
+      "reaction_cue_hits": 8,
+      "enzyme_word_hits": 58,
+      "ok": false,
+      "refused": "weak_reaction_cues:8"
+    },
+    {
+      "pmcid": "PMC11754754",
+      "title": "Structure and mechanism of biosynthesis of Streptococcus mutans cell wall polysaccharide.",
+      "journal": "",
+      "year": "2025",
+      "chars": 80839,
+      "reaction_cue_hits": 109,
+      "enzyme_word_hits": 136,
+      "ok": true,
+      "refused": ""
+    }
+  ]
+}
