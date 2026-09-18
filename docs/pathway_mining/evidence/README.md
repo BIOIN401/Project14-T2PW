@@ -42,3 +42,17 @@ or `pkill python` was used anywhere.
 
 Both commands are in [`../testing.md`](../testing.md). `--basetemp` is mandatory
 and its parent must already exist.
+
+## Tip measurements
+
+`001` and `002` were taken mid-branch, before the documentation commit's two
+report-wording fixes. `003` and `004` re-measure the same two gates at the
+branch tip and are the ones to cite.
+
+| File | Gate | Result |
+|---|---|---|
+| `003-smoke-feature-disabled-tip.json` | production SMOKE, feature OFF | **508 passed** in 45.67 s |
+| `004-mining-suite-tip.json` | the pathway-mining suite | **222 passed** in 4.09 s |
+
+Both: exit `completed` / code 0, **final surviving count 0**, cleanup success,
+heavy lock `EXP-MINING` acquired and released, measured-tree `violations: []`.
