@@ -16,7 +16,7 @@ from collections import Counter
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
 from t2pw.mining.admission import ADMITTED_STATUSES
-from t2pw.mining.artifacts import STATE_COMPLETED
+from t2pw.mining.artifacts import STATE_COMPLETED, STATE_STOPPED
 from t2pw.mining.config import MiningConfig
 from t2pw.mining.models import (
     STATUS_ACCEPTED,
@@ -213,12 +213,22 @@ def build_report(summary: Mapping[str, Any], *, state: Any, config: MiningConfig
     add(f"# Pathway mining run `{summary['run_id']}`")
     add("")
     if not summary["completed_normally"]:
-        add(
-            f"> **This run did not complete normally.** State: "
-            f"`{summary['completion_state']}`. Stop reason: `{summary['stop_reason']}`"
-            f"{' - ' + summary['stop_detail'] if summary.get('stop_detail') else ''}."
-        )
-        add("> Every completed round's artifacts are present; nothing below is final.")
+        # A limit stop is a legitimate outcome and is worded differently from a
+        # cancellation or a failure. Both are distinguished from a completed run.
+        if summary["completion_state"] == STATE_STOPPED:
+            add(
+                "> **This run stopped at a configured limit rather than finishing its "
+                f"work.** Stop reason: `{summary['stop_reason']}`"
+                f"{' - ' + summary['stop_detail'] if summary.get('stop_detail') else ''}."
+            )
+            add("> The graph below is what the budget bought, not a complete answer.")
+        else:
+            add(
+                f"> **This run did not complete normally.** State: "
+                f"`{summary['completion_state']}`. Stop reason: `{summary['stop_reason']}`"
+                f"{' - ' + summary['stop_detail'] if summary.get('stop_detail') else ''}."
+            )
+            add("> Every completed round's artifacts are present; nothing below is final.")
         add("")
     add(f"- **Target species:** {summary['target_species']} "
         f"(normalized `{summary['target_species_normalized']}`)")

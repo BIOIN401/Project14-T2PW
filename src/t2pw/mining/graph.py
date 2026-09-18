@@ -784,7 +784,8 @@ class ResearchGraph:
         chosen.rationale = (
             f"selected as the primary component: evidence-weighted topic relevance "
             f"{best[0]:.4f} over {best[1]} reaction(s) and {best[2]} distinct paper(s); "
-            f"{len(scored) - 1} other component(s) retained as candidates"
+            f"{len(scored) - 1} other admitted component(s) retained as candidate "
+            "subgraphs (quarantined components were never eligible)"
         )
         self.primary_selection_rationale = chosen.rationale
         for rid in chosen.reaction_ids:
