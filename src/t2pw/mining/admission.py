@@ -226,6 +226,37 @@ def build_reaction(
     )
 
 
+def clear_disputed_attributes(reaction: ResearchReaction, conflicts: Sequence[Any]) -> List[str]:
+    """Blank every attribute independent papers disagree about, on the graph node.
+
+    Applied to the STORED reaction after a merge, not only to the freshly built
+    one: a reaction admitted in round 1 with one enzyme attribution, contradicted
+    in round 2, must stop displaying the round-1 value. Both positions stay in
+    ``conflicts.json`` and on the claims -- what is removed is the graph node's
+    silent assertion that one of them is the answer.
+    """
+    cleared: List[str] = []
+    for conflict in conflicts:
+        if len(getattr(conflict, "paper_ids", []) or []) < 2:
+            continue
+        attribute = getattr(conflict, "attribute", "")
+        if attribute == "enzyme":
+            if reaction.enzyme_names or reaction.enzyme_entity_ids:
+                reaction.enzyme_names = []
+                reaction.enzyme_entity_ids = []
+                cleared.append("enzyme")
+        elif attribute == "direction" and reaction.direction not in ("", DIRECTION_UNSPECIFIED):
+            reaction.direction = DIRECTION_UNSPECIFIED
+            cleared.append("direction")
+        elif attribute == "reversible" and reaction.reversible is not None:
+            reaction.reversible = None
+            cleared.append("reversible")
+        elif attribute == "compartment" and reaction.compartment:
+            reaction.compartment = ""
+            cleared.append("compartment")
+    return cleared
+
+
 def judge(
     claim: ExtractedClaim,
     *,
@@ -446,5 +477,6 @@ __all__ = [
     "AdmissionOutcome",
     "evidence_level",
     "build_reaction",
+    "clear_disputed_attributes",
     "judge",
 ]

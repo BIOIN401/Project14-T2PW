@@ -91,14 +91,16 @@ def git_state(cwd: Optional[Path] = None) -> Dict[str, Any]:
 
 
 def environment_state() -> Dict[str, Any]:
-    versions: Dict[str, str] = {}
-    for module in ("streamlit", "openai", "httpx", "jsonschema", "pandas"):
-        try:
-            import importlib
+    # importlib.metadata rather than module.__version__: reading __version__ is
+    # deprecated on some of these and must not emit a warning during a run.
+    from importlib import metadata
 
-            versions[module] = str(getattr(importlib.import_module(module), "__version__", "?"))
+    versions: Dict[str, str] = {}
+    for package in ("streamlit", "openai", "httpx", "jsonschema", "pandas", "lxml"):
+        try:
+            versions[package] = metadata.version(package)
         except Exception:  # noqa: BLE001
-            versions[module] = "absent"
+            versions[package] = "absent"
     return {
         "python": sys.version.split()[0],
         "platform": platform.platform(),

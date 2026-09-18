@@ -39,7 +39,7 @@ from t2pw.mining import frontier as frontier_mod
 from t2pw.mining import queries as queries_mod
 from t2pw.mining import viz
 from t2pw.mining.acquisition import Acquirer, LoadedPaper, PaperSource
-from t2pw.mining.admission import ADMITTED_STATUSES, judge
+from t2pw.mining.admission import ADMITTED_STATUSES, clear_disputed_attributes, judge
 from t2pw.mining.artifacts import (
     INCOMPLETE_STATES,
     STATE_CANCELLED,
@@ -610,6 +610,20 @@ class MiningController:
         for cid in outcome.conflict_ids:
             if cid not in stored_reaction.conflict_ids:
                 stored_reaction.conflict_ids.append(cid)
+        # A reaction admitted in an earlier round with one attribution must stop
+        # displaying it once independent papers disagree. Applied to the STORED
+        # node, after the merge, so a round-1 value cannot survive a round-2
+        # contradiction.
+        cleared = clear_disputed_attributes(
+            stored_reaction, self.state.store.conflicts_for(stored.claim_identity)
+        )
+        if cleared:
+            stored_reaction.note(
+                index,
+                "disputed_attribute_cleared",
+                ", ".join(cleared) + " (positions retained in conflicts.json)",
+                art.utcnow(),
+            )
 
         if existing is None:
             if outcome.admitted:

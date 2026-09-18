@@ -139,6 +139,23 @@ from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, g
 from t2pw.config import rag_config  # noqa: E402  (all imports here follow the sys.path shim above)
 
 st.set_page_config(page_title="PWML Multi-Stage Pipeline", layout="wide")
+
+# --- experimental pathway-mining mode (additive, OFF by default) -------------
+# The entire cost of this when T2PW_PATHWAY_MINING_ENABLED is unset is one
+# function call that reads one environment variable and returns False, so the
+# default render of this page is unchanged. Only when the flag is on does a
+# "Mode" radio appear in the sidebar; only when the user selects the mining mode
+# does render_entry import the mining package and take over the render. Pathway
+# mining produces a research graph, never PWML, and never touches this page's
+# pipeline state. See docs/pathway_mining/streamlit.md.
+try:
+    from t2pw.mining.ui.entry import render_entry as _render_mining_entry
+
+    if _render_mining_entry(st):
+        st.stop()
+except ImportError:  # pragma: no cover - the experimental package is optional
+    pass
+
 st.title("PWML Extraction -> Inference Pipeline (LM Studio)")
 
 REFINEMENT_STATE_DEFAULTS = {
