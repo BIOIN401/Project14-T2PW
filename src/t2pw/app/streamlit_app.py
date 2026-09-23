@@ -7234,3 +7234,11 @@ if st.session_state.get("pipeline_ready"):
                 mime="application/json",
                 key="dl_libsbml_checker",
             )
+
+# -- Reaction Evidence (ORCH-742b) --------------------------------------------
+# Read-only review of the run's existing artifacts plus a deterministic .txt
+# export. Module level, outside the pipeline_ready block, so a saved run
+# directory can be reviewed with no run loaded. Presentation only.
+from t2pw.app.reaction_evidence_view import render_reaction_evidence  # noqa: E402
+
+render_reaction_evidence()

@@ -1,0 +1,139 @@
+PATHWAY EVIDENCE REPORT
+=======================
+Paper: PMC12096016
+Pathway: enterobactin biosynthesis
+Requested organism (Stage 0): Escherichia coli
+Species (final payload): Escherichia coli (taxonomy 562)
+Coverage: 0.75
+Minimum core satisfied: true
+Surviving processes: 9
+Quarantined processes: 1
+Release status: review_required
+Reactions itemised: 5 (transports: 1, interactions: 3; counted above, not itemised)
+Surviving reactions read from: final_mapped.json
+Artifacts read: coverage_summary.json, final_mapped.json, LEG_TRACE.jsonl, quarantine_report.json, removed_entity_report.json
+
+SURVIVING REACTIONS (5)
+-----------------------
+REACTION 1  [final payload /processes/reactions/0; lock rxn_lock_003]
+Name: EntC-catalyzed isomerization of chorismate to isochorismate
+Equation: chorismate -> isochorismate
+Substrates: chorismate
+Products: isochorismate
+Enzyme(s): Isochorismate synthase (protein_complex; components: EntC)
+Species: Escherichia coli
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - chorismate: matched; db_status=legacy_id_unverified; pathbank_compound_id=7748, chebi_id=17333, kegg_id=C00251, hmdb_id=HMDB0012199
+  - isochorismate: matched; db_status=legacy_id_unverified; pathbank_compound_id=40741, chebi_id=29780, kegg_id=C00885
+  - Isochorismate synthase: matched; pathbank_protein_complex_id=1143
+Evidence:
+  1. "EntC (isochorismate synthase; EC 5.4.4.2)"
+Source:
+  - supplied paper PMC12096016 via paper_extraction
+
+REACTION 2  [final payload /processes/reactions/1; lock rxn_lock_002]
+Name: EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate
+Equation: isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate
+Substrates: isochorismate
+Products: 2,3-dihydro-2,3-dihydroxybenzoate, pyruvate
+Enzyme(s): isochorismatase (protein_complex; components: EntB)
+Species: Escherichia coli
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - isochorismate: matched; db_status=legacy_id_unverified; pathbank_compound_id=40741, chebi_id=29780, kegg_id=C00885
+  - 2,3-dihydro-2,3-dihydroxybenzoate: novel; db_status=ambiguous; no identifier recorded
+  - pyruvate: matched; db_status=legacy_id_unverified; pathbank_compound_id=108870
+  - isochorismatase: matched; pathbank_protein_complex_id=1189
+Evidence:
+  1. "isochorismate is converted to 2,3-diDHB and pyruvate by EntB isochorismatase activity"
+Source:
+  - supplied paper PMC12096016 via paper_extraction
+
+REACTION 3  [final payload /processes/reactions/2; lock rxn_lock_001]
+Name: EntA dehydrogenase conversion of 2,3-diDHB to 2,3-DHB
+Equation: 2,3-dihydro-2,3-dihydroxybenzoate -> 2,3-dihydroxybenzoic acid
+Substrates: 2,3-dihydro-2,3-dihydroxybenzoate
+Products: 2,3-dihydroxybenzoic acid
+Enzyme(s): oxidoreductase (entA) (protein_complex; components: EntA)
+Species: Escherichia coli
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - 2,3-dihydro-2,3-dihydroxybenzoate: novel; db_status=ambiguous; no identifier recorded
+  - 2,3-dihydroxybenzoic acid: matched; db_status=legacy_id_unverified; pathbank_compound_id=40792, chebi_id=18026
+  - oxidoreductase (entA): matched; pathbank_protein_complex_id=1190
+Evidence:
+  1. "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
+Source:
+  - supplied paper PMC12096016 via paper_extraction
+
+REACTION 4  [final payload /processes/reactions/3; lock rxn_lock_005]
+Name: EntE adenylation of 2,3-DHB
+Equation: 2,3-dihydroxybenzoic acid + Adenosine triphosphate -> 2,3-dihydroxybenzoyl-AMP
+Substrates: 2,3-dihydroxybenzoic acid, Adenosine triphosphate
+Products: 2,3-dihydroxybenzoyl-AMP
+Enzyme(s): EntE complex (protein_complex; components: EntE)
+Species: Escherichia coli
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - 2,3-dihydroxybenzoic acid: matched; db_status=legacy_id_unverified; pathbank_compound_id=40792, chebi_id=18026
+  - Adenosine triphosphate: matched; db_status=matched_offline_name_index; pathbank_compound_id=414, chebi_id=15422, kegg_id=C00002, hmdb_id=HMDB0000538
+  - 2,3-dihydroxybenzoyl-AMP: novel; db_status=unmatched; no identifier recorded
+  - EntE complex: ambiguous; no identifier recorded
+Evidence:
+  1. "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+  2. "2,3-DHB is adenylated by EntE in an ATP-dependent reaction"
+Source:
+  - supplied paper PMC12096016 via paper_extraction
+
+REACTION 5  [final payload /processes/reactions/4; lock rxn_lock_006]
+Name: EntF-catalyzed enterobactin synthesis
+Equation: 2,3-dihydroxybenzoyl-AMP + L-serine -> enterobactin
+Substrates: 2,3-dihydroxybenzoyl-AMP, L-serine
+Products: enterobactin
+Enzyme(s): EntF complex (protein_complex; components: EntF); EntE complex (protein_complex; components: EntE); enterobactin synthase complex (protein_complex; components: EntB, EntD, EntF, EntE)
+Species: Escherichia coli
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - 2,3-dihydroxybenzoyl-AMP: novel; db_status=unmatched; no identifier recorded
+  - L-serine: matched; db_status=legacy_id_unverified; pathbank_compound_id=120, chebi_id=17115, kegg_id=C00065, hmdb_id=HMDB0000187
+  - enterobactin: matched; db_status=legacy_id_unverified; pathbank_compound_id=40793, chebi_id=28855
+  - EntF complex: novel; no identifier recorded
+  - EntE complex: ambiguous; no identifier recorded
+  - enterobactin synthase complex: matched; pathbank_protein_complex_id=3623
+Evidence:
+  1. "Enterobactin production from activated 2,3-DHB then involves three EntF-catalyzed cycles of condensation with L-serine"
+  2. "three EntF-catalyzed cycles of condensation with L-serine"
+  3. "EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71)"
+  4. "catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF"
+Source:
+  - supplied paper PMC12096016 via paper_extraction
+
+QUARANTINED / REJECTED (1)
+--------------------------
+QUARANTINED 1  [pre-quarantine /processes/reactions/5; reaction; lock rxn_lock_004]
+Name: EntD-catalyzed phosphopantetheinylation of EntB
+Equation: apo-EntB -> holo-EntB
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: apo-EntB
+Evidence:
+  1. "the ArCP domain of apo-EntB itself must be phosphopantetheinylated at Ser245 by the accessory enzyme EntD to form holo-EntB"
+  2. "phosphopantetheinylated at Ser245 by the accessory enzyme EntD"
+
+REMOVED ENTITIES (3)
+--------------------
+- compounds NADH: unreferenced_after_quarantine
+- proteins apo-EntB: degree_zero_after_quarantine
+- protein_complexes EntD complex: degree_zero_after_quarantine
+
+CORE COVERAGE
+-------------
+Requested (16): 2,3-dihydroxybenzoic acid (2,3-DHB), chorismate, isochorismate, 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB), enterobactin, L-serine, NADH, pyruvate, ATP, EntB, EntC, EntA, EntE, EntF, EntD, Fur
+Matched (12): 2,3-dihydroxybenzoic acid (2,3-DHB), chorismate, isochorismate, 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB), enterobactin, L-serine, pyruvate, EntB, EntC, EntA, EntE, EntF
+Unmatched (4): NADH, ATP, EntD, Fur
