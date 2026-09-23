@@ -10474,3 +10474,42 @@ Full record: [`ORCH-741-VERIFICATION-RUN-RESULT.md`](ORCH-741-VERIFICATION-RUN-R
 | G11 | eight bounded jobs, **all `FINAL SURVIVING COUNT : 0` / `cleanup : success`**; the run job terminated **23 descendants** and left none. Heavy lock acquired and released. Four pre-existing VS Code language servers reported, **never killed**. SMOKE **508 passed** on the frozen tree before the cohort |
 | **decision** | **NONE TAKEN. The reliability-closure call is the product owner's.** 70 % is not § 23's ~80 %; the misses **are** isolated (`n = 1` each) but **two of the three are deterministic, not stochastic**, so the alternative condition is only half met. I am not pre-empting it |
 | next | (1) **import the six clean files and check coordinates** — start with `ORCH741_PMC13364408`, import `ORCH741_PMC13486683.F195` **last**; (2) `F-204`'s observability half is cheap and self-contained; (3) `F-205` needs adjudication first; (4) `F-199` still stands |
+
+---
+
+## `ORCH-742` — three parallel workstreams DISPATCHED: mining stability, reaction-evidence UI, evaluation v2 · 2026-09-23
+
+**No merge is authorized by this entry.** Three isolated branches, three worktrees outside the
+primary checkout, none sharing a writable tree. Production stays frozen at `5f6a7aa3` (`D-102`);
+no worker is authorized to change extraction, RAG admission, mapping, quarantine, prompts or
+PathWhiz handling. `main` untouched.
+
+### Product-owner answers taken before dispatch
+
+| question | answer |
+|---|---|
+| live pathway-mining pilot | **NOT RUN.** No frozen pilot config exists (the `cli.md` example uses placeholder paper IDs). Mining lane is the two stability fixes and their tests only |
+| where completed supported-reaction labels go | a **new versioned gold file**; `pinned_v1.json` stays byte-identical so `T-107`/`T-108`/`T-109` scoring cannot move |
+| paper text for exhaustiveness | read-only EuropePMC full-text fetch **allowed**, no LLM |
+| ledger | tracked here as `ORCH-742a/b/c` |
+
+### Lanes
+
+| lane | branch | worktree | base | scope |
+|---|---|---|---|---|
+| `ORCH-742a` | `experiment/pathway-mining` | `C:/t/mining` | `9c085967` | preflight probe token budget (hardcoded `8`) and enforcing `MiningBudgets.max_new_reactions_per_round` (declared, never checked). No live call |
+| `ORCH-742b` | `feature/reaction-evidence-ui` | `C:/t/evidence-ui` | `9f13188e` | Streamlit reaction-evidence review + deterministic `.txt` export, read from existing run artifacts only. No `.env` in this worktree, so no LLM call is possible |
+| `ORCH-742c` | `eval/reaction-rag-metrics` | `C:/t/eval` | `9f13188e` | evaluation only: completed gold labels (new file), reaction P/R/F1, entity accuracy, mapped-ID correctness, RAG retrieval metrics, un-gated RAG influence audit, reproducibility-metadata completeness, fallback-embedding cache test. Embeddings allowed, chat/completion calls are not |
+
+### Protected state recorded before dispatch
+
+The primary tree's dirty files were fingerprinted before any worktree was created, and are re-checked at
+close. `src/t2pw/app/streamlit_app.py` = `sha256:47e4fafa…` (the protected 35 ins / 2 del edit, unchanged
+since `ORCH-741`). Both new branches are cut from the **committed** tip, so that edit is in no worktree.
+
+### Overlap to watch
+
+`ORCH-742a` and `ORCH-742b` both touch `src/t2pw/app/streamlit_app.py`: mining adds a 17-line hook right after
+`st.set_page_config` that calls `st.stop()` in mining mode; the evidence UI adds its hook near the results
+render. Integration is planned only after both are reviewed, and must also prove the protected uncommitted
+edit still applies.
