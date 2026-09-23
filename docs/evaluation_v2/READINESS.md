@@ -1,0 +1,50 @@
+# Evaluation v2 — readiness for the upcoming results run (ORCH-742c)
+
+## Verdict
+
+**READY WITH GAPS:** (1) reaction precision/recall/F1 are measurable only on the four newly complete gold
+papers — any other paper needs its own exhaustive gold first; (2) per-call LLM reproducibility metadata is
+incomplete at the source — 6 of 11 fields are not recorded (served model, per-call temperature, seed,
+provider identity, token usage, and a response hash that is written EMPTY on every committed record), and
+closing that needs production hooks this lane may not add; (3) the mapped-ID `wrong_identity` flag is a
+candidate list with a measured precision of 5/21 on T-107/T-108 and needs adjudication or a synonym source;
+(4) retrieval-level negative-query rejection is structurally 0% (the production retriever has no score floor
+and normalizes scores per query), and the archived A/B split sees only persisted candidate spans;
+(5) the fallback-embedding cache defect is confirmed and unfixed, so a results run made during an embedding
+outage would silently poison later runs' retrieval.
+
+## What is ready, with the measured sample (from `SAMPLE_REPORT.md`)
+
+| capability | status | sample |
+|---|---|---|
+| exhaustive gold for positive cases | 4 cases, 18 in-scope reactions, every quote verified in the fetched text and every in-scope quote in the committed text | PMC12096016 (5), PMC12657337 (3), PMC12312563 (1), PMC12421875 (9) |
+| reaction P / R / F1, two tables (D-093) | ready for those 4 papers | canonical, 26 legs: P 86.0% (117/136), R 96.6% (114/118), F1 91.0%; fallback, 44 legs: P 64.5%, R 96.2%, F1 77.2% |
+| unsupported-reaction rate | ready; lineage-aware, upper bound reported | canonical 2.8% (4/141, ≤ 6.4%); fallback 17.0% (63/370, ≤ 33.2%) |
+| entity accuracy | ready | canonical substrate 96.5%, product 97.9%, enzyme 100% of matched, species 100% of known (12 unknown) |
+| evidence support | ready | canonical 77.3% of rows carry a verbatim paper quote; fallback 50.8% (119 rows carry only document dumps) |
+| strict vs old matcher | reported side by side on the same rows | canonical old recall 90.7% vs v2 96.6% (7 rows the old matcher refused on an enzyme-name contradiction); fallback 2 rows credited by old only through congener containment (`DHNA` for `DHNA-CoA`) |
+| mapped-ID correctness | ready as a candidate flag | 115 canonical legs: 1201 correct, 510 unresolved/novel, 102 wrong-identity candidates, 17 not evaluable |
+| live retrieval (production retriever, `embedding_mode: api`) | ready | target-quote Recall@1/3/5 16.7% / 22.2% / 44.4%, P@5 8.9%, MRR 0.293; participants-named Recall@5 61.1%, MRR 0.437; negative rejection 0/49 |
+| retrieval vs LLM-use vs admission (A/B/C/D) | ready on archived reports | untruncated 34 legs: A 5, B 2, C 8, admitted 2, D 0 (137 already in Stage 1); truncated 28 legs: B 2, C 4 |
+| chunk provenance | ready | 144/144 live hits and 8,733/8,733 persisted candidates: provenance present, `validate_provenance` ok, valid source reference |
+| un-gated RAG influence audit | ready, report-only | Stage-2 merge output: 20 candidates in 13 of 162 legs (3 on external retrieved evidence); canonical final: 8 in 7 of 112 (3 external) |
+| reproducibility-metadata completeness | measured | 663 committed model_attempt records (T-108 only): model, finish_reason, request(=prompt) hash, retry count 100%; the other 6 fields 0% |
+
+## Gap detail, with the exact site of each future hook (none added here)
+
+| gap | site |
+|---|---|
+| served model | `src/t2pw/llm/client.py::chat_detailed`, after `_client.chat.completions.create`: `resp.model` |
+| per-call temperature | `chat_detailed` `kwargs['temperature']` → `src/t2pw/batch/leg_trace.py::record_model_attempt` (no parameter today) |
+| seed | `chat_detailed` kwargs; no evaluation-only configuration surface exists, so none was forced |
+| provider identity | `chat_detailed`: OpenRouter's `provider` field on the response |
+| response hash | `client.py` `CompletionDiagnostics.note` → `_publish_attempt` runs before `diagnostics.response_hash` is assigned |
+| token usage | `client.py::_record_usage` only accumulates process totals |
+| fallback embedding cache | `src/t2pw/rag/embed.py::Embedder.embed_one` caches `_embed_uncached`'s lexical fallback under the model key |
+| identity synonyms | ChEBI enrichment: all 265 cached lookups are errors (`data/enrichment_cache.json`) |
+
+## What this verdict does not say
+
+It does not accept, reject or re-score T-107, T-108 or T-109; it does not claim the pipeline is biologically
+correct because a PWML was produced; and the gap list is not a request to change production — each item is the
+product owner's call.
