@@ -56,3 +56,34 @@ branch tip and are the ones to cite.
 
 Both: exit `completed` / code 0, **final surviving count 0**, cleanup success,
 heavy lock `EXP-MINING` acquired and released, measured-tree `violations: []`.
+
+## ORCH-742a: mining stability fixes
+
+Two G9 corrections, committed in `ad4245f5`: the preflight probe budget
+(hardcoded `8` → `PROBE_MAX_TOKENS = 64`, override
+`PATHWAY_MINING_PROBE_MAX_TOKENS`) and the enforcement of
+`max_new_reactions_per_round`. No live call in any run below. Every run: final
+surviving count **0**, cleanup success, measured-tree `violations: []`.
+
+| File | Tree / SHA | Selection | Result |
+|---|---|---|---|
+| `005-mining-suite-untouched-tip` | `C:/t/mining` @ `9c085967` | `tests/test_mining_*.py` | **222 passed** (baseline before any change) |
+| `006-g9-base-arm` | `C:/t/mining-base` @ `9c085967` | `test_mining_stability.py` (earlier assertion order) | **3 failed** (behavioural) |
+| `007-g9-tip-arm` | `C:/t/mining` working tree, before the commit | `test_mining_stability.py` + `test_mining_budget.py` | **23 passed** |
+| `008-g9-base-arm-final` | `C:/t/mining-base` @ `9c085967` | `test_mining_stability.py` exactly as committed | **3 failed** (behavioural) |
+| `009-mining-suite-fix-tip` | `C:/t/mining` @ `ad4245f5` | `tests/test_mining_*.py` | **226 passed** |
+| `010-smoke-feature-disabled-fix-tip` | `C:/t/mining` @ `ad4245f5` | production SMOKE, `T2PW_PATHWAY_MINING_ENABLED` unset | **508 passed** |
+
+`008` is the G9 base arm to cite. Its three failures are assertions, not
+import errors: the preflight **failed** a scripted reasoning model that needs
+more than 8 tokens (`'fail' == 'ok'`); the failure detail named neither the
+budget nor `PATHWAY_MINING_PROBE_MAX_TOKENS`; and a run with
+`max_new_reactions_per_round=1` went on past round 1 and stopped with
+`frontier_exhausted`. `006` is the same file with test 1's assertions in a
+different order: it failed 3/3 as well, and is kept because it was run. For
+both base arms the test file was copied into the base worktree, run with that
+tree's own launcher (`--expect-tree C:/t/mining-base`), then deleted.
+
+`007` measured the uncommitted working tree. `009` and `010` measured the
+commit and are the ones to cite for the tip. `005`, `009` and `010` held the
+heavy lock `ORCH-742a` (acquired and released). The G9 arms did not take it.

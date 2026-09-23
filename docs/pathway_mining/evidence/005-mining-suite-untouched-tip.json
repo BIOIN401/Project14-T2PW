@@ -1,0 +1,148 @@
+{
+  "label": "mining-suite-untouched-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pathway_mining/evidence/005-mining-suite-untouched-tip.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/mining/r005",
+    "tests/test_mining_admission.py",
+    "tests/test_mining_artifacts.py",
+    "tests/test_mining_budget.py",
+    "tests/test_mining_cli.py",
+    "tests/test_mining_extraction.py",
+    "tests/test_mining_feature_flag.py",
+    "tests/test_mining_graph.py",
+    "tests/test_mining_integration.py",
+    "tests/test_mining_species.py",
+    "tests/test_mining_starting_inputs.py",
+    "tests/test_mining_ui.py"
+  ],
+  "cwd": "C:\\t\\mining",
+  "started_at": "2026-09-23T23:09:40+00:00",
+  "finished_at": "2026-09-23T23:09:49+00:00",
+  "duration_seconds": 9.630801300052553,
+  "timeout_seconds": 300.0,
+  "root_pid": 668100,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 668112,
+      "name": "python.exe",
+      "ppid": 668100
+    },
+    {
+      "pid": 668192,
+      "name": "git.exe",
+      "ppid": 668112
+    },
+    {
+      "pid": 665408,
+      "name": "git.exe",
+      "ppid": 668112
+    },
+    {
+      "pid": 668060,
+      "name": "git.exe",
+      "ppid": 668112
+    },
+    {
+      "pid": 668212,
+      "name": "git.exe",
+      "ppid": 668112
+    },
+    {
+      "pid": 668720,
+      "name": "git.exe",
+      "ppid": 668112
+    },
+    {
+      "pid": 668884,
+      "name": "git.exe",
+      "ppid": 668112
+    },
+    {
+      "pid": 669080,
+      "name": "git.exe",
+      "ppid": 668112
+    },
+    {
+      "pid": 668772,
+      "name": "git.exe",
+      "ppid": 668112
+    }
+  ],
+  "descendants_terminated": [
+    665408,
+    668060,
+    668112,
+    668192,
+    668212,
+    668720,
+    668772,
+    668884,
+    669080
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 626796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 627152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 660852,
+      "name": "python.exe"
+    },
+    {
+      "pid": 667652,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pathway_mining/evidence/005-mining-suite-untouched-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining",
+    "repo_head": "9c0859676bfb56458aba8e15ea23aafaec93d540",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-742a",
+    "token": "ORCH-742a:667652:2eed9c17594fb76e",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
