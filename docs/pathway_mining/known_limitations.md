@@ -100,7 +100,7 @@ conflict kinds to be the most valuable and the cofactor kind to be mostly noise.
 
 No live mining run has been executed against real literature as part of this
 work — the whole test suite is fixture-driven and spends no API credit. The
-system is *verified* (222 focused tests plus an eight-point integration test) but
+system is *verified* (226 focused tests plus an eight-point integration test) but
 not *evaluated*: nobody has yet judged whether the reactions it mines from real
 papers are good ones. That is the obvious next step and it needs explicit cost
 authorization.

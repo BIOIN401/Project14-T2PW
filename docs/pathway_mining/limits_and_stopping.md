@@ -47,6 +47,7 @@ Precedence: CLI flag / Streamlit control / config file > environment > default.
 | `max_primary_reactions_reached` | primary graph full |
 | `max_candidate_reactions_reached` | candidate quarantine full |
 | `max_candidate_components_reached` | too many components |
+| `max_new_reactions_per_round_reached` | the last round added at least that many reactions new to the graph (admitted or quarantined). That round is complete and kept; the next one does not start |
 | `max_llm_calls_reached` | call budget spent |
 | `max_input_tokens_reached` / `max_output_tokens_reached` | token budget spent |
 | `max_estimated_cost_reached` | estimated cost budget spent |
@@ -72,7 +73,8 @@ useful round resets the streak.
 ## Where limits are checked
 
 * `check_before_round` — rounds, wall clock, calls, tokens, cost, papers
-  processed, graph sizes, cancellation, convergence.
+  processed, graph sizes, new reactions added by the last round, cancellation,
+  convergence.
 * `check_before_call` — calls, tokens, cost, wall clock, cancellation. Checked
   before **every** attempt, so a run that has exhausted its token allowance stops
   in `MiningModelClient` rather than inside the provider.
@@ -100,6 +102,11 @@ writability; model configuration, credentials presence and — unless `--no-prob
 — reachability; embeddings configuration and reachability; acquisition sources;
 the selected budgets; and the two standing policies (database validation
 deferred, no PWML).
+
+The model probe asks for one word with an output budget of 64 tokens
+(`PATHWAY_MINING_PROBE_MAX_TOKENS` overrides it). A reasoning model can spend a
+smaller budget thinking and return nothing with `finish_reason=length`; the check
+then fails saying the probe budget was exhausted, not that the model is down.
 
 A `fail` blocks the run: `completion_state` becomes `preflight_failed`,
 `stop_reason` becomes `preflight_failed`, and **no model call is made**.

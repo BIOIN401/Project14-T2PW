@@ -17,13 +17,19 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from t2pw.mining.config import MiningConfig
+from t2pw.mining.config import MiningConfig, _as_int, _env
 from t2pw.mining.flags import FEATURE_ENV_VAR, mining_enabled
 
 OK = "ok"
 WARN = "warn"
 FAIL = "fail"
 SKIPPED = "skipped"
+
+#: Output-token budget for the one-word reachability probe. A reasoning model
+#: (DeepSeek) can spend a smaller budget thinking and return empty content with
+#: ``finish_reason=length``, failing a model that works. Override with
+#: ``PATHWAY_MINING_PROBE_MAX_TOKENS``.
+PROBE_MAX_TOKENS = 64
 
 
 @dataclass
@@ -110,20 +116,29 @@ def _check_model(
     if not probe:
         report.add("model.reachable", SKIPPED, "probe disabled (no live call attempted)")
         return
+    probe_tokens = max(1, _as_int(_env("PATHWAY_MINING_PROBE_MAX_TOKENS"), PROBE_MAX_TOKENS))
     try:
         from t2pw.llm.client import chat_detailed
 
         result = chat_detailed(
             [{"role": "user", "content": "Reply with the single word: ok"}],
             temperature=0.0,
-            max_tokens=8,
+            max_tokens=probe_tokens,
             model_override=config.model.model,
             stage_name="mining:preflight",
             timeout=min(30.0, config.model.request_timeout_seconds),
         )
         text = str(getattr(result, "text", "") or "").strip()
+        finish = str(getattr(getattr(result, "diagnostics", None), "finish_reason", "") or "")
         if text:
             report.add("model.reachable", OK, f"model answered ({len(text)} chars)")
+        elif finish == "length":
+            report.add(
+                "model.reachable",
+                FAIL,
+                f"the {probe_tokens}-token preflight probe budget was exhausted before any "
+                "answer text (finish_reason=length); raise PATHWAY_MINING_PROBE_MAX_TOKENS",
+            )
         else:
             report.add(
                 "model.reachable",

@@ -28,6 +28,7 @@ STOP_MAX_PAPERS_PROCESSED = "max_papers_processed_reached"
 STOP_MAX_PRIMARY_REACTIONS = "max_primary_reactions_reached"
 STOP_MAX_CANDIDATE_REACTIONS = "max_candidate_reactions_reached"
 STOP_MAX_CANDIDATE_COMPONENTS = "max_candidate_components_reached"
+STOP_MAX_NEW_REACTIONS_PER_ROUND = "max_new_reactions_per_round_reached"
 STOP_MAX_LLM_CALLS = "max_llm_calls_reached"
 STOP_MAX_INPUT_TOKENS = "max_input_tokens_reached"
 STOP_MAX_OUTPUT_TOKENS = "max_output_tokens_reached"
@@ -48,6 +49,7 @@ STOP_REASONS = frozenset(
         STOP_MAX_PRIMARY_REACTIONS,
         STOP_MAX_CANDIDATE_REACTIONS,
         STOP_MAX_CANDIDATE_COMPONENTS,
+        STOP_MAX_NEW_REACTIONS_PER_ROUND,
         STOP_MAX_LLM_CALLS,
         STOP_MAX_INPUT_TOKENS,
         STOP_MAX_OUTPUT_TOKENS,
@@ -93,6 +95,8 @@ class Usage:
     claims_extracted: int = 0
     elapsed_seconds: float = 0.0
     unproductive_streak: int = 0
+    #: Reactions new to the graph (admitted or quarantined) in the last round.
+    last_round_new_reactions: int = 0
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -148,8 +152,9 @@ class BudgetLedger:
         self.refresh()
         return cost
 
-    def record_round(self, *, useful: bool) -> None:
+    def record_round(self, *, useful: bool, new_reactions: int = 0) -> None:
         self.usage.rounds += 1
+        self.usage.last_round_new_reactions = max(0, int(new_reactions))
         self.usage.unproductive_streak = 0 if useful else self.usage.unproductive_streak + 1
         self.refresh()
 
@@ -209,6 +214,12 @@ class BudgetLedger:
             self._limit(STOP_MAX_PRIMARY_REACTIONS, primary_reactions, b.max_primary_reactions, "primary reactions"),
             self._limit(STOP_MAX_CANDIDATE_REACTIONS, candidate_reactions, b.max_candidate_reactions, "candidate reactions"),
             self._limit(STOP_MAX_CANDIDATE_COMPONENTS, candidate_components, b.max_candidate_components, "candidate components"),
+            self._limit(
+                STOP_MAX_NEW_REACTIONS_PER_ROUND,
+                self.usage.last_round_new_reactions,
+                b.max_new_reactions_per_round,
+                f"new reactions in round {self.usage.rounds}",
+            ),
         ):
             if reason:
                 return reason
@@ -294,7 +305,7 @@ class BudgetLedger:
         for key in (
             "rounds", "llm_calls", "input_tokens", "output_tokens", "cached_tokens",
             "papers_discovered", "papers_processed", "passages_extracted",
-            "claims_extracted", "unproductive_streak",
+            "claims_extracted", "unproductive_streak", "last_round_new_reactions",
         ):
             if key in data:
                 setattr(self.usage, key, int(data.get(key) or 0))
@@ -312,6 +323,7 @@ __all__ = [
     "STOP_MAX_PRIMARY_REACTIONS",
     "STOP_MAX_CANDIDATE_REACTIONS",
     "STOP_MAX_CANDIDATE_COMPONENTS",
+    "STOP_MAX_NEW_REACTIONS_PER_ROUND",
     "STOP_MAX_LLM_CALLS",
     "STOP_MAX_INPUT_TOKENS",
     "STOP_MAX_OUTPUT_TOKENS",

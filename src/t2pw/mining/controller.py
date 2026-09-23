@@ -490,7 +490,10 @@ class MiningController:
                 delta.created_component_ids.append(component.component_id)
         self.state.deltas.append(delta)
 
-        self.ledger.record_round(useful=delta.useful)
+        self.ledger.record_round(
+            useful=delta.useful,
+            new_reactions=len(delta.added_reaction_ids) + len(delta.added_candidate_reaction_ids),
+        )
         self.state.errors.extend(round_errors)
 
         next_frontier = frontier_mod.generate(

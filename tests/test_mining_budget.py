@@ -19,6 +19,7 @@ from t2pw.mining.budget import (  # noqa: E402
     STOP_MAX_COST,
     STOP_MAX_INPUT_TOKENS,
     STOP_MAX_LLM_CALLS,
+    STOP_MAX_NEW_REACTIONS_PER_ROUND,
     STOP_MAX_OUTPUT_TOKENS,
     STOP_MAX_PAPERS_DISCOVERED,
     STOP_MAX_PAPERS_PROCESSED,
@@ -130,6 +131,17 @@ def test_graph_size_limits_stop_the_loop(field, value, expected):
     assert led.check_before_round(**{field: value}) == expected
 
 
+def test_new_reactions_per_round_cap_is_checked_before_the_next_round():
+    """Unit-level pin of the boundary. The G9 proof that the cap is enforced in a
+    real run is test_mining_stability.py."""
+    led = ledger(max_new_reactions_per_round=3)
+    led.record_round(useful=True, new_reactions=2)
+    assert led.check_before_round() is None
+    led.record_round(useful=True, new_reactions=3)
+    assert led.check_before_round() == STOP_MAX_NEW_REACTIONS_PER_ROUND
+    assert "new reactions in round 2: 3 >= limit 3" in led.stop_detail
+
+
 def test_paper_limits_are_tracked_separately():
     led = ledger(max_papers_discovered=3, max_papers_processed=2)
     led.record_papers_discovered(3)
@@ -182,6 +194,7 @@ def test_every_stop_reason_constant_is_in_the_closed_set():
         STOP_MAX_PRIMARY_REACTIONS, STOP_MAX_CANDIDATE_REACTIONS, STOP_MAX_LLM_CALLS,
         STOP_MAX_INPUT_TOKENS, STOP_MAX_OUTPUT_TOKENS, STOP_MAX_COST,
         STOP_MAX_WALL_CLOCK, STOP_CONVERGED, STOP_CANCELLED,
+        STOP_MAX_NEW_REACTIONS_PER_ROUND,
     ):
         assert reason in STOP_REASONS
 
