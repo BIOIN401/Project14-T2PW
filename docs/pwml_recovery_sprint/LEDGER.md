@@ -10513,3 +10513,34 @@ since `ORCH-741`). Both new branches are cut from the **committed** tip, so that
 `st.set_page_config` that calls `st.stop()` in mining mode; the evidence UI adds its hook near the results
 render. Integration is planned only after both are reviewed, and must also prove the protected uncommitted
 edit still applies.
+
+### `ORCH-742a` amendment — the live pathway-mining pilot is AUTHORIZED; config FROZEN before the run · 2026-09-23
+
+The product owner reversed the "no live run" answer above ("start the pilot run for the mining"). No pilot
+config existed, so the one the orchestrator had recommended at dispatch is adopted and **frozen here,
+before any model call**:
+
+| item | frozen value |
+|---|---|
+| code | `experiment/pathway-mining` at the tip that `ORCH-742a`'s independent reviewer APPROVES (both stability fixes in). SHA recorded in the result. **Not launched on `9c085967`**: probe `max_tokens=8` fails preflight on this model, and `--no-probe` is not an acceptable workaround |
+| run tree | a dedicated detached worktree at that SHA, so repair rounds cannot move the tree mid-run |
+| starting inputs | species `Arabidopsis thaliana` · topic `jasmonate biosynthesis` · seed metabolite `12-OPDA` · seed enzyme `AOS` · **no** `--paper` (discovery only; `cli.md`'s example IDs are placeholders) |
+| model | branch default `deepseek/deepseek-v4-flash`, temperature 0 |
+| budgets | branch defaults, unchanged: 8 rounds · 150 discovered · 40 processed · 25 new reactions/round · 200 LLM calls · `$5` **estimated** · 3,600 s |
+| retrieval | vector backend `memory`; `PATHWAY_MINING_REQUIRE_EMBEDDINGS=true`, so a lexical fallback fails preflight instead of silently degrading retrieval. LM Studio `nomic-embed-text-v1.5`, OpenRouter, EuropePMC and NCBI all answered a no-cost reachability check at 2026-09-23 |
+| process | one `bounded_run.py` job, tracked background plus a Monitor, wrapper timeout 4,200 s. **No heavy lock**: the run is one sequential process (one model call at a time, in-memory vector store) and is not a suite, benchmark or memory-heavy leg. Its working set is **measured during the run** and recorded, so this call can be checked |
+
+**One run.** It is reported whatever it produces. A re-run is allowed **only** if the run dies of
+infrastructure before round 1's first model call (preflight outage), and that re-run is itself recorded.
+There is **no re-run for a better draw**.
+
+**Pre-registered report.** Papers considered / retrieved · candidate, admitted, rejected and duplicate
+reactions · species mismatches · budget stops · empty/model failures · for every admitted reaction: the
+reaction, species, source paper, supporting quote/chunk, whether it connects to the seed pathway, and the
+admission reason · rejected candidates summarized by reason. **Biological plausibility is adjudicated by
+`pwml-bio-auditor` against the literature**, never inferred from graph size or from the run completing.
+
+**Artifacts.** The full run directory is kept on disk outside the repo, and the durable records (manifest,
+config, candidates, admission decisions, graph, budgets, model-call metadata, report, evidence table, G11
+report) are committed to `experiment/pathway-mining`. Anything too large to commit, such as paper full
+texts, is listed with its sha256 instead.
