@@ -5,20 +5,37 @@ base SHA ``9f13188e``; no base failure is claimed. The script under test is the 
 alone (``render_reaction_evidence()``), not the whole app, so no pipeline, model or
 network call can run. Run this file ALONE in its own bounded process with
 ``T2PW_OFFLINE_CURATOR=1`` (AppTest files stall a shared pytest process).
+
+The fixture bundle is written out per test into ``tmp_path``; see
+``test_reaction_evidence.py`` for why it is never committed under its real file names.
 """
 
 from __future__ import annotations
 
 import json
-import shutil
 from pathlib import Path
 
+import pytest
 from streamlit.testing.v1 import AppTest
 
 from t2pw.app.reaction_evidence import DUPLICATE_WARNING, FINAL_MAPPED_FILENAME
 from t2pw.app.reaction_evidence_view import DOWNLOAD_LABEL, NO_RUN_MESSAGE
 
-FIXTURE = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "reaction_evidence" / "enterobactin_strict"
+BUNDLE = Path(__file__).resolve().parent / "fixtures" / "reaction_evidence" / "enterobactin_strict.bundle.json"
+
+
+def write_leg(target: Path, names=None) -> Path:
+    target.mkdir(parents=True, exist_ok=True)
+    for name, content in json.loads(BUNDLE.read_text(encoding="utf-8")).items():
+        if names is None or name in names:
+            text = content if isinstance(content, str) else json.dumps(content, ensure_ascii=False)
+            (target / name).write_text(text, encoding="utf-8")
+    return target
+
+
+@pytest.fixture()
+def leg(tmp_path: Path) -> Path:
+    return write_leg(tmp_path / "leg")
 
 
 def _script():
@@ -43,9 +60,9 @@ def test_no_run_loaded_says_so_and_offers_no_download():
     assert len(at.download_button) == 0 and len(at.expander) == 0
 
 
-def test_missing_directory_warns():
+def test_missing_directory_warns(tmp_path):
     at = _app().run()
-    at.text_input[0].input(str(FIXTURE / "does-not-exist")).run()
+    at.text_input[0].input(str(tmp_path / "does-not-exist")).run()
     assert not at.exception
     assert _texts(at.warning)[0].startswith("Not a directory:")
 
@@ -56,7 +73,7 @@ def test_missing_artifacts_read_not_recorded(tmp_path):
     assert not at.exception
     assert _texts(at.warning)[0].startswith("None of coverage_summary.json, quarantine_report.json")
 
-    shutil.copy(FIXTURE / "coverage_summary.json", tmp_path / "coverage_summary.json")
+    write_leg(tmp_path, names={"coverage_summary.json"})
     at.run()
     assert not at.exception
     assert [m.value for m in at.metric] == ["0.75", "true", "9", "1"]
@@ -65,9 +82,9 @@ def test_missing_artifacts_read_not_recorded(tmp_path):
     assert "Release status: Not recorded" in "\n".join(_texts(at.code))
 
 
-def test_leg_directory_renders_header_reactions_quarantine_and_download():
+def test_leg_directory_renders_header_reactions_quarantine_and_download(leg):
     at = _app().run()
-    at.text_input[0].input(str(FIXTURE)).run()
+    at.text_input[0].input(str(leg)).run()
     assert not at.exception
     assert [b.label for b in at.download_button] == [DOWNLOAD_LABEL]
     assert [(m.label, m.value) for m in at.metric] == [
@@ -86,9 +103,8 @@ def test_leg_directory_renders_header_reactions_quarantine_and_download():
 
 
 def test_session_run_directory_uses_session_payload_when_no_final_mapped_on_disk(tmp_path):
-    for name in ("coverage_summary.json", "quarantine_report.json", "removed_entity_report.json"):
-        shutil.copy(FIXTURE / name, tmp_path / name)
-    payload = json.loads((FIXTURE / FINAL_MAPPED_FILENAME).read_text(encoding="utf-8"))
+    write_leg(tmp_path, names={"coverage_summary.json", "quarantine_report.json", "removed_entity_report.json"})
+    payload = json.loads(BUNDLE.read_text(encoding="utf-8"))[FINAL_MAPPED_FILENAME]
     at = _app()
     at.session_state["quarantine_artifacts"] = {"coverage_summary.json": str(tmp_path / "coverage_summary.json")}
     at.session_state["post_pipeline_artifacts"] = {"canonical_export_payload": payload}
@@ -100,21 +116,19 @@ def test_session_run_directory_uses_session_payload_when_no_final_mapped_on_disk
     assert "Surviving reactions read from: session post_pipeline_artifacts[canonical_export_payload]" in codes
 
 
-def test_section_follows_a_run_that_completes_after_the_first_render():
+def test_section_follows_a_run_that_completes_after_the_first_render(leg):
     """The page is usually open BEFORE the run: the field must pick up the new directory."""
 
     at = _app().run()
     assert _texts(at.info) == [NO_RUN_MESSAGE]
-    at.session_state["quarantine_artifacts"] = {"coverage_summary.json": str(FIXTURE / "coverage_summary.json")}
+    at.session_state["quarantine_artifacts"] = {"coverage_summary.json": str(leg / "coverage_summary.json")}
     at.run()
     assert not at.exception
-    assert at.text_input[0].value == str(FIXTURE)
+    assert at.text_input[0].value == str(leg)
     assert len([e for e in at.expander if e.label.startswith("Reaction ")]) == 5
 
 
-def test_duplicate_reaction_warning_is_shown(tmp_path):
-    leg = tmp_path / "leg"
-    shutil.copytree(FIXTURE, leg)
+def test_duplicate_reaction_warning_is_shown(leg):
     path = leg / FINAL_MAPPED_FILENAME
     payload = json.loads(path.read_text(encoding="utf-8"))
     payload["processes"]["reactions"].append(dict(payload["processes"]["reactions"][0], name="twin"))

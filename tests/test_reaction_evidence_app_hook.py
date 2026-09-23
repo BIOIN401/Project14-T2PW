@@ -8,6 +8,7 @@ ALONE in its own bounded process with ``T2PW_OFFLINE_CURATOR=1``.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
@@ -16,17 +17,21 @@ from t2pw.app.reaction_evidence_view import DOWNLOAD_LABEL, NO_RUN_MESSAGE
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_PATH = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
-FIXTURE = ROOT / "tests" / "fixtures" / "reaction_evidence" / "enterobactin_strict"
+BUNDLE = ROOT / "tests" / "fixtures" / "reaction_evidence" / "enterobactin_strict.bundle.json"
 
 
-def test_real_app_page_ends_with_the_reaction_evidence_section():
+def test_real_app_page_ends_with_the_reaction_evidence_section(tmp_path):
+    for name, content in json.loads(BUNDLE.read_text(encoding="utf-8")).items():
+        text = content if isinstance(content, str) else json.dumps(content, ensure_ascii=False)
+        (tmp_path / name).write_text(text, encoding="utf-8")
+
     at = AppTest.from_file(str(APP_PATH), default_timeout=300).run()
     assert not at.exception
     assert "Reaction Evidence" in [s.value for s in at.subheader]
     assert NO_RUN_MESSAGE in [i.value for i in at.info]
 
     # What the app's quarantine boundary leaves in session state after a run.
-    at.session_state["quarantine_artifacts"] = {"coverage_summary.json": str(FIXTURE / "coverage_summary.json")}
+    at.session_state["quarantine_artifacts"] = {"coverage_summary.json": str(tmp_path / "coverage_summary.json")}
     at.run()
     assert not at.exception
     assert DOWNLOAD_LABEL in [b.label for b in at.download_button]
