@@ -12,10 +12,17 @@ The app never writes ``final_mapped.json`` for an interactive run, so for the
 session's own directory only, the canonical payload is taken from session state
 under the same key order the batch driver uses to write that file, and the report
 names that source.
+
+The section never emits ``st.error`` / ``st.warning`` and never raises: the batch
+driver drives this page through AppTest and folds every error, warning and
+exception into the leg's ``detail`` and failure classification
+(``batch.driver._collect_app_text``). A review panel must not change a leg's
+outcome, so its notices are ``st.info`` / coloured markdown only.
 """
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
@@ -37,6 +44,8 @@ from t2pw.app.reaction_evidence import (
 )
 from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY
 from t2pw.pipeline.strict_quarantine import COVERAGE_REPORT_FILENAME
+
+logger = logging.getLogger(__name__)
 
 DIR_KEY = "reaction_evidence_dir"
 DOWNLOAD_LABEL = "Download Reaction Evidence (.txt)"
@@ -73,6 +82,14 @@ def render_reaction_evidence() -> None:
         "Read-only review of what the run's artifacts say the pathway contains. "
         "Nothing here edits the pathway or calls a model. Missing fields read 'Not recorded'."
     )
+    try:
+        _render_body()
+    except Exception as exc:  # noqa: BLE001 -- see the module docstring
+        logger.debug("reaction evidence could not be rendered", exc_info=True)
+        st.info(f"Reaction Evidence could not be rendered: {exc}")
+
+
+def _render_body() -> None:
     session_dir = _session_run_dir()
     # The session directory is part of the key: a keyed widget keeps its old value
     # when its default changes, so a page opened before the run would stay empty.
@@ -81,7 +98,7 @@ def render_reaction_evidence() -> None:
         st.info(NO_RUN_MESSAGE)
         return
     if not Path(directory).is_dir():
-        st.warning(f"Not a directory: {directory}")
+        st.info(f"Not a directory: {directory}")
         return
 
     artifacts = load_run_artifacts(directory)
@@ -92,7 +109,7 @@ def render_reaction_evidence() -> None:
             artifacts[FINAL_MAPPED_FILENAME] = payload
             source = f"session post_pipeline_artifacts[{key}]"
     if not artifacts:
-        st.warning(f"None of {', '.join(JSON_ARTIFACTS)} was found in {directory}.")
+        st.info(f"None of {', '.join(JSON_ARTIFACTS)} was found in {directory}.")
         return
 
     report = build_report(artifacts, payload_source=source)
@@ -117,7 +134,10 @@ def render_reaction_evidence() -> None:
     for reaction in report["reactions"]:
         if reaction["duplicate_of"]:
             others = ", ".join(str(n) for n in reaction["duplicate_of"])
-            st.warning(f"Reaction {reaction['number']}: {DUPLICATE_WARNING} (same substrates and products as reaction {others})")
+            st.markdown(
+                f":orange[**Reaction {reaction['number']}: {DUPLICATE_WARNING}** "
+                f"(same substrates and products as reaction {others})]"
+            )
         with st.expander(f"Reaction {reaction['number']}: {reaction['equation']}"):
             _block(reaction_lines(reaction))
 

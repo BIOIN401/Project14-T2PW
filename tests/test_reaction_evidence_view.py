@@ -60,18 +60,25 @@ def test_no_run_loaded_says_so_and_offers_no_download():
     assert len(at.download_button) == 0 and len(at.expander) == 0
 
 
-def test_missing_directory_warns(tmp_path):
+def _silent_to_the_batch_driver(at) -> None:
+    """batch.driver._collect_app_text folds errors, exceptions and warnings into a leg's
+    detail and failure classification; this section must add none of them."""
+
+    assert not at.exception and not at.error and not at.warning
+
+
+def test_missing_directory_is_reported(tmp_path):
     at = _app().run()
     at.text_input[0].input(str(tmp_path / "does-not-exist")).run()
-    assert not at.exception
-    assert _texts(at.warning)[0].startswith("Not a directory:")
+    _silent_to_the_batch_driver(at)
+    assert _texts(at.info)[0].startswith("Not a directory:")
 
 
 def test_missing_artifacts_read_not_recorded(tmp_path):
     at = _app().run()
     at.text_input[0].input(str(tmp_path)).run()
-    assert not at.exception
-    assert _texts(at.warning)[0].startswith("None of coverage_summary.json, quarantine_report.json")
+    _silent_to_the_batch_driver(at)
+    assert _texts(at.info)[0].startswith("None of coverage_summary.json, quarantine_report.json")
 
     write_leg(tmp_path, names={"coverage_summary.json"})
     at.run()
@@ -99,7 +106,7 @@ def test_leg_directory_renders_header_reactions_quarantine_and_download(leg):
     codes = "\n".join(_texts(at.code))
     assert "Paper: PMC12096016" in codes and "Unmatched (4): NADH, ATP, EntD, Fur" in codes
     assert "QUARANTINED 1  [pre-quarantine /processes/reactions/5; reaction; lock rxn_lock_004]" in codes
-    assert not at.warning
+    _silent_to_the_batch_driver(at)
 
 
 def test_session_run_directory_uses_session_payload_when_no_final_mapped_on_disk(tmp_path):
@@ -135,9 +142,23 @@ def test_duplicate_reaction_warning_is_shown(leg):
     path.write_text(json.dumps(payload), encoding="utf-8")
     at = _app().run()
     at.text_input[0].input(str(leg)).run()
-    assert not at.exception
-    assert _texts(at.warning) == [
-        f"Reaction 1: {DUPLICATE_WARNING} (same substrates and products as reaction 6)",
-        f"Reaction 6: {DUPLICATE_WARNING} (same substrates and products as reaction 1)",
+    _silent_to_the_batch_driver(at)
+    flags = [m for m in _texts(at.markdown) if DUPLICATE_WARNING in m]
+    assert flags == [
+        f":orange[**Reaction 1: {DUPLICATE_WARNING}** (same substrates and products as reaction 6)]",
+        f":orange[**Reaction 6: {DUPLICATE_WARNING}** (same substrates and products as reaction 1)]",
     ]
     assert len([e for e in at.expander if e.label.startswith("Reaction ")]) == 6
+
+
+def test_a_rendering_fault_is_contained(leg, monkeypatch):
+    import t2pw.app.reaction_evidence_view as view
+
+    def broken(*_args, **_kwargs):
+        raise RuntimeError("synthetic fault")
+
+    monkeypatch.setattr(view, "build_report", broken)
+    at = _app().run()
+    at.text_input[0].input(str(leg)).run()
+    _silent_to_the_batch_driver(at)
+    assert _texts(at.info) == ["Reaction Evidence could not be rendered: synthetic fault"]
