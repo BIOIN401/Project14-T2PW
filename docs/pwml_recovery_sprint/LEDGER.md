@@ -10566,3 +10566,27 @@ product-owner D-xxx.
 
 **Proposed order: eval → UI (after a D-xxx) → mining (later, after a full review and pilot F1–F3).
 Decision is the product owner's.**
+
+---
+
+## `ORCH-743` — pathway-mining iteration 1: fix the four pilot-001 blockers, then re-pilot · 2026-09-23 · DISPATCHED
+
+**Product-owner instruction** (after reading `ORCH-742`): iterate on the mining findings and change nothing
+else; no questions and no permission requests overnight. **No merge anywhere.** `main`, the sprint code,
+the UI and eval lanes, and both candidates are untouched. Production stays frozen at `5f6a7aa3`, and all
+four fixes stay inside `src/t2pw/mining/`:
+
+| # | fix | pilot-001 finding |
+|---|---|---|
+| 1 | persist each extraction call's raw completion (only a hash was kept) | F1 lineage |
+| 2 | keep enzyme / gene / species fields that a shown passage **verifiably** supports, **without** weakening "uncited = dropped" | F1 |
+| 3 | search: the frontier item's own term is required · results per query are a budget knob using `search_candidates`' existing page size · no one-attempt exhaustion | F2 |
+| 4 | the screen is loosened **for mining only**, through `screen_candidate`'s own `thresholds` argument and/or a recorded mining-side rescue. `src/t2pw/rag/eligibility.py` is unchanged | F5 |
+
+Out of scope and left alone: F3 species labelling (beyond wiring in recovered evidence), F4 frontier cap,
+F6 review typing, F7 report numbers, F8, F9 (the `.env` launcher stays) and F10.
+
+Lane: branch `experiment/pathway-mining` from `23e1ae83`, worktree `C:/t/mining`, G9 base `C:/t/mining-base2`.
+Independent `pwml-reviewer` and `pwml-bio-auditor`, with at most 2 repair rounds. Then **pilot-002 on the pilot-001
+config, unchanged except for the code SHA**, pre-registered here before it runs. Iterate at most **twice**; a
+second iteration only if pilot-002's audit names a remaining defect in these same four areas.
