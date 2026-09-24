@@ -178,3 +178,22 @@ assertion on behaviour.
 | `028-g9-rep1-item2-restated` | `C:/t/mining-base2` @ `23e1ae83` | the 2 item-2 G9 nodes as restated after B-1 | **2 failed**: `('', '', '') == ('LOX2', …)`; `'LOX2' in ['', '']` |
 
 All four: FINAL SURVIVING COUNT 0, pin `violations: []`.
+
+## ORCH-743 repair round 2 (bio B-4)
+
+Pre-repair tip `59eb761d`. Fix commit `e21e73f2`: rescue route 1 no longer rescues a paper
+whose title names an organism other than the target. That covers a paper where the target
+is only the source of a transgene expressed in another plant, e.g. PMC10742046, emmer wheat
+overexpressing AtAOS / AtOPR3. There is a new fixture,
+`tests/fixtures/mining/orch743_transgene_source.json`, holding the bio re-audit's saved title
+and abstract. No live call of any kind in this round. Both runs: exit reason `completed`,
+**final surviving count 0**, cleanup success, heavy lock `ORCH-743` acquired and released,
+pin `violations: []`, wrapper clean at `e21e73f2`.
+
+| File | Tree / SHA | What | Result |
+|---|---|---|---|
+| `029-mining-suite-orch743-repair2` | `C:/t/mining` @ `e21e73f2` | `tests/test_mining_*.py` (16 files) | **269 passed** in 7.90 s (266 before this round) |
+| `030-smoke-feature-disabled-orch743-repair2` | `C:/t/mining` @ `e21e73f2` | production SMOKE (22 files), `T2PW_PATHWAY_MINING_ENABLED` unset | **508 passed** in 39.71 s |
+
+The G9 base arm is run by the orchestrator at `59eb761d`. The nodes are in
+`C:/t/mining-iter/g9_manifest.json` (item `r2-bio-B-4`).
