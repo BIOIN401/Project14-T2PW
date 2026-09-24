@@ -1,0 +1,109 @@
+{
+  "label": "g9-it2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/035-g9-it2.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/mining-iter/orch-g9-it2/b",
+    "tests/test_mining_iteration2.py::test_g9_it2_1_a_paper_is_extracted_in_batches_with_the_extraction_budget",
+    "tests/test_mining_iteration2.py::test_g9_it2_2_an_ncbi_record_never_carries_a_cited_reference_identity",
+    "tests/test_mining_iteration2.py::test_g9_it2_2_the_same_article_from_two_sources_is_one_paper",
+    "tests/test_mining_iteration2.py::test_g9_it2_2_a_full_text_of_another_article_is_refused",
+    "tests/test_mining_iteration2.py::test_g9_it2_3_a_budget_cut_window_does_not_exhaust_the_item",
+    "tests/test_mining_iteration2.py::test_g9_it2_4_route1_does_not_rescue_a_grape_host_paper",
+    "tests/test_mining_iteration2.py::test_g9_it2_5_every_ladder_rung_is_recorded_with_its_fraction_and_passages"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-09-24T23:13:02+00:00",
+  "finished_at": "2026-09-24T23:13:06+00:00",
+  "duration_seconds": 3.0224154999996244,
+  "timeout_seconds": 300.0,
+  "root_pid": 267584,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 267688,
+      "name": "python.exe",
+      "ppid": 267584
+    },
+    {
+      "pid": 267572,
+      "name": "git.exe",
+      "ppid": 267688
+    },
+    {
+      "pid": 268140,
+      "name": "git.exe",
+      "ppid": 267688
+    },
+    {
+      "pid": 267268,
+      "name": "git.exe",
+      "ppid": 267688
+    }
+  ],
+  "descendants_terminated": [
+    267268,
+    267572,
+    267688,
+    268140
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 41020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 189180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 189220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 265620,
+      "name": "python.exe"
+    },
+    {
+      "pid": 267168,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/035-g9-it2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "ecf6b9a02feb8904015fb4e249cc3a3e1a8cdbed",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

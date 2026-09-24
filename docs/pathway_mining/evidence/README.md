@@ -235,3 +235,11 @@ New fixtures: `tests/fixtures/mining/pilot002_grape_host.json` (IT2-4) and
 `tests/fixtures/mining/pubmed_pmid34638573.xml` (IT2-2). The G9 base arms are the
 orchestrator's, at `ecf6b9a0`. The nodes are in `C:/t/mining-iter/g9_manifest.json`
 (items `it2-1` … `it2-5`).
+
+**G9 base arm for iteration 2, run by the orchestrator.**
+
+| File | Tree / SHA | What | Result at base |
+|---|---|---|---|
+| `035-g9-it2` | `C:/t/mining-rep-base` @ `ecf6b9a0` (the pilot-002 code) | the 7 `test_g9_it2_*` nodes of `test_mining_iteration2.py` (plus `pubmed_pmid34638573.xml`, `pilot002_grape_host.json`) | **7 failed**: `[12] == [5, 5, 2]`; the reference PMCID PMC411572 is kept; the same article is 2 papers; the foreign full text is used; a budget-cut window exhausts the item; the grape paper is rescued; rung fractions are `[None, None, None]` |
+
+FINAL SURVIVING COUNT 0, pin `violations: []`; the base tree status is empty afterwards.
