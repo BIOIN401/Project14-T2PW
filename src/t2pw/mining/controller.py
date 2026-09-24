@@ -362,6 +362,7 @@ class MiningController:
         round_decisions: List[ClaimDecision] = []
         round_rejections: List[Dict[str, Any]] = []
         round_errors: List[str] = []
+        round_raw: List[Dict[str, Any]] = []
         entities_before = {e.entity_id for e in self.state.graph.registry.all()}
 
         active = list(self.state.frontier)
@@ -445,6 +446,7 @@ class MiningController:
                 )
                 if extraction.outcome is not None:
                     self.state.model_calls.append(extraction.outcome.record)
+                    round_raw.extend(extraction.outcome.lineage_rows())
                 record.processed_round = index
                 processed_this_round += 1
                 self.ledger.record_paper_processed()
@@ -542,6 +544,7 @@ class MiningController:
                 "candidate_components": len(self.state.graph.candidate_components),
             },
             "errors": round_errors,
+            "model_raw": round_raw,
         }
         self.state.round_records.append(record)
         self.run_dir.write_round(index, record)

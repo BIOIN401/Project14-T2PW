@@ -21,6 +21,7 @@ runs_mining/<run_id>/
                    papers_considered.jsonl passages_retrieved.jsonl
                    claims_extracted.jsonl decisions.jsonl rejections.jsonl
                    new_frontier.jsonl graph_delta.json metrics.json errors.jsonl
+                   model_raw.jsonl
         round_002/ ...
 ```
 
@@ -144,6 +145,28 @@ and retries, and the checkpoint.
 
 `metrics` carries counts plus the cumulative `usage` snapshot and the primary /
 candidate / component sizes at the end of that round.
+
+### `model_raw.jsonl` — raw completion lineage
+
+One row per **attempt** of every extraction call made in that round (a call that
+climbs the shrink-and-retry ladder has one row per rung). `model_calls.jsonl`
+keeps only a `response_hash`; this file keeps what the model actually said, so a
+dropped field or a failed parse can be attributed to the completion itself.
+
+| Field | |
+|---|---|
+| `call_id` | links the row to its `model_calls.jsonl` record |
+| `round_index` · `purpose` · `paper_id` | as on the call record |
+| `call_status` | the call's final status (`ok`, `parse_error`, `truncated`, ...) |
+| `attempt` · `model` | ladder rung (1-based) and the slug asked |
+| `finish_reason` | as the provider reported it for that attempt |
+| `parse_outcome` | `ok`, `parse_error`, `truncated_completion`, `truncated_but_parseable`, `schema_error`, `empty_completion` or `provider_error` |
+| `error` | the parse / schema / provider error, if any (a key-like `sk-…` token is redacted) |
+| `response_hash` | the provider diagnostics' hash of that attempt's text |
+| `raw_text` | the completion text exactly as returned |
+
+Only model **output** is written: never the request, its headers or any key. The
+same rows are also inside that round's `round.json`.
 
 ## `checkpoint.json` and `state.json`
 

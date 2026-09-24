@@ -51,6 +51,9 @@ _SHRINK_LADDER = (1.0, 0.6, 0.35)
 
 _FENCE = re.compile(r"^\s*```(?:json)?\s*|\s*```\s*$", re.IGNORECASE)
 
+#: A provider error can quote a masked key prefix; the lineage file never keeps it.
+_SECRETISH = re.compile(r"sk-[A-Za-z0-9_.\-]*")
+
 
 def _utcnow() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -139,10 +142,26 @@ class ModelCallOutcome:
     #: A partially parsed payload kept for diagnosis ONLY. Never admitted.
     partial: Optional[Any] = None
     attempts: List[Dict[str, Any]] = field(default_factory=list)
+    #: One row per attempt: the raw completion text and how it was classified.
+    raw_attempts: List[Dict[str, Any]] = field(default_factory=list)
 
     @property
     def ok(self) -> bool:
         return self.status == EXTRACTION_OK and self.payload is not None
+
+    def lineage_rows(self) -> List[Dict[str, Any]]:
+        """``rounds/round_NNN/model_raw.jsonl`` rows, linked by ``call_id``.
+
+        The raw completion is model output only: no request, no headers, no key.
+        """
+        base = {
+            "call_id": self.record.call_id,
+            "round_index": self.record.round_index,
+            "purpose": self.record.purpose,
+            "paper_id": self.record.paper_id,
+            "call_status": self.status,
+        }
+        return [{**base, **row} for row in self.raw_attempts]
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -269,6 +288,17 @@ class MiningModelClient:
                     shrink_fraction=fraction,
                 )
                 outcome.attempts.append(attempt["log"])
+                outcome.raw_attempts.append(
+                    {
+                        "attempt": index + 1,
+                        "model": model_slug,
+                        "finish_reason": attempt["log"].get("finish_reason", ""),
+                        "parse_outcome": attempt["log"].get("classification", ""),
+                        "error": _SECRETISH.sub("[redacted]", str(attempt.get("error") or "")),
+                        "response_hash": attempt["log"].get("response_hash", ""),
+                        "raw_text": attempt["raw"],
+                    }
+                )
                 if attempt["status"] == EXTRACTION_OK:
                     outcome.payload = attempt["payload"]
                     outcome.status = EXTRACTION_OK
@@ -377,10 +407,12 @@ class MiningModelClient:
             "input_tokens": input_tokens,
             "output_tokens": output_tokens,
             "schema": "tight" if schema is not None and schema is not None else "none",
+            "response_hash": str(getattr(diagnostics, "response_hash", "") or ""),
         }
 
         if error:
             log["error"] = error
+            log["classification"] = "provider_error"
             return {"status": EXTRACTION_PARSE_ERROR, "payload": None, "raw": raw,
                     "error": error, "log": log}
 

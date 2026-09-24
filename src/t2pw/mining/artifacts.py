@@ -295,6 +295,7 @@ class RunDirectory:
             "new_frontier",
             "metrics",
             "errors",
+            "model_raw",
         ):
             if name in payload:
                 value = payload[name]
