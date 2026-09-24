@@ -91,7 +91,11 @@ through the production path:
 * frontier generation (`frontier.py`) — the production RAG controller is
   gap-driven and stays that way;
 * graph management (`graph.py`), provenance (`models.py`), visualization
-  (`viz.py`) and stopping policy (`budget.py`).
+  (`viz.py`) and stopping policy (`budget.py`);
+* the screen rescue (`acquisition.Acquirer.rescue`). It re-admits, for mining
+  only, a paper the production eligibility screen excluded by its
+  pathway-anchor rule. `rag/eligibility.py` is unchanged; see
+  [`evidence_policy.md`](evidence_policy.md).
 
 The run's vector index defaults to the **in-memory** backend so mining cannot
 write into the production RAG index.
@@ -126,7 +130,7 @@ material field must cite the passage that supports it.
 |---|---|---|
 | 1 | select frontier items (priority-ordered, unexhausted) | `frontier` |
 | 2 | build one traceable query per item: its own terms AND the species; a second formulation (+ topic) if the first finds no new paper | `queries` |
-| 3 | acquire, screen, cache; record inclusions and exclusions | `acquisition` |
+| 3 | acquire, screen (plus the mining rescue), cache; record inclusions and exclusions | `acquisition` |
 | 4 | index new papers; retrieve passages as evidence spans | `retrieval` |
 | 5 | extract claims; drop every uncited field (an enzyme / gene / species name found verbatim in the claim's own cited participant span is kept, recorded as `verbatim_cited_span`) | `extraction` |
 | 6 | normalize entities within the run | `normalize` |

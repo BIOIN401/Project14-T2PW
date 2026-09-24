@@ -153,6 +153,47 @@ a claim missing either is `incomplete`.
 
 ---
 
+## Which papers are read: the screen and the mining rescue
+
+Every discovered paper goes through the production eligibility screen,
+`t2pw.rag.eligibility.screen_candidate`, unchanged. Its pathway-anchor rule
+excludes a paper as `context_only`, `omics_only` or `off_topic` when nothing
+next to the pathway mention is a reaction or an enzyme. It does this before the
+score is consulted. In pilot-001 that rule excluded PMC9947334 (primary
+recombinant AtLOX2 enzymology, score 4.0) as `context_only`.
+
+For mining only, `acquisition.Acquirer.rescue` reconsiders **that exclusion
+only**. An organism veto or a negative-evidence veto is never reconsidered. A
+paper is re-admitted by either of two routes:
+
+1. The production screen reads the target species in it (`organism_match ==
+   "match"`), and `screen_candidate`'s own `thresholds` accept it with the
+   anchor rule off and `min_score` raised by 1.0.
+2. The **title** names the target species, and one sentence of the title or
+   abstract names it together with an enzyme or metabolite from **this run's**
+   seeds or frontier (`queries.rescue_terms`). No pathway vocabulary is
+   hard-coded. Names shorter than 3 characters, the topic and the species are
+   never terms. Both guards exist because of the pilot-001 wheat transgene
+   paper, which names *A. thaliana* only as a gene source, in its abstract.
+
+The paper's `screening_outcome` becomes `mining_rescue`. Its inclusion reason
+is `mining_rescue: <what matched>`, and the production exclusion reason is kept
+in `notes`. The claim-level species guardrail is unaffected: a rescued paper's
+claims face exactly the same gates.
+
+The rule is pinned by `tests/fixtures/mining/pilot001_screened_papers.json`: the
+21 papers pilot-001 screened, with the bio-audit's adjudication.
+
+| | pilot-001 papers |
+|---|---|
+| required, now included | PMC9947334 (route 1, score 4.0) |
+| desired, now included | PMID 35404431 (DAD1; route 1, score 3.0) |
+| desired, still excluded | PMC12280011 (`off_topic`, score 0.0; it names none of the run's names verbatim) |
+| must stay excluded, and do | all 15, including with the richest (round 2) vocabulary |
+| borderline, excluded | PMC11300881 (no species reading), PMC13096701 (score 2.25) |
+
+---
+
 ## Evidence type and independent support
 
 Each paper is labelled `primary`, `review`, `preprint` or `unknown` —

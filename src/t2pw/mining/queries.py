@@ -27,6 +27,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Sequence
 
 from t2pw.mining.config import MiningConfig
+from t2pw.mining.frontier import seed_frontier
 from t2pw.mining.ids import query_id as make_query_id
 from t2pw.mining.models import (
     FRONTIER_BRANCH,
@@ -183,6 +184,25 @@ def build_query(
     )
 
 
+def rescue_terms(config: MiningConfig, frontier: Sequence[FrontierItem]) -> List[str]:
+    """This run's seed and frontier enzyme / metabolite names, for the screen rescue.
+
+    The names are the frontier items' own :func:`target_terms` plus the declared
+    seeds. The topic, the species and pathway-reference targets are left out:
+    they are not enzymes or metabolites. Names shorter than 3 characters are left
+    out too; a 1-2 letter acronym matches by accident.
+    """
+    skip = {_clean(config.topic).casefold(), config.target_species.casefold()}
+    names: List[str] = []
+    for item in [*seed_frontier(config), *frontier]:
+        if item.kind == FRONTIER_PATHWAY_REFERENCE:
+            continue
+        for term in target_terms(item, config):
+            if len(term) >= 3 and term.casefold() not in skip and term not in names:
+                names.append(term)
+    return names
+
+
 def retrieval_query_text(item: FrontierItem, config: MiningConfig) -> str:
     """The natural-language string used for *passage* retrieval, not paper search.
 
@@ -197,4 +217,4 @@ def retrieval_query_text(item: FrontierItem, config: MiningConfig) -> str:
     return " ".join(p for p in parts if p)
 
 
-__all__ = ["target_terms", "formulation", "build_context", "build_query", "retrieval_query_text"]
+__all__ = ["target_terms", "formulation", "build_context", "build_query", "rescue_terms", "retrieval_query_text"]

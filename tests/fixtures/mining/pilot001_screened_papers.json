@@ -1,0 +1,556 @@
+{
+ "source": "pilot-001 (ORCH-742a), run/papers.jsonl + run/rounds/round_001/new_frontier.jsonl; expectations from bio-audit screening_quality in audit_workflow_result.json",
+ "target_species": "Arabidopsis thaliana",
+ "topic": "jasmonate biosynthesis",
+ "seeds": [
+  {
+   "kind": "seed_metabolite",
+   "value": "12-OPDA"
+  },
+  {
+   "kind": "seed_enzyme",
+   "value": "AOS"
+  }
+ ],
+ "frontier_by_round": {
+  "1": [],
+  "2": [
+   {
+    "kind": "seed_expansion",
+    "target": "12-OPDA"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "EPA (20:5n3) | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "dn-cis-OPDA | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "LA (18:2n6) | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "(9S,13S)-dn-cis-OPDA | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "15-HPEPE | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "16:1n9 (Δ7-palmitoleic acid) | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "16:2n6 (HDA) | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "ALA (18:3n3) | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "allene oxide (12,13-EOT) | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "allene oxide | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "HTA (16:3n3) | jasmonate biosynthesis"
+   },
+   {
+    "kind": "bridge_search",
+    "target": "Δ4-dn-iso-OPDA | jasmonate biosynthesis"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "(9S,13S)-dn-cis-OPDA"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "(9S,13S)-OPDA"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "16:1n9 (Δ7-palmitoleic acid)"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "16:2n6 (HDA)"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "allene oxide"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "allene oxide (14,15-EEPE)"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "dn-OPDA-Gln"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "dn-OPDA-Glu"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "dn-OPDA-His"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "EPA (20:5n3)"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "HTA (16:3n3)"
+   },
+   {
+    "kind": "downstream_expansion",
+    "target": "Δ4-dn-iso-OPDA"
+   },
+   {
+    "kind": "upstream_expansion",
+    "target": "13-HPOT"
+   },
+   {
+    "kind": "upstream_expansion",
+    "target": "15-HPEPE"
+   },
+   {
+    "kind": "upstream_expansion",
+    "target": "15-HPETE"
+   },
+   {
+    "kind": "upstream_expansion",
+    "target": "16:0 (palmitic acid)"
+   },
+   {
+    "kind": "upstream_expansion",
+    "target": "16:1n9"
+   },
+   {
+    "kind": "upstream_expansion",
+    "target": "allene oxide (from 11-HPHT)"
+   },
+   {
+    "kind": "upstream_expansion",
+    "target": "dn-cis-OPDA"
+   },
+   {
+    "kind": "upstream_expansion",
+    "target": "HDA (16:2n6)"
+   },
+   {
+    "kind": "upstream_expansion",
+    "target": "LA (18:2n6)"
+   },
+   {
+    "kind": "upstream_expansion",
+    "target": "Δ4-dn-cis-OPDA"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "13-HPOT -> allene oxide (12,13-EOT)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "15-HPEPE -> allene oxide (14,15-EEPE)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "15-HPETE -> allene oxide"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "16:0 (palmitic acid) -> 16:1n9 (Δ7-palmitoleic acid)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "16:1n9 -> 16:2n6 (HDA)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "ALA (18:3n3) -> SDA (18:4n3)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "allene oxide (12,13-EOT) -> (9S,13S)-OPDA"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "ARA (20:4n6) -> EPA (20:5n3)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "DGLA (20:3n6) -> ARA (20:4n6)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "dn-cis-OPDA -> dn-iso-OPDA"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "ETA (20:4n3) -> EPA (20:5n3)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "GLA (18:3n6) -> DGLA (20:3n6)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "HDA (16:2n6) -> HTA (16:3n3)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "LA (18:2n6) -> ALA (18:3n3)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "LA (18:2n6) -> GLA (18:3n6)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "SDA (18:4n3) -> ETA (20:4n3)"
+   },
+   {
+    "kind": "missing_species_evidence",
+    "target": "Δ4-dn-cis-OPDA -> Δ4-dn-iso-OPDA"
+   },
+   {
+    "kind": "branch_reaction",
+    "target": "(9S,13S)-dn-cis-OPDA"
+   },
+   {
+    "kind": "branch_reaction",
+    "target": "(9S,13S)-OPDA"
+   },
+   {
+    "kind": "branch_reaction",
+    "target": "13-HPOT"
+   },
+   {
+    "kind": "branch_reaction",
+    "target": "15-HPEPE"
+   },
+   {
+    "kind": "branch_reaction",
+    "target": "15-HPETE"
+   },
+   {
+    "kind": "branch_reaction",
+    "target": "16:0 (palmitic acid)"
+   }
+  ]
+ },
+ "papers": [
+  {
+   "paper_id": "PMC:PMC13358708",
+   "candidate_id": "PMC13358708",
+   "title": "Size of chloroplasts in Arabidopsis mesophyll cells affects jasmonate biosynthesis.",
+   "abstract": "Chloroplasts are highly dynamic organelles whose morphology responds to developmental and environmental cues, yet whether organellar architecture directly influences metabolic capacity remains unclear. Using Arabidopsis arc3 and arc5 mutants harbouring defective division machinery resulting in giant chloroplasts, we investigated how chloroplast morphology is linked to the biosynthesis of jasmonates, such as jasmonic acid (JA) and jasmonoyl-isoleucine (JA-Ile). Quantitative three-dimensional analysis using confocal laser scanning microscopy, jasmonate determination after wounding, galactolipid profiling and ultrastructural analysis were performed to characterize arc mutants relative to wild type, the chloroplast positioning mutant chup1 and the chloroplast movement mutant kac1/2. Upon wounding, arc mutants accumulated higher levels of JA and JA-Ile than the wild type, whereas levels of galactolipids enriched in α-linolenic acid, the primary fatty acid substrate for jasmonate biosynthesis, were reduced. Giant chloroplasts in arc mutants possessed loosely organized thylakoid membranes with expanded stromal regions. Moreover, protein abundance of the JA biosynthetic enzyme allene oxide cyclase was increased in arc mutants. Enhanced jasmonate production resulted in a stronger mechanostimulation response in these mutants: Compared to wild type, arc mutants exhibited a more pronounced flowering delay under repeated mechanical stimulation. The combination of altered membrane architecture and increased enzyme abundance likely underlies enhanced jasmonate production. Collectively, these findings identify chloroplast morphology as a previously unrecognized factor associated with jasmonate biosynthesis and suggest a link between organellar architecture and hormone biosynthesis during plant stress adaptation.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 1.5,
+    "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: enriched)"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "chloroplast size / JA physiology (bio-audit: correctly excluded, keyword-artefact reason)"
+  },
+  {
+   "paper_id": "PMC:PMC13096701",
+   "candidate_id": "PMC13096701",
+   "title": "Interaction with CYP20-3 limits OPDA flux into jasmonate biosynthesis in wounded leaves of arabidopsis grown at eCO&lt;sub&gt;2&lt;/sub&gt;.",
+   "abstract": "Upon recognition of a stress, such as wounding, a rapid increase in jasmonates leads to plant resistance against necrotrophic pathogens and chewing insect herbivores. This jasmonate burst is weaker in <i>Arabidopsis thaliana</i> plants grown under future predicted carbon dioxide levels (eCO<sub>2</sub>) compared to todays' levels. Even though foliar levels of jasmonoyl-isoleucine are lower in wounded arabidopsis at eCO<sub>2</sub>, levels of their precursor, 12-<i>oxo</i>-phytodienoic acid (OPDA), are not affected by atmospheric CO<sub>2</sub> levels. We focused on the role of the OPDA-binding protein CYP20-3 in regulating jasmonate levels in wounded rosettes of arabidopsis grown at eCO<sub>2</sub>. By comparing phytohormone and transcriptomic responses of wounded wildtype plants and <i>cyp20-3</i> grown under different CO<sub>2</sub> conditions, our results suggest that under eCO<sub>2</sub>, CYP20-3 binds to OPDA to limit flux into jasmonate biosynthesis. As well, the CYP20-3-OPDA-SAT1-OASTL-B complex activates cysteine production which can lead to glutathione biosynthesis to buffer changes in the cellular redox state, dampening wound-associated oxidative stress that leads to jasmonate biosynthesis.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 2.25,
+    "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic)"
+   },
+   "expectation": "borderline",
+   "bio_audit_note": "CYP20-3 / OPDA flux regulation (bio-audit: borderline)"
+  },
+  {
+   "paper_id": "PMC:PMC13238047",
+   "candidate_id": "PMC13238047",
+   "title": "Lipoxygenase 2 (LOX2) enhances cold tolerance through modulating jasmonate biosynthesis in Nicotiana tabacum.",
+   "abstract": "BACKGROUND: Chilling stress severely compromises tobacco production by reducing leaf biomass accumulation and deteriorating leaf quality. Lipoxygenase (LOX) plays a key role in the oxidative metabolism of linoleic and linolenic acids, which serves as the initial step for jasmonic acid (JA) biosynthesis. However, its specific function in mediating cold-induced JA accumulation and cold tolerance in Nicotiana tabacum remains elusive. RESULTS: Our results found that cold stress significantly induces NtLOX2 expression in N. tabacum. Transgenic tobacco plants overexpressing NtLOX2 (OE#NtLOX2-1 and OE#NtLOX2-2) exhibited improved cold tolerance, which was associated with increased activities of antioxidant enzymes and improved reactive oxygen species (ROS) scavenging capacity. RNA-seq analysis revealed that NtLOX2-overexpressing lines displayed upregulation of key cold-responsive genes, including COR, ERF, LRR-RLK, GST, POD, DREB, and NCED. Furthermore, genes involved in JA biosynthesis, such as ADH and OPR1, were also upregulated, concomitant with elevated levels of both JA and MeJA as confirmed by metabolic profiling. CONCLUSIONS: Our results demonstrate that NtLOX2 enhances cold tolerance by stimulating JA biosynthesis and activating a downstream transcriptional network of cold-responsive and antioxidant genes. These findings posit NtLOX2 as a promising genetic target for improving cold tolerance in crops.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 1.0,
+    "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: upregulated, rna seq)"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "tobacco (NtLOX2)"
+  },
+  {
+   "paper_id": "PMC:PMC11478715",
+   "candidate_id": "PMC11478715",
+   "title": "Genetic Transformation of <i>Triticum dicoccum</i> and <i>Triticum aestivum</i> with Genes of Jasmonate Biosynthesis Pathway Affects Growth and Productivity Characteristics.",
+   "abstract": "The transformation protocol based on the dual selection approach (fluorescent protein and herbicide resistance) has been applied here to produce transgenic plants of two cereal species, emmer wheat and bread wheat, with the goal of activating the synthesis of the stress hormone jasmonates by overexpressing <i>ALLENE OXIDE SYNTHASE</i> from <i>Arabidopsis thaliana</i> (<i>AtAOS</i>) and bread wheat (<i>TaAOS</i>) and <i>OXOPHYTODIENOATE REDUCTASE 3</i> from <i>A. thaliana</i> (<i>AtOPR3</i>) under the strong constitutive promoter (<i>ZmUbi1</i>), either individually or both genes simultaneously. The delivery of the expression cassette encoding AOS was found to affect morphogenesis in both wheat species negatively. The effect of transgene expression on the accumulation of individual jasmonates in hexaploid and tetraploid wheat was observed. Among the introduced genes, overexpression of <i>TaAOS</i> was the most successful in increasing stress-inducible phytohormone levels in transgenic plants, resulting in higher accumulations of JA and JA-Ile in emmer wheat and 12-OPDA in bread wheat. In general, overexpression of <i>AOS</i>, alone or together with <i>AtOPR3</i>, negatively affected leaf lamina length and grain numbers per spike in both wheat species. Double (<i>AtAOS</i> + <i>AtOPR3</i>) transgenic wheat plants were characterized by significantly reduced plant height and seed numbers, especially in emmer wheat, where several primary plants failed to produce seeds.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 2.5,
+    "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "wheat (AtAOS/AtOPR3 transgenes)"
+  },
+  {
+   "paper_id": "PMC:PMC11300881",
+   "candidate_id": "PMC11300881",
+   "title": "NAD&lt;sup&gt;+&lt;/sup&gt; deficiency primes defense metabolism via &lt;sup&gt;1&lt;/sup&gt;O&lt;sub&gt;2&lt;/sub&gt;-escalated jasmonate biosynthesis in plants.",
+   "abstract": "Nicotinamide adenine dinucleotide (NAD<sup>+</sup>) is a redox cofactor and signal central to cell metabolisms. Disrupting NAD homeostasis in plant alters growth and stress resistance, yet the underlying mechanisms remain largely unknown. Here, by combining genetics with multi-omics, we discover that NAD<sup>+</sup> deficiency in qs-2 caused by mutation in NAD<sup>+</sup> biosynthesis gene-Quinolinate Synthase retards growth but induces biosynthesis of defense compounds, notably aliphatic glucosinolates that confer insect resistance. The elevated defense in qs-2 is resulted from activated jasmonate biosynthesis, critically hydroperoxidation of α-linolenic acid by the 13-lipoxygenase (namely LOX2), which is escalated via the burst of chloroplastic ROS-singlet oxygen (<sup>1</sup>O<sub>2</sub>). The NAD<sup>+</sup> deficiency-mediated JA induction and defense priming sequence in plants is recapitulated upon insect infestation, suggesting such defense mechanism operates in plant stress response. Hence, NAD homeostasis is a pivotal metabolic checkpoint that may be manipulated to navigate plant growth and defense metabolism for stress acclimation.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 3.0,
+    "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: multi omics)"
+   },
+   "expectation": "borderline",
+   "bio_audit_note": "NAD+ / LOX2 regulatory work (bio-audit: borderline)"
+  },
+  {
+   "paper_id": "PMID:35404431",
+   "candidate_id": "35404431",
+   "title": "On the initiation of jasmonate biosynthesis in wounded leaves.",
+   "abstract": "The basal level of the plant defense hormone jasmonate (JA) in unstressed leaves is low, but wounding causes its near instantaneous increase. How JA biosynthesis is initiated is uncertain, but the lipolysis step that generates fatty acid precursors is generally considered to be the first step. Here, we used a series of physiological, pharmacological, genetic, and kinetic analyses of gene expression and hormone profiling to demonstrate that the early spiking of JA upon wounding does not depend on the expression of JA biosynthetic genes in Arabidopsis (Arabidopsis thaliana). Using a transgenic system, we showed how decoupling the responses to wounding and JA prevents the perpetual synthesis of JA in wounded leaves. We then used DEFECTIVE IN ANTHER DEHISCENCE1 (DAD1) as a model wound-responsive lipase to demonstrate that although its transient expression in leaves can elicit JA biosynthesis to a low level, an additional level of activation is triggered by wounding, which causes massive accumulation of JA. This wound-triggered boosting effect of DAD1-mediated JA synthesis can happen directly in damaged leaves or indirectly in undamaged remote leaves by the systemically transmitted wound signal. Finally, protein stability of DAD1 was influenced by wounding, α-linolenic acid, and mutation in its catalytic site. Together, the data support mechanisms that are independent of gene transcription and translation to initiate the rapid JA burst in wounded leaves and demonstrate how transient expression of the lipase can be used to reveal changes occurring at the level of activity and stability of the key lipolytic step.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 3.0,
+    "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it"
+   },
+   "expectation": "desired_include",
+   "bio_audit_note": "DAD1 lipase, initiation of JA biosynthesis in A. thaliana (bio-audit: moderate miss)"
+  },
+  {
+   "paper_id": "PMC:PMC12865809",
+   "candidate_id": "PMC12865809",
+   "title": "Plant oxylipins: adaptation to environmental stresses and impact on mycotoxin contamination.",
+   "abstract": "Due to increasingly frequent changes in climatic conditions and global warming, plants consistently deal with severe weather events including extreme temperature variations, floods and drought. These abiotic stressors resulting from climate change weaken host crop resistance, making them more exposed to fungal disease insurgences and mycotoxin contamination. Oxylipins are major players in the plant-environment interaction. Their synthesis begins with the oxygenation of polyunsaturated fatty acids by lipoxygenases (LOXs) to generate fatty acid hydroperoxides that in turn are converted into a huge assortment of bioactive compounds by specialized cytochrome P450 enzymes, known as CYP74. In the present review we focus on recent advances concerning oxylipin biosynthesis and the phylogenetic relationships among the main key enzymes of the oxylipin pathway considering five monocot and dicot plant species. Moreover, new information regarding the role of these signaling molecules on the plant physiology in response to abiotic stress and mycotoxin occurrence are provided along with the application of clustered regularly interspaced short palindromic repeats (CRISPR)/CRISPR associated (Cas) (CRISPR/Cas)-based tools. Here, we report the intervention of <i>LOX</i>, <i>allene oxide synthase</i>, <i>OPDA reductase</i>, <i>JASMONATE</i> (JA) <i>resistant</i> and <i>JA ZIM domain</i> genes along with the accumulation of JA and its conjugates, 12-OPDA, ketols and green leaf volatiles in response to abiotic stress. The modulation of <i>LOX</i> genes and the production of several fatty acids, oxylipins and sphingolipids is also required against mycotoxin contamination.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 0.0,
+    "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "general oxylipin review"
+  },
+  {
+   "paper_id": "PMC:PMC13493544",
+   "candidate_id": "PMC13493544",
+   "title": "Phyto-Oxylipins as Key Regulators of Plant Resilience to Abiotic and Biotic Stress.",
+   "abstract": "Phyto-oxylipins, oxidized derivatives of unsaturated fatty acids, serve as crucial mediators in plant responses to biotic and abiotic stresses, which are becoming increasingly frequent and severe under changing climatic conditions. These signaling molecules, produced enzymatically or spontaneously, orchestrate a wide range of physiological and molecular responses that enhance plant resilience. By scavenging reactive oxygen species (ROS) and upregulating antioxidant enzymes, phyto-oxylipins help mitigate oxidative damage, thus preserving cellular integrity and sustaining growth under environmental stress. Additionally, they interact intricately with key phytohormones such as jasmonic acid (JA), abscisic acid, and salicylic acid (SA), forming a dynamic hormonal network that regulates stress-responsive genes and adaptive processes. Beyond stress mitigation, phyto-oxylipins promote wound healing, programmed cell death, and cell wall reinforcement, essential for maintaining plant structural integrity. Recognizing these molecules as central regulators of stress adaptation offers promising avenues for developing climate-resilient crops. This review synthesizes current insights into the molecular and physiological roles of phyto-oxylipins, emphasizing their potential in integrating plant defense mechanisms to enhance crop productivity amid abiotic and biotic challenges.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": -0.75,
+    "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "general oxylipin review"
+  },
+  {
+   "paper_id": "PMC:PMC9947334",
+   "candidate_id": "PMC9947334",
+   "title": "Pseudophosphorylation of Arabidopsis jasmonate biosynthesis enzyme lipoxygenase 2 via mutation of Ser<sup>600</sup> inhibits enzyme activity.",
+   "abstract": "Jasmonates are oxylipin phytohormones critical for plant resistance against necrotrophic pathogens and chewing herbivores. An early step in their biosynthesis is catalyzed by non-heme iron lipoxygenases (LOX; EC 1.13.11.12). In Arabidopsis thaliana, phosphorylation of Ser<sup>600</sup> of AtLOX2 was previously reported, but whether phosphorylation regulates AtLOX2 activity is unclear. Here, we characterize the kinetic properties of recombinant WT AtLOX2 (AtLOX2<sup>WT</sup>). AtLOX2<sup>WT</sup> displays positive cooperativity with α-linolenic acid (α-LeA, jasmonate precursor), linoleic acid (LA), and arachidonic acid (AA) as substrates. Enzyme velocity with endogenous substrates α-LeA and LA increased with pH. For α-LeA, this increase was accompanied by a decrease in substrate affinity at alkaline pH; thus, the catalytic efficiency for α-LeA was not affected over the pH range tested. Analysis of Ser<sup>600</sup> phosphovariants demonstrated that pseudophosphorylation inhibits enzyme activity. AtLOX2 activity was not detected in phosphomimics Atlox2<sup>S600D</sup> and Atlox2<sup>S600M</sup> when α-LeA or AA were used as substrates. In contrast, phosphonull mutant Atlox2<sup>S600A</sup> exhibited strong activity with all three substrates, α-LeA, LA, and AA. Structural comparison between the AtLOX2 AlphaFold model and a complex between 8R-LOX and a 20C polyunsaturated fatty acid suggests a close proximity between AtLOX2 Ser<sup>600</sup> and the carboxylic acid head group of the polyunsaturated fatty acid. This analysis indicates that Ser<sup>600</sup> is located at a critical position within the AtLOX2 structure and highlights how Ser<sup>600</sup> phosphorylation could affect AtLOX2 catalytic activity. Overall, we propose that AtLOX2 Ser<sup>600</sup> phosphorylation represents a key mechanism for the regulation of AtLOX2 activity and, thus, the jasmonate biosynthesis pathway and plant resistance.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 4.0,
+    "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it"
+   },
+   "expectation": "required_include",
+   "bio_audit_note": "primary recombinant AtLOX2 enzymology (bio-audit: clear miss)"
+  },
+  {
+   "paper_id": "PMC:PMC13364333",
+   "candidate_id": "PMC13364333",
+   "title": "Jasmonate Biosynthesis Across Bryophyte Lineages: Lessons from &lt;i&gt;Marchantia polymorpha&lt;/i&gt; and Beyond.",
+   "abstract": "Jasmonates are lipid-derived phytohormones that regulate plant development and defense across the green lineage. Thus, understanding the intricacies of jasmonate biosynthesis and signaling is of paramount importance to improve crop yields and food safety. For the last 40 years, the canonical jasmonate biosynthetic pathway has been thoroughly dissected in angiosperms; however, only recent efforts have started to decode the alternative jasmonate biosynthetic networks that operate in bryophytes. In the nonvascular model <i>Marchantia polymorpha</i>, a <i>cis</i>-to-<i>iso</i> isomerization constitutes a key step in the formation of dn-<i>iso</i>-OPDA and Δ<sup>4</sup>-dn-<i>iso</i>-OPDA, the bioactive jasmonates recognized by a conserved COI1/JAZ co-receptor complex. Their biosynthesis depends on a uniquely expanded fatty acid repertoire that includes, alongside the canonical C<sub>16</sub> and C<sub>18</sub> omega-3 polyunsaturated fatty acids (PUFAs) found in angiosperms, substantial pools of eicosanoids such as arachidonic acid and eicosapentaenoic acid, essentially absent from flowering plants. Here we trace the jasmonate biosynthetic pathway in bryophytes step-by-step, from PUFA precursors production through lipoxygenase oxygenation and downstream reactions to the processing and catabolic modifications of bioactive compounds. By integrating current knowledge across bryophyte lineages, we identify mechanistic parallels and divergences relative to angiosperms, highlight key unresolved questions, and propose future directions for the field. Deciphering jasmonate biosynthesis in bryophytes is essential for reconstructing the evolutionary origins of jasmonate signaling and understanding how this pathway contributed to the successful colonization of land by plants.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "eligible",
+    "screening_score": 5.0,
+    "reason": "score 5.0 >= threshold 2.0; anchored on jasmonate biosynthesis, jasmonate biosynthetic pathway, jasmonate biosynthetic (local: precursors)"
+   },
+   "expectation": "included",
+   "bio_audit_note": "the Marchantia review pilot-001 included"
+  },
+  {
+   "paper_id": "PMC:PMC10721488",
+   "candidate_id": "PMC10721488",
+   "title": "Histone H3 lysine 27 trimethylation suppresses jasmonate biosynthesis and signaling to affect male fertility under high temperature in cotton.",
+   "abstract": "High-temperature (HT) stress causes male sterility in crops, thus decreasing yields. To explore the possible contribution of histone modifications to male fertility under HT conditions, we defined the histone methylation landscape for the marks histone H3 lysine 27 trimethylation (H3K27me3) and histone H3 lysine 4 trimethylation (H3K4me3) by chromatin immunoprecipitation sequencing (ChIP-seq) in two differing upland cotton (Gossypium hirsutum) varieties. We observed a global disruption in H3K4me3 and H3K27me3 modifications, especially H3K27me3, in cotton anthers subjected to HT. HT affected the bivalent H3K4me3-H3K27me3 modification more than either monovalent modification. We determined that removal of H3K27me3 at the promoters of jasmonate-related genes increased their expression, maintaining male fertility under HT in the HT-tolerant variety at the anther dehiscence stage. Modulating jasmonate homeostasis or signaling resulted in an anther indehiscence phenotype under HT. Chemical suppression of H3K27me3 deposition increased jasmonic acid contents and maintained male fertility under HT. In summary, our study provides new insights into the regulation of male fertility by histone modifications under HT and suggests a potential strategy for improving cotton HT tolerance.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 1.25,
+    "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: sequencing)"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "cotton"
+  },
+  {
+   "paper_id": "DOI:10.64898/2026.09.07.749967",
+   "candidate_id": "10.64898/2026.09.07.749967",
+   "title": "Lysine biosynthesis impairment shapes heat-stress acclimation through metabolic and transcriptional reprogramming in  <i>Arabidopsis thaliana</i>",
+   "abstract": "<h4>ABSTRACT</h4>  Global warming is increasing the frequency and intensity of high-temperature episodes, limiting plant productivity. However, the molecular mechanisms integrating primary metabolism with the heat stress response remains poorly understood. Here, we show that lysine biosynthesis contributes to the coordination of physiological, metabolic and transcriptional responses to heat stress in  Arabidopsis thaliana . We compared wild-type, the lysine-biosynthesis mutant  dapat , and the salicylic acid (SA)-biosynthesis and signaling mutants  sid2-1 and  npr1-3 under prolonged warming (6□°C above control for 7 days) and heat shock (38 °C for 6 h), followed by recovery. We assessed growth, gas exchange, photosynthetic performance, free SA, salicylic acid glucoside (SAG), salicylic acid glucose ester (SGE), and total SA content, primary metabolite profiles, heat-stress-responsive gene expression and transcriptome-wide changes by RNA sequencing. Before heat stress,  dapat mutant presented a distinct metabolic state, marked by amino-acid accumulation, altered organic-acid profiles, reduced soluble sugars and elevated endogenous SA. This metabolic configuration persisted during prolonged warming, whereas WT and SA-pathway mutants underwent more dynamic reprogramming. Heat shock, by contrast, elicited a more convergent response across genotypes. Despite reduced basal PSII efficiency,  dapat maintained photosynthetic performance during prolonged warming and recovered. Its transcriptional response, however, differed from that of WT and SA-pathway mutants: selected heat-responsive genes were constitutively or more strongly expressed, whereas some canonical heat- stress regulators showed weaker induction after heat shock. RNA-seq further revealed a largely conserved core heat-shock response but genotype-dependent regulation of defense, hormone and amino-acid-metabolism programs, particularly during recovery. Together, these findings indicate that impaired DAPAT activity establishes a metabolically primed but energetically constrained state that reshapes gas exchange, photosynthetic acclimation and heat-responsive transcription. Lysine homeostasis therefore emerges as a regulatory node linking primary metabolism and SA accumulation with SA-dependent and SA-independent components of heat-stress acclimation.",
+   "discovered_round": 1,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": -0.5,
+    "reason": "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "unrelated stress / omics"
+  },
+  {
+   "paper_id": "PMC:PMC13373823",
+   "candidate_id": "PMC13373823",
+   "title": "Weaponizing nutrition: plants use a double strategy to fight herbivory, converting nutritionally essential fatty acids into defensive oxylipin signals.",
+   "abstract": "Jasmonates, key plant immune hormones, derive almost exclusively from omega-3 polyunsaturated fatty acids (n3-PUFAs), yet the evolutionary rationale for this substrate specificity remains unresolved. This study employed the liverwort Marchantia polymorpha to investigate the functional roles of omega-3 fatty acid desaturases (n3-FADs) in n3-PUFA metabolism, jasmonate biosynthesis and plant defense. CRISPR-Cas9-mediated loss-of-function mutants were generated for MpFAD3 (endoplasmic reticulum-localized) and MpFAD7 (chloroplast-localized), including a double mutant (Mpfad3fad7). Phenotypic characterization encompassed fatty acid and jasmonate profiling, transcriptomic analysis, pathogen inoculation (Fusarium oxysporum), herbivory assays (Spodoptera exigua) and dietary PUFA supplementation experiments. We found that MpFAD3 and MpFAD7 control distinct jasmonate subsets, with Mpfad3fad7 representing the first fully jasmonate-deficient Marchantia line. Contrary to expectations, jasmonate-deficient fad mutants did not support enhanced larval performance, whereas dietary n3-PUFA supplementation significantly promoted caterpillar growth and pupation success. Our results indicate that plants deploy a dual anti-herbivore defense strategy by converting nutritionally essential n3-PUFAs into defense signals, simultaneously depleting insect nutrients and activating immune responses. The presence of both n3-PUFAs and oxylipins in algae lacking jasmonate pathways supports n3-PUFA depletion as an ancestral defense mechanism predating jasmonate-dependent immunity.",
+   "discovered_round": 2,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 2.5,
+    "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic)"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "Marchantia primary (MpFAD3/MpFAD7)"
+  },
+  {
+   "paper_id": "PMC:PMC12280011",
+   "candidate_id": "PMC12280011",
+   "title": "Downstream metabolites of (+)-cis-12-oxo-phytodienoic acid function as noncanonical bioactive jasmonates in Arabidopsis thaliana.",
+   "abstract": "(+)-cis-12-oxo-phytodienoic acid (cis-OPDA) is a biosynthetic precursor of the plant hormone (+)-7-iso-Jasmonoyl-L-isoleucine (JA-Ile). It was proposed as an endogenous chemical signal independent of the JA-Ile receptor COI1-JAZ in Arabidopsis thaliana. The bioactive form of cis-OPDA that induces COI1-JAZ-independent gene expression remains unknown. Here we demonstrate that the downstream metabolites of cis-OPDA, especially tetranor-cis-OPDA (tn-cis-OPDA) and 7-iso-4,5-didehydro-JA (4,5-ddh-JA), upregulate the expression of the OPDA marker genes such as ZAT10 and ERF5. These downstream metabolites function independently of the JA-Ile-COI1-JAZ-MYCs canonical jasmonate signaling module, and their electrophilic α, β-unsaturated carbonyl functionalities are essential for their bioactivity. These results raise a possibility that the downstream metabolites of cis-OPDA would function as endogenous chemical signal in A. thaliana.",
+   "discovered_round": 2,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 0.0,
+    "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "desired_include",
+   "bio_audit_note": "12-OPDA downstream metabolites in A. thaliana (bio-audit: moderate miss)"
+  },
+  {
+   "paper_id": "PMC:PMC11225365",
+   "candidate_id": "PMC11225365",
+   "title": "Δ<sup>4</sup>-dn-<i>iso</i>-OPDA, a bioactive plant hormone of <i>Marchantia polymorpha</i>.",
+   "abstract": "Significant progress has been recently made in our understanding of the evolution of jasmonates biosynthesis and signaling. The bioactive jasmonate activating COI1-JAZ co-receptor differs in bryophytes and vascular plants. Dinor<i>-iso</i>-12-oxo-phytodienoic acid (dn-<i>iso</i>-OPDA) is the bioactive hormone in bryophytes and lycophytes. However, further studies showed that the full activation of hormone signaling in <i>Marchantia polymorpha</i> requires additional unidentified hormones. Δ<sup>4</sup>-dn-OPDAs were previously identified as novel bioactive jasmonates in <i>M. polymorpha</i>. In this paper, we describe the major bioactive isomer of Δ<sup>4</sup>-dn-OPDAs as Δ<sup>4</sup>-dn-<i>iso</i>-OPDA through chemical synthesis, receptor binding assay, and biological activity in <i>M. polymorpha</i>. In addition, we disclosed that Δ<sup>4</sup>-dn-<i>cis</i>-OPDA is a biosynthetic precursor of Δ<sup>4</sup>-dn-<i>iso</i>-OPDA. We demonstrated that in planta <i>cis</i>-to-<i>iso</i> conversion of Δ<sup>4</sup>-dn-<i>cis</i>-OPDA occurs in the biosynthesis of Δ<sup>4</sup>-dn-<i>iso</i>-OPDA, defining a key biosynthetic step in the chemical evolution of hormone structure. We predict that these findings will facilitate further understanding of the molecular evolution of plant hormone signaling.",
+   "discovered_round": 2,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": -1.0,
+    "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "Marchantia primary (delta4-dn-iso-OPDA)"
+  },
+  {
+   "paper_id": "PMID:42734610",
+   "candidate_id": "42734610",
+   "title": "DNA methylome responses to biotic and abiotic stress in Arabidopsis thaliana: A multi-study analysis.",
+   "abstract": "<h4>Rationale</h4>Plants experience diverse biotic and abiotic stresses that can induce changes in DNA methylation. However, comparisons among existing studies are complicated by differences in analytical methods and experimental designs. We aimed to identify shared and stress-specific DNA methylation responses across studies.<h4>Methods</h4>We reanalysed 16 whole-genome bisulphite sequencing datasets from 13 Arabidopsis thaliana studies using a unified bioinformatics pipeline. Differentially methylated regions (DMRs) were assessed in the CG, CHG and CHH contexts and examined in relation to genes, transposable elements (TEs), Gene Ontology terms, gene-proximal TE superfamilies and epimutation-prone loci.<h4>Results</h4>Global methylation levels were generally stable, whereas the number and genomic distribution of DMRs varied according to stress type and methylation context. CG-DMRs occurred primarily in gene bodies, while CHG- and CHH-DMRs were enriched in TEs. Functional analysis identified shared stress-related processes across conditions. Gene-proximal LINE/L1, RathE1_cons and DNA/HAT elements were enriched for stress-responsive methylation changes. A subset of stress-associated CG-DMRs overlapped loci known to accumulate stable epimutations over generations.<h4>Conclusions</h4>Standardized cross-study analysis revealed both shared and stress-specific methylation patterns. The association of stress-responsive DMRs with gene-proximal TEs and epimutation-prone loci suggests potential links among environmental responses, genome regulation and long-term epigenetic variation.",
+   "discovered_round": 2,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 0.25,
+    "reason": "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "unrelated stress / omics"
+  },
+  {
+   "paper_id": "PMC:PMC13524073",
+   "candidate_id": "PMC13524073",
+   "title": "Fingers for signaling? A possible role of stromules in intracellular communication.",
+   "abstract": "Plastid stromules are frequently observed under stress, yet their function remains enigmatic. In the current study, we tested 2 alternative hypotheses: stromules might channel metabolic flux from plastids to peroxisomes during jasmonate biosynthesis, or they might serve as conduits for plastid-nucleus retrograde signaling. We used Nicotiana tabacum BY-2 cells to investigate stromulation in nonphotosynthetic plastids. Fluorescent markers for stroma, plastid outer membrane, peroxisomes, and the 12-oxo-phytodienoic acid (OPDA) exporter were combined with confocal visualization and AI-based quantification of stromule frequency and length. Exogenous methyl jasmonate (MeJA) and salicylic acid (SA) each triggered a rapid (∼60 min) ∼3-fold increase in stromule frequency. This increase primarily resulted from more initiation events, rather than elongation. Disrupting microtubules with oryzalin stopped MeJA from causing stromule formation, while actin depolymerization had no effect. Inhibition of jasmonate biosynthesis with Phenidone prevented SA-triggered stromule formation. MeJA-induced expression of genes involved in jasmonate biosynthesis (AOC) and jasmonate responses (JAZ1 and JAZ3) was further amplified when stromule formation was suppressed by oryzalin, suggesting that stromules modulate jasmonate-dependent gene expression. The GFP-fusion of the OPDA exporter JASSY showed a significant preference for stromules, and over 80% of them associated with peroxisomes. Stromule frequency was highest during the cell-expansion phase. We discuss our findings in the context of a role for stromules in stress-dependent retrograde signaling from plastids to the nucleus.",
+   "discovered_round": 2,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 2.0,
+    "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "tobacco (BY-2 stromules)"
+  },
+  {
+   "paper_id": "PMC:PMC13490264",
+   "candidate_id": "PMC13490264",
+   "title": "Metabolism meets transport: a new perspective on auxin homeostasis at subcellular level.",
+   "abstract": "<h4>Main conclusion</h4>This review highlights recent advances revealing auxin homeostasis as an integrated network of metabolism and transport, emphasizing subcellular compartmentalization as a key regulatory principle. Indole-3-acetic acid (IAA), the principal auxin, is a central regulator of plant growth and development throughout the plant life cycle. Recent discoveries have reshaped our understanding of auxin metabolism and highlighted its close integration with auxin transport in maintaining cellular homeostasis. This review summarizes current knowledge on IAA metabolism and places it into the broader framework of auxin distribution within plant cells. The spatial distribution of auxin is tightly linked to its metabolic regulation, as localized auxin accumulation underlies many developmental and signaling processes. Subcellular compartmentalization of auxin into organelles such as the endoplasmic reticulum or vacuole is closely associated with metabolic modifications that influence auxin transport and availability, although the mechanisms governing the movement of auxin conjugates across organellar membranes remain poorly understood. Directed auxin transport delivers active IAA to specific intracellular sites where enzymes catalyze its conjugation, hydrolysis, or degradation. Together, these interconnected processes create a dynamic regulatory network that coordinates auxin metabolism, transport, and compartmentalization to maintain auxin homeostasis and ensure precise control of plant growth and development.",
+   "discovered_round": 2,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": -0.75,
+    "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "auxin review"
+  },
+  {
+   "paper_id": "PMC:PMC13468208",
+   "candidate_id": "PMC13468208",
+   "title": "Maize Lipoxygenase &lt;i&gt;ZmLOX2&lt;/i&gt; Modulates Jasmonate-Associated Antioxidant Defense and ROS Scavenging Under Osmotic Stress in Transgenic Arabidopsis.",
+   "abstract": "Drought stress is a major abiotic factor that adversely affects plant growth, development, and crop productivity. Lipoxygenases (LOXs) are key enzymes in the jasmonic acid (JA) biosynthetic pathway and play crucial roles in plant responses to environmental stresses. In this study, the <i>ZmLOX2</i> gene was cloned from maize (<i>Zea mays</i> L.), and was found to encode a chloroplast-localized 13-lipoxygenase (13-LOX) protein. Expression analysis revealed that <i>ZmLOX2</i> was predominantly expressed in leaves and was strongly induced under osmotic stress conditions. Compared with wild-type plants, transgenic <i>Arabidopsis thaliana</i> overexpressing <i>ZmLOX2</i> exhibited significantly higher survival rates, enhanced growth performance, and improved root development under water deficit conditions. Physiological and biochemical analyses showed that the overexpression lines displayed higher activities of superoxide dismutase (SOD), peroxidase (POD), and catalase (CAT), accompanied by significantly reduced malondialdehyde (MDA) content and reactive oxygen species (ROS) accumulation. Further investigation demonstrated that the expression levels of JA biosynthesis- and signaling-related genes, including <i>ALLENE OXIDE SYNTHASE (AtAOS)</i>, <i>12-OXOPHYTODIENOATE REDUCTASE 3 (AtOPR3)</i>, <i>MYC DOMAIN PROTEIN 2 (AtMYC2)</i>, and <i>JASMONATE ZIM-DOMAIN 1 (AtJAZ1)</i>, were markedly upregulated in the transgenic lines. Protein-protein interaction analysis suggested that ZmLOX2 may interact with ALLENE OXIDE SYNTHASE 1 (AOS1), HYDROPEROXIDE LYASE 1 (HPL1), and ALPHA-DIOXYGENASE 1 (DOX1). Collectively, these results suggest that ZmLOX2 may contribute to plant adaptation to water limitation by regulating responses associated with JA, enhancing antioxidant defense, and maintaining ROS homeostasis.",
+   "discovered_round": 2,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 2.0,
+    "reason": "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "ZmLOX2 in transgenic Arabidopsis (physiology)"
+  },
+  {
+   "paper_id": "PMC:PMC13526860",
+   "candidate_id": "PMC13526860",
+   "title": "Uncovering core regulators of multi-abiotic stress adaptation in Arabidopsis thaliana through integrative meta-analysis and machine learning with RT-qPCR validation.",
+   "abstract": "Abiotic stresses such as drought and salinity impose substantial constraints on agricultural productivity, underscoring the need to decipher the core transcriptional programs that underlie plant resilience. Here, we performed an integrative meta-analysis of Arabidopsis thaliana transcriptomes exposed to drought, salt, and abscisic acid (ABA) treatments. The three stresses exhibited distinct transcriptional architectures: salt stress triggered the most extensive reprogramming (957 DEGs), dominated by pronounced induction of ERF transcription factors (32 genes); drought induced a moderate response (634 DEGs), with NAC (9 genes) and MYB (8 genes) families most represented; and ABA elicited the smallest transcriptional shift (608 DEGs), characterized primarily by ERF and NAC regulators (9 genes each). From the shared stress-responsive gene set, a consensus machine learning framework integrating XGBoost, Random Forest, and AdaBoost identified eight high-confidence predictive biomarkers. To focus on novel discoveries, four candidates with less-established roles in stress signaling-At5g50360, At1g73480, At3g46230, and At1g16850-were prioritized for experimental validation. RT-qPCR analysis confirmed their robust induction under osmotic stress, while the weaker responses of At3g46230 and At1g16850 to exogenous ABA reflected their distinct cis-regulatory architectures, indicating activation through ABA-independent or combinatorial pathways. To link these hub genes to upstream regulation, Pearson correlation analysis across all biological replicates revealed strong positive correlations with ten commonly upregulated TFs (r = 0.67-0.90) and consistent negative correlations with a downregulated repressor (At5g28770, r = - 0.47 to - 0.74), consistent with both activation and de-repression mechanisms. Protein-protein interaction networks further positioned these genes within key stress-related modules, including ABA signaling, lipid metabolism, chaperone networks, and osmotic stress adaptation. Collectively, the integration of large-scale transcriptomic meta-analysis, ensemble machine learning, co-expression analysis, interaction network modeling, and experimental validation defines a conserved abiotic stress-responsive transcriptional signature and prioritizes candidate regulators for future functional characterization in plant stress biology.",
+   "discovered_round": 2,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": 0.5,
+    "reason": "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "unrelated stress / omics"
+  },
+  {
+   "paper_id": "DOI:10.64898/2026.08.31.748218",
+   "candidate_id": "10.64898/2026.08.31.748218",
+   "title": "Subcellular carbohydrate compartmentation and organic acid signatures reveal natural variation in cold acclimation of  <i>Arabidopsis thaliana</i>",
+   "abstract": "Plant cold acclimation emerges from coordinated adjustments in photosynthesis, primary metabolism, and intracellular carbon allocation. Yet, the regulatory role of subcellular metabolite compartmentation in natural variation of cold acclimation remains insufficiently understood. Here, we investigated four  Arabidopsis thaliana accessions grown either individually or in bulk to determine how growth configuration and genotype shape the metabolism of sugars and organic acids during cold exposure. Using non-aqueous fractionation, we quantified plastidial, cytosolic, and vacuolar sugar pools alongside whole-cell carbohydrates, organic acids, enzyme activities, photosynthetic parameters, and stress markers. A neural-network classifier revealed that subcellular sugar distribution together with sugar amounts and organic acids provided the strongest discriminatory power among accessions, surpassing photosynthetic traits and enzyme activities. Our findings demonstrate that natural variation in cold acclimation is strongly determined by genotype-specific subcellular metabolite architectures, and that the cultivation strategy modulates these intracellular signatures. We conclude that subcellular compartmentation of metabolites represents a cellular control layer for natural variation of cold acclimation and resilience in  Arabidopsis thaliana .",
+   "discovered_round": 2,
+   "original_decision": {
+    "screening_outcome": "ineligible_pathway",
+    "screening_score": -0.5,
+    "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "unrelated stress / omics"
+  }
+ ]
+}

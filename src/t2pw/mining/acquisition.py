@@ -15,7 +15,7 @@ paper *discovery*.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from itertools import zip_longest
 from pathlib import Path
@@ -37,6 +37,27 @@ _PMID = re.compile(r"^(?:pmid[:\s]*)?(\d{4,9})$", re.IGNORECASE)
 _PMCID = re.compile(r"^(?:pmcid[:\s]*)?(pmc\d{4,9})$", re.IGNORECASE)
 _DOI = re.compile(r"^(?:doi[:\s]*)?(10\.\d{4,9}/\S+)$", re.IGNORECASE)
 _URL = re.compile(r"^https?://\S+$", re.IGNORECASE)
+
+#: Production-screen classifications the mining rescue may reconsider: the
+#: pathway-anchor branch of ``rag.eligibility.screen_paper``, never a veto.
+_RESCUABLE = ("context_only", "omics_only", "off_topic")
+#: Without the pathway anchor, a paper must clear the production bar by this much.
+#: ponytail: one number, fit on pilot-001's 21 screened papers (wheat 2.5 and a
+#: Marchantia primary 2.5 stay out; AtLOX2 enzymology 4.0 and DAD1 3.0 come in).
+#: Re-fit when more pilots have been adjudicated.
+_UNANCHORED_MARGIN = 1.0
+#: A sentence break, but not after an abbreviated genus ("A. thaliana").
+_SENTENCE = re.compile(r"(?<=[.!?])(?<!\b[A-Z]\.)\s+")
+
+
+def _fold(text: str) -> str:
+    return " ".join(str(text or "").split()).lower()
+
+
+def _names(folded: str, name: str) -> bool:
+    """``name`` occurs in ``folded`` as a whole word or phrase."""
+    return bool(name) and re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", folded) is not None
+
 
 _REVIEW_MARKERS = ("review", "overview", "perspectives on", "a survey of", "current concepts")
 _PREPRINT_MARKERS = ("biorxiv", "medrxiv", "chemrxiv", "preprint", "research square")
@@ -354,6 +375,14 @@ class Acquirer:
         self.seen_paper_ids: set = set()
 
     # -- screening ----------------------------------------------------------
+    def _scope(self) -> Any:
+        from t2pw.rag.eligibility import RequestedScope
+
+        return RequestedScope(
+            requested_pathway=self.config.topic,
+            requested_organism=self.config.target_species,
+        )
+
     def screen(self, candidate: Any) -> Optional[Any]:
         """Run the existing eligibility screen. ``None`` when screening is off."""
         if not self.config.screen_papers:
@@ -361,15 +390,68 @@ class Acquirer:
         if self._screener is not None:
             return self._screener(candidate, self.config)
         try:
-            from t2pw.rag.eligibility import RequestedScope, screen_candidate
+            from t2pw.rag.eligibility import screen_candidate
 
-            scope = RequestedScope(
-                requested_pathway=self.config.topic,
-                requested_organism=self.config.target_species,
-            )
-            return screen_candidate(candidate, scope)
+            return screen_candidate(candidate, self._scope())
         except Exception:  # noqa: BLE001 - a screening failure must not lose the paper
             return None
+
+    def rescue(self, candidate: Any, decision: Any, run_terms: Sequence[str] = ()) -> str:
+        """Why mining re-admits a paper the production screen excluded, or ``""``.
+
+        Only an exclusion by the pathway-anchor rule (classification
+        ``context_only`` / ``omics_only`` / ``off_topic``) is reconsidered. An
+        organism veto or a negative-evidence veto never is. Two routes:
+
+        1. The production screen names the target species (``organism_match ==
+           "match"``), and ``screen_candidate``'s own thresholds, with the anchor
+           rule off and the bar raised by ``_UNANCHORED_MARGIN``, pass the paper.
+        2. The title names the target species, and one sentence of the title or
+           abstract names it together with an enzyme or metabolite from this
+           run's seeds or frontier (``run_terms``). Both guards come from
+           pilot-001's wheat transgene paper. Its abstract names *A. thaliana*
+           only as a gene source ("ALLENE OXIDE SYNTHASE from Arabidopsis
+           thaliana"), and its title names wheat.
+
+        ``rag/eligibility.py`` is not changed. No pathway vocabulary is hard-coded.
+        """
+        classification = str(getattr(decision, "classification", "") or "")
+        reason = str(getattr(decision, "reason", "") or "")
+        if classification not in _RESCUABLE or not reason.startswith(f"{classification}:"):
+            return ""
+        try:
+            from t2pw.rag.eligibility import screen_candidate, thresholds_from_config
+
+            if str(getattr(decision, "organism_match", "") or "") == "match":
+                base = thresholds_from_config()
+                relaxed = replace(base, require_pathway_anchor=False,
+                                  min_score=base.min_score + _UNANCHORED_MARGIN)
+                second = screen_candidate(candidate, self._scope(), thresholds=relaxed, apply=False)
+                if not second.ineligible:
+                    return (
+                        f"{self.config.target_species} named; score {round(second.score, 3)} >= "
+                        f"{relaxed.min_score} with the pathway-anchor rule off"
+                    )
+        except Exception:  # noqa: BLE001 - a failed rescue leaves the exclusion standing
+            pass
+
+        from t2pw.mining.species import species_matches_target
+
+        target = self.config.target_species_normalized
+        genus, _, epithet = target.partition(" ")
+        forms = [target] + ([f"{genus[0]}. {epithet}"] if epithet else [])
+        if species_matches_target(genus, target):  # species.py's documented genus convenience
+            forms.append(genus)
+        title = str(getattr(candidate, "title", "") or "")
+        if not any(_names(_fold(title), f) for f in forms):
+            return ""
+        for sentence in _SENTENCE.split(f"{title}. {getattr(candidate, 'abstract', '') or ''}"):
+            folded = _fold(sentence)
+            named = next((f for f in forms if _names(folded, f)), "")
+            term = next((t for t in run_terms if named and _names(folded, _fold(t))), "")
+            if term:
+                return f"names {named!r} and {term!r} in one sentence"
+        return ""
 
     # -- acquisition --------------------------------------------------------
     def acquire(
@@ -379,8 +461,13 @@ class Acquirer:
         *,
         round_index: int,
         max_papers: int,
+        run_terms: Sequence[str] = (),
     ) -> AcquisitionResult:
-        """Search, screen and load full text for one query."""
+        """Search, screen and load full text for one query.
+
+        ``run_terms`` are this run's seed and frontier names, used only by
+        :meth:`rescue`.
+        """
         result = AcquisitionResult(query=query)
         try:
             candidates = self.source.search(
@@ -402,12 +489,23 @@ class Acquirer:
                 record.screening_outcome = str(getattr(decision, "outcome", "") or "")
                 record.screening_score = float(getattr(decision, "score", 0.0) or 0.0)
                 reason = str(getattr(decision, "reason", "") or "")
-                if getattr(decision, "ineligible", False):
+                # The rescue reconsiders the PRODUCTION screen's verdicts only; an
+                # injected test screener's verdict stands as given.
+                rescued = (
+                    self.rescue(candidate, decision, run_terms)
+                    if getattr(decision, "ineligible", False) and self._screener is None
+                    else ""
+                )
+                if getattr(decision, "ineligible", False) and not rescued:
                     record.exclusion_reasons.append(reason or "screened out by eligibility")
                     self.seen_paper_ids.add(record.paper_id)
                     result.excluded.append(record)
                     continue
-                if reason:
+                if rescued:
+                    record.screening_outcome = "mining_rescue"
+                    record.inclusion_reasons.append(f"mining_rescue: {rescued}")
+                    record.notes.append(f"the production screen excluded it: {reason}")
+                elif reason:
                     record.inclusion_reasons.append(reason)
                 for attr, target in (
                     ("observed_organisms", record.observed_organisms),

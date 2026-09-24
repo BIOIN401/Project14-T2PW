@@ -367,6 +367,7 @@ class MiningController:
 
         active = list(self.state.frontier)
         processed_this_round = 0
+        run_terms = queries_mod.rescue_terms(self.config, active)
 
         for item in active:
             if self.ledger.check_before_call():
@@ -402,6 +403,7 @@ class MiningController:
                     context,
                     round_index=index,
                     max_papers=min(max(1, budgets.max_results_per_query), remaining) if remaining else 0,
+                    run_terms=run_terms,
                 )
                 round_errors.extend(result.errors)
                 self.ledger.record_papers_discovered(len(result.papers) + len(result.excluded))
