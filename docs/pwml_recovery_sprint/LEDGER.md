@@ -10544,3 +10544,25 @@ admission reason · rejected candidates summarized by reason. **Biological plaus
 config, candidates, admission decisions, graph, budgets, model-call metadata, report, evidence table, G11
 report) are committed to `experiment/pathway-mining`. Anything too large to commit, such as paper full
 texts, is listed with its sha256 instead.
+
+### `ORCH-742` close — all three lanes approved; pilot BLOCKED; integration PROPOSED, not performed · 2026-09-23
+
+Full record: [`ORCH-742-RESULT.md`](ORCH-742-RESULT.md). **Nothing merged into this branch or `main`.
+Nothing pushed.** The primary checkout's dirty set is unchanged, and `streamlit_app.py` is still
+`sha256:47e4fafa…`. One exception: harness permission entries were written to `.claude/settings.json`
+(X-7).
+
+| lane | tip | verdict |
+|---|---|---|
+| `ORCH-742a` mining | `23e1ae83` | fixes `APPROVE_WITH_FINDINGS`; live pilot (`dcb64fc4`, frozen at `08db8199`, run once): **BLOCKED for evaluation**, bio `NOT_PLAUSIBLE`, 0 target-species reactions, no fabrication |
+| `ORCH-742b` evidence UI | `e328961e` | `APPROVE_WITH_FINDINGS` after 2 repair rounds |
+| `ORCH-742c` eval v2 | `a51e9609` | `APPROVE_WITH_FINDINGS` + bio `SOUND_WITH_FINDINGS` after 2 repair rounds; **READY WITH GAPS**; 4 gold cases complete, 3 bio-certified |
+
+Candidates `b9b19c06` (A+B+C) and `59e31724` (B+C): SMOKE 508, Chunk D 187/187, every lane suite
+green, gold-readers 465/8. The two failures in the extra selection are identical at base, so they predate
+this work and were introduced by no lane (X-1). Both candidate reviewers: `NOT_READY` on governance only.
+Integrating mining brings about 17.6 k unreviewed lines, and any `streamlit_app.py` hook needs a
+product-owner D-xxx.
+
+**Proposed order: eval → UI (after a D-xxx) → mining (later, after a full review and pilot F1–F3).
+Decision is the product owner's.**
