@@ -10631,3 +10631,34 @@ re-run.
 - confirmation that no `target_species_supported` reaction rests on a recovered species.
 
 The code review (`APPROVE_WITH_FINDINGS`) and the bio-audit (`SOUND_WITH_FINDINGS`) were given at `ecf6b9a0`, with **no blocking findings**. Known non-blocking gaps, to close before any run whose rescue vocabulary grows beyond the seeds: route 2 has no title-organism check, and the title check misses binomial hosts (N-9).
+
+### `ORCH-743` pilot-002 result and iteration 2 · 2026-09-24
+
+**Pilot-002** (one run, frozen at `c52dd65c`, code `ecf6b9a0`): 2,040 s, 0 survivors, stop `max_papers_discovered_reached`
+after 3 rounds.
+
+| | pilot-001 | pilot-002 |
+|---|---|---|
+| discovered / included / processed | 21 / 1 / 1 | 150 / 11 / 10 |
+| A. thaliana primary reactions | 0 | 1 |
+| uncited-field drops | 59 | 0 (53 fields model-cited) |
+| est. cost | $0.0034 | $0.0589 |
+
+The `pwml-bio-auditor` verdict is **PLAUSIBLE_BUT_THIN**. The primary reaction (α-LeA → 13-HPOT, 13-LOX, LOX2/3/4/6) is correct
+A. thaliana biology on the route. But it rests on recombinant enzymology, which `species_policy.md` calls in vitro, and the
+paper id it carries is wrong. No unsupported reaction entered the target graph.
+
+**Iteration 2 is warranted by the pre-registered rule:** the audit names remaining defects in the ORCH-743 areas.
+
+| area | defect | fix, inside `src/t2pw/mining/` only |
+|---|---|---|
+| item 2 | prompt 1.1.0 empty completions: the output budget is exhausted on every rung (78 % of cost). 1.0.0 answered the same passages in one request | diagnose live (≤ 4 calls), then fix within mining |
+| item 3 | NCBI records carry a cited reference's PMCID/DOI (`rag/acquire.py:536`, production); wrong full texts fetched | mining-side: never trust NCBI PMC/DOI, resolve by PMID, refuse a mismatched full text |
+| item 3 | a window cut by the discovery budget exhausts items unsearched (40 one-result queries) | budget-cut windows do not exhaust; stop querying at the cap |
+| item 4 | grape host not detected (a false rescue) | extend the documented host list |
+| item 1 | `attempt_log` overwritten per rung; no shrink fraction in `model_raw.jsonl` | record every rung |
+
+**Registered, NOT in scope** (they need a product-owner decision or their own card):
+- B-2: in-vitro evidence admitted as `target_species_supported`, and species labels that are keyword artefacts (`species.py`; the owner said change nothing else).
+- A1 root: `rag/acquire.py:536` PubMed id parsing (production).
+- A5 phantom round; A9 entity split; A12 `report.md` misstatements; A15 uncited participants; F6; A14.
