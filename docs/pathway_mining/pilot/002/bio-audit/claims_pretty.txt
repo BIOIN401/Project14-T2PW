@@ -1,0 +1,796 @@
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_9ac4b6db39b411c0",
+ "claim_identity": "arabidopsis thaliana::13-s-hydroperoxyoctadeca-9,11,15-trienoic acid (13-hpot)|alpha-linolenic acid (lea)",
+ "claim_type": "reaction",
+ "compartment": "",
+ "conditions": "",
+ "confidence": "",
+ "conflicts_with": [],
+ "direction": "unspecified",
+ "duplicate_of": "",
+ "enzyme": "13-lipoxygenase (13-LOX)",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_b58e2cb64e2f1d87",
+  "ev_ba6fb9f5cdb8ce58"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "enzyme": "model_citation",
+  "gene": "model_citation",
+  "species": "model_citation"
+ },
+ "field_evidence": {
+  "enzyme": [
+   "ev_b58e2cb64e2f1d87",
+   "ev_ba6fb9f5cdb8ce58"
+  ],
+  "gene": [
+   "ev_b58e2cb64e2f1d87",
+   "ev_ba6fb9f5cdb8ce58"
+  ],
+  "species": [
+   "ev_b58e2cb64e2f1d87",
+   "ev_ba6fb9f5cdb8ce58"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "LOX2, LOX3, LOX4, LOX6",
+ "hypothesis": false,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0001",
+ "object": "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+ "paper_id": "PMC:PMC411572",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+   "stoichiometry": "1"
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "target species 'arabidopsis thaliana' explicitly supported by 2 evidence span(s)",
+ "species_state": "target_species_supported",
+ "species_text": "Arabidopsis thaliana",
+ "subject": "α-linolenic acid (LeA)",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "α-linolenic acid (LeA)",
+   "stoichiometry": "1"
+  }
+ ],
+ "tissue": ""
+}
+=====
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_50aa0e7c0c06a243",
+ "claim_identity": "unspecified:in-vitro-or-cell-free::(13s)-hydroperoxy-octadecatrienoic acid (13-hpot)|alpha-linolenic acid",
+ "claim_type": "reaction",
+ "compartment": "",
+ "conditions": "",
+ "confidence": "",
+ "conflicts_with": [],
+ "direction": "unspecified",
+ "duplicate_of": "",
+ "enzyme": "13S-lipoxygenase (13S-LOX)",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_f7c56801adf6792d"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "enzyme": "model_citation"
+ },
+ "field_evidence": {
+  "enzyme": [
+   "ev_f7c56801adf6792d"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "",
+ "hypothesis": false,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0004",
+ "object": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+ "paper_id": "PMC:PMC12787732",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+   "stoichiometry": "1"
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+ "species_state": "in_vitro_or_cell_free",
+ "species_text": "",
+ "subject": "α-linolenic acid",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "α-linolenic acid",
+   "stoichiometry": "1"
+  }
+ ],
+ "tissue": ""
+}
+=====
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_1edde52e869b2e7d",
+ "claim_identity": "capsicum annuum::(13s)-hydroperoxy-octadecatrienoic acid (13-hpot)|alpha-linolenic acid",
+ "claim_type": "reaction",
+ "compartment": "chloroplast",
+ "conditions": "",
+ "confidence": "",
+ "conflicts_with": [],
+ "direction": "forward",
+ "duplicate_of": "",
+ "enzyme": "",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_f7c56801adf6792d"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "compartment": "model_citation",
+  "direction": "model_citation",
+  "species": "model_citation"
+ },
+ "field_evidence": {
+  "compartment": [
+   "ev_f7c56801adf6792d"
+  ],
+  "direction": [
+   "ev_f7c56801adf6792d"
+  ],
+  "species": [
+   "ev_f7c56801adf6792d"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "",
+ "hypothesis": false,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0004",
+ "object": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+ "paper_id": "PMC:PMC12787732",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+   "stoichiometry": "1"
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+ "species_state": "in_vitro_or_cell_free",
+ "species_text": "Capsicum annuum",
+ "subject": "α-linolenic acid",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "α-linolenic acid",
+   "stoichiometry": "1"
+  }
+ ],
+ "tissue": ""
+}
+=====
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_9a3a35f18bb35153",
+ "claim_identity": "capsicum annuum::(12s,13s)-epoxy-hydroperoxy-octadecatrienoic acid ((12s,13s)-eot)|(13s)-hydroperoxy-octadecatrienoic acid (13-hpot)",
+ "claim_type": "reaction",
+ "compartment": "chloroplast",
+ "conditions": "",
+ "confidence": "",
+ "conflicts_with": [],
+ "direction": "forward",
+ "duplicate_of": "",
+ "enzyme": "allene oxide synthase (AOS)",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_f7c56801adf6792d"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "compartment": "model_citation",
+  "direction": "model_citation",
+  "enzyme": "model_citation",
+  "species": "model_citation"
+ },
+ "field_evidence": {
+  "compartment": [
+   "ev_f7c56801adf6792d"
+  ],
+  "direction": [
+   "ev_f7c56801adf6792d"
+  ],
+  "enzyme": [
+   "ev_f7c56801adf6792d"
+  ],
+  "species": [
+   "ev_f7c56801adf6792d"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "",
+ "hypothesis": false,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0004",
+ "object": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+ "paper_id": "PMC:PMC12787732",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+   "stoichiometry": "1"
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+ "species_state": "in_vitro_or_cell_free",
+ "species_text": "Capsicum annuum",
+ "subject": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+   "stoichiometry": "1"
+  }
+ ],
+ "tissue": ""
+}
+=====
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_bbf451c081405dad",
+ "claim_identity": "capsicum annuum::(12s,13s)-epoxy-hydroperoxy-octadecatrienoic acid ((12s,13s)-eot)|(9s,13s)-12-oxo-phytodienoic acid (opda)",
+ "claim_type": "reaction",
+ "compartment": "chloroplast",
+ "conditions": "",
+ "confidence": "",
+ "conflicts_with": [],
+ "direction": "forward",
+ "duplicate_of": "",
+ "enzyme": "allene oxide cyclase (AOC)",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_f7c56801adf6792d"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "compartment": "model_citation",
+  "direction": "model_citation",
+  "enzyme": "model_citation",
+  "species": "model_citation"
+ },
+ "field_evidence": {
+  "compartment": [
+   "ev_f7c56801adf6792d"
+  ],
+  "direction": [
+   "ev_f7c56801adf6792d"
+  ],
+  "enzyme": [
+   "ev_f7c56801adf6792d"
+  ],
+  "species": [
+   "ev_f7c56801adf6792d"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "",
+ "hypothesis": false,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0004",
+ "object": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+ "paper_id": "PMC:PMC12787732",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+   "stoichiometry": "1"
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+ "species_state": "in_vitro_or_cell_free",
+ "species_text": "Capsicum annuum",
+ "subject": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+   "stoichiometry": "1"
+  }
+ ],
+ "tissue": ""
+}
+=====
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_ea067e387e3f42ac",
+ "claim_identity": "capsicum annuum::(9s,13s)-12-oxo-phytodienoic acid (opda)|opc-8",
+ "claim_type": "reaction",
+ "compartment": "peroxisome",
+ "conditions": "",
+ "confidence": "",
+ "conflicts_with": [],
+ "direction": "forward",
+ "duplicate_of": "",
+ "enzyme": "OPDA reductase 3 (OPR3)",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_f7c56801adf6792d"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "compartment": "model_citation",
+  "direction": "model_citation",
+  "enzyme": "model_citation",
+  "species": "model_citation"
+ },
+ "field_evidence": {
+  "compartment": [
+   "ev_f7c56801adf6792d"
+  ],
+  "direction": [
+   "ev_f7c56801adf6792d"
+  ],
+  "enzyme": [
+   "ev_f7c56801adf6792d"
+  ],
+  "species": [
+   "ev_f7c56801adf6792d"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "",
+ "hypothesis": false,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0004",
+ "object": "OPC-8",
+ "paper_id": "PMC:PMC12787732",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "OPC-8",
+   "stoichiometry": "1"
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+ "species_state": "in_vitro_or_cell_free",
+ "species_text": "Capsicum annuum",
+ "subject": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+   "stoichiometry": "1"
+  }
+ ],
+ "tissue": ""
+}
+=====
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_d1c4e947dc6fe086",
+ "claim_identity": "capsicum annuum::jasmonoyl-coa|opc-8",
+ "claim_type": "reaction",
+ "compartment": "peroxisome",
+ "conditions": "",
+ "confidence": "",
+ "conflicts_with": [],
+ "direction": "forward",
+ "duplicate_of": "",
+ "enzyme": "acyl-CoA oxidase (ACX), multifunctional protein (MFP), 3-ketoacyl-CoA thiolase (KAT)",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_f7c56801adf6792d"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "compartment": "model_citation",
+  "direction": "model_citation",
+  "enzyme": "model_citation",
+  "species": "model_citation"
+ },
+ "field_evidence": {
+  "compartment": [
+   "ev_f7c56801adf6792d"
+  ],
+  "direction": [
+   "ev_f7c56801adf6792d"
+  ],
+  "enzyme": [
+   "ev_f7c56801adf6792d"
+  ],
+  "species": [
+   "ev_f7c56801adf6792d"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "",
+ "hypothesis": false,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0004",
+ "object": "jasmonoyl-CoA",
+ "paper_id": "PMC:PMC12787732",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "jasmonoyl-CoA",
+   "stoichiometry": "1"
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+ "species_state": "in_vitro_or_cell_free",
+ "species_text": "Capsicum annuum",
+ "subject": "OPC-8",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "OPC-8",
+   "stoichiometry": "1"
+  }
+ ],
+ "tissue": ""
+}
+=====
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_7695a7e80bc79328",
+ "claim_identity": "capsicum annuum::jasmonic acid (ja)|jasmonoyl-coa",
+ "claim_type": "reaction",
+ "compartment": "cytosol",
+ "conditions": "",
+ "confidence": "",
+ "conflicts_with": [],
+ "direction": "forward",
+ "duplicate_of": "",
+ "enzyme": "",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_f7c56801adf6792d"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "compartment": "model_citation",
+  "direction": "model_citation",
+  "species": "model_citation"
+ },
+ "field_evidence": {
+  "compartment": [
+   "ev_f7c56801adf6792d"
+  ],
+  "direction": [
+   "ev_f7c56801adf6792d"
+  ],
+  "species": [
+   "ev_f7c56801adf6792d"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "",
+ "hypothesis": false,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0004",
+ "object": "jasmonic acid (JA)",
+ "paper_id": "PMC:PMC12787732",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "jasmonic acid (JA)",
+   "stoichiometry": "1"
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+ "species_state": "in_vitro_or_cell_free",
+ "species_text": "Capsicum annuum",
+ "subject": "jasmonoyl-CoA",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "jasmonoyl-CoA",
+   "stoichiometry": "1"
+  }
+ ],
+ "tissue": ""
+}
+=====
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_87b979b4ddda7787",
+ "claim_identity": "capsicum annuum::jasmonic acid (ja)|jasmonoyl-isoleucine (ja-ile)",
+ "claim_type": "reaction",
+ "compartment": "cytosol",
+ "conditions": "",
+ "confidence": "",
+ "conflicts_with": [],
+ "direction": "forward",
+ "duplicate_of": "",
+ "enzyme": "jasmonate resistant 1 (JAR1)",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_f7c56801adf6792d"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "compartment": "model_citation",
+  "direction": "model_citation",
+  "enzyme": "model_citation",
+  "species": "model_citation"
+ },
+ "field_evidence": {
+  "compartment": [
+   "ev_f7c56801adf6792d"
+  ],
+  "direction": [
+   "ev_f7c56801adf6792d"
+  ],
+  "enzyme": [
+   "ev_f7c56801adf6792d"
+  ],
+  "species": [
+   "ev_f7c56801adf6792d"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "",
+ "hypothesis": false,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0004",
+ "object": "jasmonoyl-isoleucine (JA-Ile)",
+ "paper_id": "PMC:PMC12787732",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "jasmonoyl-isoleucine (JA-Ile)",
+   "stoichiometry": "1"
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+ "species_state": "in_vitro_or_cell_free",
+ "species_text": "Capsicum annuum",
+ "subject": "jasmonic acid (JA)",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "jasmonic acid (JA)",
+   "stoichiometry": "1"
+  }
+ ],
+ "tissue": ""
+}
+=====
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_d168265641d5797d",
+ "claim_identity": "capsicum annuum::ja-ile-bound scf coi1 complex|jasmonoyl-isoleucine (ja-ile)",
+ "claim_type": "reaction",
+ "compartment": "nucleus",
+ "conditions": "",
+ "confidence": "",
+ "conflicts_with": [],
+ "direction": "forward",
+ "duplicate_of": "",
+ "enzyme": "",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_f7c56801adf6792d"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "compartment": "model_citation",
+  "direction": "model_citation",
+  "species": "model_citation"
+ },
+ "field_evidence": {
+  "compartment": [
+   "ev_f7c56801adf6792d"
+  ],
+  "direction": [
+   "ev_f7c56801adf6792d"
+  ],
+  "species": [
+   "ev_f7c56801adf6792d"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "",
+ "hypothesis": true,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0004",
+ "object": "JA-Ile-bound SCF COI1 complex",
+ "paper_id": "PMC:PMC12787732",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "JA-Ile-bound SCF COI1 complex",
+   "stoichiometry": "1"
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+ "species_state": "in_vitro_or_cell_free",
+ "species_text": "Capsicum annuum",
+ "subject": "jasmonoyl-isoleucine (JA-Ile)",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [],
+   "name": "jasmonoyl-isoleucine (JA-Ile)",
+   "stoichiometry": "1"
+  }
+ ],
+ "tissue": ""
+}
+=====
+{
+ "actual_model": "deepseek/deepseek-v4-flash",
+ "claim_id": "cl_f349e4bfd16fa738",
+ "claim_identity": "unspecified:species-not-stated::13-hydroperoxy-alpha-linolenic acid|alpha-linolenic acid",
+ "claim_type": "reaction",
+ "compartment": "chloroplast",
+ "conditions": "",
+ "confidence": "high",
+ "conflicts_with": [],
+ "direction": "unspecified",
+ "duplicate_of": "",
+ "enzyme": "13-lipoxygenase (LOX2)",
+ "equivalent_claim_ids": [],
+ "evidence_ids": [
+  "ev_49c948bc587a2016"
+ ],
+ "extraction_status": "ok",
+ "field_attribution": {
+  "compartment": "model_citation",
+  "enzyme": "model_citation",
+  "gene": "model_citation"
+ },
+ "field_evidence": {
+  "compartment": [
+   "ev_49c948bc587a2016"
+  ],
+  "enzyme": [
+   "ev_49c948bc587a2016"
+  ],
+  "gene": [
+   "ev_49c948bc587a2016"
+  ],
+  "products": [
+   "ev_49c948bc587a2016"
+  ],
+  "substrates": [
+   "ev_49c948bc587a2016"
+  ]
+ },
+ "first_seen_round": 1,
+ "gene": "LOX2",
+ "hypothesis": false,
+ "last_updated_round": 1,
+ "model": "deepseek/deepseek-v4-flash",
+ "model_call_id": "mc_001_extract_claims_0005",
+ "object": "13-hydroperoxy-α-linolenic acid",
+ "paper_id": "PMC:PMC6628814",
+ "pathway_names": [],
+ "products": [
+  {
+   "declared_type": "",
+   "evidence_ids": [
+    "ev_49c948bc587a2016"
+   ],
+   "name": "13-hydroperoxy-α-linolenic acid",
+   "stoichiometry": ""
+  }
+ ],
+ "prompt_version": "mining-extract/1.1.0",
+ "protein": "",
+ "relationship": "converted_to",
+ "reversible": null,
+ "schema_version": "t2pw.mining/1.0.0",
+ "species_reason": "no species is stated anywhere in the supporting evidence",
+ "species_state": "species_not_stated",
+ "species_text": "",
+ "subject": "α-linolenic acid",
+ "substrates": [
+  {
+   "declared_type": "",
+   "evidence_ids": [
+    "ev_49c948bc587a2016"
+   ],
+   "name": "α-linolenic acid",
+   "stoichiometry": ""
+  }
+ ],
+ "tissue": ""
+}
+=====

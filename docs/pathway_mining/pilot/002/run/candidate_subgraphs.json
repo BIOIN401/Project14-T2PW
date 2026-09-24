@@ -1,0 +1,771 @@
+{
+  "components": [
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_2c50f30771a0",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "hypothesis_only",
+      "rationale": "quarantined at discovery: hypothesis_only",
+      "reaction_ids": [
+        "rx_85236be236d5f1e8a0f1"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "capsicum annuum::ja-ile-bound scf coi1 complex|jasmonoyl-isoleucine (ja-ile)",
+          "claim_ids": [
+            "cl_d168265641d5797d"
+          ],
+          "compartment": "nucleus",
+          "component_id": "cmp_2c50f30771a0",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "the source presents this as a proposal or model, not an observed result; retained as a labelled hypothesis, never as an established reaction",
+          "decision_status": "hypothesis_only",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_f7c56801adf6792d"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "jasmonoyl-isoleucine (JA-Ile) -> JA-Ile-bound SCF COI1 complex",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "component cmp_2c50f30771a0: the paper proposes this reaction rather than reporting it",
+              "event": "quarantined",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "paper(s) PMC:PMC12787732",
+              "event": "duplicate_merged",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": true,
+          "label": "jasmonoyl-isoleucine (JA-Ile) -> JA-Ile-bound SCF COI1 complex",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12787732"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_1bed385ec5cac0cc"
+          ],
+          "product_names": [
+            "JA-Ile-bound SCF COI1 complex"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "hypothesis_only",
+          "reaction_id": "rx_85236be236d5f1e8a0f1",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Capsicum annuum",
+          "substrate_ids": [
+            "en_6b6b1e744497a27d"
+          ],
+          "substrate_names": [
+            "jasmonoyl-isoleucine (JA-Ile)"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_5d3abd31040c",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_b30980df6dd1f29b4504",
+        "rx_c1d050d4171b110ad2d4",
+        "rx_86b33c076d39e423f2fa",
+        "rx_afb91c7037581c9fadc2",
+        "rx_f8664da4761606d51db8",
+        "rx_312345b466fea5ca097c",
+        "rx_da81fbd8f5b34dc5ec32",
+        "rx_355aa30ff85f270c9a58"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "capsicum annuum::jasmonoyl-coa|opc-8",
+          "claim_ids": [
+            "cl_d1c4e947dc6fe086"
+          ],
+          "compartment": "peroxisome",
+          "component_id": "cmp_5d3abd31040c",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_6e71b5b8fcf12167"
+          ],
+          "enzyme_names": [
+            "acyl-CoA oxidase (ACX), multifunctional protein (MFP), 3-ketoacyl-CoA thiolase (KAT)"
+          ],
+          "evidence_ids": [
+            "ev_f7c56801adf6792d"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "OPC-8 -> jasmonoyl-CoA",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "paper(s) PMC:PMC12787732",
+              "event": "duplicate_merged",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "paper(s) PMC:PMC12787732",
+              "event": "duplicate_merged",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "OPC-8 -> jasmonoyl-CoA",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12787732"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_9704e85ec766369f"
+          ],
+          "product_names": [
+            "jasmonoyl-CoA"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_312345b466fea5ca097c",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Capsicum annuum",
+          "substrate_ids": [
+            "en_1ce5de3712dd3155"
+          ],
+          "substrate_names": [
+            "OPC-8"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "capsicum annuum::jasmonic acid (ja)|jasmonoyl-isoleucine (ja-ile)",
+          "claim_ids": [
+            "cl_87b979b4ddda7787"
+          ],
+          "compartment": "cytosol",
+          "component_id": "cmp_5d3abd31040c",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_d7b7add2c2b6bf0d"
+          ],
+          "enzyme_names": [
+            "jasmonate resistant 1 (JAR1)"
+          ],
+          "evidence_ids": [
+            "ev_f7c56801adf6792d"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "jasmonic acid (JA) -> jasmonoyl-isoleucine (JA-Ile)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "paper(s) PMC:PMC12787732",
+              "event": "duplicate_merged",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "jasmonic acid (JA) -> jasmonoyl-isoleucine (JA-Ile)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12787732"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_6b6b1e744497a27d"
+          ],
+          "product_names": [
+            "jasmonoyl-isoleucine (JA-Ile)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_355aa30ff85f270c9a58",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Capsicum annuum",
+          "substrate_ids": [
+            "en_6da0482c2db8e0bd"
+          ],
+          "substrate_names": [
+            "jasmonic acid (JA)"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "capsicum annuum::(12s,13s)-epoxy-hydroperoxy-octadecatrienoic acid ((12s,13s)-eot)|(13s)-hydroperoxy-octadecatrienoic acid (13-hpot)",
+          "claim_ids": [
+            "cl_9a3a35f18bb35153"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_5d3abd31040c",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_a8a1912daabd8554"
+          ],
+          "enzyme_names": [
+            "allene oxide synthase (AOS)"
+          ],
+          "evidence_ids": [
+            "ev_f7c56801adf6792d"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT) -> (12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT) -> (12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12787732"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_8850bae276205da2"
+          ],
+          "product_names": [
+            "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_86b33c076d39e423f2fa",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Capsicum annuum",
+          "substrate_ids": [
+            "en_3bfc193ee67b38cf"
+          ],
+          "substrate_names": [
+            "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "capsicum annuum::(12s,13s)-epoxy-hydroperoxy-octadecatrienoic acid ((12s,13s)-eot)|(9s,13s)-12-oxo-phytodienoic acid (opda)",
+          "claim_ids": [
+            "cl_bbf451c081405dad"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_5d3abd31040c",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_5bbc481da2e79850"
+          ],
+          "enzyme_names": [
+            "allene oxide cyclase (AOC)"
+          ],
+          "evidence_ids": [
+            "ev_f7c56801adf6792d"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT) -> (9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT) -> (9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12787732"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_b81b6bcf76945143"
+          ],
+          "product_names": [
+            "(9S,13S)-12-oxo-phytodienoic acid (OPDA)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_afb91c7037581c9fadc2",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Capsicum annuum",
+          "substrate_ids": [
+            "en_8850bae276205da2"
+          ],
+          "substrate_names": [
+            "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "unspecified:in-vitro-or-cell-free::(13s)-hydroperoxy-octadecatrienoic acid (13-hpot)|alpha-linolenic acid",
+          "claim_ids": [
+            "cl_50aa0e7c0c06a243"
+          ],
+          "compartment": "",
+          "component_id": "cmp_5d3abd31040c",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_2ded3b0e46940b7c"
+          ],
+          "enzyme_names": [
+            "13S-lipoxygenase (13S-LOX)"
+          ],
+          "evidence_ids": [
+            "ev_f7c56801adf6792d"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "\u03b1-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "\u03b1-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12787732"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_3bfc193ee67b38cf"
+          ],
+          "product_names": [
+            "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_b30980df6dd1f29b4504",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "",
+          "substrate_ids": [
+            "en_a5ab0b2e2e152263"
+          ],
+          "substrate_names": [
+            "\u03b1-linolenic acid"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "capsicum annuum::(13s)-hydroperoxy-octadecatrienoic acid (13-hpot)|alpha-linolenic acid",
+          "claim_ids": [
+            "cl_1edde52e869b2e7d"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_5d3abd31040c",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_f7c56801adf6792d"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "\u03b1-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "\u03b1-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12787732"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_3bfc193ee67b38cf"
+          ],
+          "product_names": [
+            "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_c1d050d4171b110ad2d4",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Capsicum annuum",
+          "substrate_ids": [
+            "en_a5ab0b2e2e152263"
+          ],
+          "substrate_names": [
+            "\u03b1-linolenic acid"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "capsicum annuum::jasmonic acid (ja)|jasmonoyl-coa",
+          "claim_ids": [
+            "cl_7695a7e80bc79328"
+          ],
+          "compartment": "cytosol",
+          "component_id": "cmp_5d3abd31040c",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_f7c56801adf6792d"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "jasmonoyl-CoA -> jasmonic acid (JA)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "paper(s) PMC:PMC12787732",
+              "event": "duplicate_merged",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "jasmonoyl-CoA -> jasmonic acid (JA)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12787732"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_6da0482c2db8e0bd"
+          ],
+          "product_names": [
+            "jasmonic acid (JA)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_da81fbd8f5b34dc5ec32",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Capsicum annuum",
+          "substrate_ids": [
+            "en_9704e85ec766369f"
+          ],
+          "substrate_names": [
+            "jasmonoyl-CoA"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "capsicum annuum::(9s,13s)-12-oxo-phytodienoic acid (opda)|opc-8",
+          "claim_ids": [
+            "cl_ea067e387e3f42ac"
+          ],
+          "compartment": "peroxisome",
+          "component_id": "cmp_5d3abd31040c",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_8b4639dec2428c2c"
+          ],
+          "enzyme_names": [
+            "OPDA reductase 3 (OPR3)"
+          ],
+          "evidence_ids": [
+            "ev_f7c56801adf6792d"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "(9S,13S)-12-oxo-phytodienoic acid (OPDA) -> OPC-8",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:00:08+00:00",
+              "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "(9S,13S)-12-oxo-phytodienoic acid (OPDA) -> OPC-8",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12787732"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_1ce5de3712dd3155"
+          ],
+          "product_names": [
+            "OPC-8"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_f8664da4761606d51db8",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Capsicum annuum",
+          "substrate_ids": [
+            "en_b81b6bcf76945143"
+          ],
+          "substrate_names": [
+            "(9S,13S)-12-oxo-phytodienoic acid (OPDA)"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_ce149ce26fcb",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:species_not_stated",
+      "rationale": "quarantined at discovery: species:species_not_stated",
+      "reaction_ids": [
+        "rx_febac937577910d44f45"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "unspecified:species-not-stated::13-hydroperoxy-alpha-linolenic acid|alpha-linolenic acid",
+          "claim_ids": [
+            "cl_f349e4bfd16fa738"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_ce149ce26fcb",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'species_not_stated' is not target-species-supported (no species is stated anywhere in the supporting evidence); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_cd162db0b5b1dec9"
+          ],
+          "enzyme_names": [
+            "13-lipoxygenase (LOX2)"
+          ],
+          "evidence_ids": [
+            "ev_49c948bc587a2016"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "LOX2",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T20:01:09+00:00",
+              "detail": "\u03b1-linolenic acid -> 13-hydroperoxy-\u03b1-linolenic acid",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T20:01:09+00:00",
+              "detail": "component cmp_ce149ce26fcb: species state species_not_stated: no species is stated anywhere in the supporting evidence",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "\u03b1-linolenic acid -> 13-hydroperoxy-\u03b1-linolenic acid",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC6628814"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_2a962fa9e6f4e663"
+          ],
+          "product_names": [
+            "13-hydroperoxy-\u03b1-linolenic acid"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:species_not_stated",
+          "reaction_id": "rx_febac937577910d44f45",
+          "reversible": null,
+          "species_state": "species_not_stated",
+          "species_text": "",
+          "substrate_ids": [
+            "en_a5ab0b2e2e152263"
+          ],
+          "substrate_names": [
+            "\u03b1-linolenic acid"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    }
+  ],
+  "count": 3
+}

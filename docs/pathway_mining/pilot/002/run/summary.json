@@ -1,0 +1,315 @@
+{
+  "additions_by_round": [
+    {
+      "added_candidates": 10,
+      "added_reactions": 1,
+      "graph_hash_after": "d75b3a1280e7e798e602a1ff63c74587",
+      "new_components": 4,
+      "new_conflicts": 0,
+      "promoted": 0,
+      "round": 1,
+      "updated": 5,
+      "useful": true
+    },
+    {
+      "added_candidates": 0,
+      "added_reactions": 0,
+      "graph_hash_after": "d75b3a1280e7e798e602a1ff63c74587",
+      "new_components": 0,
+      "new_conflicts": 0,
+      "promoted": 0,
+      "round": 2,
+      "updated": 0,
+      "useful": false
+    },
+    {
+      "added_candidates": 0,
+      "added_reactions": 0,
+      "graph_hash_after": "d75b3a1280e7e798e602a1ff63c74587",
+      "new_components": 0,
+      "new_conflicts": 0,
+      "promoted": 0,
+      "round": 3,
+      "updated": 0,
+      "useful": false
+    }
+  ],
+  "claims": {
+    "by_latest_status": {
+      "accepted": 1,
+      "candidate": 9,
+      "hypothesis_only": 1
+    },
+    "distinct_identities": 11,
+    "extracted": 11,
+    "rejected_by_reason": {}
+  },
+  "completed_normally": false,
+  "completion_state": "stopped_at_limit",
+  "conflicts": {
+    "detail": [],
+    "total": 0,
+    "unresolved": 0
+  },
+  "costs": {
+    "cached_tokens": 0,
+    "elapsed_seconds": 2039.18,
+    "estimate_only": true,
+    "estimated_cost_usd": 0.058908,
+    "input_tokens": 302829,
+    "llm_calls": 15,
+    "max_cost_usd": 5.0,
+    "note": "Estimated from configured per-million-token rates. This is NOT a billed amount and does not reflect provider discounts, cached-token pricing or minimum charges.",
+    "output_tokens": 95417,
+    "price_input_per_mtok_usd": 0.1,
+    "price_output_per_mtok_usd": 0.3
+  },
+  "errors": [],
+  "external_database_validation": "deferred_not_evaluated",
+  "graph": {
+    "candidate_components": 3,
+    "candidate_reactions": 10,
+    "chemical_connections": 11,
+    "entities": 20,
+    "graph_hash": "d75b3a1280e7e798e602a1ff63c74587",
+    "multi_paper_reactions": 0,
+    "primary_component_id": "cmp_98656adf98c1",
+    "primary_reactions": 1,
+    "primary_selection_rationale": "selected as the primary component: evidence-weighted topic relevance 1.0000 over 1 reaction(s) and 1 distinct paper(s); 0 other admitted component(s) retained as candidate subgraphs (quarantined components were never eligible)",
+    "promoted_components": [],
+    "species_states": {
+      "in_vitro_or_cell_free": 9,
+      "species_not_stated": 1,
+      "target_species_supported": 1
+    },
+    "total_reactions": 11
+  },
+  "model_calls": {
+    "by_status": {
+      "empty_completion": 2,
+      "ok": 8
+    },
+    "failed": [
+      {
+        "call_id": "mc_001_extract_claims_0002",
+        "finish_reason": "length",
+        "parse_error": "empty completion (finish_reason=length)",
+        "round": 1,
+        "schema_error": "",
+        "status": "empty_completion"
+      },
+      {
+        "call_id": "mc_001_extract_claims_0003",
+        "finish_reason": "length",
+        "parse_error": "empty completion (finish_reason=length)",
+        "round": 1,
+        "schema_error": "",
+        "status": "empty_completion"
+      }
+    ],
+    "total": 10
+  },
+  "papers": {
+    "by_evidence_type": {
+      "unknown": 11
+    },
+    "discovered": 150,
+    "excluded": 139,
+    "excluded_reasons": {
+      "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it": 17,
+      "context_only: 'jasmonate biosynthesis, jasmonate pathway' appears in the title/abstract but no strong reaction/enzyme evidence is local to it": 1,
+      "context_only: 'jasmonate biosynthetic pathway, jasmonate biosynthetic' appears in the title/abstract but no strong reaction/enzyme evidence is local to it": 1,
+      "decisive negative evidence: epidemiology_survey -- not a mechanistic pathway paper": 1,
+      "decisive negative evidence: software_only -- not a mechanistic pathway paper": 1,
+      "observed organism (Homo sapiens) does not match the requested organism (Arabidopsis thaliana)": 1,
+      "observed organism (Pseudomonas syringae) does not match the requested organism (Arabidopsis thaliana)": 1,
+      "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title": 1,
+      "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract": 49,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: bioinformatics)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: enriched)": 2,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: enrichment analysis, rna seq, genome wide)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: genome wide)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: multi omics)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptome, upregulated, enriched)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic)": 3,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic, proteomic, metabolomics)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic, transcriptome, differentially expressed, up regulated)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomics)": 2,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: up regulated)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: up regulated, rna sequencing, sequencing)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: upregulated, rna seq)": 1,
+      "omics_only: 'jasmonate biosynthesis, jasmonate pathway' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: up regulated)": 1,
+      "omics_only: 'jasmonate biosynthetic' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic, gene family, enriched, sequencing)": 1,
+      "omics_only: 'jasmonate pathway' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptome, enriched)": 1,
+      "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title": 1,
+      "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract": 45
+    },
+    "included": 11,
+    "processed": 10,
+    "screened": 150
+  },
+  "passages": {
+    "extracted": 80,
+    "retrieved": 80
+  },
+  "preflight": {
+    "checks": [
+      {
+        "data": {
+          "enabled": true,
+          "env_var": "T2PW_PATHWAY_MINING_ENABLED"
+        },
+        "detail": "pathway mining ENABLED (cli_flag)",
+        "name": "feature.flag",
+        "status": "ok"
+      },
+      {
+        "data": {},
+        "detail": "target species 'Arabidopsis thaliana' (normalized 'arabidopsis thaliana')",
+        "name": "inputs.species",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "kinds": [
+            "seed_enzyme",
+            "seed_metabolite",
+            "topic"
+          ]
+        },
+        "detail": "topic=jasmonate biosynthesis; starting inputs: seed_enzyme, seed_metabolite, topic",
+        "name": "inputs.starting",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "path": "C:\\t\\mining-pilot-runs2"
+        },
+        "detail": "C:\\t\\mining-pilot-runs2 is writable",
+        "name": "outputs.writable",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "api_key_present": true,
+          "provider": "openrouter",
+          "requested_model": "deepseek/deepseek-v4-flash"
+        },
+        "detail": "requested model 'deepseek/deepseek-v4-flash' via provider openrouter; API key present; fallback none (a failure will be loud)",
+        "name": "model.configuration",
+        "status": "ok"
+      },
+      {
+        "data": {},
+        "detail": "model answered (2 chars)",
+        "name": "model.reachable",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "endpoint_configured": true,
+          "model": "text-embedding-nomic-embed-text-v1.5"
+        },
+        "detail": "endpoint http://127.0.0.1:1234/v1; model text-embedding-nomic-embed-text-v1.5",
+        "name": "embeddings.configuration",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "api": 1,
+          "hits": 0,
+          "lexical": 0,
+          "misses": 1
+        },
+        "detail": "embedding endpoint answered",
+        "name": "embeddings.reachable",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "sources": [
+            "europepmc",
+            "ncbi"
+          ]
+        },
+        "detail": "sources europepmc, ncbi",
+        "name": "acquisition.sources",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "max_candidate_components": 40,
+          "max_candidate_reactions": 300,
+          "max_cost_usd": 5.0,
+          "max_frontier_size": 60,
+          "max_input_tokens": 2000000,
+          "max_llm_calls": 200,
+          "max_new_reactions_per_round": 25,
+          "max_output_tokens": 400000,
+          "max_papers_discovered": 150,
+          "max_papers_processed": 40,
+          "max_passages_per_paper": 20,
+          "max_primary_reactions": 200,
+          "max_query_attempts": 2,
+          "max_results_per_query": 25,
+          "max_rounds": 8,
+          "max_wall_clock_seconds": 3600.0,
+          "price_input_per_mtok_usd": 0.1,
+          "price_output_per_mtok_usd": 0.3,
+          "stop_after_unproductive_rounds": 2
+        },
+        "detail": "rounds<=8, papers processed<=40, llm calls<=200, est. cost<=$5, wall clock<=3600s",
+        "name": "budgets.selected",
+        "status": "ok"
+      },
+      {
+        "data": {},
+        "detail": "external biochemical database validation is DEFERRED in version 1; admission is on paper evidence alone and no identifier service will be queried",
+        "name": "policy.database_validation",
+        "status": "ok"
+      },
+      {
+        "data": {},
+        "detail": "this mode produces a research graph only; the PWML exporter is not invoked and no PWML file will be written",
+        "name": "policy.pwml",
+        "status": "ok"
+      }
+    ],
+    "failures": [],
+    "ok": true,
+    "warnings": []
+  },
+  "produces_pwml": false,
+  "provenance_problems": [],
+  "retrieval": {
+    "chunks": 112,
+    "embedding_mode": "api",
+    "papers_indexed": 11,
+    "vector_backend": "memory",
+    "warnings": []
+  },
+  "rounds_completed": 3,
+  "run_id": "pilot-002-jasmonate-ath",
+  "schema_version": "t2pw.mining/1.0.0",
+  "stop_detail": "papers discovered: 150 >= limit 150",
+  "stop_reason": "max_papers_discovered_reached",
+  "target_species": "Arabidopsis thaliana",
+  "target_species_normalized": "arabidopsis thaliana",
+  "topic": "jasmonate biosynthesis",
+  "usage": {
+    "cached_tokens": 0,
+    "claims_extracted": 16,
+    "elapsed_seconds": 2039.163,
+    "estimated_cost_usd": 0.058908,
+    "input_tokens": 302829,
+    "last_round_new_reactions": 0,
+    "llm_calls": 15,
+    "output_tokens": 95417,
+    "papers_discovered": 150,
+    "papers_processed": 10,
+    "passages_extracted": 80,
+    "rounds": 3,
+    "unproductive_streak": 2
+  },
+  "warnings": []
+}

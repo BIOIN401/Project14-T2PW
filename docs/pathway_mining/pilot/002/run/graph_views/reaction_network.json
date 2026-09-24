@@ -1,0 +1,1480 @@
+{
+  "components": {
+    "cmp_2c50f30771a0": {
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_2c50f30771a0",
+      "created_round": 1,
+      "is_primary": false,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "rationale": "quarantined at discovery: hypothesis_only",
+      "relevance_score": 0.0
+    },
+    "cmp_5d3abd31040c": {
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_5d3abd31040c",
+      "created_round": 1,
+      "is_primary": false,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "relevance_score": 0.0
+    },
+    "cmp_98656adf98c1": {
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_98656adf98c1",
+      "created_round": 1,
+      "is_primary": true,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "rationale": "selected as the primary component: evidence-weighted topic relevance 1.0000 over 1 reaction(s) and 1 distinct paper(s); 0 other admitted component(s) retained as candidate subgraphs (quarantined components were never eligible)",
+      "relevance_score": 1.0
+    },
+    "cmp_ce149ce26fcb": {
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_ce149ce26fcb",
+      "created_round": 1,
+      "is_primary": false,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "rationale": "quarantined at discovery: species:species_not_stated",
+      "relevance_score": 0.0
+    }
+  },
+  "connections": [
+    {
+      "is_cofactor": false,
+      "kind": "shared_substrate",
+      "left_reaction_id": "rx_c1d050d4171b110ad2d4",
+      "right_reaction_id": "rx_b30980df6dd1f29b4504",
+      "via_entity_id": "en_a5ab0b2e2e152263",
+      "via_entity_name": "\u03b1-linolenic acid"
+    },
+    {
+      "is_cofactor": false,
+      "kind": "product_to_substrate",
+      "left_reaction_id": "rx_86b33c076d39e423f2fa",
+      "right_reaction_id": "rx_b30980df6dd1f29b4504",
+      "via_entity_id": "en_3bfc193ee67b38cf",
+      "via_entity_name": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)"
+    },
+    {
+      "is_cofactor": false,
+      "kind": "product_to_substrate",
+      "left_reaction_id": "rx_86b33c076d39e423f2fa",
+      "right_reaction_id": "rx_c1d050d4171b110ad2d4",
+      "via_entity_id": "en_3bfc193ee67b38cf",
+      "via_entity_name": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)"
+    },
+    {
+      "is_cofactor": false,
+      "kind": "product_to_substrate",
+      "left_reaction_id": "rx_afb91c7037581c9fadc2",
+      "right_reaction_id": "rx_86b33c076d39e423f2fa",
+      "via_entity_id": "en_8850bae276205da2",
+      "via_entity_name": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)"
+    },
+    {
+      "is_cofactor": false,
+      "kind": "product_to_substrate",
+      "left_reaction_id": "rx_f8664da4761606d51db8",
+      "right_reaction_id": "rx_afb91c7037581c9fadc2",
+      "via_entity_id": "en_b81b6bcf76945143",
+      "via_entity_name": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)"
+    },
+    {
+      "is_cofactor": false,
+      "kind": "product_to_substrate",
+      "left_reaction_id": "rx_312345b466fea5ca097c",
+      "right_reaction_id": "rx_f8664da4761606d51db8",
+      "via_entity_id": "en_1ce5de3712dd3155",
+      "via_entity_name": "OPC-8"
+    },
+    {
+      "is_cofactor": false,
+      "kind": "product_to_substrate",
+      "left_reaction_id": "rx_da81fbd8f5b34dc5ec32",
+      "right_reaction_id": "rx_312345b466fea5ca097c",
+      "via_entity_id": "en_9704e85ec766369f",
+      "via_entity_name": "jasmonoyl-CoA"
+    },
+    {
+      "is_cofactor": false,
+      "kind": "product_to_substrate",
+      "left_reaction_id": "rx_355aa30ff85f270c9a58",
+      "right_reaction_id": "rx_da81fbd8f5b34dc5ec32",
+      "via_entity_id": "en_6da0482c2db8e0bd",
+      "via_entity_name": "jasmonic acid (JA)"
+    },
+    {
+      "is_cofactor": false,
+      "kind": "product_to_substrate",
+      "left_reaction_id": "rx_85236be236d5f1e8a0f1",
+      "right_reaction_id": "rx_355aa30ff85f270c9a58",
+      "via_entity_id": "en_6b6b1e744497a27d",
+      "via_entity_name": "jasmonoyl-isoleucine (JA-Ile)"
+    },
+    {
+      "is_cofactor": false,
+      "kind": "shared_substrate",
+      "left_reaction_id": "rx_febac937577910d44f45",
+      "right_reaction_id": "rx_b30980df6dd1f29b4504",
+      "via_entity_id": "en_a5ab0b2e2e152263",
+      "via_entity_name": "\u03b1-linolenic acid"
+    },
+    {
+      "is_cofactor": false,
+      "kind": "shared_substrate",
+      "left_reaction_id": "rx_febac937577910d44f45",
+      "right_reaction_id": "rx_c1d050d4171b110ad2d4",
+      "via_entity_id": "en_a5ab0b2e2e152263",
+      "via_entity_name": "\u03b1-linolenic acid"
+    }
+  ],
+  "counts": {
+    "candidate_reactions": 10,
+    "enzymes": 8,
+    "metabolites": 12,
+    "primary_reactions": 1,
+    "reactions": 11
+  },
+  "edges": [
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_1ce5de3712dd3155",
+      "target": "rx_312345b466fea5ca097c",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "rx_312345b466fea5ca097c",
+      "target": "en_9704e85ec766369f",
+      "type": "product_of"
+    },
+    {
+      "annotation": true,
+      "chemical": false,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_6e71b5b8fcf12167",
+      "target": "rx_312345b466fea5ca097c",
+      "type": "catalyzes"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_6da0482c2db8e0bd",
+      "target": "rx_355aa30ff85f270c9a58",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "rx_355aa30ff85f270c9a58",
+      "target": "en_6b6b1e744497a27d",
+      "type": "product_of"
+    },
+    {
+      "annotation": true,
+      "chemical": false,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_d7b7add2c2b6bf0d",
+      "target": "rx_355aa30ff85f270c9a58",
+      "type": "catalyzes"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_6b6b1e744497a27d",
+      "target": "rx_85236be236d5f1e8a0f1",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "rx_85236be236d5f1e8a0f1",
+      "target": "en_1bed385ec5cac0cc",
+      "type": "product_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_3bfc193ee67b38cf",
+      "target": "rx_86b33c076d39e423f2fa",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "rx_86b33c076d39e423f2fa",
+      "target": "en_8850bae276205da2",
+      "type": "product_of"
+    },
+    {
+      "annotation": true,
+      "chemical": false,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_a8a1912daabd8554",
+      "target": "rx_86b33c076d39e423f2fa",
+      "type": "catalyzes"
+    },
+    {
+      "chemical": true,
+      "graph_status": "primary",
+      "round": 1,
+      "source": "en_f0c6dad9eca6ffd2",
+      "target": "rx_98656adf98c1fca1946a",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "primary",
+      "round": 1,
+      "source": "rx_98656adf98c1fca1946a",
+      "target": "en_eff1e8a25ef4d5d6",
+      "type": "product_of"
+    },
+    {
+      "annotation": true,
+      "chemical": false,
+      "graph_status": "primary",
+      "round": 1,
+      "source": "en_80b043c85ef7bba4",
+      "target": "rx_98656adf98c1fca1946a",
+      "type": "catalyzes"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_8850bae276205da2",
+      "target": "rx_afb91c7037581c9fadc2",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "rx_afb91c7037581c9fadc2",
+      "target": "en_b81b6bcf76945143",
+      "type": "product_of"
+    },
+    {
+      "annotation": true,
+      "chemical": false,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_5bbc481da2e79850",
+      "target": "rx_afb91c7037581c9fadc2",
+      "type": "catalyzes"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_a5ab0b2e2e152263",
+      "target": "rx_b30980df6dd1f29b4504",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "rx_b30980df6dd1f29b4504",
+      "target": "en_3bfc193ee67b38cf",
+      "type": "product_of"
+    },
+    {
+      "annotation": true,
+      "chemical": false,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_2ded3b0e46940b7c",
+      "target": "rx_b30980df6dd1f29b4504",
+      "type": "catalyzes"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_a5ab0b2e2e152263",
+      "target": "rx_c1d050d4171b110ad2d4",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "rx_c1d050d4171b110ad2d4",
+      "target": "en_3bfc193ee67b38cf",
+      "type": "product_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_9704e85ec766369f",
+      "target": "rx_da81fbd8f5b34dc5ec32",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "rx_da81fbd8f5b34dc5ec32",
+      "target": "en_6da0482c2db8e0bd",
+      "type": "product_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_b81b6bcf76945143",
+      "target": "rx_f8664da4761606d51db8",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "rx_f8664da4761606d51db8",
+      "target": "en_1ce5de3712dd3155",
+      "type": "product_of"
+    },
+    {
+      "annotation": true,
+      "chemical": false,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_8b4639dec2428c2c",
+      "target": "rx_f8664da4761606d51db8",
+      "type": "catalyzes"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_a5ab0b2e2e152263",
+      "target": "rx_febac937577910d44f45",
+      "type": "substrate_of"
+    },
+    {
+      "chemical": true,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "rx_febac937577910d44f45",
+      "target": "en_2a962fa9e6f4e663",
+      "type": "product_of"
+    },
+    {
+      "annotation": true,
+      "chemical": false,
+      "graph_status": "candidate",
+      "round": 1,
+      "source": "en_cd162db0b5b1dec9",
+      "target": "rx_febac937577910d44f45",
+      "type": "catalyzes"
+    }
+  ],
+  "nodes": [
+    {
+      "claim_ids": [
+        "cl_d1c4e947dc6fe086"
+      ],
+      "compartment": "peroxisome",
+      "component_id": "cmp_5d3abd31040c",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+      "decision_status": "candidate",
+      "direction": "forward",
+      "discovery_round": 1,
+      "enzymes": [
+        "acyl-CoA oxidase (ACX), multifunctional protein (MFP), 3-ketoacyl-CoA thiolase (KAT)"
+      ],
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "",
+      "graph_status": "candidate",
+      "history": [
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "OPC-8 -> jasmonoyl-CoA",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+          "event": "quarantined",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "paper(s) PMC:PMC12787732",
+          "event": "duplicate_merged",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "paper(s) PMC:PMC12787732",
+          "event": "duplicate_merged",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "id": "rx_312345b466fea5ca097c",
+      "label": "OPC-8 -> jasmonoyl-CoA",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "Capsicum annuum",
+      "species_state": "in_vitro_or_cell_free",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC12787732",
+          "title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+          "year": "2025"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "aliases": [
+        "OPC-8"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_1ce5de3712dd3155",
+      "label": "OPC-8",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "substrate",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "jasmonoyl-CoA"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_9704e85ec766369f",
+      "label": "jasmonoyl-CoA",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "product",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "acyl-CoA oxidase (ACX), multifunctional protein (MFP), 3-ketoacyl-CoA thiolase (KAT)"
+      ],
+      "entity_type": "enzyme",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_6e71b5b8fcf12167",
+      "label": "acyl-CoA oxidase (ACX), multifunctional protein (MFP), 3-ketoacyl-CoA thiolase (KAT)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "enzyme",
+      "type": "enzyme"
+    },
+    {
+      "claim_ids": [
+        "cl_87b979b4ddda7787"
+      ],
+      "compartment": "cytosol",
+      "component_id": "cmp_5d3abd31040c",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+      "decision_status": "candidate",
+      "direction": "forward",
+      "discovery_round": 1,
+      "enzymes": [
+        "jasmonate resistant 1 (JAR1)"
+      ],
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "",
+      "graph_status": "candidate",
+      "history": [
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "jasmonic acid (JA) -> jasmonoyl-isoleucine (JA-Ile)",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+          "event": "quarantined",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "paper(s) PMC:PMC12787732",
+          "event": "duplicate_merged",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "id": "rx_355aa30ff85f270c9a58",
+      "label": "jasmonic acid (JA) -> jasmonoyl-isoleucine (JA-Ile)",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "Capsicum annuum",
+      "species_state": "in_vitro_or_cell_free",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC12787732",
+          "title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+          "year": "2025"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "aliases": [
+        "jasmonic acid (JA)"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_6da0482c2db8e0bd",
+      "label": "jasmonic acid (JA)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "substrate",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "jasmonoyl-isoleucine (JA-Ile)"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_6b6b1e744497a27d",
+      "label": "jasmonoyl-isoleucine (JA-Ile)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "product",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "jasmonate resistant 1 (JAR1)"
+      ],
+      "entity_type": "enzyme",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_d7b7add2c2b6bf0d",
+      "label": "jasmonate resistant 1 (JAR1)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "enzyme",
+      "type": "enzyme"
+    },
+    {
+      "claim_ids": [
+        "cl_d168265641d5797d"
+      ],
+      "compartment": "nucleus",
+      "component_id": "cmp_2c50f30771a0",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "the source presents this as a proposal or model, not an observed result; retained as a labelled hypothesis, never as an established reaction",
+      "decision_status": "hypothesis_only",
+      "direction": "forward",
+      "discovery_round": 1,
+      "enzymes": [],
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "",
+      "graph_status": "candidate",
+      "history": [
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "jasmonoyl-isoleucine (JA-Ile) -> JA-Ile-bound SCF COI1 complex",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "component cmp_2c50f30771a0: the paper proposes this reaction rather than reporting it",
+          "event": "quarantined",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "paper(s) PMC:PMC12787732",
+          "event": "duplicate_merged",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": true,
+      "id": "rx_85236be236d5f1e8a0f1",
+      "label": "jasmonoyl-isoleucine (JA-Ile) -> JA-Ile-bound SCF COI1 complex",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "Capsicum annuum",
+      "species_state": "in_vitro_or_cell_free",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC12787732",
+          "title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+          "year": "2025"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "aliases": [
+        "JA-Ile-bound SCF COI1 complex"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_1bed385ec5cac0cc",
+      "label": "JA-Ile-bound SCF COI1 complex",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "product",
+      "type": "metabolite"
+    },
+    {
+      "claim_ids": [
+        "cl_9a3a35f18bb35153"
+      ],
+      "compartment": "chloroplast",
+      "component_id": "cmp_5d3abd31040c",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+      "decision_status": "candidate",
+      "direction": "forward",
+      "discovery_round": 1,
+      "enzymes": [
+        "allene oxide synthase (AOS)"
+      ],
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "",
+      "graph_status": "candidate",
+      "history": [
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT) -> (12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+          "event": "quarantined",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "id": "rx_86b33c076d39e423f2fa",
+      "label": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT) -> (12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "Capsicum annuum",
+      "species_state": "in_vitro_or_cell_free",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC12787732",
+          "title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+          "year": "2025"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "aliases": [
+        "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_3bfc193ee67b38cf",
+      "label": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "substrate",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_8850bae276205da2",
+      "label": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "product",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "allene oxide synthase (AOS)"
+      ],
+      "entity_type": "enzyme",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_a8a1912daabd8554",
+      "label": "allene oxide synthase (AOS)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "enzyme",
+      "type": "enzyme"
+    },
+    {
+      "claim_ids": [
+        "cl_9ac4b6db39b411c0"
+      ],
+      "compartment": "",
+      "component_id": "cmp_98656adf98c1",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "paper-supported, target-species reaction with single paper; no external database lookup was required or performed",
+      "decision_status": "accepted",
+      "direction": "unspecified",
+      "discovery_round": 1,
+      "enzymes": [
+        "13-lipoxygenase (13-LOX)"
+      ],
+      "evidence_ids": [
+        "ev_b58e2cb64e2f1d87",
+        "ev_ba6fb9f5cdb8ce58"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "LOX2, LOX3, LOX4, LOX6",
+      "graph_status": "primary",
+      "history": [
+        {
+          "at": "2026-09-24T19:38:31+00:00",
+          "detail": "\u03b1-linolenic acid (LeA) -> 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T19:38:31+00:00",
+          "detail": "component cmp_98656adf98c1",
+          "event": "quarantined",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:01:09+00:00",
+          "detail": "selected as the primary component: evidence-weighted topic relevance 1.0000 over 1 reaction(s) and 1 distinct paper(s); 0 other admitted component(s) retained as candidate subgraphs (quarantined components were never eligible)",
+          "event": "primary_component_selected",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "id": "rx_98656adf98c1fca1946a",
+      "label": "\u03b1-linolenic acid (LeA) -> 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "Arabidopsis thaliana",
+      "species_state": "target_species_supported",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC411572",
+          "title": "Biochemical Characterization of 13-Lipoxygenases of Arabidopsis thaliana.",
+          "year": "2021"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "aliases": [
+        "\u03b1-linolenic acid (LeA)"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_b58e2cb64e2f1d87",
+        "ev_ba6fb9f5cdb8ce58"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_f0c6dad9eca6ffd2",
+      "label": "\u03b1-linolenic acid (LeA)",
+      "paper_ids": [
+        "PMC:PMC411572"
+      ],
+      "role_hint": "substrate",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_b58e2cb64e2f1d87",
+        "ev_ba6fb9f5cdb8ce58"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_eff1e8a25ef4d5d6",
+      "label": "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+      "paper_ids": [
+        "PMC:PMC411572"
+      ],
+      "role_hint": "product",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "13-lipoxygenase (13-LOX)"
+      ],
+      "entity_type": "enzyme",
+      "evidence_ids": [
+        "ev_b58e2cb64e2f1d87",
+        "ev_ba6fb9f5cdb8ce58"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_80b043c85ef7bba4",
+      "label": "13-lipoxygenase (13-LOX)",
+      "paper_ids": [
+        "PMC:PMC411572"
+      ],
+      "role_hint": "enzyme",
+      "type": "enzyme"
+    },
+    {
+      "claim_ids": [
+        "cl_bbf451c081405dad"
+      ],
+      "compartment": "chloroplast",
+      "component_id": "cmp_5d3abd31040c",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+      "decision_status": "candidate",
+      "direction": "forward",
+      "discovery_round": 1,
+      "enzymes": [
+        "allene oxide cyclase (AOC)"
+      ],
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "",
+      "graph_status": "candidate",
+      "history": [
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT) -> (9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+          "event": "quarantined",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "id": "rx_afb91c7037581c9fadc2",
+      "label": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT) -> (9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "Capsicum annuum",
+      "species_state": "in_vitro_or_cell_free",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC12787732",
+          "title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+          "year": "2025"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "aliases": [
+        "(9S,13S)-12-oxo-phytodienoic acid (OPDA)"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_b81b6bcf76945143",
+      "label": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "product",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "allene oxide cyclase (AOC)"
+      ],
+      "entity_type": "enzyme",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_5bbc481da2e79850",
+      "label": "allene oxide cyclase (AOC)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "enzyme",
+      "type": "enzyme"
+    },
+    {
+      "claim_ids": [
+        "cl_50aa0e7c0c06a243"
+      ],
+      "compartment": "",
+      "component_id": "cmp_5d3abd31040c",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+      "decision_status": "candidate",
+      "direction": "unspecified",
+      "discovery_round": 1,
+      "enzymes": [
+        "13S-lipoxygenase (13S-LOX)"
+      ],
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "",
+      "graph_status": "candidate",
+      "history": [
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "\u03b1-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+          "event": "quarantined",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "id": "rx_b30980df6dd1f29b4504",
+      "label": "\u03b1-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "",
+      "species_state": "in_vitro_or_cell_free",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC12787732",
+          "title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+          "year": "2025"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "aliases": [
+        "\u03b1-linolenic acid"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d",
+        "ev_49c948bc587a2016"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_a5ab0b2e2e152263",
+      "label": "\u03b1-linolenic acid",
+      "paper_ids": [
+        "PMC:PMC12787732",
+        "PMC:PMC6628814"
+      ],
+      "role_hint": "substrate",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "13S-lipoxygenase (13S-LOX)"
+      ],
+      "entity_type": "enzyme",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_2ded3b0e46940b7c",
+      "label": "13S-lipoxygenase (13S-LOX)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "enzyme",
+      "type": "enzyme"
+    },
+    {
+      "claim_ids": [
+        "cl_1edde52e869b2e7d"
+      ],
+      "compartment": "chloroplast",
+      "component_id": "cmp_5d3abd31040c",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+      "decision_status": "candidate",
+      "direction": "forward",
+      "discovery_round": 1,
+      "enzymes": [],
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "",
+      "graph_status": "candidate",
+      "history": [
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "\u03b1-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+          "event": "quarantined",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "id": "rx_c1d050d4171b110ad2d4",
+      "label": "\u03b1-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "Capsicum annuum",
+      "species_state": "in_vitro_or_cell_free",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC12787732",
+          "title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+          "year": "2025"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "claim_ids": [
+        "cl_7695a7e80bc79328"
+      ],
+      "compartment": "cytosol",
+      "component_id": "cmp_5d3abd31040c",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+      "decision_status": "candidate",
+      "direction": "forward",
+      "discovery_round": 1,
+      "enzymes": [],
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "",
+      "graph_status": "candidate",
+      "history": [
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "jasmonoyl-CoA -> jasmonic acid (JA)",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+          "event": "quarantined",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "paper(s) PMC:PMC12787732",
+          "event": "duplicate_merged",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "id": "rx_da81fbd8f5b34dc5ec32",
+      "label": "jasmonoyl-CoA -> jasmonic acid (JA)",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "Capsicum annuum",
+      "species_state": "in_vitro_or_cell_free",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC12787732",
+          "title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+          "year": "2025"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "claim_ids": [
+        "cl_ea067e387e3f42ac"
+      ],
+      "compartment": "peroxisome",
+      "component_id": "cmp_5d3abd31040c",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+      "decision_status": "candidate",
+      "direction": "forward",
+      "discovery_round": 1,
+      "enzymes": [
+        "OPDA reductase 3 (OPR3)"
+      ],
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "",
+      "graph_status": "candidate",
+      "history": [
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "(9S,13S)-12-oxo-phytodienoic acid (OPDA) -> OPC-8",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:00:08+00:00",
+          "detail": "component cmp_5d3abd31040c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+          "event": "quarantined",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "id": "rx_f8664da4761606d51db8",
+      "label": "(9S,13S)-12-oxo-phytodienoic acid (OPDA) -> OPC-8",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "Capsicum annuum",
+      "species_state": "in_vitro_or_cell_free",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC12787732",
+          "title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+          "year": "2025"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "aliases": [
+        "OPDA reductase 3 (OPR3)"
+      ],
+      "entity_type": "enzyme",
+      "evidence_ids": [
+        "ev_f7c56801adf6792d"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_8b4639dec2428c2c",
+      "label": "OPDA reductase 3 (OPR3)",
+      "paper_ids": [
+        "PMC:PMC12787732"
+      ],
+      "role_hint": "enzyme",
+      "type": "enzyme"
+    },
+    {
+      "claim_ids": [
+        "cl_f349e4bfd16fa738"
+      ],
+      "compartment": "chloroplast",
+      "component_id": "cmp_ce149ce26fcb",
+      "conditions": "",
+      "conflicts": [],
+      "decision_reason": "species state 'species_not_stated' is not target-species-supported (no species is stated anywhere in the supporting evidence); retained as a labelled lead, not as an established target-species reaction",
+      "decision_status": "candidate",
+      "direction": "unspecified",
+      "discovery_round": 1,
+      "enzymes": [
+        "13-lipoxygenase (LOX2)"
+      ],
+      "evidence_ids": [
+        "ev_49c948bc587a2016"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "LOX2",
+      "graph_status": "candidate",
+      "history": [
+        {
+          "at": "2026-09-24T20:01:09+00:00",
+          "detail": "\u03b1-linolenic acid -> 13-hydroperoxy-\u03b1-linolenic acid",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:01:09+00:00",
+          "detail": "component cmp_ce149ce26fcb: species state species_not_stated: no species is stated anywhere in the supporting evidence",
+          "event": "quarantined",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "id": "rx_febac937577910d44f45",
+      "label": "\u03b1-linolenic acid -> 13-hydroperoxy-\u03b1-linolenic acid",
+      "multi_paper_supported": false,
+      "paper_count": 1,
+      "pathway_names": [],
+      "promoted_round": -1,
+      "reversible": null,
+      "species": "",
+      "species_state": "species_not_stated",
+      "supporting_papers": [
+        {
+          "evidence_type": "unknown",
+          "paper_id": "PMC:PMC6628814",
+          "title": "NAD+ deficiency primes defense metabolism via 1O2-escalated jasmonate biosynthesis in plants.",
+          "year": "2024"
+        }
+      ],
+      "tissue": "",
+      "type": "reaction"
+    },
+    {
+      "aliases": [
+        "13-hydroperoxy-\u03b1-linolenic acid"
+      ],
+      "entity_type": "metabolite",
+      "evidence_ids": [
+        "ev_49c948bc587a2016"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_2a962fa9e6f4e663",
+      "label": "13-hydroperoxy-\u03b1-linolenic acid",
+      "paper_ids": [
+        "PMC:PMC6628814"
+      ],
+      "role_hint": "product",
+      "type": "metabolite"
+    },
+    {
+      "aliases": [
+        "13-lipoxygenase (LOX2)"
+      ],
+      "entity_type": "enzyme",
+      "evidence_ids": [
+        "ev_49c948bc587a2016"
+      ],
+      "external_refs": {
+        "status": "not_evaluated"
+      },
+      "first_round": 1,
+      "id": "en_cd162db0b5b1dec9",
+      "label": "13-lipoxygenase (LOX2)",
+      "paper_ids": [
+        "PMC:PMC6628814"
+      ],
+      "role_hint": "enzyme",
+      "type": "enzyme"
+    }
+  ],
+  "note": "Reaction nodes carry all their substrates and products; there are no pairwise metabolite edges. Enzyme edges are annotations (chemical=false) and never connect two reactions.",
+  "primary_component_id": "cmp_98656adf98c1",
+  "primary_selection_rationale": "selected as the primary component: evidence-weighted topic relevance 1.0000 over 1 reaction(s) and 1 distinct paper(s); 0 other admitted component(s) retained as candidate subgraphs (quarantined components were never eligible)",
+  "rounds": [
+    0,
+    1
+  ],
+  "schema_version": "t2pw.mining.view/1.0.0",
+  "view": "reaction_network"
+}

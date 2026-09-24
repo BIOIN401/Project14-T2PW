@@ -1,0 +1,97 @@
+{
+  "label": "mining-pilot-002",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/mining-pilot-runs2/launch_mining.py",
+    "--enable-pathway-mining",
+    "run",
+    "--species",
+    "Arabidopsis thaliana",
+    "--topic",
+    "jasmonate biosynthesis",
+    "--seed-metabolite",
+    "12-OPDA",
+    "--seed-enzyme",
+    "AOS",
+    "--run-id",
+    "pilot-002-jasmonate-ath",
+    "--runs-dir",
+    "C:/t/mining-pilot-runs2",
+    "--json"
+  ],
+  "cwd": "C:/t/mining-pilot2",
+  "started_at": "2026-09-24T19:37:55+00:00",
+  "finished_at": "2026-09-24T20:11:55+00:00",
+  "duration_seconds": 2039.6906571000009,
+  "timeout_seconds": 4200.0,
+  "root_pid": 144204,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 5,
+  "returned_code": 5,
+  "descendants_observed": [
+    {
+      "pid": 133436,
+      "name": "python.exe",
+      "ppid": 144204
+    },
+    {
+      "pid": 144124,
+      "name": "git.exe",
+      "ppid": 133436
+    }
+  ],
+  "descendants_terminated": [
+    133436,
+    144124
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 41020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 103216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 105240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 136416,
+      "name": "python.exe"
+    },
+    {
+      "pid": 138540,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining-pilot-runs2/g11/002-mining-pilot-002.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-pilot2\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-pilot2",
+    "repo_head": "ecf6b9a02feb8904015fb4e249cc3a3e1a8cdbed",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

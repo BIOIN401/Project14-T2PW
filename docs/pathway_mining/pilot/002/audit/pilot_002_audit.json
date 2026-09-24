@@ -1,0 +1,4272 @@
+{
+ "audit": "ORCH-743 pilot-002 artifact audit (read-only)",
+ "run_dir": "C:\\t\\mining-pilot-runs2\\pilot-002-jasmonate-ath",
+ "code": "C:/t/mining-pilot2 @ ecf6b9a02feb8904015fb4e249cc3a3e1a8cdbed",
+ "generated_by": [
+  "build_audit.py"
+ ],
+ "headline": {
+  "stop_reason": "max_papers_discovered_reached",
+  "stop_detail": "papers discovered: 150 >= limit 150",
+  "completion_state": "stopped_at_limit",
+  "rounds_completed": 3,
+  "elapsed_seconds": 2039.163,
+  "estimated_cost_usd": 0.058908
+ },
+ "counts": {
+  "papers_discovered": {
+   "value": 150,
+   "source": "summary.json papers.discovered=150; usage.papers_discovered=150; papers.jsonl rows=150",
+   "note": "by source: {'europepmc': 67, 'ncbi': 83}"
+  },
+  "papers_screened": {
+   "value": 150,
+   "source": "summary.json papers.screened=150; papers.jsonl rows with screening_outcome set",
+   "note": ""
+  },
+  "papers_included": {
+   "value": 11,
+   "source": "summary.json papers.included=11; papers.jsonl rows with empty exclusion_reasons",
+   "note": "by route (papers.jsonl screening_outcome + inclusion_reasons): {'mining_rescue route 2': 1, 'production': 5, 'mining_rescue route 1': 5}; by source: {'ncbi': 8, 'europepmc': 3}"
+  },
+  "papers_excluded": {
+   "value": 139,
+   "source": "summary.json papers.excluded",
+   "note": ""
+  },
+  "papers_processed": {
+   "value": 10,
+   "source": "papers.jsonl processed_round>=0; usage.papers_processed=10; summary papers.processed=10",
+   "note": "the 11th included paper, PMC:PMC5104190, was never processed: its notes say 'round 2: no passages retrieved for this query'"
+  },
+  "claims_extracted": {
+   "value": 16,
+   "source": "usage.claims_extracted=16; rounds/*/claims_extracted.jsonl rows=16",
+   "note": "claims.jsonl holds 11 stored claims (= summary.json claims.extracted=11, which is the STORED count, not the extracted one); distinct identities=11"
+  },
+  "primary_reactions": {
+   "value": 1,
+   "source": "primary_graph.json reaction_count; summary graph.primary_reactions=1",
+   "note": "component cmp_98656adf98c1"
+  },
+  "candidate_reactions": {
+   "value": 10,
+   "source": "candidate_subgraphs.json sum(len(components[].reactions)) over count=3 components; summary graph.candidate_reactions=10",
+   "note": "decision status of the 10: {'hypothesis_only': 1, 'candidate': 9}"
+  },
+  "rejected_by_reason": {
+   "value": {},
+   "source": "summary.json claims.rejected_by_reason ({} = no claim has status 'rejected')",
+   "note": "rounds/*/rejections.jsonl holds 15 rows (every NON-ADMITTED claim, controller.py _admit): statuses {'candidate': 13, 'hypothesis_only': 2}"
+  },
+  "duplicates_merged": {
+   "value": 5,
+   "source": "reaction history events 'duplicate_merged' in primary_graph.json + candidate_subgraphs.json; usage.claims_extracted - distinct identities = 5",
+   "note": "all 5 are the model re-emitting a claim inside call mc_001_extract_claims_0004 (same paper, same span ev_f7c56801adf6792d): {'jasmonoyl-isoleucine (JA-Ile) -> JA-Ile-bound SCF COI1 complex': 1, 'OPC-8 -> jasmonoyl-CoA': 2, 'jasmonic acid (JA) -> jasmonoyl-isoleucine (JA-Ile)': 1, 'jasmonoyl-CoA -> jasmonic acid (JA)': 1}"
+  },
+  "species_states_reaction_nodes": {
+   "value": {
+    "target_species_supported": 1,
+    "in_vitro_or_cell_free": 9,
+    "species_not_stated": 1
+   },
+   "source": "candidate_subgraphs.json + primary_graph.json reactions[].species_state (== summary.json graph.species_states)",
+   "note": "per extracted claim (16): {'target_species_supported': 1, 'in_vitro_or_cell_free': 14, 'species_not_stated': 1}"
+  },
+  "budget_stops": {
+   "value": "max_papers_discovered_reached",
+   "source": "run_manifest.json stop_reason / stop_detail='papers discovered: 150 >= limit 150' / completion_state=stopped_at_limit",
+   "note": "the only limit reached. It was recorded during round 2; round 3 then started and ran 0 queries (see anomaly A5)"
+  },
+  "model_calls_by_status": {
+   "value": {
+    "ok": 8,
+    "empty_completion": 2
+   },
+   "source": "model_calls.jsonl status (10 logical calls); summary.json model_calls.by_status",
+   "note": "ladder rungs (model_raw.jsonl rows, = usage.llm_calls): 15, by parse_outcome {'ok': 8, 'empty_completion': 7}; provider HTTP requests: 30 (+1 preflight probe)"
+  },
+  "empty_completion_log_lines": {
+   "value": 7,
+   "source": "pilot-002.log lines 'giving up and returning the empty string'",
+   "note": "one line per ladder rung whose 3 provider requests all came back empty: 3 rungs of mc_001_..._0002 + 3 of _0003 + 1 of mc_002_..._0006 = 7. model_calls.jsonl shows only 2 failed calls because _0006 recovered on rung 2 (status ok). Other log retries: ['finish_reason=error attempt 1/3']"
+  },
+  "uncited_field_drops": {
+   "value": {
+    "total": 0
+   },
+   "source": "state.json errors (0 rows); rounds/*/errors.jsonl rows=0",
+   "note": "pilot-001 dropped 59 of 59"
+  },
+  "fields_kept_by_attribution": {
+   "value": {
+    "compartment:model_citation": 9,
+    "direction:model_citation": 8,
+    "enzyme:model_citation": 8,
+    "gene:model_citation": 2,
+    "species:model_citation": 9
+   },
+   "source": "claims.jsonl field_attribution (11 stored claims)",
+   "note": "over the 16 extracted claims: {'compartment:model_citation': 14, 'direction:model_citation': 13, 'enzyme:model_citation': 10, 'gene:model_citation': 2, 'species:model_citation': 14}; verbatim_cited_span = 0"
+  },
+  "passages": {
+   "value": {
+    "extracted": 80,
+    "retrieved": 80
+   },
+   "source": "summary.json passages; evidence_spans.jsonl rows=80",
+   "note": ""
+  }
+ },
+ "budgets": [
+  {
+   "budget": "rounds",
+   "used": 3,
+   "limit": 8
+  },
+  {
+   "budget": "papers discovered",
+   "used": 150,
+   "limit": 150
+  },
+  {
+   "budget": "papers processed",
+   "used": 10,
+   "limit": 40
+  },
+  {
+   "budget": "LLM calls (ladder rungs)",
+   "used": 15,
+   "limit": 200
+  },
+  {
+   "budget": "input tokens",
+   "used": 302829,
+   "limit": 2000000
+  },
+  {
+   "budget": "output tokens",
+   "used": 95417,
+   "limit": 400000
+  },
+  {
+   "budget": "est. cost USD",
+   "used": 0.058908,
+   "limit": 5.0
+  },
+  {
+   "budget": "wall clock s",
+   "used": 2039.163,
+   "limit": 3600.0
+  },
+  {
+   "budget": "frontier size (start of round 2 / 3)",
+   "used": "44 / 19",
+   "limit": 60
+  },
+  {
+   "budget": "unproductive streak",
+   "used": 2,
+   "limit": 2
+  }
+ ],
+ "reactions": [
+  {
+   "reaction_id": "rx_98656adf98c1fca1946a",
+   "graph_status": "primary",
+   "component_id": "cmp_98656adf98c1",
+   "quarantine_reason": "",
+   "equation": "α-linolenic acid (LeA) -> 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+   "enzymes": [
+    {
+     "name": "13-lipoxygenase (13-LOX)",
+     "attribution": "model_citation"
+    }
+   ],
+   "gene": {
+    "value": "LOX2, LOX3, LOX4, LOX6",
+    "attribution": "model_citation"
+   },
+   "species_state": "target_species_supported",
+   "species_value": "Arabidopsis thaliana",
+   "species_attribution": "model_citation",
+   "species_evidence_ids": [
+    "ev_b58e2cb64e2f1d87",
+    "ev_ba6fb9f5cdb8ce58"
+   ],
+   "species_reason": "target species 'arabidopsis thaliana' explicitly supported by 2 evidence span(s)",
+   "paper_id": "PMC:PMC411572",
+   "paper_title": "Biochemical Characterization of 13-Lipoxygenases of Arabidopsis thaliana.",
+   "claim_ids": [
+    "cl_9ac4b6db39b411c0"
+   ],
+   "model_call_id": "mc_001_extract_claims_0001",
+   "spans": [
+    {
+     "evidence_id": "ev_b58e2cb64e2f1d87",
+     "section": "abstract",
+     "locator": "abstract#0",
+     "char_start": 0,
+     "char_end": 1775,
+     "excerpt": [
+      "13-lipoxygenases (13-LOX) catalyze the dioxygenation of various polyunsaturated fatty acids (PUFAs), of which α-linolenic acid (LeA) is converted to 13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT), the precursor for the prostaglandin-like plant hormones cis-(+)-12-oxophytodienoic acid (12-OPDA) and methyl jasmonate (MJ).",
+      "This study aimed for characterizing the four annotated A. thaliana 13-LOX enzymes (LOX2, LOX3, LOX4, and LOX6) focusing on synthesis of 12-OPDA and 4Z,7Z,10Z)-12-[[-(1S,5S)-4-oxo-5-(2Z)-pent-2-en-1yl] cyclopent-2-en-1yl] dodeca-4,7,10-trienoic acid (OCPD).",
+      "A. thaliana 13-LOXs, in cascade with 12-OPDA pathway enzymes, synthesized 12-OPDA and OCPD from LeA and docosahexaenoic acid, previously shown only for LOX6."
+     ],
+     "same_text_as": [
+      "ev_ba6fb9f5cdb8ce58"
+     ]
+    },
+    {
+     "evidence_id": "ev_ba6fb9f5cdb8ce58",
+     "section": "body",
+     "locator": "body#0",
+     "char_start": 0,
+     "char_end": 1775,
+     "excerpt": [],
+     "same_text_as": [
+      "ev_b58e2cb64e2f1d87"
+     ]
+    }
+   ],
+   "seed_connection": "upstream, 2 steps",
+   "seed_how": "13-LOX step: makes 13-HPOT, the AOS substrate; 12-OPDA is AOS then AOC away",
+   "graph_neighbours": [],
+   "decision_status": "accepted",
+   "decision_reason": "paper-supported, target-species reaction with single paper; no external database lookup was required or performed",
+   "decision_id": "dc_33a7aaedfc8d6eaf",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 0,
+   "hypothesis": false
+  },
+  {
+   "reaction_id": "rx_85236be236d5f1e8a0f1",
+   "graph_status": "candidate",
+   "component_id": "cmp_2c50f30771a0",
+   "quarantine_reason": "hypothesis_only",
+   "equation": "jasmonoyl-isoleucine (JA-Ile) -> JA-Ile-bound SCF COI1 complex",
+   "enzymes": [],
+   "gene": {
+    "value": "",
+    "attribution": ""
+   },
+   "species_state": "in_vitro_or_cell_free",
+   "species_value": "Capsicum annuum",
+   "species_attribution": "model_citation",
+   "species_evidence_ids": [
+    "ev_f7c56801adf6792d"
+   ],
+   "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+   "paper_id": "PMC:PMC12787732",
+   "paper_title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+   "claim_ids": [
+    "cl_d168265641d5797d"
+   ],
+   "model_call_id": "mc_001_extract_claims_0004",
+   "spans": [
+    {
+     "evidence_id": "ev_f7c56801adf6792d",
+     "section": "introduction",
+     "locator": "introduction#0",
+     "char_start": 3467,
+     "char_end": 8329,
+     "excerpt": [
+      "After entering the nucleus [ 32 ], JA-Ile binds to the Skp1/Cullin1/F-box protein coronatine-insensitive 1 (SCF CO1 ) complex, bridging the ubiquitin E3 ligase with its target repressor jasmonate ZIM-domain (JAZ) proteins, leading to its degradation through the 26 S -proteasome, thus freeing MYC2, MYC3, or MYC4 transcription factors from repression and allowing JA-Ile-responsive gene expression to proceed [ 32 , 33 , 34 , 35 , 36 ]."
+     ],
+     "same_text_as": []
+    }
+   ],
+   "seed_connection": "not a metabolic step",
+   "seed_how": "JA-Ile binding the SCF-COI1 receptor complex is perception, not a conversion; held as hypothesis_only",
+   "graph_neighbours": [
+    {
+     "kind": "product_to_substrate",
+     "via": "jasmonoyl-isoleucine (JA-Ile)",
+     "reaction_id": "rx_355aa30ff85f270c9a58"
+    }
+   ],
+   "decision_status": "hypothesis_only",
+   "decision_reason": "the source presents this as a proposal or model, not an observed result; retained as a labelled hypothesis, never as an established reaction",
+   "decision_id": "dc_8c4ff0d260c0f16d",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 1,
+   "hypothesis": true
+  },
+  {
+   "reaction_id": "rx_312345b466fea5ca097c",
+   "graph_status": "candidate",
+   "component_id": "cmp_5d3abd31040c",
+   "quarantine_reason": "species:in_vitro_or_cell_free",
+   "equation": "OPC-8 -> jasmonoyl-CoA",
+   "enzymes": [
+    {
+     "name": "acyl-CoA oxidase (ACX), multifunctional protein (MFP), 3-ketoacyl-CoA thiolase (KAT)",
+     "attribution": "model_citation"
+    }
+   ],
+   "gene": {
+    "value": "",
+    "attribution": ""
+   },
+   "species_state": "in_vitro_or_cell_free",
+   "species_value": "Capsicum annuum",
+   "species_attribution": "model_citation",
+   "species_evidence_ids": [
+    "ev_f7c56801adf6792d"
+   ],
+   "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+   "paper_id": "PMC:PMC12787732",
+   "paper_title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+   "claim_ids": [
+    "cl_d1c4e947dc6fe086"
+   ],
+   "model_call_id": "mc_001_extract_claims_0004",
+   "spans": [
+    {
+     "evidence_id": "ev_f7c56801adf6792d",
+     "section": "introduction",
+     "locator": "introduction#0",
+     "char_start": 3467,
+     "char_end": 8329,
+     "excerpt": [
+      "After esterification to CoA [ 21 ], OPC-8 undergoes β -oxidation by the fatty acid β -oxidation machinery composed of acyl-CoA oxidase (ACX), multifunctional protein (MFP), and 3-ketoacyl CoA thiolase (KAT) [ 22 , 23 , 24 , 25 , 26 , 27 ]."
+     ],
+     "same_text_as": []
+    }
+   ],
+   "seed_connection": "downstream, 2 steps",
+   "seed_how": "OPC-8 -> JA-CoA; the span collapses CoA activation and three beta-oxidation cycles into one step",
+   "graph_neighbours": [
+    {
+     "kind": "product_to_substrate",
+     "via": "OPC-8",
+     "reaction_id": "rx_f8664da4761606d51db8"
+    },
+    {
+     "kind": "product_to_substrate",
+     "via": "jasmonoyl-CoA",
+     "reaction_id": "rx_da81fbd8f5b34dc5ec32"
+    }
+   ],
+   "decision_status": "candidate",
+   "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+   "decision_id": "dc_4b793bd723426aaf",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 2,
+   "hypothesis": false
+  },
+  {
+   "reaction_id": "rx_355aa30ff85f270c9a58",
+   "graph_status": "candidate",
+   "component_id": "cmp_5d3abd31040c",
+   "quarantine_reason": "species:in_vitro_or_cell_free",
+   "equation": "jasmonic acid (JA) -> jasmonoyl-isoleucine (JA-Ile)",
+   "enzymes": [
+    {
+     "name": "jasmonate resistant 1 (JAR1)",
+     "attribution": "model_citation"
+    }
+   ],
+   "gene": {
+    "value": "",
+    "attribution": ""
+   },
+   "species_state": "in_vitro_or_cell_free",
+   "species_value": "Capsicum annuum",
+   "species_attribution": "model_citation",
+   "species_evidence_ids": [
+    "ev_f7c56801adf6792d"
+   ],
+   "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+   "paper_id": "PMC:PMC12787732",
+   "paper_title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+   "claim_ids": [
+    "cl_87b979b4ddda7787"
+   ],
+   "model_call_id": "mc_001_extract_claims_0004",
+   "spans": [
+    {
+     "evidence_id": "ev_f7c56801adf6792d",
+     "section": "introduction",
+     "locator": "introduction#0",
+     "char_start": 3467,
+     "char_end": 8329,
+     "excerpt": [
+      "There, it may be converted into its biologically active form, jasmonoyl-isoleucine (JA-Ile), by jasmonate resistant 1 (JAR1) [ 31 ]."
+     ],
+     "same_text_as": []
+    }
+   ],
+   "seed_connection": "downstream, 4 steps",
+   "seed_how": "JAR1 conjugates JA to JA-Ile",
+   "graph_neighbours": [
+    {
+     "kind": "product_to_substrate",
+     "via": "jasmonic acid (JA)",
+     "reaction_id": "rx_da81fbd8f5b34dc5ec32"
+    },
+    {
+     "kind": "product_to_substrate",
+     "via": "jasmonoyl-isoleucine (JA-Ile)",
+     "reaction_id": "rx_85236be236d5f1e8a0f1"
+    }
+   ],
+   "decision_status": "candidate",
+   "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+   "decision_id": "dc_96c52f468f24da44",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 1,
+   "hypothesis": false
+  },
+  {
+   "reaction_id": "rx_86b33c076d39e423f2fa",
+   "graph_status": "candidate",
+   "component_id": "cmp_5d3abd31040c",
+   "quarantine_reason": "species:in_vitro_or_cell_free",
+   "equation": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT) -> (12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+   "enzymes": [
+    {
+     "name": "allene oxide synthase (AOS)",
+     "attribution": "model_citation"
+    }
+   ],
+   "gene": {
+    "value": "",
+    "attribution": ""
+   },
+   "species_state": "in_vitro_or_cell_free",
+   "species_value": "Capsicum annuum",
+   "species_attribution": "model_citation",
+   "species_evidence_ids": [
+    "ev_f7c56801adf6792d"
+   ],
+   "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+   "paper_id": "PMC:PMC12787732",
+   "paper_title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+   "claim_ids": [
+    "cl_9a3a35f18bb35153"
+   ],
+   "model_call_id": "mc_001_extract_claims_0004",
+   "spans": [
+    {
+     "evidence_id": "ev_f7c56801adf6792d",
+     "section": "introduction",
+     "locator": "introduction#0",
+     "char_start": 3467,
+     "char_end": 8329,
+     "excerpt": [
+      "The reaction that converts 13-HPOT to (12 S -13 S )-epoxy-hydroperoxy-octadecatrienoic acid ((12 S -13 S )-EOT) is catalyzed by allene oxide synthase (AOS) and commits the pathway towards jasmonate biosynthesis [ 12 ]."
+     ],
+     "same_text_as": []
+    }
+   ],
+   "seed_connection": "DIRECT (seed enzyme AOS)",
+   "seed_how": "the AOS step 13-HPOT -> 12,13-EOT, catalysed by the seed enzyme",
+   "graph_neighbours": [
+    {
+     "kind": "product_to_substrate",
+     "via": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+     "reaction_id": "rx_afb91c7037581c9fadc2"
+    },
+    {
+     "kind": "product_to_substrate",
+     "via": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+     "reaction_id": "rx_b30980df6dd1f29b4504"
+    },
+    {
+     "kind": "product_to_substrate",
+     "via": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+     "reaction_id": "rx_c1d050d4171b110ad2d4"
+    }
+   ],
+   "decision_status": "candidate",
+   "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+   "decision_id": "dc_6cd2f91dd0e4e154",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 0,
+   "hypothesis": false
+  },
+  {
+   "reaction_id": "rx_afb91c7037581c9fadc2",
+   "graph_status": "candidate",
+   "component_id": "cmp_5d3abd31040c",
+   "quarantine_reason": "species:in_vitro_or_cell_free",
+   "equation": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT) -> (9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+   "enzymes": [
+    {
+     "name": "allene oxide cyclase (AOC)",
+     "attribution": "model_citation"
+    }
+   ],
+   "gene": {
+    "value": "",
+    "attribution": ""
+   },
+   "species_state": "in_vitro_or_cell_free",
+   "species_value": "Capsicum annuum",
+   "species_attribution": "model_citation",
+   "species_evidence_ids": [
+    "ev_f7c56801adf6792d"
+   ],
+   "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+   "paper_id": "PMC:PMC12787732",
+   "paper_title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+   "claim_ids": [
+    "cl_bbf451c081405dad"
+   ],
+   "model_call_id": "mc_001_extract_claims_0004",
+   "spans": [
+    {
+     "evidence_id": "ev_f7c56801adf6792d",
+     "section": "introduction",
+     "locator": "introduction#0",
+     "char_start": 3467,
+     "char_end": 8329,
+     "excerpt": [
+      "(12 S -13 S )-EOT is reconfigured by allene oxide cyclase (AOC) into the more stable (9 S ,13 S )-12- oxo -phytodienoic acid (OPDA), a bioactive jasmonate [ 13 , 14 , 15 ]."
+     ],
+     "same_text_as": []
+    }
+   ],
+   "seed_connection": "DIRECT (makes seed 12-OPDA)",
+   "seed_how": "the AOC step; its product (9S,13S)-OPDA is the seed 12-OPDA",
+   "graph_neighbours": [
+    {
+     "kind": "product_to_substrate",
+     "via": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+     "reaction_id": "rx_86b33c076d39e423f2fa"
+    },
+    {
+     "kind": "product_to_substrate",
+     "via": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+     "reaction_id": "rx_f8664da4761606d51db8"
+    }
+   ],
+   "decision_status": "candidate",
+   "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+   "decision_id": "dc_f8762ee4106b9520",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 0,
+   "hypothesis": false
+  },
+  {
+   "reaction_id": "rx_b30980df6dd1f29b4504",
+   "graph_status": "candidate",
+   "component_id": "cmp_5d3abd31040c",
+   "quarantine_reason": "species:in_vitro_or_cell_free",
+   "equation": "α-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+   "enzymes": [
+    {
+     "name": "13S-lipoxygenase (13S-LOX)",
+     "attribution": "model_citation"
+    }
+   ],
+   "gene": {
+    "value": "",
+    "attribution": ""
+   },
+   "species_state": "in_vitro_or_cell_free",
+   "species_value": "",
+   "species_attribution": "",
+   "species_evidence_ids": [],
+   "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+   "paper_id": "PMC:PMC12787732",
+   "paper_title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+   "claim_ids": [
+    "cl_50aa0e7c0c06a243"
+   ],
+   "model_call_id": "mc_001_extract_claims_0004",
+   "spans": [
+    {
+     "evidence_id": "ev_f7c56801adf6792d",
+     "section": "introduction",
+     "locator": "introduction#0",
+     "char_start": 3467,
+     "char_end": 8329,
+     "excerpt": [
+      "After wounding or recognition of a necrotrophic pathogen, jasmonate biosynthesis starts in the chloroplast, where α -linolenic acid, a substrate of lipoxygenases (LOXs), is released from the galactolipids of the chloroplast membrane by a galactolipase [ 10 ].",
+      "The fatty acid undergoes oxidation, catalyzed by a member of the 13 S -LOX class of lipoxygenases, producing (13 S )-hydroperoxy-octadecatrienoic acid (13-HPOT) [ 11 ]."
+     ],
+     "same_text_as": []
+    }
+   ],
+   "seed_connection": "upstream, 2 steps",
+   "seed_how": "same 13-LOX step as the primary reaction (pepper introduction, species left empty)",
+   "graph_neighbours": [
+    {
+     "kind": "product_to_substrate",
+     "via": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+     "reaction_id": "rx_86b33c076d39e423f2fa"
+    },
+    {
+     "kind": "shared_substrate",
+     "via": "α-linolenic acid",
+     "reaction_id": "rx_c1d050d4171b110ad2d4"
+    },
+    {
+     "kind": "shared_substrate",
+     "via": "α-linolenic acid",
+     "reaction_id": "rx_febac937577910d44f45"
+    }
+   ],
+   "decision_status": "candidate",
+   "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+   "decision_id": "dc_f8ff12d0b2da0699",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 0,
+   "hypothesis": false
+  },
+  {
+   "reaction_id": "rx_c1d050d4171b110ad2d4",
+   "graph_status": "candidate",
+   "component_id": "cmp_5d3abd31040c",
+   "quarantine_reason": "species:in_vitro_or_cell_free",
+   "equation": "α-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+   "enzymes": [],
+   "gene": {
+    "value": "",
+    "attribution": ""
+   },
+   "species_state": "in_vitro_or_cell_free",
+   "species_value": "Capsicum annuum",
+   "species_attribution": "model_citation",
+   "species_evidence_ids": [
+    "ev_f7c56801adf6792d"
+   ],
+   "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+   "paper_id": "PMC:PMC12787732",
+   "paper_title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+   "claim_ids": [
+    "cl_1edde52e869b2e7d"
+   ],
+   "model_call_id": "mc_001_extract_claims_0004",
+   "spans": [
+    {
+     "evidence_id": "ev_f7c56801adf6792d",
+     "section": "introduction",
+     "locator": "introduction#0",
+     "char_start": 3467,
+     "char_end": 8329,
+     "excerpt": [
+      "After wounding or recognition of a necrotrophic pathogen, jasmonate biosynthesis starts in the chloroplast, where α -linolenic acid, a substrate of lipoxygenases (LOXs), is released from the galactolipids of the chloroplast membrane by a galactolipase [ 10 ].",
+      "The fatty acid undergoes oxidation, catalyzed by a member of the 13 S -LOX class of lipoxygenases, producing (13 S )-hydroperoxy-octadecatrienoic acid (13-HPOT) [ 11 ]."
+     ],
+     "same_text_as": []
+    }
+   ],
+   "seed_connection": "upstream, 2 steps",
+   "seed_how": "same 13-LOX step again, same span, species Capsicum annuum: a second node for the same sentence",
+   "graph_neighbours": [
+    {
+     "kind": "product_to_substrate",
+     "via": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+     "reaction_id": "rx_86b33c076d39e423f2fa"
+    },
+    {
+     "kind": "shared_substrate",
+     "via": "α-linolenic acid",
+     "reaction_id": "rx_b30980df6dd1f29b4504"
+    },
+    {
+     "kind": "shared_substrate",
+     "via": "α-linolenic acid",
+     "reaction_id": "rx_febac937577910d44f45"
+    }
+   ],
+   "decision_status": "candidate",
+   "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+   "decision_id": "dc_ee61992b2b43c5ae",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 0,
+   "hypothesis": false
+  },
+  {
+   "reaction_id": "rx_da81fbd8f5b34dc5ec32",
+   "graph_status": "candidate",
+   "component_id": "cmp_5d3abd31040c",
+   "quarantine_reason": "species:in_vitro_or_cell_free",
+   "equation": "jasmonoyl-CoA -> jasmonic acid (JA)",
+   "enzymes": [],
+   "gene": {
+    "value": "",
+    "attribution": ""
+   },
+   "species_state": "in_vitro_or_cell_free",
+   "species_value": "Capsicum annuum",
+   "species_attribution": "model_citation",
+   "species_evidence_ids": [
+    "ev_f7c56801adf6792d"
+   ],
+   "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+   "paper_id": "PMC:PMC12787732",
+   "paper_title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+   "claim_ids": [
+    "cl_7695a7e80bc79328"
+   ],
+   "model_call_id": "mc_001_extract_claims_0004",
+   "spans": [
+    {
+     "evidence_id": "ev_f7c56801adf6792d",
+     "section": "introduction",
+     "locator": "introduction#0",
+     "char_start": 3467,
+     "char_end": 8329,
+     "excerpt": [
+      "The product, jasmonoyl-CoA, is transformed into jasmonic acid (JA), which moves into the cytosol [ 28 , 29 , 30 ]."
+     ],
+     "same_text_as": []
+    }
+   ],
+   "seed_connection": "downstream, 3 steps",
+   "seed_how": "JA-CoA -> JA (thioesterase step; no enzyme stated)",
+   "graph_neighbours": [
+    {
+     "kind": "product_to_substrate",
+     "via": "jasmonic acid (JA)",
+     "reaction_id": "rx_355aa30ff85f270c9a58"
+    },
+    {
+     "kind": "product_to_substrate",
+     "via": "jasmonoyl-CoA",
+     "reaction_id": "rx_312345b466fea5ca097c"
+    }
+   ],
+   "decision_status": "candidate",
+   "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+   "decision_id": "dc_6197c7c4346ed6e3",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 1,
+   "hypothesis": false
+  },
+  {
+   "reaction_id": "rx_f8664da4761606d51db8",
+   "graph_status": "candidate",
+   "component_id": "cmp_5d3abd31040c",
+   "quarantine_reason": "species:in_vitro_or_cell_free",
+   "equation": "(9S,13S)-12-oxo-phytodienoic acid (OPDA) -> OPC-8",
+   "enzymes": [
+    {
+     "name": "OPDA reductase 3 (OPR3)",
+     "attribution": "model_citation"
+    }
+   ],
+   "gene": {
+    "value": "",
+    "attribution": ""
+   },
+   "species_state": "in_vitro_or_cell_free",
+   "species_value": "Capsicum annuum",
+   "species_attribution": "model_citation",
+   "species_evidence_ids": [
+    "ev_f7c56801adf6792d"
+   ],
+   "species_reason": "the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+   "paper_id": "PMC:PMC12787732",
+   "paper_title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+   "claim_ids": [
+    "cl_ea067e387e3f42ac"
+   ],
+   "model_call_id": "mc_001_extract_claims_0004",
+   "spans": [
+    {
+     "evidence_id": "ev_f7c56801adf6792d",
+     "section": "introduction",
+     "locator": "introduction#0",
+     "char_start": 3467,
+     "char_end": 8329,
+     "excerpt": [
+      "In this organelle, jasmonate biosynthesis continues with the reduction of OPDA by OPDA reductase 3 (OPR3) [ 18 , 19 , 20 ]."
+     ],
+     "same_text_as": []
+    }
+   ],
+   "seed_connection": "DIRECT (consumes seed 12-OPDA)",
+   "seed_how": "OPR3 reduces the seed 12-OPDA to OPC-8 (downstream)",
+   "graph_neighbours": [
+    {
+     "kind": "product_to_substrate",
+     "via": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+     "reaction_id": "rx_afb91c7037581c9fadc2"
+    },
+    {
+     "kind": "product_to_substrate",
+     "via": "OPC-8",
+     "reaction_id": "rx_312345b466fea5ca097c"
+    }
+   ],
+   "decision_status": "candidate",
+   "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+   "decision_id": "dc_b512c63d1ac266b2",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 0,
+   "hypothesis": false
+  },
+  {
+   "reaction_id": "rx_febac937577910d44f45",
+   "graph_status": "candidate",
+   "component_id": "cmp_ce149ce26fcb",
+   "quarantine_reason": "species:species_not_stated",
+   "equation": "α-linolenic acid -> 13-hydroperoxy-α-linolenic acid",
+   "enzymes": [
+    {
+     "name": "13-lipoxygenase (LOX2)",
+     "attribution": "model_citation"
+    }
+   ],
+   "gene": {
+    "value": "LOX2",
+    "attribution": "model_citation"
+   },
+   "species_state": "species_not_stated",
+   "species_value": "",
+   "species_attribution": "",
+   "species_evidence_ids": [],
+   "species_reason": "no species is stated anywhere in the supporting evidence",
+   "paper_id": "PMC:PMC6628814",
+   "paper_title": "NAD+ deficiency primes defense metabolism via 1O2-escalated jasmonate biosynthesis in plants.",
+   "claim_ids": [
+    "cl_f349e4bfd16fa738"
+   ],
+   "model_call_id": "mc_001_extract_claims_0005",
+   "spans": [
+    {
+     "evidence_id": "ev_49c948bc587a2016",
+     "section": "abstract",
+     "locator": "abstract#0",
+     "char_start": null,
+     "char_end": null,
+     "excerpt": [
+      "The elevated defense in qs-2 is resulted from activated jasmonate biosynthesis, critically hydroperoxidation of α-linolenic acid by the 13-lipoxygenase (namely LOX2), which is escalated via the burst of chloroplastic ROS-singlet oxygen (1O2)."
+     ],
+     "same_text_as": []
+    }
+   ],
+   "seed_connection": "upstream, 2 steps",
+   "seed_how": "the same 13-LOX step (LOX2) from the NAD+ paper's abstract",
+   "graph_neighbours": [
+    {
+     "kind": "shared_substrate",
+     "via": "α-linolenic acid",
+     "reaction_id": "rx_b30980df6dd1f29b4504"
+    },
+    {
+     "kind": "shared_substrate",
+     "via": "α-linolenic acid",
+     "reaction_id": "rx_c1d050d4171b110ad2d4"
+    }
+   ],
+   "decision_status": "candidate",
+   "decision_reason": "species state 'species_not_stated' is not target-species-supported (no species is stated anywhere in the supporting evidence); retained as a labelled lead, not as an established target-species reaction",
+   "decision_id": "dc_7cbf5810f3f97827",
+   "evidence_level": "single_paper",
+   "duplicate_merges": 0,
+   "hypothesis": false
+  }
+ ],
+ "primary_species": {
+  "evidence_ids": [
+   "ev_b58e2cb64e2f1d87",
+   "ev_ba6fb9f5cdb8ce58"
+  ],
+  "attribution": "model_citation",
+  "raw_model_species": "Arabidopsis thaliana",
+  "raw_species_evidence_ids": [
+   "ev_b58e2cb64e2f1d87",
+   "ev_ba6fb9f5cdb8ce58"
+  ],
+  "two_spans_identical_text": true,
+  "species_sentences": [
+   "This study aimed for characterizing the four annotated A. thaliana 13-LOX enzymes (LOX2, LOX3, LOX4, and LOX6) focusing on synthesis of 12-OPDA and 4Z,7Z,10Z)-12-[[-(1S,5S)-4-oxo-5-(2Z)-pent-2-en-1yl] cyclopent-2-en-1yl] dodeca-4,7,10-trienoic acid (OCPD).",
+   "A. thaliana 13-LOXs, in cascade with 12-OPDA pathway enzymes, synthesized 12-OPDA and OCPD from LeA and docosahexaenoic acid, previously shown only for LOX6."
+  ]
+ },
+ "pepper_span": {
+  "species_sentence": [
+   "We chose pepper ( Capsicum annuum ) as our study organism since pepper has four 13 S -LOXs [ 43 ]; CaLOX2 and CaLOX8 have a Ser at the phosphosite, whereas CaLOX6 and CaLOX7 have an unphosphorylatable Ala at this site, suggesting that these proteins may be regulated at the post-translational or transcriptional levels, respectively (Note: Pepper LOXs have been color-coded; those with an Ala at the phosphosite ( CaLOX6 and CaLOX7 ) in orange and those with a Ser at this site ( CaLOX2 and CaLOX8 ) in blue)."
+  ],
+  "in_vitro_trigger_sentence": [
+   "Using phosphovariants, in vitro studies confirmed that the unphosphorylatable AtLOX2 had over a 100 times increase in V max compared to the phosphomimic, which likely reflects blocking of the substrate from the catalytic site [ 42 ]."
+  ]
+ },
+ "seed_named_entities": {
+  "en_8b4639dec2428c2c": "OPDA reductase 3 (OPR3)",
+  "en_a8a1912daabd8554": "allene oxide synthase (AOS)",
+  "en_b81b6bcf76945143": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)"
+ },
+ "included_papers": [
+  {
+   "paper_id": "PMC:PMC411572",
+   "title": "Biochemical Characterization of 13-Lipoxygenases of Arabidopsis thaliana.",
+   "year": "2021",
+   "source": "ncbi",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.1073/pnas.76.9.4350",
+   "route": "mining_rescue route 2",
+   "inclusion_reason": "mining_rescue: names 'a. thaliana' and '12-OPDA' in one sentence",
+   "matched_term": "12-OPDA",
+   "matched_species_form": "a. thaliana",
+   "route2_sentence": "This study aimed for characterizing the four annotated A. thaliana 13-LOX enzymes (LOX2, LOX3, LOX4, and LOX6) focusing on synthesis of 12-OPDA and 4Z,7Z,10Z)-12-[[-(1S,5S)-4-oxo-5-(2Z)-pent-2-en-1yl] cyclopent-2-en-1yl] dodeca-4,7,10-trienoic acid (OCPD).",
+   "production_exclusion": "the production screen excluded it: off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "screening_score": 3.0,
+   "title_other_organisms": [],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "",
+   "observed_organisms": [
+    "Arabidopsis thaliana",
+    "Homo sapiens"
+   ],
+   "processed_round": 1,
+   "text_used": "abstract only",
+   "fulltext_cache_chars": 0,
+   "fetched_text_names_this_title": null,
+   "fetched_text_header": "",
+   "passages": 2,
+   "model_call": "mc_001_extract_claims_0001",
+   "claims_extracted": 1,
+   "evidence_type": "unknown",
+   "notes": [
+    "the production screen excluded it: off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC13364333",
+   "title": "Jasmonate Biosynthesis Across Bryophyte Lineages: Lessons from &lt;i&gt;Marchantia polymorpha&lt;/i&gt; and Beyond.",
+   "year": "2026",
+   "source": "europepmc",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.3390/plants15132102",
+   "route": "production",
+   "inclusion_reason": "score 5.0 >= threshold 2.0; anchored on jasmonate biosynthesis, jasmonate biosynthetic pathway, jasmonate biosynthetic (local: precursors)",
+   "matched_term": "",
+   "matched_species_form": "",
+   "route2_sentence": "",
+   "production_exclusion": "",
+   "screening_score": 5.0,
+   "title_other_organisms": [],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "",
+   "observed_organisms": [],
+   "processed_round": 1,
+   "text_used": "full text 98172 chars",
+   "fulltext_cache_chars": 98172,
+   "fetched_text_names_this_title": true,
+   "fetched_text_header": "Jasmonate Biosynthesis Across Bryophyte Lineages: Lessons from Marchantia polymorpha and Beyond Galassi Lucia 1 † Medina-Paz Francisco 1 † J",
+   "passages": 20,
+   "model_call": "mc_001_extract_claims_0002",
+   "claims_extracted": 0,
+   "evidence_type": "unknown",
+   "notes": [
+    "extraction produced no admissible claims: status=empty_completion. No reaction was added; the failure is recorded and the passages remain available for a later round."
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC4793799",
+   "title": "Arabidopsis GH3.10 conjugates jasmonates.",
+   "year": "2025",
+   "source": "ncbi",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.1199/tab.0167",
+   "route": "production",
+   "inclusion_reason": "score 4.75 >= threshold 2.0; anchored on jasmonate biosynthesis (local: knockout)",
+   "matched_term": "",
+   "matched_species_form": "",
+   "route2_sentence": "",
+   "production_exclusion": "",
+   "screening_score": 4.75,
+   "title_other_organisms": [],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "",
+   "observed_organisms": [
+    "Arabidopsis thaliana"
+   ],
+   "processed_round": 1,
+   "text_used": "full text 64756 chars",
+   "fulltext_cache_chars": 64756,
+   "fetched_text_names_this_title": false,
+   "fetched_text_header": "Hormone crosstalk in wound stress response: wound-inducible amidohydrolases can simultaneously regulate jasmonate and auxin homeostasis in A",
+   "passages": 20,
+   "model_call": "mc_001_extract_claims_0003",
+   "claims_extracted": 0,
+   "evidence_type": "unknown",
+   "notes": [
+    "extraction produced no admissible claims: status=empty_completion. No reaction was added; the failure is recorded and the passages remain available for a later round."
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC12787732",
+   "title": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pepper Leaves.",
+   "year": "2025",
+   "source": "europepmc",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.3390/plants15010045",
+   "route": "production",
+   "inclusion_reason": "score 4.0 >= threshold 2.0; anchored on jasmonate biosynthesis (local: catalyzes)",
+   "matched_term": "",
+   "matched_species_form": "",
+   "route2_sentence": "",
+   "production_exclusion": "",
+   "screening_score": 4.0,
+   "title_other_organisms": [],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "",
+   "observed_organisms": [],
+   "processed_round": 1,
+   "text_used": "full text 88532 chars",
+   "fulltext_cache_chars": 88532,
+   "fetched_text_names_this_title": true,
+   "fetched_text_header": "Transcription, Alternative Splicing, and Post-Translational Regulation of CaLOXs in the Dynamic Regulation of Jasmonate Levels in Wounded Pe",
+   "passages": 16,
+   "model_call": "mc_001_extract_claims_0004",
+   "claims_extracted": 14,
+   "evidence_type": "unknown",
+   "notes": []
+  },
+  {
+   "paper_id": "PMC:PMC6628814",
+   "title": "NAD+ deficiency primes defense metabolism via 1O2-escalated jasmonate biosynthesis in plants.",
+   "year": "2024",
+   "source": "ncbi",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.1073/pnas.1905471116",
+   "route": "production",
+   "inclusion_reason": "score 4.5 >= threshold 2.0; anchored on jasmonate biosynthesis (local: cofactor)",
+   "matched_term": "",
+   "matched_species_form": "",
+   "route2_sentence": "",
+   "production_exclusion": "",
+   "screening_score": 4.5,
+   "title_other_organisms": [],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "",
+   "observed_organisms": [],
+   "processed_round": 1,
+   "text_used": "full text 47121 chars",
+   "fulltext_cache_chars": 47121,
+   "fetched_text_names_this_title": false,
+   "fetched_text_header": "An effector from cotton bollworm oral secretion impairs host plant defense signaling Chen Chun-Yu a b 1 Liu Yao-Qian a b c 1 Song Wei-Meng a",
+   "passages": 8,
+   "model_call": "mc_001_extract_claims_0005",
+   "claims_extracted": 1,
+   "evidence_type": "unknown",
+   "notes": []
+  },
+  {
+   "paper_id": "PMC:PMC5382222",
+   "title": "Identification of Candidate Genes and Biosynthesis Pathways Related to Fertility Conversion by Wheat KTM3315A Transcriptome Profiling.",
+   "year": "2017",
+   "source": "europepmc",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.3389/fpls.2017.00449",
+   "route": "production",
+   "inclusion_reason": "score 2.75 >= threshold 2.0; anchored on jasmonate biosynthesis (local: conversion of)",
+   "matched_term": "",
+   "matched_species_form": "",
+   "route2_sentence": "",
+   "production_exclusion": "",
+   "screening_score": 2.75,
+   "title_other_organisms": [
+    "wheat"
+   ],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "",
+   "observed_organisms": [],
+   "processed_round": 2,
+   "text_used": "full text 49516 chars",
+   "fulltext_cache_chars": 49516,
+   "fetched_text_names_this_title": true,
+   "fetched_text_header": "Identification of Candidate Genes and Biosynthesis Pathways Related to Fertility Conversion by Wheat KTM3315A Transcriptome Profiling Ye Jia",
+   "passages": 6,
+   "model_call": "mc_002_extract_claims_0006",
+   "claims_extracted": 0,
+   "evidence_type": "unknown",
+   "notes": []
+  },
+  {
+   "paper_id": "PMC:PMC1955694",
+   "title": "Cesium Inhibits Plant Growth through Jasmonate Signaling in Arabidopsis thaliana.",
+   "year": "2013",
+   "source": "ncbi",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.1371/journal.pone.0047797",
+   "route": "mining_rescue route 1",
+   "inclusion_reason": "mining_rescue: Arabidopsis thaliana named; score 3.0 >= 3.0 with the pathway-anchor rule off",
+   "matched_term": "",
+   "matched_species_form": "",
+   "route2_sentence": "",
+   "production_exclusion": "the production screen excluded it: context_only: 'jasmonate biosynthesis, jasmonate pathway' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "screening_score": 3.0,
+   "title_other_organisms": [],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "",
+   "observed_organisms": [
+    "Arabidopsis thaliana"
+   ],
+   "processed_round": 2,
+   "text_used": "abstract only",
+   "fulltext_cache_chars": 0,
+   "fetched_text_names_this_title": null,
+   "fetched_text_header": "",
+   "passages": 2,
+   "model_call": "mc_002_extract_claims_0007",
+   "claims_extracted": 0,
+   "evidence_type": "unknown",
+   "notes": [
+    "the production screen excluded it: context_only: 'jasmonate biosynthesis, jasmonate pathway' appears in the title/abstract but no strong reaction/enzyme evidence is local to it"
+   ]
+  },
+  {
+   "paper_id": "PMID:12777050",
+   "title": "Jasmonate biosynthesis and the allene oxide cyclase family of Arabidopsis thaliana.",
+   "year": "2003",
+   "source": "ncbi",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.1023/a:1023049319723",
+   "route": "mining_rescue route 1",
+   "inclusion_reason": "mining_rescue: Arabidopsis thaliana named; score 4.0 >= 3.0 with the pathway-anchor rule off",
+   "matched_term": "",
+   "matched_species_form": "",
+   "route2_sentence": "",
+   "production_exclusion": "the production screen excluded it: omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: up regulated)",
+   "screening_score": 4.0,
+   "title_other_organisms": [],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "",
+   "observed_organisms": [
+    "Arabidopsis thaliana"
+   ],
+   "processed_round": 2,
+   "text_used": "abstract only",
+   "fulltext_cache_chars": 0,
+   "fetched_text_names_this_title": null,
+   "fetched_text_header": "",
+   "passages": 2,
+   "model_call": "mc_002_extract_claims_0008",
+   "claims_extracted": 0,
+   "evidence_type": "unknown",
+   "notes": [
+    "the production screen excluded it: omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: up regulated)"
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC3000969",
+   "title": "Pseudophosphorylation of Arabidopsis jasmonate biosynthesis enzyme lipoxygenase 2 via mutation of Ser600 inhibits enzyme activity.",
+   "year": "2023",
+   "source": "ncbi",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.1101/2021.10.04.463034",
+   "route": "mining_rescue route 1",
+   "inclusion_reason": "mining_rescue: Arabidopsis thaliana named; score 4.0 >= 3.0 with the pathway-anchor rule off",
+   "matched_term": "",
+   "matched_species_form": "",
+   "route2_sentence": "",
+   "production_exclusion": "the production screen excluded it: context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "screening_score": 4.0,
+   "title_other_organisms": [],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "",
+   "observed_organisms": [
+    "Arabidopsis thaliana",
+    "Arabidopsis jasmonate"
+   ],
+   "processed_round": 2,
+   "text_used": "abstract only",
+   "fulltext_cache_chars": 0,
+   "fetched_text_names_this_title": null,
+   "fetched_text_header": "",
+   "passages": 2,
+   "model_call": "mc_002_extract_claims_0009",
+   "claims_extracted": 0,
+   "evidence_type": "unknown",
+   "notes": [
+    "the production screen excluded it: context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it"
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC5104190",
+   "title": "GRAS-domain transcription factor PAT1 regulates jasmonic acid biosynthesis in grape cold stress response.",
+   "year": "2021",
+   "source": "ncbi",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.1093/plphys/kiab142",
+   "route": "mining_rescue route 1",
+   "inclusion_reason": "mining_rescue: Arabidopsis thaliana named; score 3.25 >= 3.0 with the pathway-anchor rule off",
+   "matched_term": "",
+   "matched_species_form": "",
+   "route2_sentence": "",
+   "production_exclusion": "the production screen excluded it: omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptome)",
+   "screening_score": 3.25,
+   "title_other_organisms": [],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "ectopic",
+   "observed_organisms": [
+    "Arabidopsis thaliana",
+    "Arabidopsis arabidopsis"
+   ],
+   "processed_round": -1,
+   "text_used": "abstract only",
+   "fulltext_cache_chars": 0,
+   "fetched_text_names_this_title": null,
+   "fetched_text_header": "",
+   "passages": 0,
+   "model_call": "",
+   "claims_extracted": 0,
+   "evidence_type": "unknown",
+   "notes": [
+    "the production screen excluded it: omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptome)",
+    "round 2: no passages retrieved for this query"
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC5338657",
+   "title": "Glutathione and Its Biosynthetic Intermediates Alleviate Cesium Stress in Arabidopsis.",
+   "year": "2019",
+   "source": "ncbi",
+   "doi_recorded": "",
+   "url_recorded": "https://doi.org/10.1021/acs.jproteome.6b00258",
+   "route": "mining_rescue route 1",
+   "inclusion_reason": "mining_rescue: Arabidopsis thaliana named; score 4.0 >= 3.0 with the pathway-anchor rule off",
+   "matched_term": "",
+   "matched_species_form": "",
+   "route2_sentence": "",
+   "production_exclusion": "the production screen excluded it: context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "screening_score": 4.0,
+   "title_other_organisms": [],
+   "foreign_host_in_title": false,
+   "foreign_host_in_abstract": "",
+   "observed_organisms": [
+    "Arabidopsis thaliana",
+    "Arabidopsis phytoremediation"
+   ],
+   "processed_round": 2,
+   "text_used": "abstract only",
+   "fulltext_cache_chars": 0,
+   "fetched_text_names_this_title": null,
+   "fetched_text_header": "",
+   "passages": 2,
+   "model_call": "mc_002_extract_claims_0010",
+   "claims_extracted": 0,
+   "evidence_type": "unknown",
+   "notes": [
+    "the production screen excluded it: context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it"
+   ]
+  }
+ ],
+ "ncbi_identity_proof": {
+  "synthetic_record_own_ids": {
+   "pmid": "111",
+   "pmc": "PMC999001",
+   "doi": "10.9999/own"
+  },
+  "cited_reference_ids": {
+   "pmc": "PMC411572",
+   "doi": "10.1073/pnas.76.9.4350"
+  },
+  "parser_returned": {
+   "id": "PMC411572",
+   "source_uri": "https://doi.org/10.1073/pnas.76.9.4350",
+   "title": "Own title"
+  }
+ },
+ "duplicate_articles": [
+  {
+   "title": "Genetic Transformation of Triticum dicoccum and Triticum aestivum with Genes of Jasmonate Biosynthesis Pathway Affects Growth and Productivity Characteristics.",
+   "records": [
+    {
+     "paper_id": "PMC:PMC7013545",
+     "source": "ncbi",
+     "year": "2024",
+     "url": "https://doi.org/10.3390/ijms21020567",
+     "included": false,
+     "score": 2.5,
+     "outcome": "ineligible_pathway"
+    },
+    {
+     "paper_id": "PMC:PMC11478715",
+     "source": "europepmc",
+     "year": "2024",
+     "url": "https://doi.org/10.3390/plants13192781",
+     "included": false,
+     "score": 2.5,
+     "outcome": "ineligible_pathway"
+    }
+   ],
+   "ncbi_pmcid_differs_from_europepmc": true
+  },
+  {
+   "title": "The plant endophytic fungus Cyanodermella asteris produces the phytohormone jasmonic acid.",
+   "records": [
+    {
+     "paper_id": "PMC:PMC13063583",
+     "source": "europepmc",
+     "year": "2026",
+     "url": "https://doi.org/10.1186/s40694-026-00210-6",
+     "included": false,
+     "score": 1.75,
+     "outcome": "ineligible_pathway"
+    },
+    {
+     "paper_id": "PMC:PMC6164985",
+     "source": "ncbi",
+     "year": "2026",
+     "url": "https://doi.org/10.1016/j.jplph.2005.10.014",
+     "included": false,
+     "score": 1.75,
+     "outcome": "ineligible_pathway"
+    }
+   ],
+   "ncbi_pmcid_differs_from_europepmc": true
+  },
+  {
+   "title": "NAD&lt;sup&gt;+&lt;/sup&gt; deficiency primes defense metabolism via &lt;sup&gt;1&lt;/sup&gt;O&lt;sub&gt;2&lt;/sub&gt;-escalated jasmonate biosynthesis in plants.",
+   "records": [
+    {
+     "paper_id": "PMC:PMC11300881",
+     "source": "europepmc",
+     "year": "2024",
+     "url": "https://doi.org/10.1038/s41467-024-51114-1",
+     "included": false,
+     "score": 3.0,
+     "outcome": "ineligible_pathway"
+    },
+    {
+     "paper_id": "PMC:PMC6628814",
+     "source": "ncbi",
+     "year": "2024",
+     "url": "https://doi.org/10.1073/pnas.1905471116",
+     "included": true,
+     "score": 4.5,
+     "outcome": "eligible"
+    }
+   ],
+   "ncbi_pmcid_differs_from_europepmc": true
+  },
+  {
+   "title": "Interaction with CYP20-3 limits OPDA flux into jasmonate biosynthesis in wounded leaves of arabidopsis grown at eCO&lt;sub&gt;2&lt;/sub&gt;.",
+   "records": [
+    {
+     "paper_id": "PMC:PMC13096701",
+     "source": "europepmc",
+     "year": "2026",
+     "url": "https://doi.org/10.3389/fpls.2026.1725249",
+     "included": false,
+     "score": 2.25,
+     "outcome": "ineligible_pathway"
+    },
+    {
+     "paper_id": "PMC:PMC2716216",
+     "source": "ncbi",
+     "year": "2026",
+     "url": "https://doi.org/10.1089/cmb.2005.12.1047",
+     "included": false,
+     "score": 2.25,
+     "outcome": "ineligible_pathway"
+    }
+   ],
+   "ncbi_pmcid_differs_from_europepmc": true
+  },
+  {
+   "title": "Size of chloroplasts in Arabidopsis mesophyll cells affects jasmonate biosynthesis.",
+   "records": [
+    {
+     "paper_id": "PMC:PMC3694706",
+     "source": "ncbi",
+     "year": "2026",
+     "url": "https://doi.org/10.1111/plb.70222",
+     "included": false,
+     "score": 1.5,
+     "outcome": "ineligible_pathway"
+    },
+    {
+     "paper_id": "PMC:PMC13358708",
+     "source": "europepmc",
+     "year": "2026",
+     "url": "https://doi.org/10.1111/plb.70222",
+     "included": false,
+     "score": 1.5,
+     "outcome": "ineligible_pathway"
+    }
+   ],
+   "ncbi_pmcid_differs_from_europepmc": true
+  },
+  {
+   "title": "Arabidopsis Transcriptomics Reveals the Role of Lipoxygenase2 (AtLOX2) in Wound-Induced Responses.",
+   "records": [
+    {
+     "paper_id": "PMC:PMC8265181",
+     "source": "ncbi",
+     "year": "2024",
+     "url": "https://doi.org/10.1002/cpz1.922",
+     "included": false,
+     "score": 0.5,
+     "outcome": "ineligible_pathway"
+    },
+    {
+     "paper_id": "PMC:PMC11173247",
+     "source": "europepmc",
+     "year": "2024",
+     "url": "https://doi.org/10.3390/ijms25115898",
+     "included": false,
+     "score": 0.5,
+     "outcome": "ineligible_pathway"
+    }
+   ],
+   "ncbi_pmcid_differs_from_europepmc": true
+  }
+ ],
+ "ncbi_counts": {
+  "discovered": 83,
+  "with_pmcid": 50,
+  "included": 8,
+  "unique_articles_discovered": 144
+ },
+ "excluded_titles_naming_pathway": [
+  {
+   "paper_id": "PMC:PMC12865809",
+   "title": "Plant oxylipins: adaptation to environmental stresses and impact on mycotoxin contamination.",
+   "source": "europepmc",
+   "score": 0.0,
+   "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC7013545",
+   "title": "Genetic Transformation of Triticum dicoccum and Triticum aestivum with Genes of Jasmonate Biosynthesis Pathway Affects Growth and Productivity Characteristics.",
+   "source": "ncbi",
+   "score": 2.5,
+   "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "names_arabidopsis": false,
+   "title_other_organisms": [
+    "triticum"
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC9505089",
+   "title": "Maize OPR2 and LOX10 Mediate Defense against Fall Armyworm and Western Corn Rootworm by Tissue-Specific Regulation of Jasmonic Acid and Ketol Metabolism.",
+   "source": "ncbi",
+   "score": -0.75,
+   "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": [
+    "Maize",
+    "Corn"
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC13493544",
+   "title": "Phyto-Oxylipins as Key Regulators of Plant Resilience to Abiotic and Biotic Stress.",
+   "source": "europepmc",
+   "score": -0.75,
+   "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC4970199",
+   "title": "The AtMYB60 transcription factor regulates stomatal opening by modulating oxylipin synthesis in guard cells.",
+   "source": "ncbi",
+   "score": -1.5,
+   "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC11478715",
+   "title": "Genetic Transformation of <i>Triticum dicoccum</i> and <i>Triticum aestivum</i> with Genes of Jasmonate Biosynthesis Pathway Affects Growth and Productivity Characteristics.",
+   "source": "europepmc",
+   "score": 2.5,
+   "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "names_arabidopsis": false,
+   "title_other_organisms": [
+    "triticum"
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC4911631",
+   "title": "The In Vitro Interaction of 12-Oxophytodienoic Acid and Related Conjugated Carbonyl Compounds with Thiol Antioxidants.",
+   "source": "ncbi",
+   "score": 0.25,
+   "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMID:31834385",
+   "title": "12-Oxophytodienoic Acid Reductase 3 (OPR3) Functions as NADPH-Dependent α,β-Ketoalkene Reductase in Detoxification and Monodehydroascorbate Reductase in Redox Homeostasis.",
+   "source": "ncbi",
+   "score": 1.5,
+   "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC3938610",
+   "title": "Drought stress modulates oxylipin signature by eliciting 12-OPDA as a potent regulator of stomatal aperture.",
+   "source": "ncbi",
+   "score": -0.75,
+   "reason": "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC2039767",
+   "title": "Functional convergence of oxylipin and abscisic acid pathways controls stomatal closure in response to drought.",
+   "source": "ncbi",
+   "score": 0.0,
+   "reason": "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC11300881",
+   "title": "NAD&lt;sup&gt;+&lt;/sup&gt; deficiency primes defense metabolism via &lt;sup&gt;1&lt;/sup&gt;O&lt;sub&gt;2&lt;/sub&gt;-escalated jasmonate biosynthesis in plants.",
+   "source": "europepmc",
+   "score": 3.0,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: multi omics)",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC13468208",
+   "title": "Maize Lipoxygenase &lt;i&gt;ZmLOX2&lt;/i&gt; Modulates Jasmonate-Associated Antioxidant Defense and ROS Scavenging Under Osmotic Stress in Transgenic Arabidopsis.",
+   "source": "europepmc",
+   "score": 2.0,
+   "reason": "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": true,
+   "title_other_organisms": [
+    "Maize"
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC9806556",
+   "title": "An extragenic second-site mutation in the jar1-1 mutant suppresses the response to photoperiod stress independent of jasmonic acid.",
+   "source": "ncbi",
+   "score": 0.5,
+   "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC13096701",
+   "title": "Interaction with CYP20-3 limits OPDA flux into jasmonate biosynthesis in wounded leaves of arabidopsis grown at eCO&lt;sub&gt;2&lt;/sub&gt;.",
+   "source": "europepmc",
+   "score": 2.25,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic)",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC3694706",
+   "title": "Size of chloroplasts in Arabidopsis mesophyll cells affects jasmonate biosynthesis.",
+   "source": "ncbi",
+   "score": 1.5,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: enriched)",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC2716216",
+   "title": "Interaction with CYP20-3 limits OPDA flux into jasmonate biosynthesis in wounded leaves of arabidopsis grown at eCO2.",
+   "source": "ncbi",
+   "score": 2.25,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic)",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMID:40578603",
+   "title": "Effects of the Ib-miR168-3p-IbKTN80 module on jasmonate biosynthesis in the systemic leaves of sweet potato after wounding.",
+   "source": "ncbi",
+   "score": 1.5,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: bioinformatics)",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC13373823",
+   "title": "Weaponizing nutrition: plants use a double strategy to fight herbivory, converting nutritionally essential fatty acids into defensive oxylipin signals.",
+   "source": "europepmc",
+   "score": 2.5,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic)",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC8265181",
+   "title": "Arabidopsis Transcriptomics Reveals the Role of Lipoxygenase2 (AtLOX2) in Wound-Induced Responses.",
+   "source": "ncbi",
+   "score": 0.5,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomics)",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC10135161",
+   "title": "Oxylipins and Reactive Carbonyls as Regulators of the Plant Redox and Reactive Oxygen Species Network under Stress.",
+   "source": "europepmc",
+   "score": -0.75,
+   "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC10132601",
+   "title": "Oxylipin biosynthetic gene families of Cannabis sativa.",
+   "source": "europepmc",
+   "score": 0.5,
+   "reason": "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC6320827",
+   "title": "Overexpression of Arabidopsis <i>OPR3</i> in Hexaploid Wheat (<i>Triticum aestivum</i> L.) Alters Plant Development and Freezing Tolerance.",
+   "source": "europepmc",
+   "score": 2.5,
+   "reason": "omics_only: 'jasmonate biosynthesis, jasmonate pathway' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: up regulated)",
+   "names_arabidopsis": true,
+   "title_other_organisms": [
+    "wheat",
+    "triticum"
+   ]
+  },
+  {
+   "paper_id": "PMC:PMC5538288",
+   "title": "An allene oxide and 12-oxophytodienoic acid are key intermediates in jasmonic acid biosynthesis by <i>Fusarium oxysporum</i>.",
+   "source": "europepmc",
+   "score": 2.0,
+   "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC13358708",
+   "title": "Size of chloroplasts in Arabidopsis mesophyll cells affects jasmonate biosynthesis.",
+   "source": "europepmc",
+   "score": 1.5,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: enriched)",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMID:25752924",
+   "title": "Activated expression of AtEDT1/HDG11 promotes lateral root formation in Arabidopsis mutant edt1 by upregulating jasmonate biosynthesis.",
+   "source": "ncbi",
+   "score": 0.75,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptome, upregulated, enriched)",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC1693950",
+   "title": "The NAC-like gene ANTHER INDEHISCENCE FACTOR acts as a repressor that controls anther dehiscence by regulating genes in the jasmonate biosynthesis pathway in Arabidopsis.",
+   "source": "ncbi",
+   "score": 1.25,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: up regulated)",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC1803729",
+   "title": "Salicylate-mediated suppression of jasmonate-responsive gene expression in Arabidopsis is targeted downstream of the jasmonate biosynthesis pathway.",
+   "source": "ncbi",
+   "score": 2.0,
+   "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC11173247",
+   "title": "Arabidopsis Transcriptomics Reveals the Role of Lipoxygenase2 (AtLOX2) in Wound-Induced Responses.",
+   "source": "europepmc",
+   "score": 0.5,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomics)",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC13254203",
+   "title": "Genomic contraction of the &lt;i&gt;LOX&lt;/i&gt; gene family limits jasmonic acid biosynthesis and contributes to delayed flower bud opening in honeysuckle (&lt;i&gt;Lonicera japonica&lt;/i&gt;).",
+   "source": "europepmc",
+   "score": 3.0,
+   "reason": "omics_only: 'jasmonate biosynthetic' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic, gene family, enriched, sequencing)",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMID:38522214",
+   "title": "pH change accompanying long-distance electrical signal controls systemic jasmonate biosynthesis.",
+   "source": "ncbi",
+   "score": 2.0,
+   "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC13238047",
+   "title": "Lipoxygenase 2 (LOX2) enhances cold tolerance through modulating jasmonate biosynthesis in Nicotiana tabacum.",
+   "source": "europepmc",
+   "score": 1.0,
+   "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: upregulated, rna seq)",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC12709120",
+   "title": "Genome-wide identification reveals unprecedented expansion and stress-responsive expression patterns of the lipoxygenase gene family in soybean (&lt;i&gt;Glycine max&lt;/i&gt; L.).",
+   "source": "europepmc",
+   "score": 0.25,
+   "reason": "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMID:31974860",
+   "title": "Light promotes jasmonate biosynthesis to regulate photomorphogenesis in Arabidopsis.",
+   "source": "ncbi",
+   "score": 0.75,
+   "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMID:31481228",
+   "title": "Calcium-mediation of jasmonate biosynthesis and signaling in plants.",
+   "source": "ncbi",
+   "score": 0.5,
+   "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC5379949",
+   "title": "JASSY, a chloroplast outer membrane protein required for jasmonate biosynthesis.",
+   "source": "ncbi",
+   "score": 1.5,
+   "reason": "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC4844422",
+   "title": "Activity Regulation by Heteromerization of Arabidopsis Allene Oxide Cyclase Family Members.",
+   "source": "europepmc",
+   "score": 0.25,
+   "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": true,
+   "title_other_organisms": []
+  },
+  {
+   "paper_id": "PMC:PMC3177274",
+   "title": "OPDA-Ile - a new JA-Ile-independent signal?",
+   "source": "ncbi",
+   "score": -1.5,
+   "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract",
+   "names_arabidopsis": false,
+   "title_other_organisms": []
+  }
+ ],
+ "verbatim_fallback": {
+  "values": [],
+  "raw_field_citation_lists": {
+   "compartment:own list present": 14,
+   "direction:own list present": 13,
+   "enzyme:own list present": 9,
+   "gene:own list present": 2,
+   "species:own list present": 14
+  },
+  "raw_participant_citations": {
+   "uncited": 30,
+   "cited": 2
+  }
+ },
+ "model_calls": [
+  {
+   "call_id": "mc_001_extract_claims_0001",
+   "round": 1,
+   "paper_id": "PMC:PMC411572",
+   "passages": 2,
+   "system_chars": 2490,
+   "user_chars_rung1": 4072,
+   "est_input_tokens_per_request_rung1": 2355,
+   "rungs": [
+    {
+     "rung": 1,
+     "shrink_fraction": 1.0,
+     "chars_sent_system_plus_user": 6562,
+     "schema": "full",
+     "provider_requests": 1,
+     "finish_reason": "stop",
+     "parse_outcome": "ok",
+     "raw_text_chars": 774,
+     "raw_text": "{\n  \"claims\": [\n    {\n      \"enzyme\": \"1...",
+     "est_input_tokens_per_request": 2355
+    }
+   ],
+   "provider_requests": 1,
+   "input_tokens": 2355,
+   "output_tokens": 2661,
+   "output_tokens_per_request": 2661.0,
+   "status": "ok",
+   "finish_reason": "stop",
+   "response_chars": 774,
+   "claims": 1,
+   "latency_s": 22.7,
+   "cost_usd": 0.001034,
+   "attempt_log_len": 1,
+   "retries_field": 1,
+   "chars_per_token": 2.79
+  },
+  {
+   "call_id": "mc_001_extract_claims_0002",
+   "round": 1,
+   "paper_id": "PMC:PMC13364333",
+   "passages": 20,
+   "system_chars": 2490,
+   "user_chars_rung1": 91626,
+   "est_input_tokens_per_request_rung1": 22903,
+   "rungs": [
+    {
+     "rung": 1,
+     "shrink_fraction": 1.0,
+     "chars_sent_system_plus_user": 94116,
+     "schema": "full",
+     "provider_requests": 3,
+     "finish_reason": "length",
+     "parse_outcome": "empty_completion",
+     "raw_text_chars": 0,
+     "raw_text": "",
+     "est_input_tokens_per_request": 22903
+    },
+    {
+     "rung": 2,
+     "shrink_fraction": 0.6,
+     "chars_sent_system_plus_user": 57465,
+     "schema": "full",
+     "provider_requests": 3,
+     "finish_reason": "length",
+     "parse_outcome": "empty_completion",
+     "raw_text_chars": 0,
+     "raw_text": "",
+     "est_input_tokens_per_request": 13984
+    },
+    {
+     "rung": 3,
+     "shrink_fraction": 0.35,
+     "chars_sent_system_plus_user": 34559,
+     "schema": "tight",
+     "provider_requests": 3,
+     "finish_reason": "length",
+     "parse_outcome": "empty_completion",
+     "raw_text_chars": 0,
+     "raw_text": "",
+     "est_input_tokens_per_request": 8410
+    }
+   ],
+   "provider_requests": 9,
+   "input_tokens": 135891,
+   "output_tokens": 36000,
+   "output_tokens_per_request": 4000.0,
+   "status": "empty_completion",
+   "finish_reason": "length",
+   "response_chars": 0,
+   "claims": 0,
+   "latency_s": 890.1,
+   "cost_usd": 0.024389,
+   "attempt_log_len": 3,
+   "retries_field": 3,
+   "chars_per_token": 4.11
+  },
+  {
+   "call_id": "mc_001_extract_claims_0003",
+   "round": 1,
+   "paper_id": "PMC:PMC4793799",
+   "passages": 20,
+   "system_chars": 2490,
+   "user_chars_rung1": 63586,
+   "est_input_tokens_per_request_rung1": 17577,
+   "rungs": [
+    {
+     "rung": 1,
+     "shrink_fraction": 1.0,
+     "chars_sent_system_plus_user": 66076,
+     "schema": "full",
+     "provider_requests": 3,
+     "finish_reason": "length",
+     "parse_outcome": "empty_completion",
+     "raw_text_chars": 0,
+     "raw_text": "",
+     "est_input_tokens_per_request": 17577
+    },
+    {
+     "rung": 2,
+     "shrink_fraction": 0.6,
+     "chars_sent_system_plus_user": 40641,
+     "schema": "full",
+     "provider_requests": 3,
+     "finish_reason": "length",
+     "parse_outcome": "empty_completion",
+     "raw_text_chars": 0,
+     "raw_text": "",
+     "est_input_tokens_per_request": 10811
+    },
+    {
+     "rung": 3,
+     "shrink_fraction": 0.35,
+     "chars_sent_system_plus_user": 24745,
+     "schema": "tight",
+     "provider_requests": 3,
+     "finish_reason": "length",
+     "parse_outcome": "empty_completion",
+     "raw_text_chars": 0,
+     "raw_text": "",
+     "est_input_tokens_per_request": 6583
+    }
+   ],
+   "provider_requests": 9,
+   "input_tokens": 104913,
+   "output_tokens": 36000,
+   "output_tokens_per_request": 4000.0,
+   "status": "empty_completion",
+   "finish_reason": "length",
+   "response_chars": 0,
+   "claims": 0,
+   "latency_s": 293.4,
+   "cost_usd": 0.021291,
+   "attempt_log_len": 3,
+   "retries_field": 3,
+   "chars_per_token": 3.76
+  },
+  {
+   "call_id": "mc_001_extract_claims_0004",
+   "round": 1,
+   "paper_id": "PMC:PMC12787732",
+   "passages": 16,
+   "system_chars": 2490,
+   "user_chars_rung1": 57613,
+   "est_input_tokens_per_request_rung1": 15000,
+   "rungs": [
+    {
+     "rung": 1,
+     "shrink_fraction": 1.0,
+     "chars_sent_system_plus_user": 60103,
+     "schema": "full",
+     "provider_requests": 1,
+     "finish_reason": "stop",
+     "parse_outcome": "ok",
+     "raw_text_chars": 9537,
+     "raw_text": "{\n  \"claims\": [\n    {\n      \"enzyme\": \"1...",
+     "est_input_tokens_per_request": 15000
+    }
+   ],
+   "provider_requests": 1,
+   "input_tokens": 15000,
+   "output_tokens": 3031,
+   "output_tokens_per_request": 3031.0,
+   "status": "ok",
+   "finish_reason": "stop",
+   "response_chars": 9537,
+   "claims": 14,
+   "latency_s": 98.4,
+   "cost_usd": 0.002409,
+   "attempt_log_len": 1,
+   "retries_field": 1,
+   "chars_per_token": 4.01
+  },
+  {
+   "call_id": "mc_001_extract_claims_0005",
+   "round": 1,
+   "paper_id": "PMC:PMC6628814",
+   "passages": 8,
+   "system_chars": 2490,
+   "user_chars_rung1": 32820,
+   "est_input_tokens_per_request_rung1": 8705,
+   "rungs": [
+    {
+     "rung": 1,
+     "shrink_fraction": 1.0,
+     "chars_sent_system_plus_user": 35310,
+     "schema": "full",
+     "provider_requests": 1,
+     "finish_reason": "stop",
+     "parse_outcome": "ok",
+     "raw_text_chars": 778,
+     "raw_text": "{\n  \"claims\": [\n    {\n      \"substrates\"...",
+     "est_input_tokens_per_request": 8705
+    }
+   ],
+   "provider_requests": 1,
+   "input_tokens": 8705,
+   "output_tokens": 2050,
+   "output_tokens_per_request": 2050.0,
+   "status": "ok",
+   "finish_reason": "stop",
+   "response_chars": 778,
+   "claims": 1,
+   "latency_s": 60.5,
+   "cost_usd": 0.001485,
+   "attempt_log_len": 1,
+   "retries_field": 1,
+   "chars_per_token": 4.06
+  },
+  {
+   "call_id": "mc_002_extract_claims_0006",
+   "round": 2,
+   "paper_id": "PMC:PMC5382222",
+   "passages": 6,
+   "system_chars": 2490,
+   "user_chars_rung1": 26112,
+   "est_input_tokens_per_request_rung1": 7611,
+   "rungs": [
+    {
+     "rung": 1,
+     "shrink_fraction": 1.0,
+     "chars_sent_system_plus_user": 28602,
+     "schema": "full",
+     "provider_requests": 3,
+     "finish_reason": "length",
+     "parse_outcome": "empty_completion",
+     "raw_text_chars": 0,
+     "raw_text": "",
+     "est_input_tokens_per_request": 7611
+    },
+    {
+     "rung": 2,
+     "shrink_fraction": 0.6,
+     "chars_sent_system_plus_user": 18157,
+     "schema": "full",
+     "provider_requests": 1,
+     "finish_reason": "stop",
+     "parse_outcome": "ok",
+     "raw_text_chars": 16,
+     "raw_text": "{ \"claims\": [] }",
+     "est_input_tokens_per_request": 4831
+    }
+   ],
+   "provider_requests": 4,
+   "input_tokens": 27664,
+   "output_tokens": 12497,
+   "output_tokens_per_request": 3124.2,
+   "status": "ok",
+   "finish_reason": "stop",
+   "response_chars": 16,
+   "claims": 0,
+   "latency_s": 177.5,
+   "cost_usd": 0.006515,
+   "attempt_log_len": 1,
+   "retries_field": 3,
+   "chars_per_token": 3.76
+  },
+  {
+   "call_id": "mc_002_extract_claims_0007",
+   "round": 2,
+   "paper_id": "PMC:PMC1955694",
+   "passages": 2,
+   "system_chars": 2490,
+   "user_chars_rung1": 2752,
+   "est_input_tokens_per_request_rung1": 1166,
+   "rungs": [
+    {
+     "rung": 1,
+     "shrink_fraction": 1.0,
+     "chars_sent_system_plus_user": 5242,
+     "schema": "full",
+     "provider_requests": 1,
+     "finish_reason": "stop",
+     "parse_outcome": "ok",
+     "raw_text_chars": 14,
+     "raw_text": "{\"claims\": []}",
+     "est_input_tokens_per_request": 1166
+    }
+   ],
+   "provider_requests": 1,
+   "input_tokens": 1166,
+   "output_tokens": 6,
+   "output_tokens_per_request": 6.0,
+   "status": "ok",
+   "finish_reason": "stop",
+   "response_chars": 14,
+   "claims": 0,
+   "latency_s": 4.7,
+   "cost_usd": 0.000118,
+   "attempt_log_len": 1,
+   "retries_field": 1,
+   "chars_per_token": 4.5
+  },
+  {
+   "call_id": "mc_002_extract_claims_0008",
+   "round": 2,
+   "paper_id": "PMID:12777050",
+   "passages": 2,
+   "system_chars": 2490,
+   "user_chars_rung1": 4012,
+   "est_input_tokens_per_request_rung1": 1468,
+   "rungs": [
+    {
+     "rung": 1,
+     "shrink_fraction": 1.0,
+     "chars_sent_system_plus_user": 6502,
+     "schema": "full",
+     "provider_requests": 1,
+     "finish_reason": "stop",
+     "parse_outcome": "ok",
+     "raw_text_chars": 14,
+     "raw_text": "{\"claims\": []}",
+     "est_input_tokens_per_request": 1468
+    }
+   ],
+   "provider_requests": 1,
+   "input_tokens": 1468,
+   "output_tokens": 940,
+   "output_tokens_per_request": 940.0,
+   "status": "ok",
+   "finish_reason": "stop",
+   "response_chars": 14,
+   "claims": 0,
+   "latency_s": 28.8,
+   "cost_usd": 0.000429,
+   "attempt_log_len": 1,
+   "retries_field": 1,
+   "chars_per_token": 4.43
+  },
+  {
+   "call_id": "mc_002_extract_claims_0009",
+   "round": 2,
+   "paper_id": "PMC:PMC3000969",
+   "passages": 2,
+   "system_chars": 2490,
+   "user_chars_rung1": 4201,
+   "est_input_tokens_per_request_rung1": 1907,
+   "rungs": [
+    {
+     "rung": 1,
+     "shrink_fraction": 1.0,
+     "chars_sent_system_plus_user": 6691,
+     "schema": "full",
+     "provider_requests": 2,
+     "finish_reason": "stop",
+     "parse_outcome": "ok",
+     "raw_text_chars": 14,
+     "raw_text": "{\"claims\": []}",
+     "est_input_tokens_per_request": 1907
+    }
+   ],
+   "provider_requests": 2,
+   "input_tokens": 3814,
+   "output_tokens": 1621,
+   "output_tokens_per_request": 810.5,
+   "status": "ok",
+   "finish_reason": "stop",
+   "response_chars": 14,
+   "claims": 0,
+   "latency_s": 318.3,
+   "cost_usd": 0.000868,
+   "attempt_log_len": 2,
+   "retries_field": 2,
+   "chars_per_token": 3.51
+  },
+  {
+   "call_id": "mc_002_extract_claims_0010",
+   "round": 2,
+   "paper_id": "PMC:PMC5338657",
+   "passages": 2,
+   "system_chars": 2490,
+   "user_chars_rung1": 3629,
+   "est_input_tokens_per_request_rung1": 1853,
+   "rungs": [
+    {
+     "rung": 1,
+     "shrink_fraction": 1.0,
+     "chars_sent_system_plus_user": 6119,
+     "schema": "full",
+     "provider_requests": 1,
+     "finish_reason": "stop",
+     "parse_outcome": "ok",
+     "raw_text_chars": 14,
+     "raw_text": "{\"claims\": []}",
+     "est_input_tokens_per_request": 1853
+    }
+   ],
+   "provider_requests": 1,
+   "input_tokens": 1853,
+   "output_tokens": 611,
+   "output_tokens_per_request": 611.0,
+   "status": "ok",
+   "finish_reason": "stop",
+   "response_chars": 14,
+   "claims": 0,
+   "latency_s": 6.1,
+   "cost_usd": 0.000369,
+   "attempt_log_len": 1,
+   "retries_field": 1,
+   "chars_per_token": 3.3
+  }
+ ],
+ "empty_completion_summary": {
+  "logical_calls": 10,
+  "ladder_rungs": 15,
+  "provider_requests": 30,
+  "rungs_empty": 7,
+  "log_giving_up_lines": 7,
+  "inner_retry_limit": 3,
+  "calls_failed": [
+   "mc_001_extract_claims_0002",
+   "mc_001_extract_claims_0003"
+  ],
+  "failed_calls_output_tokens_equal_max_tokens_x_requests": [
+   "mc_001_extract_claims_0002",
+   "mc_001_extract_claims_0003"
+  ],
+  "failed_cost_usd": 0.04568,
+  "failed_latency_s": 1183.5,
+  "pilot001_same_paper_same_passages": true,
+  "pilot001_same_paper_call": {
+   "input_tokens": 22843,
+   "output_tokens": 3629,
+   "response_chars": 10814,
+   "finish_reason": "stop",
+   "prompt_version": "mining-extract/1.0.0"
+  }
+ },
+ "search": {
+  "queries": [
+   {
+    "n": 1,
+    "round": 1,
+    "query_id": "qr_6e3cc3da08590a9b",
+    "frontier_item_id": "fr_7429f942671933ef",
+    "kind": "seed_expansion",
+    "target": "12-OPDA",
+    "attempt": 1,
+    "deeper": false,
+    "window": 25,
+    "result_count": 25,
+    "window_filled": true,
+    "new_discovered": 25,
+    "new_included": [
+     "PMC:PMC411572"
+    ],
+    "new_by_source": {
+     "europepmc": 15,
+     "ncbi": 10
+    },
+    "cumulative_discovered": 25,
+    "query_text": "\"12-OPDA\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T19:38:01+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 2,
+    "round": 1,
+    "query_id": "qr_62517700090ed0dd",
+    "frontier_item_id": "fr_4fdd939234c8ba23",
+    "kind": "seed_expansion",
+    "target": "AOS",
+    "attempt": 1,
+    "deeper": false,
+    "window": 25,
+    "result_count": 25,
+    "window_filled": true,
+    "new_discovered": 21,
+    "new_included": [
+     "PMC:PMC13364333",
+     "PMC:PMC4793799"
+    ],
+    "new_by_source": {
+     "ncbi": 11,
+     "europepmc": 10
+    },
+    "cumulative_discovered": 46,
+    "query_text": "\"AOS\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T19:38:31+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 3,
+    "round": 1,
+    "query_id": "qr_00e07a57f96e8c6f",
+    "frontier_item_id": "fr_a9f926a3625749e8",
+    "kind": "seed_expansion",
+    "target": "jasmonate biosynthesis",
+    "attempt": 1,
+    "deeper": false,
+    "window": 25,
+    "result_count": 25,
+    "window_filled": true,
+    "new_discovered": 20,
+    "new_included": [
+     "PMC:PMC12787732",
+     "PMC:PMC6628814"
+    ],
+    "new_by_source": {
+     "europepmc": 11,
+     "ncbi": 9
+    },
+    "cumulative_discovered": 66,
+    "query_text": "\"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T19:58:22+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 4,
+    "round": 2,
+    "query_id": "qr_dddcd6f3eb3ea357",
+    "frontier_item_id": "fr_cd5bd67830898942",
+    "kind": "bridge_search",
+    "target": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT) | 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 25,
+    "result_count": 0,
+    "window_filled": false,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 66,
+    "query_text": "\"(13S)-hydroperoxy-octadecatrienoic acid\" AND \"13-S-hydroperoxyoctadeca-9,11,15-trienoic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:01:09+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 5,
+    "round": 2,
+    "query_id": "qr_c4b3ed30da643380",
+    "frontier_item_id": "fr_7429f942671933ef",
+    "kind": "seed_expansion",
+    "target": "12-OPDA",
+    "attempt": 1,
+    "deeper": false,
+    "window": 25,
+    "result_count": 25,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 66,
+    "query_text": "\"12-OPDA\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:01:11+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 6,
+    "round": 2,
+    "query_id": "qr_634bda2c48a548f4",
+    "frontier_item_id": "fr_7429f942671933ef",
+    "kind": "seed_expansion",
+    "target": "12-OPDA",
+    "attempt": 2,
+    "deeper": false,
+    "window": 25,
+    "result_count": 25,
+    "window_filled": true,
+    "new_discovered": 18,
+    "new_included": [
+     "PMC:PMC5382222"
+    ],
+    "new_by_source": {
+     "europepmc": 18
+    },
+    "cumulative_discovered": 84,
+    "query_text": "\"12-OPDA\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:01:11+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 7,
+    "round": 2,
+    "query_id": "qr_c586379ae2720aef",
+    "frontier_item_id": "fr_4fdd939234c8ba23",
+    "kind": "seed_expansion",
+    "target": "AOS",
+    "attempt": 1,
+    "deeper": false,
+    "window": 25,
+    "result_count": 25,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 84,
+    "query_text": "\"AOS\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:04:12+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 8,
+    "round": 2,
+    "query_id": "qr_bf841f9c296b272f",
+    "frontier_item_id": "fr_4fdd939234c8ba23",
+    "kind": "seed_expansion",
+    "target": "AOS",
+    "attempt": 2,
+    "deeper": false,
+    "window": 25,
+    "result_count": 25,
+    "window_filled": true,
+    "new_discovered": 11,
+    "new_included": [
+     "PMC:PMC1955694",
+     "PMID:12777050"
+    ],
+    "new_by_source": {
+     "europepmc": 4,
+     "ncbi": 7
+    },
+    "cumulative_discovered": 95,
+    "query_text": "\"AOS\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:04:12+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 9,
+    "round": 2,
+    "query_id": "qr_0a8d01389830a74f",
+    "frontier_item_id": "fr_a9f926a3625749e8",
+    "kind": "seed_expansion",
+    "target": "jasmonate biosynthesis",
+    "attempt": 1,
+    "deeper": false,
+    "window": 25,
+    "result_count": 25,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 95,
+    "query_text": "\"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:04:54+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 10,
+    "round": 2,
+    "query_id": "qr_a47ca5acb6ad9a83",
+    "frontier_item_id": "fr_a9f926a3625749e8",
+    "kind": "seed_expansion",
+    "target": "jasmonate biosynthesis",
+    "attempt": 2,
+    "deeper": true,
+    "window": 50,
+    "result_count": 50,
+    "window_filled": true,
+    "new_discovered": 19,
+    "new_included": [
+     "PMC:PMC3000969",
+     "PMC:PMC5104190",
+     "PMC:PMC5338657"
+    ],
+    "new_by_source": {
+     "ncbi": 13,
+     "europepmc": 6
+    },
+    "cumulative_discovered": 114,
+    "query_text": "\"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:04:54+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 11,
+    "round": 2,
+    "query_id": "qr_8bbf55017466bace",
+    "frontier_item_id": "fr_98447a76f4877074",
+    "kind": "bridge_search",
+    "target": "JA-Ile-bound SCF COI1 complex | 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 25,
+    "result_count": 0,
+    "window_filled": false,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 114,
+    "query_text": "\"JA-Ile-bound SCF COI1 complex\" AND \"13-S-hydroperoxyoctadeca-9,11,15-trienoic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:36+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 12,
+    "round": 2,
+    "query_id": "qr_944c6dad86ee2250",
+    "frontier_item_id": "fr_4f33af4e020c3882",
+    "kind": "bridge_search",
+    "target": "α-linolenic acid | 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 25,
+    "result_count": 2,
+    "window_filled": false,
+    "new_discovered": 1,
+    "new_included": [],
+    "new_by_source": {
+     "europepmc": 1
+    },
+    "cumulative_discovered": 115,
+    "query_text": "\"α-linolenic acid\" AND \"13-S-hydroperoxyoctadeca-9,11,15-trienoic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:38+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 13,
+    "round": 2,
+    "query_id": "qr_d728931759b7bf82",
+    "frontier_item_id": "fr_4f33af4e020c3882",
+    "kind": "bridge_search",
+    "target": "α-linolenic acid | 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 25,
+    "result_count": 1,
+    "window_filled": false,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 115,
+    "query_text": "\"α-linolenic acid\" AND \"13-S-hydroperoxyoctadeca-9,11,15-trienoic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:40+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 14,
+    "round": 2,
+    "query_id": "qr_faf2adeaf3e7810c",
+    "frontier_item_id": "fr_ccf07be8e4a308e5",
+    "kind": "downstream_expansion",
+    "target": "13-hydroperoxy-α-linolenic acid",
+    "attempt": 1,
+    "deeper": false,
+    "window": 25,
+    "result_count": 25,
+    "window_filled": true,
+    "new_discovered": 24,
+    "new_included": [],
+    "new_by_source": {
+     "ncbi": 23,
+     "europepmc": 1
+    },
+    "cumulative_discovered": 139,
+    "query_text": "\"13-hydroperoxy-α-linolenic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:41+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 15,
+    "round": 2,
+    "query_id": "qr_1020e280e3ab17d6",
+    "frontier_item_id": "fr_ccf07be8e4a308e5",
+    "kind": "downstream_expansion",
+    "target": "13-hydroperoxy-α-linolenic acid",
+    "attempt": 2,
+    "deeper": false,
+    "window": 11,
+    "result_count": 11,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 139,
+    "query_text": "\"13-hydroperoxy-α-linolenic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:44+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 16,
+    "round": 2,
+    "query_id": "qr_1814c7ece8e2e9cf",
+    "frontier_item_id": "fr_bc069ae48cd35169",
+    "kind": "downstream_expansion",
+    "target": "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 11,
+    "result_count": 2,
+    "window_filled": false,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 139,
+    "query_text": "\"13-S-hydroperoxyoctadeca-9,11,15-trienoic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:46+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 17,
+    "round": 2,
+    "query_id": "qr_4b9230034bb28b8d",
+    "frontier_item_id": "fr_bc069ae48cd35169",
+    "kind": "downstream_expansion",
+    "target": "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 11,
+    "result_count": 1,
+    "window_filled": false,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 139,
+    "query_text": "\"13-S-hydroperoxyoctadeca-9,11,15-trienoic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:48+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 18,
+    "round": 2,
+    "query_id": "qr_28aec95fa0b7b104",
+    "frontier_item_id": "fr_e25ffed8bfe590cc",
+    "kind": "downstream_expansion",
+    "target": "JA-Ile-bound SCF COI1 complex",
+    "attempt": 1,
+    "deeper": false,
+    "window": 11,
+    "result_count": 11,
+    "window_filled": true,
+    "new_discovered": 10,
+    "new_included": [],
+    "new_by_source": {
+     "ncbi": 10
+    },
+    "cumulative_discovered": 149,
+    "query_text": "\"JA-Ile-bound SCF COI1 complex\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:49+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 19,
+    "round": 2,
+    "query_id": "qr_0b50dfcdaabd7940",
+    "frontier_item_id": "fr_e25ffed8bfe590cc",
+    "kind": "downstream_expansion",
+    "target": "JA-Ile-bound SCF COI1 complex",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"JA-Ile-bound SCF COI1 complex\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:51+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 20,
+    "round": 2,
+    "query_id": "qr_db206d55e883e5c3",
+    "frontier_item_id": "fr_7c90137f230529d7",
+    "kind": "upstream_expansion",
+    "target": "α-linolenic acid",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"α-linolenic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:53+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 21,
+    "round": 2,
+    "query_id": "qr_07f9dfca527bef66",
+    "frontier_item_id": "fr_7c90137f230529d7",
+    "kind": "upstream_expansion",
+    "target": "α-linolenic acid",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"α-linolenic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:55+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 22,
+    "round": 2,
+    "query_id": "qr_db206d55e883e5c3",
+    "frontier_item_id": "fr_7faaf0fb1a93c98b",
+    "kind": "upstream_expansion",
+    "target": "α-linolenic acid (LeA)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"α-linolenic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:57+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 23,
+    "round": 2,
+    "query_id": "qr_07f9dfca527bef66",
+    "frontier_item_id": "fr_7faaf0fb1a93c98b",
+    "kind": "upstream_expansion",
+    "target": "α-linolenic acid (LeA)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"α-linolenic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:57+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 24,
+    "round": 2,
+    "query_id": "qr_1179128adbc939ba",
+    "frontier_item_id": "fr_ec32fd10261d653e",
+    "kind": "missing_species_evidence",
+    "target": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT) -> (9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)\" AND \"(9S,13S)-12-oxo-phytodienoic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:57+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 25,
+    "round": 2,
+    "query_id": "qr_f0e9fe9cb9c690bc",
+    "frontier_item_id": "fr_ec32fd10261d653e",
+    "kind": "missing_species_evidence",
+    "target": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT) -> (9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)\" AND \"(9S,13S)-12-oxo-phytodienoic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:10:59+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 26,
+    "round": 2,
+    "query_id": "qr_0d54c3d4bf63b1ee",
+    "frontier_item_id": "fr_dcdbeaca3738cd0b",
+    "kind": "missing_species_evidence",
+    "target": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT) -> (12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(13S)-hydroperoxy-octadecatrienoic acid\" AND \"(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:00+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 27,
+    "round": 2,
+    "query_id": "qr_29f5ea21941fc983",
+    "frontier_item_id": "fr_dcdbeaca3738cd0b",
+    "kind": "missing_species_evidence",
+    "target": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT) -> (12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(13S)-hydroperoxy-octadecatrienoic acid\" AND \"(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:01+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 28,
+    "round": 2,
+    "query_id": "qr_25e5c0c83d984e9d",
+    "frontier_item_id": "fr_32325cbfe1963bc9",
+    "kind": "missing_species_evidence",
+    "target": "(9S,13S)-12-oxo-phytodienoic acid (OPDA) -> OPC-8",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(9S,13S)-12-oxo-phytodienoic acid\" AND \"OPC-8\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:03+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 29,
+    "round": 2,
+    "query_id": "qr_5326c5b90d318897",
+    "frontier_item_id": "fr_32325cbfe1963bc9",
+    "kind": "missing_species_evidence",
+    "target": "(9S,13S)-12-oxo-phytodienoic acid (OPDA) -> OPC-8",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(9S,13S)-12-oxo-phytodienoic acid\" AND \"OPC-8\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:05+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 30,
+    "round": 2,
+    "query_id": "qr_f359a51a3c0f4a0a",
+    "frontier_item_id": "fr_07f7cd54cf955d84",
+    "kind": "missing_species_evidence",
+    "target": "jasmonic acid (JA) -> jasmonoyl-isoleucine (JA-Ile)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"jasmonic acid\" AND \"jasmonoyl-isoleucine\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:06+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 31,
+    "round": 2,
+    "query_id": "qr_6efd117413d6b87f",
+    "frontier_item_id": "fr_07f7cd54cf955d84",
+    "kind": "missing_species_evidence",
+    "target": "jasmonic acid (JA) -> jasmonoyl-isoleucine (JA-Ile)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"jasmonic acid\" AND \"jasmonoyl-isoleucine\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:08+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 32,
+    "round": 2,
+    "query_id": "qr_5226e35caf2ea5ab",
+    "frontier_item_id": "fr_b1a061205c2cb066",
+    "kind": "missing_species_evidence",
+    "target": "jasmonoyl-CoA -> jasmonic acid (JA)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"jasmonoyl-CoA\" AND \"jasmonic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:10+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 33,
+    "round": 2,
+    "query_id": "qr_386d591c1786177b",
+    "frontier_item_id": "fr_b1a061205c2cb066",
+    "kind": "missing_species_evidence",
+    "target": "jasmonoyl-CoA -> jasmonic acid (JA)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"jasmonoyl-CoA\" AND \"jasmonic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:11+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 34,
+    "round": 2,
+    "query_id": "qr_f32c44cb848860be",
+    "frontier_item_id": "fr_4745d71b9bd88b99",
+    "kind": "missing_species_evidence",
+    "target": "OPC-8 -> jasmonoyl-CoA",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"OPC-8\" AND \"jasmonoyl-CoA\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:13+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 35,
+    "round": 2,
+    "query_id": "qr_c449959b3a4c2d67",
+    "frontier_item_id": "fr_4745d71b9bd88b99",
+    "kind": "missing_species_evidence",
+    "target": "OPC-8 -> jasmonoyl-CoA",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"OPC-8\" AND \"jasmonoyl-CoA\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:14+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 36,
+    "round": 2,
+    "query_id": "qr_af65699102bafd99",
+    "frontier_item_id": "fr_286d8b369e11b8ba",
+    "kind": "missing_species_evidence",
+    "target": "α-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"α-linolenic acid\" AND \"(13S)-hydroperoxy-octadecatrienoic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:15+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 37,
+    "round": 2,
+    "query_id": "qr_0e1d54e2e4563703",
+    "frontier_item_id": "fr_286d8b369e11b8ba",
+    "kind": "missing_species_evidence",
+    "target": "α-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"α-linolenic acid\" AND \"(13S)-hydroperoxy-octadecatrienoic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:17+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 38,
+    "round": 2,
+    "query_id": "qr_5e89704cbae1a36a",
+    "frontier_item_id": "fr_5316f71f74e5d5d4",
+    "kind": "missing_species_evidence",
+    "target": "α-linolenic acid -> 13-hydroperoxy-α-linolenic acid",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"α-linolenic acid\" AND \"13-hydroperoxy-α-linolenic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:18+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 39,
+    "round": 2,
+    "query_id": "qr_6e2838a4603dbee4",
+    "frontier_item_id": "fr_5316f71f74e5d5d4",
+    "kind": "missing_species_evidence",
+    "target": "α-linolenic acid -> 13-hydroperoxy-α-linolenic acid",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"α-linolenic acid\" AND \"13-hydroperoxy-α-linolenic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:20+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 40,
+    "round": 2,
+    "query_id": "qr_73d3e367955de4a3",
+    "frontier_item_id": "fr_c66e6d07f069be49",
+    "kind": "branch_reaction",
+    "target": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:22+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 41,
+    "round": 2,
+    "query_id": "qr_16f794106e3e75ad",
+    "frontier_item_id": "fr_c66e6d07f069be49",
+    "kind": "branch_reaction",
+    "target": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:23+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 42,
+    "round": 2,
+    "query_id": "qr_c1715bef7f5482e8",
+    "frontier_item_id": "fr_d7db8d64bc74411d",
+    "kind": "branch_reaction",
+    "target": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(13S)-hydroperoxy-octadecatrienoic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:25+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 43,
+    "round": 2,
+    "query_id": "qr_f5230fd6d6892504",
+    "frontier_item_id": "fr_d7db8d64bc74411d",
+    "kind": "branch_reaction",
+    "target": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(13S)-hydroperoxy-octadecatrienoic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:26+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 44,
+    "round": 2,
+    "query_id": "qr_4bf93c880635791f",
+    "frontier_item_id": "fr_e6e6322c3e126057",
+    "kind": "branch_reaction",
+    "target": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(9S,13S)-12-oxo-phytodienoic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:27+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 45,
+    "round": 2,
+    "query_id": "qr_d13235f60f59300d",
+    "frontier_item_id": "fr_e6e6322c3e126057",
+    "kind": "branch_reaction",
+    "target": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"(9S,13S)-12-oxo-phytodienoic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:29+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 46,
+    "round": 2,
+    "query_id": "qr_faf2adeaf3e7810c",
+    "frontier_item_id": "fr_ef7af2a092dd1b33",
+    "kind": "branch_reaction",
+    "target": "13-hydroperoxy-α-linolenic acid",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"13-hydroperoxy-α-linolenic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:30+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 47,
+    "round": 2,
+    "query_id": "qr_1020e280e3ab17d6",
+    "frontier_item_id": "fr_ef7af2a092dd1b33",
+    "kind": "branch_reaction",
+    "target": "13-hydroperoxy-α-linolenic acid",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"13-hydroperoxy-α-linolenic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:33+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 48,
+    "round": 2,
+    "query_id": "qr_1814c7ece8e2e9cf",
+    "frontier_item_id": "fr_eae9a72d41bfe7a2",
+    "kind": "branch_reaction",
+    "target": "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"13-S-hydroperoxyoctadeca-9,11,15-trienoic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:35+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 49,
+    "round": 2,
+    "query_id": "qr_4b9230034bb28b8d",
+    "frontier_item_id": "fr_eae9a72d41bfe7a2",
+    "kind": "branch_reaction",
+    "target": "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"13-S-hydroperoxyoctadeca-9,11,15-trienoic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:36+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 50,
+    "round": 2,
+    "query_id": "qr_28aec95fa0b7b104",
+    "frontier_item_id": "fr_a51bff72f070618a",
+    "kind": "branch_reaction",
+    "target": "JA-Ile-bound SCF COI1 complex",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"JA-Ile-bound SCF COI1 complex\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:38+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 51,
+    "round": 2,
+    "query_id": "qr_0b50dfcdaabd7940",
+    "frontier_item_id": "fr_a51bff72f070618a",
+    "kind": "branch_reaction",
+    "target": "JA-Ile-bound SCF COI1 complex",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"JA-Ile-bound SCF COI1 complex\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:40+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 52,
+    "round": 2,
+    "query_id": "qr_0b745ab3d25d1f13",
+    "frontier_item_id": "fr_e01b480d07d2fefb",
+    "kind": "branch_reaction",
+    "target": "jasmonic acid (JA)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"jasmonic acid\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:40+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 53,
+    "round": 2,
+    "query_id": "qr_ebeb731f8f9e638e",
+    "frontier_item_id": "fr_e01b480d07d2fefb",
+    "kind": "branch_reaction",
+    "target": "jasmonic acid (JA)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"jasmonic acid\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:42+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 54,
+    "round": 2,
+    "query_id": "qr_d504bc4522fb5311",
+    "frontier_item_id": "fr_c71a39dc86b3673d",
+    "kind": "branch_reaction",
+    "target": "jasmonoyl-CoA",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"jasmonoyl-CoA\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:44+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 55,
+    "round": 2,
+    "query_id": "qr_a0e2a540fb5108b3",
+    "frontier_item_id": "fr_c71a39dc86b3673d",
+    "kind": "branch_reaction",
+    "target": "jasmonoyl-CoA",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"jasmonoyl-CoA\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:46+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 56,
+    "round": 2,
+    "query_id": "qr_9d1a0039cb0634fc",
+    "frontier_item_id": "fr_b815e5bd27e1a24b",
+    "kind": "branch_reaction",
+    "target": "jasmonoyl-isoleucine (JA-Ile)",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"jasmonoyl-isoleucine\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:47+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 57,
+    "round": 2,
+    "query_id": "qr_46fb4537fda6cb8e",
+    "frontier_item_id": "fr_b815e5bd27e1a24b",
+    "kind": "branch_reaction",
+    "target": "jasmonoyl-isoleucine (JA-Ile)",
+    "attempt": 2,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 0,
+    "new_included": [],
+    "new_by_source": {},
+    "cumulative_discovered": 149,
+    "query_text": "\"jasmonoyl-isoleucine\" AND \"jasmonate biosynthesis\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:49+00:00",
+    "cache_hit": false
+   },
+   {
+    "n": 58,
+    "round": 2,
+    "query_id": "qr_af6c42ee4c311751",
+    "frontier_item_id": "fr_87862a59afff1543",
+    "kind": "branch_reaction",
+    "target": "OPC-8",
+    "attempt": 1,
+    "deeper": false,
+    "window": 1,
+    "result_count": 1,
+    "window_filled": true,
+    "new_discovered": 1,
+    "new_included": [],
+    "new_by_source": {
+     "europepmc": 1
+    },
+    "cumulative_discovered": 150,
+    "query_text": "\"OPC-8\" AND \"Arabidopsis thaliana\"",
+    "executed_at": "2026-09-24T20:11:52+00:00",
+    "cache_hit": false
+   }
+  ],
+  "items": [
+   {
+    "round": 1,
+    "frontier_item_id": "fr_7429f942671933ef",
+    "kind": "seed_expansion",
+    "target": "12-OPDA",
+    "attempts": [
+     "attempt 1"
+    ],
+    "results": [
+     25
+    ],
+    "windows": [
+     25
+    ],
+    "new_discovered": 25,
+    "new_included": [
+     "PMC:PMC411572"
+    ],
+    "outcome": "open"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_7429f942671933ef",
+    "kind": "seed_expansion",
+    "target": "12-OPDA",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     25,
+     25
+    ],
+    "windows": [
+     25,
+     25
+    ],
+    "new_discovered": 18,
+    "new_included": [
+     "PMC:PMC5382222"
+    ],
+    "outcome": "open"
+   },
+   {
+    "round": 1,
+    "frontier_item_id": "fr_4fdd939234c8ba23",
+    "kind": "seed_expansion",
+    "target": "AOS",
+    "attempts": [
+     "attempt 1"
+    ],
+    "results": [
+     25
+    ],
+    "windows": [
+     25
+    ],
+    "new_discovered": 21,
+    "new_included": [
+     "PMC:PMC13364333",
+     "PMC:PMC4793799"
+    ],
+    "outcome": "open"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_4fdd939234c8ba23",
+    "kind": "seed_expansion",
+    "target": "AOS",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     25,
+     25
+    ],
+    "windows": [
+     25,
+     25
+    ],
+    "new_discovered": 11,
+    "new_included": [
+     "PMC:PMC1955694",
+     "PMID:12777050"
+    ],
+    "outcome": "open"
+   },
+   {
+    "round": 1,
+    "frontier_item_id": "fr_a9f926a3625749e8",
+    "kind": "seed_expansion",
+    "target": "jasmonate biosynthesis",
+    "attempts": [
+     "attempt 1"
+    ],
+    "results": [
+     25
+    ],
+    "windows": [
+     25
+    ],
+    "new_discovered": 20,
+    "new_included": [
+     "PMC:PMC12787732",
+     "PMC:PMC6628814"
+    ],
+    "outcome": "open"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_a9f926a3625749e8",
+    "kind": "seed_expansion",
+    "target": "jasmonate biosynthesis",
+    "attempts": [
+     "attempt 1",
+     "wider window 50"
+    ],
+    "results": [
+     25,
+     50
+    ],
+    "windows": [
+     25,
+     50
+    ],
+    "new_discovered": 19,
+    "new_included": [
+     "PMC:PMC3000969",
+     "PMC:PMC5104190",
+     "PMC:PMC5338657"
+    ],
+    "outcome": "open"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_cd5bd67830898942",
+    "kind": "bridge_search",
+    "target": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT) | 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempts": [
+     "attempt 1"
+    ],
+    "results": [
+     0
+    ],
+    "windows": [
+     25
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "zero results (exhausted at once)"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_98447a76f4877074",
+    "kind": "bridge_search",
+    "target": "JA-Ile-bound SCF COI1 complex | 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempts": [
+     "attempt 1"
+    ],
+    "results": [
+     0
+    ],
+    "windows": [
+     25
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "zero results (exhausted at once)"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_4f33af4e020c3882",
+    "kind": "bridge_search",
+    "target": "α-linolenic acid | 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     2,
+     1
+    ],
+    "windows": [
+     25,
+     25
+    ],
+    "new_discovered": 1,
+    "new_included": [],
+    "outcome": "attempts found no new included paper"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_ccf07be8e4a308e5",
+    "kind": "downstream_expansion",
+    "target": "13-hydroperoxy-α-linolenic acid",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     25,
+     11
+    ],
+    "windows": [
+     25,
+     11
+    ],
+    "new_discovered": 24,
+    "new_included": [],
+    "outcome": "attempts found no new included paper"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_bc069ae48cd35169",
+    "kind": "downstream_expansion",
+    "target": "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     2,
+     1
+    ],
+    "windows": [
+     11,
+     11
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 11/11 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_e25ffed8bfe590cc",
+    "kind": "downstream_expansion",
+    "target": "JA-Ile-bound SCF COI1 complex",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     11,
+     1
+    ],
+    "windows": [
+     11,
+     1
+    ],
+    "new_discovered": 10,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 11/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_7c90137f230529d7",
+    "kind": "upstream_expansion",
+    "target": "α-linolenic acid",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_7faaf0fb1a93c98b",
+    "kind": "upstream_expansion",
+    "target": "α-linolenic acid (LeA)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_ec32fd10261d653e",
+    "kind": "missing_species_evidence",
+    "target": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT) -> (9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_dcdbeaca3738cd0b",
+    "kind": "missing_species_evidence",
+    "target": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT) -> (12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_32325cbfe1963bc9",
+    "kind": "missing_species_evidence",
+    "target": "(9S,13S)-12-oxo-phytodienoic acid (OPDA) -> OPC-8",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_07f7cd54cf955d84",
+    "kind": "missing_species_evidence",
+    "target": "jasmonic acid (JA) -> jasmonoyl-isoleucine (JA-Ile)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_b1a061205c2cb066",
+    "kind": "missing_species_evidence",
+    "target": "jasmonoyl-CoA -> jasmonic acid (JA)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_4745d71b9bd88b99",
+    "kind": "missing_species_evidence",
+    "target": "OPC-8 -> jasmonoyl-CoA",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_286d8b369e11b8ba",
+    "kind": "missing_species_evidence",
+    "target": "α-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_5316f71f74e5d5d4",
+    "kind": "missing_species_evidence",
+    "target": "α-linolenic acid -> 13-hydroperoxy-α-linolenic acid",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_c66e6d07f069be49",
+    "kind": "branch_reaction",
+    "target": "(12S,13S)-epoxy-hydroperoxy-octadecatrienoic acid ((12S,13S)-EOT)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_d7db8d64bc74411d",
+    "kind": "branch_reaction",
+    "target": "(13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_e6e6322c3e126057",
+    "kind": "branch_reaction",
+    "target": "(9S,13S)-12-oxo-phytodienoic acid (OPDA)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_ef7af2a092dd1b33",
+    "kind": "branch_reaction",
+    "target": "13-hydroperoxy-α-linolenic acid",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_eae9a72d41bfe7a2",
+    "kind": "branch_reaction",
+    "target": "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_a51bff72f070618a",
+    "kind": "branch_reaction",
+    "target": "JA-Ile-bound SCF COI1 complex",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_e01b480d07d2fefb",
+    "kind": "branch_reaction",
+    "target": "jasmonic acid (JA)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_c71a39dc86b3673d",
+    "kind": "branch_reaction",
+    "target": "jasmonoyl-CoA",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_b815e5bd27e1a24b",
+    "kind": "branch_reaction",
+    "target": "jasmonoyl-isoleucine (JA-Ile)",
+    "attempts": [
+     "attempt 1",
+     "attempt 2"
+    ],
+    "results": [
+     1,
+     1
+    ],
+    "windows": [
+     1,
+     1
+    ],
+    "new_discovered": 0,
+    "new_included": [],
+    "outcome": "every attempt's window was cut to 1/1 by the remaining discovery budget"
+   },
+   {
+    "round": 2,
+    "frontier_item_id": "fr_87862a59afff1543",
+    "kind": "branch_reaction",
+    "target": "OPC-8",
+    "attempts": [
+     "attempt 1"
+    ],
+    "results": [
+     1
+    ],
+    "windows": [
+     1
+    ],
+    "new_discovered": 1,
+    "new_included": [],
+    "outcome": "open"
+   }
+  ],
+  "duplicate_query_ids": {
+   "qr_faf2adeaf3e7810c": 2,
+   "qr_1020e280e3ab17d6": 2,
+   "qr_1814c7ece8e2e9cf": 2,
+   "qr_4b9230034bb28b8d": 2,
+   "qr_28aec95fa0b7b104": 2,
+   "qr_0b50dfcdaabd7940": 2,
+   "qr_db206d55e883e5c3": 2,
+   "qr_07f9dfca527bef66": 2
+  },
+  "papers_discovered_by_round_and_source": {
+   "1": {
+    "europepmc": 36,
+    "ncbi": 30
+   },
+   "2": {
+    "europepmc": 31,
+    "ncbi": 53
+   },
+   "3": {}
+  },
+  "round2_frontier": 44,
+  "round2_items_asked": 29,
+  "round2_items_never_asked": [
+   [
+    "branch_reaction",
+    "α-linolenic acid"
+   ],
+   [
+    "branch_reaction",
+    "α-linolenic acid (LeA)"
+   ],
+   [
+    "enzyme_reactions",
+    "13-lipoxygenase (13-LOX)"
+   ],
+   [
+    "enzyme_reactions",
+    "13-lipoxygenase (LOX2)"
+   ],
+   [
+    "enzyme_reactions",
+    "13S-lipoxygenase (13S-LOX)"
+   ],
+   [
+    "enzyme_reactions",
+    "acyl-CoA oxidase (ACX), multifunctional protein (MFP), 3-ketoacyl-CoA thiolase (KAT)"
+   ],
+   [
+    "enzyme_reactions",
+    "allene oxide cyclase (AOC)"
+   ],
+   [
+    "enzyme_reactions",
+    "allene oxide synthase (AOS)"
+   ],
+   [
+    "enzyme_reactions",
+    "jasmonate resistant 1 (JAR1)"
+   ],
+   [
+    "enzyme_reactions",
+    "OPDA reductase 3 (OPR3)"
+   ],
+   [
+    "missing_direction",
+    "α-linolenic acid (LeA) -> 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)"
+   ],
+   [
+    "missing_direction",
+    "α-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)"
+   ],
+   [
+    "missing_direction",
+    "α-linolenic acid -> 13-hydroperoxy-α-linolenic acid"
+   ],
+   [
+    "missing_compartment",
+    "α-linolenic acid (LeA) -> 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)"
+   ],
+   [
+    "missing_compartment",
+    "α-linolenic acid -> (13S)-hydroperoxy-octadecatrienoic acid (13-HPOT)"
+   ]
+  ],
+  "round2_exhaustions": {
+   "zero results": 2,
+   "attempts found no new included paper": 2,
+   "window cut by discovery budget": 21
+  },
+  "cap_reached_at_query": 58,
+  "cap_reached_seconds_after_start": 2037.0,
+  "first_throttled_query": 15,
+  "queries_with_window_1": 40,
+  "cache_hit_true": 0
+ },
+ "side_by_side": {
+  "pilot-001": {
+   "code": "23e1ae83",
+   "prompt_version": "mining-extract/1.0.0",
+   "stop_reason": "frontier_exhausted",
+   "rounds": 2,
+   "elapsed_s": 303.704,
+   "queries (rows)": 63,
+   "papers discovered": 21,
+   "papers screened": 21,
+   "papers included": 1,
+   "  by production / route 1 / route 2": "1 / 0 / 0",
+   "papers processed": 1,
+   "passages": 20,
+   "claims extracted": 21,
+   "distinct identities": 19,
+   "duplicates merged": 2,
+   "primary reactions": 0,
+   "candidate reactions": 19,
+   "candidate components": 14,
+   "rejected (status)": "{}",
+   "species states (nodes)": "{\"in_vitro_or_cell_free\": 1, \"inferred_only\": 10, \"species_not_stated\": 8}",
+   "model calls (logical, by status)": "{\"ok\": 1}",
+   "LLM calls (ladder rungs, budgeted)": 1,
+   "input / output tokens": "22843 / 3629",
+   "est. cost USD": 0.003373,
+   "uncited field drops": 59,
+   "fields kept: model_citation / verbatim_cited_span": "0 / 0 (field_attribution did not exist; 0 fields kept)",
+   "evidence type of included": "{\"unknown\": 1}"
+  },
+  "pilot-002": {
+   "code": "ecf6b9a0",
+   "prompt_version": "mining-extract/1.1.0",
+   "stop_reason": "max_papers_discovered_reached",
+   "rounds": 3,
+   "elapsed_s": 2039.18,
+   "queries (rows)": 58,
+   "papers discovered": 150,
+   "papers screened": 150,
+   "papers included": 11,
+   "  by production / route 1 / route 2": "5 / 5 / 1",
+   "papers processed": 10,
+   "passages": 80,
+   "claims extracted": 16,
+   "distinct identities": 11,
+   "duplicates merged": 5,
+   "primary reactions": 1,
+   "candidate reactions": 10,
+   "candidate components": 3,
+   "rejected (status)": "{}",
+   "species states (nodes)": "{\"in_vitro_or_cell_free\": 9, \"species_not_stated\": 1, \"target_species_supported\": 1}",
+   "model calls (logical, by status)": "{\"empty_completion\": 2, \"ok\": 8}",
+   "LLM calls (ladder rungs, budgeted)": 15,
+   "input / output tokens": "302829 / 95417",
+   "est. cost USD": 0.058908,
+   "uncited field drops": 0,
+   "fields kept: model_citation / verbatim_cited_span": "53 / 0",
+   "evidence type of included": "{\"unknown\": 11}"
+  }
+ },
+ "span_texts": {
+  "ev_b58e2cb64e2f1d87": "13-lipoxygenases (13-LOX) catalyze the dioxygenation of various polyunsaturated fatty acids (PUFAs), of which α-linolenic acid (LeA) is converted to 13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT), the precursor for the prostaglandin-like plant hormones cis-(+)-12-oxophytodienoic acid (12-OPDA) and methyl jasmonate (MJ). This study aimed for characterizing the four annotated A. thaliana 13-LOX enzymes (LOX2, LOX3, LOX4, and LOX6) focusing on synthesis of 12-OPDA and 4Z,7Z,10Z)-12-[[-(1S,5S)-4-oxo-5-(2Z)-pent-2-en-1yl] cyclopent-2-en-1yl] dodeca-4,7,10-trienoic acid (OCPD). In addition, we performed interaction studies of 13-LOXs with ions and molecules to advance our understanding of 13-LOX. Cell imaging indicated plastid targeting of fluorescent proteins fused to 13-LOXs-N-terminal extensions, supporting the prediction of 13-LOX localization to plastids. The apparent maximal velocity (Vmax&nbsp;app) values for LOX-catalyzed LeA oxidation were highest for LOX4 (128 nmol·s-1·mg protein-1), with a Km value of 5.8 µM. A. thaliana 13-LOXs, in cascade with 12-OPDA pathway enzymes, synthesized 12-OPDA and OCPD from LeA and docosahexaenoic acid, previously shown only for LOX6. The activities of the four isoforms were differently affected by physiologically relevant chemicals, such as Mg2+, Ca2+, Cu2+ and Cd2+, and by 12-OPDA and MJ. As demonstrated for LOX4, 12-OPDA inhibited enzymatic LeA hydroperoxidation, with half-maximal enzyme inhibition at 48 µM. Biochemical interactions, such as the sensitivity of LOX toward thiol-reactive agents belonging to cyclopentenone prostaglandins, are suggested to occur in human LOX homologs. Furthermore, we conclude that 13-LOXs are isoforms with rather specific functional and regulatory enzymatic features.",
+  "ev_ba6fb9f5cdb8ce58": "13-lipoxygenases (13-LOX) catalyze the dioxygenation of various polyunsaturated fatty acids (PUFAs), of which α-linolenic acid (LeA) is converted to 13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT), the precursor for the prostaglandin-like plant hormones cis-(+)-12-oxophytodienoic acid (12-OPDA) and methyl jasmonate (MJ). This study aimed for characterizing the four annotated A. thaliana 13-LOX enzymes (LOX2, LOX3, LOX4, and LOX6) focusing on synthesis of 12-OPDA and 4Z,7Z,10Z)-12-[[-(1S,5S)-4-oxo-5-(2Z)-pent-2-en-1yl] cyclopent-2-en-1yl] dodeca-4,7,10-trienoic acid (OCPD). In addition, we performed interaction studies of 13-LOXs with ions and molecules to advance our understanding of 13-LOX. Cell imaging indicated plastid targeting of fluorescent proteins fused to 13-LOXs-N-terminal extensions, supporting the prediction of 13-LOX localization to plastids. The apparent maximal velocity (Vmax&nbsp;app) values for LOX-catalyzed LeA oxidation were highest for LOX4 (128 nmol·s-1·mg protein-1), with a Km value of 5.8 µM. A. thaliana 13-LOXs, in cascade with 12-OPDA pathway enzymes, synthesized 12-OPDA and OCPD from LeA and docosahexaenoic acid, previously shown only for LOX6. The activities of the four isoforms were differently affected by physiologically relevant chemicals, such as Mg2+, Ca2+, Cu2+ and Cd2+, and by 12-OPDA and MJ. As demonstrated for LOX4, 12-OPDA inhibited enzymatic LeA hydroperoxidation, with half-maximal enzyme inhibition at 48 µM. Biochemical interactions, such as the sensitivity of LOX toward thiol-reactive agents belonging to cyclopentenone prostaglandins, are suggested to occur in human LOX homologs. Furthermore, we conclude that 13-LOXs are isoforms with rather specific functional and regulatory enzymatic features.",
+  "ev_f7c56801adf6792d": "troduction Jasmonates are a family of oxylipin signaling molecules that regulate plant development processes, including flowering time and senescence [ 1 , 2 , 3 ], and stress responses [ 4 , 5 , 6 ]. In response to mechanical damage, such as that incurred by chewing insect herbivory, jasmonate signaling gives rise to approximately 95% of the wound-induced protein synthesis that leads to the production of protective plant specialized metabolites and morphological barriers [ 7 , 8 ]. Given the importance of this pathway in plant resistance to pathogens and insect herbivores, understanding its regulation is key and may lead to novel strategies to enhance crop productivity [ 9 ]. After wounding or recognition of a necrotrophic pathogen, jasmonate biosynthesis starts in the chloroplast, where α -linolenic acid, a substrate of lipoxygenases (LOXs), is released from the galactolipids of the chloroplast membrane by a galactolipase [ 10 ]. The fatty acid undergoes oxidation, catalyzed by a member of the 13 S -LOX class of lipoxygenases, producing (13 S )-hydroperoxy-octadecatrienoic acid (13-HPOT) [ 11 ]. At this point in the pathway, different oxylipins may be produced. The reaction that converts 13-HPOT to (12 S -13 S )-epoxy-hydroperoxy-octadecatrienoic acid ((12 S -13 S )-EOT) is catalyzed by allene oxide synthase (AOS) and commits the pathway towards jasmonate biosynthesis [ 12 ]. (12 S -13 S )-EOT is reconfigured by allene oxide cyclase (AOC) into the more stable (9 S ,13 S )-12- oxo -phytodienoic acid (OPDA), a bioactive jasmonate [ 13 , 14 , 15 ]. OPDA is transported from the chloroplast into the cytosol and then into the peroxisome [ 16 , 17 ]. In this organelle, jasmonate biosynthesis continues with the reduction of OPDA by OPDA reductase 3 (OPR3) [ 18 , 19 , 20 ]. After esterification to CoA [ 21 ], OPC-8 undergoes β -oxidation by the fatty acid β -oxidation machinery composed of acyl-CoA oxidase (ACX), multifunctional protein (MFP), and 3-ketoacyl CoA thiolase (KAT) [ 22 , 23 , 24 , 25 , 26 , 27 ]. The product, jasmonoyl-CoA, is transformed into jasmonic acid (JA), which moves into the cytosol [ 28 , 29 , 30 ]. There, it may be converted into its biologically active form, jasmonoyl-isoleucine (JA-Ile), by jasmonate resistant 1 (JAR1) [ 31 ]. After entering the nucleus [ 32 ], JA-Ile binds to the Skp1/Cullin1/F-box protein coronatine-insensitive 1 (SCF CO1 ) complex, bridging the ubiquitin E3 ligase with its target repressor jasmonate ZIM-domain (JAZ) proteins, leading to its degradation through the 26 S -proteasome, thus freeing MYC2, MYC3, or MYC4 transcription factors from repression and allowing JA-Ile-responsive gene expression to proceed [ 32 , 33 , 34 , 35 , 36 ]. Targets of these transcription factors include genes that encode enzymes in the jasmonate biosynthetic pathway, leading to feedforward regulation [ 37 ]. In unwounded leaves, the basal JA level in Arabidopsis thaliana (arabidopsis) is less than 30 pmol/gm fresh mass [ 38 ]. After wounding, JA levels increase within seconds after mechanical damage, reaching levels that are over 10-fold higher than those of unwounded leaves within 2 min. This response is too rapid to be attributed to the increase in the expression of genes encoding enzymes in the jasmonate biosynthesis pathway. This indicates that the pathway must be constitutively present and activated upon damage [ 10 , 39 , 40 ]. Thivierge et al. [ 41 ] found that AtLOX2, which catalyzes an early step in jasmonate biosynthesis, is constitutively phosphorylated on Serine 600 (Ser 600 ) and dephosphorylated in response to wounding. Using phosphovariants, in vitro studies confirmed that the unphosphorylatable AtLOX2 had over a 100 times increase in V max compared to the phosphomimic, which likely reflects blocking of the substrate from the catalytic site [ 42 ]. Therefore, wounding stress is proposed to lead to the dephosphorylation of AtLOX2, contributing to the rapid increase in JA-Ile biosynthesis. In arabidopsis AtLOX2, the phosphosite, where the Ser 600 is shown in red, is flanked by the amino acid sequence ARQ S LVNG [ 42 ]. The sequence ARQ S LVNG is relatively conserved among plant 13 S -LOXs; however, there are variations at the phosphosite Ser, where Ala or Ile occupy this position, generating non-phosphorylatable variants. We chose pepper ( Capsicum annuum ) as our study organism since pepper has four 13 S -LOXs [ 43 ]; CaLOX2 and CaLOX8 have a Ser at the phosphosite, whereas CaLOX6 and CaLOX7 have an unphosphorylatable Ala at this site, suggesting that these proteins may be regulated at the post-translational or transcriptional levels, respectively (Note: Pepper LOXs have been color-coded; those with an Ala at the phosphosite ( CaLOX6 and CaLOX7 ) in orange and those with a Ser at this site ( CaLOX2 and CaLOX8 ) in blue). Alternative splicing",
+  "ev_49c948bc587a2016": "Nicotinamide adenine dinucleotide (NAD+) is a redox cofactor and signal central to cell metabolisms. Disrupting NAD homeostasis in plant alters growth and stress resistance, yet the underlying mechanisms remain largely unknown. Here, by combining genetics with multi-omics, we discover that NAD+ deficiency in qs-2 caused by mutation in NAD+ biosynthesis gene-Quinolinate Synthase retards growth but induces biosynthesis of defense compounds, notably aliphatic glucosinolates that confer insect resistance. The elevated defense in qs-2 is resulted from activated jasmonate biosynthesis, critically hydroperoxidation of α-linolenic acid by the 13-lipoxygenase (namely LOX2), which is escalated via the burst of chloroplastic ROS-singlet oxygen (1O2). The NAD+ deficiency-mediated JA induction and defense priming sequence in plants is recapitulated upon insect infestation, suggesting such defense mechanism operates in plant stress response. Hence, NAD homeostasis is a pivotal metabolic checkpoint that may be manipulated to navigate plant growth and defense metabolism for stress acclimation."
+ }
+}

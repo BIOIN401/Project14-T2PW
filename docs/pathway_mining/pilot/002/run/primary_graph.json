@@ -1,0 +1,90 @@
+{
+  "allow_cofactor_bridges": false,
+  "component_id": "cmp_98656adf98c1",
+  "connections": [],
+  "entity_ids": [
+    "en_eff1e8a25ef4d5d6",
+    "en_f0c6dad9eca6ffd2"
+  ],
+  "graph_hash": "d75b3a1280e7e798e602a1ff63c74587",
+  "reaction_count": 1,
+  "reactions": [
+    {
+      "admitted": true,
+      "claim_identity": "arabidopsis thaliana::13-s-hydroperoxyoctadeca-9,11,15-trienoic acid (13-hpot)|alpha-linolenic acid (lea)",
+      "claim_ids": [
+        "cl_9ac4b6db39b411c0"
+      ],
+      "compartment": "",
+      "component_id": "cmp_98656adf98c1",
+      "conditions": "",
+      "conflict_ids": [],
+      "decision_reason": "paper-supported, target-species reaction with single paper; no external database lookup was required or performed",
+      "decision_status": "accepted",
+      "direction": "unspecified",
+      "discovery_round": 1,
+      "enzyme_entity_ids": [
+        "en_80b043c85ef7bba4"
+      ],
+      "enzyme_names": [
+        "13-lipoxygenase (13-LOX)"
+      ],
+      "evidence_ids": [
+        "ev_b58e2cb64e2f1d87",
+        "ev_ba6fb9f5cdb8ce58"
+      ],
+      "external_validation": {
+        "status": "not_evaluated"
+      },
+      "gene": "LOX2, LOX3, LOX4, LOX6",
+      "graph_status": "primary",
+      "history": [
+        {
+          "at": "2026-09-24T19:38:31+00:00",
+          "detail": "\u03b1-linolenic acid (LeA) -> 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+          "event": "discovered",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T19:38:31+00:00",
+          "detail": "component cmp_98656adf98c1",
+          "event": "quarantined",
+          "round_index": 1
+        },
+        {
+          "at": "2026-09-24T20:01:09+00:00",
+          "detail": "selected as the primary component: evidence-weighted topic relevance 1.0000 over 1 reaction(s) and 1 distinct paper(s); 0 other admitted component(s) retained as candidate subgraphs (quarantined components were never eligible)",
+          "event": "primary_component_selected",
+          "round_index": 1
+        }
+      ],
+      "hypothesis": false,
+      "label": "\u03b1-linolenic acid (LeA) -> 13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)",
+      "multi_paper_supported": false,
+      "paper_ids": [
+        "PMC:PMC411572"
+      ],
+      "pathway_names": [],
+      "product_ids": [
+        "en_eff1e8a25ef4d5d6"
+      ],
+      "product_names": [
+        "13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)"
+      ],
+      "promoted_round": -1,
+      "quarantine_reason": "",
+      "reaction_id": "rx_98656adf98c1fca1946a",
+      "reversible": null,
+      "species_state": "target_species_supported",
+      "species_text": "Arabidopsis thaliana",
+      "substrate_ids": [
+        "en_f0c6dad9eca6ffd2"
+      ],
+      "substrate_names": [
+        "\u03b1-linolenic acid (LeA)"
+      ],
+      "tissue": ""
+    }
+  ],
+  "selection_rationale": "selected as the primary component: evidence-weighted topic relevance 1.0000 over 1 reaction(s) and 1 distinct paper(s); 0 other admitted component(s) retained as candidate subgraphs (quarantined components were never eligible)"
+}
