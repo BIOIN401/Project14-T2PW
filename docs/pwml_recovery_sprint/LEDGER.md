@@ -10696,3 +10696,11 @@ The iteration-2 fixes were approved by the independent code review (`APPROVE_WIT
 
 **Registered, NOT in scope** (both non-blocking for this pilot, but required before any scale-up): IT2-N1 (participant
 citation not enforced at admission) and IT2-N2 (last-writer-wins species state across batches).
+
+### `ORCH-743` close — two iterations done; mining still BLOCKED, now on out-of-scope causes · 2026-09-24
+
+Full record: [`ORCH-743-RESULT.md`](ORCH-743-RESULT.md). **Nothing merged. Nothing pushed.**
+
+- `experiment/pathway-mining` @ `f9556288`: mining suite 281, SMOKE 508, every change inside `src/t2pw/mining/`, and every iteration approved by an independent code review and bio-audit.
+- Pilots 001, 002 and 003 (bio verdicts NOT_PLAUSIBLE, PLAUSIBLE_BUT_THIN, NOT_PLAUSIBLE) confirmed each in-scope fix live: 0 uncited drops, 0 wrong NCBI ids, 16/16 extraction calls ok, and the best candidate layer yet (8 correct A. thaliana-tied candidates).
+- The target graph is still empty because of the species gate (`species.py`, out of scope), the per-round cap semantics, the frontier cap and provider routing (`llm/`). Five product-owner decisions are listed in the result. Iterations stopped at the pre-registered maximum of two.
