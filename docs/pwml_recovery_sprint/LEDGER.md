@@ -10590,3 +10590,44 @@ Lane: branch `experiment/pathway-mining` from `23e1ae83`, worktree `C:/t/mining`
 Independent `pwml-reviewer` and `pwml-bio-auditor`, with at most 2 repair rounds. Then **pilot-002 on the pilot-001
 config, unchanged except for the code SHA**, pre-registered here before it runs. Iterate at most **twice**; a
 second iteration only if pilot-002's audit names a remaining defect in these same four areas.
+
+### `ORCH-743` pilot-002 — config FROZEN before the run · 2026-09-24
+
+The iteration-1 fixes were approved: independent `pwml-reviewer` and `pwml-bio-auditor`, after 2 repair
+rounds. Every correction has a behavioural G9 base arm (`012`, `020`–`022`, `025`–`028`, `031`). Mining
+suite 269, SMOKE 508 with the feature off. Nothing outside `src/t2pw/mining/` changed; `species.py`,
+`rag/`, `llm/` and `app/` are untouched.
+
+**Pilot-002 is pilot-001 with only the code changed:**
+
+| item | value |
+|---|---|
+| code | `experiment/pathway-mining` @ `ecf6b9a0`, a frozen detached worktree `C:/t/mining-pilot2` |
+| CLI arguments | **identical to pilot-001**: `--species "Arabidopsis thaliana" --topic "jasmonate biosynthesis" --seed-metabolite "12-OPDA" --seed-enzyme "AOS"`, no `--paper` |
+| model | `deepseek/deepseek-v4-flash`, temperature 0, `max_tokens` 4000 (unchanged) |
+| budgets | branch defaults; the new knobs are at their defaults (`max_results_per_query` 25, `max_query_attempts` 2). Cost cap $5 estimated, 3,600 s |
+| environment | `PATHWAY_MINING_REQUIRE_EMBEDDINGS=true`; the same `.env` launcher as pilot-001 (F9 is still unfixed) |
+| process | one `bounded_run.py` job, tracked background plus a Monitor, wrapper 4,200 s, no heavy lock |
+
+**One run, reported whatever it produces.** A re-run is allowed only for an infrastructure death before
+round 1's first model call. **Known risk, declared in advance:** this model spends most of its output on
+reasoning. At 4,000 tokens, extraction can come back empty (1 of 2 diagnostic draws did), and the item-2
+prompt change has never been verified live. An empty-extraction outcome is a result, not grounds for a
+re-run.
+
+**Pre-registered report:**
+- the same counts as pilot-001, plus rescued papers, each with the route and the matched term;
+- `verbatim_cited_span` attributions, each checked against its row (bio-audit N-1);
+- query attempts per item;
+- the processed-cap stop, if hit;
+- per-reaction bio verdicts from `pwml-bio-auditor`;
+- a side-by-side comparison with pilot-001.
+
+**Iteration 2** only if the audit names a remaining defect in the four ORCH-743 areas.
+
+**Audit watch items** (from the approving bio-audit):
+- every route-1 and route-2 rescue, with its matched term and the organisms its title names;
+- every `verbatim_cited_span` enzyme and gene, checked against its row;
+- confirmation that no `target_species_supported` reaction rests on a recovered species.
+
+The code review (`APPROVE_WITH_FINDINGS`) and the bio-audit (`SOUND_WITH_FINDINGS`) were given at `ecf6b9a0`, with **no blocking findings**. Known non-blocking gaps, to close before any run whose rescue vocabulary grows beyond the seeds: route 2 has no title-organism check, and the title check misses binomial hosts (N-9).
