@@ -182,9 +182,13 @@ For mining only, `acquisition.Acquirer.rescue` reconsiders **that exclusion
 only**. An organism veto or a negative-evidence veto is never reconsidered. A
 paper is re-admitted by either of two routes:
 
-1. The production screen reads the target species in it (`organism_match ==
-   "match"`), and `screen_candidate`'s own `thresholds` accept it with the
-   anchor rule off and `min_score` raised by 1.0.
+1. `context_only` or `omics_only` only. An `off_topic` paper names no topic
+   term at all, so this route never brings one back. The production screen
+   reads the target species in it (`organism_match == "match"`), and
+   `screen_candidate`'s own `thresholds` accept it with the anchor rule off and
+   both bars raised by 1.0: `min_score` (2.0 -> 3.0) and, for a paper with no
+   abstract, `title_only_min_score` (1.5 -> 2.5). The recorded reason names the
+   threshold that was actually applied.
 2. The **title** names the target species, and one sentence of the title or
    abstract names it together with an enzyme or metabolite from **this run's**
    seeds or frontier (`queries.rescue_terms`). No pathway vocabulary is

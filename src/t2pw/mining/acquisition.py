@@ -41,6 +41,9 @@ _URL = re.compile(r"^https?://\S+$", re.IGNORECASE)
 #: Production-screen classifications the mining rescue may reconsider: the
 #: pathway-anchor branch of ``rag.eligibility.screen_paper``, never a veto.
 _RESCUABLE = ("context_only", "omics_only", "off_topic")
+#: The ones route 1 (score only) may reconsider. ``off_topic`` names no topic term
+#: at all, so only route 2, which needs a run name, may bring one back.
+_SCORE_RESCUABLE = ("context_only", "omics_only")
 #: Without the pathway anchor, a paper must clear the production bar by this much.
 #: ponytail: one number, fit on pilot-001's 21 screened papers (wheat 2.5 and a
 #: Marchantia primary 2.5 stay out; AtLOX2 enzymology 4.0 and DAD1 3.0 come in).
@@ -403,9 +406,11 @@ class Acquirer:
         ``context_only`` / ``omics_only`` / ``off_topic``) is reconsidered. An
         organism veto or a negative-evidence veto never is. Two routes:
 
-        1. The production screen names the target species (``organism_match ==
+        1. ``context_only`` / ``omics_only`` only (never ``off_topic``): the
+           production screen names the target species (``organism_match ==
            "match"``), and ``screen_candidate``'s own thresholds, with the anchor
-           rule off and the bar raised by ``_UNANCHORED_MARGIN``, pass the paper.
+           rule off and both bars (full and title-only) raised by
+           ``_UNANCHORED_MARGIN``, pass the paper.
         2. The title names the target species, and one sentence of the title or
            abstract names it together with an enzyme or metabolite from this
            run's seeds or frontier (``run_terms``). Both guards come from
@@ -422,15 +427,18 @@ class Acquirer:
         try:
             from t2pw.rag.eligibility import screen_candidate, thresholds_from_config
 
-            if str(getattr(decision, "organism_match", "") or "") == "match":
+            if (classification in _SCORE_RESCUABLE
+                    and str(getattr(decision, "organism_match", "") or "") == "match"):
                 base = thresholds_from_config()
+                # Both bars are raised: with no abstract, screen_paper applies the title-only one.
                 relaxed = replace(base, require_pathway_anchor=False,
-                                  min_score=base.min_score + _UNANCHORED_MARGIN)
+                                  min_score=base.min_score + _UNANCHORED_MARGIN,
+                                  title_only_min_score=base.title_only_min_score + _UNANCHORED_MARGIN)
                 second = screen_candidate(candidate, self._scope(), thresholds=relaxed, apply=False)
                 if not second.ineligible:
                     return (
                         f"{self.config.target_species} named; score {round(second.score, 3)} >= "
-                        f"{relaxed.min_score} with the pathway-anchor rule off"
+                        f"{second.threshold} with the pathway-anchor rule off"
                     )
         except Exception:  # noqa: BLE001 - a failed rescue leaves the exclusion standing
             pass

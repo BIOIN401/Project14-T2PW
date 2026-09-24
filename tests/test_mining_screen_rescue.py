@@ -30,6 +30,12 @@ from t2pw.rag.acquire import CandidatePaper  # noqa: E402
 FIXTURE = json.loads(
     (ROOT / "tests" / "fixtures" / "mining" / "pilot001_screened_papers.json").read_text(encoding="utf-8")
 )
+#: Repair round 1: the papers the bio-audit found wrongly rescued at 16fd8a4b.
+NEGATIVES = {
+    p["candidate_id"]: p for p in json.loads(
+        (ROOT / "tests" / "fixtures" / "mining" / "orch743_rescue_negatives.json").read_text(encoding="utf-8")
+    )["papers"]
+}
 
 
 def _config(tmp_path):
@@ -95,7 +101,8 @@ def test_the_pilot001_screening_fixture(tmp_path):
     wrongly_in = [pid for pid, e in expected.items() if e == "must_exclude" and included[pid]]
     assert wrongly_in == []
     # Every rescue says what matched; a production inclusion keeps its own reason.
-    assert reasons["PMC:PMC9947334"].startswith("mining_rescue: Arabidopsis thaliana named; score 4.0")
+    assert reasons["PMC:PMC9947334"] == (
+        "mining_rescue: Arabidopsis thaliana named; score 4.0 >= 3.0 with the pathway-anchor rule off")
     assert not reasons["PMC:PMC13364333"].startswith("mining_rescue")
 
     # A run's vocabulary only grows. Screened with the richest one (round 2's),
@@ -107,6 +114,43 @@ def test_the_pilot001_screening_fixture(tmp_path):
     assert "allene oxide" in rescue_terms(config, frontier)
     assert [p.record.paper_id for p in richest.papers
             if expected[p.record.paper_id] == "must_exclude"] == []
+
+
+# ---------------------------------------------------------------------------
+# Repair round 1: route 1 (score only) is bounded
+# ---------------------------------------------------------------------------
+def test_g9_b2_route1_never_rescues_an_off_topic_paper(tmp_path):
+    """Bio B-2: two live rescues at 16fd8a4b with no topic term at all (protease, chalcone synthase)."""
+    config = _config(tmp_path)
+    acquirer = Acquirer(config)
+    for pmcid in ("PMC13181208", "PMC13153360"):
+        paper = NEGATIVES[pmcid]
+        decision = acquirer.screen(_candidate(paper))
+        assert (decision.classification, decision.organism_match, decision.score) == ("off_topic", "match", 3.0)
+        result = _acquire(config, [paper], 2)
+        assert [p.record.paper_id for p in result.papers] == []
+        assert [r.paper_id for r in result.excluded] == [paper["paper_id"]]
+        assert acquirer.rescue(_candidate(paper), decision) == ""
+
+
+def test_g9_r1_a_title_only_paper_must_clear_the_raised_title_only_bar(tmp_path):
+    """Review B1: with no abstract the production screen applies ``title_only_min_score`` (1.5).
+    At 16fd8a4b route 1 left that bar unraised and recorded "score 1.5 >= 3.0"."""
+    config = _config(tmp_path)
+    title = "Cold stress transcriptome of Arabidopsis thaliana rosettes and jasmonate biosynthesis"
+    candidate = CandidatePaper(id="PMC8888888", source="fixture", title=title, abstract="",
+                               full_text="Results. A body of text the source can serve.")
+    decision = Acquirer(config).screen(candidate)
+    assert decision.provisional and decision.organism_match == "match"
+    assert decision.classification in {"context_only", "omics_only"}
+    assert 1.5 <= decision.score < 2.5
+
+    acquirer = Acquirer(config, source=OfflinePaperSource([candidate]))
+    result = acquirer.acquire(LiteratureQuery(query_id="qr_fixture", query_text="fixture"), {},
+                              round_index=1, max_papers=1)
+    assert [p.record.paper_id for p in result.papers] == []
+    assert [r.paper_id for r in result.excluded] == ["PMC:PMC8888888"]
+    assert acquirer.rescue(candidate, decision) == ""
 
 
 # ---------------------------------------------------------------------------

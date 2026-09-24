@@ -1,0 +1,47 @@
+{
+ "source": "EuropePMC REST core records (title, abstractText) fetched 2026-09-24 for ORCH-743 repair round 1; the three papers the bio-audit found wrongly rescued at 16fd8a4b (C:/t/bt/mining-iter/bio743-r0/route1_labels.json). 'production' is the unchanged rag.eligibility screen's verdict on this title and abstract.",
+ "papers": [
+  {
+   "paper_id": "PMC:PMC13181208",
+   "candidate_id": "PMC13181208",
+   "title": "Structural basis for dimerization, catalytic regulation, and substrate selectivity of the chloroplast S9D CGEP protease in Arabidopsis thaliana.",
+   "abstract": "S9 proteases are widely distributed across the tree-of-life and play essential roles in protein processing. However, the structural and mechanistic basis for protease activity in the S9D subfamily, restricted to photosynthetic eukaryotes (e.g., plants), cyanobacteria, proteobacteria and flavobacteria, is unknown. Here, we report the first high-resolution cryo-EM structures of an S9D protease, chloroplast glutamyl endopeptidase (CGEP) from the model plant Arabidopsis thaliana. CGEP adopts a dimeric architecture stabilized by two distinct interfaces: hydrophobic interactions between catalytic domains and an interdomain β-sheet linking the cap and catalytic domains. These interactions create a scaffold that supports a hinge loop, which acts as a steric gate to restrict substrate access and confine catalytic activity to the closed conformation. Unlike S9A-B-C proteases, CGEP maintains an intact catalytic triad in both open and closed states, relying on hinge-loop gating rather than catalytic disruption for regulation. Structural analysis and mutagenesis reveal that the hinge loop forms a conserved pocket favoring glutamate side chains, explaining CGEP's strong glutamate preference at cleavage sites. Together, these findings uncover a unique regulatory paradigm for S9D proteases and provide a structural framework for understanding substrate selectivity and dimerization.",
+   "production": {
+    "classification": "off_topic",
+    "organism_match": "match",
+    "score": 3.0,
+    "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "bio B-2: chloroplast S9D protease structure; no jasmonate or fatty-acid content. Rescued live at 16fd8a4b by route 1 from the frontier query '\"ALA\" AND \"Arabidopsis thaliana\"'"
+  },
+  {
+   "paper_id": "PMC:PMC13153360",
+   "candidate_id": "PMC13153360",
+   "title": "Integrative structural and physicochemical characterization of chalcone synthase enzymes from medicinal plants using AlphaFold, molecular docking, and molecular dynamics.",
+   "abstract": "Chalcone synthase (CHS) is the entry-point enzyme of the flavonoid biosynthetic pathway, catalyzing the first committed step toward the production of diverse bioactive metabolites with antioxidant, anti-inflammatory, and anticancer properties. Here, we conducted a comparative in silico characterization of CHS from 13 medicinal plants, with Arabidopsis thaliana included as reference species. Protein sequences retrieved from UniProtKB were aligned using ClustalW, revealing strong conservation of key motifs, particularly the catalytic triad (Cys-His-Asn), GFGPG motif, and catalytic loop. Physicochemical profiling indicated interspecies variability in predicted protein stability, hydrophobicity, and thermostability, reflecting structural adaptation rather than direct functional divergence. AlphaFold-predicted structures consistently adopted the conserved thiolase-like αβαβα-fold characteristic of type III polyketide synthases, while exhibiting species-specific variations in the substrate-binding channel architecture. These variations are interpreted as structural features that may influence substrate accommodation and selectivity. To assess functional relevance, molecular docking with p-coumaroyl-CoA further confirmed stable substrate placement within the conserved catalytic pocket across species. Furthermore, 100-ns molecular dynamics simulations of representative crystal-derived and AlphaFold-predicted CHS-ligand complexes confirmed conformational stability, which was supported by MM-PBSA calculations revealing favorable binding energetics dominated by van der Waals interactions. Collectively, this study integrates sequence, structural, and dynamic analyses to establish a computational framework for comparative CHS characterization in medicinal plants. While the findings are derived exclusively from in silico approaches, they provide structurally grounded hypotheses that may guide future experimental validation, enzyme engineering, and pathway-oriented exploration of flavonoid biosynthesis.",
+   "production": {
+    "classification": "off_topic",
+    "organism_match": "match",
+    "score": 3.0,
+    "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "bio B-2: chalcone synthase docking across medicinal plants (flavonoids). Rescued live at 16fd8a4b by route 1 from the same query"
+  },
+  {
+   "paper_id": "PMC:PMC12977409",
+   "candidate_id": "PMC12977409",
+   "title": "Harnessing Rhodopseudomonas palustris strains for salt stress mitigation in Arabidopsis thaliana.",
+   "abstract": "BACKGROUND: Soil salinity severely limits plant growth and agricultural productivity. 5-Aminolevulinic acid (ALA), a precursor in tetrapyrrole biosynthesis, has been reported to alleviate salinity stress and is frequently proposed as a key component by which purple non-sulfur bacteria enhance plant stress tolerance. This study compared the treatments of three Rhodopseudomonas palustris strains (PS3, TPN1, and YSC3) with ALA under salinity stress to understand the importance of ALA production for their potential ability to alleviate salinity stress, using Arabidopsis thaliana, a salt-sensitive model plant in which NaCl concentrations above 30 mM induce growth inhibition and physiological stress responses, making it well suited for assessing salinity tolerance mechanisms. RESULTS: Both bacterial and ALA treatments increased the photosynthetic efficiency, root growth, relative water content, and oxidative balance of salt-stressed plants. These treatments maintained chlorophyll biosynthetic capacity and modulation of ion transport-related responses, consistent with improved ionic homeostasis under salinity stress. Among the strains, TPN1 performed the best, exhibiting altered expression of antioxidant genes, reduced lipid peroxidation, and decreased electrolyte leakage, which indicates improved membrane integrity. The outcomes were associated with the ability of TPN1 to maintain halotolerance and key plant growth-promoting traits, including the production of extracellular polysaccharides and indole-3-acetic acid, under high salinity. Notably, strains with comparatively lower extracellular ALA outputs conferred benefits comparable to those observed with ALA treatment, suggesting that plant stress mitigation is not solely dependent on ALA concentration. CONCLUSIONS: We identified ALA-producing R. palustris strains, particularly TPN1, that help enhance plant tolerance to salinity through coordinated changes in ion regulation, antioxidant balance, and photosynthetic performance, and demonstrate that ALA production may not be the primary factor contributing to R. palustris' enhancement of plant salt tolerance.",
+   "production": {
+    "classification": "off_topic",
+    "organism_match": "match",
+    "score": 0.25,
+    "reason": "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "bio B-3: 'ALA' here is 5-aminolevulinic acid, not alpha-linolenic acid. Rescued live at 16fd8a4b by route 2 on the bare acronym 'ALA'"
+  }
+ ]
+}
