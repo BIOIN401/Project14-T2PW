@@ -65,9 +65,9 @@ All optional; all recorded in the manifest. See
 | `PATHWAY_MINING_MODEL` | `deepseek/deepseek-v4-flash` | requested model slug |
 | `PATHWAY_MINING_FALLBACK_MODEL` | *(empty)* | explicit, logged fallback; empty means a failure stays loud |
 | `PATHWAY_MINING_TEMPERATURE` | `0.0` | deterministic extraction |
-| `PATHWAY_MINING_MAX_TOKENS` | `4000` | per-call output ceiling |
+| `PATHWAY_MINING_MAX_TOKENS` | `12000` | per-call output ceiling: hidden reasoning plus the answer for one passage batch (was 4000; evidence 032) |
 | `PATHWAY_MINING_MAX_ATTEMPTS` | `3` | shrink-and-retry ladder length |
-| `PATHWAY_MINING_REQUEST_TIMEOUT` | `120` | seconds per attempt |
+| `PATHWAY_MINING_REQUEST_TIMEOUT` | `360` | seconds per attempt (was 120; 12,000 tokens at the slowest observed 41 tokens/s is about 293 s) |
 | `PATHWAY_MINING_STRUCTURED_OUTPUT` | `true` | request a JSON schema where supported |
 | `PATHWAY_MINING_ACQUISITION_SOURCES` | `europepmc,ncbi` | literature sources (discovery only) |
 | `PATHWAY_MINING_RETRIEVE_TOP_K` | `8` | passages per query |

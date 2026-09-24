@@ -27,6 +27,9 @@ ARTIFACT_SCHEMA_VERSION = "t2pw.mining/1.0.0"
 
 #: Bumped whenever an extraction prompt changes in a way that could change a claim.
 PROMPT_VERSION = "mining-extract/1.1.0"
+#: Extraction defaults (IT2-1, evidence 032): one batch's reasoning plus answer.
+EXTRACTION_MAX_TOKENS = 12000
+EXTRACTION_REQUEST_TIMEOUT_SECONDS = 360.0
 
 #: The default extraction and exploration model, per the feature brief.
 DEFAULT_MINING_MODEL = "deepseek/deepseek-v4-flash"
@@ -85,6 +88,11 @@ class MiningBudgets:
     max_papers_processed: int = 40
     max_new_reactions_per_round: int = 25
     max_passages_per_paper: int = 20
+    #: Passages sent in ONE extraction call; a paper's passages go in consecutive
+    #: batches of this size. A reasoning model drafts every claim with every
+    #: per-field citation list before answering, so a 20-passage review needs far
+    #: more than 20k output tokens in one call (pilot-002; evidence 032).
+    max_passages_per_call: int = 5
     max_primary_reactions: int = 200
     max_candidate_reactions: int = 300
     max_candidate_components: int = 40
@@ -145,11 +153,16 @@ class MiningModelConfig:
 
     model: str = DEFAULT_MINING_MODEL
     temperature: float = 0.0
-    max_tokens: int = 4000
+    #: The extraction output budget: hidden reasoning plus the answer for one batch
+    #: of ``max_passages_per_call`` passages. 4000 left pilot-002's dense batches
+    #: empty on ``finish_reason=length`` (evidence 032).
+    max_tokens: int = EXTRACTION_MAX_TOKENS
     #: A narrower retry budget than the shared client's default: an extraction
     #: that needs eight attempts is a prompt problem, not a transient.
     max_attempts: int = 3
-    request_timeout_seconds: float = 120.0
+    #: Per provider request: ``max_tokens`` at the slowest observed 41 tokens/s is
+    #: about 293 s (evidence 032).
+    request_timeout_seconds: float = EXTRACTION_REQUEST_TIMEOUT_SECONDS
     #: An explicit, logged fallback. Empty means "no fallback" -- the run fails
     #: loudly rather than quietly answering with a different model.
     fallback_model: str = ""
@@ -172,10 +185,11 @@ class MiningModelConfig:
         return cls(
             model=model,
             temperature=_as_float(pick("temperature", "PATHWAY_MINING_TEMPERATURE"), 0.0),
-            max_tokens=_as_int(pick("max_tokens", "PATHWAY_MINING_MAX_TOKENS"), 4000),
+            max_tokens=_as_int(pick("max_tokens", "PATHWAY_MINING_MAX_TOKENS"), EXTRACTION_MAX_TOKENS),
             max_attempts=max(1, _as_int(pick("max_attempts", "PATHWAY_MINING_MAX_ATTEMPTS"), 3)),
             request_timeout_seconds=_as_float(
-                pick("request_timeout_seconds", "PATHWAY_MINING_REQUEST_TIMEOUT"), 120.0
+                pick("request_timeout_seconds", "PATHWAY_MINING_REQUEST_TIMEOUT"),
+                EXTRACTION_REQUEST_TIMEOUT_SECONDS,
             ),
             fallback_model=str(pick("fallback_model", "PATHWAY_MINING_FALLBACK_MODEL") or "").strip(),
             use_structured_output=_as_bool(

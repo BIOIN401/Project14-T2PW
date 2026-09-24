@@ -15,6 +15,7 @@ crawl is both expensive and useless.
 | Max papers fully processed | 40 | `MAX_PAPERS_PROCESSED` | `--max-papers-processed` |
 | Max new reactions per round | 25 | `MAX_NEW_REACTIONS_PER_ROUND` | — |
 | Max passages per paper | 20 | `MAX_PASSAGES_PER_PAPER` | — |
+| Max passages per extraction call | 5 | `MAX_PASSAGES_PER_CALL` | — |
 | Max primary-graph reactions | 200 | `MAX_PRIMARY_REACTIONS` | — |
 | Max candidate reactions | 300 | `MAX_CANDIDATE_REACTIONS` | — |
 | Max candidate components | 40 | `MAX_CANDIDATE_COMPONENTS` | — |
@@ -64,6 +65,21 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
   `query_text` and its own `query_id`. The item is exhausted only after that attempt too finds
   no new paper. A window that was not full exhausts the item after one attempt, because
   there is nothing past it.
+
+## Extraction in passage batches
+
+A paper's retrieved passages (up to `max_passages_per_paper`) are extracted in consecutive
+batches of `max_passages_per_call` (default 5). Each batch is its own logical model call, with
+its own `model_calls.jsonl` record and `model_raw.jsonl` rows; its claims merge through the
+claim store like any other paper's. A paper counts once toward `max_papers_processed`,
+however many batches it takes. If the call budget runs out between batches, the rest of the
+paper's passages are not sent, and a note on the paper says how many were.
+
+Why: the extraction model reasons before it answers. Its hidden reasoning surveys every
+passage and then drafts every claim with every per-field citation list. In pilot-002, 20
+passages of one review needed well over 20,000 output tokens in a single call, and every
+request came back empty on `finish_reason=length`. The output budget (`PATHWAY_MINING_MAX_TOKENS`,
+12,000) is sized for one batch. See [`evidence/032-it2-extraction-diagnosis/`](evidence/032-it2-extraction-diagnosis/README.md).
 
 ## Stop reasons
 

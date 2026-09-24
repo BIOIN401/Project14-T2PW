@@ -1,0 +1,91 @@
+"""ORCH-743 iteration 2: the pilot-002 audit's five defects inside the ORCH-743 areas.
+
+Each ``test_g9_*`` node fails behaviourally at ecf6b9a0, the tip pilot-002 ran on. The
+other tests pin the new behaviour's edges. No network and no model: every provider, HTTP
+client and model is scripted.
+"""
+
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+from types import SimpleNamespace
+
+ROOT = Path(__file__).resolve().parents[1]
+for _path in (ROOT / "src", ROOT / "tests"):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
+
+import helpers_mining as H  # noqa: E402
+from t2pw.mining.controller import MiningController  # noqa: E402
+from t2pw.mining.models import EvidenceSpan  # noqa: E402
+
+PER_FIELD_LISTS = ("enzyme_evidence_ids", "gene_evidence_ids", "species_evidence_ids",
+                   "compartment_evidence_ids", "direction_evidence_ids", "reversible_evidence_ids")
+
+
+# ---------------------------------------------------------------------------
+# IT2-1: extraction in passage batches, with an output budget that fits one
+# ---------------------------------------------------------------------------
+def _twelve_passages(paper_id, query_text, **kwargs):  # noqa: ARG001
+    tag = paper_id.split(":")[-1].lower()
+    return [EvidenceSpan(evidence_id=f"ev_{tag}_{n:02d}", paper_id=paper_id, section="results",
+                         text=f"Passage {n}: alpha-linolenic acid is oxygenated in Arabidopsis thaliana.")
+            for n in range(12)]
+
+
+def test_g9_it2_1_a_paper_is_extracted_in_batches_with_the_extraction_budget(tmp_path):
+    """Pilot-002 sent 20 passages in one call with max_tokens 4000 and a 120 s timeout;
+    the hidden reasoning spent the budget and the call came back empty (evidence 032)."""
+    calls = []
+
+    def chat(messages, **kwargs):
+        system = next(m["content"] for m in messages if m["role"] == "system")
+        user = next(m["content"] for m in messages if m["role"] == "user")
+        calls.append({"passages": user.count("[evidence_id: "), "max_tokens": kwargs.get("max_tokens"),
+                      "timeout": kwargs.get("timeout"), "system": system})
+        return SimpleNamespace(text='{"claims": []}', diagnostics=None)
+
+    config = H.make_config(tmp_path, budgets={"max_rounds": 1})
+    index = H.offline_index(config, tmp_path)
+    index.spans_for_paper = _twelve_passages
+    controller = MiningController(config, source=H.ScriptedPaperSource({1: ["P1"]}), chat_fn=chat,
+                                  index=index, enabled_override=True)
+    outcome = controller.run(probe_model=False, probe_embeddings=False)
+
+    assert [c["passages"] for c in calls] == [5, 5, 2]
+    assert {c["max_tokens"] for c in calls} == {12000}
+    assert {c["timeout"] for c in calls} == {360.0}
+    assert len([r for r in outcome.state.papers.values() if r.processed_round == 1]) == 1
+    assert outcome.ledger.usage.papers_processed == 1
+    # The prompt is unchanged: every per-field citation list is still demanded.
+    for call in calls:
+        assert all(key in call["system"] for key in PER_FIELD_LISTS)
+
+
+def test_the_extraction_settings_and_prompt_shape_are_pinned():
+    from t2pw.mining.config import MiningBudgets, MiningModelConfig
+    from t2pw.mining.extraction import SYSTEM_PROMPT
+
+    model = MiningModelConfig()
+    assert (model.max_tokens, model.request_timeout_seconds, model.prompt_version) == (
+        12000, 360.0, "mining-extract/1.1.0")
+    assert MiningBudgets().max_passages_per_call == 5
+    assert all(key in SYSTEM_PROMPT for key in PER_FIELD_LISTS)
+    assert "a filled\n   field whose own list is missing or empty will be discarded" in SYSTEM_PROMPT
+
+
+def test_the_batch_knob_is_honoured(tmp_path):
+    seen = []
+
+    def chat(messages, **kwargs):  # noqa: ARG001
+        seen.append(next(m["content"] for m in messages if m["role"] == "user").count("[evidence_id: "))
+        return SimpleNamespace(text='{"claims": []}', diagnostics=None)
+
+    config = H.make_config(tmp_path, budgets={"max_rounds": 1, "max_passages_per_call": 20})
+    index = H.offline_index(config, tmp_path)
+    index.spans_for_paper = _twelve_passages
+    MiningController(config, source=H.ScriptedPaperSource({1: ["P1"]}), chat_fn=chat, index=index,
+                     enabled_override=True).run(probe_model=False, probe_embeddings=False)
+    assert seen == [12]

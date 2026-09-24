@@ -469,38 +469,49 @@ class MiningController:
                 round_spans.extend(spans)
                 self.ledger.record_passages(len(spans))
 
-                extraction = extract_claims(
-                    client=self.client,
-                    spans=spans,
-                    paper_id=record.paper_id,
-                    paper_title=record.title,
-                    target_species=self.config.target_species,
-                    target_species_normalized=self.config.target_species_normalized,
-                    round_index=index,
-                    topic=self.config.topic,
-                    paper_observed_organisms=record.observed_organisms,
-                )
-                if extraction.outcome is not None:
-                    self.state.model_calls.append(extraction.outcome.record)
-                    round_raw.extend(extraction.outcome.lineage_rows())
+                # One extraction call per batch of max_passages_per_call passages
+                # (evidence 032). Each batch is its own logical call; its claims
+                # merge through the claim store like any other paper's.
+                per_call = max(1, self.config.budgets.max_passages_per_call)
+                for start in range(0, len(spans), per_call):
+                    if start and self.ledger.check_before_call():
+                        record.notes.append(
+                            f"round {index}: extraction stopped after {start} of {len(spans)} "
+                            "passages: the call budget is spent"
+                        )
+                        break
+                    extraction = extract_claims(
+                        client=self.client,
+                        spans=spans[start:start + per_call],
+                        paper_id=record.paper_id,
+                        paper_title=record.title,
+                        target_species=self.config.target_species,
+                        target_species_normalized=self.config.target_species_normalized,
+                        round_index=index,
+                        topic=self.config.topic,
+                        paper_observed_organisms=record.observed_organisms,
+                    )
+                    if extraction.outcome is not None:
+                        self.state.model_calls.append(extraction.outcome.record)
+                        round_raw.extend(extraction.outcome.lineage_rows())
+                    if extraction.notes:
+                        record.notes.extend(extraction.notes)
+                    if extraction.dropped_fields:
+                        round_errors.extend(extraction.dropped_fields)
+                    self.ledger.record_claims(len(extraction.claims))
+                    round_claims.extend(extraction.claims)
+
+                    for claim in extraction.claims:
+                        self._admit(
+                            claim,
+                            index=index,
+                            delta=delta,
+                            decisions=round_decisions,
+                            rejections=round_rejections,
+                        )
                 record.processed_round = index
                 processed_this_round += 1
                 self.ledger.record_paper_processed()
-                if extraction.notes:
-                    record.notes.extend(extraction.notes)
-                if extraction.dropped_fields:
-                    round_errors.extend(extraction.dropped_fields)
-                self.ledger.record_claims(len(extraction.claims))
-                round_claims.extend(extraction.claims)
-
-                for claim in extraction.claims:
-                    self._admit(
-                        claim,
-                        index=index,
-                        delta=delta,
-                        decisions=round_decisions,
-                        rejections=round_rejections,
-                    )
 
         # -- close the round ----------------------------------------------
         if not self.state.graph.primary_component_id and self.state.graph.components:
