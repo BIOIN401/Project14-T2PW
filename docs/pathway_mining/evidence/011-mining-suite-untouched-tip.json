@@ -1,0 +1,193 @@
+{
+  "label": "mining-suite-untouched-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/011-mining-suite-untouched-tip.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/mining-iter/r011",
+    "tests/test_mining_admission.py",
+    "tests/test_mining_artifacts.py",
+    "tests/test_mining_budget.py",
+    "tests/test_mining_cli.py",
+    "tests/test_mining_extraction.py",
+    "tests/test_mining_feature_flag.py",
+    "tests/test_mining_graph.py",
+    "tests/test_mining_integration.py",
+    "tests/test_mining_species.py",
+    "tests/test_mining_stability.py",
+    "tests/test_mining_starting_inputs.py",
+    "tests/test_mining_ui.py"
+  ],
+  "cwd": "C:\\t\\mining",
+  "started_at": "2026-09-24T03:28:50+00:00",
+  "finished_at": "2026-09-24T03:29:02+00:00",
+  "duration_seconds": 11.624498100019991,
+  "timeout_seconds": 400.0,
+  "root_pid": 977448,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 977452,
+      "name": "python.exe",
+      "ppid": 977448
+    },
+    {
+      "pid": 977148,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 978636,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 978068,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 972904,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 976956,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 978072,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 976180,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 978520,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 973992,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 978036,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 977964,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 978420,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 971016,
+      "name": "git.exe",
+      "ppid": 977452
+    },
+    {
+      "pid": 977180,
+      "name": "git.exe",
+      "ppid": 977452
+    }
+  ],
+  "descendants_terminated": [
+    971016,
+    972904,
+    973992,
+    976180,
+    976956,
+    977148,
+    977180,
+    977452,
+    977964,
+    978036,
+    978068,
+    978072,
+    978420,
+    978520,
+    978636
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 862936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 863296,
+      "name": "python.exe"
+    },
+    {
+      "pid": 964692,
+      "name": "python.exe"
+    },
+    {
+      "pid": 968140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 975756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 978452,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/011-mining-suite-untouched-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining",
+    "repo_head": "23e1ae8308b002e1235509f028dc75dc2c341e19",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-743",
+    "token": "ORCH-743:975756:40673bfffb560d95",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

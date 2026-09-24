@@ -87,3 +87,35 @@ tree's own launcher (`--expect-tree C:/t/mining-base`), then deleted.
 `007` measured the uncommitted working tree. `009` and `010` measured the
 commit and are the ones to cite for the tip. `005`, `009` and `010` held the
 heavy lock `ORCH-742a` (acquired and released). The G9 arms did not take it.
+
+## ORCH-743: pathway-mining iteration 1 (the four pilot-001 blockers)
+
+Base `23e1ae83`. Item commits: `638c8f48` (1, raw completion lineage), `5fd3acad` (2, citation
+recovery), `f5e44ec7` (3, search), `6f910144` (4, screen rescue). Every run below ended with
+exit reason `completed`, **final surviving count 0**, cleanup success and, where pinned,
+measured-tree `violations: []`.
+
+| File | Tree / SHA | What | Result |
+|---|---|---|---|
+| `011-mining-suite-untouched-tip` | `C:/t/mining` @ `23e1ae83` | `tests/test_mining_*.py`, before any change | **226 passed** (heavy lock `ORCH-743`) |
+| `012-g9-base-arm-lineage` | `C:/t/mining-base2` @ `23e1ae83` | item 1 G9 base arm, `test_mining_lineage.py`, run by the orchestrator | **3 failed** (behavioural) |
+| `013-item2-replay/` | `C:/t/mining` @ `638c8f48` (+ the item-2 working tree for call 3 and the offline fallback) | item 2 diagnosis: pilot-001's extraction input replayed, 3 live calls, est. $0.018879 | see its [`README.md`](013-item2-replay/README.md) |
+| `014-mining-suite-orch743-tip` | `C:/t/mining` @ `6f910144` | `tests/test_mining_*.py` (16 files) | **252 passed** in 6.59 s (heavy lock `ORCH-743`) |
+| `015-smoke-feature-disabled-orch743-tip` | `C:/t/mining` @ `6f910144` | production SMOKE (22 files), `T2PW_PATHWAY_MINING_ENABLED` unset | **508 passed** in 52.58 s (heavy lock `ORCH-743`) |
+| `016-item3-search-probe/` | `C:/t/mining` @ `6f910144` | live, read-only EuropePMC + NCBI search. No model call and no cache read or write | see below |
+| `017-item4-screen-fixture/` | `C:/t/mining` @ `6f910144` | offline: the mining screen over pilot-001's 21 screened papers | see below |
+
+The G9 base arms for items 2, 3 and 4 are run by the orchestrator. This worker cannot
+write into the base worktree.
+
+**016, the search probe.** Pilot-001's three round-1 frontier items (12-OPDA, AOS, the
+topic) ran through the new formulation and the real `PaperSource.search`. Attempt 1 gave 3
+queries, 75 result slots and **66 unique papers**; pilot-001's round 1 gave 30 slots and 12
+unique. NCBI contributed 10, 12 and 12 of the 25 results per query. Before, it contributed
+none. Query strings: `"12-OPDA" AND "Arabidopsis thaliana"`, and
+`"12-OPDA" AND "jasmonate biosynthesis" AND "Arabidopsis thaliana"` for attempt 2.
+
+**017, the screen fixture.** Each paper is screened with the vocabulary its round had.
+Included: PMC9947334 (required; rescued, score 4.0), PMID 35404431 (desired; rescued, score
+3.0) and PMC13364333 (the production screen's own inclusion). Excluded: PMC12280011
+(desired, not reached), both borderline papers, and **all 15 must-exclude papers**.

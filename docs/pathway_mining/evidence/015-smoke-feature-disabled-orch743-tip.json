@@ -1,0 +1,163 @@
+{
+  "label": "smoke-feature-disabled-orch743-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/015-smoke-feature-disabled-orch743-tip.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/mining-iter/r015",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\mining",
+  "started_at": "2026-09-24T18:27:39+00:00",
+  "finished_at": "2026-09-24T18:28:32+00:00",
+  "duration_seconds": 53.84174089999988,
+  "timeout_seconds": 540.0,
+  "root_pid": 74444,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 74456,
+      "name": "python.exe",
+      "ppid": 74444
+    },
+    {
+      "pid": 74372,
+      "name": "python.exe",
+      "ppid": 74456
+    },
+    {
+      "pid": 74408,
+      "name": "python.exe",
+      "ppid": 74372
+    },
+    {
+      "pid": 72136,
+      "name": "python.exe",
+      "ppid": 73412
+    },
+    {
+      "pid": 73412,
+      "name": "python.exe",
+      "ppid": 74456
+    },
+    {
+      "pid": 74516,
+      "name": "python.exe",
+      "ppid": 74628
+    },
+    {
+      "pid": 74628,
+      "name": "python.exe",
+      "ppid": 74456
+    },
+    {
+      "pid": 72064,
+      "name": "python.exe",
+      "ppid": 74616
+    },
+    {
+      "pid": 74616,
+      "name": "python.exe",
+      "ppid": 74456
+    }
+  ],
+  "descendants_terminated": [
+    72064,
+    72136,
+    73412,
+    74372,
+    74408,
+    74456,
+    74516,
+    74616,
+    74628
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 27260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 27552,
+      "name": "python.exe"
+    },
+    {
+      "pid": 41020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74096,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74140,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/015-smoke-feature-disabled-orch743-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining",
+    "repo_head": "6f9101440677f543d7e8307a913780a646d24e2a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-743",
+    "token": "ORCH-743:74140:bab5f33ba8f1f5da",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

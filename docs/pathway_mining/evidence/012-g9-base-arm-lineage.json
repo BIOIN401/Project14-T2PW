@@ -1,0 +1,129 @@
+{
+  "label": "g9-base-lineage",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-base2",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/012-g9-base-arm-lineage.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/mining-iter/orch-g9-1/b",
+    "tests/test_mining_lineage.py"
+  ],
+  "cwd": "C:\\t\\mining-base2",
+  "started_at": "2026-09-24T17:24:23+00:00",
+  "finished_at": "2026-09-24T17:24:49+00:00",
+  "duration_seconds": 22.934202799980994,
+  "timeout_seconds": 300.0,
+  "root_pid": 1424568,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1426552,
+      "name": "python.exe",
+      "ppid": 1424568
+    },
+    {
+      "pid": 1426616,
+      "name": "git.exe",
+      "ppid": 1426552
+    },
+    {
+      "pid": 1425888,
+      "name": "git.exe",
+      "ppid": 1426552
+    },
+    {
+      "pid": 1424356,
+      "name": "git.exe",
+      "ppid": 1426552
+    },
+    {
+      "pid": 1415716,
+      "name": "git.exe",
+      "ppid": 1426552
+    },
+    {
+      "pid": 1426152,
+      "name": "git.exe",
+      "ppid": 1426552
+    },
+    {
+      "pid": 1393096,
+      "name": "git.exe",
+      "ppid": 1426552
+    },
+    {
+      "pid": 1426164,
+      "name": "git.exe",
+      "ppid": 1426552
+    },
+    {
+      "pid": 1424200,
+      "name": "git.exe",
+      "ppid": 1426552
+    }
+  ],
+  "descendants_terminated": [
+    1393096,
+    1415716,
+    1424200,
+    1424356,
+    1425888,
+    1426152,
+    1426164,
+    1426552,
+    1426616
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1022000,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1022004,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1423172,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1426624,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/012-g9-base-arm-lineage.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-base2\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-base2",
+    "repo_head": "23e1ae8308b002e1235509f028dc75dc2c341e19",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
