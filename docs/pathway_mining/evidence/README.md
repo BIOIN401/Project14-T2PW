@@ -197,3 +197,11 @@ pin `violations: []`, wrapper clean at `e21e73f2`.
 
 The G9 base arm is run by the orchestrator at `59eb761d`. The nodes are in
 `C:/t/mining-iter/g9_manifest.json` (item `r2-bio-B-4`).
+
+**G9 base arm for repair round 2, run by the orchestrator.**
+
+| File | Tree / SHA | What | Result at base |
+|---|---|---|---|
+| `031-g9-rep2-bio-b4` | `C:/t/mining-rep-base` @ `59eb761d` (pre-repair-2 tip) | the two `test_g9_b4_*` nodes of `test_mining_screen_rescue.py` (plus `orch743_transgene_source.json`) | **2 failed**: route 1 rescues the emmer-wheat AtAOS/AtOPR3 paper (PMC10742046, score 3.5) and the strengthened PMC11478715 (3.25) |
+
+FINAL SURVIVING COUNT 0, pin `violations: []`; the base tree was restored afterwards and its status is empty.
