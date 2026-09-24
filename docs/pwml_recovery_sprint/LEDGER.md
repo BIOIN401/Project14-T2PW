@@ -10662,3 +10662,37 @@ paper id it carries is wrong. No unsupported reaction entered the target graph.
 - B-2: in-vitro evidence admitted as `target_species_supported`, and species labels that are keyword artefacts (`species.py`; the owner said change nothing else).
 - A1 root: `rag/acquire.py:536` PubMed id parsing (production).
 - A5 phantom round; A9 entity split; A12 `report.md` misstatements; A15 uncited participants; F6; A14.
+
+### `ORCH-743` pilot-003 — config FROZEN before the run (iteration 2's single pilot, the last one) · 2026-09-24
+
+The iteration-2 fixes were approved by the independent code review (`APPROVE_WITH_FINDINGS`) and the bio-audit
+(`SOUND_WITH_FINDINGS`), both at `f9556288`, with **no blocking findings**.
+- G9: `035` (7/7 fail at `ecf6b9a0`).
+- Mining suite 281, SMOKE 508 with the feature off.
+- `rag/`, `llm/`, `app/` and `species.py` are untouched.
+
+| item | value |
+|---|---|
+| code | `experiment/pathway-mining` @ `f9556288`, frozen detached worktree `C:/t/mining-pilot3` |
+| CLI arguments | **identical to pilots 001 and 002** (A. thaliana, `jasmonate biosynthesis`, seeds `12-OPDA` + `AOS`, no `--paper`) |
+| model | `deepseek/deepseek-v4-flash`, temperature 0. The new extraction defaults: `max_tokens` 12,000, request timeout 360 s, `max_passages_per_call` 5 |
+| budgets | branch defaults, unchanged (150 discovered, 40 processed, 200 calls, $5 estimated, 3,600 s) |
+| process | one `bounded_run.py` job, tracked background plus a Monitor. **Wrapper 7,200 s** (was 4,200): a batched call with the 360 s timeout and client retries can outlast the between-rung wall-clock check. `max_wall_clock_seconds` is unchanged |
+
+**One run**, reported whatever it produces. **Declared risks:**
+- the 5-passage / 12k sizing is unproven on a reasoning provider;
+- OpenRouter provider routing is unpinned, and fixing it needs an `llm/` change, out of scope;
+- `max_llm_calls` may bind before `max_papers_processed`.
+
+**Audit watch items** (from the approving bio-audit):
+1. The evidence grade of every admitted reaction: in planta vs recombinant (B-2 is still open).
+2. Participant support: each admitted reaction needs a cited passage naming its substrate and product (IT2-N1).
+3. Same-paper batch merges that overwrote a more conservative species state (IT2-N2).
+4. The identity of every NCBI paper, every "full text refused" note, and titles under two ids (IT2-N3).
+5. Every rescue, with its matched term and the organisms its title names.
+6. `verbatim_cited_span` enzymes and genes.
+7. Papers stopped after k of n batches.
+8. Background / review-level passages.
+
+**Registered, NOT in scope** (both non-blocking for this pilot, but required before any scale-up): IT2-N1 (participant
+citation not enforced at admission) and IT2-N2 (last-writer-wins species state across batches).
