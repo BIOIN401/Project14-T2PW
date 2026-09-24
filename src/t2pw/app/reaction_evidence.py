@@ -5,8 +5,10 @@ PRESENTATION ONLY. Everything here is read from a run's EXISTING artifacts --
 ``removed_entity_report.json`` (the strict-quarantine set written by
 ``strict_quarantine.write_quarantine_artifacts``), ``final_mapped.json`` (the
 canonical payload, ``batch.driver._add_identity_artifacts``, including its
-``quarantined_locked_reactions``: locked reactions removed upstream of strict
-quarantine) and the first record of ``LEG_TRACE.jsonl`` for the paper id. Nothing
+``quarantined_locked_reactions`` record, which ``pipeline.filter_unresolvable_reactions``,
+``process_normalizer.dedupe_processes`` and strict quarantine all append to; a row
+from it is labelled by that record name, never by a guessed stage) and the first
+record of ``LEG_TRACE.jsonl`` for the paper id. Nothing
 is recomputed, repaired, merged or deleted, and no model, embedding or network
 call is made: this module imports only the standard library and the quarantine
 filename constants.
@@ -44,7 +46,7 @@ JSON_ARTIFACTS = (
 NOT_RECORDED = "Not recorded"
 NONE_RECORDED = "None recorded"
 DUPLICATE_WARNING = "Possible duplicate reaction"
-LOCKED_FILTER = "locked-reaction filter"
+LOCKED_RECORD = "final payload quarantined_locked_reactions"
 
 #: Identifier fields shown verbatim, by their payload key, so nothing is relabelled.
 _ID_FIELDS = (
@@ -270,8 +272,10 @@ def build_report(artifacts: Mapping[str, Any], *, payload_source: str = FINAL_MA
                 }
             )
 
-    # Locked (paper-extracted) reactions removed UPSTREAM of strict quarantine are
-    # recorded only in the payload. A lock strict quarantine already lists is shown once.
+    # The payload's quarantined_locked_reactions record has three writers (the
+    # locked-reaction filter, dedupe_processes, strict quarantine); the entry's own
+    # action / quarantine_stage, when recorded, is the only stage shown. A lock
+    # strict quarantine already lists is shown once.
     locked_records = payload.get("quarantined_locked_reactions")
     strict_locks = {row["lock_id"] for row in strict_rows or [] if row["lock_id"]}
     locked_rows: List[Dict[str, Any]] = []
@@ -291,7 +295,7 @@ def build_report(artifacts: Mapping[str, Any], *, payload_source: str = FINAL_MA
                 fields.append((label, _text(entry[key])))
         locked_rows.append(
             {
-                "source": LOCKED_FILTER,
+                "source": LOCKED_RECORD,
                 "name": _text(entry.get("reaction_name") or original.get("name")),
                 "pointer": f"json_pointer {_text(entry['json_pointer'])}" if _text(entry.get("json_pointer")) else "",
                 "lock_id": lock_id,
@@ -307,7 +311,7 @@ def build_report(artifacts: Mapping[str, Any], *, payload_source: str = FINAL_MA
     quarantined: Optional[List[Dict[str, Any]]] = None
     if strict_rows is not None or isinstance(locked_records, list):
         quarantined = [*(strict_rows or []), *locked_rows]
-    locked_line = f"From final payload quarantined_locked_reactions ({LOCKED_FILTER}): "
+    locked_line = f"From {LOCKED_RECORD}: "
     if not isinstance(locked_records, list):
         locked_line += NOT_RECORDED
     else:

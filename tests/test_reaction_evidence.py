@@ -146,7 +146,7 @@ def test_missing_optional_artifacts_read_not_recorded(tmp_path):
     title = "QUARANTINED / REJECTED (0)"
     assert (
         f"{title}\n{'-' * len(title)}\nFrom quarantine_report.json quarantined: 0\n"
-        f"From final payload quarantined_locked_reactions (locked-reaction filter): {NOT_RECORDED}\n\nNone recorded\n"
+        f"From final payload quarantined_locked_reactions: {NOT_RECORDED}\n\nNone recorded\n"
     ) in text
 
     # Unreadable JSON is treated as absent, not as a crash.
@@ -336,14 +336,18 @@ def test_trimmed_bundle_renders_like_its_committed_leg(tmp_path, name):
 
 
 # 14 ------------------------------------------------------------------------
-def test_locked_reactions_removed_upstream_are_listed_with_reason_and_evidence(tmp_path):
-    """B1: final_mapped.json quarantined_locked_reactions is a removal record too."""
+def test_payload_quarantined_locked_reactions_are_listed_with_reason_and_evidence(tmp_path):
+    """B1: final_mapped.json quarantined_locked_reactions is a removal record too.
+
+    RV742b-B1: rows are labelled by that record name, never by a writer stage the
+    entry does not record; these four carry the writer's recorded action.
+    """
 
     leg = _bundle_leg(tmp_path, "lipid_a_strict")
     report = _report(leg)
     text = render_text(report)
     on_disk = set(_all_strings(json.loads((FIXTURES / "lipid_a_strict.bundle.json").read_text(encoding="utf-8"))))
-    locked = {row["name"]: row for row in report["quarantined"] if row["source"] == "locked-reaction filter"}
+    locked = {row["name"]: row for row in report["quarantined"] if row["source"] == "final payload quarantined_locked_reactions"}
 
     expected = {
         "LpxC reaction": ("rxn_lock_003", "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety"),
@@ -357,17 +361,19 @@ def test_locked_reactions_removed_upstream_are_listed_with_reason_and_evidence(t
         assert (row["lock_id"], row["reason"]) == (lock, "coarse_grained_same_entity_transformation")
         assert row["evidence"][0] == first_quote and set(row["evidence"]) <= on_disk
         block = _quarantined_block(text, name)
-        assert "[locked-reaction filter; json_pointer " in block and f"lock {lock}]" in block
+        assert "[final payload quarantined_locked_reactions; json_pointer " in block and f"lock {lock}]" in block
         assert "Reason: coarse_grained_same_entity_transformation" in block
         assert "Action: quarantined_from_active_reactions" in block and f'1. "{first_quote}"' in block
 
+    assert "locked-reaction filter" not in text
+
     # LpxL / LpxM are in BOTH records: listed once, from strict quarantine, and the
-    # locked-filter count says so.
+    # payload-record count says so.
     assert [r["name"] for r in report["quarantined"]].count("LpxL reaction") == 1
     assert [r["name"] for r in report["quarantined"]].count("LpxM reaction") == 1
     assert "QUARANTINED / REJECTED (15)" in text
     assert (
-        "From final payload quarantined_locked_reactions (locked-reaction filter): 6 "
+        "From final payload quarantined_locked_reactions: 6 "
         "(2 already listed from quarantine_report.json by lock id: rxn_lock_007, rxn_lock_008)"
     ) in text
 
