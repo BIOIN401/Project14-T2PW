@@ -44,6 +44,7 @@ import collections
 import importlib.util
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
@@ -411,8 +412,24 @@ def _usable(value: Any) -> bool:
     return value not in (None, "", 0) and str(value).strip().casefold() not in ("unknown", "none")
 
 
+REFERENCE_TABLES = ("data/id_mapping_cache.json", "data/enrichment_cache.json", "data/pathwhiz_id_db.json")
+
+
+def _committed_table(root: Path, rel: str) -> Tuple[str, Any]:
+    """``(blob id, parsed JSON)`` of ``rel`` as committed at HEAD. The working-tree copy
+    is never read: the two caches are rewritten by every pipeline run and never
+    committed, so reading them from disk would make the ID numbers depend on local
+    state (review finding B-R2-1). A table missing at HEAD raises; it is not skipped."""
+
+    blob = subprocess.run(["git", "rev-parse", f"HEAD:{rel}"], cwd=root, capture_output=True,
+                          text=True, check=True).stdout.strip()
+    data = subprocess.run(["git", "cat-file", "blob", blob], cwd=root, capture_output=True, check=True).stdout
+    return blob, json.loads(data.decode("utf-8"))
+
+
 def build_reference_index(repo_root: Path) -> Dict[str, Any]:
-    """Reference names per identifier, from COMMITTED tables only, split by authority.
+    """Reference names per identifier, from the tables AS COMMITTED AT HEAD (git blobs,
+    never the working-tree copies; ``tables`` records each blob id), split by authority.
 
     ``independent[(kind, id)]`` -- a record fetched or curated BY that identifier:
     ``data/pathwhiz_id_db.json`` (keyed the way payloads key it: ``pathbank_compound_id``
@@ -448,10 +465,11 @@ def build_reference_index(repo_root: Path) -> Dict[str, Any]:
                 idx[_norm_id(kind, value)].add(n.strip())
 
     root = Path(repo_root)
-    try:
-        cache = json.loads((root / "data/id_mapping_cache.json").read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        cache = {}
+    tables: Dict[str, str] = {}
+    loaded: Dict[str, Any] = {}
+    for rel in REFERENCE_TABLES:
+        tables[rel], loaded[rel] = _committed_table(root, rel)
+    cache = loaded["data/id_mapping_cache.json"]
     for section in cache.values() if isinstance(cache, dict) else ():
         for entry in section.values() if isinstance(section, dict) else ():
             for c in (entry or {}).get("candidates") or ():
@@ -465,10 +483,7 @@ def build_reference_index(repo_root: Path) -> Dict[str, Any]:
                     add(mapper, str(c["database"]).lower(), c["id"], c.get("name"))
                 for kind, value in (c.get("mapped_ids") or {}).items():
                     add(mapper, kind, value, *names)
-    try:
-        enr = json.loads((root / "data/enrichment_cache.json").read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        enr = {}
+    enr = loaded["data/enrichment_cache.json"]
     for key, rec in ((enr.get("proteins") or {}).items() if isinstance(enr, dict) else ()):
         parsed = (rec or {}).get("parsed") or {}
         if key.startswith("uniprot:") and parsed.get("status") == "ok":
@@ -478,10 +493,7 @@ def build_reference_index(repo_root: Path) -> Dict[str, Any]:
         if isinstance(rec, dict) and rec.get("status") == "ok" and ":" in key:
             kind, value = key.split(":", 1)
             add(indep, kind, value, rec.get("primary_name"), *(rec.get("synonyms") or ()))
-    try:
-        pw = json.loads((root / "data/pathwhiz_id_db.json").read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        pw = {}
+    pw = loaded["data/pathwhiz_id_db.json"]
     pw = pw if isinstance(pw, dict) else {}
 
     def declare(members: List[Tuple[str, str]]) -> None:
@@ -508,7 +520,8 @@ def build_reference_index(repo_root: Path) -> Dict[str, Any]:
         if any(_usable((proteins.get(str(p)) or {}).get("uniprot")) for p in rec.get("protein_ids") or ()):
             for kind in ("pathbank_complex_id", "pathbank_protein_complex_id"):
                 add(indep, kind, pw_id, rec.get("name"))
-    return {"independent": dict(indep), "mapper_cache": dict(mapper), "same_record": dict(same)}
+    return {"independent": dict(indep), "mapper_cache": dict(mapper), "same_record": dict(same),
+            "tables": tables}
 
 
 def _declared_keys(name: Any) -> Set[str]:

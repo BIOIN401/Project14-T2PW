@@ -1,6 +1,6 @@
 # Evaluation v2 (ORCH-742c) — definitions, gold labels, and how to reproduce
 
-**A NEW, separately versioned evaluator (`eval-v2.0`, with the ORCH-742c repair-round-1 corrections B1/B2 described in §§ 2–4).** It re-runs nothing and edits nothing: T-107,
+**A NEW, separately versioned evaluator (`eval-v2.0`, with the ORCH-742c repair-round-1 corrections B1/B2 described in §§ 2–4 and the repair-round-2 corrections: ID reference tables read from the commit, § 4; PMC12657337 PoxB off-pathway label, § 1).** It re-runs nothing and edits nothing: T-107,
 T-108, T-109 and every committed benchmark report keep their meaning. These numbers come from a different
 instrument and are **not** a re-score, replacement or correction of any earlier result. Production is
 frozen (D-102); no production module imports this code (`tests/test_eval_v2_metrics.py::
@@ -45,9 +45,19 @@ the target paper only; it never by itself makes an unmatched row "invented"** (s
 | case | species | in-scope | off-pathway | summaries | scope in one line |
 |---|---|---|---|---|---|
 | PMC12096016 | *E. coli* | 5 (EntC, EntB, EntA, EntE, EntF) | 4 (MenD, LDH assay, TolC secretion, Fe chelation) | 2 | DHB + assembly arms; ArCP loading and EntD phosphopantetheinylation excluded as protein-bound states (the D-091 audit's rule for ThDP adducts) |
-| PMC12657337 | *E. coli* | 3 (HepPPS, MenA, UbiE) | 2 (Idi IPP→FPP as stated, acs) | 0 | the paper's own "MK-7 pathway" module (Fig. 1); MVA/precursor modules stated only by enzyme names |
+| PMC12657337 | *E. coli* | 3 (HepPPS, MenA, UbiE) | 3 (Idi IPP→FPP as stated, acs, PoxB pyruvate→acetate) | 0 | the paper's own "MK-7 pathway" module (Fig. 1); MVA/precursor modules stated only by enzyme names |
 | PMC12312563 | *L. monocytogenes* | 1 (MenD) | 0 | 0 | adopts the D-091 audit biology (upheld by D-092), re-verified on the fetched text: MenD 133, other Men symbols 0, free chorismate 0 |
 | PMC12421875 | *L. lactis* | 9 (MenF, D, H, C, E, B, I, A, G) | 3 (biosensor Fe reduction, ferrozine, DHNA efflux) | 1 | MenH–MenI stated through the steady-state model's letter-assigned equations (5)–(11); MenG's wrong verb noted, its DMK→MK pair scored |
+
+**Gold correction in repair round 2 (bio-audit finding B-1, `gold_data_defect`).** PMC12657337 as first
+submitted omitted a conversion the paper states — "knockout of the PoxB gene reduces acetate accumulation, a
+byproduct of pyruvate oxidase activity" (product named; substrate named inside the enzyme name, which the
+Fig. 1 legend also gives as "PoxB, pyruvate oxidase") — and its audit string wrongly called PoxB a legend
+abbreviation only. It is now off-pathway `O3` (pyruvate → acetate, PoxB/pyruvate oxidase), and the audit
+string is corrected. On the committed corpus exactly one row moved: `runs/2026-07-28_2122` PMC12657337
+strict (fallback) row 9, pyruvate → acetate, from `unsupported` to `paper_stated_off_pathway`. Fallback
+unsupported rate 17.0% (63/370) → 16.8% (62/370), upper bound 33.5% → 33.2%, off-pathway rows 33 → 34;
+precision (199/310), recall and F1 are unchanged, and canonical is unchanged.
 
 **Not completed, and why.** PMC12782028: MSMO1's catalysis is stated on a compound *class* ("4,4-dimethyl and
 4alpha-methylsterols") with no named product, which a two-sided signature cannot represent honestly.
@@ -146,6 +156,19 @@ only records with an external identifier (KEGG/ChEBI/HMDB/PubChem/
 DrugBank for a compound, a UniProt accession for a protein, member proteins for a complex) are used — the rest
 would convict correct mappings.
 
+**The reference tables are read from the commit, never from the working tree (repair of review finding
+B-R2-1).** `data/id_mapping_cache.json` and `data/enrichment_cache.json` are mutable runtime caches: every
+pipeline run rewrites them and the sprint never commits them. `build_reference_index` therefore reads all
+three tables as committed at HEAD (`git rev-parse HEAD:<path>` + `git cat-file blob`) and the report records
+each blob id under `mapped_id_correctness.reference_tables` (today `id_mapping_cache` 02b18edd,
+`enrichment_cache` a84eb220, `pathwhiz_id_db` 75d2e5f4). As first submitted it read the working-tree copies:
+the same committed legs judged against the primary checkout's dirty caches gave 1186 correct / 117
+wrong_identity instead of 1184 / 119 (G11 `ORCH-742c/25`); read from the commit, the same checkout gives
+1184 / 119 (`ORCH-742c/26`). Consequence for a new run: its mappings are judged against the committed
+snapshot (plus each payload's own enrichment sub-records and `mapping_meta.candidates`), not against the
+caches that run rewrote, so an identifier the snapshot lacks is `no_reference`. Refreshing the snapshot
+means committing a cache, which is the product owner's call.
+
 **What the per-identifier rule changed on the committed corpus:** all 102 earlier `wrong_identity` flags remain
 and 17 are new. Three new ones are independent and genuine — `DHB` mapped to KEGG C19557, whose own KEGG record
 is Treosulfan (2 legs), and `ALAS2` carrying DrugBank DB00114, pyridoxal 5'-phosphate; the other 14 rest on the
@@ -231,7 +254,12 @@ PYTHONPATH=<tree>/src python -m t2pw.bench.eval_v2.fetch --out <dir outside the 
 ```
 
 `tests/test_eval_v2_report.py` re-runs `evaluate` and requires byte-for-byte agreement with the committed
-report, so every number in `SAMPLE_REPORT.md` is reproducible from git-tracked artifacts.
+report. Every number in `SAMPLE_REPORT.md` is reproducible from the commit: run artifacts are read at their
+git-tracked paths, and the three ID reference tables (mutable runtime caches in any working tree) are read as
+committed at HEAD, with their blob ids recorded in the report. A dirty cache in an integration checkout is
+therefore never read; the test first checks the recorded blob ids against HEAD, so a cache committed after the
+report was generated fails it with an explicit "regenerate" message. The report is pinned to the committed corpus: a
+merge that adds committed runs for these papers, or `final_mapped.json` legs, also requires regenerating it.
 
 ## 10. Known unevaluated areas
 

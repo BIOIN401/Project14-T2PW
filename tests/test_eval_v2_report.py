@@ -4,14 +4,17 @@ reproducible from git-tracked artifacts alone.
 Re-runs the offline evaluator over the committed run trees and requires the result to
 equal ``docs/evaluation_v2/sample_report.json`` exactly, and the rendered markdown to
 equal ``SAMPLE_REPORT.md``. The live-retrieval section is read from its own committed
-JSON (it needs an embedding endpoint, so it is not re-measured here). New capability:
-no base-SHA failure applies (G9).
+JSON (it needs an embedding endpoint, so it is not re-measured here). The mapped-ID
+reference tables are read as committed at HEAD (git blobs), never from the working tree,
+so the dirty runtime caches of an integration checkout cannot move a number (review
+finding B-R2-1, repair 2). New capability: no base-SHA failure applies (G9).
 """
 
 from __future__ import annotations
 
 import json
 import re
+import subprocess
 from pathlib import Path
 
 from t2pw.bench.eval_v2.report import evaluate, render_markdown
@@ -22,6 +25,10 @@ OUT = ROOT / "docs" / "evaluation_v2"
 
 def test_committed_sample_report_is_reproducible_from_tracked_artifacts():
     committed = json.loads((OUT / "sample_report.json").read_text(encoding="utf-8"))
+    recorded = committed["mapped_id_correctness"]["reference_tables"]
+    heads = {rel: subprocess.run(["git", "rev-parse", f"HEAD:{rel}"], cwd=ROOT, capture_output=True,
+                                 text=True, check=True).stdout.strip() for rel in recorded}
+    assert recorded == heads, "a reference table was committed after the report was generated: regenerate it"
     live = json.loads((OUT / "retrieval_live.json").read_text(encoding="utf-8"))
     fresh = json.loads(json.dumps(evaluate(ROOT, live), ensure_ascii=False))
     for section in committed:

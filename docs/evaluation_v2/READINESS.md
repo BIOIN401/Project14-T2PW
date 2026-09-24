@@ -13,7 +13,13 @@ authority only for its records that carry an external identifier);
 (4) retrieval-level negative-query rejection is structurally 0% (the production retriever has no score floor
 and normalizes scores per query), and the archived A/B split sees only persisted candidate spans;
 (5) the fallback-embedding cache defect is confirmed and unfixed, so a results run made during an embedding
-outage would silently poison later runs' retrieval.
+outage would silently poison later runs' retrieval; (6) the mapped-ID reference tables
+(`data/id_mapping_cache.json`, `data/enrichment_cache.json`, `data/pathwhiz_id_db.json`) are mutable runtime
+caches that every pipeline run rewrites and the sprint never commits: the evaluator pins them by reading them as
+committed at HEAD and recording each blob id in the report (today 02b18edd / a84eb220 / 75d2e5f4), so a results
+run's mappings are judged against that committed snapshot (plus each payload's own enrichment sub-records and
+mapping candidates), not against the caches the run rewrote; an identifier the snapshot lacks is `no_reference`,
+and refreshing the snapshot means committing a cache, which is the product owner's call.
 
 ## What is ready, with the measured sample (from `SAMPLE_REPORT.md`)
 
@@ -21,11 +27,11 @@ outage would silently poison later runs' retrieval.
 |---|---|---|
 | exhaustive gold for positive cases | 4 cases, 18 in-scope reactions, every quote verified in the fetched text and every in-scope quote in the committed text | PMC12096016 (5), PMC12657337 (3), PMC12312563 (1), PMC12421875 (9) |
 | reaction P / R / F1, two tables (D-093) | ready for those 4 papers | canonical, 26 legs: P 86.0% (117/136), R 96.6% (114/118), F1 91.0%; fallback, 44 legs: P 64.2% (199/310), R 96.2%, F1 77.0% |
-| unsupported-reaction rate | ready; lineage-aware, upper bound reported | canonical 2.8% (4/141, ≤ 6.4%); fallback 17.0% (63/370, ≤ 33.5%, the bound now including 1 `name_conflict` row) |
+| unsupported-reaction rate | ready; lineage-aware, upper bound reported | canonical 2.8% (4/141, ≤ 6.4%); fallback 16.8% (62/370, ≤ 33.2%, the bound including 1 `name_conflict` row; the PoxB gold correction moved 1 row from unsupported to off-pathway) |
 | entity accuracy | ready | canonical substrate 96.5%, product 97.9%, enzyme 100% of matched, species 100% of known (12 unknown) |
 | evidence support | ready | canonical 77.3% of rows carry a verbatim paper quote; fallback 50.8% (119 rows carry only document dumps) |
 | strict vs old matcher | reported side by side on the same rows; a parenthetical's inside never overrides a contradicting outer name (1 `name_conflict` row listed for hand review) | canonical old recall 90.7% vs v2 96.6% (7 rows the old matcher refused on an enzyme-name contradiction); fallback 2 rows credited by old only through congener containment (`DHNA` for `DHNA-CoA`) |
-| mapped-ID correctness | ready as a candidate flag, judged per identifier | 115 canonical legs: 1184 correct (322 on the mapper cache only), 510 unresolved/novel, 119 wrong-identity candidates (47 on the mapper cache only), 17 not evaluable |
+| mapped-ID correctness | ready as a candidate flag, judged per identifier, against the reference tables as committed (blob ids in the report) | 115 canonical legs: 1184 correct (322 on the mapper cache only), 510 unresolved/novel, 119 wrong-identity candidates (47 on the mapper cache only), 17 not evaluable |
 | live retrieval (production retriever, `embedding_mode: api`) | ready | target-quote Recall@1/3/5 16.7% / 22.2% / 44.4%, P@5 8.9%, MRR 0.293; participants-named Recall@5 61.1%, MRR 0.437; negative rejection 0/49 |
 | retrieval vs LLM-use vs admission (A/B/C/D) | ready on archived reports | untruncated 34 legs: A 5, B 2, C 8, admitted 2, D 0 (137 already in Stage 1); truncated 28 legs: B 2, C 4 |
 | chunk provenance | ready | 144/144 live hits and 8,733/8,733 persisted candidates: provenance present, `validate_provenance` ok, valid source reference |

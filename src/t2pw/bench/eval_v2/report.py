@@ -1,7 +1,9 @@
 """Evaluation v2 report CLI (ORCH-742c). EVALUATION-ONLY.
 
-``evaluate``        deterministic, offline: reads ONLY git-tracked run artifacts and
-                    writes a NEW versioned report. Re-running it on the same commit
+``evaluate``        deterministic, offline: reads ONLY git-tracked run artifacts, and
+                    the ID reference tables as committed at HEAD (git blobs; their
+                    working-tree copies are mutable runtime caches and are never read),
+                    and writes a NEW versioned report. Re-running it on the same commit
                     reproduces every number.
 ``live-retrieval``  runs the production retriever (embeddings only, never chat) over
                     the committed paper texts and writes its own JSON, which
@@ -257,9 +259,12 @@ def evaluate(repo: Path, live: Optional[Dict[str, Any]] = None) -> Dict[str, Any
         "evaluator_version": EVALUATOR_VERSION,
         "notice": ("NEW evaluator version. Not a re-score, replacement or correction of T-107, T-108, "
                    "T-109 or any committed benchmark result; those keep their meaning and were not "
-                   "re-run. Every number below is computed from git-tracked artifacts at the commit "
-                   "this file was generated on. 'PWML produced' is not biological correctness and is "
-                   "not reported as such."),
+                   "re-run. Every number below is computed from git-tracked run artifacts at the commit "
+                   "this file was generated on. The mapped-ID reference tables (data/id_mapping_cache.json, "
+                   "data/enrichment_cache.json, data/pathwhiz_id_db.json) are mutable runtime caches; "
+                   "they are read as committed at HEAD, never from the working tree, and their blob ids "
+                   "are recorded under mapped_id_correctness.reference_tables. 'PWML produced' is not "
+                   "biological correctness and is not reported as such."),
         "gold_supplement": {
             "complete_cases": sorted(pid for pid, c in supplement.items() if c.complete),
             "in_scope_reactions": {pid: len(c.reactions) for pid, c in supplement.items()},
@@ -269,7 +274,7 @@ def evaluate(repo: Path, live: Optional[Dict[str, Any]] = None) -> Dict[str, Any
         "rag_archived_failure_split": {"by_population": split_counts, "legs": split_out},
         "rag_live_retrieval": live if live is not None else {
             "status": "not_run", "reason": "no --live-json supplied; retrieval metrics were not measured"},
-        "mapped_id_correctness": {"canonical_legs": id_legs, "counts": dict(idc),
+        "mapped_id_correctness": {"reference_tables": ref["tables"], "canonical_legs": id_legs, "counts": dict(idc),
                                   "counts_resting_on_mapper_cache_only": dict(idc_mapper), "wrong": wrong},
         "ungated_rag_influence_audit": {"summary": leak_summary, "legs": leak_legs, "candidates": leak_rows},
         "reproducibility_metadata": repro,
@@ -320,7 +325,9 @@ def render_markdown(res: Mapping[str, Any], commit: str = "") -> str:
     L += ["## 3. Mapped-ID correctness (every committed canonical leg)", "",
           f"canonical legs: {idc['canonical_legs']}. Each identifier is judged against its own record; "
           "'resting on the mapper cache only' means no independent record (PathWhiz table, KEGG/ChEBI/HMDB/"
-          "UniProt record) decided it.", "",
+          "UniProt record) decided it. Reference tables are read as committed at HEAD (git blob ids: "
+          + ", ".join(f"`{k}` {v[:8]}" for k, v in sorted(idc["reference_tables"].items()))
+          + "), never from the working tree, where the two caches are rewritten by every pipeline run.", "",
           "| verdict | entities | of which resting on the mapper cache only |", "|---|---|---|"]
     for k, v in sorted(idc["counts"].items()):
         L.append(f"| {k} | {v} | {idc['counts_resting_on_mapper_cache_only'].get(k, 0)} |")

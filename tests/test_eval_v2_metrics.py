@@ -218,6 +218,52 @@ def test_a_verdict_resting_only_on_the_mapper_cache_is_marked_non_independent():
     assert res["counts"] == {"wrong_identity": 1} and res["wrong"][0]["independent"] is False
 
 
+def test_reference_tables_are_read_from_the_commit_not_the_working_tree(tmp_path):
+    """NEW ACCEPTANCE TEST, regression fixture for review finding B-R2-1 (ORCH-742c
+    repair 2). data/id_mapping_cache.json and data/enrichment_cache.json are rewritten by
+    every pipeline run and never committed, so the reference is read from HEAD: a dirty
+    working-tree copy must not move an ID verdict, and the blob ids are recorded."""
+    git = ["git", "-C", str(tmp_path)]
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    (tmp_path / "data").mkdir()
+
+    def write(mapper_name, kegg_name):
+        (tmp_path / "data/id_mapping_cache.json").write_text(json.dumps(
+            {"compounds": {"x": {"candidates": [{"name": mapper_name, "pathbank_compound_id": 9}]}}}))
+        (tmp_path / "data/enrichment_cache.json").write_text(json.dumps(
+            {"compounds": {"kegg:C00019": {"status": "ok", "primary_name": kegg_name}}}))
+        (tmp_path / "data/pathwhiz_id_db.json").write_text("{}")
+
+    write("Glycine", "S-Adenosyl-L-methionine")
+    subprocess.run(git + ["add", "data"], check=True)
+    subprocess.run(git + ["-c", "user.email=eval@t2pw.local", "-c", "user.name=ORCH-742c",
+                          "commit", "-q", "-m", "tables"], check=True)
+    write("Serine", "Oxoglutaric acid")  # the working tree after a pipeline run
+
+    ref = R.build_reference_index(tmp_path)
+    assert ref["mapper_cache"][("pathbank_compound_id", "9")] == {"Glycine"}
+    assert ref["independent"][("kegg", "C00019")] == {"S-Adenosyl-L-methionine"}
+    sam = {"entities": {"compounds": [{"name": "S-adenosyl-L-methionine", "mapped_ids": {"kegg": "C00019"}}]}}
+    assert R.id_correctness(sam, ref)["counts"] == {"correct_identity": 1}
+    heads = {rel: subprocess.run(git + ["rev-parse", f"HEAD:{rel}"], capture_output=True, text=True,
+                                 check=True).stdout.strip() for rel in R.REFERENCE_TABLES}
+    assert ref["tables"] == heads
+
+
+def test_poxb_pyruvate_to_acetate_is_paper_stated_off_pathway():
+    """NEW ACCEPTANCE TEST, regression fixture for bio-audit finding B-1 (ORCH-742c
+    repair 2): PMC12657337 states 'knockout of the PoxB gene reduces acetate
+    accumulation, a byproduct of pyruvate oxidase activity'. A row for it is paper
+    content off the MK-7 module, never unsupported and never a true positive."""
+    from t2pw.bench.eval_v2.gold import load_supplement
+
+    case = load_supplement()["PMC12657337"]
+    row = {"inputs": ["pyruvate"], "outputs": ["acetate"], "enzymes": ["pyruvate oxidase"]}
+    res = R.score_leg(case, {"processes": {"reactions": [row]}}, [], None)
+    assert res["rows"][0]["class"] == R.OFF and res["rows"][0]["gold_ids"] == ["O3"]
+    assert res["table1_paper_extraction"]["true_positive_rows"] == 0
+
+
 def test_heptanoyl_hepp_is_a_name_conflict_not_a_true_positive():
     """NEW ACCEPTANCE TEST, regression fixture for review finding B2 (ORCH-742c repair 1),
     on the committed PMC12657337 supplement case."""

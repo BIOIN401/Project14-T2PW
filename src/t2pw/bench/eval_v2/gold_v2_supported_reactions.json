@@ -459,7 +459,7 @@
     "PMC12657337": {
       "supported_reactions_complete": true,
       "species": "Escherichia coli",
-      "scope": "The paper's own 'MK-7 pathway' module (Fig. 1 divides MK-7 biosynthesis into the MVA pathway, DHNA pathway and MK-7 pathway modules): HepPPS, MenA, UbiE, run in engineered E. coli. The DHNA module is named but no DHNA-forming reaction is stated in the text. Precursor-supply conversions the paper states (Idi, acs) are listed as off-pathway. Two catalysts are B. subtilis-derived genes expressed in E. coli; the reaction organism is E. coli (pinned_v1 export_rationale).",
+      "scope": "The paper's own 'MK-7 pathway' module (Fig. 1 divides MK-7 biosynthesis into the MVA pathway, DHNA pathway and MK-7 pathway modules): HepPPS, MenA, UbiE, run in engineered E. coli. The DHNA module is named but no DHNA-forming reaction is stated in the text. Precursor-supply and central-carbon conversions the paper states (Idi, acs, PoxB) are listed as off-pathway. Two catalysts are B. subtilis-derived genes expressed in E. coli; the reaction organism is E. coli (pinned_v1 export_rationale).",
       "source": {
         "pmcid": "PMC12657337",
         "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12657337/fullTextXML",
@@ -468,7 +468,7 @@
         "text_sha256": "c6b706f14707672bec1db55624c8cb94dd1c7dd2a376f9df47dde7ce280c97e1",
         "text_chars": 57863
       },
-      "audit": "Read in full to the reference list. Swept for convert|catalyz|methylat|conjugat|produce|yield|to form|isomer and every Men/Idi/ispA/MetK/SAM token. Fig. 1's legend lists MVA-module enzyme names (MvaE, MvaS, MVK, PMK, MVD, ispA, MetK, PoxB) and SAM/SAH as abbreviations only; the figure image is not text and no conversion by them is stated.",
+      "audit": "Read in full to the reference list. Swept for convert|catalyz|methylat|conjugat|produce|yield|to form|isomer and every Men/Idi/ispA/MetK/SAM token. Fig. 1's legend lists MVA-module enzyme names (MvaE, MvaS, MVK, PMK, MVD, ispA, MetK) and SAM/SAH as abbreviations only; the figure image is not text and no conversion by them is stated. PoxB is NOT legend-only: the Results state 'knockout of the PoxB gene reduces acetate accumulation, a byproduct of pyruvate oxidase activity' (product acetate named; substrate pyruvate named in the enzyme name, which the legend also gives as 'PoxB, pyruvate oxidase'), listed as off-pathway O3 (repair round 2, bio-audit finding B-1; the first audit string wrongly called PoxB an abbreviation only).",
       "reactions": [
         {
           "id": "R1",
@@ -656,6 +656,34 @@
           },
           "quote": "We also overexpressed acetyl-CoA synthetase ( acs ), an enzyme that converts acetate into acetyl-CoA",
           "reason": "central-carbon precursor supply for the MVA module"
+        },
+        {
+          "id": "O3",
+          "kind": "precursor_supply",
+          "label": "PoxB: pyruvate -> acetate (pyruvate oxidase)",
+          "inputs": [
+            {
+              "name": "pyruvate",
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "acetate",
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "PoxB",
+            "aliases": [
+              "pyruvate oxidase"
+            ]
+          },
+          "quote": "knockout of the PoxB gene reduces acetate accumulation, a byproduct of pyruvate oxidase activity",
+          "supporting_quotes": [
+            "PoxB, pyruvate oxidase"
+          ],
+          "reason": "acetate overflow from pyruvate oxidase; central-carbon side reaction knocked out to improve precursor supply, not the MK-7 module"
         }
       ],
       "summary_statements": [],

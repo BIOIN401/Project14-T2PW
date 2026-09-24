@@ -1,6 +1,6 @@
 {
  "evaluator_version": "eval-v2.0 (ORCH-742c)",
- "notice": "NEW evaluator version. Not a re-score, replacement or correction of T-107, T-108, T-109 or any committed benchmark result; those keep their meaning and were not re-run. Every number below is computed from git-tracked artifacts at the commit this file was generated on. 'PWML produced' is not biological correctness and is not reported as such.",
+ "notice": "NEW evaluator version. Not a re-score, replacement or correction of T-107, T-108, T-109 or any committed benchmark result; those keep their meaning and were not re-run. Every number below is computed from git-tracked run artifacts at the commit this file was generated on. The mapped-ID reference tables (data/id_mapping_cache.json, data/enrichment_cache.json, data/pathwhiz_id_db.json) are mutable runtime caches; they are read as committed at HEAD, never from the working tree, and their blob ids are recorded under mapped_id_correctness.reference_tables. 'PWML produced' is not biological correctness and is not reported as such.",
  "gold_supplement": {
   "complete_cases": [
    "PMC12096016",
@@ -16,7 +16,7 @@
   },
   "off_pathway_reactions": {
    "PMC12096016": 4,
-   "PMC12657337": 2,
+   "PMC12657337": 3,
    "PMC12312563": 0,
    "PMC12421875": 3
   }
@@ -94,14 +94,14 @@
      184
     ],
     "reaction_f1": 0.77,
-    "unsupported_rate": 0.1703,
+    "unsupported_rate": 0.1676,
     "unsupported_num_den": [
-     63,
+     62,
      370
     ],
-    "unsupported_rate_upper_bound": 0.3351,
+    "unsupported_rate_upper_bound": 0.3324,
     "external_rag_supported_rows": 0,
-    "paper_stated_off_pathway_rows": 33,
+    "paper_stated_off_pathway_rows": 34,
     "partial_match_rows": 9,
     "name_conflict_rows": 1,
     "paper_stated_summary_rows": 5,
@@ -1026,13 +1026,13 @@
      "duplicate_rows_collapsed": 0,
      "row_classes": {
       "target_paper_supported": 8,
-      "paper_stated_off_pathway": 4,
+      "paper_stated_off_pathway": 5,
       "paper_stated_summary": 0,
       "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
-      "unsupported": 8
+      "unsupported": 7
      },
      "table1_paper_extraction": {
       "rows_claimed_as_paper_extraction": 21,
@@ -1049,13 +1049,13 @@
      },
      "table2_final_support": {
       "retained_unique": 21,
-      "unsupported": 8,
-      "unsupported_rate": 0.381,
+      "unsupported": 7,
+      "unsupported_rate": 0.3333,
       "indeterminate_external": 0,
-      "unsupported_rate_upper_bound": 0.381,
+      "unsupported_rate_upper_bound": 0.3333,
       "external_rag_supported": 0,
-      "paper_stated_off_pathway": 4,
-      "off_pathway_rate": 0.1905,
+      "paper_stated_off_pathway": 5,
+      "off_pathway_rate": 0.2381,
       "paper_stated_summary": 0,
       "partial_match": 1,
       "name_conflict": 0
@@ -11587,6 +11587,11 @@
   "corpus_source": "latest committed 01_source_text.txt per gold paper (git ls-files)"
  },
  "mapped_id_correctness": {
+  "reference_tables": {
+   "data/id_mapping_cache.json": "02b18edd9e83be2720019f449fd3608496eb0232",
+   "data/enrichment_cache.json": "a84eb2202741f4a0d66de1f4001e5c2157958dbf",
+   "data/pathwhiz_id_db.json": "75d2e5f4a1a8c794264c1dad891594778f5b033d"
+  },
   "canonical_legs": 115,
   "counts": {
    "correct_identity": 1184,
