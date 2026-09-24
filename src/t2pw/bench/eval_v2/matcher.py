@@ -27,9 +27,14 @@ do not cover must be a declared gold alias.
 
 Two reading rules for the CANDIDATE side only, both documented where used:
 
-* a trailing parenthetical is an alternative name of the same entity -- payloads write
-  ``oxidoreductase (entA)`` and ``2,3-dihydroxybenzoic acid (2,3-DHB)`` -- so the
-  outside and inside parts are tried separately, each by equality;
+* a trailing parenthetical (``2,3-dihydroxybenzoic acid (2,3-DHB)``) may CORROBORATE
+  the outer name, never override it: a name credits a term when the whole or the OUTER
+  part matches, each by equality. When only the INSIDE matches while a non-empty outer
+  name does not, the verdict is ``conflict`` (:func:`name_verdict`), never a match --
+  ``heptanoyl pyrophosphate (HepPP)`` is a C7 acyl diphosphate, not heptaprenyl
+  diphosphate, whatever its abbreviation says (ORCH-742c repair B2). The evaluator
+  cannot tell a generic outer name (``oxidoreductase (entA)``) from a contradicting
+  one (``isochorismate synthase (EntB)``), so both go to hand review;
 * for ENZYMES only, a trailing word ``complex`` is dropped and a protein complex is
   also represented by its component names and gene names (from the payload's own
   ``components`` list), because the enzyme question is "which protein catalyses
@@ -59,16 +64,36 @@ def strict_key(value: Any) -> str:
 
 
 def candidate_keys(value: Any) -> Set[str]:
-    """Keys for one payload name: the whole, and each side of a trailing parenthetical."""
+    """Keys that may CREDIT one payload name: the whole, and the outer part of a
+    trailing parenthetical. The inside is never a crediting key: see :func:`name_verdict`."""
 
     text = str(value if value is not None else "").strip()
     keys = {strict_key(text)}
     m = _PAREN.match(text)
     if m:
         keys.add(strict_key(m.group("outer")))
-        keys.add(strict_key(m.group("inner")))
     keys.discard("")
     return keys
+
+
+def inner_key(value: Any) -> str:
+    """Key of a trailing parenthetical's inside when a non-empty outer name stands
+    before it, else ``''``."""
+
+    m = _PAREN.match(str(value if value is not None else "").strip())
+    return strict_key(m.group("inner")) if m and strict_key(m.group("outer")) else ""
+
+
+def name_verdict(candidate: Any, wanted: Set[str]) -> str:
+    """``match`` | ``conflict`` | ``''`` for one payload name against a set of keys.
+
+    ``conflict``: only the parenthetical's inside is in ``wanted`` and the outer name is
+    not -- the abbreviation would credit a name the outer text contradicts."""
+
+    if candidate_keys(candidate) & wanted:
+        return "match"
+    inner = inner_key(candidate)
+    return "conflict" if inner and inner in wanted else ""
 
 
 def term_keys(name: str, aliases: Iterable[str] = ()) -> Set[str]:
@@ -179,8 +204,10 @@ __all__ = [
     "complex_index",
     "enzyme_keys",
     "enzyme_names",
+    "inner_key",
     "lenient_matches",
     "matches",
+    "name_verdict",
     "participant_names",
     "mentions",
     "strict_key",

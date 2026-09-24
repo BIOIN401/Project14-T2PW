@@ -1,0 +1,81 @@
+{
+  "label": "b1b2-fixtures-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-c",
+    "\"\"\"B1/B2 regression fixtures as a standalone behavioural probe, using ONLY each tree's\nown public API (build_reference_index, id_correctness, score_leg), so the same script\nruns against the previous tip 6046f6b5 and the repaired tip. Exit 0 iff the repaired\nbehaviour holds. Data tables are read from the worktree C:/t/eval (unchanged by the lane).\"\"\"\nimport json\nimport sys\nfrom pathlib import Path\n\nimport t2pw.bench.eval_v2.reactions as R\nfrom t2pw.bench.eval_v2.gold import load_supplement\n\nprint(\"reactions module:\", R.__file__)\nref = R.build_reference_index(Path(\"C:/t/eval\"))\nsam = {\"entities\": {\"compounds\": [{\"name\": \"S-adenosyl-L-methionine\",\n                                   \"mapped_ids\": {\"kegg\": \"C00019\", \"pathbank_compound_id\": \"134\"}}]}}\nb1 = R.id_correctness(sam, ref)\nb1_verdict = b1[\"counts\"]\nb1_ids = [w.get(\"contradicting_ids\") for w in b1[\"wrong\"]]\ncase = load_supplement()[\"PMC12657337\"]\nrow = lambda outs: {\"inputs\": [\"FPP\"], \"outputs\": outs, \"enzymes\": [{\"entity\": \"HepPPS\"}]}  # noqa: E731\nbad = R.score_leg(case, {\"processes\": {\"reactions\": [row([\"heptanoyl pyrophosphate (HepPP)\"])]}}, [], None)[\"rows\"][0]\ngood = R.score_leg(case, {\"processes\": {\"reactions\": [row([\"heptaprenyl diphosphate (HepPP)\"])]}}, [], None)[\"rows\"][0]\nout = {\"B1_sam_on_pathwhiz_134\": {\"counts\": b1_verdict, \"contradicting_ids\": b1_ids},\n       \"B2_heptanoyl_hepp\": {\"class\": bad[\"class\"], \"gold_ids\": bad[\"gold_ids\"]},\n       \"B2_control_heptaprenyl\": {\"class\": good[\"class\"], \"gold_ids\": good[\"gold_ids\"]}}\nprint(json.dumps(out, indent=1))\nok = (b1_verdict == {\"wrong_identity\": 1} and b1_ids == [[\"pathbank_compound_id:134\"]]\n      and bad[\"class\"] != \"target_paper_supported\"\n      and good[\"class\"] == \"target_paper_supported\" and good[\"gold_ids\"] == [\"R1\"])\nprint(\"REPAIRED BEHAVIOUR HOLDS\" if ok else \"REPAIRED BEHAVIOUR DOES NOT HOLD\")\nsys.exit(0 if ok else 1)"
+  ],
+  "cwd": "C:/t/eval",
+  "started_at": "2026-09-24T00:32:54+00:00",
+  "finished_at": "2026-09-24T00:32:54+00:00",
+  "duration_seconds": 0.7277542999945581,
+  "timeout_seconds": 200.0,
+  "root_pid": 783752,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 783764,
+      "name": "python.exe",
+      "ppid": 783752
+    }
+  ],
+  "descendants_terminated": [
+    783764
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 626796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 627152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 742016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 745256,
+      "name": "python.exe"
+    },
+    {
+      "pid": 784788,
+      "name": "python.exe"
+    },
+    {
+      "pid": 784812,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-742c\\20-b1b2-fixtures-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\eval",
+    "repo_head": "6046f6b55e237ee75b0a1acf5ec26742bd47a2b0",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

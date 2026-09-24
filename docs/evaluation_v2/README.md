@@ -1,6 +1,6 @@
 # Evaluation v2 (ORCH-742c) — definitions, gold labels, and how to reproduce
 
-**A NEW, separately versioned evaluator (`eval-v2.0`).** It re-runs nothing and edits nothing: T-107,
+**A NEW, separately versioned evaluator (`eval-v2.0`, with the ORCH-742c repair-round-1 corrections B1/B2 described in §§ 2–4).** It re-runs nothing and edits nothing: T-107,
 T-108, T-109 and every committed benchmark report keep their meaning. These numbers come from a different
 instrument and are **not** a re-score, replacement or correction of any earlier result. Production is
 frozen (D-102); no production module imports this code (`tests/test_eval_v2_metrics.py::
@@ -61,8 +61,10 @@ negative controls already carry `max_retained_reactions` ceilings. **So: 4 newly
 Equality of a normalized key; no containment in either direction. Normalization, in full: reuse of
 `goldset.normalize_name` (NFKC, unicode dashes, Greek letters **spelled out**, casefold, a trailing charge sign
 dropped, punctuation → one space; digits and locants kept) + `-ic acid` → `-ate` (protonation form) +
-`pyrophosphate` → `diphosphate`. Candidate-side reading rules: a trailing parenthetical is an alternative
-name (`oxidoreductase (entA)`); for **enzymes only**, a trailing `complex` is dropped and a complex also
+`pyrophosphate` → `diphosphate`. Candidate-side reading rules: a trailing parenthetical may **corroborate**
+the outer name, never override it — a name credits a gold term when the whole or the outer part matches; when
+only the inside matches and a non-empty outer name does not, the verdict is `conflict`, never a match
+(`matcher.name_verdict`; review finding B2); for **enzymes only**, a trailing `complex` is dropped and a complex also
 stands for its own `components` (names and gene names). Stereo descriptors are never stripped; `serine` meets
 `L-serine` only through a declared, justified alias.
 
@@ -71,9 +73,14 @@ stands for its own `components` (names and gene names). Stereo descriptors are n
 lenient matcher — and `CoA`/`acetyl-CoA`, `PGE2`/`PGE1`, `2,3-DHB`/`2,5-DHB`, alpha/beta-ketoglutarate,
 `DMK-7`/`DMK-8`. The old matcher's result is reported beside v2 on the same rows in every leg.
 
-**Known false-credit risk (measured, 1 row in the corpus):** the parenthetical rule credits
-`heptanoyl pyrophosphate (HepPP)` (`runs/2026-07-28_2122`, PMC12657337) through its correct abbreviation
-although the spelled-out name is a different molecule.
+**Parenthetical conflicts are not credited (repair of review finding B2).** `eval-v2.0` as first submitted
+credited a row if EITHER side of a parenthetical matched, so `heptanoyl pyrophosphate (HepPP)` — a C7 acyl
+diphosphate — was credited as heptaprenyl diphosphate for PMC12657337 R1 (`runs/2026-07-28_2122`, fallback
+row 17) through its abbreviation. Such a row is now class `name_conflict` and listed for hand review in
+`SAMPLE_REPORT.md`; it is the only one in the committed corpus (fallback precision 200/310 → 199/310). The
+evaluator cannot tell a generic outer name (`oxidoreductase (entA)`) from a contradicting one
+(`isochorismate synthase (EntB)`), so an enzyme credited only through its parenthetical's inside is scored
+`name_conflict` as well (none occurs on a matched row today).
 
 ## 3. Reaction metrics (`reactions.score_leg`)
 
@@ -82,7 +89,8 @@ input/output key sets are collapsed first (R-D092-2: a duplicated row is not a s
 
 Row classes, in precedence order: `target_paper_supported` (all **defining** participants of an in-scope gold
 reaction on the right sides; reversible gold may match backwards) · `paper_stated_off_pathway` ·
-`paper_stated_summary` · `partial_match` (≥ 1 defining substrate **and** ≥ 1 defining product of an in-scope
+`paper_stated_summary` · `name_conflict` (the row would be one of the above, or a partial match, only by letting
+a parenthetical's inside credit a term its outer name does not match; never a true positive) · `partial_match` (≥ 1 defining substrate **and** ≥ 1 defining product of an in-scope
 reaction) · `external_rag_supported` / `indeterminate_external` (no gold match; the committed R-D092-1
 classifier `evidence/rd092_1_reaction_lineage.py`, reused by path, finds an external source) · `unsupported`
 (everything else: the exhaustively read paper does not state it and nothing external defends it).
@@ -94,10 +102,10 @@ classifier `evidence/rd092_1_reaction_lineage.py`, reused by path, finds an exte
 | reaction precision | TP rows / rows claimed as paper extraction (every row except those whose lineage names an external source and that match no gold statement) |
 | reaction recall | in-scope gold reactions matched / in-scope gold reactions |
 | reaction F1 | harmonic mean of the two |
-| unsupported rate | `unsupported` rows / all retained (deduplicated) rows; the **upper bound** adds `indeterminate_external` |
+| unsupported rate | `unsupported` rows / all retained (deduplicated) rows; the **upper bound** adds `indeterminate_external` and `name_conflict` |
 | off-pathway / summary / partial | counted apart: stated by the paper, not invented, not correct |
 | substrate / product accuracy | over in-scope gold reactions: defining substrates (products) present on the aligned row (the full match, else the best partial), / all defining substrates (products) |
-| enzyme accuracy | over matched gold reactions with a gold enzyme: correct / (correct + wrong + missing). **Scored apart**: a wrong or missing enzyme never fails an otherwise correct reaction |
+| enzyme accuracy | over matched gold reactions with a gold enzyme: correct / (correct + wrong + missing + name_conflict). **Scored apart**: a wrong or missing enzyme never fails an otherwise correct reaction |
 | species accuracy | binomial (genus + epithet) of the row's biological state vs the case's actual organism; `unknown` (no species recorded) is excluded from the denominator and reported |
 | evidence-support rate | rows whose evidence carries a quote-sized span (≤ 2,000 chars) found verbatim (folded) in the committed paper text / all rows. Longer strings are `dump_only` (R-D092-1 fact 4) |
 | minor cofactors | gold `cofactor`-role participants missing from a matched row, listed apart from defining chemistry |
@@ -107,21 +115,51 @@ Aggregates are micro-averaged, per population (canonical `final_mapped.json` vs 
 
 ## 4. Mapped-ID correctness (`reactions.id_correctness`)
 
-Per entity with a mapped identifier: the **claim** is the entity's own name (never its `synonyms`, which may
-be written from the record under test); the **reference** is every name that committed tables and ID-keyed
-records give for that identifier — `data/id_mapping_cache.json`, `data/enrichment_cache.json` (UniProt and
-KEGG records fetched by identifier), `data/pathwhiz_id_db.json`, and the payload's own mapped-record candidate
-and ID-keyed enrichment block. Verdicts: `correct_identity` (a reference name equals the claim; spacing-only
-differences tolerated) · `wrong_identity` (reference names exist, none agrees) · `unresolved_or_novel` (no
-identifier, novel/generated) · `not_evaluable_no_reference`. Nothing is fixed.
+Per entity with a mapped identifier, **each identifier is judged against its own record** — never a union
+across the entity's identifiers, so one correct KEGG id cannot hide a wrong PathWhiz id (review finding B1:
+`eval-v2.0` as first submitted unioned them and never read the PathWhiz table under the payload's key). The
+**claim** is the entity's own name (never its `synonyms`, which may be written from the record under test;
+whole, outer and inside of a parenthetical are all names the entity declares). Two reference layers:
+
+- **independent** — a record curated or fetched BY that identifier: `data/pathwhiz_id_db.json` read under the
+  payload's own keys (`pathbank_compound_id` → `compounds.by_id`, `pathbank_protein_id` → `proteins.by_id`,
+  complex ids → `protein_complexes.by_id`), `data/enrichment_cache.json` (KEGG / ChEBI / HMDB / UniProt records)
+  and the payload row's own per-source enrichment sub-records. A PathWhiz record is also judged with the
+  independent records of the identifiers it declares for itself (record 134 declares KEGG C00026, so
+  `alpha-ketoglutarate` meets it through KEGG's `alpha-Ketoglutaric acid`).
+- **mapper cache** — `data/id_mapping_cache.json` and the payload's `mapping_meta.candidates`: the mapper's
+  own candidate cache, not an independent authority.
+
+Per identifier: `correct` if the claim matches the independent record, else `correct` if it matches the mapper
+cache (marked non-independent), else `wrong` (independent iff an independent record exists), else
+`no_reference`. Entity verdicts: `wrong_identity` if ANY identifier is wrong (the contradicting identifiers and
+per-identifier verdicts are listed) · `correct_identity` · `unresolved_or_novel` (no identifier,
+novel/generated) · `not_evaluable_no_reference`. Every verdict that rests on the mapper cache only is counted
+apart. Nothing is fixed.
+
+**The PathWhiz table is only partly an authority.** It mixes real PathBank records with LOCAL ids from sample
+.pwml files whose numbers collide with PathBank's: compound 14 is `ATP` there (PathBank 14: Iodotyrosine), 29 is
+`α-ketoglutarate` (PathBank 29: acetic acid), protein 13 is `diglyceride lipase` (PathBank 13: ACAT2, which six
+committed legs map correctly). Where the mapper's cached PathBank record for the same number exists, all 31
+table records carrying an external identifier agree with it by name, and 17 of the 18 without one disagree. So
+only records with an external identifier (KEGG/ChEBI/HMDB/PubChem/
+DrugBank for a compound, a UniProt accession for a protein, member proteins for a complex) are used — the rest
+would convict correct mappings.
+
+**What the per-identifier rule changed on the committed corpus:** all 102 earlier `wrong_identity` flags remain
+and 17 are new. Three new ones are independent and genuine — `DHB` mapped to KEGG C19557, whose own KEGG record
+is Treosulfan (2 legs), and `ALAS2` carrying DrugBank DB00114, pyridoxal 5'-phosphate; the other 14 rest on the
+mapper cache only and, on a reading of their names, are synonym gaps (`serine` vs `L-Serine` ×4, `Kdo` ×3,
+`SEPHCHC`, `LpxL`, `LpxM`, `Phosphoethanolamine`, `2,3-dihydroxybenzoic acid`, `lactate`, `CoA-SH`). The
+T-107/T-108 flag set is unchanged (the same 21), so the calibration below still applies to it.
 
 **Calibration, by hand, on the 21 T-107/T-108 `wrong_identity` flags:** 5 are genuine — `enterobactin
 synthase` (the EntB/D/E/F assembly, or EntF in PMC12096016's own usage) mapped to EntE / P10378 in 4 legs, and
 `cardiolipin` (a class) mapped to one molecular species; 16 are synonym gaps or policy-allowed states
 (`2,3-dihydro-2,3-dihydroxybenzoate` vs its stereo-named record ×6, `(δ-)aminolevulinic acid` vs
 5-aminolevulinate ×6, `UDP-GlcNAc`, `laurate`, `aminolevulinic acid synthase 2`, and `holo-EntB`, which D-035
-lets carry the parent's accession). **Measured precision of the flag: 5/21 ≈ 24%.** It is a candidate list for
-adjudication, not a verdict; ChEBI synonyms (all 265 cached ChEBI lookups are errors) would be the obvious
+lets carry the parent's accession). **Measured precision of the flag: 5/21 ≈ 24%.** Of those 21, 8 rest on the
+mapper cache only. It is a candidate list for adjudication, not a verdict; ChEBI synonyms (all 265 cached ChEBI lookups are errors) would be the obvious
 missing reference.
 
 ## 5. RAG

@@ -45,6 +45,7 @@
     "external_rag_supported_rows": 0,
     "paper_stated_off_pathway_rows": 5,
     "partial_match_rows": 9,
+    "name_conflict_rows": 0,
     "paper_stated_summary_rows": 1,
     "substrate_accuracy": 0.9653,
     "substrate_num_den": [
@@ -82,9 +83,9 @@
    },
    "fallback": {
     "legs": 44,
-    "reaction_precision": 0.6452,
+    "reaction_precision": 0.6419,
     "precision_num_den": [
-     200,
+     199,
      310
     ],
     "reaction_recall": 0.962,
@@ -92,16 +93,17 @@
      177,
      184
     ],
-    "reaction_f1": 0.7724,
+    "reaction_f1": 0.77,
     "unsupported_rate": 0.1703,
     "unsupported_num_den": [
      63,
      370
     ],
-    "unsupported_rate_upper_bound": 0.3324,
+    "unsupported_rate_upper_bound": 0.3351,
     "external_rag_supported_rows": 0,
     "paper_stated_off_pathway_rows": 33,
     "partial_match_rows": 9,
+    "name_conflict_rows": 1,
     "paper_stated_summary_rows": 5,
     "substrate_accuracy": 0.9561,
     "substrate_num_den": [
@@ -132,9 +134,9 @@
     "matched_reactions_missing_minor_cofactors": 0,
     "duplicate_rows_collapsed": 15,
     "old_lenient_matcher_recall": 0.962,
-    "old_vs_v2_row_disagreements": 3,
+    "old_vs_v2_row_disagreements": 2,
     "old_credits_v2_refuses": 2,
-    "v2_credits_old_refuses": 1,
+    "v2_credits_old_refuses": 0,
     "both_credit_different_gold_reaction": 0
    },
    "T-107:canonical": {
@@ -159,6 +161,7 @@
     "external_rag_supported_rows": 0,
     "paper_stated_off_pathway_rows": 0,
     "partial_match_rows": 0,
+    "name_conflict_rows": 0,
     "paper_stated_summary_rows": 0,
     "substrate_accuracy": 1.0,
     "substrate_num_den": [
@@ -212,6 +215,7 @@
     "external_rag_supported_rows": 0,
     "paper_stated_off_pathway_rows": 4,
     "partial_match_rows": 1,
+    "name_conflict_rows": 0,
     "paper_stated_summary_rows": 0,
     "substrate_accuracy": 0.9062,
     "substrate_num_den": [
@@ -268,6 +272,7 @@
     "external_rag_supported_rows": 0,
     "paper_stated_off_pathway_rows": 0,
     "partial_match_rows": 0,
+    "name_conflict_rows": 0,
     "paper_stated_summary_rows": 0,
     "substrate_accuracy": 1.0,
     "substrate_num_den": [
@@ -322,6 +327,7 @@
     "external_rag_supported_rows": 0,
     "paper_stated_off_pathway_rows": 5,
     "partial_match_rows": 0,
+    "name_conflict_rows": 0,
     "paper_stated_summary_rows": 1,
     "substrate_accuracy": 0.9062,
     "substrate_num_den": [
@@ -375,6 +381,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 2,
@@ -401,8 +408,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -456,6 +465,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 1,
@@ -482,8 +492,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -538,6 +550,7 @@
       "target_paper_supported": 2,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -564,8 +577,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -619,6 +634,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 1,
@@ -645,8 +661,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -701,6 +719,7 @@
       "target_paper_supported": 11,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 1,
+      "name_conflict": 0,
       "partial_match": 2,
       "external_rag_supported": 0,
       "indeterminate_external": 10,
@@ -735,8 +754,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 1,
-      "partial_match": 2
+      "partial_match": 2,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -799,6 +820,7 @@
       "target_paper_supported": 10,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 1,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 3,
@@ -833,8 +855,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 1,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -894,9 +918,10 @@
      "unique_reactions": 58,
      "duplicate_rows_collapsed": 0,
      "row_classes": {
-      "target_paper_supported": 7,
+      "target_paper_supported": 6,
       "paper_stated_off_pathway": 3,
       "paper_stated_summary": 0,
+      "name_conflict": 1,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 44,
@@ -904,29 +929,50 @@
      },
      "table1_paper_extraction": {
       "rows_claimed_as_paper_extraction": 14,
-      "true_positive_rows": 7,
+      "true_positive_rows": 6,
       "gold_reactions": 3,
       "gold_reactions_matched": [
        "R1",
        "R2",
        "R3"
       ],
-      "precision": 0.5,
+      "precision": 0.4286,
       "recall": 1.0,
-      "f1": 0.6667
+      "f1": 0.6
      },
      "table2_final_support": {
       "retained_unique": 58,
       "unsupported": 4,
       "unsupported_rate": 0.069,
       "indeterminate_external": 44,
-      "unsupported_rate_upper_bound": 0.8276,
+      "unsupported_rate_upper_bound": 0.8448,
       "external_rag_supported": 0,
       "paper_stated_off_pathway": 3,
       "off_pathway_rate": 0.0517,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 1
      },
+     "name_conflicts_for_hand_review": [
+      {
+       "row_index": 17,
+       "inputs": [
+        "FPP"
+       ],
+       "outputs": [
+        "heptanoyl pyrophosphate (HepPP)"
+       ],
+       "enzymes": [
+        "IspA"
+       ],
+       "gold_ids": [
+        "R1"
+       ],
+       "conflicting_names": [
+        "heptanoyl pyrophosphate (HepPP)"
+       ]
+      }
+     ],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -946,7 +992,7 @@
      "minor_cofactors_missing_on_matched_reactions": [],
      "evidence": {
       "evidence_support_rate": 0.1724,
-      "evidence_support_rate_on_true_positives": 0.4286,
+      "evidence_support_rate_on_true_positives": 0.5,
       "verdicts": {
        "verbatim_in_paper": 10,
        "dump_only": 47,
@@ -962,22 +1008,7 @@
        "R3"
       ],
       "recall": 1.0,
-      "rows_where_old_and_v2_disagree": [
-       {
-        "row_index": 17,
-        "inputs": [
-         "FPP"
-        ],
-        "outputs": [
-         "heptanoyl pyrophosphate (HepPP)"
-        ],
-        "old": [],
-        "v2_class": "target_paper_supported",
-        "v2_gold_ids": [
-         "R1"
-        ]
-       }
-      ]
+      "rows_where_old_and_v2_disagree": []
      }
     }
    },
@@ -997,6 +1028,7 @@
       "target_paper_supported": 8,
       "paper_stated_off_pathway": 4,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1025,8 +1057,10 @@
       "paper_stated_off_pathway": 4,
       "off_pathway_rate": 0.1905,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -1083,6 +1117,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1113,8 +1148,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -1173,6 +1210,7 @@
       "target_paper_supported": 6,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1203,8 +1241,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -1260,6 +1300,7 @@
       "target_paper_supported": 2,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1286,8 +1327,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -1340,6 +1383,7 @@
       "target_paper_supported": 8,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1373,8 +1417,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 0.9,
       "substrate_hits": 9,
@@ -1435,6 +1481,7 @@
       "target_paper_supported": 9,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 1,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1469,8 +1516,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 1,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -1531,6 +1580,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 3,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1559,8 +1609,10 @@
       "paper_stated_off_pathway": 3,
       "off_pathway_rate": 0.3333,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -1615,6 +1667,7 @@
       "target_paper_supported": 4,
       "paper_stated_off_pathway": 3,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1643,8 +1696,10 @@
       "paper_stated_off_pathway": 3,
       "off_pathway_rate": 0.4286,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -1700,6 +1755,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1730,8 +1786,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -1788,6 +1846,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1818,8 +1877,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -1878,6 +1939,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 1,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1908,8 +1970,10 @@
       "paper_stated_off_pathway": 1,
       "off_pathway_rate": 0.1429,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -1968,6 +2032,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -1998,8 +2063,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -2057,6 +2124,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -2087,8 +2155,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -2162,6 +2232,7 @@
       "target_paper_supported": 4,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -2191,8 +2262,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 0.8333,
       "substrate_hits": 5,
@@ -2249,6 +2322,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -2279,8 +2353,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -2354,6 +2430,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -2380,8 +2457,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -2433,6 +2512,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -2459,8 +2539,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -2512,6 +2594,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 3,
@@ -2538,8 +2621,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -2591,6 +2676,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -2617,8 +2703,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -2670,6 +2758,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 1,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -2700,8 +2789,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 1,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -2757,6 +2848,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 1,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -2787,8 +2879,10 @@
       "paper_stated_off_pathway": 1,
       "off_pathway_rate": 0.1667,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -2860,6 +2954,7 @@
       "target_paper_supported": 3,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -2888,8 +2983,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 0.5,
       "substrate_hits": 3,
@@ -2944,6 +3041,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -2974,8 +3072,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -3047,6 +3147,7 @@
       "target_paper_supported": 0,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -3071,8 +3172,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 0.5,
       "substrate_hits": 1,
@@ -3122,6 +3225,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -3148,8 +3252,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -3202,6 +3308,7 @@
       "target_paper_supported": 11,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -3236,8 +3343,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -3298,6 +3407,7 @@
       "target_paper_supported": 10,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -3332,8 +3442,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -3396,6 +3508,7 @@
       "target_paper_supported": 3,
       "paper_stated_off_pathway": 2,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -3424,8 +3537,10 @@
       "paper_stated_off_pathway": 2,
       "off_pathway_rate": 0.4,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -3479,6 +3594,7 @@
       "target_paper_supported": 3,
       "paper_stated_off_pathway": 2,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -3507,8 +3623,10 @@
       "paper_stated_off_pathway": 2,
       "off_pathway_rate": 0.4,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -3562,6 +3680,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 1,
@@ -3592,8 +3711,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -3650,6 +3771,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -3680,8 +3802,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -3752,6 +3876,7 @@
       "target_paper_supported": 0,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -3776,8 +3901,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 0.0,
       "substrate_hits": 0,
@@ -3827,6 +3954,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -3853,8 +3981,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -3906,6 +4036,7 @@
       "target_paper_supported": 10,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -3940,8 +4071,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -4004,6 +4137,7 @@
       "target_paper_supported": 9,
       "paper_stated_off_pathway": 1,
       "paper_stated_summary": 1,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4038,8 +4172,10 @@
       "paper_stated_off_pathway": 1,
       "off_pathway_rate": 0.0909,
       "paper_stated_summary": 1,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -4118,6 +4254,7 @@
       "target_paper_supported": 3,
       "paper_stated_off_pathway": 2,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4146,8 +4283,10 @@
       "paper_stated_off_pathway": 2,
       "off_pathway_rate": 0.4,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -4201,6 +4340,7 @@
       "target_paper_supported": 3,
       "paper_stated_off_pathway": 1,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4229,8 +4369,10 @@
       "paper_stated_off_pathway": 1,
       "off_pathway_rate": 0.25,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -4284,6 +4426,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 1,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4314,8 +4457,10 @@
       "paper_stated_off_pathway": 1,
       "off_pathway_rate": 0.1667,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -4372,6 +4517,7 @@
       "target_paper_supported": 6,
       "paper_stated_off_pathway": 1,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4402,8 +4548,10 @@
       "paper_stated_off_pathway": 1,
       "off_pathway_rate": 0.1429,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -4475,6 +4623,7 @@
       "target_paper_supported": 6,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4505,8 +4654,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -4563,6 +4714,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4593,8 +4745,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -4666,6 +4820,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4692,8 +4847,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -4745,6 +4902,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4771,8 +4929,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -4824,6 +4984,7 @@
       "target_paper_supported": 9,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4858,8 +5019,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -4919,6 +5082,7 @@
       "target_paper_supported": 9,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -4953,8 +5117,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -5015,6 +5181,7 @@
       "target_paper_supported": 3,
       "paper_stated_off_pathway": 1,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -5043,8 +5210,10 @@
       "paper_stated_off_pathway": 1,
       "off_pathway_rate": 0.2,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -5099,6 +5268,7 @@
       "target_paper_supported": 4,
       "paper_stated_off_pathway": 2,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -5127,8 +5297,10 @@
       "paper_stated_off_pathway": 2,
       "off_pathway_rate": 0.3333,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -5183,6 +5355,7 @@
       "target_paper_supported": 4,
       "paper_stated_off_pathway": 1,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -5212,8 +5385,10 @@
       "paper_stated_off_pathway": 1,
       "off_pathway_rate": 0.1429,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 0.8333,
       "substrate_hits": 5,
@@ -5271,6 +5446,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -5301,8 +5477,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -5514,6 +5692,7 @@
       "target_paper_supported": 0,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -5538,8 +5717,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 0.0,
       "substrate_hits": 0,
@@ -5662,6 +5843,7 @@
       "target_paper_supported": 0,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 1,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -5686,8 +5868,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 1
+      "partial_match": 1,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 0.5,
       "substrate_hits": 1,
@@ -5838,6 +6022,7 @@
       "target_paper_supported": 9,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -5872,8 +6057,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -6207,6 +6394,7 @@
       "target_paper_supported": 10,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -6241,8 +6429,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -6630,6 +6820,7 @@
       "target_paper_supported": 3,
       "paper_stated_off_pathway": 2,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -6658,8 +6849,10 @@
       "paper_stated_off_pathway": 2,
       "off_pathway_rate": 0.4,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -6858,6 +7051,7 @@
       "target_paper_supported": 3,
       "paper_stated_off_pathway": 2,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -6886,8 +7080,10 @@
       "paper_stated_off_pathway": 2,
       "off_pathway_rate": 0.4,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -7084,6 +7280,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -7114,8 +7311,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -7328,6 +7527,7 @@
       "target_paper_supported": 5,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -7358,8 +7558,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 6,
@@ -7573,6 +7775,7 @@
       "target_paper_supported": 1,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -7599,8 +7802,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 2,
@@ -7685,6 +7890,7 @@
       "target_paper_supported": 0,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -7709,8 +7915,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 0.0,
       "substrate_hits": 0,
@@ -7832,6 +8040,7 @@
       "target_paper_supported": 8,
       "paper_stated_off_pathway": 1,
       "paper_stated_summary": 1,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -7865,8 +8074,10 @@
       "paper_stated_off_pathway": 1,
       "off_pathway_rate": 0.1,
       "paper_stated_summary": 1,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 0.9,
       "substrate_hits": 9,
@@ -8239,6 +8450,7 @@
       "target_paper_supported": 9,
       "paper_stated_off_pathway": 0,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -8273,8 +8485,10 @@
       "paper_stated_off_pathway": 0,
       "off_pathway_rate": 0.0,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 10,
@@ -8607,6 +8821,7 @@
       "target_paper_supported": 3,
       "paper_stated_off_pathway": 2,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -8635,8 +8850,10 @@
       "paper_stated_off_pathway": 2,
       "off_pathway_rate": 0.2857,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -8883,6 +9100,7 @@
       "target_paper_supported": 3,
       "paper_stated_off_pathway": 2,
       "paper_stated_summary": 0,
+      "name_conflict": 0,
       "partial_match": 0,
       "external_rag_supported": 0,
       "indeterminate_external": 0,
@@ -8911,8 +9129,10 @@
       "paper_stated_off_pathway": 2,
       "off_pathway_rate": 0.4,
       "paper_stated_summary": 0,
-      "partial_match": 0
+      "partial_match": 0,
+      "name_conflict": 0
      },
+     "name_conflicts_for_hand_review": [],
      "entity_accuracy": {
       "substrate_accuracy": 1.0,
       "substrate_hits": 4,
@@ -11369,12 +11589,68 @@
  "mapped_id_correctness": {
   "canonical_legs": 115,
   "counts": {
-   "correct_identity": 1201,
-   "wrong_identity": 102,
+   "correct_identity": 1184,
+   "wrong_identity": 119,
    "unresolved_or_novel": 510,
    "not_evaluable_no_reference": 17
   },
+  "counts_resting_on_mapper_cache_only": {
+   "wrong_identity": 47,
+   "correct_identity": 322
+  },
   "wrong": [
+   {
+    "leg_dir": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+    "bucket": "compounds",
+    "name": "SEPHCHC",
+    "ids": {
+     "pathbank_compound_id": "40742",
+     "kegg": "C16519",
+     "chebi": "CHEBI:50271",
+     "pubchem": "51090848"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40742",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+       "sehcc"
+      ]
+     },
+     {
+      "id": "kegg:C16519",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:CHEBI:50271",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+       "sehcc"
+      ]
+     },
+     {
+      "id": "pubchem:51090848",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+       "sehcc"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40742",
+     "chebi:CHEBI:50271",
+     "pubchem:51090848"
+    ]
+   },
    {
     "leg_dir": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
     "bucket": "compounds",
@@ -11382,11 +11658,22 @@
     "ids": {
      "kegg": "C22686"
     },
+    "per_id": [
+     {
+      "id": "kegg:C22686",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "4-Cyano-2-dimethylamino-4,4-diphenylbutane",
+       "4-Dimethylamino-2,2-diphenylvaleronitrile",
+       "Methadone intermediate"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "4-Cyano-2-dimethylamino-4,4-diphenylbutane",
-     "4-Dimethylamino-2,2-diphenylvaleronitrile",
-     "Methadone intermediate"
+    "independent": true,
+    "contradicting_ids": [
+     "kegg:C22686"
     ]
    },
    {
@@ -11396,11 +11683,22 @@
     "ids": {
      "uniprot": "A0A0H3GEM5"
     },
+    "per_id": [
+     {
+      "id": "uniprot:A0A0H3GEM5",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+       "1,4-dihydroxy-2-naphthoyl-coenzyme A thioesterase",
+       "menI"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
-     "1,4-dihydroxy-2-naphthoyl-coenzyme A thioesterase",
-     "menI"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:A0A0H3GEM5"
     ]
    },
    {
@@ -11414,13 +11712,62 @@
      "hmdb": "HMDB0000290",
      "pubchem": "445675"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:196",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "kegg:C00043",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "UDP-N-acetyl-D-glucosamine",
+       "UDP-N-acetyl-alpha-D-glucosamine",
+       "UDP-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:16264",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000290",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "pubchem:445675",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "UDP-GN",
-     "UDP-N-acetyl-D-glucosamine",
-     "UDP-N-acetyl-alpha-D-glucosamine",
-     "UDP-N-acetylglucosamine",
-     "Uridine diphosphate-N-acetylglucosamine"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:196",
+     "kegg:C00043",
+     "chebi:CHEBI:16264",
+     "hmdb:HMDB0000290",
+     "pubchem:445675"
     ]
    },
    {
@@ -11432,14 +11779,95 @@
      "kegg": "C06025",
      "chebi": "CHEBI:60365"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40738",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "KdoIVA",
+       "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA"
+      ]
+     },
+     {
+      "id": "kegg:C06025",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Di[3-deoxy-D-manno-octulosonyl]-lipid IV(A)",
+       "KDO2-lipid IV(A)",
+       "KDO2-lipid IVA",
+       "alpha-Kdo-(2->4)-alpha-Kdo-(2->6)-[lipid IVA]"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:60365",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "KdoIVA",
+       "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Di[3-deoxy-D-manno-octulosonyl]-lipid IV(A)",
-     "KDO2-lipid IV(A)",
-     "KDO2-lipid IVA",
-     "KdoIVA",
-     "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA",
-     "alpha-Kdo-(2->4)-alpha-Kdo-(2->6)-[lipid IVA]"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:40738",
+     "kegg:C06025",
+     "chebi:CHEBI:60365"
+    ]
+   },
+   {
+    "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+    "bucket": "compounds",
+    "name": "Kdo",
+    "ids": {
+     "pathbank_compound_id": "57926",
+     "kegg": "C01187",
+     "chebi": "CHEBI:85986",
+     "pubchem": "21681234"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:57926",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "3-deoxy-D-manno-2-octulosonate",
+       "3dDmanO"
+      ]
+     },
+     {
+      "id": "kegg:C01187",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:CHEBI:85986",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "3-deoxy-D-manno-2-octulosonate",
+       "3dDmanO"
+      ]
+     },
+     {
+      "id": "pubchem:21681234",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "3-deoxy-D-manno-2-octulosonate",
+       "3dDmanO"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:57926",
+     "chebi:CHEBI:85986",
+     "pubchem:21681234"
     ]
    },
    {
@@ -11451,14 +11879,43 @@
      "kegg": "C06025",
      "chebi": "CHEBI:60365"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40738",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "KdoIVA",
+       "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA"
+      ]
+     },
+     {
+      "id": "kegg:C06025",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Di[3-deoxy-D-manno-octulosonyl]-lipid IV(A)",
+       "KDO2-lipid IV(A)",
+       "KDO2-lipid IVA",
+       "alpha-Kdo-(2->4)-alpha-Kdo-(2->6)-[lipid IVA]"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:60365",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "KdoIVA",
+       "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Di[3-deoxy-D-manno-octulosonyl]-lipid IV(A)",
-     "KDO2-lipid IV(A)",
-     "KDO2-lipid IVA",
-     "KdoIVA",
-     "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA",
-     "alpha-Kdo-(2->4)-alpha-Kdo-(2->6)-[lipid IVA]"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:40738",
+     "kegg:C06025",
+     "chebi:CHEBI:60365"
     ]
    },
    {
@@ -11473,14 +11930,89 @@
      "pubchem": "1060",
      "drugbank": "DB00119"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:164",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2-Oxopropanoate",
+       "2-Oxopropanoic acid",
+       "Pyroracemic acid",
+       "Pyruvate",
+       "Pyruvic acid"
+      ]
+     },
+     {
+      "id": "kegg:C00022",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2-Oxopropanoate",
+       "2-Oxopropanoic acid",
+       "Pyroracemic acid",
+       "Pyruvate",
+       "Pyruvic acid"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:32816",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2-Oxopropanoate",
+       "2-Oxopropanoic acid",
+       "Pyroracemic acid",
+       "Pyruvate",
+       "Pyruvic acid"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000243",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2-Oxopropanoate",
+       "2-Oxopropanoic acid",
+       "Pyroracemic acid",
+       "Pyruvate",
+       "Pyruvic acid"
+      ]
+     },
+     {
+      "id": "pubchem:1060",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2-Oxopropanoate",
+       "2-Oxopropanoic acid",
+       "Pyroracemic acid",
+       "Pyruvate",
+       "Pyruvic acid"
+      ]
+     },
+     {
+      "id": "drugbank:DB00119",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2-Oxopropanoate",
+       "2-Oxopropanoic acid",
+       "Pyroracemic acid",
+       "Pyruvate",
+       "Pyruvic acid"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2-Oxopropanoate",
-     "2-Oxopropanoic acid",
-     "Pyr",
-     "Pyroracemic acid",
-     "Pyruvate",
-     "Pyruvic acid"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:164",
+     "kegg:C00022",
+     "chebi:CHEBI:32816",
+     "hmdb:HMDB0000243",
+     "pubchem:1060",
+     "drugbank:DB00119"
     ]
    },
    {
@@ -11490,9 +12022,20 @@
     "ids": {
      "kegg": "C00012"
     },
+    "per_id": [
+     {
+      "id": "kegg:C00012",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Peptide"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Peptide"
+    "independent": true,
+    "contradicting_ids": [
+     "kegg:C00012"
     ]
    },
    {
@@ -11506,14 +12049,64 @@
      "pubchem": "53477679",
      "drugbank": "DB01861"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:193",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "kegg:C00029",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "UDP-D-glucose",
+       "UDP-alpha-D-glucose",
+       "UDP-glucose",
+       "UDPglucose",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000286",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "pubchem:53477679",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "drugbank:DB01861",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "UDP-D-glucose",
-     "UDP-alpha-D-glucose",
-     "UDP-glucose",
-     "UDPG",
-     "UDPglucose",
-     "Uridine diphosphate glucose"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:193",
+     "kegg:C00029",
+     "hmdb:HMDB0000286",
+     "pubchem:53477679",
+     "drugbank:DB01861"
     ]
    },
    {
@@ -11527,14 +12120,64 @@
      "pubchem": "53477679",
      "drugbank": "DB01861"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:193",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "kegg:C00029",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "UDP-D-glucose",
+       "UDP-alpha-D-glucose",
+       "UDP-glucose",
+       "UDPglucose",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000286",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "pubchem:53477679",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "drugbank:DB01861",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "UDP-D-glucose",
-     "UDP-alpha-D-glucose",
-     "UDP-glucose",
-     "UDPG",
-     "UDPglucose",
-     "Uridine diphosphate glucose"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:193",
+     "kegg:C00029",
+     "hmdb:HMDB0000286",
+     "pubchem:53477679",
+     "drugbank:DB01861"
     ]
    },
    {
@@ -11548,14 +12191,124 @@
      "pubchem": "53477679",
      "drugbank": "DB01861"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:193",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "kegg:C00029",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "UDP-D-glucose",
+       "UDP-alpha-D-glucose",
+       "UDP-glucose",
+       "UDPglucose",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000286",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "pubchem:53477679",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     },
+     {
+      "id": "drugbank:DB01861",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDPG",
+       "Uridine diphosphate glucose"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "UDP-D-glucose",
-     "UDP-alpha-D-glucose",
-     "UDP-glucose",
-     "UDPG",
-     "UDPglucose",
-     "Uridine diphosphate glucose"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:193",
+     "kegg:C00029",
+     "hmdb:HMDB0000286",
+     "pubchem:53477679",
+     "drugbank:DB01861"
+    ]
+   },
+   {
+    "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+    "bucket": "proteins",
+    "name": "LpxL",
+    "ids": {
+     "uniprot": "P0ACV0",
+     "pathbank_protein_id": "6214"
+    },
+    "per_id": [
+     {
+      "id": "uniprot:P0ACV0",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "pathbank_protein_id:6214",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Lipid A biosynthesis lauroyl acyltransferase",
+       "htrB"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_protein_id:6214"
+    ]
+   },
+   {
+    "leg_dir": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+    "bucket": "proteins",
+    "name": "LpxM",
+    "ids": {
+     "uniprot": "P24205",
+     "pathbank_protein_id": "6435"
+    },
+    "per_id": [
+     {
+      "id": "uniprot:P24205",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "pathbank_protein_id:6435",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Lipid A biosynthesis (KDO)2-(lauroyl)-lipid IVA acyltransferase",
+       "msbB"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_protein_id:6435"
     ]
    },
    {
@@ -11566,11 +12319,32 @@
      "uniprot": "P0ABD8",
      "pathbank_protein_id": "6172"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P0ABD8",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Biotin carboxyl carrier protein of acetyl-CoA carboxylase",
+       "accB",
+       "fabE"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6172",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Biotin carboxyl carrier protein of acetyl-CoA carboxylase",
+       "accB"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Biotin carboxyl carrier protein of acetyl-CoA carboxylase",
-     "accB",
-     "fabE"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P0ABD8",
+     "pathbank_protein_id:6172"
     ]
    },
    {
@@ -11581,12 +12355,33 @@
      "uniprot": "P18200",
      "pathbank_protein_id": "6371"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P18200",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Phosphatidylglycerolphosphate phosphatase A",
+       "Phosphatidylglycerophosphatase A",
+       "pgpA",
+       "yajN"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6371",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Phosphatidylglycerophosphatase A",
+       "pgpA"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Phosphatidylglycerolphosphate phosphatase A",
-     "Phosphatidylglycerophosphatase A",
-     "pgpA",
-     "yajN"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P18200",
+     "pathbank_protein_id:6371"
     ]
    },
    {
@@ -11597,10 +12392,31 @@
      "uniprot": "P0A7A7",
      "pathbank_protein_id": "6043"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P0A7A7",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Glycerol-3-phosphate acyltransferase",
+       "plsB"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6043",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Glycerol-3-phosphate acyltransferase",
+       "plsB"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Glycerol-3-phosphate acyltransferase",
-     "plsB"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P0A7A7",
+     "pathbank_protein_id:6043"
     ]
    },
    {
@@ -11611,9 +12427,29 @@
      "pathbank_complex_id": "3616",
      "pathbank_protein_complex_id": "3616"
     },
+    "per_id": [
+     {
+      "id": "pathbank_complex_id:3616",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "biotin carboxyl carrier protein"
+      ]
+     },
+     {
+      "id": "pathbank_protein_complex_id:3616",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "biotin carboxyl carrier protein"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "biotin carboxyl carrier protein"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_complex_id:3616",
+     "pathbank_protein_complex_id:3616"
     ]
    },
    {
@@ -11627,13 +12463,63 @@
      "hmdb": "HMDB0000224",
      "pubchem": "1015"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Ethamp",
+       "O-Phosphoethanolamine"
+      ]
+     },
+     {
+      "id": "kegg:C00346",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Ethanolamine phosphate",
+       "O-Phosphoethanolamine",
+       "O-Phosphorylethanolamine",
+       "Phosphoethanolamine"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17553",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Ethamp",
+       "O-Phosphoethanolamine"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000224",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Ethamp",
+       "O-Phosphoethanolamine"
+      ]
+     },
+     {
+      "id": "pubchem:1015",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Ethamp",
+       "O-Phosphoethanolamine"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Ethamp",
-     "Ethanolamine phosphate",
-     "O-Phosphoethanolamine",
-     "O-Phosphorylethanolamine",
-     "Phosphoethanolamine"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:149",
+     "kegg:C00346",
+     "chebi:CHEBI:17553",
+     "hmdb:HMDB0000224",
+     "pubchem:1015"
     ]
    },
    {
@@ -11647,15 +12533,125 @@
      "hmdb": "HMDB0000902",
      "pubchem": "5893"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:721",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "NAD"
+      ]
+     },
+     {
+      "id": "kegg:C00003",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "DPN",
+       "Diphosphopyridine nucleotide",
+       "NAD",
+       "NAD+",
+       "Nadide",
+       "Nicotinamide adenine dinucleotide",
+       "beta-NAD+"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:15846",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "NAD"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000902",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "NAD"
+      ]
+     },
+     {
+      "id": "pubchem:5893",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "NAD"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "DPN",
-     "Diphosphopyridine nucleotide",
-     "NAD",
-     "NAD+",
-     "Nadide",
-     "Nicotinamide adenine dinucleotide",
-     "beta-NAD+"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:721",
+     "kegg:C00003",
+     "chebi:CHEBI:15846",
+     "hmdb:HMDB0000902",
+     "pubchem:5893"
+    ]
+   },
+   {
+    "leg_dir": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+    "bucket": "compounds",
+    "name": "Phosphoethanolamine",
+    "ids": {
+     "pathbank_compound_id": "149",
+     "kegg": "C00346",
+     "chebi": "CHEBI:17553",
+     "hmdb": "HMDB0000224",
+     "pubchem": "1015"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Ethamp",
+       "O-Phosphoethanolamine"
+      ]
+     },
+     {
+      "id": "kegg:C00346",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:CHEBI:17553",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Ethamp",
+       "O-Phosphoethanolamine"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000224",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Ethamp",
+       "O-Phosphoethanolamine"
+      ]
+     },
+     {
+      "id": "pubchem:1015",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Ethamp",
+       "O-Phosphoethanolamine"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:149",
+     "chebi:CHEBI:17553",
+     "hmdb:HMDB0000224",
+     "pubchem:1015"
     ]
    },
    {
@@ -11665,11 +12661,22 @@
     "ids": {
      "uniprot": "P30843"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P30843",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Transcriptional regulatory protein BasR",
+       "basR",
+       "pmrA"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Transcriptional regulatory protein BasR",
-     "basR",
-     "pmrA"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P30843"
     ]
    },
    {
@@ -11679,11 +12686,22 @@
     "ids": {
      "uniprot": "P30843"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P30843",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Transcriptional regulatory protein BasR",
+       "basR",
+       "pmrA"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Transcriptional regulatory protein BasR",
-     "basR",
-     "pmrA"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P30843"
     ]
    },
    {
@@ -11693,13 +12711,24 @@
     "ids": {
      "uniprot": "P08235"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P08235",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "MCR",
+       "MLR",
+       "Mineralocorticoid receptor",
+       "NR3C2",
+       "Nuclear receptor subfamily 3 group C member 2"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "MCR",
-     "MLR",
-     "Mineralocorticoid receptor",
-     "NR3C2",
-     "Nuclear receptor subfamily 3 group C member 2"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P08235"
     ]
    },
    {
@@ -11709,11 +12738,22 @@
     "ids": {
      "uniprot": "P79281"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P79281",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "PTN",
+       "Pleiotrophic factor beta",
+       "Pleiotrophin"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "PTN",
-     "Pleiotrophic factor beta",
-     "Pleiotrophin"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P79281"
     ]
    },
    {
@@ -11723,14 +12763,25 @@
     "ids": {
      "uniprot": "Q9UBM1"
     },
+    "per_id": [
+     {
+      "id": "uniprot:Q9UBM1",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "PEMPT",
+       "PEMT",
+       "PEMT2",
+       "PNMT",
+       "Phosphatidylethanolamine N-methyltransferase",
+       "Phospholipid methyltransferase"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "PEMPT",
-     "PEMT",
-     "PEMT2",
-     "PNMT",
-     "Phosphatidylethanolamine N-methyltransferase",
-     "Phospholipid methyltransferase"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:Q9UBM1"
     ]
    },
    {
@@ -11740,11 +12791,22 @@
     "ids": {
      "uniprot": "P30843"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P30843",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Transcriptional regulatory protein BasR",
+       "basR",
+       "pmrA"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Transcriptional regulatory protein BasR",
-     "basR",
-     "pmrA"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P30843"
     ]
    },
    {
@@ -11754,10 +12816,21 @@
     "ids": {
      "uniprot": "P03023"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P03023",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Lactose operon repressor",
+       "lacI"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Lactose operon repressor",
-     "lacI"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P03023"
     ]
    },
    {
@@ -11768,9 +12841,177 @@
      "pathbank_complex_id": "13897",
      "pathbank_protein_complex_id": "13897"
     },
+    "per_id": [
+     {
+      "id": "pathbank_complex_id:13897",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Sensor protein PhoQ"
+      ]
+     },
+     {
+      "id": "pathbank_protein_complex_id:13897",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Sensor protein PhoQ"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Sensor protein PhoQ"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_complex_id:13897",
+     "pathbank_protein_complex_id:13897"
+    ]
+   },
+   {
+    "leg_dir": "runs/2026-08-02_2130/papers/PMC12180156/research",
+    "bucket": "compounds",
+    "name": "serine",
+    "ids": {
+     "pathbank_compound_id": "120",
+     "kegg": "C00065",
+     "chebi": "CHEBI:17115",
+     "hmdb": "HMDB0000187",
+     "pubchem": "5951",
+     "drugbank": "DB00133"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:120",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "kegg:C00065",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:CHEBI:17115",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000187",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "pubchem:5951",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "drugbank:DB00133",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:120",
+     "chebi:CHEBI:17115",
+     "hmdb:HMDB0000187",
+     "pubchem:5951",
+     "drugbank:DB00133"
+    ]
+   },
+   {
+    "leg_dir": "runs/2026-08-02_2130/papers/PMC12180156/strict",
+    "bucket": "compounds",
+    "name": "serine",
+    "ids": {
+     "pathbank_compound_id": "120",
+     "kegg": "C00065",
+     "chebi": "CHEBI:17115",
+     "hmdb": "HMDB0000187",
+     "pubchem": "5951",
+     "drugbank": "DB00133"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:120",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "kegg:C00065",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:CHEBI:17115",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000187",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "pubchem:5951",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "drugbank:DB00133",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:120",
+     "chebi:CHEBI:17115",
+     "hmdb:HMDB0000187",
+     "pubchem:5951",
+     "drugbank:DB00133"
     ]
    },
    {
@@ -11785,14 +13026,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:CHEBI:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -11806,13 +13107,114 @@
      "hmdb": "HMDB0000290",
      "pubchem": "445675"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:196",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "kegg:C00043",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "UDP-N-acetyl-D-glucosamine",
+       "UDP-N-acetyl-alpha-D-glucosamine",
+       "UDP-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:16264",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000290",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "pubchem:445675",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "UDP-GN",
-     "UDP-N-acetyl-D-glucosamine",
-     "UDP-N-acetyl-alpha-D-glucosamine",
-     "UDP-N-acetylglucosamine",
-     "Uridine diphosphate-N-acetylglucosamine"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:196",
+     "kegg:C00043",
+     "chebi:CHEBI:16264",
+     "hmdb:HMDB0000290",
+     "pubchem:445675"
+    ]
+   },
+   {
+    "leg_dir": "runs/2026-08-02_2130/papers/PMC12444477/research",
+    "bucket": "compounds",
+    "name": "Kdo",
+    "ids": {
+     "pathbank_compound_id": "57926",
+     "kegg": "C01187",
+     "chebi": "CHEBI:85986",
+     "pubchem": "21681234"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:57926",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "3-deoxy-D-manno-2-octulosonate",
+       "3dDmanO"
+      ]
+     },
+     {
+      "id": "kegg:C01187",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:CHEBI:85986",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "3-deoxy-D-manno-2-octulosonate",
+       "3dDmanO"
+      ]
+     },
+     {
+      "id": "pubchem:21681234",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "3-deoxy-D-manno-2-octulosonate",
+       "3dDmanO"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:57926",
+     "chebi:CHEBI:85986",
+     "pubchem:21681234"
     ]
    },
    {
@@ -11826,13 +13228,62 @@
      "hmdb": "HMDB0000290",
      "pubchem": "445675"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:196",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "kegg:C00043",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "UDP-N-acetyl-D-glucosamine",
+       "UDP-N-acetyl-alpha-D-glucosamine",
+       "UDP-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:16264",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000290",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "pubchem:445675",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "UDP-GN",
-     "UDP-N-acetyl-D-glucosamine",
-     "UDP-N-acetyl-alpha-D-glucosamine",
-     "UDP-N-acetylglucosamine",
-     "Uridine diphosphate-N-acetylglucosamine"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:196",
+     "kegg:C00043",
+     "chebi:CHEBI:16264",
+     "hmdb:HMDB0000290",
+     "pubchem:445675"
     ]
    },
    {
@@ -11847,14 +13298,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:CHEBI:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -11869,14 +13380,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:CHEBI:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -11891,14 +13462,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:CHEBI:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -11913,14 +13544,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:CHEBI:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -11935,14 +13626,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:CHEBI:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -11953,14 +13704,109 @@
      "uniprot": "P10378",
      "pathbank_protein_id": "6301"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P10378",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2,3-dihydroxybenzoate-AMP ligase",
+       "2,3-dihydroxybenzoate-AMP synthase",
+       "Dihydroxybenzoic acid-activating enzyme",
+       "Enterobactin synthase component E",
+       "Enterochelin synthase E",
+       "entE"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6301",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Enterobactin synthase component E",
+       "entE"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2,3-dihydroxybenzoate-AMP ligase",
-     "2,3-dihydroxybenzoate-AMP synthase",
-     "Dihydroxybenzoic acid-activating enzyme",
-     "Enterobactin synthase component E",
-     "Enterochelin synthase E",
-     "entE"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P10378",
+     "pathbank_protein_id:6301"
+    ]
+   },
+   {
+    "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12180156/research",
+    "bucket": "compounds",
+    "name": "serine",
+    "ids": {
+     "pathbank_compound_id": "120",
+     "kegg": "C00065",
+     "chebi": "CHEBI:17115",
+     "hmdb": "HMDB0000187",
+     "pubchem": "5951",
+     "drugbank": "DB00133"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:120",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "kegg:C00065",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:CHEBI:17115",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000187",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "pubchem:5951",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "drugbank:DB00133",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:120",
+     "chebi:CHEBI:17115",
+     "hmdb:HMDB0000187",
+     "pubchem:5951",
+     "drugbank:DB00133"
     ]
    },
    {
@@ -11975,14 +13821,148 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:CHEBI:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
+    ]
+   },
+   {
+    "leg_dir": "runs_verify/2026-08-04_1754/papers/PMC12180156/strict",
+    "bucket": "compounds",
+    "name": "serine",
+    "ids": {
+     "pathbank_compound_id": "120",
+     "kegg": "C00065",
+     "chebi": "CHEBI:17115",
+     "hmdb": "HMDB0000187",
+     "pubchem": "5951",
+     "drugbank": "DB00133"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:120",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "kegg:C00065",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:CHEBI:17115",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000187",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "pubchem:5951",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     },
+     {
+      "id": "drugbank:DB00133",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "L-Serine",
+       "Ser"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:120",
+     "chebi:CHEBI:17115",
+     "hmdb:HMDB0000187",
+     "pubchem:5951",
+     "drugbank:DB00133"
     ]
    },
    {
@@ -11993,10 +13973,31 @@
      "uniprot": "P10378",
      "pathbank_protein_id": "6301"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P10378",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Enterobactin synthase component E",
+       "entE"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6301",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Enterobactin synthase component E",
+       "entE"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Enterobactin synthase component E",
-     "entE"
+    "independent": false,
+    "contradicting_ids": [
+     "uniprot:P10378",
+     "pathbank_protein_id:6301"
     ]
    },
    {
@@ -12011,14 +14012,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:CHEBI:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12033,14 +14094,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:CHEBI:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12050,10 +14171,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12066,13 +14198,42 @@
      "chebi": "32317",
      "pubchem": "586122"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:7827",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Tetrahydrodipicolinate",
+       "Thdpa"
+      ]
+     },
+     {
+      "id": "kegg:C13378",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2-(1,2-Dihydroxyethyl)-TPP",
+       "alpha,beta-Dihydroxyethyl-TPP",
+       "alpha,beta-Dihydroxyethyl-ThDP"
+      ]
+     },
+     {
+      "id": "chebi:32317",
+      "verdict": "no_reference",
+      "independent": false
+     },
+     {
+      "id": "pubchem:586122",
+      "verdict": "no_reference",
+      "independent": false
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2-(1,2-Dihydroxyethyl)-TPP",
-     "Tetrahydrodipicolinate",
-     "Thdpa",
-     "alpha,beta-Dihydroxyethyl-TPP",
-     "alpha,beta-Dihydroxyethyl-ThDP"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:7827",
+     "kegg:C13378"
     ]
    },
    {
@@ -12084,13 +14245,37 @@
      "kegg": "C22686",
      "pubchem": "497620041"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:41270",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "N-Acety",
+       "N-Acetylmuramoyl-L-alanyl-D-glutamyl-meso-2,6-diaminopimelyl-D-alanyl-D-alanine-diphosphoundecaprenol"
+      ]
+     },
+     {
+      "id": "kegg:C22686",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "4-Cyano-2-dimethylamino-4,4-diphenylbutane",
+       "4-Dimethylamino-2,2-diphenylvaleronitrile",
+       "Methadone intermediate"
+      ]
+     },
+     {
+      "id": "pubchem:497620041",
+      "verdict": "no_reference",
+      "independent": false
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "4-Cyano-2-dimethylamino-4,4-diphenylbutane",
-     "4-Dimethylamino-2,2-diphenylvaleronitrile",
-     "Methadone intermediate",
-     "N-Acety",
-     "N-Acetylmuramoyl-L-alanyl-D-glutamyl-meso-2,6-diaminopimelyl-D-alanyl-D-alanine-diphosphoundecaprenol"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:41270",
+     "kegg:C22686"
     ]
    },
    {
@@ -12100,10 +14285,90 @@
     "ids": {
      "pathbank_compound_id": "43200"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:43200",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "N-Acetylmuramoyl-L-alanyl-D-glutamyl-L-lysyl-D-alanyl-D-alanine-diphosphoundecaprenyl-N-acetylglucosamine",
+       "NALADG"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "N-Acetylmuramoyl-L-alanyl-D-glutamyl-L-lysyl-D-alanyl-D-alanine-diphosphoundecaprenyl-N-acetylglucosamine",
-     "NALADG"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:43200"
+    ]
+   },
+   {
+    "leg_dir": "runs_verify/2026-08-21_2057/papers/PMC12096016/research",
+    "bucket": "compounds",
+    "name": "2,3-dihydroxybenzoic acid",
+    "ids": {
+     "pathbank_compound_id": "296",
+     "kegg": "C00196",
+     "chebi": "18026",
+     "hmdb": "HMDB0000397",
+     "pubchem": "19",
+     "drugbank": "DB01672"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:296",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "2-Pyrocatechuic acid",
+       "DHBA"
+      ]
+     },
+     {
+      "id": "kegg:C00196",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:18026",
+      "verdict": "correct",
+      "independent": false
+     },
+     {
+      "id": "hmdb:HMDB0000397",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "2-Pyrocatechuic acid",
+       "DHBA"
+      ]
+     },
+     {
+      "id": "pubchem:19",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "2-Pyrocatechuic acid",
+       "DHBA"
+      ]
+     },
+     {
+      "id": "drugbank:DB01672",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "2-Pyrocatechuic acid",
+       "DHBA"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:296",
+     "hmdb:HMDB0000397",
+     "pubchem:19",
+     "drugbank:DB01672"
     ]
    },
    {
@@ -12113,14 +14378,24 @@
     "ids": {
      "uniprot": "P52643"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P52643",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "D-lactate dehydrogenase",
+       "Fermentative lactate dehydrogenase",
+       "hslI",
+       "htpH",
+       "ldhA"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "D-lactate dehydrogenase",
-     "D-lactate dehydrogenase_",
-     "Fermentative lactate dehydrogenase",
-     "hslI",
-     "htpH",
-     "ldhA"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P52643"
     ]
    },
    {
@@ -12130,10 +14405,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12143,10 +14429,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12156,10 +14453,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12174,14 +14482,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12196,14 +14564,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12213,10 +14641,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12231,14 +14670,112 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
+    ]
+   },
+   {
+    "leg_dir": "runs_verify/2026-08-21_2239/papers/PMC12856317/research",
+    "bucket": "proteins",
+    "name": "ALAS2",
+    "ids": {
+     "uniprot": "P22557",
+     "pathbank_protein_id": "17",
+     "drugbank": "DB00114"
+    },
+    "per_id": [
+     {
+      "id": "uniprot:P22557",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "pathbank_protein_id:17",
+      "verdict": "correct",
+      "independent": false
+     },
+     {
+      "id": "drugbank:DB00114",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "PLP",
+       "Pyridoxal 5'-phosphate",
+       "Pyridoxal 5-phosphate",
+       "Pyridoxal phosphate"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": true,
+    "contradicting_ids": [
+     "drugbank:DB00114"
     ]
    },
    {
@@ -12253,14 +14790,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12270,10 +14867,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12283,10 +14891,21 @@
     "ids": {
      "pathbank_compound_id": "296"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:296",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "2-Pyrocatechuic acid",
+       "DHBA"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2-Pyrocatechuic acid",
-     "DHBA"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:296"
     ]
    },
    {
@@ -12297,9 +14916,29 @@
      "pathbank_complex_id": "3624",
      "pathbank_protein_complex_id": "3624"
     },
+    "per_id": [
+     {
+      "id": "pathbank_complex_id:3624",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "ferric enterobactin outer membrane transport complex"
+      ]
+     },
+     {
+      "id": "pathbank_protein_complex_id:3624",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "ferric enterobactin outer membrane transport complex"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "ferric enterobactin outer membrane transport complex"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_complex_id:3624",
+     "pathbank_protein_complex_id:3624"
     ]
    },
    {
@@ -12314,14 +14953,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12336,14 +15035,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12353,14 +15112,24 @@
     "ids": {
      "uniprot": "P0ADI4"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P0ADI4",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Enterobactin biosynthesis bifunctional protein EntB",
+       "Enterobactin synthase component B",
+       "Enterochelin synthase B",
+       "entB",
+       "entG"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Enterobactin biosynthesis bifunctional protein EntB",
-     "Enterobactin synthase component B",
-     "Enterochelin synthase B",
-     "Isochorismatase",
-     "entB",
-     "entG"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P0ADI4"
     ]
    },
    {
@@ -12370,10 +15139,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12384,14 +15164,35 @@
      "uniprot": "P10378",
      "pathbank_protein_id": "6301"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P10378",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2,3-dihydroxybenzoate-AMP ligase",
+       "2,3-dihydroxybenzoate-AMP synthase",
+       "Dihydroxybenzoic acid-activating enzyme",
+       "Enterobactin synthase component E",
+       "Enterochelin synthase E",
+       "entE"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6301",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Enterobactin synthase component E",
+       "entE"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2,3-dihydroxybenzoate-AMP ligase",
-     "2,3-dihydroxybenzoate-AMP synthase",
-     "Dihydroxybenzoic acid-activating enzyme",
-     "Enterobactin synthase component E",
-     "Enterochelin synthase E",
-     "entE"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P10378",
+     "pathbank_protein_id:6301"
     ]
    },
    {
@@ -12406,14 +15207,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12428,14 +15289,128 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
+    ]
+   },
+   {
+    "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12096016/research",
+    "bucket": "compounds",
+    "name": "lactate",
+    "ids": {
+     "pathbank_compound_id": "122",
+     "kegg": "C00186",
+     "chebi": "422",
+     "hmdb": "HMDB0000190",
+     "pubchem": "107689",
+     "drugbank": "DB03066"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:122",
+      "verdict": "correct",
+      "independent": false
+     },
+     {
+      "id": "kegg:C00186",
+      "verdict": "correct",
+      "independent": false
+     },
+     {
+      "id": "chebi:422",
+      "verdict": "correct",
+      "independent": false
+     },
+     {
+      "id": "hmdb:HMDB0000190",
+      "verdict": "correct",
+      "independent": false
+     },
+     {
+      "id": "pubchem:107689",
+      "verdict": "correct",
+      "independent": false
+     },
+     {
+      "id": "drugbank:DB03066",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "D-Lac",
+       "D-Lactic acid"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "drugbank:DB03066"
     ]
    },
    {
@@ -12445,10 +15420,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12458,10 +15444,68 @@
     "ids": {
      "pathbank_compound_id": "41655"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:41655",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Ferric",
+       "Ferric enterobactin"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Ferric",
-     "Ferric enterobactin"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:41655"
+    ]
+   },
+   {
+    "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12452463/research",
+    "bucket": "compounds",
+    "name": "DHB",
+    "ids": {
+     "pathbank_compound_id": "22765",
+     "kegg": "C19557",
+     "chebi": "82557",
+     "hmdb": "HMDB0042046",
+     "pubchem": "9296"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:22765",
+      "verdict": "correct",
+      "independent": false
+     },
+     {
+      "id": "kegg:C19557",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Treosulfan"
+      ]
+     },
+     {
+      "id": "chebi:82557",
+      "verdict": "no_reference",
+      "independent": false
+     },
+     {
+      "id": "hmdb:HMDB0042046",
+      "verdict": "no_reference",
+      "independent": false
+     },
+     {
+      "id": "pubchem:9296",
+      "verdict": "no_reference",
+      "independent": false
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": true,
+    "contradicting_ids": [
+     "kegg:C19557"
     ]
    },
    {
@@ -12472,14 +15516,82 @@
      "uniprot": "P10378",
      "pathbank_protein_id": "6301"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P10378",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2,3-dihydroxybenzoate-AMP ligase",
+       "2,3-dihydroxybenzoate-AMP synthase",
+       "Dihydroxybenzoic acid-activating enzyme",
+       "Enterobactin synthase component E",
+       "Enterochelin synthase E",
+       "entE"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6301",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Enterobactin synthase component E",
+       "entE"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2,3-dihydroxybenzoate-AMP ligase",
-     "2,3-dihydroxybenzoate-AMP synthase",
-     "Dihydroxybenzoic acid-activating enzyme",
-     "Enterobactin synthase component E",
-     "Enterochelin synthase E",
-     "entE"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P10378",
+     "pathbank_protein_id:6301"
+    ]
+   },
+   {
+    "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12452463/strict",
+    "bucket": "compounds",
+    "name": "DHB",
+    "ids": {
+     "pathbank_compound_id": "22765",
+     "kegg": "C19557",
+     "chebi": "82557",
+     "hmdb": "HMDB0042046",
+     "pubchem": "9296"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:22765",
+      "verdict": "correct",
+      "independent": false
+     },
+     {
+      "id": "kegg:C19557",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Treosulfan"
+      ]
+     },
+     {
+      "id": "chebi:82557",
+      "verdict": "no_reference",
+      "independent": false
+     },
+     {
+      "id": "hmdb:HMDB0042046",
+      "verdict": "no_reference",
+      "independent": false
+     },
+     {
+      "id": "pubchem:9296",
+      "verdict": "no_reference",
+      "independent": false
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": true,
+    "contradicting_ids": [
+     "kegg:C19557"
     ]
    },
    {
@@ -12494,14 +15606,137 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
+    ]
+   },
+   {
+    "leg_dir": "runs_verify/2026-08-24_1203/papers/PMC12856317/research",
+    "bucket": "compounds",
+    "name": "CoA-SH",
+    "ids": {
+     "pathbank_compound_id": "1099",
+     "kegg": "C00010",
+     "chebi": "1146900",
+     "hmdb": "HMDB0001423",
+     "pubchem": "6816"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:1099",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "CoA",
+       "Coenzyme A"
+      ]
+     },
+     {
+      "id": "kegg:C00010",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:1146900",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "CoA",
+       "Coenzyme A"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001423",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "CoA",
+       "Coenzyme A"
+      ]
+     },
+     {
+      "id": "pubchem:6816",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "CoA",
+       "Coenzyme A"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:1099",
+     "chebi:1146900",
+     "hmdb:HMDB0001423",
+     "pubchem:6816"
     ]
    },
    {
@@ -12516,14 +15751,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:CHEBI:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:CHEBI:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12534,9 +15829,29 @@
      "pathbank_complex_id": "2000",
      "pathbank_protein_complex_id": "2000"
     },
+    "per_id": [
+     {
+      "id": "pathbank_complex_id:2000",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "ClpXP complex"
+      ]
+     },
+     {
+      "id": "pathbank_protein_complex_id:2000",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "ClpXP complex"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "ClpXP complex"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_complex_id:2000",
+     "pathbank_protein_complex_id:2000"
     ]
    },
    {
@@ -12546,10 +15861,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12559,10 +15885,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12576,13 +15913,114 @@
      "hmdb": "HMDB0000290",
      "pubchem": "445675"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:196",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "kegg:C00043",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "UDP-N-acetyl-D-glucosamine",
+       "UDP-N-acetyl-alpha-D-glucosamine",
+       "UDP-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "chebi:16264",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000290",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "pubchem:445675",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "UDP-GN",
-     "UDP-N-acetyl-D-glucosamine",
-     "UDP-N-acetyl-alpha-D-glucosamine",
-     "UDP-N-acetylglucosamine",
-     "Uridine diphosphate-N-acetylglucosamine"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:196",
+     "kegg:C00043",
+     "chebi:16264",
+     "hmdb:HMDB0000290",
+     "pubchem:445675"
+    ]
+   },
+   {
+    "leg_dir": "runs_verify/2026-08-24_1428/papers/PMC12444477/strict",
+    "bucket": "compounds",
+    "name": "Kdo",
+    "ids": {
+     "pathbank_compound_id": "57926",
+     "kegg": "C01187",
+     "chebi": "85986",
+     "pubchem": "21681234"
+    },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:57926",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "3-deoxy-D-manno-2-octulosonate",
+       "3dDmanO"
+      ]
+     },
+     {
+      "id": "kegg:C01187",
+      "verdict": "correct",
+      "independent": true
+     },
+     {
+      "id": "chebi:85986",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "3-deoxy-D-manno-2-octulosonate",
+       "3dDmanO"
+      ]
+     },
+     {
+      "id": "pubchem:21681234",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "3-deoxy-D-manno-2-octulosonate",
+       "3dDmanO"
+      ]
+     }
+    ],
+    "verdict": "wrong_identity",
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:57926",
+     "chebi:85986",
+     "pubchem:21681234"
     ]
    },
    {
@@ -12592,10 +16030,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12605,10 +16054,21 @@
     "ids": {
      "pathbank_compound_id": "296"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:296",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "2-Pyrocatechuic acid",
+       "DHBA"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2-Pyrocatechuic acid",
-     "DHBA"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:296"
     ]
    },
    {
@@ -12619,14 +16079,35 @@
      "uniprot": "P10378",
      "pathbank_protein_id": "6301"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P10378",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2,3-dihydroxybenzoate-AMP ligase",
+       "2,3-dihydroxybenzoate-AMP synthase",
+       "Dihydroxybenzoic acid-activating enzyme",
+       "Enterobactin synthase component E",
+       "Enterochelin synthase E",
+       "entE"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6301",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Enterobactin synthase component E",
+       "entE"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2,3-dihydroxybenzoate-AMP ligase",
-     "2,3-dihydroxybenzoate-AMP synthase",
-     "Dihydroxybenzoic acid-activating enzyme",
-     "Enterobactin synthase component E",
-     "Enterochelin synthase E",
-     "entE"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P10378",
+     "pathbank_protein_id:6301"
     ]
    },
    {
@@ -12636,10 +16117,21 @@
     "ids": {
      "pathbank_compound_id": "296"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:296",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "2-Pyrocatechuic acid",
+       "DHBA"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2-Pyrocatechuic acid",
-     "DHBA"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:296"
     ]
    },
    {
@@ -12654,14 +16146,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12676,14 +16228,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12694,9 +16306,29 @@
      "pathbank_complex_id": "2000",
      "pathbank_protein_complex_id": "2000"
     },
+    "per_id": [
+     {
+      "id": "pathbank_complex_id:2000",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "ClpXP complex"
+      ]
+     },
+     {
+      "id": "pathbank_protein_complex_id:2000",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "ClpXP complex"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "ClpXP complex"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_complex_id:2000",
+     "pathbank_protein_complex_id:2000"
     ]
    },
    {
@@ -12710,13 +16342,62 @@
      "hmdb": "HMDB0000290",
      "pubchem": "445675"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:196",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "kegg:C00043",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "UDP-N-acetyl-D-glucosamine",
+       "UDP-N-acetyl-alpha-D-glucosamine",
+       "UDP-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "chebi:16264",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000290",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "pubchem:445675",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "UDP-GN",
-     "UDP-N-acetyl-D-glucosamine",
-     "UDP-N-acetyl-alpha-D-glucosamine",
-     "UDP-N-acetylglucosamine",
-     "Uridine diphosphate-N-acetylglucosamine"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:196",
+     "kegg:C00043",
+     "chebi:16264",
+     "hmdb:HMDB0000290",
+     "pubchem:445675"
     ]
    },
    {
@@ -12726,10 +16407,21 @@
     "ids": {
      "pathbank_compound_id": "6699"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:6699",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "CL(18:1(9Z)/18:1(9Z)/18:1(9Z)/18:1(9Z))",
+       "CL72:4"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "CL(18:1(9Z)/18:1(9Z)/18:1(9Z)/18:1(9Z))",
-     "CL72:4"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:6699"
     ]
    },
    {
@@ -12744,14 +16436,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12762,9 +16514,29 @@
      "pathbank_complex_id": "2000",
      "pathbank_protein_complex_id": "2000"
     },
+    "per_id": [
+     {
+      "id": "pathbank_complex_id:2000",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "ClpXP complex"
+      ]
+     },
+     {
+      "id": "pathbank_protein_complex_id:2000",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "ClpXP complex"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "ClpXP complex"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_complex_id:2000",
+     "pathbank_protein_complex_id:2000"
     ]
    },
    {
@@ -12774,10 +16546,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12787,10 +16570,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12805,14 +16599,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12822,10 +16676,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12836,14 +16701,35 @@
      "uniprot": "P10378",
      "pathbank_protein_id": "6301"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P10378",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2,3-dihydroxybenzoate-AMP ligase",
+       "2,3-dihydroxybenzoate-AMP synthase",
+       "Dihydroxybenzoic acid-activating enzyme",
+       "Enterobactin synthase component E",
+       "Enterochelin synthase E",
+       "entE"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6301",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Enterobactin synthase component E",
+       "entE"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2,3-dihydroxybenzoate-AMP ligase",
-     "2,3-dihydroxybenzoate-AMP synthase",
-     "Dihydroxybenzoic acid-activating enzyme",
-     "Enterobactin synthase component E",
-     "Enterochelin synthase E",
-     "entE"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P10378",
+     "pathbank_protein_id:6301"
     ]
    },
    {
@@ -12853,10 +16739,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12871,14 +16768,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12893,14 +16850,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -12910,10 +16927,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -12924,14 +16952,35 @@
      "uniprot": "P10378",
      "pathbank_protein_id": "6301"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P10378",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2,3-dihydroxybenzoate-AMP ligase",
+       "2,3-dihydroxybenzoate-AMP synthase",
+       "Dihydroxybenzoic acid-activating enzyme",
+       "Enterobactin synthase component E",
+       "Enterochelin synthase E",
+       "entE"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6301",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Enterobactin synthase component E",
+       "entE"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2,3-dihydroxybenzoate-AMP ligase",
-     "2,3-dihydroxybenzoate-AMP synthase",
-     "Dihydroxybenzoic acid-activating enzyme",
-     "Enterobactin synthase component E",
-     "Enterochelin synthase E",
-     "entE"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P10378",
+     "pathbank_protein_id:6301"
     ]
    },
    {
@@ -12941,14 +16990,24 @@
     "ids": {
      "uniprot": "P0ADI4"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P0ADI4",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "Enterobactin biosynthesis bifunctional protein EntB",
+       "Enterobactin synthase component B",
+       "Enterochelin synthase B",
+       "entB",
+       "entG"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "Enterobactin biosynthesis bifunctional protein EntB",
-     "Enterobactin synthase component B",
-     "Enterochelin synthase B",
-     "Isochorismatase",
-     "entB",
-     "entG"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P0ADI4"
     ]
    },
    {
@@ -12959,14 +17018,35 @@
      "uniprot": "P10378",
      "pathbank_protein_id": "6301"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P10378",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2,3-dihydroxybenzoate-AMP ligase",
+       "2,3-dihydroxybenzoate-AMP synthase",
+       "Dihydroxybenzoic acid-activating enzyme",
+       "Enterobactin synthase component E",
+       "Enterochelin synthase E",
+       "entE"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6301",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Enterobactin synthase component E",
+       "entE"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2,3-dihydroxybenzoate-AMP ligase",
-     "2,3-dihydroxybenzoate-AMP synthase",
-     "Dihydroxybenzoic acid-activating enzyme",
-     "Enterobactin synthase component E",
-     "Enterochelin synthase E",
-     "entE"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P10378",
+     "pathbank_protein_id:6301"
     ]
    },
    {
@@ -12981,14 +17061,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -13002,13 +17142,62 @@
      "hmdb": "HMDB0000290",
      "pubchem": "445675"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:196",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "kegg:C00043",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "UDP-N-acetyl-D-glucosamine",
+       "UDP-N-acetyl-alpha-D-glucosamine",
+       "UDP-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "chebi:16264",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0000290",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     },
+     {
+      "id": "pubchem:445675",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "UDP-GN",
+       "Uridine diphosphate-N-acetylglucosamine"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "UDP-GN",
-     "UDP-N-acetyl-D-glucosamine",
-     "UDP-N-acetyl-alpha-D-glucosamine",
-     "UDP-N-acetylglucosamine",
-     "Uridine diphosphate-N-acetylglucosamine"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:196",
+     "kegg:C00043",
+     "chebi:16264",
+     "hmdb:HMDB0000290",
+     "pubchem:445675"
     ]
    },
    {
@@ -13018,10 +17207,21 @@
     "ids": {
      "pathbank_compound_id": "497"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:497",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "12:0",
+       "Dodecanoic acid"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "12:0",
-     "Dodecanoic acid"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:497"
     ]
    },
    {
@@ -13031,10 +17231,21 @@
     "ids": {
      "pathbank_compound_id": "6699"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:6699",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "CL(18:1(9Z)/18:1(9Z)/18:1(9Z)/18:1(9Z))",
+       "CL72:4"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "CL(18:1(9Z)/18:1(9Z)/18:1(9Z)/18:1(9Z))",
-     "CL72:4"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:6699"
     ]
    },
    {
@@ -13044,10 +17255,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -13058,14 +17280,35 @@
      "uniprot": "P10378",
      "pathbank_protein_id": "6301"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P10378",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "2,3-dihydroxybenzoate-AMP ligase",
+       "2,3-dihydroxybenzoate-AMP synthase",
+       "Dihydroxybenzoic acid-activating enzyme",
+       "Enterobactin synthase component E",
+       "Enterochelin synthase E",
+       "entE"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:6301",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "Enterobactin synthase component E",
+       "entE"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "2,3-dihydroxybenzoate-AMP ligase",
-     "2,3-dihydroxybenzoate-AMP synthase",
-     "Dihydroxybenzoic acid-activating enzyme",
-     "Enterobactin synthase component E",
-     "Enterochelin synthase E",
-     "entE"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P10378",
+     "pathbank_protein_id:6301"
     ]
    },
    {
@@ -13075,10 +17318,21 @@
     "ids": {
      "pathbank_compound_id": "40770"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:40770",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+       "223D3D"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
-     "223D3D"
+    "independent": false,
+    "contradicting_ids": [
+     "pathbank_compound_id:40770"
     ]
    },
    {
@@ -13093,14 +17347,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    },
    {
@@ -13111,15 +17425,36 @@
      "uniprot": "P22557",
      "pathbank_protein_id": "17"
     },
+    "per_id": [
+     {
+      "id": "uniprot:P22557",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+       "5-aminolevulinic acid synthase 2",
+       "ALAS2",
+       "ALASE",
+       "ASB",
+       "Delta-ALA synthase 2",
+       "Delta-aminolevulinate synthase 2"
+      ]
+     },
+     {
+      "id": "pathbank_protein_id:17",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+       "ALAS2"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
-     "5-aminolevulinic acid synthase 2",
-     "ALAS2",
-     "ALASE",
-     "ASB",
-     "Delta-ALA synthase 2",
-     "Delta-aminolevulinate synthase 2"
+    "independent": true,
+    "contradicting_ids": [
+     "uniprot:P22557",
+     "pathbank_protein_id:17"
     ]
    },
    {
@@ -13134,14 +17469,74 @@
      "pubchem": "137",
      "drugbank": "DB00855"
     },
+    "per_id": [
+     {
+      "id": "pathbank_compound_id:894",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "kegg:C00430",
+      "verdict": "wrong",
+      "independent": true,
+      "reference_names": [
+       "5-Amino-4-oxopentanoate",
+       "5-Amino-4-oxopentanoic acid",
+       "5-Amino-4-oxovaleric acid",
+       "5-Aminolevulinate"
+      ]
+     },
+     {
+      "id": "chebi:17549",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinate",
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "hmdb:HMDB0001149",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "pubchem:137",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     },
+     {
+      "id": "drugbank:DB00855",
+      "verdict": "wrong",
+      "independent": false,
+      "reference_names": [
+       "5-Aminolevulinic acid",
+       "5-Amnva"
+      ]
+     }
+    ],
     "verdict": "wrong_identity",
-    "reference_names": [
-     "5-Amino-4-oxopentanoate",
-     "5-Amino-4-oxopentanoic acid",
-     "5-Amino-4-oxovaleric acid",
-     "5-Aminolevulinate",
-     "5-Aminolevulinic acid",
-     "5-Amnva"
+    "independent": true,
+    "contradicting_ids": [
+     "pathbank_compound_id:894",
+     "kegg:C00430",
+     "chebi:17549",
+     "hmdb:HMDB0001149",
+     "pubchem:137",
+     "drugbank:DB00855"
     ]
    }
   ]

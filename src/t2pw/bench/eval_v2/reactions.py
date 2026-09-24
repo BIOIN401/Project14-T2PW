@@ -21,6 +21,10 @@ ROW CLASSES (complete cases), in precedence order -- documented in
                              pathway, an assay or transport
 ``paper_stated_summary``     the same, against an overall multi-step conversion the paper
                              states (a lumped row: not invented, never a true positive)
+``name_conflict``            it would be one of the above (or a partial match) only by
+                             crediting a parenthetical's INSIDE whose outer name does not
+                             match (``heptanoyl pyrophosphate (HepPP)`` for heptaprenyl
+                             diphosphate); never a true positive, listed for hand review
 ``partial_match``            at least one defining substrate AND one defining product of
                              an in-scope gold reaction, not all of them
 ``external_rag_supported``   no gold match; the R-D092-1 lineage classifier finds an
@@ -51,11 +55,12 @@ from t2pw.bench.goldset import GoldTerm, SupportedReaction, fold_for_quote
 TP = "target_paper_supported"
 OFF = "paper_stated_off_pathway"
 SUMMARY = "paper_stated_summary"
+CONFLICT = "name_conflict"
 PARTIAL = "partial_match"
 EXT = "external_rag_supported"
 INDET = "indeterminate_external"
 UNSUP = "unsupported"
-ROW_CLASSES = (TP, OFF, SUMMARY, PARTIAL, EXT, INDET, UNSUP)
+ROW_CLASSES = (TP, OFF, SUMMARY, CONFLICT, PARTIAL, EXT, INDET, UNSUP)
 
 #: An evidence string longer than this is a document dump, not a quote (R-D092-1 fact 4:
 #: 35k- and 108k-character "evidence" strings exist and carry external text).
@@ -80,12 +85,25 @@ def load_lineage(repo_root: Path) -> Any:
 
 
 # --------------------------------------------------------------------------- matching
-def _side_hits(terms: Sequence[Term], names: Sequence[str]) -> List[bool]:
-    return [M.any_match(names, t.name, t.aliases) is not None for t in terms]
+def _side_hits(terms: Sequence[Term], names: Sequence[str]) -> List[str]:
+    """Per gold term: ``match`` | ``conflict`` | ``''`` (see :func:`matcher.name_verdict`)."""
+
+    out = []
+    for t in terms:
+        verdicts = {M.name_verdict(n, M.term_keys(t.name, t.aliases)) for n in names}
+        out.append("match" if "match" in verdicts else "conflict" if "conflict" in verdicts else "")
+    return out
+
+
+def _kind(hits_in: Sequence[str], hits_out: Sequence[str], ok: Tuple[str, ...]) -> str:
+    i, o = [h in ok for h in hits_in], [h in ok for h in hits_out]
+    return "full" if all(i) and all(o) else "partial" if any(i) and any(o) else ""
 
 
 def match_reaction(g: Reaction, row: Mapping[str, Any]) -> Tuple[str, bool]:
-    """``("full"|"partial"|"", backwards)`` for one row against one gold reaction."""
+    """``("full"|"name_conflict"|"partial"|"", backwards)`` for one row against one gold
+    reaction. ``name_conflict``: the outcome changes only if a parenthetical's inside is
+    allowed to credit a term its outer name does not match."""
 
     ins = M.participant_names(row.get("inputs"))
     outs = M.participant_names(row.get("outputs"))
@@ -94,10 +112,12 @@ def match_reaction(g: Reaction, row: Mapping[str, Any]) -> Tuple[str, bool]:
         a, b = (outs, ins) if backwards else (ins, outs)
         hi = _side_hits(g.defining("inputs"), a)
         ho = _side_hits(g.defining("outputs"), b)
-        if all(hi) and all(ho):
+        strict = _kind(hi, ho, ("match",))
+        if strict == "full":
             return "full", backwards
-        if any(hi) and any(ho) and not best[0]:
-            best = ("partial", backwards)
+        kind = CONFLICT if _kind(hi, ho, ("match", "conflict")) != strict else strict
+        if kind and (not best[0] or (best[0] == "partial" and kind == CONFLICT)):
+            best = (kind, backwards)
     return best
 
 
@@ -199,6 +219,8 @@ def score_leg(case: CaseV2, payload: Mapping[str, Any], lineage_records: Sequenc
         full = [(g, bw) for g in case.reactions for kind, bw in [match_reaction(g, row)] if kind == "full"]
         off = [g for g in case.off_pathway if match_reaction(g, row)[0] == "full"]
         summ = [g for g in case.summaries if match_reaction(g, row)[0] == "full"]
+        conflict = [(g, bw) for g in (*case.reactions, *case.off_pathway, *case.summaries)
+                    for kind, bw in [match_reaction(g, row)] if kind == CONFLICT]
         part = [(g, bw) for g in case.reactions for kind, bw in [match_reaction(g, row)] if kind == "partial"]
         lin = lin_by_index.get(i, {})
         resolutions = lin.get("source_resolutions")
@@ -209,6 +231,12 @@ def score_leg(case: CaseV2, payload: Mapping[str, Any], lineage_records: Sequenc
             cls, gid = OFF, [g.id for g in off]
         elif summ:
             cls, gid = SUMMARY, [g.id for g in summ]
+        elif conflict:
+            cls, gid = CONFLICT, [g.id for g, _ in conflict]
+            gold_keys = set().union(*(M.term_keys(t.name, t.aliases) for g, _ in conflict
+                                      for t in (*g.defining("inputs"), *g.defining("outputs"))))
+            rec["conflicting_names"] = [n for n in rec["inputs"] + rec["outputs"]
+                                        if M.name_verdict(n, gold_keys) == "conflict"]
         elif part:
             cls, gid = PARTIAL, [g.id for g, _ in part]
         elif external and lin.get("support_class") == "external_rag_supported":
@@ -219,7 +247,7 @@ def score_leg(case: CaseV2, payload: Mapping[str, Any], lineage_records: Sequenc
             cls, gid = UNSUP, []
         rec.update({
             "class": cls, "gold_ids": gid, "lineage_class": lin.get("support_class", "unavailable"),
-            "lineage_external": external, "table1": (not external) or cls in (TP, OFF, SUMMARY, PARTIAL),
+            "lineage_external": external, "table1": (not external) or cls in (TP, OFF, SUMMARY, CONFLICT, PARTIAL),
             "old_matcher_gold_ids": [g.id for g in case.reactions if _old_matches(g, row)],
             "evidence": evidence_verdict(row, folded_paper),
         })
@@ -245,9 +273,12 @@ def score_leg(case: CaseV2, payload: Mapping[str, Any], lineage_records: Sequenc
             else:
                 want = M.term_keys(g.enzyme.name, g.enzyme.aliases)
                 got = set().union(*(M.enzyme_keys(e, cplx) for e in rec["enzymes"]))
-                rec["enzyme_verdict"] = "correct" if want & got else "wrong"
-        if part and not full:
-            g, bw = part[0]
+                # An inside-only hit ('oxidoreductase (entA)' for EntA) is not credited:
+                # the evaluator cannot tell a generic outer name from a contradicting one.
+                rec["enzyme_verdict"] = ("correct" if want & got else CONFLICT
+                                         if any(M.inner_key(e) in want for e in rec["enzymes"]) else "wrong")
+        if (conflict or part) and not full:
+            g, bw = (conflict or part)[0]
             a, b = ("outputs", "inputs") if bw else ("inputs", "outputs")
             ins, outs = M.participant_names(row.get(a)), M.participant_names(row.get(b))
             rec["missing_defining"] = (
@@ -274,7 +305,7 @@ def score_leg(case: CaseV2, payload: Mapping[str, Any], lineage_records: Sequenc
     cof_missing: List[Dict[str, Any]] = []
     for g in case.reactions:
         full_rows = [r for r in uniq if g.id in r["gold_ids"] and r["class"] == TP]
-        part_rows = [r for r in uniq if g.id in r["gold_ids"] and r["class"] == PARTIAL]
+        part_rows = [r for r in uniq if g.id in r["gold_ids"] and r["class"] in (CONFLICT, PARTIAL)]
         di, do = g.defining("inputs"), g.defining("outputs")
         sub_tot += len(di)
         prod_tot += len(do)
@@ -294,7 +325,7 @@ def score_leg(case: CaseV2, payload: Mapping[str, Any], lineage_records: Sequenc
             enz["reaction_not_matched"] += 1
         else:
             enz["reaction_not_matched"] += 1
-    enz_den = enz["correct"] + enz["wrong"] + enz["missing"]
+    enz_den = enz["correct"] + enz["wrong"] + enz["missing"] + enz[CONFLICT]
     sp = collections.Counter(r["species_verdict"] for r in uniq)
     ev = collections.Counter(r["evidence"] for r in uniq)
 
@@ -325,13 +356,18 @@ def score_leg(case: CaseV2, payload: Mapping[str, Any], lineage_records: Sequenc
             "unsupported": counts.get(UNSUP, 0),
             "unsupported_rate": _rate(counts.get(UNSUP, 0), len(uniq)),
             "indeterminate_external": counts.get(INDET, 0),
-            "unsupported_rate_upper_bound": _rate(counts.get(UNSUP, 0) + counts.get(INDET, 0), len(uniq)),
+            "unsupported_rate_upper_bound": _rate(counts.get(UNSUP, 0) + counts.get(INDET, 0)
+                                                  + counts.get(CONFLICT, 0), len(uniq)),
             "external_rag_supported": counts.get(EXT, 0),
             "paper_stated_off_pathway": counts.get(OFF, 0),
             "off_pathway_rate": _rate(counts.get(OFF, 0), len(uniq)),
             "paper_stated_summary": counts.get(SUMMARY, 0),
             "partial_match": counts.get(PARTIAL, 0),
+            "name_conflict": counts.get(CONFLICT, 0),
         },
+        "name_conflicts_for_hand_review": [
+            {k: r[k] for k in ("row_index", "inputs", "outputs", "enzymes", "gold_ids", "conflicting_names")}
+            for r in uniq if r["class"] == CONFLICT],
         "entity_accuracy": {
             "substrate_accuracy": _rate(sub_hit, sub_tot), "substrate_hits": sub_hit, "substrate_total": sub_tot,
             "product_accuracy": _rate(prod_hit, prod_tot), "product_hits": prod_hit, "product_total": prod_tot,
@@ -361,6 +397,7 @@ def score_leg(case: CaseV2, payload: Mapping[str, Any], lineage_records: Sequenc
 # --------------------------------------------------------------------------- mapped-ID correctness
 _ID_FIELDS = ("uniprot", "pathbank_protein_id", "pathbank_compound_id", "kegg", "chebi", "hmdb",
               "pubchem", "drugbank", "pathbank_complex_id", "pathbank_protein_complex_id")
+_XREF_KINDS = ("kegg", "chebi", "hmdb", "pubchem", "drugbank")
 
 
 def _norm_id(kind: str, value: Any) -> Tuple[str, str]:
@@ -370,18 +407,41 @@ def _norm_id(kind: str, value: Any) -> Tuple[str, str]:
     return kind, v
 
 
-def build_reference_index(repo_root: Path) -> Dict[Tuple[str, str], Set[str]]:
-    """``(id kind, id) -> reference names`` from COMMITTED mapping tables only.
+def _usable(value: Any) -> bool:
+    return value not in (None, "", 0) and str(value).strip().casefold() not in ("unknown", "none")
 
-    Sources: ``data/id_mapping_cache.json`` (PathBank / KEGG / ChEBI candidate records),
-    ``data/enrichment_cache.json`` (UniProt records) and ``data/pathwhiz_id_db.json``.
+
+def build_reference_index(repo_root: Path) -> Dict[str, Any]:
+    """Reference names per identifier, from COMMITTED tables only, split by authority.
+
+    ``independent[(kind, id)]`` -- a record fetched or curated BY that identifier:
+    ``data/pathwhiz_id_db.json`` (keyed the way payloads key it: ``pathbank_compound_id``
+    -> ``compounds.by_id``, ``pathbank_protein_id`` -> ``proteins.by_id``,
+    ``pathbank_complex_id`` / ``pathbank_protein_complex_id`` -> ``protein_complexes.by_id``)
+    and ``data/enrichment_cache.json`` (KEGG / ChEBI / HMDB / UniProt records).
+
+    ``mapper_cache[(kind, id)]`` -- ``data/id_mapping_cache.json``, the mapper's own
+    candidate cache. Not an independent authority: a verdict resting only on it is
+    marked so.
+
+    ``same_record[(kind, id)]`` -- identifiers one PathWhiz record declares for itself,
+    so each is judged with the names of all of them.
+
+    The PathWhiz table mixes real PathBank records with LOCAL ids from sample .pwml
+    files whose numbers collide with PathBank's (compound 14 is 'ATP' there, PathBank
+    compound 14 is Iodotyrosine; protein 13 is 'diglyceride lipase' there, PathBank
+    protein 13 is ACAT2). Only a record carrying an external identifier (a compound
+    with KEGG/ChEBI/HMDB/PubChem/DrugBank, a protein with a UniProt accession, a complex
+    with member proteins) is used; the rest would convict correct mappings.
     Read-only; nothing is fixed or written.
     """
 
-    idx: Dict[Tuple[str, str], Set[str]] = collections.defaultdict(set)
+    indep: Dict[Tuple[str, str], Set[str]] = collections.defaultdict(set)
+    mapper: Dict[Tuple[str, str], Set[str]] = collections.defaultdict(set)
+    same: Dict[Tuple[str, str], Set[Tuple[str, str]]] = collections.defaultdict(set)
 
-    def add(kind: str, value: Any, *names: Any) -> None:
-        if value in (None, "", 0):
+    def add(idx: Dict[Tuple[str, str], Set[str]], kind: str, value: Any, *names: Any) -> None:
+        if not _usable(value):
             return
         for n in names:
             if isinstance(n, str) and n.strip():
@@ -400,11 +460,11 @@ def build_reference_index(repo_root: Path) -> Dict[Tuple[str, str], Set[str]]:
                 names = (c.get("name"), c.get("short_name"), c.get("gene_name"))
                 for kind in ("pathbank_protein_id", "pathbank_compound_id", "uniprot",
                              "pathbank_complex_id", "pathbank_protein_complex_id"):
-                    add(kind, c.get(kind), *names)
+                    add(mapper, kind, c.get(kind), *names)
                 if c.get("database") and c.get("id"):
-                    add(str(c["database"]).lower(), c["id"], c.get("name"))
+                    add(mapper, str(c["database"]).lower(), c["id"], c.get("name"))
                 for kind, value in (c.get("mapped_ids") or {}).items():
-                    add(kind, value, *names)
+                    add(mapper, kind, value, *names)
     try:
         enr = json.loads((root / "data/enrichment_cache.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -412,32 +472,97 @@ def build_reference_index(repo_root: Path) -> Dict[Tuple[str, str], Set[str]]:
     for key, rec in ((enr.get("proteins") or {}).items() if isinstance(enr, dict) else ()):
         parsed = (rec or {}).get("parsed") or {}
         if key.startswith("uniprot:") and parsed.get("status") == "ok":
-            add("uniprot", key.split(":", 1)[1], parsed.get("recommended_name"),
+            add(indep, "uniprot", key.split(":", 1)[1], parsed.get("recommended_name"),
                 *(parsed.get("alternative_names") or ()), *(parsed.get("gene_names") or ()))
     for key, rec in ((enr.get("compounds") or {}).items() if isinstance(enr, dict) else ()):
-        # KEGG / ChEBI / HMDB records fetched BY IDENTIFIER (enrich_entities), so their
-        # names describe the record the identifier points at.
         if isinstance(rec, dict) and rec.get("status") == "ok" and ":" in key:
             kind, value = key.split(":", 1)
-            add(kind, value, rec.get("primary_name"), *(rec.get("synonyms") or ()))
+            add(indep, kind, value, rec.get("primary_name"), *(rec.get("synonyms") or ()))
     try:
         pw = json.loads((root / "data/pathwhiz_id_db.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
         pw = {}
-    comps = (pw.get("compounds") or {}) if isinstance(pw, dict) else {}
-    for pw_id, rec in (comps.get("by_id") or {}).items():
-        names = (rec.get("name"),)
-        add("pathwhiz_id", pw_id, *names)
-        for kind in ("kegg", "chebi", "hmdb", "pubchem", "drugbank"):
-            add(kind, rec.get(kind), *names)
-    return dict(idx)
+    pw = pw if isinstance(pw, dict) else {}
+
+    def declare(members: List[Tuple[str, str]]) -> None:
+        for m in members:
+            same[m] |= set(members)
+
+    for pw_id, rec in ((pw.get("compounds") or {}).get("by_id") or {}).items():
+        xrefs = [(k, rec.get(k)) for k in _XREF_KINDS if _usable(rec.get(k))]
+        if not xrefs:
+            continue  # a local sample id, not a PathBank record (see docstring)
+        members = [_norm_id("pathbank_compound_id", pw_id)] + [_norm_id(k, v) for k, v in xrefs]
+        for kind, value in members:
+            add(indep, kind, value, rec.get("name"))
+        declare(members)
+    proteins = (pw.get("proteins") or {}).get("by_id") or {}
+    for pw_id, rec in proteins.items():
+        if not _usable(rec.get("uniprot")):
+            continue
+        members = [_norm_id("pathbank_protein_id", pw_id), _norm_id("uniprot", rec["uniprot"])]
+        for kind, value in members:
+            add(indep, kind, value, rec.get("name"), rec.get("gene"))
+        declare(members)
+    for pw_id, rec in ((pw.get("protein_complexes") or {}).get("by_id") or {}).items():
+        if any(_usable((proteins.get(str(p)) or {}).get("uniprot")) for p in rec.get("protein_ids") or ()):
+            for kind in ("pathbank_complex_id", "pathbank_protein_complex_id"):
+                add(indep, kind, pw_id, rec.get("name"))
+    return {"independent": dict(indep), "mapper_cache": dict(mapper), "same_record": dict(same)}
 
 
-def id_correctness(payload: Mapping[str, Any], ref: Mapping[Tuple[str, str], Set[str]]) -> Dict[str, Any]:
+def _declared_keys(name: Any) -> Set[str]:
+    """Every name an entity or a record declares: whole, outer AND inside of a trailing
+    parenthetical. Identity is about which names a thing carries; the B2 rule (an inside
+    never credits a GOLD term its outer name contradicts) governs reaction scoring."""
+
+    return {k for k in (*M.candidate_keys(name), M.inner_key(name)) if k}
+
+
+def _name_hit(claim: Set[str], names: Iterable[str]) -> bool:
+    ref_keys = set().union(*(_declared_keys(n) for n in names))
+    # Equality only, plus one identity-check-only relaxation: spacing inside a name
+    # ('lipid IV_A' vs 'lipid IVA') is compared with spaces removed.
+    compact = lambda ks: {k.replace(" ", "") for k in ks}  # noqa: E731
+    return bool(claim & ref_keys or compact(claim) & compact(ref_keys))
+
+
+def _row_records(row: Mapping[str, Any]) -> Dict[Tuple[str, str], Set[str]]:
+    """Names from the row's own enrichment sub-records, each fetched BY one identifier
+    (KEGG / ChEBI / HMDB id, UniProt accession): record-side, independent."""
+
+    out: Dict[Tuple[str, str], Set[str]] = collections.defaultdict(set)
+    enr = row.get("enrichment") if isinstance(row.get("enrichment"), dict) else {}
+    comp = enr.get("compound") if isinstance(enr.get("compound"), dict) else {}
+    for kind in ("kegg", "chebi", "hmdb"):
+        sub = comp.get(kind) if isinstance(comp.get(kind), dict) else {}
+        if sub.get("status") == "ok" and _usable(sub.get("id")):
+            out[_norm_id(kind, sub["id"])] |= {n for n in [sub.get("primary_name"), *(sub.get("synonyms") or ())] if n}
+    uni = ((enr.get("protein") or {}).get("uniprot") or {}) if isinstance(enr.get("protein"), dict) else {}
+    if uni.get("status") == "ok" and _usable(uni.get("uniprot_id")):
+        out[_norm_id("uniprot", uni["uniprot_id"])] |= {
+            n for n in [uni.get("recommended_name"), *(uni.get("alternative_names") or ()),
+                        *(uni.get("gene_names") or ())] if n}
+    return out
+
+
+def id_correctness(payload: Mapping[str, Any], ref: Mapping[str, Any]) -> Dict[str, Any]:
     """Per entity: ``correct_identity`` | ``wrong_identity`` | ``unresolved_or_novel`` |
-    ``not_evaluable_no_reference``. The claim side is the entity NAME only (never its
+    ``not_evaluable_no_reference``, judged PER IDENTIFIER against that identifier's own
+    record -- never a union across identifiers, so one correct KEGG id cannot hide a
+    wrong PathWhiz id.
+
+    Each identifier: ``correct`` if the claim matches its independent record (plus the
+    independent records of identifiers the same PathWhiz record declares), else
+    ``correct`` if it matches the mapper's candidate cache (``independent`` False),
+    else ``wrong`` when any reference exists (``independent`` True iff an independent
+    record exists), else ``no_reference``. The entity is ``wrong_identity`` if ANY
+    identifier is wrong. The claim side is the entity NAME only (never its
     ``synonyms``, which may have been written from the very record under test)."""
 
+    indep = ref.get("independent") or {}
+    mapper = ref.get("mapper_cache") or {}
+    same = ref.get("same_record") or {}
     out: List[Dict[str, Any]] = []
     ents = payload.get("entities") if isinstance(payload.get("entities"), dict) else {}
     for bucket in ("compounds", "proteins", "protein_complexes"):
@@ -449,46 +574,53 @@ def id_correctness(payload: Mapping[str, Any], ref: Mapping[Tuple[str, str], Set
             meta = row.get("mapping_meta") if isinstance(row.get("mapping_meta"), dict) else {}
             for k in _ID_FIELDS:
                 v = mapped.get(k) or row.get(k) or meta.get(k)
-                if v not in (None, "", 0) and str(v).strip().casefold() not in ("unknown", "none"):
+                if _usable(v):
                     ids[k] = str(v)
-            claim = M.candidate_keys(row["name"]) | (M.candidate_keys(row["raw_name"]) if row.get("raw_name") else set())
-            rec = {"bucket": bucket, "name": row["name"], "ids": ids}
+            claim = _declared_keys(row["name"]) | (_declared_keys(row["raw_name"]) if row.get("raw_name") else set())
+            rec: Dict[str, Any] = {"bucket": bucket, "name": row["name"], "ids": ids}
             if not ids or str(meta.get("chosen_rule", "")).startswith("novel") or row.get("generated"):
                 rec["verdict"] = "unresolved_or_novel"
                 out.append(rec)
                 continue
-            names: Set[str] = set()
+            own = _row_records(row)
+            per_id: List[Dict[str, Any]] = []
             for k, v in ids.items():
-                names |= set(ref.get(_norm_id(k, v), ()))
-            # The DB record the mapper chose, as cached in the payload: an external
-            # record's own name, keyed by the same identifier.
-            for c in meta.get("candidates") or ():
-                if isinstance(c, dict) and any(str(c.get(k)) == v for k, v in ids.items() if c.get(k) is not None):
-                    names |= {n for n in (c.get("name"), c.get("short_name"), c.get("gene_name")) if n}
-            # The row's own enrichment block is fetched BY the mapped identifier
-            # (UniProt accession / KEGG id), so it is record-side, not claim-side.
-            enr = row.get("enrichment") if isinstance(row.get("enrichment"), dict) else {}
-            comp = enr.get("compound") if isinstance(enr.get("compound"), dict) else {}
-            names |= {n for n in [comp.get("primary_name"), *(comp.get("synonyms") or ())] if n}
-            uni = ((enr.get("protein") or {}).get("uniprot") or {}) if isinstance(enr.get("protein"), dict) else {}
-            if uni.get("status") == "ok":
-                names |= {n for n in [uni.get("recommended_name"), *(uni.get("alternative_names") or ()),
-                                      *(uni.get("gene_names") or ())] if n}
-            if not names:
-                rec["verdict"] = "not_evaluable_no_reference"
+                key = _norm_id(k, v)
+                ind: Set[str] = set()
+                for m in same.get(key, set()) | {key}:
+                    ind |= set(indep.get(m, ())) | own.get(m, set())
+                # The DB records the mapper cached in the payload for this identifier.
+                mc = set(mapper.get(key, ()))
+                for c in meta.get("candidates") or ():
+                    if isinstance(c, dict) and c.get(k) is not None and str(c.get(k)) == v:
+                        mc |= {n for n in (c.get("name"), c.get("short_name"), c.get("gene_name")) if n}
+                if ind and _name_hit(claim, ind):
+                    v_rec = {"verdict": "correct", "independent": True}
+                elif mc and _name_hit(claim, mc):
+                    v_rec = {"verdict": "correct", "independent": False}
+                elif ind or mc:
+                    v_rec = {"verdict": "wrong", "independent": bool(ind),
+                             "reference_names": sorted(ind or mc)[:12]}
+                else:
+                    v_rec = {"verdict": "no_reference", "independent": False}
+                per_id.append({"id": f"{k}:{v}", **v_rec})
+            rec["per_id"] = per_id
+            wrong = [p for p in per_id if p["verdict"] == "wrong"]
+            right = [p for p in per_id if p["verdict"] == "correct"]
+            if wrong:
+                rec["verdict"] = "wrong_identity"
+                rec["independent"] = any(p["independent"] for p in wrong)
+                rec["contradicting_ids"] = [p["id"] for p in wrong]
+            elif right:
+                rec["verdict"] = "correct_identity"
+                rec["independent"] = any(p["independent"] for p in right)
             else:
-                # Equality only, plus one identity-check-only relaxation: spacing inside
-                # a name ('lipid IV_A' vs 'lipid IVA') is compared with spaces removed.
-                ref_keys = set().union(*(M.candidate_keys(n) for n in names))
-                compact = lambda ks: {k.replace(" ", "") for k in ks}  # noqa: E731
-                rec["verdict"] = ("correct_identity" if claim & ref_keys or compact(claim) & compact(ref_keys)
-                                  else "wrong_identity")
-                if rec["verdict"] == "wrong_identity":
-                    rec["reference_names"] = sorted(names)[:12]
+                rec["verdict"] = "not_evaluable_no_reference"
             out.append(rec)
     tally = collections.Counter(r["verdict"] for r in out)
-    return {"counts": dict(tally), "wrong": [r for r in out if r["verdict"] == "wrong_identity"],
-            "entities": len(out)}
+    mapper_only = collections.Counter(r["verdict"] for r in out if r.get("independent") is False)
+    return {"counts": dict(tally), "counts_resting_on_mapper_cache_only": dict(mapper_only),
+            "wrong": [r for r in out if r["verdict"] == "wrong_identity"], "entities": len(out)}
 
 
 # --------------------------------------------------------------------------- leakage audit
@@ -573,7 +705,7 @@ def leakage_audit(stage1: Mapping[str, Any], stage2: Mapping[str, Any], admissio
 
 
 __all__ = [
-    "EXT", "INDET", "OFF", "PARTIAL", "ROW_CLASSES", "SUMMARY", "TP", "UNSUP",
+    "CONFLICT", "EXT", "INDET", "OFF", "PARTIAL", "ROW_CLASSES", "SUMMARY", "TP", "UNSUP",
     "species_key",
     "build_reference_index", "evidence_verdict", "id_correctness", "leakage_audit",
     "load_lineage", "match_reaction", "score_leg",

@@ -140,8 +140,8 @@ def test_old_lenient_matcher_is_reported_beside_v2():
 
 
 def test_id_correctness_three_way_plus_not_evaluable():
-    ref = {("kegg", "C00021"): {"S-Adenosyl-L-homocysteine", "SAH"},
-           ("uniprot", "P0AEJ2"): {"Isochorismate synthase EntC", "entC"}}
+    ref = {"independent": {("kegg", "C00021"): {"S-Adenosyl-L-homocysteine", "SAH"},
+                           ("uniprot", "P0AEJ2"): {"Isochorismate synthase EntC", "entC"}}}
     payload = {"entities": {
         "compounds": [
             {"name": "SAM", "mapped_ids": {"kegg": "C00021"}},                 # claimed SAM, ID is SAH
@@ -158,9 +158,83 @@ def test_id_correctness_three_way_plus_not_evaluable():
 
 def test_id_claim_side_never_reads_synonyms():
     """A synonyms list written from the record under test would make the check circular."""
-    ref = {("kegg", "C00021"): {"S-Adenosyl-L-homocysteine"}}
+    ref = {"independent": {("kegg", "C00021"): {"S-Adenosyl-L-homocysteine"}}}
     row = {"name": "SAM", "synonyms": ["S-Adenosyl-L-homocysteine"], "mapped_ids": {"kegg": "C00021"}}
     assert R.id_correctness({"entities": {"compounds": [row]}}, ref)["counts"] == {"wrong_identity": 1}
+
+
+# Regression fixtures for review finding B1 (ORCH-742c repair 1). NEW ACCEPTANCE TESTS:
+# the evaluator is new on this branch (G9: no base-SHA failure applies).
+SAM_ON_AKG = {"entities": {"compounds": [
+    {"name": "S-adenosyl-L-methionine", "mapped_ids": {"kegg": "C00019", "pathbank_compound_id": "134"}}]}}
+
+
+def test_one_correct_id_does_not_mask_a_wrong_pathwhiz_id():
+    """Each identifier is judged against its own record, never a union across them."""
+    ref = {"independent": {("kegg", "C00019"): {"S-Adenosyl-L-methionine"},
+                           ("pathbank_compound_id", "134"): {"Oxoglutaric acid"}}}
+    res = R.id_correctness(SAM_ON_AKG, ref)
+    assert res["counts"] == {"wrong_identity": 1}
+    w = res["wrong"][0]
+    assert w["contradicting_ids"] == ["pathbank_compound_id:134"] and w["independent"] is True
+    assert {p["id"]: p["verdict"] for p in w["per_id"]} == {
+        "kegg:C00019": "correct", "pathbank_compound_id:134": "wrong"}
+
+
+def test_claimed_sam_on_pathwhiz_134_is_wrong_against_the_committed_tables():
+    """The reviewer's fixture on the committed data: PathWhiz compound 134 is
+    Oxoglutaric acid in data/pathwhiz_id_db.json, read under the payload's own key."""
+    ref = R.build_reference_index(ROOT)
+    assert "Oxoglutaric acid" in ref["independent"][("pathbank_compound_id", "134")]
+    res = R.id_correctness(SAM_ON_AKG, ref)
+    assert res["counts"] == {"wrong_identity": 1}
+    assert res["wrong"][0]["contradicting_ids"] == ["pathbank_compound_id:134"]
+    assert res["wrong"][0]["independent"] is True
+    # The right molecule on the same identifiers stays correct, through the KEGG record
+    # that PathWhiz record 134 declares for itself.
+    akg = {"entities": {"compounds": [{"name": "alpha-ketoglutarate",
+                                       "mapped_ids": {"kegg": "C00026", "pathbank_compound_id": "134"}}]}}
+    assert R.id_correctness(akg, ref)["counts"] == {"correct_identity": 1}
+
+
+def test_local_pathwhiz_ids_that_collide_with_pathbank_are_not_an_authority():
+    """PathWhiz-table records with no external identifier are local sample-.pwml ids:
+    compound 14 is 'ATP' there, PathBank compound 14 is Iodotyrosine; protein 13 is
+    'diglyceride lipase' there, PathBank protein 13 is ACAT2. Using them would convict
+    correct mappings."""
+    ref = R.build_reference_index(ROOT)
+    assert ("pathbank_compound_id", "14") not in ref["independent"]
+    assert ("pathbank_protein_id", "13") not in ref["independent"]
+    acat2 = {"entities": {"proteins": [{"name": "ACAT2", "mapped_ids": {"pathbank_protein_id": "13"}}]}}
+    assert R.id_correctness(acat2, ref)["counts"] != {"wrong_identity": 1}
+
+
+def test_a_verdict_resting_only_on_the_mapper_cache_is_marked_non_independent():
+    ref = {"mapper_cache": {("pathbank_compound_id", "9"): {"Glycine"}}}
+    ok = {"entities": {"compounds": [{"name": "glycine", "mapped_ids": {"pathbank_compound_id": "9"}}]}}
+    bad = {"entities": {"compounds": [{"name": "serine", "mapped_ids": {"pathbank_compound_id": "9"}}]}}
+    assert R.id_correctness(ok, ref)["counts_resting_on_mapper_cache_only"] == {"correct_identity": 1}
+    res = R.id_correctness(bad, ref)
+    assert res["counts"] == {"wrong_identity": 1} and res["wrong"][0]["independent"] is False
+
+
+def test_heptanoyl_hepp_is_a_name_conflict_not_a_true_positive():
+    """NEW ACCEPTANCE TEST, regression fixture for review finding B2 (ORCH-742c repair 1),
+    on the committed PMC12657337 supplement case."""
+    from t2pw.bench.eval_v2.gold import load_supplement
+
+    case = load_supplement()["PMC12657337"]
+    bad = _row(["FPP"], ["heptanoyl pyrophosphate (HepPP)"], ["HepPPS"])
+    good = _row(["FPP"], ["heptaprenyl diphosphate (HepPP)"], ["HepPPS"])
+    res = R.score_leg(case, {"processes": {"reactions": [bad]}}, [], None)
+    assert res["rows"][0]["class"] == R.CONFLICT and res["rows"][0]["gold_ids"] == ["R1"]
+    assert res["table1_paper_extraction"]["true_positive_rows"] == 0
+    assert res["table2_final_support"]["name_conflict"] == 1
+    assert res["table2_final_support"]["unsupported_rate_upper_bound"] == 1.0
+    assert res["name_conflicts_for_hand_review"][0]["conflicting_names"] == ["heptanoyl pyrophosphate (HepPP)"]
+    ctrl = R.score_leg(case, {"processes": {"reactions": [good]}}, [], None)
+    assert ctrl["rows"][0]["class"] == R.TP and ctrl["rows"][0]["gold_ids"] == ["R1"]
+    assert ctrl["name_conflicts_for_hand_review"] == []
 
 
 def test_leakage_audit_flags_only_ungated_rag_rows():

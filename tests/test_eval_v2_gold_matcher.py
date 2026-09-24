@@ -99,13 +99,31 @@ def test_strict_matcher_documented_equivalences(a, b):
 
 
 def test_parenthetical_and_complex_rules():
-    assert M.matches("oxidoreductase (entA)", "EntA")
-    assert M.matches("2,3-dihydroxybenzoic acid (2,3-DHB)", "2,3-DHB")
+    # The inside of a parenthetical corroborates, never credits on its own (repair B2).
+    assert not M.matches("oxidoreductase (entA)", "EntA")
+    assert M.name_verdict("oxidoreductase (entA)", M.term_keys("EntA")) == "conflict"
+    assert M.matches("2,3-dihydroxybenzoic acid (2,3-DHB)", "2,3-DHB", ("2,3-dihydroxybenzoate",))
+    # Without the declared alias the outer name is not known to be 2,3-DHB: hand review.
+    assert M.name_verdict("2,3-dihydroxybenzoic acid (2,3-DHB)", M.term_keys("2,3-DHB")) == "conflict"
     complexes = {M.strict_key("Isochorismate synthase"): {"components": [{"name": "EntC", "gene_name": "entC"}]}}
     assert M.term_keys("EntC") & M.enzyme_keys("Isochorismate synthase", complexes)
     assert "ente" in M.enzyme_keys("EntE complex")
     # The complex rule is ENZYME-only: participants never lose 'complex'.
     assert not M.matches("EntE complex", "EntE")
+
+
+@pytest.mark.parametrize("candidate,verdict", [
+    ("heptanoyl pyrophosphate (HepPP)", "conflict"),   # C7 acyl diphosphate: a different molecule
+    ("heptaprenyl diphosphate (HepPP)", "match"),      # outer matches; inside corroborates
+    ("heptaprenyl pyrophosphate", "match"),
+    ("(HepPP)", "match"),                              # no outer name to contradict
+    ("farnesyl diphosphate (FPP)", ""),                # neither part names the term
+])
+def test_parenthetical_inside_never_overrides_a_contradicting_outer_name(candidate, verdict):
+    """NEW ACCEPTANCE TEST, regression fixture for review finding B2 (ORCH-742c repair 1):
+    the gold R1 product of PMC12657337 is heptaprenyl pyrophosphate (alias HepPP)."""
+    wanted = M.term_keys("heptaprenyl pyrophosphate", ("HepPP", "heptaprenyl diphosphate"))
+    assert M.name_verdict(candidate, wanted) == verdict
 
 
 def test_mentions_is_token_bounded():

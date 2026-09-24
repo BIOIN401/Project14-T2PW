@@ -75,6 +75,7 @@ def _micro(legs: List[Dict[str, Any]]) -> Dict[str, Any]:
         s["external"] += t2["external_rag_supported"]
         s["off"] += t2["paper_stated_off_pathway"]
         s["partial"] += t2["partial_match"]
+        s["conflict"] += t2["name_conflict"]
         s["summary"] += t2["paper_stated_summary"]
         s["sub_hit"] += ea["substrate_hits"]
         s["sub_tot"] += ea["substrate_total"]
@@ -95,17 +96,18 @@ def _micro(legs: List[Dict[str, Any]]) -> Dict[str, Any]:
         s["cofactor_gaps"] += len(m["minor_cofactors_missing_on_matched_reactions"])
     r = lambda a, b: round(a / b, 4) if b else None  # noqa: E731
     p, rc = r(s["tp_rows"], s["t1_rows"]), r(s["gold_matched"], s["gold"])
-    enz_den = s["enz_correct"] + s["enz_wrong"] + s["enz_missing"]
+    enz_den = s["enz_correct"] + s["enz_wrong"] + s["enz_missing"] + s["enz_" + R.CONFLICT]
     return {
         "legs": s["legs"],
         "reaction_precision": p, "precision_num_den": [s["tp_rows"], s["t1_rows"]],
         "reaction_recall": rc, "recall_num_den": [s["gold_matched"], s["gold"]],
         "reaction_f1": (round(2 * p * rc / (p + rc), 4) if p and rc else (0.0 if p is not None and rc is not None else None)),
         "unsupported_rate": r(s["unsupported"], s["retained"]), "unsupported_num_den": [s["unsupported"], s["retained"]],
-        "unsupported_rate_upper_bound": r(s["unsupported"] + s["indeterminate"], s["retained"]),
+        "unsupported_rate_upper_bound": r(s["unsupported"] + s["indeterminate"] + s["conflict"], s["retained"]),
         "external_rag_supported_rows": s["external"],
         "paper_stated_off_pathway_rows": s["off"],
         "partial_match_rows": s["partial"],
+        "name_conflict_rows": s["conflict"],
         "paper_stated_summary_rows": s["summary"],
         "substrate_accuracy": r(s["sub_hit"], s["sub_tot"]), "substrate_num_den": [s["sub_hit"], s["sub_tot"]],
         "product_accuracy": r(s["prod_hit"], s["prod_tot"]), "product_num_den": [s["prod_hit"], s["prod_tot"]],
@@ -197,6 +199,7 @@ def evaluate(repo: Path, live: Optional[Dict[str, Any]] = None) -> Dict[str, Any
     # Mapped-ID correctness over EVERY committed canonical leg.
     ref = R.build_reference_index(repo)
     idc = collections.Counter()
+    idc_mapper = collections.Counter()
     wrong: List[Dict[str, Any]] = []
     id_legs = 0
     for p in paths:
@@ -208,6 +211,7 @@ def evaluate(repo: Path, live: Optional[Dict[str, Any]] = None) -> Dict[str, Any
         id_legs += 1
         res = R.id_correctness(payload, ref)
         idc.update(res["counts"])
+        idc_mapper.update(res["counts_resting_on_mapper_cache_only"])
         for w in res["wrong"]:
             wrong.append({"leg_dir": p.rpartition("/")[0], **w})
 
@@ -265,7 +269,8 @@ def evaluate(repo: Path, live: Optional[Dict[str, Any]] = None) -> Dict[str, Any
         "rag_archived_failure_split": {"by_population": split_counts, "legs": split_out},
         "rag_live_retrieval": live if live is not None else {
             "status": "not_run", "reason": "no --live-json supplied; retrieval metrics were not measured"},
-        "mapped_id_correctness": {"canonical_legs": id_legs, "counts": dict(idc), "wrong": wrong},
+        "mapped_id_correctness": {"canonical_legs": id_legs, "counts": dict(idc),
+                                  "counts_resting_on_mapper_cache_only": dict(idc_mapper), "wrong": wrong},
         "ungated_rag_influence_audit": {"summary": leak_summary, "legs": leak_legs, "candidates": leak_rows},
         "reproducibility_metadata": repro,
     }
@@ -289,27 +294,36 @@ def render_markdown(res: Mapping[str, Any], commit: str = "") -> str:
         L.append(f"| {pid} | {g['in_scope_reactions'][pid]} | {g['off_pathway_reactions'][pid]} |")
     L += ["", "## 2. Reaction-level metrics (strict v2 matcher; micro-averaged; populations never summed)", "",
           "| population | legs | precision | recall | F1 | unsupported rate (upper bound) | off-pathway rows | "
-          "summary rows | partial rows | substrate acc | product acc | enzyme acc | species acc | "
+          "summary rows | name-conflict rows | partial rows | substrate acc | product acc | enzyme acc | species acc | "
           "evidence support | OLD lenient recall |",
-          "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+          "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for pop, a in res["reaction_metrics"]["aggregate"].items():
         L.append(
             f"| {pop} | {a['legs']} | {_pct(a['reaction_precision'])} ({a['precision_num_den'][0]}/{a['precision_num_den'][1]}) "
             f"| {_pct(a['reaction_recall'])} ({a['recall_num_den'][0]}/{a['recall_num_den'][1]}) | {_pct(a['reaction_f1'])} "
             f"| {_pct(a['unsupported_rate'])} ({a['unsupported_num_den'][0]}/{a['unsupported_num_den'][1]}; "
             f"<= {_pct(a['unsupported_rate_upper_bound'])}) | {a['paper_stated_off_pathway_rows']} "
-            f"| {a['paper_stated_summary_rows']} | {a['partial_match_rows']} "
+            f"| {a['paper_stated_summary_rows']} | {a['name_conflict_rows']} | {a['partial_match_rows']} "
             f"| {_pct(a['substrate_accuracy'])} | {_pct(a['product_accuracy'])} | {_pct(a['enzyme_accuracy'])} "
             f"| {_pct(a['species_accuracy'])} | {_pct(a['evidence_support_rate'])} | {_pct(a['old_lenient_matcher_recall'])} |")
+    conflicts = [(l["leg_dir"], c) for l in res["reaction_metrics"]["legs"]
+                 for c in l["metrics"]["name_conflicts_for_hand_review"]]
+    L += ["", f"Name-conflict rows for hand review ({len(conflicts)}): a parenthetical's inside names a gold "
+          "term its outer name does not match, so the row is not credited (it counts toward the unsupported "
+          "upper bound):", ""]
+    L += [f"- `{leg}` row {c['row_index']}: {c['conflicting_names']} vs gold {c['gold_ids']}" for leg, c in conflicts]
     L += ["", "Old lenient matcher vs strict v2 matcher on the SAME rows (old credits / v2 refuses; "
           "v2 credits / old refuses): " + "; ".join(
               f"{pop}: {a['old_credits_v2_refuses']} / {a['v2_credits_old_refuses']}"
               for pop, a in res["reaction_metrics"]["aggregate"].items()), ""]
     idc = res["mapped_id_correctness"]
     L += ["## 3. Mapped-ID correctness (every committed canonical leg)", "",
-          f"canonical legs: {idc['canonical_legs']}", "", "| verdict | entities |", "|---|---|"]
+          f"canonical legs: {idc['canonical_legs']}. Each identifier is judged against its own record; "
+          "'resting on the mapper cache only' means no independent record (PathWhiz table, KEGG/ChEBI/HMDB/"
+          "UniProt record) decided it.", "",
+          "| verdict | entities | of which resting on the mapper cache only |", "|---|---|---|"]
     for k, v in sorted(idc["counts"].items()):
-        L.append(f"| {k} | {v} |")
+        L.append(f"| {k} | {v} | {idc['counts_resting_on_mapper_cache_only'].get(k, 0)} |")
     live = res["rag_live_retrieval"]
     L += ["", "## 4. RAG retrieval (live production retriever)", ""]
     if live.get("status") == "not_run":
