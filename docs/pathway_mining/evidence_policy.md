@@ -83,7 +83,8 @@ way to the *question that found it*.
 `substrates` and `products` (each participant with its own evidence ids) ·
 `enzyme` / `protein` / `gene` · `direction` · `reversible` · `compartment` ·
 `conditions` · `tissue` · `pathway_names` · **`field_evidence`** (field name ->
-the evidence ids supporting *that field*) · `evidence_ids` · `model` ·
+the evidence ids supporting *that field*) · `field_attribution` (field name ->
+`model_citation` or `verbatim_cited_span`) · `evidence_ids` · `model` ·
 `actual_model` · `prompt_version` · `schema_version` · `model_call_id` ·
 `extraction_status` · `hypothesis` · `conflicts_with` · `duplicate_of` ·
 `equivalent_claim_ids` · `first_seen_round` · `last_updated_round` ·
@@ -104,6 +105,34 @@ that was never shown — is **dropped**, and the drop is recorded in the round's
 ```
 claim[0].enzyme='a plausible-sounding synthase' (no valid citation)
 ```
+
+The request names each field's own citation list (`enzyme_evidence_ids`,
+`gene_evidence_ids`, `species_evidence_ids`, `compartment_evidence_ids`,
+`direction_evidence_ids`, `reversible_evidence_ids`) and shows the expected JSON
+shape. The claim-level `evidence_ids` never counts as a citation for another field.
+
+**The verbatim fallback (enzyme, gene, species only).** A model can fill a name and
+cite only the reaction's participants. Pilot-001's model did exactly that for all
+59 of its enzyme, gene and species values
+([`evidence/013-item2-replay/`](evidence/013-item2-replay/README.md)). The
+fallback applies only when the field's own list is **missing**. An explicit empty
+list means the model declined to cite, and a list citing only unshown ids is a
+failed citation. Both are respected, and the value is dropped. A value whose
+list is missing is kept **only** if it occurs verbatim — ignoring case and whitespace, and
+never inside a longer word — in one of **that claim's own cited participant
+spans**. It is then attributed to the first such span. Otherwise it is dropped
+exactly as above. The fallback never looks at:
+
+* a span the model was not shown (an unshown id is discarded before anything else);
+* a shown span this claim's participants do not cite, including one cited only in
+  the claim-level `evidence_ids`;
+* paper-level metadata such as the screen's observed organisms.
+
+Every kept field records how its evidence was attached, in
+`ExtractedClaim.field_attribution`: `model_citation` (the model cited the span) or
+`verbatim_cited_span` (the fallback). The span itself is in `field_evidence`. A
+recovered species is passed to `species.classify_species` like any cited species.
+The guardrail is unchanged.
 
 **2. At admission.** `admission._strip_unsupported` re-checks the material fields
 (`enzyme`, `protein`, `gene`, `compartment`, `direction`, `reversible`) and blanks

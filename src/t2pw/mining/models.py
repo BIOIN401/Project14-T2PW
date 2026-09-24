@@ -277,6 +277,10 @@ class ExtractedClaim:
 
     #: field name -> evidence ids supporting THAT field specifically.
     field_evidence: Dict[str, List[str]] = field(default_factory=dict)
+    #: field name -> how its evidence was attached: ``model_citation`` (the model
+    #: cited the span) or ``verbatim_cited_span`` (the value occurs verbatim in
+    #: one of this claim's own cited participant spans).
+    field_attribution: Dict[str, str] = field(default_factory=dict)
     evidence_ids: List[str] = field(default_factory=list)
 
     model: str = ""

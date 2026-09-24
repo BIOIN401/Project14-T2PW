@@ -42,6 +42,7 @@ which looks exactly like a large regression.
 | `test_mining_cli.py` | gating, exit codes, usage errors, `status` / `report` / `list`, config-file overrides, one-shared-controller assertion |
 | `test_mining_ui.py` | the entry hook's no-op behaviour, the main-app hook's shape, both view payloads, the round slider, DOT exports, the offline renderer, large-graph trimming |
 | `test_mining_stability.py` | two G9 corrections: the preflight probe budget (a reasoning model that needs more than 8 tokens, the `PATHWAY_MINING_PROBE_MAX_TOKENS` override, the named exhaustion) and `max_new_reactions_per_round` stopping a real run while keeping the capped round |
+| `test_mining_citation_recovery.py` | ORCH-743 item 2 (G9): an uncited enzyme / gene / species value that occurs verbatim in the claim's own cited participant span is kept and recorded as `verbatim_cited_span`, but only when the field's own citation list is missing; never from an unshown span, an uncited span or paper metadata; an explicit empty list is respected; the request names every per-field citation key |
 | `test_mining_integration.py` | the eight required behaviours, end to end |
 
 ## The integration fixture

@@ -18,6 +18,7 @@ biochemical database. Names stay as the paper wrote them, normalized locally.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
@@ -42,9 +43,14 @@ You are given numbered passages from ONE scientific paper. Extract only the
 biochemical reactions those passages actually support.
 
 Absolute rules:
-1. Cite evidence for every field you fill. Each field has an *_evidence_ids list;
-   put in it the evidence_id of every passage that supports THAT field
-   specifically. An uncited field will be discarded.
+1. Cite evidence for every field you fill, in THAT field's own list:
+   enzyme -> enzyme_evidence_ids, gene -> gene_evidence_ids,
+   species -> species_evidence_ids, compartment -> compartment_evidence_ids,
+   direction -> direction_evidence_ids, reversible -> reversible_evidence_ids,
+   and each substrate / product -> its own evidence_ids. Put in each list the
+   evidence_id of every passage that supports that field specifically. The
+   claim-level evidence_ids list does not count for any other field: a filled
+   field whose own list is missing or empty will be discarded.
 2. Never fill a field the passages do not support. If the passages give a
    substrate and a product but never name the enzyme, leave "enzyme" empty. An
    empty field is correct; an invented one is a defect.
@@ -58,8 +64,21 @@ Absolute rules:
    "a putative step").
 6. One reaction per claim. A multi-step conversion described as a single
    sentence is several claims, each with its own substrates and products.
-7. Return valid JSON matching the schema exactly. If the passages support no
-   reaction, return {"claims": []} -- an empty list is a correct answer.
+7. Return valid JSON of exactly this shape. Omit a field the passages do not
+   support; never omit the *_evidence_ids list of a field you fill.
+   {"claims": [{
+     "substrates": [{"name": "...", "evidence_ids": ["ev_..."]}],
+     "products": [{"name": "...", "evidence_ids": ["ev_..."]}],
+     "enzyme": "...", "enzyme_evidence_ids": ["ev_..."],
+     "gene": "...", "gene_evidence_ids": ["ev_..."],
+     "species": "...", "species_evidence_ids": ["ev_..."],
+     "species_inferred": false,
+     "direction": "forward", "direction_evidence_ids": ["ev_..."],
+     "compartment": "...", "compartment_evidence_ids": ["ev_..."],
+     "hypothesis": false,
+     "evidence_ids": ["ev_..."]}]}
+   If the passages support no reaction, return {"claims": []} -- an empty list
+   is a correct answer.
 """
 
 _PARTICIPANT_SCHEMA = {
@@ -183,6 +202,36 @@ def _valid_ids(raw: Any, allowed: Mapping[str, EvidenceSpan]) -> List[str]:
     return out
 
 
+#: How a kept field got its evidence (``ExtractedClaim.field_attribution``).
+ATTRIBUTION_MODEL_CITATION = "model_citation"
+ATTRIBUTION_VERBATIM_CITED_SPAN = "verbatim_cited_span"
+
+#: Fields the verbatim fallback may recover. Only names: a value that is a
+#: name can be checked against a passage; a direction or a boolean cannot.
+_VERBATIM_RECOVERABLE = ("enzyme", "gene", "species")
+
+
+def _fold(text: str) -> str:
+    return " ".join(str(text or "").split()).lower()
+
+
+def _verbatim_span(value: str, span_ids: Sequence[str], allowed: Mapping[str, EvidenceSpan]) -> str:
+    """The first of ``span_ids`` whose text contains ``value`` verbatim.
+
+    Case- and whitespace-insensitive, and never inside a longer word ("X" does
+    not occur in "LOX2"). ``span_ids`` are the claim's own cited participant
+    spans, all already checked to be spans the model was shown.
+    """
+    needle = _fold(value)
+    if not needle:
+        return ""
+    pattern = re.compile(r"(?<!\w)" + re.escape(needle) + r"(?!\w)")
+    for eid in span_ids:
+        if eid in allowed and pattern.search(_fold(allowed[eid].text)):
+            return eid
+    return ""
+
+
 def _participants(rows: Any, allowed: Mapping[str, EvidenceSpan]) -> List[ReactionParticipant]:
     out: List[ReactionParticipant] = []
     seen = set()
@@ -293,22 +342,42 @@ def build_claims(
             if prod_ids:
                 field_evidence["products"] = list(dict.fromkeys(prod_ids))
 
-        def keep(value: Any, ids: List[str], label: str) -> str:
-            text = str(value or "").strip()
-            if text and not ids:
-                dropped.append(f"claim[{index}].{label}={text!r} (no valid citation)")
-                return ""
-            return text
+        # Every kept field names how it got its evidence.
+        attribution: Dict[str, str] = {}
+        participant_ids = list(dict.fromkeys(e for p in (*substrates, *products) for e in p.evidence_ids))
 
-        enzyme = keep(row.get("enzyme"), enzyme_ids, "enzyme")
-        gene = keep(row.get("gene"), gene_ids, "gene")
-        compartment = keep(row.get("compartment"), compartment_ids, "compartment")
-        species_text = keep(row.get("species"), species_ids, "species")
+        def keep(value: Any, ids: List[str], label: str) -> Tuple[str, List[str]]:
+            text = str(value or "").strip()
+            if not text:
+                return "", ids
+            if ids:
+                attribution[label] = ATTRIBUTION_MODEL_CITATION
+                return text, ids
+            # The model wrote no citation list for this field at all (pilot-001's
+            # failure). A name that occurs verbatim in one of THIS claim's own
+            # cited participant spans is attributed to that span. An explicit
+            # empty list, or one citing only unshown ids, is the model declining
+            # to cite and is respected. Anything else is still dropped.
+            recoverable = label in _VERBATIM_RECOVERABLE and row.get(f"{label}_evidence_ids") is None
+            span = _verbatim_span(text, participant_ids, allowed) if recoverable else ""
+            if span:
+                field_evidence[label] = [span]
+                attribution[label] = ATTRIBUTION_VERBATIM_CITED_SPAN
+                return text, [span]
+            dropped.append(f"claim[{index}].{label}={text!r} (no valid citation)")
+            return "", ids
+
+        enzyme, enzyme_ids = keep(row.get("enzyme"), enzyme_ids, "enzyme")
+        gene, gene_ids = keep(row.get("gene"), gene_ids, "gene")
+        compartment, compartment_ids = keep(row.get("compartment"), compartment_ids, "compartment")
+        species_text, species_ids = keep(row.get("species"), species_ids, "species")
 
         direction = str(row.get("direction") or DIRECTION_UNSPECIFIED).strip() or DIRECTION_UNSPECIFIED
         if direction != DIRECTION_UNSPECIFIED and not direction_ids:
             dropped.append(f"claim[{index}].direction={direction!r} (no valid citation)")
             direction = DIRECTION_UNSPECIFIED
+        elif direction != DIRECTION_UNSPECIFIED:
+            attribution["direction"] = ATTRIBUTION_MODEL_CITATION
 
         reversible = row.get("reversible")
         if reversible is not None and not reversible_ids:
@@ -316,6 +385,7 @@ def build_claims(
             reversible = None
         if reversible is not None:
             reversible = bool(reversible)
+            attribution["reversible"] = ATTRIBUTION_MODEL_CITATION
 
         evidence_text = "\n".join(allowed[e].text for e in claim_evidence if e in allowed)
         # When the claim cites no species evidence of its own, the paper's own
@@ -374,6 +444,7 @@ def build_claims(
             tissue=str(row.get("tissue") or "").strip(),
             pathway_names=[str(p).strip() for p in row.get("pathway_names") or [] if str(p).strip()],
             field_evidence=field_evidence,
+            field_attribution=attribution,
             evidence_ids=claim_evidence,
             model=model,
             actual_model=actual_model or model,
@@ -458,6 +529,15 @@ def extract_claims(
     notes = []
     if dropped:
         notes.append(f"{len(dropped)} asserted field(s) dropped for lack of a valid citation")
+    recovered = sum(
+        1 for c in claims for how in c.field_attribution.values()
+        if how == ATTRIBUTION_VERBATIM_CITED_SPAN
+    )
+    if recovered:
+        notes.append(
+            f"{recovered} uncited field(s) kept: the value occurs verbatim in one of the claim's "
+            f"own cited participant spans ({ATTRIBUTION_VERBATIM_CITED_SPAN})"
+        )
     return ExtractionResult(claims=claims, outcome=outcome, dropped_fields=dropped, notes=notes)
 
 

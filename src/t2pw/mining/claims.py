@@ -128,6 +128,8 @@ class ClaimStore:
                 for eid in ids:
                     if eid not in bucket:
                         bucket.append(eid)
+            for fname, how in claim.field_attribution.items():
+                same_paper.field_attribution.setdefault(fname, how)
             # A field the earlier pass could not support may now be supported.
             for fname in ("enzyme", "protein", "gene", "compartment", "conditions", "tissue"):
                 if not getattr(same_paper, fname, "") and getattr(claim, fname, ""):

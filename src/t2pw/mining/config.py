@@ -26,7 +26,7 @@ from t2pw.paths import PROJECT_ROOT
 ARTIFACT_SCHEMA_VERSION = "t2pw.mining/1.0.0"
 
 #: Bumped whenever an extraction prompt changes in a way that could change a claim.
-PROMPT_VERSION = "mining-extract/1.0.0"
+PROMPT_VERSION = "mining-extract/1.1.0"
 
 #: The default extraction and exploration model, per the feature brief.
 DEFAULT_MINING_MODEL = "deepseek/deepseek-v4-flash"

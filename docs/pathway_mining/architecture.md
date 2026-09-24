@@ -128,7 +128,7 @@ material field must cite the passage that supports it.
 | 2 | build one traceable query per item | `queries` |
 | 3 | acquire, screen, cache; record inclusions and exclusions | `acquisition` |
 | 4 | index new papers; retrieve passages as evidence spans | `retrieval` |
-| 5 | extract claims; drop every uncited field | `extraction` |
+| 5 | extract claims; drop every uncited field (an enzyme / gene / species name found verbatim in the claim's own cited participant span is kept, recorded as `verbatim_cited_span`) | `extraction` |
 | 6 | normalize entities within the run | `normalize` |
 | 7 | register claims: dedup, keep independent evidence | `claims` |
 | 8 | judge: accepted / candidate / conflicting / incomplete / rejected / hypothesis | `admission` |

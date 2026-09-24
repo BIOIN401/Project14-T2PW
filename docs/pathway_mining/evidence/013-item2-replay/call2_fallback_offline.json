@@ -1,0 +1,319 @@
+{
+ "source": "C:/t/mining-iter/diag/replay/call2_pilot_prompt_16k_raw.json",
+ "truncated_and_cut_to_complete_claims": true,
+ "claims_parsed": 9,
+ "enzyme_gene_species_values_asserted": 27,
+ "per_field_evidence_id_keys_emitted": 0,
+ "kept_by_attribution": {
+  "model_citation": 0,
+  "verbatim_cited_span": 23
+ },
+ "dropped": [
+  "claim[7].gene='Mp2g00660' (no valid citation)",
+  "claim[7].species='Marchantia polymorpha' (no valid citation)",
+  "claim[8].gene='Mp2g00660' (no valid citation)",
+  "claim[8].species='Marchantia polymorpha' (no valid citation)"
+ ],
+ "claims": [
+  {
+   "subject": "16:0 (palmitic acid)",
+   "object": "16:1n9 (Δ7-palmitoleic acid)",
+   "enzyme": "MpFAD5",
+   "gene": "Mp3g10660",
+   "species_text": "Marchantia polymorpha",
+   "species_state": "inferred_only",
+   "field_evidence": {
+    "substrates": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_488098050cb15807",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "products": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_488098050cb15807",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "enzyme": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "gene": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "species": [
+     "ev_20a7facf5fd73dd9"
+    ]
+   },
+   "field_attribution": {
+    "enzyme": "verbatim_cited_span",
+    "gene": "verbatim_cited_span",
+    "species": "verbatim_cited_span"
+   }
+  },
+  {
+   "subject": "16:1n9 (Δ7-palmitoleic acid)",
+   "object": "16:2n6 (HDA)",
+   "enzyme": "MpFAD6",
+   "gene": "Mp4g24020",
+   "species_text": "Marchantia polymorpha",
+   "species_state": "inferred_only",
+   "field_evidence": {
+    "substrates": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_47b9cde252a0621f",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "products": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_47b9cde252a0621f",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "enzyme": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "gene": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "species": [
+     "ev_20a7facf5fd73dd9"
+    ]
+   },
+   "field_attribution": {
+    "enzyme": "verbatim_cited_span",
+    "gene": "verbatim_cited_span",
+    "species": "verbatim_cited_span"
+   }
+  },
+  {
+   "subject": "16:2n6 (HDA) + 18:2n6 (LA)",
+   "object": "16:3n3 (HTA) + 18:3n3 (ALA)",
+   "enzyme": "MpFAD7",
+   "gene": "Mp5g20700",
+   "species_text": "Marchantia polymorpha",
+   "species_state": "inferred_only",
+   "field_evidence": {
+    "substrates": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_488098050cb15807",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "products": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_488098050cb15807",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "enzyme": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "gene": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "species": [
+     "ev_20a7facf5fd73dd9"
+    ]
+   },
+   "field_attribution": {
+    "enzyme": "verbatim_cited_span",
+    "gene": "verbatim_cited_span",
+    "species": "verbatim_cited_span"
+   }
+  },
+  {
+   "subject": "20:4n6 (ARA)",
+   "object": "20:5n3 (EPA)",
+   "enzyme": "MpFAD3",
+   "gene": "Mp3g17690",
+   "species_text": "Marchantia polymorpha",
+   "species_state": "inferred_only",
+   "field_evidence": {
+    "substrates": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_488098050cb15807",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "products": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_488098050cb15807",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "enzyme": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "gene": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "species": [
+     "ev_20a7facf5fd73dd9"
+    ]
+   },
+   "field_attribution": {
+    "enzyme": "verbatim_cited_span",
+    "gene": "verbatim_cited_span",
+    "species": "verbatim_cited_span"
+   }
+  },
+  {
+   "subject": "18:2n6 (LA) + 18:3n3 (ALA)",
+   "object": "18:3n6 (GLA) + 18:4n3 (SDA)",
+   "enzyme": "MpDES6",
+   "gene": "Mp6g17330",
+   "species_text": "Marchantia polymorpha",
+   "species_state": "inferred_only",
+   "field_evidence": {
+    "substrates": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_f42c0ce97d79b1e7",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "products": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_f42c0ce97d79b1e7",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "enzyme": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "gene": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "species": [
+     "ev_20a7facf5fd73dd9"
+    ]
+   },
+   "field_attribution": {
+    "enzyme": "verbatim_cited_span",
+    "gene": "verbatim_cited_span",
+    "species": "verbatim_cited_span"
+   }
+  },
+  {
+   "subject": "18:3n6 (GLA) + 18:4n3 (SDA)",
+   "object": "20:3n6 (DGLA) + 20:4n3 (ETA)",
+   "enzyme": "MpELO1",
+   "gene": "Mp6g02350",
+   "species_text": "Marchantia polymorpha",
+   "species_state": "inferred_only",
+   "field_evidence": {
+    "substrates": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_f42c0ce97d79b1e7",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "products": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_f42c0ce97d79b1e7",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "enzyme": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "gene": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "species": [
+     "ev_20a7facf5fd73dd9"
+    ]
+   },
+   "field_attribution": {
+    "enzyme": "verbatim_cited_span",
+    "gene": "verbatim_cited_span",
+    "species": "verbatim_cited_span"
+   }
+  },
+  {
+   "subject": "20:3n6 (DGLA) + 20:4n3 (ETA)",
+   "object": "20:4n6 (ARA) + 20:5n3 (EPA)",
+   "enzyme": "MpDES5",
+   "gene": "Mp3g13250",
+   "species_text": "Marchantia polymorpha",
+   "species_state": "inferred_only",
+   "field_evidence": {
+    "substrates": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_f42c0ce97d79b1e7",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "products": [
+     "ev_20a7facf5fd73dd9",
+     "ev_c98d84c7d84855c1",
+     "ev_f42c0ce97d79b1e7",
+     "ev_3b1f8607f4b8b229"
+    ],
+    "enzyme": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "gene": [
+     "ev_20a7facf5fd73dd9"
+    ],
+    "species": [
+     "ev_20a7facf5fd73dd9"
+    ]
+   },
+   "field_attribution": {
+    "enzyme": "verbatim_cited_span",
+    "gene": "verbatim_cited_span",
+    "species": "verbatim_cited_span"
+   }
+  },
+  {
+   "subject": "EPA (20:5n3)",
+   "object": "15-HPEPE + 11-HPEPE",
+   "enzyme": "MpLOX1",
+   "gene": "",
+   "species_text": "",
+   "species_state": "in_vitro_or_cell_free",
+   "field_evidence": {
+    "substrates": [
+     "ev_3b1f8607f4b8b229",
+     "ev_74d8b3d259ca310a"
+    ],
+    "products": [
+     "ev_3b1f8607f4b8b229",
+     "ev_74d8b3d259ca310a"
+    ],
+    "enzyme": [
+     "ev_74d8b3d259ca310a"
+    ]
+   },
+   "field_attribution": {
+    "enzyme": "verbatim_cited_span"
+   }
+  },
+  {
+   "subject": "ARA (20:4n6)",
+   "object": "15-HPETE",
+   "enzyme": "MpLOX1",
+   "gene": "",
+   "species_text": "",
+   "species_state": "in_vitro_or_cell_free",
+   "field_evidence": {
+    "substrates": [
+     "ev_3b1f8607f4b8b229",
+     "ev_74d8b3d259ca310a"
+    ],
+    "products": [
+     "ev_3b1f8607f4b8b229",
+     "ev_74d8b3d259ca310a"
+    ],
+    "enzyme": [
+     "ev_74d8b3d259ca310a"
+    ]
+   },
+   "field_attribution": {
+    "enzyme": "verbatim_cited_span"
+   }
+  }
+ ]
+}
