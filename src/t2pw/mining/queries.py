@@ -24,10 +24,9 @@ from __future__ import annotations
 
 import re
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 from t2pw.mining.config import MiningConfig
-from t2pw.mining.frontier import seed_frontier
 from t2pw.mining.ids import query_id as make_query_id
 from t2pw.mining.models import (
     FRONTIER_BRANCH,
@@ -45,6 +44,8 @@ from t2pw.mining.models import (
     FrontierItem,
     LiteratureQuery,
 )
+from t2pw.mining.normalize import is_cofactor
+from t2pw.mining.species import SPECIES_TARGET_SUPPORTED
 
 #: Extra free-text terms per frontier kind. These steer *retrieval*; they never
 #: appear in a claim and never affect admission.
@@ -186,23 +187,28 @@ def build_query(
     )
 
 
-def rescue_terms(config: MiningConfig, frontier: Sequence[FrontierItem]) -> List[str]:
-    """This run's seed and frontier enzyme / metabolite names, for the screen rescue.
+def rescue_terms(config: MiningConfig, reactions: Iterable[Any] = ()) -> List[str]:
+    """The screen rescue's vocabulary: the declared seeds, plus the substrate,
+    product and enzyme names of this run's ``target_species_supported`` reactions.
 
-    The names are the frontier items' own :func:`target_terms` plus the declared
-    seeds. The topic, the species and pathway-reference targets are left out:
-    they are not enzymes or metabolites. Names shorter than 3 characters are left
-    out too; a 1-2 letter acronym matches by accident.
+    Nothing comes from the frontier. In pilot-001 every round-2 frontier item came
+    from quarantined Marchantia claims, and their names (EPA, ARA, ALA, ...)
+    rescued off-topic Arabidopsis papers. Names are kept as written, including a
+    disambiguating note ("ALA (18:3n3)"). The topic, the species and cofactors
+    are left out. ``Acquirer.rescue`` also ignores short names and matches
+    acronyms case-sensitively.
     """
-    skip = {_clean(config.topic).casefold(), config.target_species.casefold()}
-    names: List[str] = []
-    for item in [*seed_frontier(config), *frontier]:
-        if item.kind == FRONTIER_PATHWAY_REFERENCE:
-            continue
-        for term in target_terms(item, config):
-            if len(term) >= 3 and term.casefold() not in skip and term not in names:
-                names.append(term)
-    return names
+    skip = {config.topic.strip().casefold(), config.target_species.casefold()}
+    names = [str(seed.value or seed.raw) for seed in config.seed_entities]
+    for reaction in reactions:
+        if getattr(reaction, "species_state", "") == SPECIES_TARGET_SUPPORTED:
+            names += [*reaction.substrate_names, *reaction.product_names, *reaction.enzyme_names]
+    out: List[str] = []
+    for name in names:
+        term = " ".join(str(name or "").replace('"', "").split())
+        if term and term.casefold() not in skip and not is_cofactor(term) and term not in out:
+            out.append(term)
+    return out
 
 
 def retrieval_query_text(item: FrontierItem, config: MiningConfig) -> str:

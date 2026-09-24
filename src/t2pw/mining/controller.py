@@ -367,7 +367,8 @@ class MiningController:
 
         active = list(self.state.frontier)
         processed_this_round = 0
-        run_terms = queries_mod.rescue_terms(self.config, active)
+        # Seeds and target_species_supported reactions only: never a quarantined lead's names.
+        run_terms = queries_mod.rescue_terms(self.config, self.state.graph.reactions.values())
 
         for item in active:
             if self.ledger.check_before_call():

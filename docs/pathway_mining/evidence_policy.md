@@ -191,10 +191,24 @@ paper is re-admitted by either of two routes:
    threshold that was actually applied.
 2. The **title** names the target species, and one sentence of the title or
    abstract names it together with an enzyme or metabolite from **this run's**
-   seeds or frontier (`queries.rescue_terms`). No pathway vocabulary is
-   hard-coded. Names shorter than 3 characters, the topic and the species are
-   never terms. Both guards exist because of the pilot-001 wheat transgene
-   paper, which names *A. thaliana* only as a gene source, in its abstract.
+   seeds or its `target_species_supported` reactions (`queries.rescue_terms`).
+   Nothing comes from the frontier, so a non-target or quarantined lead never
+   supplies a name. In pilot-001 every round-2 frontier item came from
+   quarantined Marchantia claims. No pathway vocabulary is hard-coded. The
+   topic, the species and cofactors are never terms. A name keeps its
+   disambiguating note (`ALA (18:3n3)`), a name shorter than 5 characters is
+   ignored, and an acronym (no lower-case letter, e.g. `12-OPDA`) must match in
+   its own case. A bare `ALA` rescued a paper where it means 5-aminolevulinic
+   acid, and `Ala` one where it means alanine. Both species guards exist because
+   of the pilot-001 wheat transgene paper, which names *A. thaliana* only as a
+   gene source, in its abstract.
+
+Neither route rescues a paper whose **title** makes the target species a host
+for a gene: *transgenic*, *heterologous(ly)*, *ectopic(ally)* or
+*overexpress…*. This covers the must-exclude maize ZmLOX2 paper "… in Transgenic
+Arabidopsis", which the name `lipoxygenase` would otherwise rescue. The rule is
+a title word list, so it also turns away a native gene overexpressed in the
+target. That is fail-closed: the production exclusion stands.
 
 The paper's `screening_outcome` becomes `mining_rescue`. Its inclusion reason
 is `mining_rescue: <what matched>`, and the production exclusion reason is kept
@@ -209,8 +223,12 @@ The rule is pinned by `tests/fixtures/mining/pilot001_screened_papers.json`: the
 | required, now included | PMC9947334 (route 1, score 4.0) |
 | desired, now included | PMID 35404431 (DAD1; route 1, score 3.0) |
 | desired, still excluded | PMC12280011 (`off_topic`, score 0.0; it names none of the run's names verbatim) |
-| must stay excluded, and do | all 15, including with the richest (round 2) vocabulary |
+| must stay excluded, and do | all 15, with the run's vocabulary (the seeds: pilot-001 admitted no target-species reaction), and even with every name its round-2 frontier held |
 | borderline, excluded | PMC11300881 (no species reading), PMC13096701 (score 2.25) |
+
+`tests/fixtures/mining/orch743_rescue_negatives.json` holds three papers the
+16fd8a4b rescue let in, live: PMC13181208 and PMC13153360 (`off_topic`, route 1)
+and PMC12977409 (`ALA` = 5-aminolevulinic acid, route 2). All three stay out.
 
 ---
 

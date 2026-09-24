@@ -5,9 +5,14 @@ enzymology, score 4.0) as ``context_only``: its pathway-anchor rule fired before
 the score was consulted. Mining now reconsiders such an exclusion, for mining
 only. ``src/t2pw/rag/eligibility.py`` is unchanged; see ``Acquirer.rescue``.
 
-G9 correction: ``test_g9_*`` fails behaviourally at 23e1ae83 (the paper is
-excluded through the mining acquisition path). The fixture test pins every one of
-the 21 pilot-001 screening outcomes against the bio-audit's adjudication.
+G9 correction: ``test_g9_the_mining_screen_includes_*`` fails behaviourally at
+23e1ae83 (the paper is excluded through the mining acquisition path). The fixture
+test pins every one of the 21 pilot-001 screening outcomes against the bio-audit's
+adjudication.
+
+Repair round 1 (bio B-2, B-3, review B1): ``test_g9_b2_*``, ``test_g9_r1_*`` and
+``test_g9_b3_*`` fail behaviourally at 16fd8a4b, where each of those papers was
+rescued, or the vocabulary held a quarantined lead's names.
 """
 
 from __future__ import annotations
@@ -22,6 +27,7 @@ for _path in (ROOT / "src", ROOT / "tests"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+import helpers_mining as H  # noqa: E402
 from t2pw.mining.acquisition import Acquirer, OfflinePaperSource  # noqa: E402
 from t2pw.mining.config import MiningConfig, StartingInput  # noqa: E402
 from t2pw.mining.models import FrontierItem, LiteratureQuery  # noqa: E402
@@ -75,18 +81,33 @@ def test_g9_the_mining_screen_includes_primary_atlox2_enzymology(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# The 21 pilot-001 papers, each screened with the vocabulary its round had
+# The 21 pilot-001 papers
 # ---------------------------------------------------------------------------
+def _frontier_names(config, rnd):
+    """Every name pilot-001's round-``rnd`` frontier held, as 16fd8a4b's ``rescue_terms``
+    took them: the seeds and each item's search terms, minus the topic and the species.
+    Most come from quarantined Marchantia claims."""
+    from t2pw.mining.queries import target_terms
+
+    skip = {config.topic.casefold(), config.target_species.casefold()}
+    frontier = [FrontierItem(frontier_item_id=f"fr_{i}", kind=f["kind"], target=f["target"])
+                for i, f in enumerate(FIXTURE["frontier_by_round"][str(rnd)])]
+    names = [s["value"] for s in FIXTURE["seeds"]] + [t for f in frontier for t in target_terms(f, config)]
+    return [t for t in dict.fromkeys(names) if t.casefold() not in skip]
+
+
 def test_the_pilot001_screening_fixture(tmp_path):
     from t2pw.mining.queries import rescue_terms
 
     config = _config(tmp_path)
+    # Pilot-001 admitted no target_species_supported reaction, so the rescue
+    # vocabulary of both rounds is the seeds.
+    vocabulary = rescue_terms(config, [])
+    assert vocabulary == ["12-OPDA", "AOS"]
     included, reasons = {}, {}
     for rnd in (1, 2):
-        frontier = [FrontierItem(frontier_item_id=f"fr_{i}", kind=f["kind"], target=f["target"])
-                    for i, f in enumerate(FIXTURE["frontier_by_round"][str(rnd)])]
         papers = [p for p in FIXTURE["papers"] if p["discovered_round"] == rnd]
-        result = _acquire(config, papers, rnd, run_terms=rescue_terms(config, frontier))
+        result = _acquire(config, papers, rnd, run_terms=vocabulary)
         for loaded in result.papers:
             included[loaded.record.paper_id] = True
             reasons[loaded.record.paper_id] = loaded.record.inclusion_reasons[0]
@@ -105,15 +126,103 @@ def test_the_pilot001_screening_fixture(tmp_path):
         "mining_rescue: Arabidopsis thaliana named; score 4.0 >= 3.0 with the pathway-anchor rule off")
     assert not reasons["PMC:PMC13364333"].startswith("mining_rescue")
 
-    # A run's vocabulary only grows. Screened with the richest one (round 2's),
-    # every must-exclude paper still stays out -- including the wheat transgene
-    # paper, whose abstract names "ALLENE OXIDE SYNTHASE from Arabidopsis thaliana".
-    frontier = [FrontierItem(frontier_item_id=f"fr_{i}", kind=f["kind"], target=f["target"])
-                for i, f in enumerate(FIXTURE["frontier_by_round"]["2"])]
-    richest = _acquire(config, FIXTURE["papers"], 2, run_terms=rescue_terms(config, frontier))
-    assert "allene oxide" in rescue_terms(config, frontier)
-    assert [p.record.paper_id for p in richest.papers
-            if expected[p.record.paper_id] == "must_exclude"] == []
+    # Stress: screened with every name pilot-001's round-2 frontier held (16fd8a4b's
+    # vocabulary, quarantined leads included), every must-exclude paper still stays
+    # out -- including the wheat transgene paper, whose abstract names "ALLENE OXIDE
+    # SYNTHASE from Arabidopsis thaliana" -- and both rescues still hold.
+    stress = _frontier_names(config, 2)
+    assert "allene oxide" in stress and "ALA" in stress
+    richest = _acquire(config, FIXTURE["papers"], 2, run_terms=stress)
+    ids = [p.record.paper_id for p in richest.papers]
+    assert [pid for pid in ids if expected[pid] == "must_exclude"] == []
+    assert "PMC:PMC9947334" in ids and "PMID:35404431" in ids
+
+
+# ---------------------------------------------------------------------------
+# Repair round 1, bio B-3: route 2's vocabulary and matching
+# ---------------------------------------------------------------------------
+def test_g9_b3_a_bare_acronym_does_not_rescue_a_paper(tmp_path):
+    """Live at 16fd8a4b: 'ALA' (here 5-aminolevulinic acid) rescued a salt-stress paper."""
+    config = _config(tmp_path)
+    paper = NEGATIVES["PMC12977409"]
+    assert paper["title"] == ("Harnessing Rhodopseudomonas palustris strains for salt stress "
+                              "mitigation in Arabidopsis thaliana.")
+    decision = Acquirer(config).screen(_candidate(paper))
+    assert (decision.classification, decision.organism_match, decision.score) == ("off_topic", "match", 0.25)
+    run_terms = _frontier_names(config, 2)
+    assert "ALA" in run_terms
+    result = _acquire(config, [paper], 2, run_terms=run_terms)
+    assert [p.record.paper_id for p in result.papers] == []
+    assert Acquirer(config).rescue(_candidate(paper), decision, run_terms) == ""
+
+
+def test_g9_b3_a_foreign_gene_in_a_transgenic_target_host_is_not_rescued(tmp_path):
+    """Must-exclude PMC13468208: maize ZmLOX2 'in Transgenic Arabidopsis'. At 16fd8a4b the
+    canonical name 'lipoxygenase' in the vocabulary rescued it."""
+    config = _config(tmp_path)
+    paper = _paper("PMC:PMC13468208")
+    assert paper["expectation"] == "must_exclude"
+    result = _acquire(config, [paper], 2, run_terms=["lipoxygenase"])
+    assert [p.record.paper_id for p in result.papers] == []
+    assert [r.paper_id for r in result.excluded] == ["PMC:PMC13468208"]
+
+
+def test_g9_b3_the_rescue_vocabulary_never_comes_from_a_quarantined_lead(tmp_path):
+    """At 16fd8a4b round 2's vocabulary was the whole active frontier, including the items
+    the fixture's Zea mays (non-target) reaction produced. Now: seeds, and the names of
+    target_species_supported reactions."""
+    wired = H.build_controller(tmp_path, budgets={"max_rounds": 2})
+    vocabulary = {}
+    acquire = wired.controller.acquirer.acquire
+
+    def spy(query, context, **kwargs):
+        vocabulary.setdefault(kwargs["round_index"], list(kwargs.get("run_terms") or []))
+        return acquire(query, context, **kwargs)
+
+    wired.controller.acquirer.acquire = spy
+    wired.controller.run(probe_model=False, probe_embeddings=False)
+
+    graph = wired.controller.state.graph
+    maize = next(r for r in graph.reactions.values() if r.species_state == "non_target_species")
+    assert maize.substrate_names == ["linoleic acid"]
+    assert "linoleic acid" not in vocabulary[2] and "9-HPOD" not in vocabulary[2]
+    supported = [r for r in graph.reactions.values()
+                 if r.species_state == "target_species_supported" and r.discovery_round == 1]
+    assert supported and set(supported[0].product_names) <= set(vocabulary[2])
+    assert vocabulary[1] == ["alpha-linolenic acid"]  # round 1: the seed only
+
+
+def test_rescue_terms_are_seeds_and_target_supported_reaction_names(tmp_path):
+    from t2pw.mining.queries import rescue_terms
+
+    config = _config(tmp_path)
+    reactions = [
+        SimpleNamespace(species_state="target_species_supported", substrate_names=["ALA (18:3n3)", "O2"],
+                        product_names=["13-HPOT"], enzyme_names=["lipoxygenase 2"]),
+        SimpleNamespace(species_state="non_target_species", substrate_names=["DGLA (20:3n6)"],
+                        product_names=["ARA (20:4n6)"], enzyme_names=["MpDES5"]),
+        SimpleNamespace(species_state="species_ambiguous", substrate_names=["EPA (20:5n3)"],
+                        product_names=["15-HPEPE"], enzyme_names=[]),
+    ]
+    # The disambiguator is kept; a cofactor, the topic and the species never are terms.
+    assert rescue_terms(config, reactions) == ["12-OPDA", "AOS", "ALA (18:3n3)", "13-HPOT", "lipoxygenase 2"]
+
+
+def test_route2_ignores_short_names_and_matches_acronyms_in_case(tmp_path):
+    acquirer = Acquirer(_config(tmp_path))
+    title = "Cold responses of Arabidopsis thaliana rosette leaves"
+    for abstract, terms in (
+        ("In Arabidopsis thaliana, ALA levels rose.", ["ALA"]),  # too short
+        ("In Arabidopsis thaliana, Ala levels rose.", ["Ala"]),  # too short
+        ("In Arabidopsis thaliana, 12-opda levels rose.", ["12-OPDA"]),  # an acronym, other case
+    ):
+        candidate = _low_score_candidate(abstract, title=title)
+        decision = acquirer.screen(candidate)
+        assert decision.ineligible
+        assert acquirer.rescue(candidate, decision, terms) == "", abstract
+    candidate = _low_score_candidate("In Arabidopsis thaliana, ALA (18:3n3) levels rose.", title=title)
+    assert acquirer.rescue(candidate, acquirer.screen(candidate), ["ALA (18:3n3)"]) == (
+        "names 'arabidopsis thaliana' and 'ALA (18:3n3)' in one sentence")
 
 
 # ---------------------------------------------------------------------------

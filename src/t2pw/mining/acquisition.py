@@ -51,6 +51,16 @@ _SCORE_RESCUABLE = ("context_only", "omics_only")
 _UNANCHORED_MARGIN = 1.0
 #: A sentence break, but not after an abbreviated genus ("A. thaliana").
 _SENTENCE = re.compile(r"(?<=[.!?])(?<!\b[A-Z]\.)\s+")
+#: Route 2 ignores a run name shorter than this: it matches by accident. Pilot
+#: follow-up: "ALA" rescued a paper where it is 5-aminolevulinic acid, "Ala" one
+#: where it is alanine. An acronym (no lower-case letter) must also match in case.
+_MIN_TERM_CHARS = 5
+#: A title that makes the target species a host for a gene: the maize ZmLOX2
+#: "in Transgenic Arabidopsis" paper. The analogue of the wheat gene-source guard.
+#: ponytail: a title word list, not a parse of where the gene came from; it also
+#: turns away a native gene overexpressed in the target, which is fail-closed.
+_FOREIGN_HOST = re.compile(
+    r"\b(?:transgenic|heterologous(?:ly)?|ectopic(?:ally)?|over-?express\w*)\b", re.IGNORECASE)
 
 
 def _fold(text: str) -> str:
@@ -60,6 +70,13 @@ def _fold(text: str) -> str:
 def _names(folded: str, name: str) -> bool:
     """``name`` occurs in ``folded`` as a whole word or phrase."""
     return bool(name) and re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", folded) is not None
+
+
+def _term_in(sentence: str, term: str) -> bool:
+    """``term`` occurs in ``sentence``; an acronym (no lower-case letter) only in its own case."""
+    if any(c.islower() for c in term):
+        return _names(_fold(sentence), _fold(term))
+    return _names(" ".join(sentence.split()), term)
 
 
 _REVIEW_MARKERS = ("review", "overview", "perspectives on", "a survey of", "current concepts")
@@ -413,16 +430,26 @@ class Acquirer:
            ``_UNANCHORED_MARGIN``, pass the paper.
         2. The title names the target species, and one sentence of the title or
            abstract names it together with an enzyme or metabolite from this
-           run's seeds or frontier (``run_terms``). Both guards come from
-           pilot-001's wheat transgene paper. Its abstract names *A. thaliana*
-           only as a gene source ("ALLENE OXIDE SYNTHASE from Arabidopsis
-           thaliana"), and its title names wheat.
+           run's seeds or ``target_species_supported`` reactions (``run_terms``,
+           built by ``queries.rescue_terms``). A name shorter than
+           ``_MIN_TERM_CHARS`` is ignored, and an acronym must match in its own
+           case. Both species guards come from pilot-001's wheat transgene
+           paper. Its abstract names *A. thaliana* only as a gene source
+           ("ALLENE OXIDE SYNTHASE from Arabidopsis thaliana"), and its title
+           names wheat.
+
+        Neither route rescues a paper whose title makes the target species a
+        transgenic or heterologous host (``_FOREIGN_HOST``): the maize ZmLOX2
+        "in Transgenic Arabidopsis" paper.
 
         ``rag/eligibility.py`` is not changed. No pathway vocabulary is hard-coded.
         """
         classification = str(getattr(decision, "classification", "") or "")
         reason = str(getattr(decision, "reason", "") or "")
         if classification not in _RESCUABLE or not reason.startswith(f"{classification}:"):
+            return ""
+        title = str(getattr(candidate, "title", "") or "")
+        if _FOREIGN_HOST.search(title):
             return ""
         try:
             from t2pw.rag.eligibility import screen_candidate, thresholds_from_config
@@ -450,13 +477,13 @@ class Acquirer:
         forms = [target] + ([f"{genus[0]}. {epithet}"] if epithet else [])
         if species_matches_target(genus, target):  # species.py's documented genus convenience
             forms.append(genus)
-        title = str(getattr(candidate, "title", "") or "")
         if not any(_names(_fold(title), f) for f in forms):
             return ""
+        terms = [t for t in (" ".join(str(r or "").split()) for r in run_terms) if len(t) >= _MIN_TERM_CHARS]
         for sentence in _SENTENCE.split(f"{title}. {getattr(candidate, 'abstract', '') or ''}"):
             folded = _fold(sentence)
             named = next((f for f in forms if _names(folded, f)), "")
-            term = next((t for t in run_terms if named and _names(folded, _fold(t))), "")
+            term = next((t for t in terms if named and _term_in(sentence, t)), "")
             if term:
                 return f"names {named!r} and {term!r} in one sentence"
         return ""
@@ -473,8 +500,8 @@ class Acquirer:
     ) -> AcquisitionResult:
         """Search, screen and load full text for one query.
 
-        ``run_terms`` are this run's seed and frontier names, used only by
-        :meth:`rescue`.
+        ``run_terms`` are this run's seed names and the names of its
+        ``target_species_supported`` reactions, used only by :meth:`rescue`.
         """
         result = AcquisitionResult(query=query)
         try:
