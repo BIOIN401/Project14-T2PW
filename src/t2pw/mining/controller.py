@@ -376,42 +376,55 @@ class MiningController:
             if processed_this_round >= max(1, self.config.budgets.max_papers_processed):
                 break
 
-            query = queries_mod.build_query(
-                item, self.config, round_index=index, graph=self.state.graph
-            )
-            context = queries_mod.build_context(item, self.config, graph=self.state.graph)
-            round_queries.append(query)
-            self.state.queries.append(query)
-            item.attempts += 1
+            # -- search: up to max_query_attempts distinct formulations --------
+            # A newly included paper ends the search for this item this round.
+            # The item is exhausted only when every formulation has been tried
+            # without one, or at once when a query returns no result at all.
+            found: List[Any] = []
+            exhausted = False
+            budgets = self.config.budgets
+            attempts = max(1, budgets.max_query_attempts)
+            for attempt in range(1, attempts + 1):
+                query = queries_mod.build_query(item, self.config, round_index=index, attempt=attempt)
+                if query is None:
+                    exhausted = True  # no further distinct formulation exists
+                    break
+                if attempt > 1 and self.ledger.check_papers_discovered():
+                    break
+                context = queries_mod.build_context(item, self.config, attempt=attempt)
+                round_queries.append(query)
+                self.state.queries.append(query)
+                item.attempts += 1
 
-            remaining = max(
-                0, self.config.budgets.max_papers_discovered - self.ledger.usage.papers_discovered
-            )
-            result = self.acquirer.acquire(
-                query,
-                context,
-                round_index=index,
-                max_papers=min(10, remaining) if remaining else 0,
-            )
-            round_errors.extend(result.errors)
-            self.ledger.record_papers_discovered(len(result.papers) + len(result.excluded))
-            for excluded in result.excluded:
-                self.state.papers.setdefault(excluded.paper_id, excluded)
+                remaining = max(0, budgets.max_papers_discovered - self.ledger.usage.papers_discovered)
+                result = self.acquirer.acquire(
+                    query,
+                    context,
+                    round_index=index,
+                    max_papers=min(max(1, budgets.max_results_per_query), remaining) if remaining else 0,
+                )
+                round_errors.extend(result.errors)
+                self.ledger.record_papers_discovered(len(result.papers) + len(result.excluded))
+                for excluded in result.excluded:
+                    self.state.papers.setdefault(excluded.paper_id, excluded)
+                for loaded in result.papers:
+                    self._register_paper(loaded)
+                    round_papers.append(loaded.record.paper_id)
+                    found.append((loaded, query))
+                if result.papers:
+                    break
+                if not query.result_count or attempt == attempts:
+                    exhausted = True
+                    break
 
-            new_for_item = 0
-            for loaded in result.papers:
-                self._register_paper(loaded)
-                round_papers.append(loaded.record.paper_id)
-                new_for_item += 1
-
-            if not new_for_item:
+            if exhausted and not found:
                 item.exhausted = True
                 if item.frontier_item_id not in self.state.exhausted_frontier:
                     self.state.exhausted_frontier.append(item.frontier_item_id)
 
             # -- retrieve + extract, one paper at a time ---------------------
             retrieval_text = queries_mod.retrieval_query_text(item, self.config)
-            for loaded in result.papers:
+            for loaded, query in found:
                 if self.ledger.check_before_call():
                     break
                 record = loaded.record

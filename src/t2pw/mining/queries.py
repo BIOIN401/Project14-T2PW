@@ -4,10 +4,13 @@ Every query this module produces records the frontier item, the kind of question
 and the exact terms that went into it, so a paper in the run can always be traced
 to the question that found it.
 
-Reuse, not reimplementation: the query *string* is built by
-``t2pw.rag.acquire.build_query`` -- the same organism-scoped OR-clause the
-production acquisition path uses -- from a context dict this module assembles.
-That keeps one query grammar in the repository instead of two that drift.
+Reuse, not reimplementation: the query *string* is rendered by
+``t2pw.rag.acquire.build_query``, the same renderer ``search_candidates`` runs,
+from a context dict this module assembles. So the recorded query is exactly the
+executed one. What mining decides is the content: the frontier item's own terms
+and the species, all REQUIRED. The topic and generic words are not OR'd in; in
+pilot-001 they made the item's own term optional, and 60 queries returned the
+same 20 papers (finding F2).
 
 Search terms vs biochemistry
 ----------------------------
@@ -19,11 +22,11 @@ literature; only an extracted, evidenced reaction can connect anything.
 
 from __future__ import annotations
 
+import re
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Sequence
 
 from t2pw.mining.config import MiningConfig
-from t2pw.mining.graph import ResearchGraph
 from t2pw.mining.ids import query_id as make_query_id
 from t2pw.mining.models import (
     FRONTIER_BRANCH,
@@ -64,57 +67,83 @@ def _utcnow() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
-def _split_bridge_target(target: str) -> List[str]:
-    return [part.strip() for part in str(target or "").split("|") if part.strip()]
+#: Frontier kinds whose target is a reaction label ("A + B -> C").
+_REACTION_KINDS = {FRONTIER_CONFLICT, FRONTIER_DIRECTION, FRONTIER_COMPARTMENT, FRONTIER_SPECIES}
+_ARROW = re.compile(r"\s*(?:<=>|->)\s*")
+#: A trailing parenthetical note, e.g. "HDA (16:2n6)" or "allene oxide (12,13-EOT)".
+#: As a phrase search it almost never matches, so the note is dropped.
+_TRAILING_NOTE = re.compile(r"\s+\([^()]*\)$")
 
 
-def build_context(
-    item: FrontierItem,
-    config: MiningConfig,
-    *,
-    graph: Optional[ResearchGraph] = None,
-) -> Dict[str, Any]:
-    """Assemble the acquisition context dict for one frontier item.
+def _clean(term: str) -> str:
+    return _TRAILING_NOTE.sub("", str(term or "").replace('"', "").strip()).strip()
 
-    The shape is exactly what ``t2pw.rag.acquire`` already understands:
-    ``pathway_name``, ``likely_organism``, ``key_compounds``, ``key_proteins``,
-    ``gap_terms``.
+
+def target_terms(item: FrontierItem, config: MiningConfig) -> List[str]:
+    """The frontier item's own search terms. Every one is REQUIRED in the query.
+
+    A bridge requires both of its sides; a reaction label requires its first
+    substrate and its first product; anything else requires its target. The
+    species is never a term here: it is always required separately.
     """
-    compounds: List[str] = []
-    proteins: List[str] = []
-
+    target = str(item.target or "")
+    if item.kind == FRONTIER_CONFLICT and ": " in target:
+        target = target.split(": ", 1)[1]  # "<attribute>: <reaction label>"
     if item.kind == FRONTIER_BRIDGE:
-        compounds.extend(_split_bridge_target(item.target))
-    elif item.kind in {FRONTIER_ENZYME}:
-        proteins.append(item.target)
-    elif item.kind in {FRONTIER_CONFLICT, FRONTIER_DIRECTION, FRONTIER_COMPARTMENT, FRONTIER_SPECIES}:
-        compounds.extend(
-            part.strip()
-            for part in str(item.target).replace("->", "|").replace("+", "|").split("|")
-            if part.strip()
-        )
+        parts = target.split("|")
+    elif item.kind in _REACTION_KINDS:
+        parts = [side.split(" + ")[0] for side in _ARROW.split(target)]
     else:
-        compounds.append(item.target)
+        parts = [target]
+    species = config.target_species.casefold()
+    out: List[str] = []
+    for part in parts:
+        term = _clean(part)
+        if term and term != "?" and term.casefold() != species and term.casefold() not in {
+            t.casefold() for t in out
+        }:
+            out.append(term)
+    return out
 
-    if graph is not None:
-        for eid in item.entity_ids:
-            entity = graph.registry.get(eid)
-            if entity is None:
-                continue
-            bucket = proteins if entity.is_catalytic else compounds
-            if entity.name not in bucket:
-                bucket.append(entity.name)
 
-    pathway = config.topic
-    if item.kind == FRONTIER_PATHWAY_REFERENCE:
-        pathway = item.target
+def formulation(item: FrontierItem, config: MiningConfig, attempt: int = 1) -> Optional[List[str]]:
+    """The required terms for query ``attempt`` of ``item``; ``None`` when there is none.
 
+    Attempt 1 requires the item's own terms and the species. Attempt 2 also
+    requires the run topic: a narrower query, re-ranked, which reaches papers
+    past attempt 1's result window. It exists only when it differs from
+    attempt 1. Because attempt 2 only narrows attempt 1, a zero-result attempt 1
+    means attempt 2 would also return nothing.
+    """
+    terms = target_terms(item, config)
+    if attempt <= 1:
+        return terms
+    topic = _clean(config.topic)
+    if attempt == 2 and topic and topic.casefold() not in {t.casefold() for t in terms}:
+        return [*terms, topic]
+    return None
+
+
+def build_context(item: FrontierItem, config: MiningConfig, *, attempt: int = 1) -> Optional[Dict[str, Any]]:
+    """The acquisition context for one query attempt, or ``None`` if there is no such attempt.
+
+    ``t2pw.rag.acquire.build_query`` renders a context as an OR-list AND the
+    organism: ``("a" OR "b") AND "<organism>"``. Mining needs every term
+    required, so the terms go in as ONE entry joined with ``" AND "``. That entry
+    renders as ``"a" AND "b" AND "<organism>"``, and as
+    ``("a" AND "b") AND <organism>[Organism]`` for NCBI. No topic and no generic
+    words are OR'd in. ``test_mining_search.py`` pins the rendered string, so a
+    change to rag's quoting fails a test instead of silently changing the search.
+    """
+    terms = formulation(item, config, attempt)
+    if terms is None:
+        return None
     return {
-        "pathway_name": pathway,
+        "pathway_name": "",
         "likely_organism": config.target_species,
-        "key_compounds": [c for c in dict.fromkeys(compounds) if c][:6],
-        "key_proteins": [p for p in dict.fromkeys(proteins) if p][:4],
-        "gap_terms": list(_KIND_TERMS.get(item.kind, ()))[:4],
+        "key_compounds": ['" AND "'.join(terms)] if terms else [],
+        "key_proteins": [],
+        "gap_terms": [],
     }
 
 
@@ -123,26 +152,23 @@ def build_query(
     config: MiningConfig,
     *,
     round_index: int,
-    graph: Optional[ResearchGraph] = None,
-) -> LiteratureQuery:
-    """One traceable :class:`LiteratureQuery` for one frontier item."""
-    context = build_context(item, config, graph=graph)
+    attempt: int = 1,
+) -> Optional[LiteratureQuery]:
+    """One traceable :class:`LiteratureQuery` for one attempt, or ``None``.
+
+    ``query_text`` is exactly the EuropePMC query ``search_candidates`` runs for
+    :func:`build_context`'s context.
+    """
+    context = build_context(item, config, attempt=attempt)
+    if context is None:
+        return None
+    terms = formulation(item, config, attempt) or []
     try:
         from t2pw.rag.acquire import build_query as rag_build_query
 
         text = rag_build_query(context)
     except Exception:  # noqa: BLE001 - never let query rendering break a round
-        core = [*context["key_compounds"], *context["key_proteins"], context["pathway_name"]]
-        joined = " OR ".join(f'"{t}"' for t in core if t)
-        text = f'({joined}) AND "{config.target_species}"' if joined else f'"{config.target_species}"'
-
-    terms = [
-        *context["key_compounds"],
-        *context["key_proteins"],
-        *context["gap_terms"],
-    ]
-    if context["pathway_name"]:
-        terms.insert(0, context["pathway_name"])
+        text = " AND ".join(f'"{t}"' for t in [*terms, config.target_species])
 
     return LiteratureQuery(
         query_id=make_query_id(text, round_index),
@@ -151,8 +177,9 @@ def build_query(
         frontier_kind=item.kind,
         round_index=int(round_index),
         sources=list(config.acquisition_sources),
-        source_terms=[t for t in dict.fromkeys(terms) if t],
+        source_terms=list(terms),
         executed_at=_utcnow(),
+        attempt=int(attempt),
     )
 
 
@@ -170,4 +197,4 @@ def retrieval_query_text(item: FrontierItem, config: MiningConfig) -> str:
     return " ".join(p for p in parts if p)
 
 
-__all__ = ["build_context", "build_query", "retrieval_query_text"]
+__all__ = ["target_terms", "formulation", "build_context", "build_query", "retrieval_query_text"]

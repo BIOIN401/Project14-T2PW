@@ -43,6 +43,7 @@ which looks exactly like a large regression.
 | `test_mining_ui.py` | the entry hook's no-op behaviour, the main-app hook's shape, both view payloads, the round slider, DOT exports, the offline renderer, large-graph trimming |
 | `test_mining_stability.py` | two G9 corrections: the preflight probe budget (a reasoning model that needs more than 8 tokens, the `PATHWAY_MINING_PROBE_MAX_TOKENS` override, the named exhaustion) and `max_new_reactions_per_round` stopping a real run while keeping the capped round |
 | `test_mining_citation_recovery.py` | ORCH-743 item 2 (G9): an uncited enzyme / gene / species value that occurs verbatim in the claim's own cited participant span is kept and recorded as `verbatim_cited_span`, but only when the field's own citation list is missing; never from an unshown span, an uncited span or paper metadata; an explicit empty list is respected; the request names every per-field citation key |
+| `test_mining_search.py` | ORCH-743 item 3 (G9): the frontier item's own terms are required in its query; the result window is `max_results_per_query` (default 25) and NCBI is reached; a second formulation before exhaustion, and immediate exhaustion on zero results; the rendered query strings are pinned |
 | `test_mining_integration.py` | the eight required behaviours, end to end |
 
 ## The integration fixture

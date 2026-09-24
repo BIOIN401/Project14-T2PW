@@ -24,6 +24,8 @@ crawl is both expensive and useless.
 | Max estimated cost (USD) | 5.00 | `MAX_COST_USD` | `--max-cost-usd` |
 | Max wall clock (s) | 3600 | `MAX_WALL_CLOCK_SECONDS` | `--max-seconds` |
 | Max frontier size | 60 | `MAX_FRONTIER_SIZE` | `--max-frontier-size` |
+| Max results per literature query | 25 | `MAX_RESULTS_PER_QUERY` | — |
+| Max query formulations per frontier item per round | 2 | `MAX_QUERY_ATTEMPTS` | — |
 | Stop after N unproductive rounds | 2 | `STOP_AFTER_UNPRODUCTIVE_ROUNDS` | — |
 | Input price per Mtok (USD) | 0.10 | `PRICE_INPUT_PER_MTOK_USD` | — |
 | Output price per Mtok (USD) | 0.30 | `PRICE_OUTPUT_PER_MTOK_USD` | — |
@@ -33,6 +35,25 @@ exists. They are configured estimates and are labelled as such wherever the
 number appears. They are not a billed amount.
 
 Precedence: CLI flag / Streamlit control / config file > environment > default.
+
+## Literature search per frontier item
+
+Each frontier item's query **requires** the item's own terms and the target species.
+The topic and generic words are not OR'd in. A bridge requires both of its sides. A reaction
+label requires its first substrate and its first product. A trailing parenthetical note
+(`HDA (16:2n6)` → `HDA`) is dropped from a term, because as a phrase search it almost never
+matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`.
+
+* **Result window.** Each query asks `search_candidates` for `max_results_per_query` papers.
+  Each configured source (EuropePMC, NCBI) is searched separately, and the lists are taken in
+  turn before the cap. A single call over both sources caps the merged list, which let
+  EuropePMC's first page fill it (pilot-001 F2). `max_papers_discovered` and
+  `max_papers_processed` remain the hard bounds.
+* **Attempts.** When a query brings in no newly included paper, a second, distinct formulation
+  is tried in the same round: the same required terms, plus the run topic. Each attempt is a
+  row in `queries.jsonl` with its `attempt` number. An item is marked exhausted only after every
+  formulation is tried without a new paper. It is marked exhausted at once when a query returns
+  no result at all, because the second formulation only narrows the first.
 
 ## Stop reasons
 

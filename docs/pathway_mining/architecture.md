@@ -39,7 +39,7 @@ src/t2pw/mining/
     modelclient.py    the model boundary: empty/truncated/schema handling + pricing
     extraction.py     prompts, JSON schema, per-field citation checking
     frontier.py       expansion-driven frontier generation (12 kinds)
-    queries.py        traceable literature queries (reuses rag.acquire.build_query)
+    queries.py        traceable literature queries (required terms; rendered by rag.acquire.build_query)
     acquisition.py    adapter over rag.acquire + explicit refs + uploads
     retrieval.py      adapter over rag.ingest/embed/store; per-run index
     preflight.py      visible service checks before anything expensive
@@ -125,7 +125,7 @@ material field must cite the passage that supports it.
 | # | Step | Module |
 |---|---|---|
 | 1 | select frontier items (priority-ordered, unexhausted) | `frontier` |
-| 2 | build one traceable query per item | `queries` |
+| 2 | build one traceable query per item: its own terms AND the species; a second formulation (+ topic) if the first finds no new paper | `queries` |
 | 3 | acquire, screen, cache; record inclusions and exclusions | `acquisition` |
 | 4 | index new papers; retrieve passages as evidence spans | `retrieval` |
 | 5 | extract claims; drop every uncited field (an enzyme / gene / species name found verbatim in the claim's own cited participant span is kept, recorded as `verbatim_cited_span`) | `extraction` |

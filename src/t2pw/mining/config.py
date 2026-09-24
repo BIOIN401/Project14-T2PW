@@ -94,6 +94,12 @@ class MiningBudgets:
     max_cost_usd: float = 5.0
     max_wall_clock_seconds: float = 3600.0
     max_frontier_size: int = 60
+    #: Papers asked for per literature query (``search_candidates``' ``max_papers``;
+    #: its per-source page size follows from it). Pilot-001 hard-coded 10.
+    max_results_per_query: int = 25
+    #: Distinct query formulations tried for one frontier item in a round before it
+    #: is marked exhausted. A query that returns no result at all exhausts it at once.
+    max_query_attempts: int = 2
     #: Stop after this many consecutive rounds that added nothing useful.
     stop_after_unproductive_rounds: int = 2
 

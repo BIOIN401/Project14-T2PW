@@ -17,6 +17,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from itertools import zip_longest
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple
 
@@ -169,9 +170,28 @@ class PaperSource:
 
     def search(self, context: Mapping[str, Any], *, sources: Sequence[str],
                max_papers: int) -> List[Any]:
+        """``search_candidates`` once per source, then the sources taken in turn.
+
+        One call over all sources caps the MERGED list, so EuropePMC's first page
+        filled it and NCBI's results were never reached (pilot-001 F2). Here each
+        source is searched separately through the same existing API, and the
+        lists are interleaved and de-duplicated before the ``max_papers`` cap.
+        """
         from t2pw.rag.acquire import search_candidates
 
-        return search_candidates(dict(context), sources=list(sources), max_papers=int(max_papers))
+        per_source = [
+            search_candidates(dict(context), sources=[source], max_papers=int(max_papers))
+            for source in sources
+        ]
+        merged: List[Any] = []
+        seen: set = set()
+        for candidate in (c for row in zip_longest(*per_source) for c in row if c is not None):
+            keys = set(candidate.identity_keys())
+            if keys & seen:
+                continue
+            seen |= keys
+            merged.append(candidate)
+        return merged[: max(0, int(max_papers))]
 
     def full_text(self, candidate: Any) -> str:
         from t2pw.rag.acquire import fetch_full_text
