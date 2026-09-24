@@ -276,6 +276,8 @@ class MiningModelClient:
                 use_schema = schema
                 if index >= len(_SHRINK_LADDER) - 1 and tight_schema is not None:
                     use_schema = tight_schema
+                schema_label = "tight" if use_schema is tight_schema and tight_schema is not None else (
+                    "full" if use_schema is not None else "none")
                 attempt = self._attempt(
                     record=record,
                     model_slug=model_slug,
@@ -286,12 +288,20 @@ class MiningModelClient:
                     max_tokens=max_tokens,
                     attempt_index=index + 1,
                     shrink_fraction=fraction,
+                    schema_label=schema_label,
                 )
                 outcome.attempts.append(attempt["log"])
+                # One row per ladder rung, with what the rung sent and every
+                # provider request it made (IT2-5: pilot-002 kept neither).
                 outcome.raw_attempts.append(
                     {
                         "attempt": index + 1,
                         "model": model_slug,
+                        "shrink_fraction": fraction,
+                        "passages_sent": passage.count("[evidence_id: "),
+                        "chars_sent": len(passage),
+                        "schema": schema_label,
+                        "provider_requests": attempt["provider_requests"],
                         "finish_reason": attempt["log"].get("finish_reason", ""),
                         "parse_outcome": attempt["log"].get("classification", ""),
                         "error": _SECRETISH.sub("[redacted]", str(attempt.get("error") or "")),
@@ -340,6 +350,7 @@ class MiningModelClient:
         max_tokens: Optional[int],
         attempt_index: int,
         shrink_fraction: float,
+        schema_label: str = "",
     ) -> Dict[str, Any]:
         messages = [
             {"role": "system", "content": system},
@@ -351,6 +362,7 @@ class MiningModelClient:
         finish_reason = ""
         error = ""
         diagnostics: Any = None
+        provider_requests: List[Dict[str, Any]] = []
         try:
             result = self._chat()(
                 messages,
@@ -371,7 +383,16 @@ class MiningModelClient:
                 record.retries = max(record.retries, int(getattr(diagnostics, "attempts", 0) or 0))
                 attempt_log = getattr(diagnostics, "attempt_log", None)
                 if isinstance(attempt_log, list):
-                    record.attempt_log = list(attempt_log)
+                    # Appended per rung, never overwritten: every provider request survives.
+                    provider_requests = [
+                        {k: _SECRETISH.sub("[redacted]", v) if isinstance(v, str) else v
+                         for k, v in (row.items() if isinstance(row, dict) else {"entry": str(row)}.items())}
+                        for row in attempt_log
+                    ]
+                    record.attempt_log.extend(
+                        {**row, "rung": attempt_index, "shrink_fraction": shrink_fraction}
+                        for row in provider_requests
+                    )
                 actual = str(getattr(diagnostics, "model", "") or "")
                 if actual:
                     record.actual_model = actual
@@ -406,7 +427,7 @@ class MiningModelClient:
             "latency_ms": latency_ms,
             "input_tokens": input_tokens,
             "output_tokens": output_tokens,
-            "schema": "tight" if schema is not None and schema is not None else "none",
+            "schema": schema_label or ("full" if schema is not None else "none"),
             "response_hash": str(getattr(diagnostics, "response_hash", "") or ""),
         }
 
@@ -414,13 +435,13 @@ class MiningModelClient:
             log["error"] = error
             log["classification"] = "provider_error"
             return {"status": EXTRACTION_PARSE_ERROR, "payload": None, "raw": raw,
-                    "error": error, "log": log}
+                    "error": error, "log": log, "provider_requests": provider_requests}
 
         if not raw.strip():
             log["classification"] = "empty_completion"
             return {"status": EXTRACTION_EMPTY, "payload": None, "raw": raw,
                     "error": f"empty completion (finish_reason={finish_reason or 'unknown'})",
-                    "log": log}
+                    "log": log, "provider_requests": provider_requests}
 
         truncated = finish_reason == "length" or looks_truncated(raw)
         payload, parse_error = parse_json_object(raw)
@@ -429,13 +450,15 @@ class MiningModelClient:
             log["classification"] = "truncated_completion"
             record.parse_error = parse_error
             return {"status": EXTRACTION_TRUNCATED, "payload": None, "raw": raw,
-                    "partial": None, "error": parse_error or "truncated JSON", "log": log}
+                    "partial": None, "error": parse_error or "truncated JSON", "log": log,
+                    "provider_requests": provider_requests}
 
         if payload is None:
             log["classification"] = "parse_error"
             record.parse_error = parse_error
             return {"status": EXTRACTION_PARSE_ERROR, "payload": None, "raw": raw,
-                    "error": parse_error, "log": log}
+                    "error": parse_error, "log": log,
+                    "provider_requests": provider_requests}
 
         if truncated:
             # Parsed, but the provider says it stopped on length: the object is
@@ -445,17 +468,19 @@ class MiningModelClient:
             return {"status": EXTRACTION_PARTIAL_REPAIR, "payload": None, "raw": raw,
                     "partial": payload,
                     "error": "finish_reason=length; parsed payload kept as diagnostic only",
-                    "log": log}
+                    "log": log, "provider_requests": provider_requests}
 
         schema_error = validate_against_schema(payload, schema)
         if schema_error:
             log["classification"] = "schema_error"
             record.schema_error = schema_error
             return {"status": EXTRACTION_SCHEMA_ERROR, "payload": None, "raw": raw,
-                    "partial": payload, "error": schema_error, "log": log}
+                    "partial": payload, "error": schema_error, "log": log,
+                    "provider_requests": provider_requests}
 
         log["classification"] = "ok"
-        return {"status": EXTRACTION_OK, "payload": payload, "raw": raw, "error": "", "log": log}
+        return {"status": EXTRACTION_OK, "payload": payload, "raw": raw, "error": "", "log": log,
+                "provider_requests": provider_requests}
 
 
 __all__ = [
