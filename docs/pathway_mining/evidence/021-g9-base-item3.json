@@ -1,0 +1,106 @@
+{
+  "label": "g9-base-item3",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-base2",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/021-g9-base-item3.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/mining-iter/orch-g9-base-item3/b",
+    "tests/test_mining_search.py::test_g9_a_a_paper_that_never_names_the_target_is_not_returned_for_it",
+    "tests/test_mining_search.py::test_g9_b_the_default_result_window_is_wider_than_ten",
+    "tests/test_mining_search.py::test_g9_b_an_ncbi_only_paper_is_reached_through_search_candidates",
+    "tests/test_mining_search.py::test_g9_c_a_second_formulation_reaches_a_paper_the_first_did_not"
+  ],
+  "cwd": "C:\\t\\mining-base2",
+  "started_at": "2026-09-24T18:34:38+00:00",
+  "finished_at": "2026-09-24T18:34:40+00:00",
+  "duration_seconds": 2.495611100000133,
+  "timeout_seconds": 300.0,
+  "root_pid": 80228,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 80024,
+      "name": "python.exe",
+      "ppid": 80228
+    },
+    {
+      "pid": 80420,
+      "name": "git.exe",
+      "ppid": 80024
+    },
+    {
+      "pid": 80028,
+      "name": "git.exe",
+      "ppid": 80024
+    },
+    {
+      "pid": 80036,
+      "name": "git.exe",
+      "ppid": 80024
+    }
+  ],
+  "descendants_terminated": [
+    80024,
+    80028,
+    80036,
+    80420
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 27260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 27552,
+      "name": "python.exe"
+    },
+    {
+      "pid": 41020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 80564,
+      "name": "python.exe"
+    },
+    {
+      "pid": 80732,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/021-g9-base-item3.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-base2\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-base2",
+    "repo_head": "23e1ae8308b002e1235509f028dc75dc2c341e19",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

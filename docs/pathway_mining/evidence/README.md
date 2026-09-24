@@ -128,3 +128,16 @@ re-measured at the final tip. Cite `018` and `019`.
 |---|---|---|---|
 | `018-mining-suite-orch743-final` | `C:/t/mining` @ `db3a46de` | `tests/test_mining_*.py` (16 files) | **252 passed** in 6.53 s (heavy lock `ORCH-743`) |
 | `019-smoke-feature-disabled-orch743-final` | `C:/t/mining` @ `db3a46de` | production SMOKE (22 files), `T2PW_PATHWAY_MINING_ENABLED` unset | **508 passed** in 38.93 s (heavy lock `ORCH-743`) |
+
+**G9 base arms for items 2-4, run by the orchestrator.** Workers could not write into the base
+worktree. Each new test file (plus item 4's fixture) was copied into `C:/t/mining-base2` @ `23e1ae83`,
+run pinned with that tree's own launcher (`--expect-tree C:/t/mining-base2`), then deleted again. The
+base tree's status is empty afterwards. Every failure is an assertion on behaviour, not an import error.
+
+| File | Tree / SHA | What | Result at base |
+|---|---|---|---|
+| `020-g9-base-item2` | `C:/t/mining-base2` @ `23e1ae83` | the two `test_g9_*` nodes of `test_mining_citation_recovery.py` | **2 failed**: `('', '', '') == ('LOX2', …)`; the LOX2 reaction is never admitted |
+| `021-g9-base-item3` | `C:/t/mining-base2` @ `23e1ae83` | the four `test_g9_*` nodes of `test_mining_search.py` | **4 failed**: the decoy is returned for an OR query; `10 == 25`; `{'europepmc'}` only; `1 == 2` attempts |
+| `022-g9-base-item4` | `C:/t/mining-base2` @ `23e1ae83` | `test_mining_screen_rescue.py::test_g9_the_mining_screen_includes_primary_atlox2_enzymology` | **1 failed**: `[] == ['PMC:PMC9947334']` |
+
+All three: FINAL SURVIVING COUNT 0, pin `violations: []`. Item 1's base arm is `012`.
