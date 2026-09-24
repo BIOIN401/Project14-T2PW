@@ -205,3 +205,33 @@ The G9 base arm is run by the orchestrator at `59eb761d`. The nodes are in
 | `031-g9-rep2-bio-b4` | `C:/t/mining-rep-base` @ `59eb761d` (pre-repair-2 tip) | the two `test_g9_b4_*` nodes of `test_mining_screen_rescue.py` (plus `orch743_transgene_source.json`) | **2 failed**: route 1 rescues the emmer-wheat AtAOS/AtOPR3 paper (PMC10742046, score 3.5) and the strengthened PMC11478715 (3.25) |
 
 FINAL SURVIVING COUNT 0, pin `violations: []`; the base tree was restored afterwards and its status is empty.
+
+## ORCH-743 iteration 2 (the pilot-002 audit's five defects)
+
+Base `ecf6b9a0` (the tip pilot-002 ran on). Commits:
+- `89b35443`: IT2-1 diagnosis, evidence `032`;
+- `0fd12c12`: IT2-1, extraction in passage batches;
+- `f2dd1215`: IT2-5, every ladder rung in the lineage;
+- `6ca31150`: IT2-4, the grape host;
+- `6a879818`: IT2-3, a budget-cut window never exhausts an item;
+- `1b86f4af`: IT2-2, NCBI identity from the PMID only.
+
+**`032-it2-extraction-diagnosis/`**: 4 live calls, one provider request each, est.
+**$0.013588**. It replays pilot-002's `_0002` input, with identity proven by the request hash.
+The hidden reasoning surveys every passage and drafts every claim before it answers. Call 3
+spent 16,001 reasoning tokens of a 16,000 budget and produced 0 characters. The `reasoning`
+knob is never sent, and `effort: low` did not help at 4,000. Two of the four requests went to a
+provider that did not reason and answered nearly empty. See its README.
+
+Both gate runs: exit reason `completed`, **final surviving count 0**, cleanup success, heavy lock
+`ORCH-743` acquired and released, pin `violations: []`, wrapper clean at `1b86f4af`.
+
+| File | Tree / SHA | What | Result |
+|---|---|---|---|
+| `033-mining-suite-orch743-it2` | `C:/t/mining` @ `1b86f4af` | `tests/test_mining_*.py` (17 files) | **281 passed** in 8.49 s (269 before this iteration) |
+| `034-smoke-feature-disabled-orch743-it2` | `C:/t/mining` @ `1b86f4af` | production SMOKE (22 files), `T2PW_PATHWAY_MINING_ENABLED` unset | **508 passed** in 39.04 s |
+
+New fixtures: `tests/fixtures/mining/pilot002_grape_host.json` (IT2-4) and
+`tests/fixtures/mining/pubmed_pmid34638573.xml` (IT2-2). The G9 base arms are the
+orchestrator's, at `ecf6b9a0`. The nodes are in `C:/t/mining-iter/g9_manifest.json`
+(items `it2-1` … `it2-5`).
