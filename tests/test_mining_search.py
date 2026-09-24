@@ -121,21 +121,39 @@ def test_the_result_window_is_a_budget_knob(tmp_path):
 
 
 def test_g9_b_an_ncbi_only_paper_is_reached_through_search_candidates(tmp_path, monkeypatch):
-    """The real ``search_candidates``, with only its network fetchers replaced."""
+    """The real ``PaperSource.search``. EuropePMC goes through ``search_candidates`` with its
+    fetcher replaced. NCBI goes through rag's own ``_fetch_ncbi`` over a fake HTTP client.
+    Since IT2-2 mining reads each PubMed record's PMID from the efetch XML, so NCBI is faked
+    at the HTTP seam, not at the fetcher."""
+    from types import SimpleNamespace
 
     def epmc(client, context, *, page_size, organism):  # noqa: ARG001
         return [rag_acquire.CandidatePaper(id=f"PMC{3000000 + n}", source="europepmc",
                                            title=f"EuropePMC paper {n}") for n in range(page_size)]
 
-    def ncbi(client, context, *, retmax, organism):  # noqa: ARG001
-        return [rag_acquire.CandidatePaper(id=f"{4000000 + n}", source="ncbi",
-                                           title=f"PubMed-only paper {n}") for n in range(3)]
+    xml = "<PubmedArticleSet>" + "".join(
+        f"<PubmedArticle><MedlineCitation><PMID>{4000000 + n}</PMID><Article><ArticleTitle>"
+        f"PubMed-only paper {n}</ArticleTitle></Article></MedlineCitation></PubmedArticle>"
+        for n in range(3)) + "</PubmedArticleSet>"
+
+    class FakeHttp:
+        def __init__(self, *args, **kwargs):  # noqa: ARG002
+            pass
+
+        def get(self, url, params=None, headers=None):  # noqa: ARG002
+            if "esearch.fcgi" in url:
+                ids = [str(4000000 + n) for n in range(3)]
+                return SimpleNamespace(status_code=200, json=lambda: {"esearchresult": {"idlist": ids}})
+            if "efetch.fcgi" in url:
+                return SimpleNamespace(status_code=200, text=xml)
+            # EuropePMC by PMID: these records have no PMCID.
+            return SimpleNamespace(status_code=200, json=lambda: {"resultList": {"result": []}})
 
     monkeypatch.setattr(rag_acquire, "_default_cache_dir", lambda: tmp_path / "acquire_cache")
     monkeypatch.setattr(rag_acquire, "_fetch_europepmc", epmc)
-    monkeypatch.setattr(rag_acquire, "_fetch_ncbi", ncbi)
     monkeypatch.setitem(rag_acquire._SOURCE_FETCHERS, "europepmc", epmc)
-    monkeypatch.setitem(rag_acquire._SOURCE_FETCHERS, "ncbi", ncbi)
+    monkeypatch.setattr(rag_acquire, "HttpClient", FakeHttp)
+    monkeypatch.setattr(rag_acquire, "_ncbi_throttle", lambda: None)
 
     context = {"pathway_name": "", "likely_organism": SPECIES, "key_compounds": ["12-OPDA"],
                "key_proteins": [], "gap_terms": []}

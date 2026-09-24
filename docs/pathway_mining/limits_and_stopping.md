@@ -51,6 +51,20 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
   turn before the cap. A single call over both sources caps the merged list, which let
   EuropePMC's first page fill it (pilot-001 F2). `max_papers_discovered` and
   `max_papers_processed` remain the hard bounds.
+* **NCBI paper identity (IT2-2).** rag's PubMed parser takes the PMCID and DOI from any
+  `ArticleIdList` in the record, reference list included, so the last cited reference's ids win.
+  Pilot-002 recorded a 2021 paper as PMC411572 (a 1979 PNAS paper) and fetched two other articles'
+  full texts that way. `rag/` is frozen, so mining keeps rag's own NCBI fetch (`_fetch_ncbi`) and
+  its title, abstract and year. It re-reads the returned XML for each article's own
+  `MedlineCitation/PMID` and never uses the parsed PMCID, DOI or URL. The PMCID is then asked of
+  EuropePMC by PMID (rag's `_resolve_europepmc_item`, one lookup per new PMID per run); without
+  an answer the PMID is the id, and the URL is the PubMed page. The same article found through
+  EuropePMC and through NCBI therefore gets one `paper_id`, and is one paper. This path does not
+  use rag's search cache for NCBI.
+* **Full-text check.** A fetched full text must open with the record's title: at least 70 % of
+  the title's words (3+ letters, HTML unescaped) in its first 3,000 characters. Otherwise it is
+  another article, it is refused, the abstract is used, and the paper's `notes` say so. Fixture
+  and offline sources skip the check (`verify_full_text_title = False`).
 * **Attempts.** When a query brings in no newly included paper, a second, distinct formulation
   is tried in the same round: the same required terms, plus the run topic. Each attempt is a
   row in `queries.jsonl` with its `attempt` number. An item is marked exhausted only after every

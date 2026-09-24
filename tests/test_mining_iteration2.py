@@ -224,3 +224,130 @@ def test_a_full_window_that_finds_nothing_new_still_exhausts(tmp_path):
     outcome, _, queries = _run(tmp_path, known, explicit=[i for i, _ in known])
     assert [q.attempt for q in queries] == [1, 2]
     assert queries[0].frontier_item_id in outcome.state.exhausted_frontier
+
+
+# ---------------------------------------------------------------------------
+# IT2-2: NCBI identity from the PMID only; one paper across sources; full-text title check
+# ---------------------------------------------------------------------------
+PUBMED_XML = ROOT / "tests" / "fixtures" / "mining" / "pubmed_pmid34638573.xml"
+TITLE_13LOX = "Biochemical Characterization of 13-Lipoxygenases of Arabidopsis thaliana."
+
+
+class _Resp:
+    def __init__(self, status=200, text="", payload=None):
+        self.status_code, self.text, self._payload = status, text, payload
+
+    def json(self):
+        return self._payload
+
+
+def _fake_network(monkeypatch, tmp_path, *, ncbi_for=lambda term: ["34638573"], epmc_for=lambda query: []):
+    """Stand-in for rag's HttpClient: NCBI esearch / efetch from the fixture, EuropePMC search and
+    the by-PMID lookup from the arguments, 404 for any full-text download."""
+    from t2pw.rag import acquire as rag_acquire
+
+    xml = PUBMED_XML.read_text(encoding="utf-8")
+
+    class FakeHttp:
+        def __init__(self, *args, **kwargs):  # noqa: ARG002
+            pass
+
+        def get(self, url, params=None, headers=None):  # noqa: ARG002
+            params = params or {}
+            if "esearch.fcgi" in url:
+                return _Resp(payload={"esearchresult": {"idlist": ncbi_for(str(params.get("term")))}})
+            if "efetch.fcgi" in url:
+                return _Resp(text=xml)
+            if url.endswith("/search"):
+                query = str(params.get("query"))
+                if query.startswith("EXT_ID:34638573"):
+                    return _Resp(payload={"resultList": {"result": [
+                        {"source": "MED", "id": "34638573", "pmid": "34638573", "pmcid": "PMC8508710"}]}})
+                return _Resp(payload={"resultList": {"result": epmc_for(query)}})
+            return _Resp(status=404)
+
+    monkeypatch.setattr(rag_acquire, "HttpClient", FakeHttp)
+    monkeypatch.setattr(rag_acquire, "_ncbi_throttle", lambda: None)
+    monkeypatch.setattr(rag_acquire, "_default_cache_dir", lambda: tmp_path / "acquire_cache")
+
+
+def _context(term):
+    return {"pathway_name": "", "likely_organism": "Arabidopsis thaliana", "key_compounds": [term],
+            "key_proteins": [], "gap_terms": []}
+
+
+def test_g9_it2_2_an_ncbi_record_never_carries_a_cited_reference_identity(tmp_path, monkeypatch):
+    """Pilot-002 recorded PMID 34638573 (2021) as PMC411572 with doi 10.1073/pnas.76.9.4350,
+    the Towbin 1979 paper its reference list cites."""
+    from t2pw.mining.acquisition import PaperSource, record_from_candidate
+
+    _fake_network(monkeypatch, tmp_path)
+    found = PaperSource().search(_context("13-lipoxygenase"), sources=["ncbi"], max_papers=5)
+    assert len(found) == 1
+    paper = found[0]
+    assert "PMC411572" not in paper.id and "pnas" not in paper.source_uri
+    assert paper.id == "PMC8508710"  # the article's own, from EuropePMC by PMID
+    record = record_from_candidate(paper, round_index=1)
+    assert (record.paper_id, record.pmid, record.title) == ("PMC:PMC8508710", "34638573", TITLE_13LOX)
+    assert record.url == "https://pubmed.ncbi.nlm.nih.gov/34638573/"
+
+
+def test_g9_it2_2_the_same_article_from_two_sources_is_one_paper(tmp_path, monkeypatch):
+    """Pilot-002 discovered 6 articles twice, once per source, under two ids."""
+    from t2pw.mining.acquisition import Acquirer, PaperSource
+    from t2pw.mining.models import LiteratureQuery
+
+    epmc_item = {"id": "PMC8508710", "source": "PMC", "pmid": "34638573", "pmcid": "PMC8508710",
+                 "title": TITLE_13LOX, "abstractText": "13-LOX enzymes of A. thaliana.", "pubYear": "2021"}
+    _fake_network(monkeypatch, tmp_path,
+                  ncbi_for=lambda term: ["34638573"] if "LOX6" in term else [],
+                  epmc_for=lambda query: [epmc_item] if "13-lipoxygenase" in query else [])
+    acquirer = Acquirer(H.make_config(tmp_path), source=PaperSource())
+    first = acquirer.acquire(LiteratureQuery(query_id="q1", query_text="q1"), _context("13-lipoxygenase"),
+                             round_index=1, max_papers=5)
+    second = acquirer.acquire(LiteratureQuery(query_id="q2", query_text="q2"), _context("LOX6"),
+                              round_index=1, max_papers=5)
+    included = [p.record.paper_id for p in [*first.papers, *second.papers]]
+    assert included == ["PMC:PMC8508710"]
+
+
+NAD_TITLE = ("NAD&lt;sup&gt;+&lt;/sup&gt; deficiency primes defense metabolism via "
+             "&lt;sup&gt;1&lt;/sup&gt;O&lt;sub&gt;2&lt;/sub&gt;-escalated jasmonate biosynthesis in plants.")
+NAD_ABSTRACT = "NAD+ deficiency in the qs-2 mutant primes jasmonate biosynthesis through 13-LOX."
+#: The header of what pilot-002 fetched for PMC6628814 (audit A1), and of the real article
+#: (the opening of C:/t/mining-pilot-runs2/bio-audit/nad_fulltext.txt).
+WRONG_FULL_TEXT = ("An effector from cotton bollworm oral secretion impairs host plant defense signaling "
+                   "Chen Chun-Yu a b 1 Liu Yao-Qian ... Results. The effector HARP1 binds JAZ proteins.")
+RIGHT_FULL_TEXT = ("2873 ncomms Nature Communications Nat Commun Nature Publishing Group PMC11300881 11300881 "
+                   "39103368 10.1038/s41467-024-51114-1 NAD + deficiency primes defense metabolism via 1 O 2 "
+                   "-escalated jasmonate biosynthesis in plants Hong Yechun 1 2 # Yu Zongjun ... Results.")
+
+
+def _fetched(full_text, tmp_path):
+    from t2pw.mining.acquisition import Acquirer, PaperSource
+    from t2pw.mining.models import LiteratureQuery
+    from t2pw.rag.acquire import CandidatePaper
+
+    class OneArticle(PaperSource):
+        def search(self, context, *, sources, max_papers):  # noqa: ARG002
+            return [CandidatePaper(id="PMC6628814", source="ncbi", title=NAD_TITLE, abstract=NAD_ABSTRACT)]
+
+        def full_text(self, candidate):  # noqa: ARG002
+            return full_text
+
+    result = Acquirer(H.make_config(tmp_path), source=OneArticle()).acquire(
+        LiteratureQuery(query_id="q", query_text="q"), {}, round_index=1, max_papers=1)
+    return result.papers[0]
+
+
+def test_g9_it2_2_a_full_text_of_another_article_is_refused(tmp_path):
+    """Pilot-002 extracted the cotton-bollworm paper under the NAD+ paper's title."""
+    loaded = _fetched(WRONG_FULL_TEXT, tmp_path)
+    assert loaded.text == NAD_ABSTRACT
+    assert any("full text refused" in note for note in loaded.record.notes)
+
+
+def test_the_article_own_full_text_is_kept(tmp_path):
+    loaded = _fetched(RIGHT_FULL_TEXT, tmp_path)
+    assert loaded.text == RIGHT_FULL_TEXT
+    assert not any("full text refused" in note for note in loaded.record.notes)

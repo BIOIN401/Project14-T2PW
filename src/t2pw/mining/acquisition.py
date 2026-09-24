@@ -14,6 +14,7 @@ paper *discovery*.
 
 from __future__ import annotations
 
+import html
 import re
 from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
@@ -85,6 +86,45 @@ def _term_in(sentence: str, term: str) -> bool:
     if any(c.islower() for c in term):
         return _names(_fold(sentence), _fold(term))
     return _names(" ".join(sentence.split()), term)
+
+
+#: A fetched full text opens with its own title (EuropePMC fullTextXML front
+#: matter). Only this much of it is compared, and this share of the record's
+#: title words must be there.
+_TITLE_HEAD_CHARS = 3000
+_TITLE_MATCH = 0.7
+
+
+def _title_words(text: str) -> set:
+    plain = re.sub(r"<[^>]+>", " ", html.unescape(html.unescape(str(text or ""))))
+    return {w for w in re.findall(r"[a-z0-9]+", plain.lower()) if len(w) >= 3}
+
+
+def full_text_matches_title(title: str, text: str) -> bool:
+    """Does ``text`` open with the article called ``title``? Normalised word overlap.
+
+    Pilot-002 fetched another article's full text for two NCBI records (their
+    PMCID came from a cited reference) and extracted from it under the included
+    paper's title. A title too short to judge (under 3 words of 3+ letters) passes.
+    """
+    wanted = _title_words(title)
+    if len(wanted) < 3:
+        return True
+    return len(wanted & _title_words(str(text or "")[:_TITLE_HEAD_CHARS])) / len(wanted) >= _TITLE_MATCH
+
+
+class _CapturingClient:
+    """Pass-through HTTP client that keeps the NCBI efetch XML it returned."""
+
+    def __init__(self, inner: Any) -> None:
+        self.inner = inner
+        self.efetch_xml: List[str] = []
+
+    def get(self, url: Any, **kwargs: Any) -> Any:
+        resp = self.inner.get(url, **kwargs)
+        if "efetch.fcgi" in str(url):
+            self.efetch_xml.append(str(getattr(resp, "text", "") or ""))
+        return resp
 
 
 _REVIEW_MARKERS = ("review", "overview", "perspectives on", "a survey of", "current concepts")
@@ -216,6 +256,8 @@ class PaperSource:
     """
 
     name = "rag.acquire"
+    #: Refuse a fetched full text that does not open with the record's title.
+    verify_full_text_title = True
 
     def search(self, context: Mapping[str, Any], *, sources: Sequence[str],
                max_papers: int) -> List[Any]:
@@ -225,11 +267,13 @@ class PaperSource:
         filled it and NCBI's results were never reached (pilot-001 F2). Here each
         source is searched separately through the same existing API, and the
         lists are interleaved and de-duplicated before the ``max_papers`` cap.
+        NCBI goes through :meth:`_ncbi` (IT2-2).
         """
         from t2pw.rag.acquire import search_candidates
 
         per_source = [
-            search_candidates(dict(context), sources=[source], max_papers=int(max_papers))
+            self._ncbi(context, int(max_papers)) if source == "ncbi"
+            else search_candidates(dict(context), sources=[source], max_papers=int(max_papers))
             for source in sources
         ]
         merged: List[Any] = []
@@ -242,6 +286,61 @@ class PaperSource:
             merged.append(candidate)
         return merged[: max(0, int(max_papers))]
 
+    def _ncbi(self, context: Mapping[str, Any], max_papers: int) -> List[Any]:
+        """NCBI candidates whose identity is their PMID alone.
+
+        rag's PubMed parser reads every ``ArticleIdList`` in the record, the
+        reference list's included, so the LAST cited reference's PMCID and DOI
+        win (``rag/acquire.py`` ``_parse_pubmed_article``). Pilot-002 recorded a
+        2021 paper as PMC411572 (Towbin 1979) and fetched two other articles'
+        full texts that way. ``rag/`` is frozen, so mining keeps rag's own network
+        fetch (``_fetch_ncbi``) and its text fields, but re-reads the returned XML
+        for each article's own ``MedlineCitation/PMID``, drops the parsed PMCID,
+        DOI and URL, and asks EuropePMC for the PMCID by PMID (rag's
+        ``_resolve_europepmc_item``). Without an answer, the PMID is the id.
+        ponytail: one EuropePMC lookup per new PMID, cached for the run; this
+        path bypasses rag's search cache for NCBI.
+        """
+        from xml.etree import ElementTree
+
+        from t2pw.rag import acquire as ra
+
+        cap = max(0, int(max_papers))
+        capture = _CapturingClient(ra.HttpClient())
+        organism = str(context.get("likely_organism") or "")
+        ra._fetch_ncbi(capture, dict(context), retmax=max(cap * 2, cap + 5), organism=organism)
+        out: List[Any] = []
+        for xml in capture.efetch_xml:
+            try:
+                root = ElementTree.fromstring(xml)
+            except ElementTree.ParseError:
+                continue
+            for node in root.findall(".//PubmedArticle"):
+                pmid = (node.findtext("./MedlineCitation/PMID") or "").strip()
+                paper = ra._parse_pubmed_article(node)
+                if paper is None or not pmid.isdigit() or any(c.pmid == pmid for c in out):
+                    continue
+                paper.pmid = pmid
+                paper.id = pmid
+                paper.source_uri = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+                paper.requested_organism = organism
+                out.append(paper)
+        out = out[:cap]
+        for paper in out:
+            paper.id = self._pmcid_for(paper.pmid, capture.inner) or paper.pmid
+        return out
+
+    def _pmcid_for(self, pmid: str, http: Any) -> str:
+        """The article's own PMCID from EuropePMC, by PMID. ``""`` when it has none."""
+        from t2pw.rag import acquire as ra
+
+        cache: Dict[str, str] = self.__dict__.setdefault("_pmcid_by_pmid", {})
+        if pmid not in cache:
+            item = ra._resolve_europepmc_item(http, ra.CandidatePaper(id=pmid, source="ncbi"))
+            pmcid = str(item.get("pmcid") or "").strip()
+            cache[pmid] = (pmcid if pmcid.upper().startswith("PMC") else f"PMC{pmcid}") if pmcid else ""
+        return cache[pmid]
+
     def full_text(self, candidate: Any) -> str:
         from t2pw.rag.acquire import fetch_full_text
 
@@ -252,6 +351,7 @@ class OfflinePaperSource(PaperSource):
     """A source that never touches the network. Used by fixtures and replays."""
 
     name = "offline"
+    verify_full_text_title = False
 
     def __init__(self, papers: Optional[Sequence[Any]] = None) -> None:
         self._papers = list(papers or [])
@@ -279,6 +379,7 @@ def record_from_candidate(
         pmid = ident
     elif ident.lower().startswith("10."):
         doi = ident
+    pmid = pmid or str(getattr(candidate, "pmid", "") or "")  # an NCBI record resolved to its PMCID
     url = str(getattr(candidate, "source_uri", "") or "")
     title = str(getattr(candidate, "title", "") or "")
     abstract = str(getattr(candidate, "abstract", "") or "")
@@ -593,6 +694,13 @@ class Acquirer:
             except Exception as exc:  # noqa: BLE001
                 text = ""
                 record.notes.append(f"full-text fetch failed: {type(exc).__name__}: {exc}")
+            if (text and record.title and getattr(self.source, "verify_full_text_title", False)
+                    and not full_text_matches_title(record.title, text)):
+                record.notes.append(
+                    "full text refused: its opening does not carry this record's title, so it is "
+                    "another article; the abstract is used instead"
+                )
+                text = ""
             if not text:
                 text = str(getattr(candidate, "full_text", "") or "")
             body = text or record.abstract
@@ -668,4 +776,5 @@ __all__ = [
     "Acquirer",
     "record_from_candidate",
     "record_from_upload",
+    "full_text_matches_title",
 ]

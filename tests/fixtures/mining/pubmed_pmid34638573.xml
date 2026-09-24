@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<!-- ORCH-743 IT2-2. A minimal PubmedArticle for PMID 34638573 (Maynard et al. 2021, IJMS),
+     trimmed by hand from the shape NCBI efetch returns. Its own PubmedData/ArticleIdList carries
+     PMC8508710 and 10.3390/ijms221910237. One ReferenceList entry (Towbin et al. 1979, PNAS) carries
+     PMC411572 and 10.1073/pnas.76.9.4350: the ids pilot-002 recorded for this paper, because rag's
+     parser lets the last ArticleIdList in the record win. -->
+<PubmedArticleSet>
+  <PubmedArticle>
+    <MedlineCitation Status="MEDLINE" Owner="NLM">
+      <PMID Version="1">34638573</PMID>
+      <Article PubModel="Electronic">
+        <Journal>
+          <JournalIssue CitedMedium="Internet">
+            <PubDate><Year>2021</Year></PubDate>
+          </JournalIssue>
+          <Title>International journal of molecular sciences</Title>
+        </Journal>
+        <ArticleTitle>Biochemical Characterization of 13-Lipoxygenases of Arabidopsis thaliana.</ArticleTitle>
+        <Abstract>
+          <AbstractText>13-lipoxygenases (13-LOX) catalyze the dioxygenation of various polyunsaturated fatty acids (PUFAs), of which alpha-linolenic acid (LeA) is converted to 13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT). This study aimed for characterizing the four annotated A. thaliana 13-LOX enzymes (LOX2, LOX3, LOX4, and LOX6).</AbstractText>
+        </Abstract>
+      </Article>
+    </MedlineCitation>
+    <PubmedData>
+      <ArticleIdList>
+        <ArticleId IdType="pubmed">34638573</ArticleId>
+        <ArticleId IdType="pmc">PMC8508710</ArticleId>
+        <ArticleId IdType="doi">10.3390/ijms221910237</ArticleId>
+      </ArticleIdList>
+      <ReferenceList>
+        <Reference>
+          <Citation>Towbin H., Staehelin T., Gordon J. Electrophoretic transfer of proteins from polyacrylamide gels to nitrocellulose sheets. Proc. Natl. Acad. Sci. USA. 1979;76:4350-4354.</Citation>
+          <ArticleIdList>
+            <ArticleId IdType="doi">10.1073/pnas.76.9.4350</ArticleId>
+            <ArticleId IdType="pubmed">388439</ArticleId>
+            <ArticleId IdType="pmc">PMC411572</ArticleId>
+          </ArticleIdList>
+        </Reference>
+      </ReferenceList>
+    </PubmedData>
+  </PubmedArticle>
+</PubmedArticleSet>
