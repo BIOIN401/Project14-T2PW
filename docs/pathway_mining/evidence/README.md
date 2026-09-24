@@ -164,3 +164,17 @@ call per paper. There was no model call and no cache read or write.
 
 The G9 base arms for this round are run by the orchestrator at `16fd8a4b`. The nodes and
 their expected failures are in `C:/t/mining-iter/g9_manifest.json`.
+
+**G9 base arms for repair round 1, run by the orchestrator.** Each test file (plus
+`orch743_rescue_negatives.json`) was copied into a detached base worktree and run pinned with that
+tree's own launcher, then restored. The base trees' status is empty afterwards. Every failure is an
+assertion on behaviour.
+
+| File | Tree / SHA | What | Result at base |
+|---|---|---|---|
+| `025-g9-rep1-bio-b1` | `C:/t/mining-rep-base` @ `16fd8a4b` (pre-repair tip) | 4 `test_mining_citation_recovery.py` nodes (B-1, including C1/C3) | **4 failed**: a species recovered only by the fallback gives `target_species_supported` |
+| `026-g9-rep1-rescue` | `C:/t/mining-rep-base` @ `16fd8a4b` | 5 `test_mining_screen_rescue.py` nodes (B-2, review B1, B-3) | **5 failed**: PMC13181208, the title-only paper, PMC12977409 and PMC13468208 are rescued; a quarantined lead's name enters the vocabulary |
+| `027-g9-rep1-search` | `C:/t/mining-rep-base` @ `16fd8a4b` | 2 `test_mining_search.py` nodes (review B2, B3) | **2 failed**: `25 == 5` papers processed; `[1] == [1, 2]` attempts |
+| `028-g9-rep1-item2-restated` | `C:/t/mining-base2` @ `23e1ae83` | the 2 item-2 G9 nodes as restated after B-1 | **2 failed**: `('', '', '') == ('LOX2', …)`; `'LOX2' in ['', '']` |
+
+All four: FINAL SURVIVING COUNT 0, pin `violations: []`.

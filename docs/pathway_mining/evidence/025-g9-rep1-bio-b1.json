@@ -1,0 +1,88 @@
+{
+  "label": "g9-rep1-bio-b1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/025-g9-rep1-bio-b1.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/mining-iter/orch-g9-rep1-bio-b1/b",
+    "tests/test_mining_citation_recovery.py::test_g9_uncited_values_found_verbatim_in_a_cited_participant_span_are_kept",
+    "tests/test_mining_citation_recovery.py::test_g9_a_pilot_shaped_model_keeps_its_enzyme_and_the_reaction_stays_a_lead",
+    "tests/test_mining_citation_recovery.py::test_b1_c1_a_transgenic_host_mention_does_not_make_a_target_species_reaction",
+    "tests/test_mining_citation_recovery.py::test_b1_c3_a_contrast_mention_does_not_make_a_target_species_reaction"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-09-24T19:18:55+00:00",
+  "finished_at": "2026-09-24T19:18:57+00:00",
+  "duration_seconds": 2.2199110999999903,
+  "timeout_seconds": 300.0,
+  "root_pid": 120120,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 124324,
+      "name": "python.exe",
+      "ppid": 120120
+    }
+  ],
+  "descendants_terminated": [
+    124324
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 41020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 103216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 105140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 105240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 123460,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/025-g9-rep1-bio-b1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "16fd8a4b2af86677bc6eb4cb88c575b45ba62e6a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

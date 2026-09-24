@@ -1,0 +1,89 @@
+{
+  "label": "g9-rep1-rescue",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/026-g9-rep1-rescue.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/mining-iter/orch-g9-rep1-rescue/b",
+    "tests/test_mining_screen_rescue.py::test_g9_b2_route1_never_rescues_an_off_topic_paper",
+    "tests/test_mining_screen_rescue.py::test_g9_r1_a_title_only_paper_must_clear_the_raised_title_only_bar",
+    "tests/test_mining_screen_rescue.py::test_g9_b3_a_bare_acronym_does_not_rescue_a_paper",
+    "tests/test_mining_screen_rescue.py::test_g9_b3_a_foreign_gene_in_a_transgenic_target_host_is_not_rescued",
+    "tests/test_mining_screen_rescue.py::test_g9_b3_the_rescue_vocabulary_never_comes_from_a_quarantined_lead"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-09-24T19:18:57+00:00",
+  "finished_at": "2026-09-24T19:19:00+00:00",
+  "duration_seconds": 2.1084528999999748,
+  "timeout_seconds": 300.0,
+  "root_pid": 123960,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 104840,
+      "name": "python.exe",
+      "ppid": 123960
+    }
+  ],
+  "descendants_terminated": [
+    104840
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 41020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 89580,
+      "name": "python.exe"
+    },
+    {
+      "pid": 103216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 105240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 121068,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/026-g9-rep1-rescue.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "16fd8a4b2af86677bc6eb4cb88c575b45ba62e6a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
