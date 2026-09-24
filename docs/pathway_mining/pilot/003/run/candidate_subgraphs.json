@@ -1,0 +1,2782 @@
+{
+  "components": [
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_00119fa52993",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "hypothesis_only",
+      "rationale": "quarantined at discovery: hypothesis_only",
+      "reaction_ids": [
+        "rx_3a229b45b4b5cfa65ddc"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::16:1(n9)|16:2(n6)",
+          "claim_ids": [
+            "cl_e78ca4abb54a3fc8"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_00119fa52993",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "the source presents this as a proposal or model, not an observed result; retained as a labelled hypothesis, never as an established reaction",
+          "decision_status": "hypothesis_only",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_f1ef5781f6da9531"
+          ],
+          "enzyme_names": [
+            "MpFAD6"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp4g24020",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "16:1(n9) -> 16:2(n6)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_00119fa52993: the paper proposes this reaction rather than reporting it",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": true,
+          "label": "16:1(n9) -> 16:2(n6)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_1b8619e66897f1f3"
+          ],
+          "product_names": [
+            "16:2(n6)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "hypothesis_only",
+          "reaction_id": "rx_3a229b45b4b5cfa65ddc",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_4ce95f56bfcec956"
+          ],
+          "substrate_names": [
+            "16:1(n9)"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_14e7f709c875",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_c8eec14062ae5544f820"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::dn-iso-opda|dn-opda-gln+dn-opda-glu+dn-opda-his",
+          "claim_ids": [
+            "cl_f42d3135f85ff21e"
+          ],
+          "compartment": "",
+          "component_id": "cmp_14e7f709c875",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_bff06e4f609d3573"
+          ],
+          "enzyme_names": [
+            "MpGH3A"
+          ],
+          "evidence_ids": [
+            "ev_3b1f8607f4b8b229"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "component cmp_14e7f709c875: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_c4d4e8885d6cd9e2",
+            "en_b6a03123457ae6fa",
+            "en_feb583f2fea2f925"
+          ],
+          "product_names": [
+            "dn-OPDA-Glu",
+            "dn-OPDA-Gln",
+            "dn-OPDA-His"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_c8eec14062ae5544f820",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_241fca448fba8817"
+          ],
+          "substrate_names": [
+            "dn-iso-OPDA"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_35d0b739cdec",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:inferred_only",
+      "rationale": "quarantined at discovery: species:inferred_only",
+      "reaction_ids": [
+        "rx_f6e5d9f747dbe8e43554",
+        "rx_cbf86a95dc4f74026267"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::dn-cis-opda|opc-6:0",
+          "claim_ids": [
+            "cl_5338b4fc07a47cea"
+          ],
+          "compartment": "peroxisome",
+          "component_id": "cmp_35d0b739cdec",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_be1ebacea232bde3"
+          ],
+          "enzyme_names": [
+            "OPR3"
+          ],
+          "evidence_ids": [
+            "ev_c98d84c7d84855c1"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "dn-cis-OPDA -> OPC-6:0",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "component cmp_35d0b739cdec: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "dn-cis-OPDA -> OPC-6:0",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_489f9a9e982849d5"
+          ],
+          "product_names": [
+            "OPC-6:0"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_cbf86a95dc4f74026267",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Arabidopsis thaliana",
+          "substrate_ids": [
+            "en_f34362d422ebea02"
+          ],
+          "substrate_names": [
+            "dn-cis-OPDA"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::dn-cis-opda|dn-iso-opda",
+          "claim_ids": [
+            "cl_832888dad708cf8e"
+          ],
+          "compartment": "",
+          "component_id": "cmp_35d0b739cdec",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_a82b0ad4450a0bd2",
+            "ev_98c3197eb40f9f1e",
+            "ev_3b1f8607f4b8b229",
+            "ev_c98d84c7d84855c1"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "dn-cis-OPDA -> dn-iso-OPDA",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_35d0b739cdec: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "paper(s) PMC:PMC13364333",
+              "event": "duplicate_merged",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "dn-cis-OPDA -> dn-iso-OPDA",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_241fca448fba8817"
+          ],
+          "product_names": [
+            "dn-iso-OPDA"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_f6e5d9f747dbe8e43554",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_f34362d422ebea02"
+          ],
+          "substrate_names": [
+            "dn-cis-OPDA"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_5782c1e049fd",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_d86306a16865c7a08cec"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::\u03b44-dn-cis-opda|\u03b44-dn-iso-opda",
+          "claim_ids": [
+            "cl_381c10905474b7bf"
+          ],
+          "compartment": "",
+          "component_id": "cmp_5782c1e049fd",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_3b1f8607f4b8b229"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "\u03944-dn-cis-OPDA -> \u03944-dn-iso-OPDA",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "component cmp_5782c1e049fd: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "\u03944-dn-cis-OPDA -> \u03944-dn-iso-OPDA",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_44d2323e58199fff"
+          ],
+          "product_names": [
+            "\u03944-dn-iso-OPDA"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_d86306a16865c7a08cec",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_7c1c8c3922c5fbe7"
+          ],
+          "substrate_names": [
+            "\u03944-dn-cis-OPDA"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_5c1f4c272b39",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_e818daf35c555fd843da",
+        "rx_8ffac9975e3a977a75f0"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::allene oxide|opda",
+          "claim_ids": [
+            "cl_87cb48915297c615"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_5c1f4c272b39",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_8bd8636ce52bd4af"
+          ],
+          "enzyme_names": [
+            "MpAOC"
+          ],
+          "evidence_ids": [
+            "ev_3b1f8607f4b8b229"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "allene oxide -> OPDA",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "component cmp_5c1f4c272b39: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "allene oxide -> OPDA",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_96d0e8471026934a"
+          ],
+          "product_names": [
+            "OPDA"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_8ffac9975e3a977a75f0",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_f7e2137c85355064"
+          ],
+          "substrate_names": [
+            "allene oxide"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::(9s,13s)-dn-cis-opda|allene oxide",
+          "claim_ids": [
+            "cl_8ee4bd53fcfb1b9c"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_5c1f4c272b39",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_8bd8636ce52bd4af"
+          ],
+          "enzyme_names": [
+            "MpAOC"
+          ],
+          "evidence_ids": [
+            "ev_3b1f8607f4b8b229"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "allene oxide -> (9S,13S)-dn-cis-OPDA",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "component cmp_5c1f4c272b39: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "allene oxide -> (9S,13S)-dn-cis-OPDA",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_1751acbb0e5ea32d"
+          ],
+          "product_names": [
+            "(9S,13S)-dn-cis-OPDA"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_e818daf35c555fd843da",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_f7e2137c85355064"
+          ],
+          "substrate_names": [
+            "allene oxide"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_6a218c162b75",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:inferred_only",
+      "rationale": "quarantined at discovery: species:inferred_only",
+      "reaction_ids": [
+        "rx_60e130db9d1a0aa23dce"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::(9s,13s)-opda|allene oxide",
+          "claim_ids": [
+            "cl_2865e3d8c80b6688"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_6a218c162b75",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_8bd8636ce52bd4af"
+          ],
+          "enzyme_names": [
+            "MpAOC"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9",
+            "ev_a82b0ad4450a0bd2"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp7g06220",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "allene oxide -> (9S,13S)-OPDA",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_6a218c162b75: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "allene oxide -> (9S,13S)-OPDA",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_8d0d77850e09d269"
+          ],
+          "product_names": [
+            "(9S,13S)-OPDA"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_60e130db9d1a0aa23dce",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_f7e2137c85355064"
+          ],
+          "substrate_names": [
+            "allene oxide"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_7e72499580bf",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_d438a2fdb9dede27f743"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "physcomitrium patens::c18-allene oxide|cis-opda",
+          "claim_ids": [
+            "cl_1ac4d9ef538231c7"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_7e72499580bf",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_5c9da202b304b4e4"
+          ],
+          "enzyme_names": [
+            "PpAOC1"
+          ],
+          "evidence_ids": [
+            "ev_a82b0ad4450a0bd2"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "C18-allene oxide -> cis-OPDA",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_7e72499580bf: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "C18-allene oxide -> cis-OPDA",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_92720f2a5f8a7e0f"
+          ],
+          "product_names": [
+            "cis-OPDA"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_d438a2fdb9dede27f743",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Physcomitrium patens",
+          "substrate_ids": [
+            "en_19311d232314499a"
+          ],
+          "substrate_names": [
+            "C18-allene oxide"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_8117f67d1867",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:inferred_only",
+      "rationale": "quarantined at discovery: species:inferred_only",
+      "reaction_ids": [
+        "rx_41c97e790d2e17c19477",
+        "rx_2889b990927302948b2e"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "unspecified:inferred-only::13-hpot|ala (18:3n3)",
+          "claim_ids": [
+            "cl_c230261f1437d392"
+          ],
+          "compartment": "",
+          "component_id": "cmp_8117f67d1867",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog, inferred from); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_6f4dc3ffa5db1e0c",
+            "ev_74d8b3d259ca310a"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:36:50+00:00",
+              "detail": "ALA (18:3n3) -> 13-HPOT",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:36:50+00:00",
+              "detail": "component cmp_8117f67d1867: species state inferred_only: species support is an inference, not an observation (ortholog, inferred from); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "ALA (18:3n3) -> 13-HPOT",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_50571ec303b492b5"
+          ],
+          "product_names": [
+            "13-HPOT"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_2889b990927302948b2e",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "",
+          "substrate_ids": [
+            "en_333ac73d8a5021e2"
+          ],
+          "substrate_names": [
+            "ALA (18:3n3)"
+          ],
+          "tissue": "chloroplast"
+        },
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::13-hpot|lea",
+          "claim_ids": [
+            "cl_7a9937b3db2c395f"
+          ],
+          "compartment": "",
+          "component_id": "cmp_8117f67d1867",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (inferred from); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_4dcc372e77b84976",
+            "ev_d0a63371734346ce",
+            "ev_bdc3296114db3865",
+            "ev_baf1514923696f5c"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:25:08+00:00",
+              "detail": "LeA -> 13-HPOT",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:25:08+00:00",
+              "detail": "component cmp_8117f67d1867: species state inferred_only: species support is an inference, not an observation (inferred from); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "LeA -> 13-HPOT",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC8508710"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_50571ec303b492b5"
+          ],
+          "product_names": [
+            "13-HPOT"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_41c97e790d2e17c19477",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "",
+          "substrate_ids": [
+            "en_024d17207cfa2881"
+          ],
+          "substrate_names": [
+            "LeA"
+          ],
+          "tissue": "leaf, root, inflorescence, wounded leaf"
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_9abd34f16007",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_742cac9b32cba9f3bff8",
+        "rx_05534dc3edb77ff33a5e",
+        "rx_2f53a30ba9d7528b9b3c",
+        "rx_edc1ad1fa1676f1685fd"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::ja-gln|jasmonic acid",
+          "claim_ids": [
+            "cl_5fc57dcfa32aaf35"
+          ],
+          "compartment": "",
+          "component_id": "cmp_9abd34f16007",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_7d2787cbb14b4905"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:37:02+00:00",
+              "detail": "jasmonic acid -> JA-Gln",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:37:02+00:00",
+              "detail": "component cmp_9abd34f16007: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "jasmonic acid -> JA-Gln",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12096059"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_4991614d1390a1bf"
+          ],
+          "product_names": [
+            "JA-Gln"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_05534dc3edb77ff33a5e",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Arabidopsis thaliana",
+          "substrate_ids": [
+            "en_d47043a467be4135"
+          ],
+          "substrate_names": [
+            "jasmonic acid"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::ja-asn|jasmonic acid",
+          "claim_ids": [
+            "cl_2d06a621ba1c2fac"
+          ],
+          "compartment": "",
+          "component_id": "cmp_9abd34f16007",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_7d2787cbb14b4905"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:37:02+00:00",
+              "detail": "jasmonic acid -> JA-Asn",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:37:02+00:00",
+              "detail": "component cmp_9abd34f16007: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "jasmonic acid -> JA-Asn",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12096059"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_8eacb569f682a958"
+          ],
+          "product_names": [
+            "JA-Asn"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_2f53a30ba9d7528b9b3c",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Arabidopsis thaliana",
+          "substrate_ids": [
+            "en_d47043a467be4135"
+          ],
+          "substrate_names": [
+            "jasmonic acid"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::jasmonic acid|jasmonoyl-isoleucine (ja-ile)",
+          "claim_ids": [
+            "cl_b89be46f92d4c4e1"
+          ],
+          "compartment": "",
+          "component_id": "cmp_9abd34f16007",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_dba2dbea85c56c73"
+          ],
+          "enzyme_names": [
+            "GH3.10"
+          ],
+          "evidence_ids": [
+            "ev_7d2787cbb14b4905"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "GH3.10",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:37:02+00:00",
+              "detail": "jasmonic acid -> jasmonoyl-isoleucine (JA-Ile)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:37:02+00:00",
+              "detail": "component cmp_9abd34f16007: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "jasmonic acid -> jasmonoyl-isoleucine (JA-Ile)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12096059"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_6b6b1e744497a27d"
+          ],
+          "product_names": [
+            "jasmonoyl-isoleucine (JA-Ile)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_742cac9b32cba9f3bff8",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Arabidopsis thaliana",
+          "substrate_ids": [
+            "en_d47043a467be4135"
+          ],
+          "substrate_names": [
+            "jasmonic acid"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::ja-glu|jasmonic acid",
+          "claim_ids": [
+            "cl_9ba999bda7a136f3"
+          ],
+          "compartment": "",
+          "component_id": "cmp_9abd34f16007",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_7d2787cbb14b4905"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:37:02+00:00",
+              "detail": "jasmonic acid -> JA-Glu",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:37:02+00:00",
+              "detail": "component cmp_9abd34f16007: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "jasmonic acid -> JA-Glu",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12096059"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_39f3a118e7ac9121"
+          ],
+          "product_names": [
+            "JA-Glu"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_edc1ad1fa1676f1685fd",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Arabidopsis thaliana",
+          "substrate_ids": [
+            "en_d47043a467be4135"
+          ],
+          "substrate_names": [
+            "jasmonic acid"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_a8c6dac117f6",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:inferred_only",
+      "rationale": "quarantined at discovery: species:inferred_only",
+      "reaction_ids": [
+        "rx_9dc809e3d64d7a6dbcf8",
+        "rx_354a031228c7b0e2dc3c",
+        "rx_78d3551bbaba2ff2d5f0",
+        "rx_d0557d1ccb1153bdae8a",
+        "rx_a723aaa413ec6bc29766",
+        "rx_9ebcd41f3b14a7c49564",
+        "rx_f7233e1139027ba46f53"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::gla (18:3n6)|la (18:2n6)",
+          "claim_ids": [
+            "cl_9fa8df5b9e2bb0a4"
+          ],
+          "compartment": "ER",
+          "component_id": "cmp_a8c6dac117f6",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_16f9b3b03d876eed"
+          ],
+          "enzyme_names": [
+            "MpDES6"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp6g17330",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "LA (18:2n6) -> GLA (18:3n6)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_a8c6dac117f6: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "LA (18:2n6) -> GLA (18:3n6)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_19fbc4684cd68a08"
+          ],
+          "product_names": [
+            "GLA (18:3n6)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_354a031228c7b0e2dc3c",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_af2754f9932fdbaf"
+          ],
+          "substrate_names": [
+            "LA (18:2n6)"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::ala (18:3n3)|sda (18:4n3)",
+          "claim_ids": [
+            "cl_7c0b9007ba1f8ec8"
+          ],
+          "compartment": "ER",
+          "component_id": "cmp_a8c6dac117f6",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_16f9b3b03d876eed"
+          ],
+          "enzyme_names": [
+            "MpDES6"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp6g17330",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "ALA (18:3n3) -> SDA (18:4n3)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_a8c6dac117f6: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "ALA (18:3n3) -> SDA (18:4n3)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_bf3eabcf608d7d47"
+          ],
+          "product_names": [
+            "SDA (18:4n3)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_78d3551bbaba2ff2d5f0",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_333ac73d8a5021e2"
+          ],
+          "substrate_names": [
+            "ALA (18:3n3)"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::ala (18:3n3)|la (18:2n6)",
+          "claim_ids": [
+            "cl_559992a1bf688e15"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_a8c6dac117f6",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_dda9766d33b99e7f"
+          ],
+          "enzyme_names": [
+            "MpFAD7"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp5g20700",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "LA (18:2n6) -> ALA (18:3n3)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_a8c6dac117f6: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "LA (18:2n6) -> ALA (18:3n3)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_333ac73d8a5021e2"
+          ],
+          "product_names": [
+            "ALA (18:3n3)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_9dc809e3d64d7a6dbcf8",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_af2754f9932fdbaf"
+          ],
+          "substrate_names": [
+            "LA (18:2n6)"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::ara (20:4n6)|dgla (20:3n6)",
+          "claim_ids": [
+            "cl_28107dbbe1153e90"
+          ],
+          "compartment": "ER",
+          "component_id": "cmp_a8c6dac117f6",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_c21d5fba18310dfa"
+          ],
+          "enzyme_names": [
+            "MpDES5"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp3g13250",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "DGLA (20:3n6) -> ARA (20:4n6)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_a8c6dac117f6: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "DGLA (20:3n6) -> ARA (20:4n6)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_92ba28533076c4dd"
+          ],
+          "product_names": [
+            "ARA (20:4n6)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_9ebcd41f3b14a7c49564",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_aa0b438fa77381e8"
+          ],
+          "substrate_names": [
+            "DGLA (20:3n6)"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::eta (20:4n3)|sda (18:4n3)",
+          "claim_ids": [
+            "cl_06de0d61ec6ebd01"
+          ],
+          "compartment": "ER",
+          "component_id": "cmp_a8c6dac117f6",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_56466e550f4ddf88"
+          ],
+          "enzyme_names": [
+            "MpELO1"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp6g02350",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "SDA (18:4n3) -> ETA (20:4n3)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_a8c6dac117f6: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "SDA (18:4n3) -> ETA (20:4n3)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_90be5619f21784ba"
+          ],
+          "product_names": [
+            "ETA (20:4n3)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_a723aaa413ec6bc29766",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_bf3eabcf608d7d47"
+          ],
+          "substrate_names": [
+            "SDA (18:4n3)"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::dgla (20:3n6)|gla (18:3n6)",
+          "claim_ids": [
+            "cl_183ebc7ca093105f"
+          ],
+          "compartment": "ER",
+          "component_id": "cmp_a8c6dac117f6",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_56466e550f4ddf88"
+          ],
+          "enzyme_names": [
+            "MpELO1"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp6g02350",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "GLA (18:3n6) -> DGLA (20:3n6)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_a8c6dac117f6: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "GLA (18:3n6) -> DGLA (20:3n6)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_aa0b438fa77381e8"
+          ],
+          "product_names": [
+            "DGLA (20:3n6)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_d0557d1ccb1153bdae8a",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_19fbc4684cd68a08"
+          ],
+          "substrate_names": [
+            "GLA (18:3n6)"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::epa (20:5n3)|eta (20:4n3)",
+          "claim_ids": [
+            "cl_a453942d6bd35571"
+          ],
+          "compartment": "ER",
+          "component_id": "cmp_a8c6dac117f6",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_c21d5fba18310dfa"
+          ],
+          "enzyme_names": [
+            "MpDES5"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp3g13250",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "ETA (20:4n3) -> EPA (20:5n3)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_a8c6dac117f6: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "ETA (20:4n3) -> EPA (20:5n3)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_49ecefe2891b2b8f"
+          ],
+          "product_names": [
+            "EPA (20:5n3)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_f7233e1139027ba46f53",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_90be5619f21784ba"
+          ],
+          "substrate_names": [
+            "ETA (20:4n3)"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_af4bce6bf0a5",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:inferred_only",
+      "rationale": "quarantined at discovery: species:inferred_only",
+      "reaction_ids": [
+        "rx_0d8d43b8211e3ff44724"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::ara (20:4n6)|epa (20:5n3)",
+          "claim_ids": [
+            "cl_b5e2f8082d97ede6"
+          ],
+          "compartment": "ER",
+          "component_id": "cmp_af4bce6bf0a5",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_f8146b6d9b4fb626"
+          ],
+          "enzyme_names": [
+            "MpFAD3"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp3g17690",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "ARA (20:4n6) -> EPA (20:5n3)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_af4bce6bf0a5: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "ARA (20:4n6) -> EPA (20:5n3)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_49ecefe2891b2b8f"
+          ],
+          "product_names": [
+            "EPA (20:5n3)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_0d8d43b8211e3ff44724",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_92ba28533076c4dd"
+          ],
+          "substrate_names": [
+            "ARA (20:4n6)"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_bc76b9cc43fd",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:multiple_species",
+      "rationale": "quarantined at discovery: species:multiple_species",
+      "reaction_ids": [
+        "rx_ce92a2647a229cc6528e",
+        "rx_6570fd856f1200fa7a05"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::12-oxo-phytodienoic acid (12-opda)+13(s)-hydroperoxy-9(z),11(e),15(z)-octadecatrienoic acid (13-hpot)|alpha-linolenic acid (lea)",
+          "claim_ids": [
+            "cl_fcc1f538bbd36817"
+          ],
+          "compartment": "",
+          "component_id": "cmp_bc76b9cc43fd",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'multiple_species' is not target-species-supported (the evidence names more than one species including the target; which one the reaction belongs to is not established); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_6915f534ca2dfd74",
+            "ev_bb4c9802d1637278"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:25:13+00:00",
+              "detail": "\u03b1-linolenic acid (LeA) -> 13(S)-hydroperoxy-9(Z),11(E),15(Z)-octadecatrienoic acid (13-HPOT) + 12-oxo-phytodienoic acid (12-OPDA)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:25:13+00:00",
+              "detail": "component cmp_bc76b9cc43fd: species state multiple_species: the evidence names more than one species including the target; which one the reaction belongs to is not established",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "\u03b1-linolenic acid (LeA) -> 13(S)-hydroperoxy-9(Z),11(E),15(Z)-octadecatrienoic acid (13-HPOT) + 12-oxo-phytodienoic acid (12-OPDA)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC8508710"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_af5f3d335f06408f",
+            "en_0047fd3cc21d772c"
+          ],
+          "product_names": [
+            "13(S)-hydroperoxy-9(Z),11(E),15(Z)-octadecatrienoic acid (13-HPOT)",
+            "12-oxo-phytodienoic acid (12-OPDA)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:multiple_species",
+          "reaction_id": "rx_6570fd856f1200fa7a05",
+          "reversible": null,
+          "species_state": "multiple_species",
+          "species_text": "",
+          "substrate_ids": [
+            "en_f0c6dad9eca6ffd2"
+          ],
+          "substrate_names": [
+            "\u03b1-linolenic acid (LeA)"
+          ],
+          "tissue": "chloroplast"
+        },
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::13-s-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-hpot)|alpha-linolenic acid (lea)",
+          "claim_ids": [
+            "cl_a32b77c9538b6f39"
+          ],
+          "compartment": "",
+          "component_id": "cmp_bc76b9cc43fd",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'multiple_species' is not target-species-supported (the evidence names more than one species including the target; which one the reaction belongs to is not established); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_5863efff93736770",
+            "ev_06e5eb88be1f278b"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:23:26+00:00",
+              "detail": "\u03b1-linolenic acid (LeA) -> 13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:23:26+00:00",
+              "detail": "component cmp_bc76b9cc43fd: species state multiple_species: the evidence names more than one species including the target; which one the reaction belongs to is not established",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "\u03b1-linolenic acid (LeA) -> 13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC8508710"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_17293159537acc5c"
+          ],
+          "product_names": [
+            "13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:multiple_species",
+          "reaction_id": "rx_ce92a2647a229cc6528e",
+          "reversible": null,
+          "species_state": "multiple_species",
+          "species_text": "",
+          "substrate_ids": [
+            "en_f0c6dad9eca6ffd2"
+          ],
+          "substrate_names": [
+            "\u03b1-linolenic acid (LeA)"
+          ],
+          "tissue": "plastids"
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_c312598eda0c",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_eba8e16b5409af0ff75a"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "unspecified:in-vitro-or-cell-free::alpha-linolenic acid|galactolipids",
+          "claim_ids": [
+            "cl_70223dd072f56b56"
+          ],
+          "compartment": "",
+          "component_id": "cmp_c312598eda0c",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_f7c56801adf6792d"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:41:15+00:00",
+              "detail": "galactolipids -> \u03b1-linolenic acid",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:41:15+00:00",
+              "detail": "component cmp_c312598eda0c: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "galactolipids -> \u03b1-linolenic acid",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12787732"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_a5ab0b2e2e152263"
+          ],
+          "product_names": [
+            "\u03b1-linolenic acid"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_eba8e16b5409af0ff75a",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "",
+          "substrate_ids": [
+            "en_951fd0e75f35c8d5"
+          ],
+          "substrate_names": [
+            "galactolipids"
+          ],
+          "tissue": "leaf"
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_cfd9264eb103",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_3216468cdedfd13f06ef"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::12-hydroxy-ja|12-hydroxy-ja conjugate",
+          "claim_ids": [
+            "cl_31a6adf4b22136d2"
+          ],
+          "compartment": "",
+          "component_id": "cmp_cfd9264eb103",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_dba2dbea85c56c73"
+          ],
+          "enzyme_names": [
+            "GH3.10"
+          ],
+          "evidence_ids": [
+            "ev_7d2787cbb14b4905"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "GH3.10",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:37:02+00:00",
+              "detail": "12-hydroxy-JA -> 12-hydroxy-JA conjugate",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:37:02+00:00",
+              "detail": "component cmp_cfd9264eb103: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "12-hydroxy-JA -> 12-hydroxy-JA conjugate",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12096059"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_54f1fc8711b46206"
+          ],
+          "product_names": [
+            "12-hydroxy-JA conjugate"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_3216468cdedfd13f06ef",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Arabidopsis thaliana",
+          "substrate_ids": [
+            "en_c803f873581b11e1"
+          ],
+          "substrate_names": [
+            "12-hydroxy-JA"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_d6aa0a82726e",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_642b4a34498c459fb3f2"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "physcomitrium patens::11-oxo-prostatrienoic acid (11-opta)|c20-allene oxide derived from 12-hpete",
+          "claim_ids": [
+            "cl_0e664d8a3907d58b"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_d6aa0a82726e",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_d20420d5fa49afcc"
+          ],
+          "enzyme_names": [
+            "PpAOC2"
+          ],
+          "evidence_ids": [
+            "ev_a82b0ad4450a0bd2"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "C20-allene oxide derived from 12-HPETE -> 11-oxo-prostatrienoic acid (11-OPTA)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_d6aa0a82726e: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "C20-allene oxide derived from 12-HPETE -> 11-oxo-prostatrienoic acid (11-OPTA)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_30b79cb072006806"
+          ],
+          "product_names": [
+            "11-oxo-prostatrienoic acid (11-OPTA)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_642b4a34498c459fb3f2",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Physcomitrium patens",
+          "substrate_ids": [
+            "en_6393c56a6ef53e6c"
+          ],
+          "substrate_names": [
+            "C20-allene oxide derived from 12-HPETE"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_db257e922c58",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:inferred_only",
+      "rationale": "quarantined at discovery: species:inferred_only",
+      "reaction_ids": [
+        "rx_30cb458fb147c3de7897"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::16:0|16:1n9",
+          "claim_ids": [
+            "cl_5c72ac211f2bf29a"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_db257e922c58",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_ecd979aa7c2b7d09"
+          ],
+          "enzyme_names": [
+            "MpFAD5"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp3g10660",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "16:0 -> 16:1n9",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_db257e922c58: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "16:0 -> 16:1n9",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_4de1eee03903ece5"
+          ],
+          "product_names": [
+            "16:1n9"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_30cb458fb147c3de7897",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_b3c543bc24888054"
+          ],
+          "substrate_names": [
+            "16:0"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_dd8384a54e53",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_9a6326c17c7be6ac5412"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::12-hydroxy jasmonate|12-hydroxy jasmonoyl-isoleucine",
+          "claim_ids": [
+            "cl_dee44fedcb6c01eb"
+          ],
+          "compartment": "",
+          "component_id": "cmp_dd8384a54e53",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_dba2dbea85c56c73"
+          ],
+          "enzyme_names": [
+            "GH3.10"
+          ],
+          "evidence_ids": [
+            "ev_1f2c624a181ba5ef",
+            "ev_d216d8e2a43cb218"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:38:10+00:00",
+              "detail": "12-hydroxy jasmonate -> 12-hydroxy jasmonoyl-isoleucine",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:38:10+00:00",
+              "detail": "component cmp_dd8384a54e53: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "12-hydroxy jasmonate -> 12-hydroxy jasmonoyl-isoleucine",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12096059"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_b15b3a8768af8bd6"
+          ],
+          "product_names": [
+            "12-hydroxy jasmonoyl-isoleucine"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_9a6326c17c7be6ac5412",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Arabidopsis thaliana",
+          "substrate_ids": [
+            "en_b9fda652d7e0f954"
+          ],
+          "substrate_names": [
+            "12-hydroxy jasmonate"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_dea944368da1",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:in_vitro_or_cell_free",
+      "rationale": "quarantined at discovery: species:in_vitro_or_cell_free",
+      "reaction_ids": [
+        "rx_4764f832e88bebda27cb",
+        "rx_90a150f373302278fb2f"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::atp+ile+ja|ja-ile",
+          "claim_ids": [
+            "cl_150891597632f0c5"
+          ],
+          "compartment": "",
+          "component_id": "cmp_dea944368da1",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_dba2dbea85c56c73"
+          ],
+          "enzyme_names": [
+            "GH3.10"
+          ],
+          "evidence_ids": [
+            "ev_ae0d92db16547d2c",
+            "ev_c7a1b8c0ccdfe997",
+            "ev_6893aa984a651e1f"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:39:14+00:00",
+              "detail": "JA + Ile + ATP -> JA-Ile",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:39:14+00:00",
+              "detail": "component cmp_dea944368da1: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "JA + Ile + ATP -> JA-Ile",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12096059"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_5a498ed19fb5eb72"
+          ],
+          "product_names": [
+            "JA-Ile"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_4764f832e88bebda27cb",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Arabidopsis thaliana",
+          "substrate_ids": [
+            "en_550cd23e0997fe78",
+            "en_468c9f9a535e11a8",
+            "en_2bc3c9af5e9672e7"
+          ],
+          "substrate_names": [
+            "JA",
+            "Ile",
+            "ATP"
+          ],
+          "tissue": ""
+        },
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::12-oh-ja+atp+ile|12-oh-ja-ile",
+          "claim_ids": [
+            "cl_061c152eb99e1656"
+          ],
+          "compartment": "",
+          "component_id": "cmp_dea944368da1",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_dba2dbea85c56c73"
+          ],
+          "enzyme_names": [
+            "GH3.10"
+          ],
+          "evidence_ids": [
+            "ev_ae0d92db16547d2c",
+            "ev_c7a1b8c0ccdfe997",
+            "ev_6893aa984a651e1f"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:39:14+00:00",
+              "detail": "12-OH-JA + Ile + ATP -> 12-OH-JA-Ile",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:39:14+00:00",
+              "detail": "component cmp_dea944368da1: species state in_vitro_or_cell_free: the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "12-OH-JA + Ile + ATP -> 12-OH-JA-Ile",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC12096059"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_18ae896ce6d72fce"
+          ],
+          "product_names": [
+            "12-OH-JA-Ile"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:in_vitro_or_cell_free",
+          "reaction_id": "rx_90a150f373302278fb2f",
+          "reversible": null,
+          "species_state": "in_vitro_or_cell_free",
+          "species_text": "Arabidopsis thaliana",
+          "substrate_ids": [
+            "en_514f9b545f2a69a2",
+            "en_468c9f9a535e11a8",
+            "en_2bc3c9af5e9672e7"
+          ],
+          "substrate_names": [
+            "12-OH-JA",
+            "Ile",
+            "ATP"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_e4fbeae15dea",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:inferred_only",
+      "rationale": "quarantined at discovery: species:inferred_only",
+      "reaction_ids": [
+        "rx_3dc94e3847d88fa54c12"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "marchantia polymorpha::hda (16:2n6)|hta (16:3n3)",
+          "claim_ids": [
+            "cl_5592a5f6c48d97b2"
+          ],
+          "compartment": "chloroplast",
+          "component_id": "cmp_e4fbeae15dea",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_dda9766d33b99e7f"
+          ],
+          "enzyme_names": [
+            "MpFAD7"
+          ],
+          "evidence_ids": [
+            "ev_20a7facf5fd73dd9"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "Mp5g20700",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "HDA (16:2n6) -> HTA (16:3n3)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:27:18+00:00",
+              "detail": "component cmp_e4fbeae15dea: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "HDA (16:2n6) -> HTA (16:3n3)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_34701e7abc2bcd88"
+          ],
+          "product_names": [
+            "HTA (16:3n3)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_3dc94e3847d88fa54c12",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Marchantia polymorpha",
+          "substrate_ids": [
+            "en_2df677685b18aa45"
+          ],
+          "substrate_names": [
+            "HDA (16:2n6)"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_f63e6cc91e7b",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:inferred_only",
+      "rationale": "quarantined at discovery: species:inferred_only",
+      "reaction_ids": [
+        "rx_14eb3a43a495d7ce851f"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "arabidopsis thaliana::opc-8:0|opda",
+          "claim_ids": [
+            "cl_0bc93d248b7f31db"
+          ],
+          "compartment": "peroxisome",
+          "component_id": "cmp_f63e6cc91e7b",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "forward",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [
+            "en_be1ebacea232bde3"
+          ],
+          "enzyme_names": [
+            "OPR3"
+          ],
+          "evidence_ids": [
+            "ev_c98d84c7d84855c1"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "OPDA -> OPC-8:0",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:29:05+00:00",
+              "detail": "component cmp_f63e6cc91e7b: species state inferred_only: species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "OPDA -> OPC-8:0",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_d3bec790586dc4eb"
+          ],
+          "product_names": [
+            "OPC-8:0"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:inferred_only",
+          "reaction_id": "rx_14eb3a43a495d7ce851f",
+          "reversible": null,
+          "species_state": "inferred_only",
+          "species_text": "Arabidopsis thaliana",
+          "substrate_ids": [
+            "en_96d0e8471026934a"
+          ],
+          "substrate_names": [
+            "OPDA"
+          ],
+          "tissue": ""
+        }
+      ],
+      "relevance_score": 0.0
+    },
+    {
+      "bridge_paper_ids": [],
+      "bridge_reaction_ids": [],
+      "component_id": "cmp_fe6e08218f26",
+      "created_round": 1,
+      "promoted": false,
+      "promoted_round": -1,
+      "promotion_history": [],
+      "quarantine_reason": "species:species_not_stated",
+      "rationale": "quarantined at discovery: species:species_not_stated",
+      "reaction_ids": [
+        "rx_eab7ca60441693867cca"
+      ],
+      "reactions": [
+        {
+          "admitted": false,
+          "claim_identity": "unspecified:species-not-stated::hda (16:2n6)|hta (16:3n3)",
+          "claim_ids": [
+            "cl_bbe6e30f3c568977"
+          ],
+          "compartment": "",
+          "component_id": "cmp_fe6e08218f26",
+          "conditions": "",
+          "conflict_ids": [],
+          "decision_reason": "species state 'species_not_stated' is not target-species-supported (no species is stated anywhere in the supporting evidence); retained as a labelled lead, not as an established target-species reaction",
+          "decision_status": "candidate",
+          "direction": "unspecified",
+          "discovery_round": 1,
+          "enzyme_entity_ids": [],
+          "enzyme_names": [],
+          "evidence_ids": [
+            "ev_ba1b08899518f20e"
+          ],
+          "external_validation": {
+            "status": "not_evaluated"
+          },
+          "gene": "",
+          "graph_status": "candidate",
+          "history": [
+            {
+              "at": "2026-09-24T23:31:37+00:00",
+              "detail": "HDA (16:2n6) -> HTA (16:3n3)",
+              "event": "discovered",
+              "round_index": 1
+            },
+            {
+              "at": "2026-09-24T23:31:37+00:00",
+              "detail": "component cmp_fe6e08218f26: species state species_not_stated: no species is stated anywhere in the supporting evidence",
+              "event": "quarantined",
+              "round_index": 1
+            }
+          ],
+          "hypothesis": false,
+          "label": "HDA (16:2n6) -> HTA (16:3n3)",
+          "multi_paper_supported": false,
+          "paper_ids": [
+            "PMC:PMC13364333"
+          ],
+          "pathway_names": [],
+          "product_ids": [
+            "en_34701e7abc2bcd88"
+          ],
+          "product_names": [
+            "HTA (16:3n3)"
+          ],
+          "promoted_round": -1,
+          "quarantine_reason": "species:species_not_stated",
+          "reaction_id": "rx_eab7ca60441693867cca",
+          "reversible": null,
+          "species_state": "species_not_stated",
+          "species_text": "",
+          "substrate_ids": [
+            "en_2df677685b18aa45"
+          ],
+          "substrate_names": [
+            "HDA (16:2n6)"
+          ],
+          "tissue": "leaf"
+        }
+      ],
+      "relevance_score": 0.0
+    }
+  ],
+  "count": 21
+}

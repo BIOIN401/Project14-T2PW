@@ -1,0 +1,298 @@
+37
+['actual_model', 'claim_id', 'claim_identity', 'claim_type', 'compartment', 'conditions', 'confidence', 'conflicts_with', 'direction', 'duplicate_of', 'enzyme', 'equivalent_claim_ids', 'evidence_ids', 'extraction_status', 'field_attribution', 'field_evidence', 'first_seen_round', 'gene', 'hypothesis', 'last_updated_round', 'model', 'model_call_id', 'object', 'paper_id', 'pathway_names', 'products', 'prompt_version', 'protein', 'relationship', 'reversible', 'schema_version', 'species_reason', 'species_state', 'species_text', 'subject', 'substrates', 'tissue']
+[0] cl_a32b77c9538b6f39 PMC:PMC8508710 call=mc_001_extract_claims_0001
+    α-linolenic acid (LeA) -> 13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT)
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= '' state= multiple_species | the evidence names more than one species including the target; which one the reaction belongs to is not established
+    attr= {}
+    fev= {}
+    ev= ['ev_5863efff93736770', 'ev_06e5eb88be1f278b'] status= candidate | species state 'multiple_species' is not target-species-supported (the evidence names more than one species including the target; which one the reaction belongs 
+    extra= {}
+[1] cl_7a9937b3db2c395f PMC:PMC8508710 call=mc_001_extract_claims_0002
+    LeA -> 13-HPOT
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= '' state= inferred_only | species support is an inference, not an observation (inferred from); an ortholog or analogy never transfers a reaction between species
+    attr= {}
+    fev= {}
+    ev= ['ev_4dcc372e77b84976', 'ev_d0a63371734346ce', 'ev_bdc3296114db3865', 'ev_baf1514923696f5c'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (inferred from); an ortholog or analogy never
+    extra= {}
+[2] cl_fcc1f538bbd36817 PMC:PMC8508710 call=mc_001_extract_claims_0003
+    α-linolenic acid (LeA) -> 13(S)-hydroperoxy-9(Z),11(E),15(Z)-octadecatrienoic acid (13-HPOT) + 12-oxo-phytodienoic acid (12-OPDA)
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= '' state= multiple_species | the evidence names more than one species including the target; which one the reaction belongs to is not established
+    attr= {}
+    fev= {}
+    ev= ['ev_6915f534ca2dfd74', 'ev_bb4c9802d1637278'] status= candidate | species state 'multiple_species' is not target-species-supported (the evidence names more than one species including the target; which one the reaction belongs 
+    extra= {}
+[3] cl_5c72ac211f2bf29a PMC:PMC13364333 call=mc_001_extract_claims_0005
+    16:0 -> 16:1n9
+    enz= 'MpFAD5' gene= 'Mp3g10660' prot= '' comp= 'chloroplast' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[4] cl_e78ca4abb54a3fc8 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    16:1(n9) -> 16:2(n6)
+    enz= 'MpFAD6' gene= 'Mp4g24020' prot= '' comp= 'chloroplast' dir= forward hyp= True
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= hypothesis_only | the source presents this as a proposal or model, not an observed result; retained as a labelled hypothesis, never as an established reaction
+    extra= {}
+[5] cl_5592a5f6c48d97b2 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    HDA (16:2n6) -> HTA (16:3n3)
+    enz= 'MpFAD7' gene= 'Mp5g20700' prot= '' comp= 'chloroplast' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[6] cl_559992a1bf688e15 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    LA (18:2n6) -> ALA (18:3n3)
+    enz= 'MpFAD7' gene= 'Mp5g20700' prot= '' comp= 'chloroplast' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[7] cl_b5e2f8082d97ede6 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    ARA (20:4n6) -> EPA (20:5n3)
+    enz= 'MpFAD3' gene= 'Mp3g17690' prot= '' comp= 'ER' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[8] cl_9fa8df5b9e2bb0a4 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    LA (18:2n6) -> GLA (18:3n6)
+    enz= 'MpDES6' gene= 'Mp6g17330' prot= '' comp= 'ER' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[9] cl_7c0b9007ba1f8ec8 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    ALA (18:3n3) -> SDA (18:4n3)
+    enz= 'MpDES6' gene= 'Mp6g17330' prot= '' comp= 'ER' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[10] cl_183ebc7ca093105f PMC:PMC13364333 call=mc_001_extract_claims_0005
+    GLA (18:3n6) -> DGLA (20:3n6)
+    enz= 'MpELO1' gene= 'Mp6g02350' prot= '' comp= 'ER' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[11] cl_06de0d61ec6ebd01 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    SDA (18:4n3) -> ETA (20:4n3)
+    enz= 'MpELO1' gene= 'Mp6g02350' prot= '' comp= 'ER' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[12] cl_28107dbbe1153e90 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    DGLA (20:3n6) -> ARA (20:4n6)
+    enz= 'MpDES5' gene= 'Mp3g13250' prot= '' comp= 'ER' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[13] cl_a453942d6bd35571 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    ETA (20:4n3) -> EPA (20:5n3)
+    enz= 'MpDES5' gene= 'Mp3g13250' prot= '' comp= 'ER' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9'], 'species': ['ev_20a7facf5fd73dd9'], 'substrates': ['ev_20a7facf5fd73dd9']}
+    ev= ['ev_20a7facf5fd73dd9'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[14] cl_2865e3d8c80b6688 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    allene oxide -> (9S,13S)-OPDA
+    enz= 'MpAOC' gene= 'Mp7g06220' prot= '' comp= 'chloroplast' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_20a7facf5fd73dd9', 'ev_a82b0ad4450a0bd2'], 'direction': ['ev_20a7facf5fd73dd9'], 'enzyme': ['ev_20a7facf5fd73dd9', 'ev_a82b0ad4450a0bd2'], 'gene': ['ev_20a7facf5fd73dd9'], 'products': ['ev_20a7facf5fd73dd9', 'ev_a82b0ad4450a0bd2'], 'species': ['ev_20a7facf5fd73dd9', 'ev_a82b0ad4450a0bd2'], 'substrates': ['ev_20a7facf5fd73dd9', 'ev_a82b0ad4450a0bd2']}
+    ev= ['ev_20a7facf5fd73dd9', 'ev_a82b0ad4450a0bd2'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[15] cl_1ac4d9ef538231c7 PMC:PMC13364333 call=mc_001_extract_claims_0005
+    C18-allene oxide -> cis-OPDA
+    enz= 'PpAOC1' gene= '' prot= '' comp= 'chloroplast' dir= forward hyp= False
+    species_text= 'Physcomitrium patens' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_a82b0ad4450a0bd2'], 'direction': ['ev_a82b0ad4450a0bd2'], 'enzyme': ['ev_a82b0ad4450a0bd2'], 'products': ['ev_a82b0ad4450a0bd2'], 'species': ['ev_a82b0ad4450a0bd2'], 'substrates': ['ev_a82b0ad4450a0bd2']}
+    ev= ['ev_a82b0ad4450a0bd2'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[16] cl_0e664d8a3907d58b PMC:PMC13364333 call=mc_001_extract_claims_0005
+    C20-allene oxide derived from 12-HPETE -> 11-oxo-prostatrienoic acid (11-OPTA)
+    enz= 'PpAOC2' gene= '' prot= '' comp= 'chloroplast' dir= forward hyp= False
+    species_text= 'Physcomitrium patens' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_a82b0ad4450a0bd2'], 'direction': ['ev_a82b0ad4450a0bd2'], 'enzyme': ['ev_a82b0ad4450a0bd2'], 'products': ['ev_a82b0ad4450a0bd2'], 'species': ['ev_a82b0ad4450a0bd2'], 'substrates': ['ev_a82b0ad4450a0bd2']}
+    ev= ['ev_a82b0ad4450a0bd2'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[17] cl_832888dad708cf8e PMC:PMC13364333 call=mc_001_extract_claims_0005
+    dn-cis-OPDA -> dn-iso-OPDA
+    enz= '' gene= '' prot= '' comp= '' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'direction': 'model_citation', 'species': 'model_citation'}
+    fev= {'direction': ['ev_a82b0ad4450a0bd2', 'ev_3b1f8607f4b8b229', 'ev_c98d84c7d84855c1'], 'products': ['ev_a82b0ad4450a0bd2', 'ev_98c3197eb40f9f1e', 'ev_3b1f8607f4b8b229', 'ev_c98d84c7d84855c1'], 'species': ['ev_a82b0ad4450a0bd2', 'ev_98c3197eb40f9f1e', 'ev_3b1f8607f4b8b229', 'ev_c98d84c7d84855c1'], 'substrates': ['ev_a82b0ad4450a0bd2', 'ev_98c3197eb40f9f1e', 'ev_3b1f8607f4b8b229', 'ev_c98d84c7d84855c1']}
+    ev= ['ev_a82b0ad4450a0bd2', 'ev_98c3197eb40f9f1e', 'ev_3b1f8607f4b8b229', 'ev_c98d84c7d84855c1'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[18] cl_0bc93d248b7f31db PMC:PMC13364333 call=mc_001_extract_claims_0006
+    OPDA -> OPC-8:0
+    enz= 'OPR3' gene= '' prot= '' comp= 'peroxisome' dir= forward hyp= False
+    species_text= 'Arabidopsis thaliana' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_c98d84c7d84855c1'], 'direction': ['ev_c98d84c7d84855c1'], 'enzyme': ['ev_c98d84c7d84855c1'], 'products': ['ev_c98d84c7d84855c1'], 'species': ['ev_c98d84c7d84855c1'], 'substrates': ['ev_c98d84c7d84855c1']}
+    ev= ['ev_c98d84c7d84855c1'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[19] cl_5338b4fc07a47cea PMC:PMC13364333 call=mc_001_extract_claims_0006
+    dn-cis-OPDA -> OPC-6:0
+    enz= 'OPR3' gene= '' prot= '' comp= 'peroxisome' dir= forward hyp= False
+    species_text= 'Arabidopsis thaliana' state= inferred_only | species support is an inference, not an observation (ortholog); an ortholog or analogy never transfers a reaction between species
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_c98d84c7d84855c1'], 'direction': ['ev_c98d84c7d84855c1'], 'enzyme': ['ev_c98d84c7d84855c1'], 'products': ['ev_c98d84c7d84855c1'], 'species': ['ev_c98d84c7d84855c1'], 'substrates': ['ev_c98d84c7d84855c1']}
+    ev= ['ev_c98d84c7d84855c1'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog); an ortholog or analogy never tran
+    extra= {}
+[20] cl_8ee4bd53fcfb1b9c PMC:PMC13364333 call=mc_001_extract_claims_0006
+    allene oxide -> (9S,13S)-dn-cis-OPDA
+    enz= 'MpAOC' gene= '' prot= '' comp= 'chloroplast' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_3b1f8607f4b8b229'], 'direction': ['ev_3b1f8607f4b8b229'], 'enzyme': ['ev_3b1f8607f4b8b229'], 'products': ['ev_3b1f8607f4b8b229'], 'species': ['ev_3b1f8607f4b8b229'], 'substrates': ['ev_3b1f8607f4b8b229']}
+    ev= ['ev_3b1f8607f4b8b229'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[21] cl_87cb48915297c615 PMC:PMC13364333 call=mc_001_extract_claims_0006
+    allene oxide -> OPDA
+    enz= 'MpAOC' gene= '' prot= '' comp= 'chloroplast' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'compartment': 'model_citation', 'direction': 'model_citation', 'enzyme': 'model_citation', 'species': 'model_citation'}
+    fev= {'compartment': ['ev_3b1f8607f4b8b229'], 'direction': ['ev_3b1f8607f4b8b229'], 'enzyme': ['ev_3b1f8607f4b8b229'], 'products': ['ev_3b1f8607f4b8b229'], 'species': ['ev_3b1f8607f4b8b229'], 'substrates': ['ev_3b1f8607f4b8b229']}
+    ev= ['ev_3b1f8607f4b8b229'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[22] cl_381c10905474b7bf PMC:PMC13364333 call=mc_001_extract_claims_0006
+    Δ4-dn-cis-OPDA -> Δ4-dn-iso-OPDA
+    enz= '' gene= '' prot= '' comp= '' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'direction': 'model_citation', 'species': 'model_citation'}
+    fev= {'direction': ['ev_3b1f8607f4b8b229'], 'products': ['ev_3b1f8607f4b8b229'], 'species': ['ev_3b1f8607f4b8b229'], 'substrates': ['ev_3b1f8607f4b8b229']}
+    ev= ['ev_3b1f8607f4b8b229'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[23] cl_f42d3135f85ff21e PMC:PMC13364333 call=mc_001_extract_claims_0006
+    dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His
+    enz= 'MpGH3A' gene= '' prot= '' comp= '' dir= forward hyp= False
+    species_text= 'Marchantia polymorpha' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'direction': 'model_citation', 'enzyme': 'model_citation', 'species': 'model_citation'}
+    fev= {'direction': ['ev_3b1f8607f4b8b229'], 'enzyme': ['ev_3b1f8607f4b8b229'], 'products': ['ev_3b1f8607f4b8b229'], 'species': ['ev_3b1f8607f4b8b229'], 'substrates': ['ev_3b1f8607f4b8b229']}
+    ev= ['ev_3b1f8607f4b8b229'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[24] cl_bbe6e30f3c568977 PMC:PMC13364333 call=mc_001_extract_claims_0007
+    HDA (16:2n6) -> HTA (16:3n3)
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= '' state= species_not_stated | no species is stated anywhere in the supporting evidence
+    attr= {}
+    fev= {}
+    ev= ['ev_ba1b08899518f20e'] status= candidate | species state 'species_not_stated' is not target-species-supported (no species is stated anywhere in the supporting evidence); retained as a labelled lead, not 
+    extra= {}
+[25] cl_c230261f1437d392 PMC:PMC13364333 call=mc_001_extract_claims_0008
+    ALA (18:3n3) -> 13-HPOT
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= '' state= inferred_only | species support is an inference, not an observation (ortholog, inferred from); an ortholog or analogy never transfers a reaction between species
+    attr= {}
+    fev= {}
+    ev= ['ev_6f4dc3ffa5db1e0c', 'ev_74d8b3d259ca310a'] status= candidate | species state 'inferred_only' is not target-species-supported (species support is an inference, not an observation (ortholog, inferred from); an ortholog or ana
+    extra= {}
+[26] cl_b89be46f92d4c4e1 PMC:PMC12096059 call=mc_001_extract_claims_0009
+    jasmonic acid -> jasmonoyl-isoleucine (JA-Ile)
+    enz= 'GH3.10' gene= 'GH3.10' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= 'Arabidopsis thaliana' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'enzyme': ['ev_7d2787cbb14b4905'], 'gene': ['ev_7d2787cbb14b4905'], 'products': ['ev_7d2787cbb14b4905'], 'species': ['ev_7d2787cbb14b4905'], 'substrates': ['ev_7d2787cbb14b4905']}
+    ev= ['ev_7d2787cbb14b4905'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[27] cl_31a6adf4b22136d2 PMC:PMC12096059 call=mc_001_extract_claims_0009
+    12-hydroxy-JA -> 12-hydroxy-JA conjugate
+    enz= 'GH3.10' gene= 'GH3.10' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= 'Arabidopsis thaliana' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'enzyme': 'model_citation', 'gene': 'model_citation', 'species': 'model_citation'}
+    fev= {'enzyme': ['ev_7d2787cbb14b4905'], 'gene': ['ev_7d2787cbb14b4905'], 'products': ['ev_7d2787cbb14b4905'], 'species': ['ev_7d2787cbb14b4905'], 'substrates': ['ev_7d2787cbb14b4905']}
+    ev= ['ev_7d2787cbb14b4905'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[28] cl_5fc57dcfa32aaf35 PMC:PMC12096059 call=mc_001_extract_claims_0009
+    jasmonic acid -> JA-Gln
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= 'Arabidopsis thaliana' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'species': 'model_citation'}
+    fev= {'products': ['ev_7d2787cbb14b4905'], 'species': ['ev_7d2787cbb14b4905'], 'substrates': ['ev_7d2787cbb14b4905']}
+    ev= ['ev_7d2787cbb14b4905'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[29] cl_2d06a621ba1c2fac PMC:PMC12096059 call=mc_001_extract_claims_0009
+    jasmonic acid -> JA-Asn
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= 'Arabidopsis thaliana' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'species': 'model_citation'}
+    fev= {'products': ['ev_7d2787cbb14b4905'], 'species': ['ev_7d2787cbb14b4905'], 'substrates': ['ev_7d2787cbb14b4905']}
+    ev= ['ev_7d2787cbb14b4905'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[30] cl_9ba999bda7a136f3 PMC:PMC12096059 call=mc_001_extract_claims_0009
+    jasmonic acid -> JA-Glu
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= 'Arabidopsis thaliana' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'species': 'model_citation'}
+    fev= {'products': ['ev_7d2787cbb14b4905'], 'species': ['ev_7d2787cbb14b4905'], 'substrates': ['ev_7d2787cbb14b4905']}
+    ev= ['ev_7d2787cbb14b4905'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[31] cl_dee44fedcb6c01eb PMC:PMC12096059 call=mc_001_extract_claims_0010
+    12-hydroxy jasmonate -> 12-hydroxy jasmonoyl-isoleucine
+    enz= 'GH3.10' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= 'Arabidopsis thaliana' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'enzyme': 'model_citation', 'species': 'model_citation'}
+    fev= {'enzyme': ['ev_1f2c624a181ba5ef', 'ev_d216d8e2a43cb218'], 'products': ['ev_1f2c624a181ba5ef'], 'species': ['ev_1f2c624a181ba5ef'], 'substrates': ['ev_1f2c624a181ba5ef', 'ev_d216d8e2a43cb218']}
+    ev= ['ev_1f2c624a181ba5ef', 'ev_d216d8e2a43cb218'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[32] cl_150891597632f0c5 PMC:PMC12096059 call=mc_001_extract_claims_0011
+    JA + Ile + ATP -> JA-Ile
+    enz= 'GH3.10' gene= '' prot= '' comp= '' dir= forward hyp= False
+    species_text= 'Arabidopsis thaliana' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'direction': 'model_citation', 'enzyme': 'model_citation', 'species': 'model_citation'}
+    fev= {'direction': ['ev_6893aa984a651e1f'], 'enzyme': ['ev_ae0d92db16547d2c', 'ev_6893aa984a651e1f', 'ev_c7a1b8c0ccdfe997'], 'products': ['ev_6893aa984a651e1f'], 'species': ['ev_ae0d92db16547d2c'], 'substrates': ['ev_6893aa984a651e1f', 'ev_c7a1b8c0ccdfe997']}
+    ev= ['ev_ae0d92db16547d2c', 'ev_c7a1b8c0ccdfe997', 'ev_6893aa984a651e1f'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[33] cl_061c152eb99e1656 PMC:PMC12096059 call=mc_001_extract_claims_0011
+    12-OH-JA + Ile + ATP -> 12-OH-JA-Ile
+    enz= 'GH3.10' gene= '' prot= '' comp= '' dir= forward hyp= False
+    species_text= 'Arabidopsis thaliana' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {'direction': 'model_citation', 'enzyme': 'model_citation', 'species': 'model_citation'}
+    fev= {'direction': ['ev_6893aa984a651e1f'], 'enzyme': ['ev_ae0d92db16547d2c', 'ev_6893aa984a651e1f', 'ev_c7a1b8c0ccdfe997'], 'products': ['ev_6893aa984a651e1f'], 'species': ['ev_ae0d92db16547d2c'], 'substrates': ['ev_6893aa984a651e1f', 'ev_c7a1b8c0ccdfe997']}
+    ev= ['ev_ae0d92db16547d2c', 'ev_c7a1b8c0ccdfe997', 'ev_6893aa984a651e1f'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[34] cl_70223dd072f56b56 PMC:PMC12787732 call=mc_001_extract_claims_0013
+    galactolipids -> α-linolenic acid
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= '' state= in_vitro_or_cell_free | the supporting passage describes an in vitro / cell-free system, so no organism performed the reaction
+    attr= {}
+    fev= {}
+    ev= ['ev_f7c56801adf6792d'] status= candidate | species state 'in_vitro_or_cell_free' is not target-species-supported (the supporting passage describes an in vitro / cell-free system, so no organism performed
+    extra= {}
+[35] cl_3acaf053a4653cf7 PMC:PMC12787732 call=mc_001_extract_claims_0014
+     -> JA
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= '' state= species_not_stated | no species is stated anywhere in the supporting evidence
+    attr= {}
+    fev= {}
+    ev= ['ev_b48f934b61eb21a4'] status= incomplete | no substrates supported by the evidence; retained and reconsiderable if a later round supplies them
+    extra= {}
+[36] cl_1311193317769ac2 PMC:PMC12787732 call=mc_001_extract_claims_0014
+     -> JA-Ile
+    enz= '' gene= '' prot= '' comp= '' dir= unspecified hyp= False
+    species_text= '' state= species_not_stated | no species is stated anywhere in the supporting evidence
+    attr= {}
+    fev= {}
+    ev= ['ev_b48f934b61eb21a4'] status= incomplete | no substrates supported by the evidence; retained and reconsiderable if a later round supplies them
+    extra= {}
