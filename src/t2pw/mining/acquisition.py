@@ -62,12 +62,13 @@ _MIN_TERM_CHARS = 5
 _FOREIGN_HOST = re.compile(
     r"\b(?:transgenic|heterologous(?:ly)?|ectopic(?:ally)?|over-?express\w*)\b", re.IGNORECASE)
 #: Hosts neither existing organism detector knows: ``rag.eligibility`` has no crop
-#: entries and species.py's common-name table has no wheat. Route 1 only.
-#: ponytail: two names, from the two wheat transgene papers (PMC11478715,
-#: PMC10742046). A host both detectors and this list miss (barley, soybean,
+#: entries and species.py's common-name table has no wheat or grape. Route 1 only.
+#: ponytail: four names, each from a live false rescue: the two wheat transgene
+#: papers (PMC11478715, PMC10742046) and pilot-002's grape VaPAT1 paper
+#: (PMC5104190). A host both detectors and this list miss (barley, soybean,
 #: "Nicotiana tabacum" written as a binomial) still passes; add it when a false
 #: rescue shows one, or replace the list with a taxonomy lookup.
-_EXTRA_HOSTS = ("wheat", "triticum")
+_EXTRA_HOSTS = ("wheat", "triticum", "grape", "vitis")
 
 
 def _fold(text: str) -> str:

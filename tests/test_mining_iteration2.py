@@ -133,3 +133,39 @@ def test_g9_it2_5_every_ladder_rung_is_recorded_with_its_fraction_and_passages(t
 
     record = next(r for r in read_jsonl(root / "model_calls.jsonl") if r["call_id"] in call_ids)
     assert [e.get("rung") for e in record["attempt_log"]] == [1, 1, 1, 2, 2, 2, 3]
+
+
+# ---------------------------------------------------------------------------
+# IT2-4: the grape host
+# ---------------------------------------------------------------------------
+def _screen_config(tmp_path):
+    from t2pw.mining.config import MiningConfig, StartingInput
+
+    seeds = [StartingInput(kind="seed_metabolite", raw="12-OPDA", value="12-OPDA"),
+             StartingInput(kind="seed_enzyme", raw="AOS", value="AOS")]
+    return MiningConfig.build(
+        target_species="Arabidopsis thaliana", topic="jasmonate biosynthesis", starting_inputs=seeds,
+        overrides={"runs_dir": str(tmp_path / "runs"), "offline": True, "screen_papers": True,
+                   "enabled_via": "test"},
+    )
+
+
+def test_g9_it2_4_route1_does_not_rescue_a_grape_host_paper(tmp_path):
+    """Pilot-002's PMC5104190: grape VaPAT1, 'ectopic expression ... in Arabidopsis'. The
+    title says 'grape', which neither title detector knew."""
+    from t2pw.mining.acquisition import Acquirer, OfflinePaperSource
+    from t2pw.mining.models import LiteratureQuery
+    from t2pw.rag.acquire import CandidatePaper
+
+    paper = json.loads((ROOT / "tests" / "fixtures" / "mining" / "pilot002_grape_host.json")
+                       .read_text(encoding="utf-8"))["papers"][0]
+    candidate = CandidatePaper(id=paper["candidate_id"], source="fixture", title=paper["title"],
+                               abstract=paper["abstract"], full_text=paper["abstract"])
+    config = _screen_config(tmp_path)
+    acquirer = Acquirer(config, source=OfflinePaperSource([candidate]))
+    decision = acquirer.screen(candidate)
+    assert (decision.classification, decision.organism_match, decision.score) == ("omics_only", "match", 3.25)
+    assert acquirer.rescue(candidate, decision, ["12-OPDA", "AOS"]) == ""
+    result = acquirer.acquire(LiteratureQuery(query_id="qr_fixture", query_text="fixture"), {},
+                              round_index=2, max_papers=1, run_terms=["12-OPDA", "AOS"])
+    assert [p.record.paper_id for p in result.papers] == []

@@ -194,8 +194,10 @@ paper is re-admitted by either of two routes:
    emmer wheat "overexpressing two genes ... from *Arabidopsis thaliana*", score
    3.5). The check reuses the existing detectors read-only: the production
    screen's `observe_metadata` on the title alone (what its `compare_organism`
-   calls a `mismatch`) and species.py's common-name table. Neither knows wheat,
-   so `_EXTRA_HOSTS` adds `wheat` and `triticum`. That list is a documented
+   calls a `mismatch`) and species.py's common-name table. Neither knows wheat
+   or grape, so `_EXTRA_HOSTS` adds `wheat`, `triticum`, `grape` and `vitis`, each
+   from a live false rescue (pilot-002's grape VaPAT1 paper, PMC5104190, is the
+   latest). That list is a documented
    ceiling: a host that no detector knows, such as barley, soybean or
    *Nicotiana tabacum* written as a binomial, is still not caught.
 2. The **title** names the target species, and one sentence of the title or

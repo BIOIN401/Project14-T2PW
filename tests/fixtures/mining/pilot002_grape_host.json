@@ -1,0 +1,19 @@
+{
+ "source": "pilot-002 (ORCH-743, code ecf6b9a0) papers.jsonl row for PMC:PMC5104190, read-only; title and abstract are the PubMed record's own (the recorded PMCID came from the NCBI parse, see IT2-2). 'production' is the unchanged rag.eligibility screen's verdict as recorded in the run.",
+ "papers": [
+  {
+   "paper_id": "PMC:PMC5104190",
+   "candidate_id": "PMC5104190",
+   "title": "GRAS-domain transcription factor PAT1 regulates jasmonic acid biosynthesis in grape cold stress response.",
+   "abstract": "Cultivated grapevine (Vitis) is a highly valued horticultural crop, and cold stress affects its growth and productivity. Wild Amur grape (Vitis amurensis) PAT1 (Phytochrome A signal transduction 1, VaPAT1) is induced by low temperature, and ectopic expression of VaPAT1 enhances cold tolerance in Arabidopsis (Arabidopsis thaliana). However, little is known about the molecular mechanism of VaPAT1 during the cold stress response in grapevine. Here, we confirmed the overexpression of VaPAT1 in transformed grape calli enhanced cold tolerance. Yeast two-hybrid and bimolecular fluorescence complementation assays highlighted an interaction between VaPAT1 with INDETERMINATE-DOMAIN 3 (VaIDD3). A role of VaIDD3 in cold tolerance was also indicated. Transcriptome analysis revealed VaPAT1 and VaIDD3 overexpression and cold treatment coordinately modulate the expression of stress-related genes including lipoxygenase 3 (LOX3), a gene encoding a key jasmonate biosynthesis enzyme. Co-expression network analysis indicated LOX3 might be a downstream target of VaPAT1. Both electrophoretic mobility shift and dual luciferase reporter assays showed the VaPAT1-IDD3 complex binds to the IDD-box (AGACAAA) in the VaLOX3 promoter to activate its expression. Overexpression of both VaPAT1 and VaIDD3 increased the transcription of VaLOX3 and JA levels in transgenic grape calli. Conversely, VaPAT1-SRDX (dominant repression) and CRISPR/Cas9-mediated mutagenesis of PAT1-ED causing the loss of the C-terminus in grape calli dramatically prohibited the accumulation of VaLOX3 and JA levels during cold treatment. Together, these findings point to a pivotal role of VaPAT1 in the cold stress response in grape by regulating JA biosynthesis.",
+   "production": {
+    "classification": "omics_only",
+    "organism_match": "match",
+    "score": 3.25,
+    "reason": "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptome)"
+   },
+   "expectation": "must_exclude",
+   "bio_audit_note": "grape (Vitis amurensis) VaPAT1; Arabidopsis thaliana only as an ectopic-expression host. Rescued by route 1 at ecf6b9a0 ('score 3.25 >= 3.0'). Audit A8."
+  }
+ ]
+}
