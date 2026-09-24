@@ -1,0 +1,177 @@
+{
+  "label": "smoke-r2-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-742c/30-smoke-r2-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt/eval/s30",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:/t/eval",
+  "started_at": "2026-09-24T01:10:58+00:00",
+  "finished_at": "2026-09-24T01:11:57+00:00",
+  "duration_seconds": 58.5590724000358,
+  "timeout_seconds": 500.0,
+  "root_pid": 831716,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 830044,
+      "name": "python.exe",
+      "ppid": 831716
+    },
+    {
+      "pid": 833660,
+      "name": "python.exe",
+      "ppid": 837136
+    },
+    {
+      "pid": 837136,
+      "name": "python.exe",
+      "ppid": 830044
+    },
+    {
+      "pid": 797592,
+      "name": "python.exe",
+      "ppid": 837412
+    },
+    {
+      "pid": 837412,
+      "name": "python.exe",
+      "ppid": 830044
+    },
+    {
+      "pid": 822316,
+      "name": "python.exe",
+      "ppid": 830044
+    },
+    {
+      "pid": 834136,
+      "name": "python.exe",
+      "ppid": 822316
+    },
+    {
+      "pid": 829884,
+      "name": "python.exe",
+      "ppid": 834848
+    },
+    {
+      "pid": 834848,
+      "name": "python.exe",
+      "ppid": 830044
+    },
+    {
+      "pid": 836292,
+      "name": "git.exe",
+      "ppid": 830044
+    },
+    {
+      "pid": 832572,
+      "name": "git.exe",
+      "ppid": 830044
+    }
+  ],
+  "descendants_terminated": [
+    797592,
+    822316,
+    829884,
+    830044,
+    832572,
+    833660,
+    834136,
+    834848,
+    836292,
+    837136,
+    837412
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 626796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 627152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 822364,
+      "name": "python.exe"
+    },
+    {
+      "pid": 825436,
+      "name": "python.exe"
+    },
+    {
+      "pid": 832068,
+      "name": "python.exe"
+    },
+    {
+      "pid": 836900,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-742c\\30-smoke-r2-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\eval",
+    "repo_head": "46ac349f6d41d8dc0f74cf06214ea04afe4f7666",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-742c",
+    "token": "ORCH-742c:836900:1993e710aaa81cd9",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

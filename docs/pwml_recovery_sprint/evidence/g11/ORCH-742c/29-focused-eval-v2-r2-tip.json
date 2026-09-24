@@ -1,0 +1,191 @@
+{
+  "label": "focused-eval-v2-r2-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-742c/29-focused-eval-v2-r2-tip.pin.json",
+    "-q",
+    "-rx",
+    "--basetemp=C:/t/bt/eval/f29",
+    "tests/test_eval_v2_gold_matcher.py",
+    "tests/test_eval_v2_metrics.py",
+    "tests/test_eval_v2_embedding_cache.py",
+    "tests/test_eval_v2_report.py"
+  ],
+  "cwd": "C:/t/eval",
+  "started_at": "2026-09-24T01:10:27+00:00",
+  "finished_at": "2026-09-24T01:10:44+00:00",
+  "duration_seconds": 16.737111199996434,
+  "timeout_seconds": 400.0,
+  "root_pid": 836396,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 836480,
+      "name": "python.exe",
+      "ppid": 836396
+    },
+    {
+      "pid": 836504,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 832436,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 831052,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 831748,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 835900,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 832264,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 836124,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 836168,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 836384,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 836468,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 829732,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 832768,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 830456,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 835812,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 820860,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 835644,
+      "name": "git.exe",
+      "ppid": 836480
+    },
+    {
+      "pid": 825828,
+      "name": "git.exe",
+      "ppid": 836480
+    }
+  ],
+  "descendants_terminated": [
+    820860,
+    825828,
+    829732,
+    830456,
+    831052,
+    831748,
+    832264,
+    832436,
+    832768,
+    835644,
+    835812,
+    835900,
+    836124,
+    836168,
+    836384,
+    836468,
+    836480,
+    836504
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 626796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 627152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 825436,
+      "name": "python.exe"
+    },
+    {
+      "pid": 832068,
+      "name": "python.exe"
+    },
+    {
+      "pid": 836076,
+      "name": "python.exe"
+    },
+    {
+      "pid": 836092,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-742c\\29-focused-eval-v2-r2-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\eval",
+    "repo_head": "46ac349f6d41d8dc0f74cf06214ea04afe4f7666",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
