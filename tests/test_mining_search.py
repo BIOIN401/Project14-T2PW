@@ -12,6 +12,9 @@ were three causes, and each has a G9 test here that fails behaviourally at 23e1a
     second formulation is ever tried.
 
 The remaining tests are new acceptance tests for the knobs and invariants.
+
+Repair round 1 (review B2), G9 at 16fd8a4b: ``test_g9_r2_*``, the
+``max_papers_processed`` cap is a hard bound inside one result window.
 """
 
 from __future__ import annotations
@@ -174,6 +177,20 @@ def test_a_new_paper_on_the_first_attempt_needs_no_second(tmp_path):
     outcome, _, queries = _run(tmp_path, [_paper(1, "12-OPDA in Arabidopsis thaliana.")])
     assert [q.attempt for q in queries] == [1]
     assert queries[0].frontier_item_id not in outcome.state.exhausted_frontier
+
+
+# ---------------------------------------------------------------------------
+# Repair round 1: the processed cap
+# ---------------------------------------------------------------------------
+def test_g9_r2_max_papers_processed_is_a_hard_bound_inside_one_result_window(tmp_path):
+    """At 16fd8a4b the cap was checked only before each frontier item, so one item's
+    25 results were all processed with max_papers_processed=5 (10 at 23e1ae83)."""
+    papers = [_paper(n, f"Study {n}: 12-OPDA in Arabidopsis thaliana.") for n in range(40)]
+    outcome, _, _ = _run(tmp_path, papers, budgets={"max_papers_processed": 5})
+    assert outcome.ledger.usage.papers_processed == 5
+    assert sum(1 for r in outcome.state.papers.values() if r.processed_round >= 0) == 5
+    assert len(outcome.state.model_calls) <= 5
+    assert outcome.stop_reason == "max_papers_processed_reached"
 
 
 # ---------------------------------------------------------------------------

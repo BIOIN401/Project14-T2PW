@@ -101,6 +101,10 @@ useful round resets the streak.
   before **every** attempt, so a run that has exhausted its token allowance stops
   in `MiningModelClient` rather than inside the provider.
 * `check_papers_discovered` — before each acquisition.
+* `check_papers_processed` — before each frontier item **and before each paper is
+  extracted**, together with the same cap per round. One query's result window
+  (25 papers by default) can hold more papers than the cap allows; processing stops
+  at the cap inside it, and the run stops with `max_papers_processed_reached`.
 
 ## Exit codes
 

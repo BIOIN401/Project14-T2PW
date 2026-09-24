@@ -252,6 +252,14 @@ class BudgetLedger:
                 return reason
         return None
 
+    def check_papers_processed(self) -> Optional[str]:
+        return self._limit(
+            STOP_MAX_PAPERS_PROCESSED,
+            self.usage.papers_processed,
+            self.budgets.max_papers_processed,
+            "papers processed",
+        )
+
     def check_papers_discovered(self) -> Optional[str]:
         return self._limit(
             STOP_MAX_PAPERS_DISCOVERED,

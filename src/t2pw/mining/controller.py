@@ -367,6 +367,13 @@ class MiningController:
 
         active = list(self.state.frontier)
         processed_this_round = 0
+
+        def processing_capped() -> bool:
+            # max_papers_processed is a hard bound for the run (the ledger records the
+            # stop reason when it is reached) and for each round.
+            return (bool(self.ledger.check_papers_processed())
+                    or processed_this_round >= max(1, self.config.budgets.max_papers_processed))
+
         # Seeds and target_species_supported reactions only: never a quarantined lead's names.
         run_terms = queries_mod.rescue_terms(self.config, self.state.graph.reactions.values())
 
@@ -375,7 +382,7 @@ class MiningController:
                 break
             if self.ledger.check_papers_discovered():
                 break
-            if processed_this_round >= max(1, self.config.budgets.max_papers_processed):
+            if processing_capped():
                 break
 
             # -- search: up to max_query_attempts distinct formulations --------
@@ -428,7 +435,7 @@ class MiningController:
             # -- retrieve + extract, one paper at a time ---------------------
             retrieval_text = queries_mod.retrieval_query_text(item, self.config)
             for loaded, query in found:
-                if self.ledger.check_before_call():
+                if self.ledger.check_before_call() or processing_capped():
                     break
                 record = loaded.record
                 if record.processed_round >= 0:
