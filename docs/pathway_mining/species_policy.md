@@ -57,7 +57,9 @@ Assigned by `species.classify_species`, which returns exactly one, with a reason
    target, good enough".
 5. **one species** — is it the target? If yes **and** a span is cited for the
    species specifically: `target_species_supported`. If yes but uncited:
-   `species_ambiguous`. If no: `non_target_species`.
+   `species_ambiguous`. If no: `non_target_species`. A species the extractor
+   kept only by the verbatim fallback (`verbatim_cited_span`) counts as
+   **uncited** here; see [`evidence_policy.md`](evidence_policy.md).
 
 Detected inference markers include: `ortholog`, `orthologue`, `homolog of`,
 `by analogy`, `by similarity`, `presumably`, `is expected to`,

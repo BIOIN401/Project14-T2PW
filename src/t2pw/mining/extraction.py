@@ -207,7 +207,9 @@ ATTRIBUTION_MODEL_CITATION = "model_citation"
 ATTRIBUTION_VERBATIM_CITED_SPAN = "verbatim_cited_span"
 
 #: Fields the verbatim fallback may recover. Only names: a value that is a
-#: name can be checked against a passage; a direction or a boolean cannot.
+#: name can be checked against a passage; a direction or a boolean cannot. A
+#: recovered species is kept as the observed value but is never species evidence
+#: (see ``build_claims``): the target species then classifies ``species_ambiguous``.
 _VERBATIM_RECOVERABLE = ("enzyme", "gene", "species")
 
 
@@ -398,6 +400,15 @@ def build_claims(
             if species_text
             else [str(o) for o in paper_observed_organisms if str(o or "").strip()]
         )
+        # A species kept only by the verbatim fallback is a name that occurs in a
+        # cited passage, not evidence that the passage ties it to THIS reaction
+        # ("expression of bryophyte genes in transgenic Arabidopsis", "equivalent
+        # to Arabidopsis AtFAD3"). It is still the observed value, so a non-target
+        # or second species is recognised and quarantines the claim; but it never
+        # counts as species evidence, so the target species fails closed to
+        # ``species_ambiguous`` and stays a lead.
+        if attribution.get("species") == ATTRIBUTION_VERBATIM_CITED_SPAN:
+            species_ids = []
         verdict = classify_species(
             target_species_normalized=target_species_normalized,
             observed=observed,

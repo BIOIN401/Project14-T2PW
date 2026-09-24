@@ -130,9 +130,25 @@ exactly as above. The fallback never looks at:
 
 Every kept field records how its evidence was attached, in
 `ExtractedClaim.field_attribution`: `model_citation` (the model cited the span) or
-`verbatim_cited_span` (the fallback). The span itself is in `field_evidence`. A
-recovered species is passed to `species.classify_species` like any cited species.
-The guardrail is unchanged.
+`verbatim_cited_span` (the fallback). The span itself is in `field_evidence`.
+
+**A recovered species is never species evidence.** Finding a species name in a
+cited passage does not show that the passage ties that species to this
+reaction. Pilot-001's own spans name *Arabidopsis* only as a transgenic host
+("expression of bryophyte LCPUFA genes in transgenic Arabidopsis") or as a
+comparison ("equivalent to Arabidopsis AtFAD3"). So a species kept **only** by
+the fallback goes to `species.classify_species` as the observed value, but with
+no species evidence ids:
+
+* the target species -> `species_ambiguous`. The claim is kept as a lead, and the
+  next frontier gets a `missing_species_evidence` item for it. It never reaches
+  `target_species_supported` this way;
+* another species, or a second one -> `non_target_species` / `multiple_species`,
+  which quarantines the claim as before.
+
+Only a species the model cited itself (`model_citation`) can make a claim
+`target_species_supported`. `species.py` is unchanged. Enzyme and gene recovery
+are unchanged too.
 
 **2. At admission.** `admission._strip_unsupported` re-checks the material fields
 (`enzyme`, `protein`, `gene`, `compartment`, `direction`, `reversible`) and blanks
