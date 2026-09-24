@@ -576,7 +576,8 @@ class LiteratureQuery:
     new_paper_ids: List[str] = field(default_factory=list)
     cache_hit: bool = False
     error: str = ""
-    #: Which formulation of the frontier item this is (1 = its own terms, 2 = narrowed by the topic).
+    #: Which attempt for the frontier item this is: 1 = its own terms; 2 = narrowed by the
+    #: topic or, when that is no different, attempt 1's query again over a wider window.
     attempt: int = 1
 
     def to_dict(self) -> Dict[str, Any]:

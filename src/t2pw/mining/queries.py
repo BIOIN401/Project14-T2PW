@@ -115,7 +115,9 @@ def formulation(item: FrontierItem, config: MiningConfig, attempt: int = 1) -> O
     requires the run topic: a narrower query, re-ranked, which reaches papers
     past attempt 1's result window. It exists only when it differs from
     attempt 1. Because attempt 2 only narrows attempt 1, a zero-result attempt 1
-    means attempt 2 would also return nothing.
+    means attempt 2 would also return nothing. When it does not exist, the
+    controller may ask attempt 1's question again over a wider window
+    (:func:`build_query` with ``deeper=True``).
     """
     terms = target_terms(item, config)
     if not terms and item.kind != FRONTIER_SEED:
@@ -157,16 +159,20 @@ def build_query(
     *,
     round_index: int,
     attempt: int = 1,
+    deeper: bool = False,
 ) -> Optional[LiteratureQuery]:
     """One traceable :class:`LiteratureQuery` for one attempt, or ``None``.
 
     ``query_text`` is exactly the EuropePMC query ``search_candidates`` runs for
-    :func:`build_context`'s context.
+    :func:`build_context`'s context. With ``deeper``, attempt ``attempt`` asks
+    attempt 1's question again (same terms, same text, its own ``query_id``);
+    the controller gives it a wider result window.
     """
-    context = build_context(item, config, attempt=attempt)
+    shape = 1 if deeper else attempt
+    context = build_context(item, config, attempt=shape)
     if context is None:
         return None
-    terms = formulation(item, config, attempt) or []
+    terms = formulation(item, config, shape) or []
     try:
         from t2pw.rag.acquire import build_query as rag_build_query
 
@@ -175,7 +181,7 @@ def build_query(
         text = " AND ".join(f'"{t}"' for t in [*terms, config.target_species])
 
     return LiteratureQuery(
-        query_id=make_query_id(text, round_index),
+        query_id=make_query_id(f"{text} [deeper]" if deeper else text, round_index),
         query_text=text,
         frontier_item_id=item.frontier_item_id,
         frontier_kind=item.kind,

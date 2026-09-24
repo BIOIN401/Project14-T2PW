@@ -13,8 +13,10 @@ were three causes, and each has a G9 test here that fails behaviourally at 23e1a
 
 The remaining tests are new acceptance tests for the knobs and invariants.
 
-Repair round 1 (review B2), G9 at 16fd8a4b: ``test_g9_r2_*``, the
-``max_papers_processed`` cap is a hard bound inside one result window.
+Repair round 1 (review B2, B3), G9 at 16fd8a4b: ``test_g9_r2_*``, the
+``max_papers_processed`` cap is a hard bound inside one result window;
+``test_g9_r3_*``, an item with no second formulation whose first window was all
+already-seen papers is asked again over a wider window before it is exhausted.
 """
 
 from __future__ import annotations
@@ -180,7 +182,7 @@ def test_a_new_paper_on_the_first_attempt_needs_no_second(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# Repair round 1: the processed cap
+# Repair round 1: the processed cap, and no one-attempt exhaustion of a topic item
 # ---------------------------------------------------------------------------
 def test_g9_r2_max_papers_processed_is_a_hard_bound_inside_one_result_window(tmp_path):
     """At 16fd8a4b the cap was checked only before each frontier item, so one item's
@@ -191,6 +193,46 @@ def test_g9_r2_max_papers_processed_is_a_hard_bound_inside_one_result_window(tmp
     assert sum(1 for r in outcome.state.papers.values() if r.processed_round >= 0) == 5
     assert len(outcome.state.model_calls) <= 5
     assert outcome.stop_reason == "max_papers_processed_reached"
+
+
+def _topic_item_queries(outcome):
+    item = next(i for i in outcome.state.round_records[0]["input_frontier"]
+                if i["target"] == "jasmonate biosynthesis")
+    queries = [q for q in outcome.state.queries if q.frontier_item_id == item["frontier_item_id"]]
+    return item["frontier_item_id"], queries
+
+
+def test_g9_r3_a_topic_item_whose_window_was_all_seen_is_asked_again_deeper(tmp_path):
+    """The topic seed has no second formulation (the topic is already its term). At
+    16fd8a4b its one query returned 25 already-seen papers and exhausted it; 20 more
+    matching papers were never reached."""
+    papers = [_paper(n, f"Study {n}: jasmonate biosynthesis in Arabidopsis thaliana.") for n in range(45)]
+    outcome, _, _ = _run(tmp_path, papers, seeds=(), explicit=[i for i, _ in papers[:25]],
+                         budgets={"max_papers_processed": 100})
+    item_id, queries = _topic_item_queries(outcome)
+    assert [q.attempt for q in queries] == [1, 2]
+    assert queries[0].result_count == 25 and queries[0].new_paper_ids == []
+    assert queries[1].query_text == queries[0].query_text == f'"jasmonate biosynthesis" AND "{SPECIES}"'
+    assert queries[1].query_id != queries[0].query_id
+    assert queries[1].result_count == 45 and len(queries[1].new_paper_ids) == 20
+    assert item_id not in outcome.state.exhausted_frontier
+
+
+def test_the_deeper_attempt_still_exhausts_an_item_that_finds_nothing_new(tmp_path):
+    papers = [_paper(n, f"Study {n}: jasmonate biosynthesis in Arabidopsis thaliana.") for n in range(25)]
+    outcome, _, _ = _run(tmp_path, papers, seeds=(), explicit=[i for i, _ in papers])
+    item_id, queries = _topic_item_queries(outcome)
+    assert [q.attempt for q in queries] == [1, 2]
+    assert [q.result_count for q in queries] == [25, 25]
+    assert item_id in outcome.state.exhausted_frontier
+
+
+def test_a_partial_window_with_no_second_formulation_exhausts_at_once(tmp_path):
+    papers = [_paper(n, f"Study {n}: jasmonate biosynthesis in Arabidopsis thaliana.") for n in range(3)]
+    outcome, _, _ = _run(tmp_path, papers, seeds=(), explicit=[i for i, _ in papers])
+    item_id, queries = _topic_item_queries(outcome)
+    assert [q.attempt for q in queries] == [1]
+    assert item_id in outcome.state.exhausted_frontier
 
 
 # ---------------------------------------------------------------------------

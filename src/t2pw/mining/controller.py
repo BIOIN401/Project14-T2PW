@@ -385,34 +385,47 @@ class MiningController:
             if processing_capped():
                 break
 
-            # -- search: up to max_query_attempts distinct formulations --------
+            # -- search: up to max_query_attempts attempts -----------------------
             # A newly included paper ends the search for this item this round.
-            # The item is exhausted only when every formulation has been tried
+            # The item is exhausted only when every attempt has been tried
             # without one, or at once when a query returns no result at all.
+            # When no distinct formulation exists for an attempt (the topic is
+            # already one of the item's terms: every "X | <topic>" bridge, the
+            # topic seed) but the last query filled its window, the attempt asks
+            # the same question over a wider window instead.
             found: List[Any] = []
             exhausted = False
             budgets = self.config.budgets
             attempts = max(1, budgets.max_query_attempts)
+            per_query = max(1, budgets.max_results_per_query)
+            asked = returned = 0  # the previous attempt's window and result count
             for attempt in range(1, attempts + 1):
+                remaining = max(0, budgets.max_papers_discovered - self.ledger.usage.papers_discovered)
+                window = min(per_query, remaining)
                 query = queries_mod.build_query(item, self.config, round_index=index, attempt=attempt)
+                deeper = False
+                if query is None and asked and returned >= asked and min(2 * per_query, remaining) > asked:
+                    deeper, window = True, min(2 * per_query, remaining)
+                    query = queries_mod.build_query(item, self.config, round_index=index,
+                                                    attempt=attempt, deeper=True)
                 if query is None:
-                    exhausted = True  # no further distinct formulation exists
+                    exhausted = True  # no further formulation, and no wider window, exists
                     break
                 if attempt > 1 and self.ledger.check_papers_discovered():
                     break
-                context = queries_mod.build_context(item, self.config, attempt=attempt)
+                context = queries_mod.build_context(item, self.config, attempt=1 if deeper else attempt)
                 round_queries.append(query)
                 self.state.queries.append(query)
                 item.attempts += 1
 
-                remaining = max(0, budgets.max_papers_discovered - self.ledger.usage.papers_discovered)
                 result = self.acquirer.acquire(
                     query,
                     context,
                     round_index=index,
-                    max_papers=min(max(1, budgets.max_results_per_query), remaining) if remaining else 0,
+                    max_papers=window,
                     run_terms=run_terms,
                 )
+                asked, returned = window, query.result_count
                 round_errors.extend(result.errors)
                 self.ledger.record_papers_discovered(len(result.papers) + len(result.excluded))
                 for excluded in result.excluded:

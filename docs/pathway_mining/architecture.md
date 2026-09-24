@@ -129,7 +129,7 @@ material field must cite the passage that supports it.
 | # | Step | Module |
 |---|---|---|
 | 1 | select frontier items (priority-ordered, unexhausted) | `frontier` |
-| 2 | build one traceable query per item: its own terms AND the species; a second formulation (+ topic) if the first finds no new paper | `queries` |
+| 2 | build one traceable query per item: its own terms AND the species; a second formulation (+ topic) if the first finds no new paper, or, when the topic is already one of its terms and the first query filled its window, the same query over a doubled window | `queries` |
 | 3 | acquire, screen (plus the mining rescue), cache; record inclusions and exclusions | `acquisition` |
 | 4 | index new papers; retrieve passages as evidence spans | `retrieval` |
 | 5 | extract claims; drop every uncited field (an enzyme / gene / species name found verbatim in the claim's own cited participant span is kept, recorded as `verbatim_cited_span`; a species kept that way is never species evidence) | `extraction` |

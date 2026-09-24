@@ -53,8 +53,17 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
 * **Attempts.** When a query brings in no newly included paper, a second, distinct formulation
   is tried in the same round: the same required terms, plus the run topic. Each attempt is a
   row in `queries.jsonl` with its `attempt` number. An item is marked exhausted only after every
-  formulation is tried without a new paper. It is marked exhausted at once when a query returns
+  attempt is tried without a new paper. It is marked exhausted at once when a query returns
   no result at all, because the second formulation only narrows the first.
+* **A wider window instead of a second formulation.** When the topic is already one of the
+  item's terms, there is no distinct second formulation. That is every `X | <topic>` bridge,
+  which the frontier produces whenever the primary graph is empty, and the topic seed itself.
+  If attempt 1 then filled its whole window (`result_count` equal to the papers asked for),
+  attempt 2 asks the same query again for `min(2 × max_results_per_query,
+  remaining max_papers_discovered)` papers. It is recorded as `attempt: 2`, with the same
+  `query_text` and its own `query_id`. The item is exhausted only after that attempt too finds
+  no new paper. A window that was not full exhausts the item after one attempt, because
+  there is nothing past it.
 
 ## Stop reasons
 
