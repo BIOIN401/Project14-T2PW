@@ -1,0 +1,925 @@
+{
+  "completed": true,
+  "discovered_paper_ids": [
+    "DOI:10.64898/2026.09.07.749967",
+    "PMC:PMC10721488",
+    "PMC:PMC11300881",
+    "PMC:PMC11478715",
+    "PMC:PMC12865809",
+    "PMC:PMC13096701",
+    "PMC:PMC13238047",
+    "PMC:PMC13358708",
+    "PMC:PMC13364333",
+    "PMC:PMC13493544",
+    "PMC:PMC9947334",
+    "PMID:35404431"
+  ],
+  "frontier": [
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_7429f942671933ef",
+      "kind": "seed_expansion",
+      "origin_round": 0,
+      "priority": 10.0,
+      "reason": "user-supplied seed metabolite",
+      "target": "12-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_01ed24ffdc21",
+      "entity_ids": [
+        "en_49ecefe2891b2b8f",
+        "en_92ba28533076c4dd",
+        "en_aa0b438fa77381e8",
+        "en_90be5619f21784ba"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_b49c102c57474655",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.6,
+      "reason": "candidate component cmp_01ed24ffdc21 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "EPA (20:5n3) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_48db4734b66a",
+      "entity_ids": [
+        "en_f34362d422ebea02",
+        "en_241fca448fba8817",
+        "en_c4d4e8885d6cd9e2",
+        "en_b6a03123457ae6fa",
+        "en_feb583f2fea2f925"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_93ec1f79cff200b4",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.4,
+      "reason": "candidate component cmp_48db4734b66a is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "dn-cis-OPDA | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_0ca16ab13a6c",
+      "entity_ids": [
+        "en_af2754f9932fdbaf",
+        "en_19fbc4684cd68a08",
+        "en_aa0b438fa77381e8"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_cab8e5de0ce888ed",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.4,
+      "reason": "candidate component cmp_0ca16ab13a6c is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "LA (18:2n6) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_e3c249e7ed6c",
+      "entity_ids": [
+        "en_1751acbb0e5ea32d",
+        "en_0ee1cc29d7af841e"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_870b2793b0b928de",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_e3c249e7ed6c is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "(9S,13S)-dn-cis-OPDA | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_414b2d72bed6",
+      "entity_ids": [
+        "en_fa9fe6d06e93cad2",
+        "en_fa3f3298e9d22bee"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_fa873fed6c6e8823",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_414b2d72bed6 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "15-HPEPE | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_2534f9c27a28",
+      "entity_ids": [
+        "en_883cf1c3a0024388",
+        "en_8b1b91475b6df2c2"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_ca579970f9e8309c",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_2534f9c27a28 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "16:1n9 (\u03947-palmitoleic acid) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_7d923c87a1c3",
+      "entity_ids": [
+        "en_a593a3bd48a61b75",
+        "en_4de1eee03903ece5"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_7202cb04361977d9",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_7d923c87a1c3 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "16:2n6 (HDA) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_43d9c7b9f3ab",
+      "entity_ids": [
+        "en_333ac73d8a5021e2",
+        "en_af2754f9932fdbaf"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_4fcd566b72e082af",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_43d9c7b9f3ab is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "ALA (18:3n3) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_12deb5a6c69c",
+      "entity_ids": [
+        "en_7f760677dc3f9723",
+        "en_50571ec303b492b5"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_a9609b1d0b14c796",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_12deb5a6c69c is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "allene oxide (12,13-EOT) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_b5a7c0782c7c",
+      "entity_ids": [
+        "en_f7e2137c85355064",
+        "en_1bbb183d6fcc534c"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_b23b318934f48d6f",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_b5a7c0782c7c is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "allene oxide | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_f4a600b90c99",
+      "entity_ids": [
+        "en_34701e7abc2bcd88",
+        "en_2df677685b18aa45"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_de276da1e1ea9901",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_f4a600b90c99 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "HTA (16:3n3) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "cmp_e1cca643e517",
+      "entity_ids": [
+        "en_44d2323e58199fff",
+        "en_7c1c8c3922c5fbe7"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_1372712783a31316",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_e1cca643e517 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "\u03944-dn-iso-OPDA | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_1751acbb0e5ea32d"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_8933b0dcf3e0acc2",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA with no known consuming reaction; expand downstream",
+      "target": "(9S,13S)-dn-cis-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_8d0d77850e09d269"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_1160817063955a11",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of allene oxide (12,13-EOT) -> (9S,13S)-OPDA with no known consuming reaction; expand downstream",
+      "target": "(9S,13S)-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_883cf1c3a0024388"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_74dcf411252eec40",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of 16:0 (palmitic acid) -> 16:1n9 (\u03947-palmitoleic acid) with no known consuming reaction; expand downstream",
+      "target": "16:1n9 (\u03947-palmitoleic acid)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_a593a3bd48a61b75"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_838e73c4a91beb19",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of 16:1n9 -> 16:2n6 (HDA) with no known consuming reaction; expand downstream",
+      "target": "16:2n6 (HDA)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_f7e2137c85355064"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_224aa1c743a64a23",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of 15-HPETE -> allene oxide with no known consuming reaction; expand downstream",
+      "target": "allene oxide"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_fa3f3298e9d22bee"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_76fc1aa6be08b954",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of 15-HPEPE -> allene oxide (14,15-EEPE) with no known consuming reaction; expand downstream",
+      "target": "allene oxide (14,15-EEPE)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_b6a03123457ae6fa"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_c08b821c5edbe9ab",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His with no known consuming reaction; expand downstream",
+      "target": "dn-OPDA-Gln"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_c4d4e8885d6cd9e2"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_94540fae674b155b",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His with no known consuming reaction; expand downstream",
+      "target": "dn-OPDA-Glu"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_feb583f2fea2f925"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_159860f8ae152d87",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His with no known consuming reaction; expand downstream",
+      "target": "dn-OPDA-His"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_49ecefe2891b2b8f"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_b67abe3a72c0908d",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of ARA (20:4n6) -> EPA (20:5n3) with no known consuming reaction; expand downstream",
+      "target": "EPA (20:5n3)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_34701e7abc2bcd88"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_df77445e727b23c0",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of HDA (16:2n6) -> HTA (16:3n3) with no known consuming reaction; expand downstream",
+      "target": "HTA (16:3n3)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_44d2323e58199fff"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_7f8c5b3e3d3c3854",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of \u03944-dn-cis-OPDA -> \u03944-dn-iso-OPDA with no known consuming reaction; expand downstream",
+      "target": "\u03944-dn-iso-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_50571ec303b492b5"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_de1324d2989d8266",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of 13-HPOT -> allene oxide (12,13-EOT) with no supported precursor reaction; expand upstream",
+      "target": "13-HPOT"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_fa9fe6d06e93cad2"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_4cadbcdd785897eb",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of 15-HPEPE -> allene oxide (14,15-EEPE) with no supported precursor reaction; expand upstream",
+      "target": "15-HPEPE"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_1bbb183d6fcc534c"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_65b6dcb840ba9f69",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of 15-HPETE -> allene oxide with no supported precursor reaction; expand upstream",
+      "target": "15-HPETE"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_8b1b91475b6df2c2"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_5e3d7e577b0b5e10",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of 16:0 (palmitic acid) -> 16:1n9 (\u03947-palmitoleic acid) with no supported precursor reaction; expand upstream",
+      "target": "16:0 (palmitic acid)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_4de1eee03903ece5"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_4b705c9d9eca5cf6",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of 16:1n9 -> 16:2n6 (HDA) with no supported precursor reaction; expand upstream",
+      "target": "16:1n9"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_0ee1cc29d7af841e"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_e1395aafcdce451e",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA with no supported precursor reaction; expand upstream",
+      "target": "allene oxide (from 11-HPHT)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_f34362d422ebea02"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_e35f1c2c9cda4a43",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of dn-cis-OPDA -> dn-iso-OPDA with no supported precursor reaction; expand upstream",
+      "target": "dn-cis-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_2df677685b18aa45"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_459dae56f7f24ed3",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of HDA (16:2n6) -> HTA (16:3n3) with no supported precursor reaction; expand upstream",
+      "target": "HDA (16:2n6)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_af2754f9932fdbaf"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_fe711ceaa93794c1",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of LA (18:2n6) -> GLA (18:3n6) with no supported precursor reaction; expand upstream",
+      "target": "LA (18:2n6)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_7c1c8c3922c5fbe7"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_e89d75487b5207b3",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of \u03944-dn-cis-OPDA -> \u03944-dn-iso-OPDA with no supported precursor reaction; expand upstream",
+      "target": "\u03944-dn-cis-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:inferred-only::13-hpot|allene oxide (12,13-eot)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_71ddea6658130b22",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "13-HPOT -> allene oxide (12,13-EOT)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:inferred-only::15-hpepe|allene oxide (14,15-eepe)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_1ec244844e9792ed",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "15-HPEPE -> allene oxide (14,15-EEPE)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:inferred-only::15-hpete|allene oxide",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_fd6f2f4a8c412a23",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "15-HPETE -> allene oxide"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:inferred-only::16:0 (palmitic acid)|16:1n9 (\u03b47-palmitoleic acid)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_eab3e51e5c7f0c53",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "16:0 (palmitic acid) -> 16:1n9 (\u03947-palmitoleic acid)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:inferred-only::16:1n9|16:2n6 (hda)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_cde27288592cde49",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "16:1n9 -> 16:2n6 (HDA)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:species-not-stated::ala (18:3n3)|sda (18:4n3)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_276b58e6595f2382",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "ALA (18:3n3) -> SDA (18:4n3)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:in-vitro-or-cell-free::(9s,13s)-opda|allene oxide (12,13-eot)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_d7015c9b63fc20b4",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'in_vitro_or_cell_free'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "allene oxide (12,13-EOT) -> (9S,13S)-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:inferred-only::(9s,13s)-dn-cis-opda|allene oxide (from 11-hpht)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_8103c3854752545e",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:species-not-stated::ara (20:4n6)|epa (20:5n3)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_42f4d0d86a37f2c9",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "ARA (20:4n6) -> EPA (20:5n3)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:species-not-stated::ara (20:4n6)|dgla (20:3n6)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_541325792facb1b5",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "DGLA (20:3n6) -> ARA (20:4n6)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:inferred-only::dn-cis-opda|dn-iso-opda",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_28e2cf5ef08a6176",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "dn-cis-OPDA -> dn-iso-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:inferred-only::dn-iso-opda|dn-opda-gln+dn-opda-glu+dn-opda-his",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_5f57f9614ed214f1",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:species-not-stated::epa (20:5n3)|eta (20:4n3)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_206d94c731c9f487",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "ETA (20:4n3) -> EPA (20:5n3)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:species-not-stated::dgla (20:3n6)|gla (18:3n6)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_9eededb321c28659",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "GLA (18:3n6) -> DGLA (20:3n6)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:inferred-only::hda (16:2n6)|hta (16:3n3)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_3e3aabfab5de125a",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "HDA (16:2n6) -> HTA (16:3n3)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:inferred-only::ala (18:3n3)|la (18:2n6)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_e815524f0ddb35d7",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "LA (18:2n6) -> ALA (18:3n3)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:species-not-stated::gla (18:3n6)|la (18:2n6)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_c7d5990d4a5bc36c",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "LA (18:2n6) -> GLA (18:3n6)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:species-not-stated::eta (20:4n3)|sda (18:4n3)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_575c9fa2583338dd",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "SDA (18:4n3) -> ETA (20:4n3)"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "unspecified:species-not-stated::\u03b44-dn-cis-opda|\u03b44-dn-iso-opda",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": false,
+      "frontier_item_id": "fr_19b1bb8b9cbde2b7",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "\u03944-dn-cis-OPDA -> \u03944-dn-iso-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_1751acbb0e5ea32d"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_a2ae4e52fcce0e4c",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "(9S,13S)-dn-cis-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_8d0d77850e09d269"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_ec232da23f74c674",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "(9S,13S)-OPDA"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_50571ec303b492b5"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_cc60a36c43e51a40",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "13-HPOT"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_fa9fe6d06e93cad2"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_9bc13de7885252a1",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "15-HPEPE"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_1bbb183d6fcc534c"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_7d0aaca197bf69bd",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "15-HPETE"
+    },
+    {
+      "attempts": 0,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_8b1b91475b6df2c2"
+      ],
+      "exhausted": false,
+      "frontier_item_id": "fr_a651f002f65fd02b",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "16:0 (palmitic acid)"
+    }
+  ],
+  "graph_hash": "93e8dd4f91befc0456e632f1bc72671e",
+  "processed_paper_ids": [
+    "PMC:PMC13364333"
+  ],
+  "round_index": 1,
+  "schema_version": "t2pw.mining/1.0.0",
+  "seen_query_ids": [
+    "qr_4c01525fdec4ab02",
+    "qr_a2e9b09057adadd9",
+    "qr_4de7db741b2f3c46"
+  ],
+  "unproductive_streak": 0,
+  "usage": {
+    "cached_tokens": 0,
+    "claims_extracted": 21,
+    "elapsed_seconds": 138.038,
+    "estimated_cost_usd": 0.003373,
+    "input_tokens": 22843,
+    "last_round_new_reactions": 19,
+    "llm_calls": 1,
+    "output_tokens": 3629,
+    "papers_discovered": 12,
+    "papers_processed": 1,
+    "passages_extracted": 20,
+    "rounds": 1,
+    "unproductive_streak": 0
+  },
+  "written_at": "2026-09-23T23:33:44+00:00"
+}

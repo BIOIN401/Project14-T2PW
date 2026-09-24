@@ -1,0 +1,366 @@
+{
+ "method": "frontier.generate() replayed on state.json with max_frontier_size lifted; frozen code @ 23e1ae83",
+ "round1_carried_unexhausted_items": [
+  "12-OPDA"
+ ],
+ "round1_recorded_generated_items": 59,
+ "round1_recorded_bridge_items": 12,
+ "round1_recorded_nonbridge_items": 47,
+ "replay_uncapped_generated": 123,
+ "replay_uncapped_by_kind": {
+  "branch_reaction": 30,
+  "bridge_search": 14,
+  "downstream_expansion": 12,
+  "missing_compartment": 19,
+  "missing_direction": 19,
+  "missing_species_evidence": 19,
+  "upstream_expansion": 10
+ },
+ "replay_bridge_items": 14,
+ "bridge_targets_recorded_not_in_replay": [
+  "16:2n6 (HDA) | jasmonate biosynthesis",
+  "HTA (16:3n3) | jasmonate biosynthesis",
+  "LA (18:2n6) | jasmonate biosynthesis",
+  "dn-cis-OPDA | jasmonate biosynthesis",
+  "Δ4-dn-iso-OPDA | jasmonate biosynthesis"
+ ],
+ "bridge_targets_replay_not_recorded": [
+  "13-HPOT | jasmonate biosynthesis",
+  "16:1n9 | jasmonate biosynthesis",
+  "GLA (18:3n6) | jasmonate biosynthesis",
+  "HDA (16:2n6) | jasmonate biosynthesis",
+  "SDA (18:4n3) | jasmonate biosynthesis",
+  "dn-iso-OPDA | jasmonate biosynthesis",
+  "Δ4-dn-cis-OPDA | jasmonate biosynthesis"
+ ],
+ "nonbridge_generated_uncapped": 109,
+ "cut_by_cap_count": 62,
+ "cut_by_cap_by_kind": {
+  "branch_reaction": 24,
+  "missing_compartment": 19,
+  "missing_direction": 19
+ },
+ "cut_by_cap_items": [
+  {
+   "kind": "branch_reaction",
+   "target": "16:1n9",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "16:1n9 (Δ7-palmitoleic acid)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "16:2n6 (HDA)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "ALA (18:3n3)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "allene oxide",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "allene oxide (12,13-EOT)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "allene oxide (14,15-EEPE)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "allene oxide (from 11-HPHT)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "ARA (20:4n6)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "DGLA (20:3n6)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "dn-cis-OPDA",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "dn-iso-OPDA",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "dn-OPDA-Gln",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "dn-OPDA-Glu",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "dn-OPDA-His",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "EPA (20:5n3)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "ETA (20:4n3)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "GLA (18:3n6)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "HDA (16:2n6)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "HTA (16:3n3)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "LA (18:2n6)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "SDA (18:4n3)",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "Δ4-dn-cis-OPDA",
+   "priority": 5.0
+  },
+  {
+   "kind": "branch_reaction",
+   "target": "Δ4-dn-iso-OPDA",
+   "priority": 5.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "13-HPOT -> allene oxide (12,13-EOT)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "15-HPEPE -> allene oxide (14,15-EEPE)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "15-HPETE -> allene oxide",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "16:0 (palmitic acid) -> 16:1n9 (Δ7-palmitoleic acid)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "16:1n9 -> 16:2n6 (HDA)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "ALA (18:3n3) -> SDA (18:4n3)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "allene oxide (12,13-EOT) -> (9S,13S)-OPDA",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "ARA (20:4n6) -> EPA (20:5n3)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "DGLA (20:3n6) -> ARA (20:4n6)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "dn-cis-OPDA -> dn-iso-OPDA",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "ETA (20:4n3) -> EPA (20:5n3)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "GLA (18:3n6) -> DGLA (20:3n6)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "HDA (16:2n6) -> HTA (16:3n3)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "LA (18:2n6) -> ALA (18:3n3)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "LA (18:2n6) -> GLA (18:3n6)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "SDA (18:4n3) -> ETA (20:4n3)",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_direction",
+   "target": "Δ4-dn-cis-OPDA -> Δ4-dn-iso-OPDA",
+   "priority": 3.0
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "13-HPOT -> allene oxide (12,13-EOT)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "15-HPEPE -> allene oxide (14,15-EEPE)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "15-HPETE -> allene oxide",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "16:0 (palmitic acid) -> 16:1n9 (Δ7-palmitoleic acid)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "16:1n9 -> 16:2n6 (HDA)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "ALA (18:3n3) -> SDA (18:4n3)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "allene oxide (12,13-EOT) -> (9S,13S)-OPDA",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "ARA (20:4n6) -> EPA (20:5n3)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "DGLA (20:3n6) -> ARA (20:4n6)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "dn-cis-OPDA -> dn-iso-OPDA",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "ETA (20:4n3) -> EPA (20:5n3)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "GLA (18:3n6) -> DGLA (20:3n6)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "HDA (16:2n6) -> HTA (16:3n3)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "LA (18:2n6) -> ALA (18:3n3)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "LA (18:2n6) -> GLA (18:3n6)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "SDA (18:4n3) -> ETA (20:4n3)",
+   "priority": 2.5
+  },
+  {
+   "kind": "missing_compartment",
+   "target": "Δ4-dn-cis-OPDA -> Δ4-dn-iso-OPDA",
+   "priority": 2.5
+  }
+ ],
+ "round2_replay_nonbridge_items": 0,
+ "round2_replay_bridge_items_from_reordered_anchors": [
+  "dn-iso-OPDA | jasmonate biosynthesis",
+  "GLA (18:3n6) | jasmonate biosynthesis",
+  "SDA (18:4n3) | jasmonate biosynthesis",
+  "13-HPOT | jasmonate biosynthesis",
+  "16:1n9 | jasmonate biosynthesis",
+  "HDA (16:2n6) | jasmonate biosynthesis",
+  "Δ4-dn-cis-OPDA | jasmonate biosynthesis"
+ ],
+ "validation": "recorded non-bridge items == top-ranked replay non-bridge items (asserted); round-2 replay generates no non-bridge item (asserted); its bridge items exist only because the restored component order changes the anchor name"
+}

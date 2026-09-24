@@ -1,0 +1,2389 @@
+{
+  "claims_extracted": [],
+  "decisions": [],
+  "errors": [],
+  "graph_delta": {
+    "added_candidate_reaction_ids": [],
+    "added_entity_ids": [],
+    "added_reaction_ids": [],
+    "created_component_ids": [],
+    "graph_hash_after": "93e8dd4f91befc0456e632f1bc72671e",
+    "graph_hash_before": "93e8dd4f91befc0456e632f1bc72671e",
+    "merged_component_ids": [],
+    "new_conflict_ids": [],
+    "promoted_reaction_ids": [],
+    "round_index": 2,
+    "updated_reaction_ids": [],
+    "useful": false
+  },
+  "input_frontier": [
+    {
+      "attempts": 2,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_7429f942671933ef",
+      "kind": "seed_expansion",
+      "origin_round": 0,
+      "priority": 10.0,
+      "reason": "user-supplied seed metabolite",
+      "target": "12-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_01ed24ffdc21",
+      "entity_ids": [
+        "en_49ecefe2891b2b8f",
+        "en_92ba28533076c4dd",
+        "en_aa0b438fa77381e8",
+        "en_90be5619f21784ba"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_b49c102c57474655",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.6,
+      "reason": "candidate component cmp_01ed24ffdc21 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "EPA (20:5n3) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_48db4734b66a",
+      "entity_ids": [
+        "en_f34362d422ebea02",
+        "en_241fca448fba8817",
+        "en_c4d4e8885d6cd9e2",
+        "en_b6a03123457ae6fa",
+        "en_feb583f2fea2f925"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_93ec1f79cff200b4",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.4,
+      "reason": "candidate component cmp_48db4734b66a is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "dn-cis-OPDA | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_0ca16ab13a6c",
+      "entity_ids": [
+        "en_af2754f9932fdbaf",
+        "en_19fbc4684cd68a08",
+        "en_aa0b438fa77381e8"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_cab8e5de0ce888ed",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.4,
+      "reason": "candidate component cmp_0ca16ab13a6c is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "LA (18:2n6) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_e3c249e7ed6c",
+      "entity_ids": [
+        "en_1751acbb0e5ea32d",
+        "en_0ee1cc29d7af841e"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_870b2793b0b928de",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_e3c249e7ed6c is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "(9S,13S)-dn-cis-OPDA | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_414b2d72bed6",
+      "entity_ids": [
+        "en_fa9fe6d06e93cad2",
+        "en_fa3f3298e9d22bee"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_fa873fed6c6e8823",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_414b2d72bed6 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "15-HPEPE | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_2534f9c27a28",
+      "entity_ids": [
+        "en_883cf1c3a0024388",
+        "en_8b1b91475b6df2c2"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_ca579970f9e8309c",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_2534f9c27a28 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "16:1n9 (\u03947-palmitoleic acid) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_7d923c87a1c3",
+      "entity_ids": [
+        "en_a593a3bd48a61b75",
+        "en_4de1eee03903ece5"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_7202cb04361977d9",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_7d923c87a1c3 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "16:2n6 (HDA) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_43d9c7b9f3ab",
+      "entity_ids": [
+        "en_333ac73d8a5021e2",
+        "en_af2754f9932fdbaf"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_4fcd566b72e082af",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_43d9c7b9f3ab is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "ALA (18:3n3) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_12deb5a6c69c",
+      "entity_ids": [
+        "en_7f760677dc3f9723",
+        "en_50571ec303b492b5"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_a9609b1d0b14c796",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_12deb5a6c69c is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "allene oxide (12,13-EOT) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_b5a7c0782c7c",
+      "entity_ids": [
+        "en_f7e2137c85355064",
+        "en_1bbb183d6fcc534c"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_b23b318934f48d6f",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_b5a7c0782c7c is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "allene oxide | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_f4a600b90c99",
+      "entity_ids": [
+        "en_34701e7abc2bcd88",
+        "en_2df677685b18aa45"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_de276da1e1ea9901",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_f4a600b90c99 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "HTA (16:3n3) | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "cmp_e1cca643e517",
+      "entity_ids": [
+        "en_44d2323e58199fff",
+        "en_7c1c8c3922c5fbe7"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_1372712783a31316",
+      "kind": "bridge_search",
+      "origin_round": 1,
+      "priority": 9.2,
+      "reason": "candidate component cmp_e1cca643e517 is paper-supported but not chemically connected to the primary graph; look for a biochemical step linking them",
+      "target": "\u03944-dn-iso-OPDA | jasmonate biosynthesis"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_1751acbb0e5ea32d"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_8933b0dcf3e0acc2",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA with no known consuming reaction; expand downstream",
+      "target": "(9S,13S)-dn-cis-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_8d0d77850e09d269"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_1160817063955a11",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of allene oxide (12,13-EOT) -> (9S,13S)-OPDA with no known consuming reaction; expand downstream",
+      "target": "(9S,13S)-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_883cf1c3a0024388"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_74dcf411252eec40",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of 16:0 (palmitic acid) -> 16:1n9 (\u03947-palmitoleic acid) with no known consuming reaction; expand downstream",
+      "target": "16:1n9 (\u03947-palmitoleic acid)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_a593a3bd48a61b75"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_838e73c4a91beb19",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of 16:1n9 -> 16:2n6 (HDA) with no known consuming reaction; expand downstream",
+      "target": "16:2n6 (HDA)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_f7e2137c85355064"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_224aa1c743a64a23",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of 15-HPETE -> allene oxide with no known consuming reaction; expand downstream",
+      "target": "allene oxide"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_fa3f3298e9d22bee"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_76fc1aa6be08b954",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of 15-HPEPE -> allene oxide (14,15-EEPE) with no known consuming reaction; expand downstream",
+      "target": "allene oxide (14,15-EEPE)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_b6a03123457ae6fa"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_c08b821c5edbe9ab",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His with no known consuming reaction; expand downstream",
+      "target": "dn-OPDA-Gln"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_c4d4e8885d6cd9e2"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_94540fae674b155b",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His with no known consuming reaction; expand downstream",
+      "target": "dn-OPDA-Glu"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_feb583f2fea2f925"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_159860f8ae152d87",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His with no known consuming reaction; expand downstream",
+      "target": "dn-OPDA-His"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_49ecefe2891b2b8f"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_b67abe3a72c0908d",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of ARA (20:4n6) -> EPA (20:5n3) with no known consuming reaction; expand downstream",
+      "target": "EPA (20:5n3)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_34701e7abc2bcd88"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_df77445e727b23c0",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of HDA (16:2n6) -> HTA (16:3n3) with no known consuming reaction; expand downstream",
+      "target": "HTA (16:3n3)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_44d2323e58199fff"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_7f8c5b3e3d3c3854",
+      "kind": "downstream_expansion",
+      "origin_round": 1,
+      "priority": 7.0,
+      "reason": "newly supported product of \u03944-dn-cis-OPDA -> \u03944-dn-iso-OPDA with no known consuming reaction; expand downstream",
+      "target": "\u03944-dn-iso-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_50571ec303b492b5"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_de1324d2989d8266",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of 13-HPOT -> allene oxide (12,13-EOT) with no supported precursor reaction; expand upstream",
+      "target": "13-HPOT"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_fa9fe6d06e93cad2"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_4cadbcdd785897eb",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of 15-HPEPE -> allene oxide (14,15-EEPE) with no supported precursor reaction; expand upstream",
+      "target": "15-HPEPE"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_1bbb183d6fcc534c"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_65b6dcb840ba9f69",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of 15-HPETE -> allene oxide with no supported precursor reaction; expand upstream",
+      "target": "15-HPETE"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_8b1b91475b6df2c2"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_5e3d7e577b0b5e10",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of 16:0 (palmitic acid) -> 16:1n9 (\u03947-palmitoleic acid) with no supported precursor reaction; expand upstream",
+      "target": "16:0 (palmitic acid)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_4de1eee03903ece5"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_4b705c9d9eca5cf6",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of 16:1n9 -> 16:2n6 (HDA) with no supported precursor reaction; expand upstream",
+      "target": "16:1n9"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_0ee1cc29d7af841e"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_e1395aafcdce451e",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA with no supported precursor reaction; expand upstream",
+      "target": "allene oxide (from 11-HPHT)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_f34362d422ebea02"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_e35f1c2c9cda4a43",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of dn-cis-OPDA -> dn-iso-OPDA with no supported precursor reaction; expand upstream",
+      "target": "dn-cis-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_2df677685b18aa45"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_459dae56f7f24ed3",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of HDA (16:2n6) -> HTA (16:3n3) with no supported precursor reaction; expand upstream",
+      "target": "HDA (16:2n6)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_af2754f9932fdbaf"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_fe711ceaa93794c1",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of LA (18:2n6) -> GLA (18:3n6) with no supported precursor reaction; expand upstream",
+      "target": "LA (18:2n6)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_7c1c8c3922c5fbe7"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_e89d75487b5207b3",
+      "kind": "upstream_expansion",
+      "origin_round": 1,
+      "priority": 6.5,
+      "reason": "substrate of \u03944-dn-cis-OPDA -> \u03944-dn-iso-OPDA with no supported precursor reaction; expand upstream",
+      "target": "\u03944-dn-cis-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:inferred-only::13-hpot|allene oxide (12,13-eot)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_71ddea6658130b22",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "13-HPOT -> allene oxide (12,13-EOT)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:inferred-only::15-hpepe|allene oxide (14,15-eepe)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_1ec244844e9792ed",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "15-HPEPE -> allene oxide (14,15-EEPE)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:inferred-only::15-hpete|allene oxide",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_fd6f2f4a8c412a23",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "15-HPETE -> allene oxide"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:inferred-only::16:0 (palmitic acid)|16:1n9 (\u03b47-palmitoleic acid)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_eab3e51e5c7f0c53",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "16:0 (palmitic acid) -> 16:1n9 (\u03947-palmitoleic acid)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:inferred-only::16:1n9|16:2n6 (hda)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_cde27288592cde49",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "16:1n9 -> 16:2n6 (HDA)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:species-not-stated::ala (18:3n3)|sda (18:4n3)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_276b58e6595f2382",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "ALA (18:3n3) -> SDA (18:4n3)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:in-vitro-or-cell-free::(9s,13s)-opda|allene oxide (12,13-eot)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_d7015c9b63fc20b4",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'in_vitro_or_cell_free'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "allene oxide (12,13-EOT) -> (9S,13S)-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:inferred-only::(9s,13s)-dn-cis-opda|allene oxide (from 11-hpht)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_8103c3854752545e",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:species-not-stated::ara (20:4n6)|epa (20:5n3)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_42f4d0d86a37f2c9",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "ARA (20:4n6) -> EPA (20:5n3)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:species-not-stated::ara (20:4n6)|dgla (20:3n6)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_541325792facb1b5",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "DGLA (20:3n6) -> ARA (20:4n6)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:inferred-only::dn-cis-opda|dn-iso-opda",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_28e2cf5ef08a6176",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "dn-cis-OPDA -> dn-iso-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:inferred-only::dn-iso-opda|dn-opda-gln+dn-opda-glu+dn-opda-his",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_5f57f9614ed214f1",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:species-not-stated::epa (20:5n3)|eta (20:4n3)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_206d94c731c9f487",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "ETA (20:4n3) -> EPA (20:5n3)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:species-not-stated::dgla (20:3n6)|gla (18:3n6)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_9eededb321c28659",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "GLA (18:3n6) -> DGLA (20:3n6)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:inferred-only::hda (16:2n6)|hta (16:3n3)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_3e3aabfab5de125a",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "HDA (16:2n6) -> HTA (16:3n3)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:inferred-only::ala (18:3n3)|la (18:2n6)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_e815524f0ddb35d7",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'inferred_only'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "LA (18:2n6) -> ALA (18:3n3)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:species-not-stated::gla (18:3n6)|la (18:2n6)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_c7d5990d4a5bc36c",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "LA (18:2n6) -> GLA (18:3n6)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:species-not-stated::eta (20:4n3)|sda (18:4n3)",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_575c9fa2583338dd",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "SDA (18:4n3) -> ETA (20:4n3)"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "unspecified:species-not-stated::\u03b44-dn-cis-opda|\u03b44-dn-iso-opda",
+      "component_id": "",
+      "entity_ids": [],
+      "exhausted": true,
+      "frontier_item_id": "fr_19b1bb8b9cbde2b7",
+      "kind": "missing_species_evidence",
+      "origin_round": 1,
+      "priority": 6.0,
+      "reason": "held as a lead because species state is 'species_not_stated'; retrieve direct Arabidopsis thaliana evidence (an ortholog never transfers a reaction between species)",
+      "target": "\u03944-dn-cis-OPDA -> \u03944-dn-iso-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_1751acbb0e5ea32d"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_a2ae4e52fcce0e4c",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "(9S,13S)-dn-cis-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_8d0d77850e09d269"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_ec232da23f74c674",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "(9S,13S)-OPDA"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_50571ec303b492b5"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_cc60a36c43e51a40",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "13-HPOT"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_fa9fe6d06e93cad2"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_9bc13de7885252a1",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "15-HPEPE"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_1bbb183d6fcc534c"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_7d0aaca197bf69bd",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "15-HPETE"
+    },
+    {
+      "attempts": 1,
+      "claim_identity": "",
+      "component_id": "",
+      "entity_ids": [
+        "en_8b1b91475b6df2c2"
+      ],
+      "exhausted": true,
+      "frontier_item_id": "fr_a651f002f65fd02b",
+      "kind": "branch_reaction",
+      "origin_round": 1,
+      "priority": 5.0,
+      "reason": "newly discovered metabolite; look for other reactions it participates in",
+      "target": "16:0 (palmitic acid)"
+    }
+  ],
+  "metrics": {
+    "candidate_components": 14,
+    "candidate_reactions": 19,
+    "claims": 0,
+    "decisions": 0,
+    "graph_hash_after": "93e8dd4f91befc0456e632f1bc72671e",
+    "graph_hash_before": "93e8dd4f91befc0456e632f1bc72671e",
+    "papers_discovered": 0,
+    "papers_processed": 0,
+    "passages": 0,
+    "primary_reactions": 0,
+    "queries": 60,
+    "rejections": 0,
+    "usage": {
+      "cached_tokens": 0,
+      "claims_extracted": 21,
+      "elapsed_seconds": 303.67,
+      "estimated_cost_usd": 0.003373,
+      "input_tokens": 22843,
+      "last_round_new_reactions": 0,
+      "llm_calls": 1,
+      "output_tokens": 3629,
+      "papers_discovered": 21,
+      "papers_processed": 1,
+      "passages_extracted": 20,
+      "rounds": 2,
+      "unproductive_streak": 1
+    },
+    "useful": false
+  },
+  "new_frontier": [],
+  "papers_considered": [],
+  "passages_retrieved": [],
+  "queries": [
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:33:44+00:00",
+      "frontier_item_id": "fr_7429f942671933ef",
+      "frontier_kind": "seed_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_2063671d454fb0a0",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"metabolism\" OR \"pathway\" OR \"12-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "12-OPDA",
+        "biosynthesis",
+        "metabolism",
+        "pathway"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:33:44+00:00",
+      "frontier_item_id": "fr_b49c102c57474655",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_b9b5fc84b8308c0c",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"EPA (20:5n3)\" OR \"ARA (20:4n6)\" OR \"DGLA (20:3n6)\" OR \"ETA (20:4n3)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "EPA (20:5n3)",
+        "ARA (20:4n6)",
+        "DGLA (20:3n6)",
+        "ETA (20:4n3)",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:33:46+00:00",
+      "frontier_item_id": "fr_93ec1f79cff200b4",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_404178da7aaeaf72",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"dn-cis-OPDA\" OR \"dn-iso-OPDA\" OR \"dn-OPDA-Glu\" OR \"dn-OPDA-Gln\" OR \"dn-OPDA-His\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "dn-cis-OPDA",
+        "dn-iso-OPDA",
+        "dn-OPDA-Glu",
+        "dn-OPDA-Gln",
+        "dn-OPDA-His",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:33:49+00:00",
+      "frontier_item_id": "fr_cab8e5de0ce888ed",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_536af068a0f79464",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"LA (18:2n6)\" OR \"GLA (18:3n6)\" OR \"DGLA (20:3n6)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "LA (18:2n6)",
+        "GLA (18:3n6)",
+        "DGLA (20:3n6)",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:33:53+00:00",
+      "frontier_item_id": "fr_870b2793b0b928de",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_016763f47eff6e4f",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"(9S,13S)-dn-cis-OPDA\" OR \"allene oxide (from 11-HPHT)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "(9S,13S)-dn-cis-OPDA",
+        "allene oxide (from 11-HPHT)",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:33:55+00:00",
+      "frontier_item_id": "fr_fa873fed6c6e8823",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_290ccaa5376923f4",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"15-HPEPE\" OR \"allene oxide (14,15-EEPE)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "15-HPEPE",
+        "allene oxide (14,15-EEPE)",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:33:58+00:00",
+      "frontier_item_id": "fr_ca579970f9e8309c",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_6131745637cd5961",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"16:1n9 (\u03947-palmitoleic acid)\" OR \"16:0 (palmitic acid)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "16:1n9 (\u03947-palmitoleic acid)",
+        "16:0 (palmitic acid)",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:00+00:00",
+      "frontier_item_id": "fr_7202cb04361977d9",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_6aeef95773b36850",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"16:2n6 (HDA)\" OR \"16:1n9\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "16:2n6 (HDA)",
+        "16:1n9",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:03+00:00",
+      "frontier_item_id": "fr_4fcd566b72e082af",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_52107a2f0a07b669",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"ALA (18:3n3)\" OR \"LA (18:2n6)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "ALA (18:3n3)",
+        "LA (18:2n6)",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:05+00:00",
+      "frontier_item_id": "fr_a9609b1d0b14c796",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_9a20418cf34171dd",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"allene oxide (12,13-EOT)\" OR \"13-HPOT\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "allene oxide (12,13-EOT)",
+        "13-HPOT",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:08+00:00",
+      "frontier_item_id": "fr_b23b318934f48d6f",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_464c2ee7488b3b2b",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"allene oxide\" OR \"15-HPETE\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "allene oxide",
+        "15-HPETE",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:10+00:00",
+      "frontier_item_id": "fr_de276da1e1ea9901",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_f252024775491e4a",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"HTA (16:3n3)\" OR \"HDA (16:2n6)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "HTA (16:3n3)",
+        "HDA (16:2n6)",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:13+00:00",
+      "frontier_item_id": "fr_1372712783a31316",
+      "frontier_kind": "bridge_search",
+      "new_paper_ids": [],
+      "query_id": "qr_3e0afe5584e3d86a",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"intermediate\" OR \"converted to\" OR \"links\" OR \"connecting step\" OR \"\u03944-dn-iso-OPDA\" OR \"\u03944-dn-cis-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "\u03944-dn-iso-OPDA",
+        "\u03944-dn-cis-OPDA",
+        "intermediate",
+        "converted to",
+        "links",
+        "connecting step"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:15+00:00",
+      "frontier_item_id": "fr_8933b0dcf3e0acc2",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_ba16146df03fe785",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"(9S,13S)-dn-cis-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "(9S,13S)-dn-cis-OPDA",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:18+00:00",
+      "frontier_item_id": "fr_1160817063955a11",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_ae8823f1c5d09927",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"(9S,13S)-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "(9S,13S)-OPDA",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:20+00:00",
+      "frontier_item_id": "fr_74dcf411252eec40",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_8cd46e9b4a25b353",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"16:1n9 (\u03947-palmitoleic acid)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "16:1n9 (\u03947-palmitoleic acid)",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:23+00:00",
+      "frontier_item_id": "fr_838e73c4a91beb19",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_d65023d7de286ea4",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"16:2n6 (HDA)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "16:2n6 (HDA)",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:26+00:00",
+      "frontier_item_id": "fr_224aa1c743a64a23",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_58e65389d427ce15",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"allene oxide\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "allene oxide",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:28+00:00",
+      "frontier_item_id": "fr_76fc1aa6be08b954",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_7acf2182f34fbc21",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"allene oxide (14,15-EEPE)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "allene oxide (14,15-EEPE)",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:32+00:00",
+      "frontier_item_id": "fr_c08b821c5edbe9ab",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_2e8f98ba98809679",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"dn-OPDA-Gln\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "dn-OPDA-Gln",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:36+00:00",
+      "frontier_item_id": "fr_94540fae674b155b",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_3f264e28eff837b0",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"dn-OPDA-Glu\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "dn-OPDA-Glu",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:40+00:00",
+      "frontier_item_id": "fr_159860f8ae152d87",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_101f10d30eb5b955",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"dn-OPDA-His\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "dn-OPDA-His",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:42+00:00",
+      "frontier_item_id": "fr_b67abe3a72c0908d",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_5119e92c3a26ee17",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"EPA (20:5n3)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "EPA (20:5n3)",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:46+00:00",
+      "frontier_item_id": "fr_df77445e727b23c0",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_de296083a1586ff0",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"HTA (16:3n3)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "HTA (16:3n3)",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:50+00:00",
+      "frontier_item_id": "fr_7f8c5b3e3d3c3854",
+      "frontier_kind": "downstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_fa20ec4234e2eceb",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"metabolism\" OR \"conversion\" OR \"catabolism\" OR \"downstream product\" OR \"\u03944-dn-iso-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "\u03944-dn-iso-OPDA",
+        "metabolism",
+        "conversion",
+        "catabolism",
+        "downstream product"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:52+00:00",
+      "frontier_item_id": "fr_de1324d2989d8266",
+      "frontier_kind": "upstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_c0cffbaa23664c9d",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"precursor\" OR \"formed from\" OR \"upstream\" OR \"13-HPOT\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "13-HPOT",
+        "biosynthesis",
+        "precursor",
+        "formed from",
+        "upstream"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:34:55+00:00",
+      "frontier_item_id": "fr_4cadbcdd785897eb",
+      "frontier_kind": "upstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_9ff4347a4d4063e9",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"precursor\" OR \"formed from\" OR \"upstream\" OR \"15-HPEPE\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "15-HPEPE",
+        "biosynthesis",
+        "precursor",
+        "formed from",
+        "upstream"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:00+00:00",
+      "frontier_item_id": "fr_65b6dcb840ba9f69",
+      "frontier_kind": "upstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_d4c1f58bfa30bea0",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"precursor\" OR \"formed from\" OR \"upstream\" OR \"15-HPETE\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "15-HPETE",
+        "biosynthesis",
+        "precursor",
+        "formed from",
+        "upstream"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:02+00:00",
+      "frontier_item_id": "fr_5e3d7e577b0b5e10",
+      "frontier_kind": "upstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_94dea6a27133ef17",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"precursor\" OR \"formed from\" OR \"upstream\" OR \"16:0 (palmitic acid)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "16:0 (palmitic acid)",
+        "biosynthesis",
+        "precursor",
+        "formed from",
+        "upstream"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:05+00:00",
+      "frontier_item_id": "fr_4b705c9d9eca5cf6",
+      "frontier_kind": "upstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_215101db30c6f97f",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"precursor\" OR \"formed from\" OR \"upstream\" OR \"16:1n9\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "16:1n9",
+        "biosynthesis",
+        "precursor",
+        "formed from",
+        "upstream"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:07+00:00",
+      "frontier_item_id": "fr_e1395aafcdce451e",
+      "frontier_kind": "upstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_39faa220f198cb3f",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"precursor\" OR \"formed from\" OR \"upstream\" OR \"allene oxide (from 11-HPHT)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "allene oxide (from 11-HPHT)",
+        "biosynthesis",
+        "precursor",
+        "formed from",
+        "upstream"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:11+00:00",
+      "frontier_item_id": "fr_e35f1c2c9cda4a43",
+      "frontier_kind": "upstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_d33d670694e53ace",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"precursor\" OR \"formed from\" OR \"upstream\" OR \"dn-cis-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "dn-cis-OPDA",
+        "biosynthesis",
+        "precursor",
+        "formed from",
+        "upstream"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:14+00:00",
+      "frontier_item_id": "fr_459dae56f7f24ed3",
+      "frontier_kind": "upstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_cef41d630e3b9bd1",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"precursor\" OR \"formed from\" OR \"upstream\" OR \"HDA (16:2n6)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "HDA (16:2n6)",
+        "biosynthesis",
+        "precursor",
+        "formed from",
+        "upstream"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:16+00:00",
+      "frontier_item_id": "fr_fe711ceaa93794c1",
+      "frontier_kind": "upstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_e5c9f950e292c817",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"precursor\" OR \"formed from\" OR \"upstream\" OR \"LA (18:2n6)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "LA (18:2n6)",
+        "biosynthesis",
+        "precursor",
+        "formed from",
+        "upstream"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:19+00:00",
+      "frontier_item_id": "fr_e89d75487b5207b3",
+      "frontier_kind": "upstream_expansion",
+      "new_paper_ids": [],
+      "query_id": "qr_347a88e58b40088b",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"precursor\" OR \"formed from\" OR \"upstream\" OR \"\u03944-dn-cis-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "\u03944-dn-cis-OPDA",
+        "biosynthesis",
+        "precursor",
+        "formed from",
+        "upstream"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:21+00:00",
+      "frontier_item_id": "fr_71ddea6658130b22",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_d974ac749be9350f",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"13-HPOT\" OR \"allene oxide (12,13-EOT)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "13-HPOT",
+        "allene oxide (12,13-EOT)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:25+00:00",
+      "frontier_item_id": "fr_1ec244844e9792ed",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_d1655edc4769e37e",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"15-HPEPE\" OR \"allene oxide (14,15-EEPE)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "15-HPEPE",
+        "allene oxide (14,15-EEPE)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:27+00:00",
+      "frontier_item_id": "fr_fd6f2f4a8c412a23",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_4843372881e18eb9",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"15-HPETE\" OR \"allene oxide\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "15-HPETE",
+        "allene oxide",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:30+00:00",
+      "frontier_item_id": "fr_eab3e51e5c7f0c53",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_41dba9f2e41a89d8",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"16:0 (palmitic acid)\" OR \"16:1n9 (\u03947-palmitoleic acid)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "16:0 (palmitic acid)",
+        "16:1n9 (\u03947-palmitoleic acid)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:33+00:00",
+      "frontier_item_id": "fr_cde27288592cde49",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_d157fda7db8da6f3",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"16:1n9\" OR \"16:2n6 (HDA)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "16:1n9",
+        "16:2n6 (HDA)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:35+00:00",
+      "frontier_item_id": "fr_276b58e6595f2382",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_1fc012a16cb8a2a4",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"ALA (18:3n3)\" OR \"SDA (18:4n3)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "ALA (18:3n3)",
+        "SDA (18:4n3)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:37+00:00",
+      "frontier_item_id": "fr_d7015c9b63fc20b4",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_7668d240e87d738f",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"allene oxide (12,13-EOT)\" OR \"(9S,13S)-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "allene oxide (12,13-EOT)",
+        "(9S,13S)-OPDA",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:43+00:00",
+      "frontier_item_id": "fr_8103c3854752545e",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_e99ae6c326acebaa",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"allene oxide (from 11-HPHT)\" OR \"(9S,13S)-dn-cis-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "allene oxide (from 11-HPHT)",
+        "(9S,13S)-dn-cis-OPDA",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:45+00:00",
+      "frontier_item_id": "fr_42f4d0d86a37f2c9",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_413ec774fa2403a7",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"ARA (20:4n6)\" OR \"EPA (20:5n3)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "ARA (20:4n6)",
+        "EPA (20:5n3)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:48+00:00",
+      "frontier_item_id": "fr_541325792facb1b5",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_8ff382d531ecaf6d",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"DGLA (20:3n6)\" OR \"ARA (20:4n6)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "DGLA (20:3n6)",
+        "ARA (20:4n6)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:50+00:00",
+      "frontier_item_id": "fr_28e2cf5ef08a6176",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_cd63e70813be014a",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"dn-cis-OPDA\" OR \"dn-iso-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "dn-cis-OPDA",
+        "dn-iso-OPDA",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:53+00:00",
+      "frontier_item_id": "fr_5f57f9614ed214f1",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_6c506dae62c8379a",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"dn-iso-OPDA\" OR \"dn-OPDA-Glu\" OR \"dn-OPDA-Gln\" OR \"dn-OPDA-His\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "dn-iso-OPDA",
+        "dn-OPDA-Glu",
+        "dn-OPDA-Gln",
+        "dn-OPDA-His",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:56+00:00",
+      "frontier_item_id": "fr_206d94c731c9f487",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_f77a6654900f9264",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"ETA (20:4n3)\" OR \"EPA (20:5n3)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "ETA (20:4n3)",
+        "EPA (20:5n3)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:35:58+00:00",
+      "frontier_item_id": "fr_9eededb321c28659",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_bb247c18dc483ecb",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"GLA (18:3n6)\" OR \"DGLA (20:3n6)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "GLA (18:3n6)",
+        "DGLA (20:3n6)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:00+00:00",
+      "frontier_item_id": "fr_3e3aabfab5de125a",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_d3d39cbaa1ef0855",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"HDA (16:2n6)\" OR \"HTA (16:3n3)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "HDA (16:2n6)",
+        "HTA (16:3n3)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:02+00:00",
+      "frontier_item_id": "fr_e815524f0ddb35d7",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_aa03502a092c1328",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"LA (18:2n6)\" OR \"ALA (18:3n3)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "LA (18:2n6)",
+        "ALA (18:3n3)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:05+00:00",
+      "frontier_item_id": "fr_c7d5990d4a5bc36c",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_de421e41add2d30b",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"LA (18:2n6)\" OR \"GLA (18:3n6)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "LA (18:2n6)",
+        "GLA (18:3n6)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:07+00:00",
+      "frontier_item_id": "fr_575c9fa2583338dd",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_bdd1c35c10bf9e0f",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"SDA (18:4n3)\" OR \"ETA (20:4n3)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "SDA (18:4n3)",
+        "ETA (20:4n3)",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:09+00:00",
+      "frontier_item_id": "fr_19b1bb8b9cbde2b7",
+      "frontier_kind": "missing_species_evidence",
+      "new_paper_ids": [],
+      "query_id": "qr_e3af12a637398d7d",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"in vivo\" OR \"expressed in\" OR \"characterized in\" OR \"\u03944-dn-cis-OPDA\" OR \"\u03944-dn-iso-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "\u03944-dn-cis-OPDA",
+        "\u03944-dn-iso-OPDA",
+        "in vivo",
+        "expressed in",
+        "characterized in"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:12+00:00",
+      "frontier_item_id": "fr_a2ae4e52fcce0e4c",
+      "frontier_kind": "branch_reaction",
+      "new_paper_ids": [],
+      "query_id": "qr_9303db644215f468",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"reaction\" OR \"enzyme\" OR \"metabolic fate\" OR \"(9S,13S)-dn-cis-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "(9S,13S)-dn-cis-OPDA",
+        "reaction",
+        "enzyme",
+        "metabolic fate"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:14+00:00",
+      "frontier_item_id": "fr_ec232da23f74c674",
+      "frontier_kind": "branch_reaction",
+      "new_paper_ids": [],
+      "query_id": "qr_34ad01c9b30d3980",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"reaction\" OR \"enzyme\" OR \"metabolic fate\" OR \"(9S,13S)-OPDA\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "(9S,13S)-OPDA",
+        "reaction",
+        "enzyme",
+        "metabolic fate"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:17+00:00",
+      "frontier_item_id": "fr_cc60a36c43e51a40",
+      "frontier_kind": "branch_reaction",
+      "new_paper_ids": [],
+      "query_id": "qr_745f6bdf4f46d6a7",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"reaction\" OR \"enzyme\" OR \"metabolic fate\" OR \"13-HPOT\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "13-HPOT",
+        "reaction",
+        "enzyme",
+        "metabolic fate"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:21+00:00",
+      "frontier_item_id": "fr_9bc13de7885252a1",
+      "frontier_kind": "branch_reaction",
+      "new_paper_ids": [],
+      "query_id": "qr_cfc32af6e66afab9",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"reaction\" OR \"enzyme\" OR \"metabolic fate\" OR \"15-HPEPE\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "15-HPEPE",
+        "reaction",
+        "enzyme",
+        "metabolic fate"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:23+00:00",
+      "frontier_item_id": "fr_7d0aaca197bf69bd",
+      "frontier_kind": "branch_reaction",
+      "new_paper_ids": [],
+      "query_id": "qr_b93130c3c9bda33c",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"reaction\" OR \"enzyme\" OR \"metabolic fate\" OR \"15-HPETE\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "15-HPETE",
+        "reaction",
+        "enzyme",
+        "metabolic fate"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    },
+    {
+      "cache_hit": false,
+      "error": "",
+      "executed_at": "2026-09-23T23:36:27+00:00",
+      "frontier_item_id": "fr_a651f002f65fd02b",
+      "frontier_kind": "branch_reaction",
+      "new_paper_ids": [],
+      "query_id": "qr_0cff6884acad943e",
+      "query_text": "(\"jasmonate biosynthesis\" OR \"reaction\" OR \"enzyme\" OR \"metabolic fate\" OR \"16:0 (palmitic acid)\") AND \"Arabidopsis thaliana\"",
+      "result_count": 10,
+      "round_index": 2,
+      "source_terms": [
+        "jasmonate biosynthesis",
+        "16:0 (palmitic acid)",
+        "reaction",
+        "enzyme",
+        "metabolic fate"
+      ],
+      "sources": [
+        "europepmc",
+        "ncbi"
+      ]
+    }
+  ],
+  "rejections": [],
+  "round": 2
+}

@@ -1,0 +1,125 @@
+{
+  "checks": [
+    {
+      "data": {
+        "enabled": true,
+        "env_var": "T2PW_PATHWAY_MINING_ENABLED"
+      },
+      "detail": "pathway mining ENABLED (cli_flag)",
+      "name": "feature.flag",
+      "status": "ok"
+    },
+    {
+      "data": {},
+      "detail": "target species 'Arabidopsis thaliana' (normalized 'arabidopsis thaliana')",
+      "name": "inputs.species",
+      "status": "ok"
+    },
+    {
+      "data": {
+        "kinds": [
+          "seed_enzyme",
+          "seed_metabolite",
+          "topic"
+        ]
+      },
+      "detail": "topic=jasmonate biosynthesis; starting inputs: seed_enzyme, seed_metabolite, topic",
+      "name": "inputs.starting",
+      "status": "ok"
+    },
+    {
+      "data": {
+        "path": "C:\\t\\mining-pilot-runs"
+      },
+      "detail": "C:\\t\\mining-pilot-runs is writable",
+      "name": "outputs.writable",
+      "status": "ok"
+    },
+    {
+      "data": {
+        "api_key_present": true,
+        "provider": "openrouter",
+        "requested_model": "deepseek/deepseek-v4-flash"
+      },
+      "detail": "requested model 'deepseek/deepseek-v4-flash' via provider openrouter; API key present; fallback none (a failure will be loud)",
+      "name": "model.configuration",
+      "status": "ok"
+    },
+    {
+      "data": {},
+      "detail": "model answered (2 chars)",
+      "name": "model.reachable",
+      "status": "ok"
+    },
+    {
+      "data": {
+        "endpoint_configured": true,
+        "model": "text-embedding-nomic-embed-text-v1.5"
+      },
+      "detail": "endpoint http://127.0.0.1:1234/v1; model text-embedding-nomic-embed-text-v1.5",
+      "name": "embeddings.configuration",
+      "status": "ok"
+    },
+    {
+      "data": {
+        "api": 1,
+        "hits": 0,
+        "lexical": 0,
+        "misses": 1
+      },
+      "detail": "embedding endpoint answered",
+      "name": "embeddings.reachable",
+      "status": "ok"
+    },
+    {
+      "data": {
+        "sources": [
+          "europepmc",
+          "ncbi"
+        ]
+      },
+      "detail": "sources europepmc, ncbi",
+      "name": "acquisition.sources",
+      "status": "ok"
+    },
+    {
+      "data": {
+        "max_candidate_components": 40,
+        "max_candidate_reactions": 300,
+        "max_cost_usd": 5.0,
+        "max_frontier_size": 60,
+        "max_input_tokens": 2000000,
+        "max_llm_calls": 200,
+        "max_new_reactions_per_round": 25,
+        "max_output_tokens": 400000,
+        "max_papers_discovered": 150,
+        "max_papers_processed": 40,
+        "max_passages_per_paper": 20,
+        "max_primary_reactions": 200,
+        "max_rounds": 8,
+        "max_wall_clock_seconds": 3600.0,
+        "price_input_per_mtok_usd": 0.1,
+        "price_output_per_mtok_usd": 0.3,
+        "stop_after_unproductive_rounds": 2
+      },
+      "detail": "rounds<=8, papers processed<=40, llm calls<=200, est. cost<=$5, wall clock<=3600s",
+      "name": "budgets.selected",
+      "status": "ok"
+    },
+    {
+      "data": {},
+      "detail": "external biochemical database validation is DEFERRED in version 1; admission is on paper evidence alone and no identifier service will be queried",
+      "name": "policy.database_validation",
+      "status": "ok"
+    },
+    {
+      "data": {},
+      "detail": "this mode produces a research graph only; the PWML exporter is not invoked and no PWML file will be written",
+      "name": "policy.pwml",
+      "status": "ok"
+    }
+  ],
+  "failures": [],
+  "ok": true,
+  "warnings": []
+}

@@ -1,0 +1,411 @@
+{
+ "compiled": {
+  "audit_markdown_path": "C:/t/mining-pilot-runs/audit/PILOT-001-AUDIT.md",
+  "counts": {
+   "papers_discovered_retrieved": {
+    "value": 21,
+    "source": "summary.json papers.discovered; usage.papers_discovered; papers.jsonl rows (full text retrieved for 1)"
+   },
+   "papers_considered_screened": {
+    "value": 21,
+    "source": "summary.json papers.screened"
+   },
+   "papers_included": {
+    "value": 1,
+    "source": "summary.json papers.included (PMC:PMC13364333, a Marchantia review)"
+   },
+   "papers_excluded": {
+    "value": 20,
+    "source": "summary.json papers.excluded"
+   },
+   "papers_processed": {
+    "value": 1,
+    "source": "summary.json papers.processed; papers.jsonl processed_round=1"
+   },
+   "candidate_reactions": {
+    "value": 19,
+    "source": "candidate_subgraphs.json (14 components); summary.json graph.candidate_reactions"
+   },
+   "admitted_primary_reactions": {
+    "value": 0,
+    "source": "primary_graph.json reaction_count"
+   },
+   "rejected_claims_by_reason": {
+    "value": {},
+    "source": "summary.json claims.rejected_by_reason; no claim has status 'rejected'. rounds/round_001/rejections.jsonl has 21 rows, all status candidate (non-admitted log)"
+   },
+   "duplicates_merged": {
+    "value": 2,
+    "source": "usage.claims_extracted 21 vs claims.distinct_identities 19; delta updated_reaction_ids 2; claim[14]->[11] and [15]->[12], same paper and span, dropped enzymes MpAOS1 vs MpAOS2"
+   },
+   "species_states_reactions": {
+    "value": {
+     "inferred_only": 10,
+     "species_not_stated": 8,
+     "in_vitro_or_cell_free": 1,
+     "non_target_species": 0,
+     "target_species_supported": 0
+    },
+    "source": "candidate_subgraphs.json reactions[].species_state == summary.json graph.species_states; per claim (21): inferred_only 12, species_not_stated 8, in_vitro 1"
+   },
+   "budget_stops": {
+    "value": "none",
+    "source": "run_manifest.json stop_reason=frontier_exhausted; no budget hit; max_frontier_size 60 reached at end of round 1 (silently cut 62 generated items)"
+   },
+   "empty_or_failed_model_calls": {
+    "value": 0,
+    "source": "model_calls.jsonl 1 row status ok, finish_reason stop; the preflight probe call is outside model_calls/costs"
+   },
+   "evidence_spans": {
+    "value": {
+     "retrieved": 20,
+     "extracted": 20,
+     "cited_by_claims": 10
+    },
+    "source": "summary.json passages; evidence_spans.jsonl; all 20 chunks of the paper were sent"
+   },
+   "uncited_field_drops": {
+    "value": {
+     "total": 59,
+     "enzyme": 19,
+     "gene": 19,
+     "species": 21,
+     "other": 0
+    },
+    "source": "state.json errors == rounds/round_001/errors.jsonl (summary.json truncates to 50, report.md to 40)"
+   },
+   "round2": {
+    "value": {
+     "queries": 60,
+     "result_slots": 600,
+     "unique_ids": 20,
+     "already_known": 11,
+     "new": 9,
+     "new_included": 0,
+     "distinct_result_sets": 13,
+     "queries_whose_results_never_mention_target": 37,
+     "slots_from_europepmc": 600
+    },
+    "source": "rounds/round_002/queries.jsonl + run's acquire-cache files C:/t/mining-pilot/data/rag_index/acquire_cache"
+   },
+   "frontier_cap_cut": {
+    "value": 62,
+    "source": "frontier_replay.json (branch_reaction 24, missing_compartment 19, missing_direction 19)"
+   }
+  },
+  "reactions": [
+   {
+    "id": "rx_cfcaf34abd9bd9b01f69",
+    "equation": "16:0 (palmitic acid) -> 16:1n9 (Δ7-palmitoleic acid)",
+    "decision": "candidate (species:inferred_only; cmp_2534f9c27a28)",
+    "species_state": "inferred_only",
+    "source": "PMC:PMC13364333; ev_c98d84c7d84855c1, ev_488098050cb15807",
+    "connects_to_seed": "no direct link (fatty-acid desaturation upstream); dropped uncited enzyme MpFAD5"
+   },
+   {
+    "id": "rx_ba120ec5dd1e2c7f160f",
+    "equation": "16:1n9 -> 16:2n6 (HDA)",
+    "decision": "candidate (species:inferred_only; cmp_7d923c87a1c3)",
+    "species_state": "inferred_only",
+    "source": "PMC:PMC13364333; ev_c98d84c7d84855c1, ev_488098050cb15807",
+    "connects_to_seed": "no direct link; dropped uncited enzyme MpFAD6"
+   },
+   {
+    "id": "rx_b67ae97a4f1d4149c0ef",
+    "equation": "HDA (16:2n6) -> HTA (16:3n3)",
+    "decision": "candidate (species:inferred_only; cmp_f4a600b90c99)",
+    "species_state": "inferred_only",
+    "source": "PMC:PMC13364333; ev_c98d84c7d84855c1, ev_488098050cb15807",
+    "connects_to_seed": "upstream precursor: produces HTA (C16 precursor of dn-OPDA); dropped uncited enzyme MpFAD7"
+   },
+   {
+    "id": "rx_c52713f0275d843084ce",
+    "equation": "LA (18:2n6) -> ALA (18:3n3)",
+    "decision": "candidate (species:inferred_only; cmp_43d9c7b9f3ab)",
+    "species_state": "inferred_only",
+    "source": "PMC:PMC13364333; ev_c98d84c7d84855c1, ev_488098050cb15807",
+    "connects_to_seed": "upstream precursor: produces ALA (13-LOX substrate); dropped uncited enzyme MpFAD7"
+   },
+   {
+    "id": "rx_b77605ae2b74a25a76c9",
+    "equation": "ARA (20:4n6) -> EPA (20:5n3)",
+    "decision": "candidate (species:species_not_stated; cmp_01ed24ffdc21)",
+    "species_state": "species_not_stated",
+    "source": "PMC:PMC13364333; ev_ba1b08899518f20e",
+    "connects_to_seed": "C20 PUFA feeding the C20 oxylipin branch; no LOX step in graph; dropped uncited enzyme MpFAD3"
+   },
+   {
+    "id": "rx_521de0c1ef1ce3980ffb",
+    "equation": "LA (18:2n6) -> GLA (18:3n6)",
+    "decision": "candidate (species:species_not_stated; cmp_0ca16ab13a6c)",
+    "species_state": "species_not_stated",
+    "source": "PMC:PMC13364333; ev_ba1b08899518f20e",
+    "connects_to_seed": "no direct link; dropped uncited enzyme MpDES6"
+   },
+   {
+    "id": "rx_7e7a4e2597d21a8daf41",
+    "equation": "ALA (18:3n3) -> SDA (18:4n3)",
+    "decision": "candidate (species:species_not_stated; cmp_f541b23da879)",
+    "species_state": "species_not_stated",
+    "source": "PMC:PMC13364333; ev_ba1b08899518f20e",
+    "connects_to_seed": "consumes the precursor ALA and leads away from 12-OPDA (toward C20 PUFAs); dropped uncited enzyme MpDES6"
+   },
+   {
+    "id": "rx_271d9d29572551c0995a",
+    "equation": "GLA (18:3n6) -> DGLA (20:3n6)",
+    "decision": "candidate (species:species_not_stated; cmp_0ca16ab13a6c)",
+    "species_state": "species_not_stated",
+    "source": "PMC:PMC13364333; ev_ba1b08899518f20e",
+    "connects_to_seed": "no direct link; dropped uncited enzyme MpELO1"
+   },
+   {
+    "id": "rx_5bc5aa72c50bf073d7e1",
+    "equation": "SDA (18:4n3) -> ETA (20:4n3)",
+    "decision": "candidate (species:species_not_stated; cmp_f541b23da879)",
+    "species_state": "species_not_stated",
+    "source": "PMC:PMC13364333; ev_ba1b08899518f20e",
+    "connects_to_seed": "no direct link; dropped uncited enzyme MpELO1"
+   },
+   {
+    "id": "rx_33c56fd5b50b116df0ad",
+    "equation": "DGLA (20:3n6) -> ARA (20:4n6)",
+    "decision": "candidate (species:species_not_stated; cmp_01ed24ffdc21)",
+    "species_state": "species_not_stated",
+    "source": "PMC:PMC13364333; ev_ba1b08899518f20e",
+    "connects_to_seed": "C20 PUFA precursor (ARA) of the C20 oxylipin branch; dropped uncited enzyme MpDES5"
+   },
+   {
+    "id": "rx_d2d57c7e2eb099611fa5",
+    "equation": "ETA (20:4n3) -> EPA (20:5n3)",
+    "decision": "candidate (species:species_not_stated; cmp_01ed24ffdc21)",
+    "species_state": "species_not_stated",
+    "source": "PMC:PMC13364333; ev_ba1b08899518f20e",
+    "connects_to_seed": "C20 PUFA precursor (EPA) of the C20 oxylipin branch; dropped uncited enzyme MpDES5"
+   },
+   {
+    "id": "rx_31e360d39a47d50a837a",
+    "equation": "13-HPOT -> allene oxide (12,13-EOT)",
+    "decision": "candidate (species:inferred_only; cmp_12deb5a6c69c)",
+    "species_state": "inferred_only",
+    "source": "PMC:PMC13364333; ev_089f6733d93f6ac7",
+    "connects_to_seed": "DIRECT: canonical AOS step; product 12,13-EOT is the in-graph substrate of rx_c63294bd6f7cd7898284 (-> 12-OPDA), different component; AOS only via dropped uncited MpAOS1/MpAOS2"
+   },
+   {
+    "id": "rx_afa85544d1f3505a7571",
+    "equation": "15-HPEPE -> allene oxide (14,15-EEPE)",
+    "decision": "candidate (species:inferred_only; cmp_414b2d72bed6)",
+    "species_state": "inferred_only",
+    "source": "PMC:PMC13364333; ev_089f6733d93f6ac7",
+    "connects_to_seed": "C20 oxylipin branch, AOS-type chemistry, not the Arabidopsis 12-OPDA route; dropped uncited MpAOS1/MpAOS2"
+   },
+   {
+    "id": "rx_04b5a990fe0223013188",
+    "equation": "15-HPETE -> allene oxide",
+    "decision": "candidate (species:inferred_only; cmp_b5a7c0782c7c)",
+    "species_state": "inferred_only",
+    "source": "PMC:PMC13364333; ev_089f6733d93f6ac7",
+    "connects_to_seed": "C20 oxylipin branch, AOS-type chemistry; dropped uncited MpAOS1"
+   },
+   {
+    "id": "rx_c63294bd6f7cd7898284",
+    "equation": "allene oxide (12,13-EOT) -> (9S,13S)-OPDA",
+    "decision": "candidate (species:in_vitro_or_cell_free; cmp_4993bc485988)",
+    "species_state": "in_vitro_or_cell_free",
+    "source": "PMC:PMC13364333; ev_a82b0ad4450a0bd2, ev_4419e25d9c411f56",
+    "connects_to_seed": "DIRECT: produces (9S,13S)-OPDA = the seed 12-OPDA (AOC step); dropped uncited enzyme MpAOC"
+   },
+   {
+    "id": "rx_dbf98b00d2a61c12dc9a",
+    "equation": "allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA",
+    "decision": "candidate (species:inferred_only; cmp_e3c249e7ed6c)",
+    "species_state": "inferred_only",
+    "source": "PMC:PMC13364333; ev_20a7facf5fd73dd9",
+    "connects_to_seed": "C16 dn-OPDA branch parallel to the 12-OPDA route; dropped uncited enzyme MpAOC"
+   },
+   {
+    "id": "rx_3b1de071bdca890db17e",
+    "equation": "dn-cis-OPDA -> dn-iso-OPDA",
+    "decision": "candidate (species:inferred_only; cmp_48db4734b66a)",
+    "species_state": "inferred_only",
+    "source": "PMC:PMC13364333; ev_921f8caa291e6e2c, ev_98c3197eb40f9f1e",
+    "connects_to_seed": "C16 dn-OPDA branch (bryophyte bioactive jasmonate)"
+   },
+   {
+    "id": "rx_30597429065d268ba67a",
+    "equation": "Δ4-dn-cis-OPDA -> Δ4-dn-iso-OPDA",
+    "decision": "candidate (species:species_not_stated; cmp_e1cca643e517)",
+    "species_state": "species_not_stated",
+    "source": "PMC:PMC13364333; ev_921f8caa291e6e2c",
+    "connects_to_seed": "C16 dn-OPDA branch"
+   },
+   {
+    "id": "rx_dd0c3c9fb247ccd3b5df",
+    "equation": "dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His",
+    "decision": "candidate (species:inferred_only; cmp_48db4734b66a)",
+    "species_state": "inferred_only",
+    "source": "PMC:PMC13364333; ev_e5825ef7b7833975",
+    "connects_to_seed": "C16 dn-OPDA branch (conjugates); dropped uncited enzyme MpGH3A"
+   }
+  ],
+  "round2_diagnosis": "Round 2 ran 60 queries, each returning exactly 10 results (600 slots). The run's own acquire-cache files show these held only 20 unique papers, in just 13 distinct result sets. 11 of the 20 were already known from round 1. 7 papers, including the one already processed, came back from all 60 queries. 9 papers were new, and the screen excluded all 9. new_paper_ids lists included papers only (acquisition.py:418), so every query recorded []. The 9 excluded papers are also missing from round_002/papers_considered.jsonl and from the round metrics. In 37 of the 60 queries, no returned title or abstract mentions that query's frontier target.\n\nThree causes:\n1. Query formulation. queries.py:108-118 and rag/acquire.py:371-402 OR the frontier target with the topic 'jasmonate biosynthesis' and the kind's generic terms, then AND 'Arabidopsis thaliana'. The item's own term is therefore optional.\n2. Result cap. controller.py:393 limits each query to the top 10. rag/acquire.py:887-914 queries EuropePMC first with pageSize 20, and there is no paging. All 600 slots came from EuropePMC; no NCBI result was ever reached. The one re-issued seed query had the same text as its round-1 query and was served from the cache (its file mtime is 17:31:31, during round 1).\n3. Exhaustion rule. controller.py:406-409 marks an item exhausted after one attempt that yields no newly included paper.\n\nOn top of that, frontier.py:335-336 and 353-356 silently cut 62 of the 121 items generated in round 1 (24 branch, 19 direction, 19 compartment). These were never asked, never recorded, and never regenerated from the empty round-2 delta. controller.py:327-331 then set stop_reason frontier_exhausted. That label is literally true (no unexhausted items remained) but misleading: the literature was not exhausted, and the frontier questions were never asked specifically.",
+  "round2_classification": "product_defect",
+  "uncited_drops_assessment": "All 59 drops were checked, not just a sample of 10. Every dropped value occurs, ignoring case and whitespace, in one of the 20 passages the model was shown, and in the paper text:\n- enzyme: 19 of 19 are in the claim's own cited span.\n- gene locus IDs: 1 of 19 in a cited span; 19 of 19 in some shown span.\n- species 'Marchantia polymorpha': 5 of 21 in a cited span; 21 of 21 in a shown span.\n\nThe check is in C:/t/mining-pilot/src/t2pw/mining/extraction.py:\n- 174-183, _valid_ids: keeps only ids that were shown to the model.\n- 271-285, cited(): collects the ids per field.\n- 296-306, keep(): blanks a value that has no valid id and logs '(no valid citation)'.\n\nIt tests only that the per-field *_evidence_ids list names an id that was shown. It never reads passage content, so it cannot be 'too strict' about content. The same response cited valid ids for every substrate and product in all 21 claims, yet no claim kept a valid enzyme, gene or species citation.\n\nVerdict: the model failed to cite, and the check enforced the contract correctly. No value was invented from outside the evidence. The raw response is not persisted (only a response_hash), so whether the id lists came back empty or malformed cannot be shown.\n\nTwo consequences. First, the drop hides a species mismatch: all 21 claims asserted Marchantia, but none became non_target_species. Second, 8 reactions are labelled species_not_stated even though their cited spans name Marchantia.",
+  "screen_false_negatives": [
+   "PMC:PMC12280011 Downstream metabolites of (+)-cis-12-oxo-phytodienoic acid function as noncanonical bioactive jasmonates in Arabidopsis thaliana (off_topic: no mechanistic term; seed metabolite, target species)",
+   "PMC:PMC9947334 Pseudophosphorylation of Arabidopsis jasmonate biosynthesis enzyme lipoxygenase 2 via mutation of Ser600 inhibits enzyme activity (context_only, score 4.0)",
+   "PMC:PMC13096701 Interaction with CYP20-3 limits OPDA flux into jasmonate biosynthesis in wounded leaves of arabidopsis grown at eCO2 (omics_only: transcriptomic)",
+   "PMC:PMC13238047 Lipoxygenase 2 (LOX2) enhances cold tolerance through modulating jasmonate biosynthesis in Nicotiana tabacum (omics_only)",
+   "PMC:PMC13468208 Maize Lipoxygenase ZmLOX2 Modulates Jasmonate-Associated Antioxidant Defense ... in Transgenic Arabidopsis (omics_only: no mechanistic term)",
+   "PMC:PMC11225365 Delta4-dn-iso-OPDA, a bioactive plant hormone of Marchantia polymorpha (off_topic)",
+   "PMC:PMC13373823 Weaponizing nutrition: plants ... converting nutritionally essential fatty acids into defensive oxylipin signals (omics_only: transcriptomic)"
+  ],
+  "anomalies": [
+   "A1 report.md 'Claims extracted: 19' vs 21 extracted (usage.claims_extracted, round_001 claims_extracted.jsonl); report.py:149 uses len(store.claims)",
+   "A2 report.md 'Primary graph: 0 reactions, 10 chemical connections, 30 entities': 10/30 are whole-graph counts (report.py:159-160, 298-299); primary_graph.json has no connections or entities. 5 of the 10 connections join reactions in different quarantine components, including 13-HPOT->EOT with EOT->(9S,13S)-OPDA",
+   "A3 errors list silently truncated: 59 in state.json, 50 in summary.json, 40 in report.md, no marker (report.py:194, 409)",
+   "A4 queries.jsonl cache_hit never set (models.py:573 default only); round-2 qr_2063671d454fb0a0 reused round-1 text and was served from cache",
+   "A5 screened-out papers missing from provenance: 9 round-2 discoveries appear in no new_paper_ids, round_002/papers_considered.jsonl is empty, round metrics papers_discovered counts included papers only (acquisition.py:386-389, 418; controller.py:401-404, 518-521, 530)",
+   "A6 species_not_stated reason 'no species is stated anywhere in the supporting evidence' on 8 reactions whose cited spans name Marchantia (species.py:283-287 ignores span text), contradicting species_policy.md",
+   "A7 species mismatch hidden: Marchantia asserted on all 21 claims but dropped as uncited, so 0 non_target_species",
+   "A8 included paper is a review ('This review is organized to follow the pathway sequentially.') but evidence_type is unknown and evidence_level single_paper, contrary to evidence_policy.md review_article_only; pmid and doi are empty although the text carries PMID 42452298 / DOI 10.3390/plants15132102",
+   "A9 frontier cap silently cut 62 of 121 generated round-1 items, never asked or recorded; no stop reason names the cap (frontier.py:335-336, 353-356)",
+   "A10 bridge frontier targets depend on in-memory component order: a replay on the restored state anchors 7 bridges differently, so a resumed run would ask different questions (frontier.py:173-185), against resume_and_cancellation.md determinism",
+   "A11 model_calls retries=1 with a single attempt (modelclient.py:341 stores attempts)",
+   "A12 raw model response not persisted (hash only), which blocks diagnosis of the citation drops",
+   "A13 abstract span ev_b585c188b3cdd16b has null char offsets and raw HTML markup",
+   "A14 all 14 candidate components have relevance_score 0.0"
+  ],
+  "summary": "I audited pilot-001 read-only. Outputs are in C:/t/mining-pilot-runs/audit/:\n- PILOT-001-AUDIT.md (human-readable)\n- pilot_001_audit.json (same content)\n- frontier_replay.py and build_audit.py, the scripts that rebuild both files\n- frontier_replay.json\n- g11/*.json, the wrapper reports\n\nEvery script ran through bounded_run.py with exit 0 and 0 surviving processes. There were no network or model calls, and git status in C:/t/mining-pilot shows the worktree clean.\n\n**Result.** 21 papers were screened and 1 processed: a Marchantia polymorpha review whose own text says 'This review is...', yet it is labelled evidence_type 'unknown'. It produced 21 claims, which became 19 candidate reactions in 14 components after 2 same-paper merges. 0 reactions were admitted and no budget limit was hit. All 19 are held by the species policy: 10 inferred_only, 8 species_not_stated, 1 in_vitro. Two are direct seed leads:\n- 13-HPOT -> 12,13-EOT (the AOS step)\n- 12,13-EOT -> (9S,13S)-OPDA (the step that makes 12-OPDA)\n\nThey are chemically connected in the graph but sit in different quarantine components.\n\n**Citation drops.** All 59 enzyme/gene/species drops were checked. Every value is present in a passage the model was shown, so the model failed to cite and the check (extraction.py:174-183, 271-285, 296-306) enforced the contract correctly.\n\n**Round 2.** Classified as a product defect. 600 result slots held only 20 unique papers (9 new, all screened out). Query formulation, the top-10 cap with no paging, and the one-attempt exhaustion rule emptied the frontier. The frontier cap had already silently cut 62 generated items.\n\n**Screen.** 7 excluded titles are flagged as possible false negatives. The clearest is PMC12280011, on 12-OPDA metabolites in Arabidopsis itself.\n\n**Other problems.** report.md misstates two numbers, cache_hit is never set, and screened-out papers are missing from the round provenance."
+ },
+ "bio": {
+  "verdict": "NOT_PLAUSIBLE",
+  "reactions": [
+   {
+    "id": "rx_cfcaf34abd9bd9b01f69 / cl_383fe26afa20f423",
+    "equation": "16:0 (palmitic acid) -> 16:1n9 (Δ7-palmitoleic acid)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "Plastid fatty-acid desaturation. It supplies precursor to the HTA/dn-OPDA branch but is not oxylipin chemistry. Paper Table 1 (ev_20a7facf5fd73dd9): 'MpFAD5 Mp3g10660 ... Δ7-desaturation of 16:0 → 16:1n9 ... Genetic: Mpfad5 nearly abolishes dn-OPDA after wounding'. As extracted it is Marchantia evidence, so leaving it out of the At graph is correct. The model's enzyme 'MpFAD5', gene 'Mp3g10660' and species 'Marchantia polymorpha' were all dropped as '(no valid citation)', even though they match Table 1 verbatim. inferred_only was triggered by 'Marchantia lacks JAR1 orthologs' / 'MpFAD5 is orthologous to AtFAD5' in the cited chunks, not by any inference about this reaction. The cited span also says 'AtFAD5, an Arabidopsis enzyme known to synthesize 16:1n9 ... in the plastids [26]', an Arabidopsis statement that was never extracted. The paper notes 'Enzymatic reactions occur on the acyl-esterified forms', so free-acid names simplify an MGDG-acyl reaction."
+   },
+   {
+    "id": "rx_ba120ec5dd1e2c7f160f / cl_23095d3bbfb2cff4",
+    "equation": "16:1n9 -> 16:2n6 (HDA)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "The chemistry is stated in the Fig. 2 legend (ev_488098050cb15807): 'FAD6 subsequently converts both 16:1n9 and 18:1n9 to their Δ12 di-unsaturated forms HDA (16:2n6) and LA (18:2n6)'. For Marchantia the paper itself calls this unproven. Table 1: 'MpFAD6 ... Inferred by pathway logic; no functional study reported'. Discussion: 'MpFAD6 is predicted to catalyze'. So hypothesis=false is too strong for a Marchantia claim, because the extraction did not cite those spans. The name '16:1n9' does not match R1's '16:1n9 (Δ7-palmitoleic acid)', so the two steps never chain."
+   },
+   {
+    "id": "rx_b67ae97a4f1d4149c0ef / cl_ba8b28ded800b641",
+    "equation": "HDA (16:2n6) -> HTA (16:3n3)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "Table 1: 'MpFAD7 ... n3-desaturation of HDA (16:2n6) → HTA (16:3n3) ... Genetic: Mpfad7 depleted in HTA/ALA and canonical jasmonates [14]'. This is precursor desaturation. The same metabolite appears as two entities, 'HDA (16:2n6)' here and '16:2n6 (HDA)' in R2."
+   },
+   {
+    "id": "rx_c52713f0275d843084ce / cl_184bc6263851be86",
+    "equation": "LA (18:2n6) -> ALA (18:3n3)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "MpFAD7 (ev_ba1b08899518f20e): 'MpFAD7 is the terminal n3-FAD converting HDA (16:2n6) and LA (18:2n6) to HTA and ALA'. This step makes ALA, the canonical jasmonate precursor, but it is desaturation, not oxylipin chemistry. The review also says FAD7/FAD8 do this in Arabidopsis; no Arabidopsis claim was extracted. Marchantia evidence as extracted, so excluding it from the At graph is correct."
+   },
+   {
+    "id": "rx_b77605ae2b74a25a76c9 / cl_113f485895411e4c",
+    "equation": "ARA (20:4n6) -> EPA (20:5n3)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "ev_ba1b08899518f20e: 'MpFAD3 catalyzes the conversion of ARA (20:4n6) to EPA (20:5n3) in the ER'. C20 LCPUFA metabolism specific to Marchantia; the paper says these LCPUFAs 'are absent from most angiosperm tissues'. species_not_stated carries the reason 'no species is stated anywhere in the supporting evidence', which is false: the cited span reads 'The liverwort M. polymorpha encodes two n3-FADs, MpFAD3...'."
+   },
+   {
+    "id": "rx_521de0c1ef1ce3980ffb / cl_1077b3be9a9b4085",
+    "equation": "LA (18:2n6) -> GLA (18:3n6)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "ev_ba1b08899518f20e: 'LA (18:2n6) and ALA (18:3n3) are first desaturated by MpDES6 (Δ6-desaturase) to γ-linolenic acid (GLA, 18:3n6) and stearidonic acid (SDA, 18:4n3)'. The evidence is heterologous expression (Kajikawa et al.). The paper says 'Angiosperms lack functional Δ6-desaturase/elongase and Δ5-desaturase activities', so this step cannot occur in wild-type Arabidopsis. The species_not_stated reason is false because the span names Marchantia."
+   },
+   {
+    "id": "rx_7e7a4e2597d21a8daf41 / cl_d24a774c98bbe956",
+    "equation": "ALA (18:3n3) -> SDA (18:4n3)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "Same span and caveats as R6 (MpDES6 Δ6-desaturation, LCPUFA branch absent from angiosperms)."
+   },
+   {
+    "id": "rx_271d9d29572551c0995a / cl_66cd792b203c0b4e",
+    "equation": "GLA (18:3n6) -> DGLA (20:3n6)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "MpELO1 Δ6-elongation (ev_ba1b08899518f20e). The chemistry is correct but lossy: elongation uses malonyl-CoA on acyl-CoA substrates, and that co-substrate is omitted. Marchantia-only LCPUFA branch."
+   },
+   {
+    "id": "rx_5bc5aa72c50bf073d7e1 / cl_183d5b22fb029e02",
+    "equation": "SDA (18:4n3) -> ETA (20:4n3)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "MpELO1 elongation, same span and caveats as R8."
+   },
+   {
+    "id": "rx_33c56fd5b50b116df0ad / cl_287f27e3d418db94",
+    "equation": "DGLA (20:3n6) -> ARA (20:4n6)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "'Final Δ5-desaturation by MpDES5 converts DGLA to AA and ETA to EPA [30]' (ev_ba1b08899518f20e). Marchantia-only LCPUFA branch."
+   },
+   {
+    "id": "rx_d2d57c7e2eb099611fa5 / cl_f7ec53ce4d566e55",
+    "equation": "ETA (20:4n3) -> EPA (20:5n3)",
+    "verdict": "SUPPORTED_BUT_OFF_PATHWAY",
+    "note": "MpDES5, same span as R10. The same span also says 'expression of bryophyte LCPUFA genes in transgenic Arabidopsis was demonstrated to be sufficient for de novo ARA and EPA production'. That is transgenic, not native Arabidopsis, so leaving it out of the At graph is correct (see the latent-risk finding F4)."
+   },
+   {
+    "id": "rx_31e360d39a47d50a837a / cl_b76877d1f7aac89c",
+    "equation": "13-HPOT -> allene oxide (12,13-EOT)",
+    "verdict": "SUPPORTED_WRONG_SPECIES",
+    "note": "The core AOS step, i.e. the seed enzyme. ev_089f6733d93f6ac7: 'Recombinant enzyme characterization of both MpAOSs revealed a shared preference for 13-HPOT as the best substrate [60]'; CRISPR double mutant 'abolishes OPDA' [33]. The MpAOS1 and MpAOS2 claims merged into this single node once both enzymes were stripped (round_001 claims_extracted rows 11 and 14 share a claim_id). inferred_only was triggered by 'Regiospecificity and substrate preference inferred from phylogenetic position' in a LOX figure legend at the head of the chunk, which has nothing to do with AOS. The correct label is non_target_species or in vitro. The same span says 'Arabidopsis AtAOS (CYP74A) exhibits Km values in the low micromolar range for 13-HPOT and is the sole non-redundant AOS required for wound-induced OPDA accumulation', which was never extracted as an Arabidopsis claim."
+   },
+   {
+    "id": "rx_afa85544d1f3505a7571 / cl_a60b7eef2a3390d7",
+    "equation": "15-HPEPE -> allene oxide (14,15-EEPE)",
+    "verdict": "SUPPORTED_WRONG_SPECIES",
+    "note": "Relative in-vitro activity of recombinant MpAOS1 ('15-HPEPE, ~80') and MpAOS2 ('preference for 13-HPOT and 15-HPEPE'), ev_089f6733d93f6ac7. This is oxylipin chemistry, but it belongs to the EPA-derived C20 branch, which is bryophyte-specific; EPA is essentially absent from angiosperms."
+   },
+   {
+    "id": "rx_04b5a990fe0223013188 / cl_17ff2e2b4ae961e6",
+    "equation": "15-HPETE -> allene oxide",
+    "verdict": "SUPPORTED_WRONG_SPECIES",
+    "note": "MpAOS1 relative in-vitro activity only ('15-HPETE, ~65%'). The paper never names the product, and its role in vivo is speculative ('might enable MpAOS1 to participate in the C20-derived jasmonate pathway'). Weakest reaction in the set. The generic product name 'allene oxide' could merge chemically distinct allene oxides."
+   },
+   {
+    "id": "rx_c63294bd6f7cd7898284 / cl_e8486ffe5ffc875b",
+    "equation": "allene oxide (12,13-EOT) -> (9S,13S)-OPDA",
+    "verdict": "SUPPORTED_WRONG_SPECIES",
+    "note": "AOC step. It produces the seed metabolite 12-OPDA. ev_a82b0ad4450a0bd2: 'Recombinant MpAOC produces the naturally occurring (9S,13S)-OPDA in a coupled in vitro assay with PpAOS1 (used as the AOS reaction partner) and 13-HPOT as substrate'. in_vitro_or_cell_free is accurate here, the only correct species label in the run. It is Marchantia/Physcomitrium enzyme evidence, so excluding it from the At graph is correct."
+   },
+   {
+    "id": "rx_dbf98b00d2a61c12dc9a / cl_5e7dad28f7939c2e",
+    "equation": "allene oxide (from 11-HPHT) -> (9S,13S)-dn-cis-OPDA",
+    "verdict": "SUPPORTED_WRONG_SPECIES",
+    "note": "Table 1: 'MpAOC (DIR17) ... Stereospecific ring closure of allene oxide → (9S,13S)-dn-cis-OPDA or OPDA'. The paper cautions that the MpAOC study 'quantified only OPDA', so assigning the C16 substrate to MpAOC is table-level assertion. The HTA→dn-OPDA route itself is supported in Marchantia by d6-HTA feeding [9]. The substrate name paraphrases the paper's '10,11-EHT'. The review also says dn-cis-OPDA is 'common to both species' (ev_488098050cb15807), but no Arabidopsis claim was extracted."
+   },
+   {
+    "id": "rx_3b1de071bdca890db17e / cl_be3a91096b5efa82",
+    "equation": "dn-cis-OPDA -> dn-iso-OPDA",
+    "verdict": "SUPPORTED_WRONG_SPECIES",
+    "note": "ev_921f8caa291e6e2c: 'In Marchantia, the isomerization appears to proceed directly from dn-cis-OPDA to dn-iso-OPDA'; 'the corresponding plant enzyme responsible for this isomerization is unknown'. Leaving the enzyme empty was correct. The step is bryophyte/lycophyte-specific: 'In angiosperms and most ferns, dn-cis-OPDA is converted to JA via the β-oxidation pathway'. It would be biologically wrong in Arabidopsis."
+   },
+   {
+    "id": "rx_30597429065d268ba67a / cl_1a46dec50158bc2d",
+    "equation": "Δ4-dn-cis-OPDA -> Δ4-dn-iso-OPDA",
+    "verdict": "SUPPORTED_WRONG_SPECIES",
+    "note": "'Δ4-dn-cis-OPDA is rapidly converted into Δ4-dn-iso-OPDA only in the presence of Marchantia crude extracts [12, 68]'. The evidence is a cell-free crude extract, and the compound is EPA-derived and Marchantia-specific. The species_not_stated reason is false because the span names Marchantia."
+   },
+   {
+    "id": "rx_dd0c3c9fb247ccd3b5df / cl_1ff61102855b3d37",
+    "equation": "dn-iso-OPDA -> dn-OPDA-Glu + dn-OPDA-Gln + dn-OPDA-His",
+    "verdict": "SUPPORTED_WRONG_SPECIES",
+    "note": "The chemistry is supported: 'Genetic disruption of the MpGH3A gene via CRISPR-Cas9 abolished dn-OPDA-aa conjugates production'. But the paper qualifies the enzyme assignment: 'biochemical data are absent ... these data strongly suggest'. It also records the step as absent from the target, since conjugates were found in bryophytes and lycophytes 'but not in the angiosperm Arabidopsis'. The step is catabolic inactivation, not biosynthesis. The representation is malformed: three alternative conjugations are merged into one reaction and the amino-acid co-substrates are missing, which breaks prompt rule 6 ('One reaction per claim')."
+   }
+  ],
+  "species_handling": "The outcome was correct; the labels were wrong. Keeping all 19 reactions out of the A. thaliana primary graph (primary_graph.json: reaction_count 0) correctly applies species_policy.md ('A shared enzyme name, a shared gene symbol or an ortholog relationship never transfers a reaction between species'). Every reaction, as extracted, rests on Marchantia (or in vitro Marchantia/Physcomitrium) evidence from one review. No reaction was wrongly allowed in, and none was wrongly held back.\n\nBut the gate reached the right answer through a fall-through, not by recognising Marchantia. Not one of the 19 carries non_target_species, the state that actually describes them. Census: 10 inferred_only, 8 species_not_stated, 1 in_vitro_or_cell_free.\n\n1. The chain behind this, from static inspection plus artifacts:\n   - The model filled species='Marchantia polymorpha' on all 21 claims. All 21 were dropped as '(no valid citation)' (rounds/round_001/errors.jsonl).\n   - papers.jsonl records observed_organisms [] for PMC13364333, although its title and abstract name Marchantia polymorpha.\n   - So extraction.build_claims passed observed=[] to species.classify_species.\n   - That function runs detect_inference_markers over the whole concatenated text of every cited ~5 kB chunk, and that test outranks everything else.\n\n2. The 10 inferred_only labels were triggered by strings unrelated to the reaction's species: 'Marchantia lacks JAR1 orthologs', the Table 1 header 'Arabidopsis Ortholog', 'inferred from phylogenetic position' in a LOX figure legend, and 'a single homolog of angiosperm amidohydrolases' (MpILR). Their species_reason, 'species support is an inference, not an observation', misdescribes the paper. The paper reports these steps as Marchantia genetic or biochemical results.\n\n3. The 8 species_not_stated labels carry the reason 'no species is stated anywhere in the supporting evidence'. That is false: ev_ba1b08899518f20e reads 'The liverwort M. polymorpha encodes two n3-FADs, MpFAD3...', and ev_921f8caa291e6e2c reads '...only in the presence of Marchantia crude extracts'.\n\n4. Latent risk in the hold-back direction (static inspection only, not observed in this run). The processed review contains explicit Arabidopsis statements, for example 'Arabidopsis AtAOS (CYP74A) ... 13-HPOT' (ev_089f6733d93f6ac7) and 'In Arabidopsis, OPDA and dn-cis-OPDA are reduced by OPR3 ... to produce OPC-8:0' (ev_c98d84c7d84855c1). A correctly cited Arabidopsis claim from either span would still be forced to inferred_only by those unrelated chunk-level markers. A claim citing the At 13-LOX span (ev_74d8b3d259ca310a) would be forced to in_vitro by 'recombinant enzyme assay' in the MpLOX sentence.\n\n5. Latent risk in the admit direction (a policy gap). ev_ba1b08899518f20e says 'expression of bryophyte LCPUFA genes in transgenic Arabidopsis was demonstrated to be sufficient for de novo ARA and EPA production' and contains no inference or in-vitro marker. species_policy.md has no state for heterologous/transgenic expression in the target. Only the model's own Marchantia attribution kept those steps from reading as target_species_supported.\n\n6. Round 2 then generated frontier queries, including a 'missing_species_evidence' one, that searched '... AND \"Arabidopsis thaliana\"' for EPA-, ARA-, 15-HPEPE-, Δ4-dn-iso-OPDA- and dn-OPDA-aa-derived terms. The paper states angiosperms lack these metabolites, so the searches were biologically futile.",
+  "screening_quality": "Screening was poor on recall. A bigger limit came before it: the discovered corpus contained almost no primary Arabidopsis jasmonate-biosynthesis enzymology.\n\n1. **Wrongly excluded:** PMC9947334, 'Pseudophosphorylation of Arabidopsis jasmonate biosynthesis enzyme lipoxygenase 2...' (J Biol Chem 2023, EuropePMC MeSH Arabidopsis). It is recombinant AtLOX2 kinetics with α-linolenic acid, i.e. primary At 13-LOX enzymology, and it is the one paper in the set that clearly should have been read.\n   - Recorded reason: \"context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it\". Score 4.0.\n   - The pathway-anchor branch of t2pw.rag.eligibility.screen_candidate excluded it before the score was consulted. The included review cleared at 5.0 against a stated threshold of 2.0.\n\n2. **Arguably worth reading:**\n   - PMC12280011, 'Downstream metabolites of (+)-cis-OPDA ... in Arabidopsis thaliana' (Nat Commun 2025). It is directly downstream of the seed 12-OPDA (tn-cis-OPDA, 4,5-ddh-JA). Excluded as \"off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract\".\n   - PMID 35404431, 'On the initiation of jasmonate biosynthesis in wounded leaves'. Arabidopsis, DAD1 lipase step. Excluded as context_only.\n\n3. **Borderline** (regulatory, not enzymology):\n   - PMC11300881, NAD+ / LOX2 (MeSH Arabidopsis). Excluded as omics_only 'multi omics'. The abstract states 'hydroperoxidation of α-linolenic acid by the 13-lipoxygenase (namely LOX2)'.\n   - PMC13096701, CYP20-3 / OPDA flux in Arabidopsis. Excluded as omics_only 'transcriptomic'.\n\n4. **Correctly excluded for an A. thaliana target:** tobacco (NtLOX2, BY-2 stromules), wheat (AtAOS/AtOPR3 transgenes), cotton, the ZmLOX2-in-transgenic-Arabidopsis physiology paper, the general oxylipin and auxin reviews, and the unrelated stress/omics papers. Two Marchantia primaries, PMC13373823 (MpFAD3/MpFAD7) and PMC11225365 (Δ4-dn-iso-OPDA), were also correctly out for this target. Several of these exclusion reasons are still keyword artefacts, though. PMC13358708 was tagged omics_only 'enriched' because of the phrase 'galactolipids enriched in α-linolenic acid'. PMC13373823, a CRISPR genetic study, was tagged 'transcriptomic'.\n\n5. **The included paper:** PMC13364333 is on topic but is a review (EuropePMC pubType 'review-article','Review'; its text says 'This review is organized to follow the pathway sequentially'). The run typed it evidence_type 'unknown' and observed_organisms []. Including it was defensible, since it has a full comparative At-vs-Mp pathway walk-through with explicit Arabidopsis statements. It should not have been the only paper read while primary At enzymology (PMC9947334) was excluded. And the extraction pulled only its Marchantia content.\n\n6. **Discovery limit:** all 21 discovered papers are from 2022 to 2026, 13 of them from 2026. The seed terms were OR'd with generic words, e.g. (\"jasmonate biosynthesis\" OR \"biosynthesis\" OR \"metabolism\" OR \"pathway\" OR \"12-OPDA\") AND \"Arabidopsis thaliana\", so '12-OPDA' and 'AOS' added no specificity. None of the classical primary AOS/AOC/OPR3/ACX1/JAR1 papers was ever discovered, so no screen could have admitted them.\n\n7. **Correction to the headline:** round 2 did discover and screen 9 new papers. usage.papers_discovered went from 12 after round 1 to 21, and papers.jsonl rows 12-20 have discovered_round 2. All 9 were excluded. new_paper_ids and the round metric 'papers_discovered' only count papers that pass screening (acquisition.py:418).",
+  "coverage_vs_canonical_route": "Canonical Arabidopsis route, used as a yardstick only and never as evidence the run produced (lipase release → 13-LOX → AOS → AOC → OPR3 → OPC-8:0 β-oxidation → JAR1). Arabidopsis evidence was produced for 0 of these steps; the A. thaliana primary graph is empty.\n\n| Canonical step | What the run produced |\n|---|---|\n| Lipase release (DAD1/PLA) | Nothing |\n| 13-LOX (ALA → 13-HPOT) | Nothing, in any species. The processed paper states it for Arabidopsis (ev_74d8b3d259ca310a) and for recombinant MpLOX1-3, but neither was extracted. |\n| AOS (13-HPOT → 12,13-EOT) | Present as a candidate, from Marchantia MpAOS1/2 recombinant and genetic evidence. Enzyme stripped; labelled inferred_only. |\n| AOC (12,13-EOT → (9S,13S)-OPDA) | Present as a candidate, from an in vitro MpAOC + PpAOS1 coupled assay. Labelled in_vitro_or_cell_free. |\n| OPR3 (OPDA → OPC-8:0), β-oxidation to JA (ACX/MFP/KAT), JAR1 (JA + Ile → JA-Ile) | Nothing. All of these are stated for Arabidopsis in the processed review ('In Arabidopsis, OPDA and dn-cis-OPDA are reduced by OPR3 ... to produce OPC-8:0'; 'In Arabidopsis, the GH3 family enzyme JAR1 catalyzes the ATP-dependent conjugation of JA to isoleucine'; the OPR3-independent 4,5-ddh-JA → JA route via OPR1/OPR2). None was extracted. |\n\nSo the seed neighbourhood was touched at exactly two steps (AOS and AOC), both through non-target or in vitro evidence. Nothing downstream of 12-OPDA exists in the candidate set.\n\nThe rest of the expansion is off the target route:\n- 11 of 19 are fatty-acid desaturation/elongation. 7 of those belong to the C20 LCPUFA branch, which the paper says angiosperms lack.\n- 5 are bryophyte-specific oxylipin chemistry: the C20 AOS substrates (15-HPEPE and 15-HPETE), the dn-cis→dn-iso and Δ4 isomerizations, and MpGH3A conjugation. The paper says the MpGH3A conjugates are 'not in the angiosperm Arabidopsis'.\n- 1 (the C16 dn-cis-OPDA AOC step) is chemistry the review calls common to both species, but here it rests on Marchantia evidence only.",
+  "missed_relevant_papers": [
+   "PMC9947334 (PMID 36639029), 'Pseudophosphorylation of Arabidopsis jasmonate biosynthesis enzyme lipoxygenase 2 via mutation of Ser600 inhibits enzyme activity', J Biol Chem 2023. Primary At 13-LOX enzymology (recombinant AtLOX2 kinetics with α-linolenic acid). Excluded at score 4.0 with: \"context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it\". This is a clear miss.",
+   "PMC12280011 (PMID 40691227), 'Downstream metabolites of (+)-cis-12-oxo-phytodienoic acid function as noncanonical bioactive jasmonates in Arabidopsis thaliana', Nat Commun 2025. Directly downstream of the seed 12-OPDA (tn-cis-OPDA, 4,5-ddh-JA; the OPR3-independent route). Excluded with: \"off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract\". Moderate miss: the paper focuses on signalling, but it is primary Arabidopsis work in the seed neighbourhood.",
+   "PMID 35404431, 'On the initiation of jasmonate biosynthesis in wounded leaves', 2022, Arabidopsis, DAD1 lipase (the lipolysis step). Excluded with: \"context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it\". Moderate miss; it has a PMID only, so possibly abstract-only text.",
+   "Borderline: PMC11300881 (PMID 39103368), 'NAD+ deficiency primes defense metabolism via 1O2-escalated jasmonate biosynthesis in plants', Nat Commun 2024, EuropePMC MeSH Arabidopsis. The abstract states 'hydroperoxidation of α-linolenic acid by the 13-lipoxygenase (namely LOX2)'. Excluded with \"omics_only: ... (it sits in screening context: multi omics)\". This is regulatory work, not enzymology.",
+   "Borderline: PMC13096701 (PMID 42023003), 'Interaction with CYP20-3 limits OPDA flux into jasmonate biosynthesis in wounded leaves of arabidopsis grown at eCO2'. Excluded with \"omics_only: ... (it sits in screening context: transcriptomic)\". This is regulation of OPDA flux, not enzymology.",
+   "Not a screening miss, but the largest coverage gap: no classical primary Arabidopsis enzymology for AOS, AOC, OPR3, ACX1 or JAR1 was ever discovered. All 21 discovered papers are from 2022-2026, and the seed terms were OR'd with generic words in every query (queries.jsonl), so the screen never saw those papers."
+  ],
+  "summary": "**Verdict: NOT_PLAUSIBLE, as an A. thaliana jasmonate expansion from the seeds 12-OPDA and AOS.** The primary graph is empty, which is the correct result given what the run read. The candidate expansion describes Marchantia jasmonate and PUFA biology, not Arabidopsis:\n- 11 of 19 are fatty-acid desaturation/elongation, 7 of them LCPUFA steps the source says angiosperms lack.\n- 5 are bryophyte-specific oxylipin steps.\n- Only AOS and AOC touch the canonical route, and both through Marchantia or in vitro evidence.\n- Nothing downstream of 12-OPDA was produced.\n\nNo reaction is fabricated. All 19 are faithful to the one paper read, PMC13364333, which is a review according to EuropePMC pubType, though the run typed it 'unknown'. Verdicts: 0 SUPPORTED_AND_RELEVANT, 11 SUPPORTED_BUT_OFF_PATHWAY, 8 SUPPORTED_WRONG_SPECIES, 0 UNSUPPORTED, 0 UNCLEAR. The two extra claims (21 extracted vs 19 reactions) are the MpAOS2 copies of the 13-HPOT and 15-HPEPE claims, merged after their enzyme field was stripped.\n\n**Gold citation:** none possible. No gold case covers pilot-001 or PMC13364333; a grep of src/t2pw/bench/gold/pinned_v1.json for 'jasmon', '13364333' and 'OPDA' returns nothing. The findings are adjudicated against docs/pathway_mining/species_policy.md and evidence_policy.md in C:/t/mining-pilot. None of them justifies code yet without lineage, a product-owner decision, or a labelled case.\n\n**F1. Every enzyme, gene and species field was dropped.**\n- Class: not yet classifiable. Candidate product_contract_violation in extraction, pending lineage.\n- Evidence: 59 of 59 asserted values dropped as '(no valid citation)' across 21 claims (rounds/round_001/errors.jsonl; papers.jsonl note '59 asserted field(s) dropped for lack of a valid citation'). The values match the paper's Table 1 verbatim (MpFAD5 Mp3g10660, MpAOS1 Mp3g21350, MpGH3A Mp6g07600). Participant-level citations were valid on all 19.\n- Consequence: no claim in this run could reach target_species_supported whatever the paper said, because that state requires species_evidence_ids.\n- Attribution requires lineage that does not exist: model_calls.jsonl keeps only response_hash sha256:a5efe667780d2a11. Instrumentation needed: persist the raw completion or parsed payload per call, so we can tell whether the model omitted *_evidence_ids, cited ids it was never shown, or used another key.\n- Files, if confirmed: src/t2pw/mining/extraction.py (SYSTEM_PROMPT / CLAIM_SCHEMA / build_claims).\n- Confidence: high on the fact, low on the cause.\n\n**F2. Species states are wrong even though the outcome is right.**\n- Evidence: 0 of 19 carry non_target_species. 8 are species_not_stated with a false reason: ev_ba1b08899518f20e names 'M. polymorpha' and ev_921f8caa291e6e2c names 'Marchantia'. 10 are inferred_only, triggered by unrelated substrings in the cited chunks. papers.jsonl has observed_organisms [] for a paper whose title names Marchantia polymorpha.\n- Class: for the 8 species_not_stated, a product_contract_violation of species_policy.md, whose definition is 'no species anywhere in the supporting evidence'. For the 10 inferred_only, the behaviour is documented (test order 1, whole-text markers), so it is a policy question to escalate to the product owner, not a bug.\n- Affected files: src/t2pw/mining/extraction.py (build_claims observed fallback), src/t2pw/mining/species.py (classify_species, marker scope), and paper organism population (src/t2pw/mining/acquisition.py:392-399 from t2pw.rag.eligibility.screen_candidate).\n- Expected correction: when the cited evidence names only a non-target organism, the claim is labelled non_target_species with that organism named. It stays non-admissible, so the gate is not weakened.\n- Regression fixture: `classify_species(target_species_normalized='arabidopsis thaliana', observed=[], species_evidence_ids=[], evidence_text=<ev_ba1b08899518f20e text>)`. Today it returns species_not_stated with the false reason; the corrected result is non-admissible and names Marchantia polymorpha.\n- Confidence: high.\n\n**F3. Latent wrongful hold-back** (static inspection only). Correctly cited Arabidopsis claims from ev_089f6733d93f6ac7 (AtAOS), ev_c98d84c7d84855c1 (At OPR3) or ev_d6a16a3c6577cf56 (OPR1/2 route) would be forced to inferred_only. One from ev_74d8b3d259ca310a (At 13-LOX) would be forced to in_vitro. The chunk-level markers cause this; they are unrelated to those statements. Same policy question as F2. It errs conservative, so no gate violation. Fixture: `classify_species(target='arabidopsis thaliana', observed=['Arabidopsis thaliana'], species_evidence_ids=['ev_089f6733d93f6ac7'], evidence_text=<that span>)` returns inferred_only today.\n\n**F4. Latent wrongful admission** (policy gap, escalate to the product owner). The 'transgenic Arabidopsis ... de novo ARA and EPA production' sentence in ev_ba1b08899518f20e contains no marker. species_policy.md has no heterologous/transgenic state. No code until the policy is decided.\n\n**F5. The review was typed 'unknown'.** Evidence: EuropePMC pubType 'review-article','Review'; the text says 'This review is organized...'. As a result all 19 decisions show evidence_level 'single_paper', not 'review_article_only' as evidence_policy.md requires. This is a labelling defect in acquisition.classify_evidence_type input: article_type was empty on the candidate. Severity is low because nothing was admitted.\n\n**F6. Screening false negative on PMC9947334.** Recorded reason: context_only, score 4.0. Relative to the mining intent this is a recall defect. But t2pw/rag/eligibility.py is shared with the gold-pinned PWML pipeline, so any change needs a labelled mining case and an A/B against pinned_v1 first.\n\n**F7. Discovery.** The seed terms were diluted by OR'd generic words. The round-2 frontier was built from quarantined Marchantia entities with 'AND Arabidopsis thaliana' appended. The round metric 'papers_discovered' counts only papers that passed screening; round 2 actually screened and excluded 9 new papers. Also, report.md prints 'Primary graph: 0 reactions, 10 chemical connections, 30 entities', but primary_graph.json has no connections or entities; the 10/30 are whole-graph totals.\n\n**What would change my mind:**\n- A raw completion showing valid *_evidence_ids that the parser rejected would make F1 a clear extraction product_contract_violation.\n- A product-owner statement that whole-chunk markers are intended would close the inferred_only part of F2 and F3 as designed.\n- On plausibility: only a run that actually reads Arabidopsis primary enzymology and admits canonical steps would change the verdict. That would be about the method, not this run.\n\n**Scratch notes** in C:/t/mining-pilot-runs/bio-audit/: evidence_text.txt, abstracts.txt, papers_table.txt, epmc_pubtype.py, epmc_pubtype.json. The EuropePMC GET ran through bounded_run.py with a 240 s timeout; the G11 report g11-epmc-pubtype.json records final surviving count 0. No LLM call was made and nothing in C:/t/mining-pilot was modified."
+ }
+}

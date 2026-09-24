@@ -1,0 +1,79 @@
+{
+  "acquisition_sources": [
+    "europepmc",
+    "ncbi"
+  ],
+  "artifact_schema_version": "t2pw.mining/1.0.0",
+  "budgets": {
+    "max_candidate_components": 40,
+    "max_candidate_reactions": 300,
+    "max_cost_usd": 5.0,
+    "max_frontier_size": 60,
+    "max_input_tokens": 2000000,
+    "max_llm_calls": 200,
+    "max_new_reactions_per_round": 25,
+    "max_output_tokens": 400000,
+    "max_papers_discovered": 150,
+    "max_papers_processed": 40,
+    "max_passages_per_paper": 20,
+    "max_primary_reactions": 200,
+    "max_rounds": 8,
+    "max_wall_clock_seconds": 3600.0,
+    "price_input_per_mtok_usd": 0.1,
+    "price_output_per_mtok_usd": 0.3,
+    "stop_after_unproductive_rounds": 2
+  },
+  "enabled_via": "cli_flag",
+  "model": {
+    "fallback_model": "",
+    "max_attempts": 3,
+    "max_tokens": 4000,
+    "model": "deepseek/deepseek-v4-flash",
+    "prompt_version": "mining-extract/1.0.0",
+    "reasoning": "",
+    "request_timeout_seconds": 120.0,
+    "temperature": 0.0,
+    "use_structured_output": true
+  },
+  "offline": false,
+  "retrieve_top_k": 8,
+  "run_id": "pilot-001-jasmonate-ath",
+  "runs_dir": "C:/t/mining-pilot-runs",
+  "screen_papers": true,
+  "starting_inputs": [
+    {
+      "file_name": "",
+      "file_sha256": "",
+      "id_type": "",
+      "kind": "seed_metabolite",
+      "note": "",
+      "raw": "12-OPDA",
+      "source_path": "",
+      "value": "12-OPDA"
+    },
+    {
+      "file_name": "",
+      "file_sha256": "",
+      "id_type": "",
+      "kind": "seed_enzyme",
+      "note": "",
+      "raw": "AOS",
+      "source_path": "",
+      "value": "AOS"
+    },
+    {
+      "file_name": "",
+      "file_sha256": "",
+      "id_type": "",
+      "kind": "topic",
+      "note": "",
+      "raw": "jasmonate biosynthesis",
+      "source_path": "",
+      "value": "jasmonate biosynthesis"
+    }
+  ],
+  "target_species": "Arabidopsis thaliana",
+  "target_species_normalized": "arabidopsis thaliana",
+  "topic": "jasmonate biosynthesis",
+  "vector_backend": "memory"
+}

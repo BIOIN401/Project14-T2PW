@@ -1,0 +1,314 @@
+{
+  "additions_by_round": [
+    {
+      "added_candidates": 19,
+      "added_reactions": 0,
+      "graph_hash_after": "93e8dd4f91befc0456e632f1bc72671e",
+      "new_components": 14,
+      "new_conflicts": 0,
+      "promoted": 0,
+      "round": 1,
+      "updated": 2,
+      "useful": true
+    },
+    {
+      "added_candidates": 0,
+      "added_reactions": 0,
+      "graph_hash_after": "93e8dd4f91befc0456e632f1bc72671e",
+      "new_components": 0,
+      "new_conflicts": 0,
+      "promoted": 0,
+      "round": 2,
+      "updated": 0,
+      "useful": false
+    }
+  ],
+  "claims": {
+    "by_latest_status": {
+      "candidate": 19
+    },
+    "distinct_identities": 19,
+    "extracted": 19,
+    "rejected_by_reason": {}
+  },
+  "completed_normally": false,
+  "completion_state": "stopped_at_limit",
+  "conflicts": {
+    "detail": [],
+    "total": 0,
+    "unresolved": 0
+  },
+  "costs": {
+    "cached_tokens": 0,
+    "elapsed_seconds": 303.704,
+    "estimate_only": true,
+    "estimated_cost_usd": 0.003373,
+    "input_tokens": 22843,
+    "llm_calls": 1,
+    "max_cost_usd": 5.0,
+    "note": "Estimated from configured per-million-token rates. This is NOT a billed amount and does not reflect provider discounts, cached-token pricing or minimum charges.",
+    "output_tokens": 3629,
+    "price_input_per_mtok_usd": 0.1,
+    "price_output_per_mtok_usd": 0.3
+  },
+  "errors": [
+    "claim[0].enzyme='MpFAD5' (no valid citation)",
+    "claim[0].gene='Mp3g10660' (no valid citation)",
+    "claim[0].species='Marchantia polymorpha' (no valid citation)",
+    "claim[1].enzyme='MpFAD6' (no valid citation)",
+    "claim[1].gene='Mp4g24020' (no valid citation)",
+    "claim[1].species='Marchantia polymorpha' (no valid citation)",
+    "claim[2].enzyme='MpFAD7' (no valid citation)",
+    "claim[2].gene='Mp5g20700' (no valid citation)",
+    "claim[2].species='Marchantia polymorpha' (no valid citation)",
+    "claim[3].enzyme='MpFAD7' (no valid citation)",
+    "claim[3].gene='Mp5g20700' (no valid citation)",
+    "claim[3].species='Marchantia polymorpha' (no valid citation)",
+    "claim[4].enzyme='MpFAD3' (no valid citation)",
+    "claim[4].gene='Mp3g17690' (no valid citation)",
+    "claim[4].species='Marchantia polymorpha' (no valid citation)",
+    "claim[5].enzyme='MpDES6' (no valid citation)",
+    "claim[5].gene='Mp6g17330' (no valid citation)",
+    "claim[5].species='Marchantia polymorpha' (no valid citation)",
+    "claim[6].enzyme='MpDES6' (no valid citation)",
+    "claim[6].gene='Mp6g17330' (no valid citation)",
+    "claim[6].species='Marchantia polymorpha' (no valid citation)",
+    "claim[7].enzyme='MpELO1' (no valid citation)",
+    "claim[7].gene='Mp6g02350' (no valid citation)",
+    "claim[7].species='Marchantia polymorpha' (no valid citation)",
+    "claim[8].enzyme='MpELO1' (no valid citation)",
+    "claim[8].gene='Mp6g02350' (no valid citation)",
+    "claim[8].species='Marchantia polymorpha' (no valid citation)",
+    "claim[9].enzyme='MpDES5' (no valid citation)",
+    "claim[9].gene='Mp3g13250' (no valid citation)",
+    "claim[9].species='Marchantia polymorpha' (no valid citation)",
+    "claim[10].enzyme='MpDES5' (no valid citation)",
+    "claim[10].gene='Mp3g13250' (no valid citation)",
+    "claim[10].species='Marchantia polymorpha' (no valid citation)",
+    "claim[11].enzyme='MpAOS1' (no valid citation)",
+    "claim[11].gene='Mp3g21350' (no valid citation)",
+    "claim[11].species='Marchantia polymorpha' (no valid citation)",
+    "claim[12].enzyme='MpAOS1' (no valid citation)",
+    "claim[12].gene='Mp3g21350' (no valid citation)",
+    "claim[12].species='Marchantia polymorpha' (no valid citation)",
+    "claim[13].enzyme='MpAOS1' (no valid citation)",
+    "claim[13].gene='Mp3g21350' (no valid citation)",
+    "claim[13].species='Marchantia polymorpha' (no valid citation)",
+    "claim[14].enzyme='MpAOS2' (no valid citation)",
+    "claim[14].gene='Mp5g16260' (no valid citation)",
+    "claim[14].species='Marchantia polymorpha' (no valid citation)",
+    "claim[15].enzyme='MpAOS2' (no valid citation)",
+    "claim[15].gene='Mp5g16260' (no valid citation)",
+    "claim[15].species='Marchantia polymorpha' (no valid citation)",
+    "claim[16].enzyme='MpAOC' (no valid citation)",
+    "claim[16].gene='Mp7g06220' (no valid citation)"
+  ],
+  "external_database_validation": "deferred_not_evaluated",
+  "graph": {
+    "candidate_components": 14,
+    "candidate_reactions": 19,
+    "chemical_connections": 10,
+    "entities": 30,
+    "graph_hash": "93e8dd4f91befc0456e632f1bc72671e",
+    "multi_paper_reactions": 0,
+    "primary_component_id": "",
+    "primary_reactions": 0,
+    "primary_selection_rationale": "",
+    "promoted_components": [],
+    "species_states": {
+      "in_vitro_or_cell_free": 1,
+      "inferred_only": 10,
+      "species_not_stated": 8
+    },
+    "total_reactions": 19
+  },
+  "model_calls": {
+    "by_status": {
+      "ok": 1
+    },
+    "failed": [],
+    "total": 1
+  },
+  "papers": {
+    "by_evidence_type": {
+      "unknown": 1
+    },
+    "discovered": 21,
+    "excluded": 20,
+    "excluded_reasons": {
+      "context_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it": 4,
+      "off_topic: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract": 6,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: enriched)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: multi omics)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: sequencing)": 1,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: transcriptomic)": 2,
+      "omics_only: 'jasmonate biosynthesis' appears in the title/abstract but no strong reaction/enzyme evidence is local to it (it sits in screening context: upregulated, rna seq)": 1,
+      "omics_only: no mechanistic term for 'jasmonate biosynthesis' in the title/abstract": 4
+    },
+    "included": 1,
+    "processed": 1,
+    "screened": 21
+  },
+  "passages": {
+    "extracted": 20,
+    "retrieved": 20
+  },
+  "preflight": {
+    "checks": [
+      {
+        "data": {
+          "enabled": true,
+          "env_var": "T2PW_PATHWAY_MINING_ENABLED"
+        },
+        "detail": "pathway mining ENABLED (cli_flag)",
+        "name": "feature.flag",
+        "status": "ok"
+      },
+      {
+        "data": {},
+        "detail": "target species 'Arabidopsis thaliana' (normalized 'arabidopsis thaliana')",
+        "name": "inputs.species",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "kinds": [
+            "seed_enzyme",
+            "seed_metabolite",
+            "topic"
+          ]
+        },
+        "detail": "topic=jasmonate biosynthesis; starting inputs: seed_enzyme, seed_metabolite, topic",
+        "name": "inputs.starting",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "path": "C:\\t\\mining-pilot-runs"
+        },
+        "detail": "C:\\t\\mining-pilot-runs is writable",
+        "name": "outputs.writable",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "api_key_present": true,
+          "provider": "openrouter",
+          "requested_model": "deepseek/deepseek-v4-flash"
+        },
+        "detail": "requested model 'deepseek/deepseek-v4-flash' via provider openrouter; API key present; fallback none (a failure will be loud)",
+        "name": "model.configuration",
+        "status": "ok"
+      },
+      {
+        "data": {},
+        "detail": "model answered (2 chars)",
+        "name": "model.reachable",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "endpoint_configured": true,
+          "model": "text-embedding-nomic-embed-text-v1.5"
+        },
+        "detail": "endpoint http://127.0.0.1:1234/v1; model text-embedding-nomic-embed-text-v1.5",
+        "name": "embeddings.configuration",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "api": 1,
+          "hits": 0,
+          "lexical": 0,
+          "misses": 1
+        },
+        "detail": "embedding endpoint answered",
+        "name": "embeddings.reachable",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "sources": [
+            "europepmc",
+            "ncbi"
+          ]
+        },
+        "detail": "sources europepmc, ncbi",
+        "name": "acquisition.sources",
+        "status": "ok"
+      },
+      {
+        "data": {
+          "max_candidate_components": 40,
+          "max_candidate_reactions": 300,
+          "max_cost_usd": 5.0,
+          "max_frontier_size": 60,
+          "max_input_tokens": 2000000,
+          "max_llm_calls": 200,
+          "max_new_reactions_per_round": 25,
+          "max_output_tokens": 400000,
+          "max_papers_discovered": 150,
+          "max_papers_processed": 40,
+          "max_passages_per_paper": 20,
+          "max_primary_reactions": 200,
+          "max_rounds": 8,
+          "max_wall_clock_seconds": 3600.0,
+          "price_input_per_mtok_usd": 0.1,
+          "price_output_per_mtok_usd": 0.3,
+          "stop_after_unproductive_rounds": 2
+        },
+        "detail": "rounds<=8, papers processed<=40, llm calls<=200, est. cost<=$5, wall clock<=3600s",
+        "name": "budgets.selected",
+        "status": "ok"
+      },
+      {
+        "data": {},
+        "detail": "external biochemical database validation is DEFERRED in version 1; admission is on paper evidence alone and no identifier service will be queried",
+        "name": "policy.database_validation",
+        "status": "ok"
+      },
+      {
+        "data": {},
+        "detail": "this mode produces a research graph only; the PWML exporter is not invoked and no PWML file will be written",
+        "name": "policy.pwml",
+        "status": "ok"
+      }
+    ],
+    "failures": [],
+    "ok": true,
+    "warnings": []
+  },
+  "produces_pwml": false,
+  "provenance_problems": [],
+  "retrieval": {
+    "chunks": 20,
+    "embedding_mode": "api",
+    "papers_indexed": 1,
+    "vector_backend": "memory",
+    "warnings": []
+  },
+  "rounds_completed": 2,
+  "run_id": "pilot-001-jasmonate-ath",
+  "schema_version": "t2pw.mining/1.0.0",
+  "stop_detail": "no unexhausted frontier items remain",
+  "stop_reason": "frontier_exhausted",
+  "target_species": "Arabidopsis thaliana",
+  "target_species_normalized": "arabidopsis thaliana",
+  "topic": "jasmonate biosynthesis",
+  "usage": {
+    "cached_tokens": 0,
+    "claims_extracted": 21,
+    "elapsed_seconds": 303.691,
+    "estimated_cost_usd": 0.003373,
+    "input_tokens": 22843,
+    "last_round_new_reactions": 0,
+    "llm_calls": 1,
+    "output_tokens": 3629,
+    "papers_discovered": 21,
+    "papers_processed": 1,
+    "passages_extracted": 20,
+    "rounds": 2,
+    "unproductive_streak": 1
+  },
+  "warnings": []
+}
