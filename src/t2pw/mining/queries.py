@@ -117,6 +117,8 @@ def formulation(item: FrontierItem, config: MiningConfig, attempt: int = 1) -> O
     means attempt 2 would also return nothing.
     """
     terms = target_terms(item, config)
+    if not terms and item.kind != FRONTIER_SEED:
+        return None  # e.g. "? -> ?": a species-only search would ask nothing of this item
     if attempt <= 1:
         return terms
     topic = _clean(config.topic)

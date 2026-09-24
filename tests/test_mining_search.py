@@ -206,3 +206,5 @@ def test_rendered_queries_require_every_own_term_and_the_species(tmp_path):
 
     topic_item = FrontierItem(frontier_item_id="fr_t", kind="seed_expansion", target=config.topic)
     assert Q.build_query(topic_item, config, round_index=1, attempt=2) is None
+    empty = FrontierItem(frontier_item_id="fr_e", kind="missing_direction", target="? -> ?")
+    assert Q.build_query(empty, config, round_index=1) is None

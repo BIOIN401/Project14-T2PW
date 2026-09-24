@@ -42,7 +42,8 @@ Each frontier item's query **requires** the item's own terms and the target spec
 The topic and generic words are not OR'd in. A bridge requires both of its sides. A reaction
 label requires its first substrate and its first product. A trailing parenthetical note
 (`HDA (16:2n6)` → `HDA`) is dropped from a term, because as a phrase search it almost never
-matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`.
+matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no usable term
+(e.g. `? -> ?`) is exhausted without a query, not searched on the species alone.
 
 * **Result window.** Each query asks `search_candidates` for `max_results_per_query` papers.
   Each configured source (EuropePMC, NCBI) is searched separately, and the lists are taken in
