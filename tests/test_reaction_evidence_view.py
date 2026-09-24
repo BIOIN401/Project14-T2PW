@@ -24,9 +24,9 @@ from t2pw.app.reaction_evidence_view import DOWNLOAD_LABEL, NO_RUN_MESSAGE
 BUNDLE = Path(__file__).resolve().parent / "fixtures" / "reaction_evidence" / "enterobactin_strict.bundle.json"
 
 
-def write_leg(target: Path, names=None) -> Path:
+def write_leg(target: Path, names=None, bundle: Path = BUNDLE) -> Path:
     target.mkdir(parents=True, exist_ok=True)
-    for name, content in json.loads(BUNDLE.read_text(encoding="utf-8")).items():
+    for name, content in json.loads(bundle.read_text(encoding="utf-8")).items():
         if names is None or name in names:
             text = content if isinstance(content, str) else json.dumps(content, ensure_ascii=False)
             (target / name).write_text(text, encoding="utf-8")
@@ -162,3 +162,21 @@ def test_a_rendering_fault_is_contained(leg, monkeypatch):
     at.text_input[0].input(str(leg)).run()
     _silent_to_the_batch_driver(at)
     assert _texts(at.info) == ["Reaction Evidence could not be rendered: synthetic fault"]
+
+
+def test_research_leg_headings_say_the_quarantine_was_not_applied(tmp_path):
+    """REPAIR ROUND 1 (B2), NEW ACCEPTANCE TEST: research_mode.applied=false is on the page."""
+
+    leg = write_leg(tmp_path / "leg", bundle=BUNDLE.with_name("enterobactin_research.bundle.json"))
+    at = _app().run()
+    at.text_input[0].input(str(leg)).run()
+    _silent_to_the_batch_driver(at)
+    heading = "**Surviving reactions (6) -- research_mode.applied=false: quarantine removed nothing; "
+    assert any(m.startswith(heading) for m in _texts(at.markdown))
+    assert [e.label for e in at.expander][-1] == (
+        "Quarantined / rejected candidate processes (1) -- research_mode.applied=false: "
+        "quarantine_report.json rows are review flags, not removals"
+    )
+    codes = "\n".join(_texts(at.code))
+    assert "Research mode applied: false" in codes and "From quarantine_report.json quarantined: 1" in codes
+    assert "Status: listed as QUARANTINED 1: state=quarantined_unmapped_entity" in codes

@@ -43,11 +43,11 @@ COMMITTED_LEG = REPO / "runs_verify" / "2026-09-01_1612" / "papers" / "PMC120960
 SAMPLE = REPO / "docs" / "reaction_evidence_sample.txt"
 
 
-def write_leg(target: Path) -> Path:
+def write_leg(target: Path, bundle: Path = BUNDLE) -> Path:
     """Write the bundle out as a leg directory: one file per artifact, real names."""
 
     target.mkdir(parents=True, exist_ok=True)
-    for name, content in json.loads(BUNDLE.read_text(encoding="utf-8")).items():
+    for name, content in json.loads(bundle.read_text(encoding="utf-8")).items():
         text = content if isinstance(content, str) else json.dumps(content, ensure_ascii=False)
         (target / name).write_text(text, encoding="utf-8")
     return target
@@ -141,8 +141,13 @@ def test_missing_optional_artifacts_read_not_recorded(tmp_path):
     text = render_text(build_report(load_run_artifacts(tmp_path)))
     assert "Minimum core satisfied: false" in text
     assert "Unmatched (0): none" in text
-    for title, body in (("QUARANTINED / REJECTED (0)", "None recorded"), ("SURVIVING REACTIONS (0)", NOT_RECORDED)):
-        assert f"{title}\n{'-' * len(title)}\n{body}\n" in text
+    title = "SURVIVING REACTIONS (0)"
+    assert f"{title}\n{'-' * len(title)}\n{NOT_RECORDED}\n" in text
+    title = "QUARANTINED / REJECTED (0)"
+    assert (
+        f"{title}\n{'-' * len(title)}\nFrom quarantine_report.json quarantined: 0\n"
+        f"From final payload quarantined_locked_reactions (locked-reaction filter): {NOT_RECORDED}\n\nNone recorded\n"
+    ) in text
 
     # Unreadable JSON is treated as absent, not as a crash.
     (tmp_path / FINAL_MAPPED_FILENAME).write_text("{not json", encoding="utf-8")
@@ -302,3 +307,128 @@ def test_streamlit_app_hook_is_one_module_level_call_at_the_end():
     *_, imported, called = tree.body
     assert isinstance(imported, ast.ImportFrom) and imported.module == "t2pw.app.reaction_evidence_view"
     assert isinstance(called, ast.Expr) and ast.unparse(called) == "render_reaction_evidence()"
+
+
+# REPAIR ROUND 1 (B1/B2) -- NEW ACCEPTANCE TESTS, same G9 label as the module docstring.
+# Each bundle is a trimmed copy of the committed leg named beside it; test 13 proves the
+# trim renders byte-identically to that leg, so the assertions below hold for the leg.
+FIXTURES = REPO / "tests" / "fixtures" / "reaction_evidence"
+TRIMMED_LEGS = {
+    "lipid_a_strict": "runs_verify/2026-08-24_1428/papers/PMC12444477/strict",
+    "enterobactin_research": "runs_verify/2026-08-21_2057/papers/PMC12096016/research",
+    "enterobactin_refused_strict": "runs_verify/2026-08-18_1328/papers/PMC12452463/strict",
+}
+
+
+def _bundle_leg(tmp_path: Path, name: str) -> Path:
+    return write_leg(tmp_path / name, FIXTURES / f"{name}.bundle.json")
+
+
+def _quarantined_block(text: str, name: str) -> str:
+    at = text.index(f"\nName: {name}\n")
+    return text[text.rindex("\nQUARANTINED ", 0, at) + 1 : text.index("\n\n", at)]
+
+
+# 13 ------------------------------------------------------------------------
+@pytest.mark.parametrize("name", sorted(TRIMMED_LEGS))
+def test_trimmed_bundle_renders_like_its_committed_leg(tmp_path, name):
+    assert render_text(_report(_bundle_leg(tmp_path, name))) == render_text(_report(REPO / TRIMMED_LEGS[name]))
+
+
+# 14 ------------------------------------------------------------------------
+def test_locked_reactions_removed_upstream_are_listed_with_reason_and_evidence(tmp_path):
+    """B1: final_mapped.json quarantined_locked_reactions is a removal record too."""
+
+    leg = _bundle_leg(tmp_path, "lipid_a_strict")
+    report = _report(leg)
+    text = render_text(report)
+    on_disk = set(_all_strings(json.loads((FIXTURES / "lipid_a_strict.bundle.json").read_text(encoding="utf-8"))))
+    locked = {row["name"]: row for row in report["quarantined"] if row["source"] == "locked-reaction filter"}
+
+    expected = {
+        "LpxC reaction": ("rxn_lock_003", "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety"),
+        "LpxD reaction": ("rxn_lock_004", "addition of the next acyl group by LpxD"),
+        "LpxH reaction": ("rxn_lock_005", "removal of UMP by LpxH"),
+        "LpxK reaction": ("rxn_lock_006", "phosphorylated by LpxK to produce lipid IVA"),
+    }
+    assert sorted(locked) == sorted(expected)
+    for name, (lock, first_quote) in expected.items():
+        row = locked[name]
+        assert (row["lock_id"], row["reason"]) == (lock, "coarse_grained_same_entity_transformation")
+        assert row["evidence"][0] == first_quote and set(row["evidence"]) <= on_disk
+        block = _quarantined_block(text, name)
+        assert "[locked-reaction filter; json_pointer " in block and f"lock {lock}]" in block
+        assert "Reason: coarse_grained_same_entity_transformation" in block
+        assert "Action: quarantined_from_active_reactions" in block and f'1. "{first_quote}"' in block
+
+    # LpxL / LpxM are in BOTH records: listed once, from strict quarantine, and the
+    # locked-filter count says so.
+    assert [r["name"] for r in report["quarantined"]].count("LpxL reaction") == 1
+    assert [r["name"] for r in report["quarantined"]].count("LpxM reaction") == 1
+    assert "QUARANTINED / REJECTED (15)" in text
+    assert (
+        "From final payload quarantined_locked_reactions (locked-reaction filter): 6 "
+        "(2 already listed from quarantine_report.json by lock id: rxn_lock_007, rxn_lock_008)"
+    ) in text
+
+
+# 15 ------------------------------------------------------------------------
+def test_removals_recorded_in_the_payload_are_not_called_not_recorded(tmp_path):
+    """B1: no quarantine_report.json, but the payload records removed locked reactions."""
+
+    leg = _bundle_leg(tmp_path, "lipid_a_strict")
+    (leg / "quarantine_report.json").unlink()
+    text = render_text(_report(leg))
+    assert "QUARANTINED / REJECTED (6)" in text and "QUARANTINED / REJECTED (Not recorded)" not in text
+    assert "From quarantine_report.json quarantined: Not recorded" in text
+    for name in ("LpxC", "LpxD", "LpxH", "LpxK", "LpxL", "LpxM"):
+        assert f"Name: {name} reaction" in text
+
+
+# 16 ------------------------------------------------------------------------
+def test_research_mode_flags_are_shown_as_not_applied(tmp_path):
+    """B2: research_mode.applied=false -- the flagged reaction is still in the payload."""
+
+    report = _report(_bundle_leg(tmp_path, "enterobactin_research"))
+    text = render_text(report)
+    note = (
+        "research mode: quarantine ran diagnostically. Nothing was removed and the "
+        "candidate pathway is unchanged; the decisions below are review flags."
+    )
+    for line in ("Export mode: research", "Quarantine ok: true", "Research mode applied: false",
+                 f"Research mode note: {note}"):
+        assert f"\n{line}\n" in text
+    assert (
+        "\nSURVIVING REACTIONS (6) -- research_mode.applied=false: quarantine removed nothing; "
+        "reactions it flagged are still listed here\n"
+    ) in text
+    assert (
+        "\nQUARANTINED / REJECTED (1) -- research_mode.applied=false: "
+        "quarantine_report.json rows are review flags, not removals\n"
+    ) in text
+
+    entc = report["reactions"][0]
+    assert (entc["name"], entc["lock_id"]) == ("EntC reaction", "rxn_lock_003")
+    assert (
+        "Status: listed as QUARANTINED 1: state=quarantined_unmapped_entity, "
+        "reason=protein_missing_external_identity; scope=core\n"
+    ) in text
+    assert text.count("admission=Not recorded") == 0
+
+
+# 17 ------------------------------------------------------------------------
+def test_refused_quarantine_is_shown_and_per_reaction_status_is_filled(tmp_path):
+    """B2: ok=false -- the payload read is not the released graph; say so, per reaction too."""
+
+    report = _report(_bundle_leg(tmp_path, "enterobactin_refused_strict"))
+    text = render_text(report)
+    assert "\nQuarantine ok: false\n" in text and "\nRelease status: diagnostic_only\n" in text
+    refused = "quarantine_report.json ok=false: payload not released (release status diagnostic_only)"
+    assert f"\nSURVIVING REACTIONS (6) -- {refused}\n" in text
+    assert f"\nQUARANTINED / REJECTED (5) -- {refused}\n" in text
+    status = {r["name"]: r["quarantine"] for r in report["reactions"]}
+    reason = "state=quarantined_broken_reference, reason=ambiguous_entity_type:protein_complexes+proteins"
+    assert status["DHB activation to DHB-AMP"] == [f"listed as QUARANTINED 1: {reason}"]
+    assert status["enterobactin assembly"] == [f"listed as QUARANTINED 2: {reason}"]
+    assert status["chorismate to isochorismate"] == []
+    assert f"Status: listed as QUARANTINED 1: {reason}; scope=core\n" in text

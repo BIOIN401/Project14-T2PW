@@ -9,6 +9,8 @@ Minimum core satisfied: true
 Surviving processes: 9
 Quarantined processes: 1
 Release status: review_required
+Export mode: pathwhiz
+Quarantine ok: true
 Reactions itemised: 5 (transports: 1, interactions: 3; counted above, not itemised)
 Surviving reactions read from: final_mapped.json
 Artifacts read: coverage_summary.json, final_mapped.json, LEG_TRACE.jsonl, quarantine_report.json, removed_entity_report.json
@@ -116,6 +118,9 @@ Source:
 
 QUARANTINED / REJECTED (1)
 --------------------------
+From quarantine_report.json quarantined: 1
+From final payload quarantined_locked_reactions (locked-reaction filter): 1 (1 already listed from quarantine_report.json by lock id: rxn_lock_004)
+
 QUARANTINED 1  [pre-quarantine /processes/reactions/5; reaction; lock rxn_lock_004]
 Name: EntD-catalyzed phosphopantetheinylation of EntB
 Equation: apo-EntB -> holo-EntB

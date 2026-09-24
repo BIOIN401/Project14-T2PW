@@ -41,6 +41,7 @@ from t2pw.app.reaction_evidence import (
     quarantined_lines,
     reaction_lines,
     render_text,
+    with_note,
 )
 from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY
 from t2pw.pipeline.strict_quarantine import COVERAGE_REPORT_FILENAME
@@ -127,7 +128,8 @@ def _render_body() -> None:
     columns[3].metric("Quarantined processes", report["quarantined_processes"])
     _block(header_lines(report) + coverage_lines(report))
 
-    st.markdown(f"**Surviving reactions ({len(report['reactions'])})**")
+    heading = with_note(f"Surviving reactions ({len(report['reactions'])})", report["surviving_note"])
+    st.markdown(f"**{heading}**")
     if not report["reactions"]:
         missing = report["payload_source"] == NOT_RECORDED
         st.info(f"Surviving reactions: {NOT_RECORDED + ' (no final_mapped.json)' if missing else NONE_RECORDED}")
@@ -143,9 +145,10 @@ def _render_body() -> None:
 
     quarantined = report["quarantined"]
     label = NOT_RECORDED if quarantined is None else str(len(quarantined))
-    with st.expander(f"Quarantined / rejected candidate processes ({label})"):
+    with st.expander(with_note(f"Quarantined / rejected candidate processes ({label})", report["quarantined_note"])):
+        _block(report["quarantine_sources"])
         if not quarantined:
-            st.write(f"{NOT_RECORDED} (no quarantine_report.json)" if quarantined is None else NONE_RECORDED)
+            st.write(NOT_RECORDED if quarantined is None else NONE_RECORDED)
         for number, row in enumerate(quarantined or [], 1):
             _block(quarantined_lines(number, row))
         if report["removed_entities"]:

@@ -4,10 +4,12 @@ PRESENTATION ONLY. Everything here is read from a run's EXISTING artifacts --
 ``coverage_summary.json``, ``quarantine_report.json`` and
 ``removed_entity_report.json`` (the strict-quarantine set written by
 ``strict_quarantine.write_quarantine_artifacts``), ``final_mapped.json`` (the
-canonical payload, ``batch.driver._add_identity_artifacts``) and the first record
-of ``LEG_TRACE.jsonl`` for the paper id. Nothing is recomputed, repaired, merged
-or deleted, and no model, embedding or network call is made: this module imports
-only the standard library and the quarantine filename constants.
+canonical payload, ``batch.driver._add_identity_artifacts``, including its
+``quarantined_locked_reactions``: locked reactions removed upstream of strict
+quarantine) and the first record of ``LEG_TRACE.jsonl`` for the paper id. Nothing
+is recomputed, repaired, merged or deleted, and no model, embedding or network
+call is made: this module imports only the standard library and the quarantine
+filename constants.
 
 A value an artifact does not carry is rendered ``Not recorded``; it is never
 guessed. A missing artifact (``Not recorded``) and a recorded empty list
@@ -42,6 +44,7 @@ JSON_ARTIFACTS = (
 NOT_RECORDED = "Not recorded"
 NONE_RECORDED = "None recorded"
 DUPLICATE_WARNING = "Possible duplicate reaction"
+LOCKED_FILTER = "locked-reaction filter"
 
 #: Identifier fields shown verbatim, by their payload key, so nothing is relabelled.
 _ID_FIELDS = (
@@ -200,6 +203,12 @@ def _enzyme(enzyme: Mapping[str, Any], index: Mapping[str, Dict[str, Any]]) -> s
     return f"{name} ({'; '.join(detail)})" if detail else name
 
 
+def _same_process(lock_id: str, name: Any, row: Mapping[str, Any]) -> bool:
+    if lock_id and row["lock_id"]:
+        return lock_id == row["lock_id"]
+    return bool(_norm(name)) and _norm(name) == _norm(row["name"])
+
+
 def load_run_artifacts(directory: Any) -> Dict[str, Any]:
     """Read whichever of the known artifacts exist in ``directory``. Missing = absent key."""
 
@@ -235,16 +244,106 @@ def build_report(artifacts: Mapping[str, Any], *, payload_source: str = FINAL_MA
         if row.get("bucket") == "reactions":
             admitted.setdefault(_norm(row.get("name")), set()).add(_text(row.get("state")))
 
+    strict_rows: Optional[List[Dict[str, Any]]] = None
+    if isinstance(quarantine, dict):
+        strict_rows = []
+        for row in map(_dict, _list(quarantine.get("quarantined"))):
+            # ``detail.row`` carries ELIDED evidence ("123 chars elided"); only the
+            # verbatim ``original_process`` is ever quoted.
+            original = _dict(row.get("original_process"))
+            inputs, outputs = _side(original, "inputs"), _side(original, "outputs")
+            state, reason = _text(row.get("state")), _text(row.get("reason"))
+            essential = _text(row.get("essential_participant"))
+            strict_rows.append(
+                {
+                    "source": "",
+                    "name": _text(row.get("name") or original.get("name")),
+                    "pointer": f"pre-quarantine {_text(row['pointer'])}" if _text(row.get("pointer")) else "",
+                    "lock_id": _text(original.get("locked_reaction_id")),
+                    "kind": _text(row.get("process_kind")),
+                    "equation": _equation(inputs, outputs) if (inputs or outputs) else "",
+                    "state": state,
+                    "reason": reason,
+                    "essential_participant": essential,
+                    "fields": [("State", state), ("Reason", reason), ("Essential participant", essential)],
+                    "evidence": _quotes(original),
+                }
+            )
+
+    # Locked (paper-extracted) reactions removed UPSTREAM of strict quarantine are
+    # recorded only in the payload. A lock strict quarantine already lists is shown once.
+    locked_records = payload.get("quarantined_locked_reactions")
+    strict_locks = {row["lock_id"] for row in strict_rows or [] if row["lock_id"]}
+    locked_rows: List[Dict[str, Any]] = []
+    already_listed: List[str] = []
+    for entry in map(_dict, _list(locked_records)):
+        original = _dict(entry.get("original_reaction"))
+        lock_id = _text(entry.get("locked_reaction_id") or original.get("locked_reaction_id"))
+        if lock_id in strict_locks:
+            already_listed.append(lock_id)
+            continue
+        inputs, outputs = _side(original, "inputs"), _side(original, "outputs")
+        fields = [("Reason", _text(entry.get("reason")))]
+        if isinstance(entry.get("missing_entities"), list):
+            fields.append(("Missing entities", ", ".join(_texts(entry["missing_entities"])) or NONE_RECORDED))
+        for key, label in (("action", "Action"), ("quarantine_stage", "Quarantine stage"), ("admission_state", "Admission state")):
+            if _text(entry.get(key)):
+                fields.append((label, _text(entry[key])))
+        locked_rows.append(
+            {
+                "source": LOCKED_FILTER,
+                "name": _text(entry.get("reaction_name") or original.get("name")),
+                "pointer": f"json_pointer {_text(entry['json_pointer'])}" if _text(entry.get("json_pointer")) else "",
+                "lock_id": lock_id,
+                "kind": "",
+                "equation": _equation(inputs, outputs) if (inputs or outputs) else "",
+                "state": _text(entry.get("admission_state")),
+                "reason": _text(entry.get("reason")),
+                "essential_participant": "",
+                "fields": fields,
+                "evidence": _quotes(original),
+            }
+        )
+    quarantined: Optional[List[Dict[str, Any]]] = None
+    if strict_rows is not None or isinstance(locked_records, list):
+        quarantined = [*(strict_rows or []), *locked_rows]
+    locked_line = f"From final payload quarantined_locked_reactions ({LOCKED_FILTER}): "
+    if not isinstance(locked_records, list):
+        locked_line += NOT_RECORDED
+    else:
+        locked_line += f"{len(locked_records)}"
+        if already_listed:
+            locked_line += (
+                f" ({len(already_listed)} already listed from {QUARANTINE_REPORT_FILENAME} "
+                f"by lock id: {', '.join(already_listed)})"
+            )
+    quarantine_sources = [f"From {QUARANTINE_REPORT_FILENAME} quarantined: {_count(strict_rows)}", locked_line]
+
+    # Whether the quarantine decision was applied to the payload read above, in the
+    # report's own terms. Research mode flags without removing; ok=false refused it.
+    research = quarantine.get("research_mode") if isinstance(quarantine, dict) else None
+    release_status = _show(_dict(_dict(quarantine).get("release")).get("status"))
+    surviving_note: List[str] = []
+    quarantined_note: List[str] = []
+    if isinstance(research, dict) and research.get("applied") is False:
+        surviving_note.append("research_mode.applied=false: quarantine removed nothing; reactions it flagged are still listed here")
+        quarantined_note.append(f"research_mode.applied=false: {QUARANTINE_REPORT_FILENAME} rows are review flags, not removals")
+    if _dict(quarantine).get("ok") is False:
+        refused = f"{QUARANTINE_REPORT_FILENAME} ok=false: payload not released (release status {release_status})"
+        surviving_note.append(refused)
+        quarantined_note.append(refused)
+
     reactions: List[Dict[str, Any]] = []
     for number, row in enumerate(map(_dict, _list(processes.get("reactions"))), 1):
         inputs, outputs = _side(row, "inputs"), _side(row, "outputs")
         enzyme_names = [_text(_dict(e).get("entity") or _dict(e).get("name")) for e in _list(row.get("enzymes"))]
         states = sorted(admitted.get(_norm(row.get("name")), ()))
+        lock_id = _text(row.get("locked_reaction_id"))
         reactions.append(
             {
                 "number": number,
                 "pointer": f"/processes/reactions/{number - 1}",
-                "lock_id": _text(row.get("locked_reaction_id")),
+                "lock_id": lock_id,
                 "name": _text(row.get("name")),
                 "substrates": inputs,
                 "products": outputs,
@@ -253,6 +352,13 @@ def build_report(artifacts: Mapping[str, Any], *, payload_source: str = FINAL_MA
                 "species": sorted({_text(index.get(_norm(n), {}).get("species")) for n in enzyme_names} - {""}),
                 # Matched by name; ambiguous (two states for one name) is not guessed.
                 "admission": states[0] if len(states) == 1 else "",
+                # The same reaction listed under QUARANTINED / REJECTED: by lock id when
+                # both carry one, else by name.
+                "quarantine": [
+                    f"listed as QUARANTINED {n}: state={q['state'] or NOT_RECORDED}, reason={q['reason'] or NOT_RECORDED}"
+                    for n, q in enumerate(quarantined or [], 1)
+                    if _same_process(lock_id, row.get("name"), q)
+                ],
                 "scope": _text(row.get("scope_membership")),
                 "preservation": _text(row.get("preservation_status")),
                 "lineage": _lineage(row),
@@ -270,28 +376,6 @@ def build_report(artifacts: Mapping[str, Any], *, payload_source: str = FINAL_MA
             ]
     for reaction in reactions:
         del reaction["_key"]
-
-    quarantined: Optional[List[Dict[str, Any]]] = None
-    if isinstance(quarantine, dict):
-        quarantined = []
-        for row in map(_dict, _list(quarantine.get("quarantined"))):
-            # ``detail.row`` carries ELIDED evidence ("123 chars elided"); only the
-            # verbatim ``original_process`` is ever quoted.
-            original = _dict(row.get("original_process"))
-            inputs, outputs = _side(original, "inputs"), _side(original, "outputs")
-            quarantined.append(
-                {
-                    "name": _text(row.get("name") or original.get("name")),
-                    "pointer": _text(row.get("pointer")),
-                    "lock_id": _text(original.get("locked_reaction_id")),
-                    "kind": _text(row.get("process_kind")),
-                    "equation": _equation(inputs, outputs) if (inputs or outputs) else "",
-                    "state": _text(row.get("state")),
-                    "reason": _text(row.get("reason")),
-                    "essential_participant": _text(row.get("essential_participant")),
-                    "evidence": _quotes(original),
-                }
-            )
 
     removed_entities: Optional[List[str]] = None
     if isinstance(removed, dict):
@@ -317,7 +401,17 @@ def build_report(artifacts: Mapping[str, Any], *, payload_source: str = FINAL_MA
         "surviving_processes": _show(coverage.get("surviving_processes")),
         "quarantined_processes": _show(coverage.get("quarantined_processes")),
         "minimum_core_satisfied": _show(coverage.get("minimum_core_satisfied")),
-        "release_status": _show(_dict(_dict(quarantine).get("release")).get("status")),
+        "release_status": release_status,
+        "export_mode": _show(_dict(quarantine).get("export_mode")),
+        "quarantine_ok": _show(_dict(quarantine).get("ok")),
+        "research_mode": (
+            [f"Research mode applied: {_show(research.get('applied'))}", f"Research mode note: {_show(research.get('note'))}"]
+            if isinstance(research, dict)
+            else []
+        ),
+        "surviving_note": "; ".join(surviving_note),
+        "quarantined_note": "; ".join(quarantined_note),
+        "quarantine_sources": quarantine_sources,
         "payload_source": payload_source if payload else NOT_RECORDED,
         "transport_count": len(_list(processes.get("transports"))),
         "interaction_count": len(_list(processes.get("interactions"))),
@@ -358,6 +452,9 @@ def header_lines(report: Mapping[str, Any]) -> List[str]:
         f"Surviving processes: {report['surviving_processes']}",
         f"Quarantined processes: {report['quarantined_processes']}",
         f"Release status: {report['release_status']}",
+        f"Export mode: {report['export_mode']}",
+        f"Quarantine ok: {report['quarantine_ok']}",
+        *report["research_mode"],
         f"Reactions itemised: {len(report['reactions'])} (transports: {report['transport_count']}, "
         f"interactions: {report['interaction_count']}; counted above, not itemised)",
         f"Surviving reactions read from: {report['payload_source']}",
@@ -373,7 +470,9 @@ def reaction_lines(reaction: Mapping[str, Any]) -> List[str]:
     # Pointers index the payload each artifact describes: survivors the final payload,
     # quarantined rows the pre-quarantine payload. The lock id is the cross-payload key.
     key = f"final payload {reaction['pointer']}" + (f"; lock {reaction['lock_id']}" if reaction["lock_id"] else "")
-    status = [f"admission={reaction['admission'] or NOT_RECORDED}", f"scope={reaction['scope'] or NOT_RECORDED}"]
+    status = [f"admission={reaction['admission']}"] if reaction["admission"] else []
+    status += reaction["quarantine"] or ([] if status else [f"admission={NOT_RECORDED}"])
+    status.append(f"scope={reaction['scope'] or NOT_RECORDED}")
     if reaction["preservation"]:
         status.append(f"preservation={reaction['preservation']}")
     lines = [
@@ -399,21 +498,24 @@ def reaction_lines(reaction: Mapping[str, Any]) -> List[str]:
 
 
 def quarantined_lines(number: int, row: Mapping[str, Any]) -> List[str]:
-    parts = (
-        f"pre-quarantine {row['pointer']}" if row["pointer"] else "",
-        row["kind"],
-        f"lock {row['lock_id']}" if row["lock_id"] else "",
-    )
+    parts = (row["source"], row["pointer"], row["kind"], f"lock {row['lock_id']}" if row["lock_id"] else "")
     key = "; ".join(p for p in parts if p) or NOT_RECORDED
     lines = [f"QUARANTINED {number}  [{key}]", f"Name: {row['name'] or NOT_RECORDED}"]
     if row["equation"]:
         lines.append(f"Equation: {row['equation']}")
-    return lines + [
-        f"State: {row['state'] or NOT_RECORDED}",
-        f"Reason: {row['reason'] or NOT_RECORDED}",
-        f"Essential participant: {row['essential_participant'] or NOT_RECORDED}",
-        *_evidence(row["evidence"]),
-    ]
+    return lines + [f"{label}: {value or NOT_RECORDED}" for label, value in row["fields"]] + _evidence(row["evidence"])
+
+
+def with_note(title: str, note: str) -> str:
+    return f"{title} -- {note}" if note else title
+
+
+def surviving_title(report: Mapping[str, Any]) -> str:
+    return with_note(f"SURVIVING REACTIONS ({len(report['reactions'])})", report["surviving_note"])
+
+
+def quarantined_title(report: Mapping[str, Any]) -> str:
+    return with_note(f"QUARANTINED / REJECTED ({_count(report['quarantined'])})", report["quarantined_note"])
 
 
 def _section(title: str) -> List[str]:
@@ -432,13 +534,13 @@ def render_text(report: Mapping[str, Any]) -> str:
     """The .txt export: a pure function of ``report``, so same artifacts give the same bytes."""
 
     lines = ["PATHWAY EVIDENCE REPORT", "=======================", *header_lines(report), ""]
-    lines += _section(f"SURVIVING REACTIONS ({len(report['reactions'])})")
+    lines += _section(surviving_title(report))
     for reaction in report["reactions"]:
         lines += [*reaction_lines(reaction), ""]
     if not report["reactions"]:
         lines += _absent(None if report["payload_source"] == NOT_RECORDED else [])
     quarantined = report["quarantined"]
-    lines += _section(f"QUARANTINED / REJECTED ({_count(quarantined)})")
+    lines += [*_section(quarantined_title(report)), *report["quarantine_sources"], ""]
     for number, row in enumerate(quarantined or [], 1):
         lines += [*quarantined_lines(number, row), ""]
     if not quarantined:

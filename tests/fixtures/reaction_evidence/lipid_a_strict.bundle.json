@@ -1,0 +1,1126 @@
+{
+ "coverage_summary.json": {
+  "requested_core_terms": [
+   "UDP-GlcNAc",
+   "β-hydroxyacyl-ACP",
+   "R-3-hydroxymyristoyl-ACP",
+   "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+   "lipid IVA",
+   "Kdo-lipid IVA",
+   "Kdo-lipid A",
+   "LPS",
+   "acyl carrier protein (ACP)",
+   "CoA",
+   "LpxA",
+   "LpxC",
+   "LpxD",
+   "LpxH",
+   "LpxB",
+   "LpxK",
+   "WaaA",
+   "LpxL",
+   "LpxM",
+   "FtsH",
+   "LapB",
+   "YejM",
+   "FabZ",
+   "ObgE",
+   "MsbA",
+   "Lpt system"
+  ],
+  "matched_terms": [
+   "UDP-GlcNAc",
+   "β-hydroxyacyl-ACP",
+   "R-3-hydroxymyristoyl-ACP",
+   "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+   "lipid IVA",
+   "Kdo-lipid IVA",
+   "Kdo-lipid A",
+   "LpxA",
+   "LpxC",
+   "LpxD",
+   "LpxH",
+   "LpxB",
+   "LpxK",
+   "WaaA",
+   "FabZ",
+   "MsbA",
+   "Lpt system"
+  ],
+  "unmatched_terms": [
+   "LPS",
+   "acyl carrier protein (ACP)",
+   "CoA",
+   "LpxL",
+   "LpxM",
+   "FtsH",
+   "LapB",
+   "YejM",
+   "ObgE"
+  ],
+  "coverage_ratio": 0.653846,
+  "surviving_processes": 18,
+  "quarantined_processes": 11,
+  "minimum_core_satisfied": true,
+  "reasons": [],
+  "requested_context": {
+   "pathway_name": "lipid A biosynthesis (Escherichia coli)",
+   "likely_organism": "Escherichia coli"
+  }
+ },
+ "quarantine_report.json": {
+  "export_mode": "pathwhiz",
+  "ok": true,
+  "release": {
+   "status": "review_required"
+  },
+  "accepted": [
+   {
+    "bucket": "reactions",
+    "name": "LpxA reaction",
+    "state": "core_accepted"
+   },
+   {
+    "bucket": "reactions",
+    "name": "LpxB reaction",
+    "state": "core_accepted"
+   },
+   {
+    "bucket": "reactions",
+    "name": "WaaA reaction",
+    "state": "core_accepted"
+   }
+  ],
+  "quarantined": [
+   {
+    "name": "LpxL reaction",
+    "pointer": "/processes/reactions/3",
+    "process_kind": "reaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "LpxL",
+    "original_process": {
+     "name": "LpxL reaction",
+     "locked_reaction_id": "rxn_lock_007",
+     "inputs": [
+      "Kdo-lipid IVA"
+     ],
+     "outputs": [
+      "Kdo-lipid A"
+     ],
+     "evidence": "acylated by LpxL and LpxM to finally form Kdo-lipid A",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "LpxL",
+       "entity_type": "protein",
+       "evidence": "acylated by LpxL and LpxM"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      },
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "LpxM reaction",
+    "pointer": "/processes/reactions/4",
+    "process_kind": "reaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "LpxM",
+    "original_process": {
+     "name": "LpxM reaction",
+     "locked_reaction_id": "rxn_lock_008",
+     "inputs": [
+      "Kdo-lipid IVA"
+     ],
+     "outputs": [
+      "Kdo-lipid A"
+     ],
+     "evidence": "acylated by LpxL and LpxM to finally form Kdo-lipid A",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "LpxM",
+       "entity_type": "protein",
+       "evidence": "acylated by LpxL and LpxM"
+      },
+      {
+       "entity": "LpxL",
+       "entity_type": "protein",
+       "evidence": "sequentially acylated by LpxL"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      },
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "FtsH degrades LpxC",
+    "pointer": "/processes/interactions/0",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "FtsH",
+    "original_process": {
+     "name": "FtsH degrades LpxC",
+     "evidence": "FtsH was able to directly degrade LpxC",
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      },
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "LapB binds LpxC",
+    "pointer": "/processes/interactions/1",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "LapB",
+    "original_process": {
+     "name": "LapB binds LpxC",
+     "evidence": "LapB makes extensive contacts with the N terminal and central regions of the Ec LpxC degron",
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      },
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "YejM binds LapB",
+    "pointer": "/processes/interactions/2",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "YejM",
+    "original_process": {
+     "name": "YejM binds LapB",
+     "evidence": "YejM directly interacted with LapB",
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      },
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "YejM binds LPS",
+    "pointer": "/processes/interactions/3",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "YejM",
+    "original_process": {
+     "name": "YejM binds LPS",
+     "evidence": "YejM contains an LPS binding pocket in its periplasmic surface",
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      },
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "LapB binds FtsH",
+    "pointer": "/processes/interactions/4",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "LapB",
+    "original_process": {
+     "name": "LapB binds FtsH",
+     "evidence": "LapB was shown to copurify with FtsH",
+     "provenance_lineage": [
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "Lipid A is acylated",
+    "pointer": "/processes/interactions/8",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "LpxL",
+    "original_process": {
+     "name": "Lipid A is acylated",
+     "evidence": "Kdo-lipid IV A which is sequentially acylated by LpxL and LpxM",
+     "provenance_lineage": [
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "Lipid A is acylated by LpxM",
+    "pointer": "/processes/interactions/9",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "LpxM",
+    "original_process": {
+     "name": "Lipid A is acylated by LpxM",
+     "evidence": "Kdo-lipid IV A which is sequentially acylated by LpxL and LpxM",
+     "provenance_lineage": [
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "LpxL acylates Kdo-lipid IVA",
+    "pointer": "/processes/interactions/19",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "LpxL",
+    "original_process": {
+     "name": "LpxL acylates Kdo-lipid IVA",
+     "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+     "provenance_lineage": [
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "LpxM acylates Kdo-lipid IVA",
+    "pointer": "/processes/interactions/20",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "LpxM",
+    "original_process": {
+     "name": "LpxM acylates Kdo-lipid IVA",
+     "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+     "provenance_lineage": [
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "removed_entity_report.json": {
+  "removed_entities": [
+   {
+    "bucket": "compounds",
+    "name": "Kdo-lipid A",
+    "reason": "unreferenced_after_quarantine"
+   },
+   {
+    "bucket": "compounds",
+    "name": "LPS",
+    "reason": "unreferenced_after_quarantine"
+   },
+   {
+    "bucket": "compounds",
+    "name": "acyl carrier protein",
+    "reason": "unreferenced_after_quarantine"
+   },
+   {
+    "bucket": "compounds",
+    "name": "CoA",
+    "reason": "unreferenced_after_quarantine"
+   },
+   {
+    "bucket": "compounds",
+    "name": "UMP",
+    "reason": "unreferenced_after_quarantine"
+   },
+   {
+    "bucket": "compounds",
+    "name": "lipid A",
+    "reason": "unreferenced_after_quarantine"
+   },
+   {
+    "bucket": "proteins",
+    "name": "LpxL",
+    "reason": "degree_zero_after_quarantine"
+   },
+   {
+    "bucket": "proteins",
+    "name": "LpxM",
+    "reason": "degree_zero_after_quarantine"
+   },
+   {
+    "bucket": "proteins",
+    "name": "FtsH",
+    "reason": "degree_zero_after_quarantine"
+   },
+   {
+    "bucket": "proteins",
+    "name": "LapB",
+    "reason": "degree_zero_after_quarantine"
+   },
+   {
+    "bucket": "proteins",
+    "name": "YejM",
+    "reason": "degree_zero_after_quarantine"
+   }
+  ]
+ },
+ "final_mapped.json": {
+  "entities": {
+   "species": [
+    {
+     "name": "Escherichia coli",
+     "taxonomy_id": "562"
+    },
+    {
+     "name": "E. coli",
+     "taxonomy_id": "562"
+    },
+    {
+     "name": "Arabidopsis thaliana",
+     "taxonomy_id": "3702"
+    }
+   ],
+   "compounds": [
+    {
+     "name": "UDP-GlcNAc",
+     "db_status": "legacy_id_unverified",
+     "pathbank_compound_id": 196,
+     "chebi_id": "16264",
+     "kegg_id": "C00043",
+     "hmdb_id": "HMDB0000290",
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "β-hydroxyacyl-ACP",
+     "db_status": "unmatched",
+     "mapping_meta": {
+      "resolution": {
+       "status": "novel"
+      }
+     }
+    },
+    {
+     "name": "R-3-hydroxymyristoyl-ACP",
+     "db_status": "unmatched",
+     "mapping_meta": {
+      "resolution": {
+       "status": "novel"
+      }
+     }
+    },
+    {
+     "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "db_status": "unmatched",
+     "mapping_meta": {
+      "resolution": {
+       "status": "novel"
+      }
+     }
+    },
+    {
+     "name": "lipid IVA",
+     "db_status": "legacy_id_unverified",
+     "pathbank_compound_id": 40982,
+     "chebi_id": "58603",
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "Kdo-lipid IVA",
+     "db_status": "unmatched",
+     "chebi_id": "27439",
+     "kegg_id": "C06024",
+     "mapping_meta": {
+      "resolution": {
+       "status": "novel"
+      }
+     }
+    },
+    {
+     "name": "Kdo",
+     "db_status": "legacy_id_unverified",
+     "pathbank_compound_id": 57926,
+     "chebi_id": "85986",
+     "kegg_id": "C01187",
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "core-lipid A",
+     "db_status": "unmatched",
+     "mapping_meta": {
+      "resolution": {
+       "status": "novel"
+      }
+     }
+    }
+   ],
+   "proteins": [
+    {
+     "name": "LpxA",
+     "species": "Escherichia coli",
+     "uniprot": "P0A722",
+     "pathbank_protein_id": 6025,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "LpxC",
+     "species": "Escherichia coli",
+     "uniprot": "P0A725",
+     "pathbank_protein_id": 6026,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "LpxD",
+     "species": "Escherichia coli",
+     "uniprot": "P21645",
+     "pathbank_protein_id": 6400,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "LpxH",
+     "species": "Escherichia coli",
+     "uniprot": "P43341",
+     "pathbank_protein_id": 6626,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "LpxB",
+     "species": "Escherichia coli",
+     "uniprot": "P10441",
+     "pathbank_protein_id": 6302,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "LpxK",
+     "species": "Escherichia coli",
+     "uniprot": "P27300",
+     "pathbank_protein_id": 6465,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "WaaA",
+     "species": "Escherichia coli",
+     "uniprot": "P0AC75",
+     "pathbank_protein_id": 6203,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "FabZ",
+     "species": "Escherichia coli",
+     "uniprot": "P0A6Q6",
+     "pathbank_protein_id": 7181,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "MsbA",
+     "species": "Escherichia coli",
+     "uniprot": "P60752",
+     "pathbank_protein_id": 7139,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "Unknown",
+     "species": "Arabidopsis thaliana",
+     "uniprot": "UNKNOWN",
+     "pathbank_protein_id": 9659,
+     "mapping_meta": {
+      "resolution": {
+       "status": "unresolved"
+      }
+     }
+    }
+   ],
+   "protein_complexes": [
+    {
+     "name": "Lpt system",
+     "species": "Escherichia coli",
+     "components": [
+      {
+       "name": "Unknown"
+      }
+     ],
+     "mapping_meta": {
+      "resolution": {
+       "status": "unresolved"
+      }
+     }
+    },
+    {
+     "name": "UDP-N-acetylglucosamine acyltransferase",
+     "species": "Escherichia coli",
+     "pathbank_protein_complex_id": 1616,
+     "components": [
+      {
+       "name": "LpxA"
+      }
+     ],
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "lipid A disaccharide synthase",
+     "species": "Escherichia coli",
+     "pathbank_protein_complex_id": 1620,
+     "components": [
+      {
+       "name": "LpxB"
+      }
+     ],
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "KDO transferase",
+     "species": "Escherichia coli",
+     "pathbank_protein_complex_id": 1627,
+     "components": [
+      {
+       "name": "WaaA"
+      }
+     ],
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    }
+   ]
+  },
+  "processes": {
+   "reactions": [
+    {
+     "name": "LpxA reaction",
+     "locked_reaction_id": "rxn_lock_001",
+     "inputs": [
+      "UDP-GlcNAc",
+      "β-hydroxyacyl-ACP"
+     ],
+     "outputs": [
+      "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     ],
+     "evidence": "LpxA, the first enzyme in the lipid A biosynthesis pathway, catalyzes the reversible acylation of UDP-GlcNAc using FAS II-derived β-hydroxyacyl-ACP molecules",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "UDP-N-acetylglucosamine acyltransferase",
+       "entity_type": "protein_complex",
+       "evidence": "LpxA, the first enzyme in the lipid A biosynthesis pathway, catalyzes the reversible acylation of UDP-GlcNAc"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    },
+    {
+     "name": "LpxB reaction",
+     "locked_reaction_id": "rxn_lock_002",
+     "inputs": [
+      "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     ],
+     "outputs": [
+      "lipid IVA"
+     ],
+     "evidence": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "lipid A disaccharide synthase",
+       "entity_type": "protein_complex",
+       "evidence": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    },
+    {
+     "name": "WaaA reaction",
+     "locked_reaction_id": "rxn_lock_009",
+     "inputs": [
+      "lipid IVA",
+      "Kdo"
+     ],
+     "outputs": [
+      "Kdo-lipid IVA"
+     ],
+     "evidence": "WaaA adds a number of Kdo residues that depends on the organism to form the first sugar(s) of the core, resulting in Kdo-lipid IVA",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "KDO transferase",
+       "entity_type": "protein_complex",
+       "evidence": "WaaA adds a number of Kdo residues"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    }
+   ],
+   "transports": [
+    {
+     "name": "MsbA-mediated core-lipid A flip"
+    },
+    {
+     "name": "Lpt system transport of core-lipid A to OM"
+    }
+   ],
+   "interactions": [
+    {
+     "name": "FabZ dehydrates β-hydroxyacyl-ACP"
+    },
+    {
+     "name": "Competition between FabZ and LpxA"
+    },
+    {
+     "name": "R-3-hydroxymyristoyl-ACP is substrate for LpxA"
+    },
+    {
+     "name": "WaaA modifies Kdo-lipid IVA"
+    },
+    {
+     "name": "LpxK phosphorylates lipid IVA"
+    },
+    {
+     "name": "MsbA transports core-lipid A"
+    },
+    {
+     "name": "Lpt system transports core-lipid A to OM"
+    },
+    {
+     "name": "FabZ catalyzes dehydration of β-hydroxyacyl-ACP"
+    },
+    {
+     "name": "LpxC deacetylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+    },
+    {
+     "name": "LpxD acylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+    },
+    {
+     "name": "LpxH dephosphorylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+    },
+    {
+     "name": "LpxB catalyzes disaccharide formation"
+    },
+    {
+     "name": "LpxA acylates UDP-GlcNAc"
+    }
+   ]
+  },
+  "quarantined_locked_reactions": [
+   {
+    "locked_reaction_id": "rxn_lock_003",
+    "reaction_name": "LpxC reaction",
+    "reason": "coarse_grained_same_entity_transformation",
+    "action": "quarantined_from_active_reactions",
+    "json_pointer": "/processes/reactions/1",
+    "original_reaction": {
+     "name": "LpxC reaction",
+     "locked_reaction_id": "rxn_lock_003",
+     "inputs": [
+      "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     ],
+     "outputs": [
+      "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     ],
+     "evidence": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "LpxC",
+       "entity_type": "protein",
+       "evidence": "LpxC catalyzes the first irreversible and committed step in lipid A biosynthesis"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "locked_reaction_id": "rxn_lock_004",
+    "reaction_name": "LpxD reaction",
+    "reason": "coarse_grained_same_entity_transformation",
+    "action": "quarantined_from_active_reactions",
+    "json_pointer": "/processes/reactions/2",
+    "original_reaction": {
+     "name": "LpxD reaction",
+     "locked_reaction_id": "rxn_lock_004",
+     "inputs": [
+      "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     ],
+     "outputs": [
+      "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     ],
+     "evidence": "addition of the next acyl group by LpxD",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "LpxD",
+       "entity_type": "protein",
+       "evidence": "addition of the next acyl group by LpxD"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "locked_reaction_id": "rxn_lock_005",
+    "reaction_name": "LpxH reaction",
+    "reason": "coarse_grained_same_entity_transformation",
+    "action": "quarantined_from_active_reactions",
+    "json_pointer": "/processes/reactions/3",
+    "original_reaction": {
+     "name": "LpxH reaction",
+     "locked_reaction_id": "rxn_lock_005",
+     "inputs": [
+      "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     ],
+     "outputs": [
+      "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     ],
+     "evidence": "removal of UMP by LpxH",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "LpxH",
+       "entity_type": "protein",
+       "evidence": "removal of UMP by LpxH"
+      },
+      {
+       "entity": "LpxC",
+       "entity_type": "protein",
+       "evidence": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety"
+      },
+      {
+       "entity": "LpxD",
+       "entity_type": "protein",
+       "evidence": "LpxC allows for the addition of the next acyl group by LpxD"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "locked_reaction_id": "rxn_lock_006",
+    "reaction_name": "LpxK reaction",
+    "reason": "coarse_grained_same_entity_transformation",
+    "action": "quarantined_from_active_reactions",
+    "json_pointer": "/processes/reactions/5",
+    "original_reaction": {
+     "name": "LpxK reaction",
+     "locked_reaction_id": "rxn_lock_006",
+     "inputs": [
+      "lipid IVA"
+     ],
+     "outputs": [
+      "lipid IVA"
+     ],
+     "evidence": "phosphorylated by LpxK to produce lipid IVA",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "LpxK",
+       "entity_type": "protein",
+       "evidence": "phosphorylated by LpxK to produce lipid IVA"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "locked_reaction_id": "rxn_lock_007",
+    "reaction_name": "LpxL reaction",
+    "reason": "protein_missing_external_identity",
+    "missing_entities": [
+     "LpxL"
+    ],
+    "quarantine_stage": "pre_export_strict_quarantine",
+    "admission_state": "quarantined_unmapped_entity",
+    "original_reaction": {
+     "name": "LpxL reaction",
+     "locked_reaction_id": "rxn_lock_007",
+     "inputs": [
+      "Kdo-lipid IVA"
+     ],
+     "outputs": [
+      "Kdo-lipid A"
+     ],
+     "evidence": "acylated by LpxL and LpxM to finally form Kdo-lipid A",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "LpxL",
+       "entity_type": "protein",
+       "evidence": "acylated by LpxL and LpxM"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      },
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "locked_reaction_id": "rxn_lock_008",
+    "reaction_name": "LpxM reaction",
+    "reason": "protein_missing_external_identity",
+    "missing_entities": [
+     "LpxM"
+    ],
+    "quarantine_stage": "pre_export_strict_quarantine",
+    "admission_state": "quarantined_unmapped_entity",
+    "original_reaction": {
+     "name": "LpxM reaction",
+     "locked_reaction_id": "rxn_lock_008",
+     "inputs": [
+      "Kdo-lipid IVA"
+     ],
+     "outputs": [
+      "Kdo-lipid A"
+     ],
+     "evidence": "acylated by LpxL and LpxM to finally form Kdo-lipid A",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "LpxM",
+       "entity_type": "protein",
+       "evidence": "acylated by LpxL and LpxM"
+      },
+      {
+       "entity": "LpxL",
+       "entity_type": "protein",
+       "evidence": "sequentially acylated by LpxL"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      },
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

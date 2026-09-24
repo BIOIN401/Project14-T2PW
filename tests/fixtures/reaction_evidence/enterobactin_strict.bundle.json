@@ -58,6 +58,8 @@
   "reasons": []
  },
  "quarantine_report.json": {
+  "export_mode": "pathwhiz",
+  "ok": true,
   "schema_version": 6,
   "accepted": [
    {
@@ -826,7 +828,54 @@
      "name": "EntC-EntB interaction for isochorismate channeling"
     }
    ]
-  }
+  },
+  "quarantined_locked_reactions": [
+   {
+    "locked_reaction_id": "rxn_lock_004",
+    "reaction_name": "EntD-catalyzed phosphopantetheinylation of EntB",
+    "reason": "protein_missing_external_identity",
+    "missing_entities": [
+     "apo-EntB"
+    ],
+    "quarantine_stage": "pre_export_strict_quarantine",
+    "admission_state": "quarantined_unmapped_entity",
+    "original_reaction": {
+     "name": "EntD-catalyzed phosphopantetheinylation of EntB",
+     "locked_reaction_id": "rxn_lock_004",
+     "inputs": [
+      "apo-EntB"
+     ],
+     "outputs": [
+      "holo-EntB"
+     ],
+     "evidence": "the ArCP domain of apo-EntB itself must be phosphopantetheinylated at Ser245 by the accessory enzyme EntD to form holo-EntB",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "EntD complex",
+       "entity_type": "protein_complex",
+       "evidence": "phosphopantetheinylated at Ser245 by the accessory enzyme EntD"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      },
+      {
+       "stage": "quarantine",
+       "origin": "excluded",
+       "paper_explicit": "not_evaluated",
+       "review_required": true,
+       "sources": []
+      }
+     ]
+    }
+   }
+  ]
  },
  "LEG_TRACE.jsonl": "{\"seq\": 1, \"kind\": \"leg_begin\", \"elapsed_seconds\": 0.0, \"slug\": \"PMC12096016\", \"mode\": \"strict\", \"paper_id\": \"PMC12096016\", \"child_deadline_seconds\": 3480.0}\n"
 }
