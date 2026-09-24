@@ -65,6 +65,17 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
   `query_text` and its own `query_id`. The item is exhausted only after that attempt too finds
   no new paper. A window that was not full exhausts the item after one attempt, because
   there is nothing past it.
+* **A window the discovery budget cut.** A query asks for `min(max_results_per_query,
+  remaining max_papers_discovered)` papers (a wider window, `min(2 × …, remaining)`). When the
+  remaining budget makes that window smaller than it would otherwise be, the query still runs,
+  but the item is **not** marked exhausted, whatever the query returned. A cut window only
+  shows the top few hits, which are usually papers the run already has, so an empty result
+  there says nothing about the item. That also holds when a wider window is due and the
+  budget cannot fund it. In pilot-002, 21 of 25 exhausted items had only been asked through
+  1-result windows. Once `max_papers_discovered` is reached, the round issues no further
+  query (`check_papers_discovered`, before each item and each further attempt). The stop
+  reason `max_papers_discovered_reached` is recorded, and the items left unasked or cut stay
+  open on the frontier.
 
 ## Extraction in passage batches
 

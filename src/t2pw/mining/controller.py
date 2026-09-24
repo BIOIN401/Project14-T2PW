@@ -393,8 +393,12 @@ class MiningController:
             # already one of the item's terms: every "X | <topic>" bridge, the
             # topic seed) but the last query filled its window, the attempt asks
             # the same question over a wider window instead.
+            # A window the discovery budget cut short is not a search that found
+            # nothing: an item asked only that way is never marked exhausted
+            # (pilot-002 exhausted 21 items on 1-result windows).
             found: List[Any] = []
             exhausted = False
+            budget_cut = False
             budgets = self.config.budgets
             attempts = max(1, budgets.max_query_attempts)
             per_query = max(1, budgets.max_results_per_query)
@@ -404,10 +408,14 @@ class MiningController:
                 window = min(per_query, remaining)
                 query = queries_mod.build_query(item, self.config, round_index=index, attempt=attempt)
                 deeper = False
-                if query is None and asked and returned >= asked and min(2 * per_query, remaining) > asked:
-                    deeper, window = True, min(2 * per_query, remaining)
-                    query = queries_mod.build_query(item, self.config, round_index=index,
-                                                    attempt=attempt, deeper=True)
+                if query is None and asked and returned >= asked:
+                    wide = min(2 * per_query, remaining)
+                    if wide > asked:
+                        deeper, window = True, wide
+                        query = queries_mod.build_query(item, self.config, round_index=index,
+                                                        attempt=attempt, deeper=True)
+                    if wide < 2 * per_query:
+                        budget_cut = True  # the wider window is, or would be, cut by the budget
                 if query is None:
                     exhausted = True  # no further formulation, and no wider window, exists
                     break
@@ -426,6 +434,8 @@ class MiningController:
                     run_terms=run_terms,
                 )
                 asked, returned = window, query.result_count
+                if window < (2 * per_query if deeper else per_query):
+                    budget_cut = True
                 round_errors.extend(result.errors)
                 self.ledger.record_papers_discovered(len(result.papers) + len(result.excluded))
                 for excluded in result.excluded:
@@ -440,7 +450,7 @@ class MiningController:
                     exhausted = True
                     break
 
-            if exhausted and not found:
+            if exhausted and not found and not budget_cut:
                 item.exhausted = True
                 if item.frontier_item_id not in self.state.exhausted_frontier:
                     self.state.exhausted_frontier.append(item.frontier_item_id)

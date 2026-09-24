@@ -169,3 +169,58 @@ def test_g9_it2_4_route1_does_not_rescue_a_grape_host_paper(tmp_path):
     result = acquirer.acquire(LiteratureQuery(query_id="qr_fixture", query_text="fixture"), {},
                               round_index=2, max_papers=1, run_terms=["12-OPDA", "AOS"])
     assert [p.record.paper_id for p in result.papers] == []
+
+
+# ---------------------------------------------------------------------------
+# IT2-3: a window the discovery budget cut short never exhausts an item
+# ---------------------------------------------------------------------------
+def _search_run(tmp_path, papers, budgets):
+    from test_mining_search import BooleanSource
+
+    from t2pw.mining.config import StartingInput
+
+    config = H.make_config(tmp_path, budgets={"max_rounds": 1, "max_llm_calls": 200,
+                                              "max_papers_processed": 100, **budgets},
+                           starting_inputs=[StartingInput(kind="seed_metabolite", raw="12-OPDA",
+                                                          value="12-OPDA")])
+    source = BooleanSource(papers)
+    controller = MiningController(config, source=source, chat_fn=H.ScriptedModel(),
+                                  index=H.offline_index(config, tmp_path), enabled_override=True)
+    outcome = controller.run(probe_model=False, probe_embeddings=False)
+    items = {i["target"]: i["frontier_item_id"] for i in outcome.state.round_records[0]["input_frontier"]}
+    return outcome, source, items
+
+
+def _jasmonate_papers(count):
+    return [(f"PMC{2000000 + n}", f"Study {n}: 12-OPDA and jasmonate biosynthesis in Arabidopsis thaliana.")
+            for n in range(count)]
+
+
+def test_g9_it2_3_a_budget_cut_window_does_not_exhaust_the_item(tmp_path):
+    """The seed takes 25 of a 26-paper discovery budget. The topic item's window is then cut
+    to 1, and that 1 is an already-seen paper. At ecf6b9a0 the topic item was marked
+    exhausted, which looks the same as a real search that found nothing."""
+    outcome, _, items = _search_run(tmp_path, _jasmonate_papers(30), {"max_papers_discovered": 26})
+    topic = items["jasmonate biosynthesis"]
+    asked = [q for q in outcome.state.queries if q.frontier_item_id == topic]
+    assert asked and asked[0].result_count == 1  # the cut window, filled by a seen paper
+    assert topic not in outcome.state.exhausted_frontier
+    assert any(i.frontier_item_id == topic and not i.exhausted for i in outcome.state.frontier)
+
+
+def test_a_spent_discovery_budget_stops_the_round_and_is_the_stop_reason(tmp_path):
+    outcome, source, items = _search_run(tmp_path, _jasmonate_papers(30), {"max_papers_discovered": 25})
+    assert outcome.ledger.usage.papers_discovered == 25
+    assert [q.frontier_item_id for q in outcome.state.queries] == [items["12-OPDA"]]  # nothing after
+    assert outcome.stop_reason == "max_papers_discovered_reached"
+    assert items["jasmonate biosynthesis"] not in outcome.state.exhausted_frontier
+
+
+def test_a_full_window_that_finds_nothing_new_still_exhausts(tmp_path):
+    from test_mining_search import _run
+
+    known = [(f"PMC{2000000 + n}", f"Study {n}: 12-OPDA and jasmonate biosynthesis in Arabidopsis thaliana.")
+             for n in range(3)]
+    outcome, _, queries = _run(tmp_path, known, explicit=[i for i, _ in known])
+    assert [q.attempt for q in queries] == [1, 2]
+    assert queries[0].frontier_item_id in outcome.state.exhausted_frontier
