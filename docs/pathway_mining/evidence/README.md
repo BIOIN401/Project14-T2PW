@@ -141,3 +141,26 @@ base tree's status is empty afterwards. Every failure is an assertion on behavio
 | `022-g9-base-item4` | `C:/t/mining-base2` @ `23e1ae83` | `test_mining_screen_rescue.py::test_g9_the_mining_screen_includes_primary_atlox2_enzymology` | **1 failed**: `[] == ['PMC:PMC9947334']` |
 
 All three: FINAL SURVIVING COUNT 0, pin `violations: []`. Item 1's base arm is `012`.
+
+## ORCH-743 repair round 1 (six blocking review findings)
+
+Pre-repair tip `16fd8a4b`. Fix commits: `4ec77a7f` (bio B-1, a recovered species is never
+species evidence), `d220e6a9` (bio B-2 + review B1, rescue route 1), `e58b0d45` (bio B-3,
+rescue route 2 vocabulary and matching), `305ce27c` (review B2, the processed cap),
+`7e1925fb` (review B3, a wider window instead of a missing second formulation). No live
+model call in this round. Both runs: exit reason `completed`, **final surviving count 0**,
+cleanup success, heavy lock `ORCH-743` acquired and released, pin `violations: []`,
+wrapper clean at `7e1925fb`.
+
+| File | Tree / SHA | What | Result |
+|---|---|---|---|
+| `023-mining-suite-orch743-repair1` | `C:/t/mining` @ `7e1925fb` | `tests/test_mining_*.py` (16 files) | **266 passed** in 7.37 s (252 before this round) |
+| `024-smoke-feature-disabled-orch743-repair1` | `C:/t/mining` @ `7e1925fb` | production SMOKE (22 files), `T2PW_PATHWAY_MINING_ENABLED` unset | **508 passed** in 51.87 s |
+
+`tests/fixtures/mining/orch743_rescue_negatives.json` is new. It holds the EuropePMC title
+and abstract of PMC13181208, PMC13153360 and PMC12977409, the three papers the bio-audit
+found rescued live at `16fd8a4b`. The records came from one read-only EuropePMC REST
+call per paper. There was no model call and no cache read or write.
+
+The G9 base arms for this round are run by the orchestrator at `16fd8a4b`. The nodes and
+their expected failures are in `C:/t/mining-iter/g9_manifest.json`.
