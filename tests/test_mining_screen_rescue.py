@@ -13,6 +13,10 @@ adjudication.
 Repair round 1 (bio B-2, B-3, review B1): ``test_g9_b2_*``, ``test_g9_r1_*`` and
 ``test_g9_b3_*`` fail behaviourally at 16fd8a4b, where each of those papers was
 rescued, or the vocabulary held a quarantined lead's names.
+
+Repair round 2 (bio B-4): ``test_g9_b4_*`` fail behaviourally at 59eb761d, where
+route 1 rescued a paper whose title names another plant and whose abstract names
+the target only as a transgene source.
 """
 
 from __future__ import annotations
@@ -136,6 +140,46 @@ def test_the_pilot001_screening_fixture(tmp_path):
     ids = [p.record.paper_id for p in richest.papers]
     assert [pid for pid in ids if expected[pid] == "must_exclude"] == []
     assert "PMC:PMC9947334" in ids and "PMID:35404431" in ids
+
+
+# ---------------------------------------------------------------------------
+# Repair round 2, bio B-4: route 1 and a target that is only a transgene source
+# ---------------------------------------------------------------------------
+def test_g9_b4_route1_does_not_rescue_a_transgene_source_paper(tmp_path):
+    """PMC10742046: emmer wheat 'overexpressing two genes ... from Arabidopsis thaliana'.
+    The production screen still reads an organism match."""
+    fixture = json.loads((ROOT / "tests" / "fixtures" / "mining" / "orch743_transgene_source.json")
+                         .read_text(encoding="utf-8"))
+    paper = fixture["papers"][0]
+    config = _config(tmp_path)
+    acquirer = Acquirer(config)
+    decision = acquirer.screen(_candidate(paper))
+    assert (decision.classification, decision.organism_match, decision.score) == ("context_only", "match", 3.5)
+    assert acquirer.rescue(_candidate(paper), decision, ["12-OPDA", "AOS"]) == ""
+    result = _acquire(config, [paper], 1, run_terms=["12-OPDA", "AOS"])
+    assert [p.record.paper_id for p in result.papers] == []
+
+
+def test_g9_b4_a_triticum_title_is_not_rescued_even_above_the_bar(tmp_path):
+    """Pilot-001's PMC11478715 (Triticum, AtAOS / AtOPR3 transgenes) scores 2.5. One synthetic
+    sentence lifts it to 3.25 while it stays context_only / match; it must still stay out."""
+    paper = _paper("PMC:PMC11478715")
+    paper = dict(paper, abstract=paper["abstract"]
+                 + " We measured the activity of the AOS enzyme and its substrate conversion in leaves.")
+    config = _config(tmp_path)
+    acquirer = Acquirer(config)
+    decision = acquirer.screen(_candidate(paper))
+    assert (decision.classification, decision.organism_match) == ("context_only", "match")
+    assert decision.score >= 3.0
+    assert acquirer.rescue(_candidate(paper), decision, ["12-OPDA", "AOS"]) == ""
+
+
+def test_the_title_organism_check_keeps_the_two_required_rescues(tmp_path):
+    acquirer = Acquirer(_config(tmp_path))
+    for pid in ("PMC:PMC9947334", "PMID:35404431"):  # names Arabidopsis / names no organism
+        assert acquirer._other_organisms_in_title(_paper(pid)["title"]) == []
+    assert acquirer._other_organisms_in_title("Maize ZmLOX2 in Arabidopsis") == ["Maize"]
+    assert acquirer._other_organisms_in_title("A lipoxygenase of Escherichia coli") == ["Escherichia coli"]
 
 
 # ---------------------------------------------------------------------------

@@ -61,6 +61,13 @@ _MIN_TERM_CHARS = 5
 #: turns away a native gene overexpressed in the target, which is fail-closed.
 _FOREIGN_HOST = re.compile(
     r"\b(?:transgenic|heterologous(?:ly)?|ectopic(?:ally)?|over-?express\w*)\b", re.IGNORECASE)
+#: Hosts neither existing organism detector knows: ``rag.eligibility`` has no crop
+#: entries and species.py's common-name table has no wheat. Route 1 only.
+#: ponytail: two names, from the two wheat transgene papers (PMC11478715,
+#: PMC10742046). A host both detectors and this list miss (barley, soybean,
+#: "Nicotiana tabacum" written as a binomial) still passes; add it when a false
+#: rescue shows one, or replace the list with a taxonomy lookup.
+_EXTRA_HOSTS = ("wheat", "triticum")
 
 
 def _fold(text: str) -> str:
@@ -416,6 +423,30 @@ class Acquirer:
         except Exception:  # noqa: BLE001 - a screening failure must not lose the paper
             return None
 
+    def _other_organisms_in_title(self, title: str) -> List[str]:
+        """Organisms other than the target species that ``title`` names.
+
+        Read-only reuse of both existing detectors: the production screen's
+        ``observe_metadata`` on the title alone, counting what its own
+        ``compare_organism`` calls a ``mismatch`` (its genus scan reads
+        "Arabidopsis jasmonate" as a same-genus binomial), and species.py's
+        common-name table (a title word or word pair that ``normalize_species``
+        maps to a species). ``_EXTRA_HOSTS`` covers what neither knows.
+        """
+        from t2pw.mining.species import normalize_species
+        from t2pw.rag.eligibility import ObservedContext, compare_organism, observe_metadata
+
+        scope = self._scope()
+        found = [o for o in observe_metadata(title, "", scope).observed_organisms
+                 if compare_organism(scope, ObservedContext(observed_organisms=[o])) == "mismatch"]
+        words = re.findall(r"[A-Za-z]+", title)
+        for gram in [*words, *(f"{a} {b}" for a, b in zip(words, words[1:]))]:
+            if normalize_species(gram) != gram.lower():  # the table knows this name
+                found.append(gram)
+        found += [host for host in _EXTRA_HOSTS if _names(_fold(title), host)]
+        target = self.config.target_species_normalized
+        return [o for o in dict.fromkeys(found) if normalize_species(o) != target]
+
     def rescue(self, candidate: Any, decision: Any, run_terms: Sequence[str] = ()) -> str:
         """Why mining re-admits a paper the production screen excluded, or ``""``.
 
@@ -425,9 +456,13 @@ class Acquirer:
 
         1. ``context_only`` / ``omics_only`` only (never ``off_topic``): the
            production screen names the target species (``organism_match ==
-           "match"``), and ``screen_candidate``'s own thresholds, with the anchor
-           rule off and both bars (full and title-only) raised by
-           ``_UNANCHORED_MARGIN``, pass the paper.
+           "match"``), the title names no other organism
+           (:meth:`_other_organisms_in_title`), and ``screen_candidate``'s own
+           thresholds, with the anchor rule off and both bars (full and
+           title-only) raised by ``_UNANCHORED_MARGIN``, pass the paper. The
+           screen says "match" even when the target is only the source of a
+           transgene expressed in another plant (PMC10742046, emmer wheat
+           "overexpressing ... from Arabidopsis thaliana").
         2. The title names the target species, and one sentence of the title or
            abstract names it together with an enzyme or metabolite from this
            run's seeds or ``target_species_supported`` reactions (``run_terms``,
@@ -455,7 +490,8 @@ class Acquirer:
             from t2pw.rag.eligibility import screen_candidate, thresholds_from_config
 
             if (classification in _SCORE_RESCUABLE
-                    and str(getattr(decision, "organism_match", "") or "") == "match"):
+                    and str(getattr(decision, "organism_match", "") or "") == "match"
+                    and not self._other_organisms_in_title(title)):
                 base = thresholds_from_config()
                 # Both bars are raised: with no abstract, screen_paper applies the title-only one.
                 relaxed = replace(base, require_pathway_anchor=False,

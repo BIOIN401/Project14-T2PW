@@ -188,7 +188,16 @@ paper is re-admitted by either of two routes:
    `screen_candidate`'s own `thresholds` accept it with the anchor rule off and
    both bars raised by 1.0: `min_score` (2.0 -> 3.0) and, for a paper with no
    abstract, `title_only_min_score` (1.5 -> 2.5). The recorded reason names the
-   threshold that was actually applied.
+   threshold that was actually applied. The **title** must also name no organism
+   other than the target, because the screen reads "match" even when the target
+   is only the source of a transgene expressed in another plant (PMC10742046:
+   emmer wheat "overexpressing two genes ... from *Arabidopsis thaliana*", score
+   3.5). The check reuses the existing detectors read-only: the production
+   screen's `observe_metadata` on the title alone (what its `compare_organism`
+   calls a `mismatch`) and species.py's common-name table. Neither knows wheat,
+   so `_EXTRA_HOSTS` adds `wheat` and `triticum`. That list is a documented
+   ceiling: a host that no detector knows, such as barley, soybean or
+   *Nicotiana tabacum* written as a binomial, is still not caught.
 2. The **title** names the target species, and one sentence of the title or
    abstract names it together with an enzyme or metabolite from **this run's**
    seeds or its `target_species_supported` reactions (`queries.rescue_terms`).
