@@ -1,0 +1,254 @@
+{
+  "label": "r1-tip-chunkd-core",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/chunk_d_gate.py",
+    "run",
+    "--tmp",
+    "C:/t/bt/ui/cd51",
+    "--task",
+    "ORCH-742b",
+    "--label-prefix",
+    "r1tip-",
+    "--timeout",
+    "450",
+    "--node-timeout",
+    "300",
+    "--only",
+    "core"
+  ],
+  "cwd": "C:\\t\\evidence-ui",
+  "started_at": "2026-09-24T00:09:51+00:00",
+  "finished_at": "2026-09-24T00:10:00+00:00",
+  "duration_seconds": 8.997158200014383,
+  "timeout_seconds": 520.0,
+  "root_pid": 748060,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 744284,
+      "name": "python.exe",
+      "ppid": 746448
+    },
+    {
+      "pid": 746448,
+      "name": "python.exe",
+      "ppid": 748060
+    },
+    {
+      "pid": 743760,
+      "name": "git.exe",
+      "ppid": 747596
+    },
+    {
+      "pid": 747596,
+      "name": "python.exe",
+      "ppid": 744284
+    },
+    {
+      "pid": 739676,
+      "name": "python.exe",
+      "ppid": 748516
+    },
+    {
+      "pid": 748516,
+      "name": "python.exe",
+      "ppid": 747596
+    },
+    {
+      "pid": 745576,
+      "name": "python.exe",
+      "ppid": 746448
+    },
+    {
+      "pid": 744880,
+      "name": "python.exe",
+      "ppid": 745576
+    },
+    {
+      "pid": 745284,
+      "name": "git.exe",
+      "ppid": 744880
+    },
+    {
+      "pid": 747052,
+      "name": "python.exe",
+      "ppid": 744880
+    },
+    {
+      "pid": 747732,
+      "name": "python.exe",
+      "ppid": 747052
+    },
+    {
+      "pid": 748148,
+      "name": "python.exe",
+      "ppid": 746448
+    },
+    {
+      "pid": 744740,
+      "name": "git.exe",
+      "ppid": 746580
+    },
+    {
+      "pid": 746580,
+      "name": "python.exe",
+      "ppid": 748148
+    },
+    {
+      "pid": 736312,
+      "name": "python.exe",
+      "ppid": 746580
+    },
+    {
+      "pid": 748200,
+      "name": "python.exe",
+      "ppid": 736312
+    },
+    {
+      "pid": 654076,
+      "name": "python.exe",
+      "ppid": 746448
+    },
+    {
+      "pid": 746412,
+      "name": "python.exe",
+      "ppid": 654076
+    },
+    {
+      "pid": 656620,
+      "name": "git.exe",
+      "ppid": 746412
+    },
+    {
+      "pid": 736372,
+      "name": "python.exe",
+      "ppid": 746412
+    },
+    {
+      "pid": 747196,
+      "name": "python.exe",
+      "ppid": 736372
+    },
+    {
+      "pid": 742292,
+      "name": "python.exe",
+      "ppid": 746448
+    },
+    {
+      "pid": 747904,
+      "name": "python.exe",
+      "ppid": 742292
+    },
+    {
+      "pid": 743724,
+      "name": "git.exe",
+      "ppid": 747904
+    },
+    {
+      "pid": 745144,
+      "name": "python.exe",
+      "ppid": 747904
+    },
+    {
+      "pid": 747912,
+      "name": "python.exe",
+      "ppid": 745144
+    }
+  ],
+  "descendants_terminated": [
+    654076,
+    656620,
+    736312,
+    736372,
+    739676,
+    742292,
+    743724,
+    743760,
+    744284,
+    744740,
+    744880,
+    745144,
+    745284,
+    745576,
+    746412,
+    746448,
+    746580,
+    747052,
+    747196,
+    747596,
+    747732,
+    747904,
+    747912,
+    748148,
+    748200,
+    748516
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 626796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 627152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 703656,
+      "name": "python.exe"
+    },
+    {
+      "pid": 705180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 748364,
+      "name": "python.exe"
+    },
+    {
+      "pid": 748396,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\evidence-ui\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-742b\\51-r1-tip-chunkd-core.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\evidence-ui\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\evidence-ui",
+    "repo_head": "ae208e1e7e14f81c05b6a3ca55c9fb654ef0cdd2",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-742b",
+    "token": "ORCH-742b:748396:5172f474f67e9d64",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
