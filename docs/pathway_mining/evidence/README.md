@@ -119,3 +119,12 @@ none. Query strings: `"12-OPDA" AND "Arabidopsis thaliana"`, and
 Included: PMC9947334 (required; rescued, score 4.0), PMID 35404431 (desired; rescued, score
 3.0) and PMC13364333 (the production screen's own inclusion). Excluded: PMC12280011
 (desired, not reached), both borderline papers, and **all 15 must-exclude papers**.
+
+**Final tip.** Commit `db3a46de` is an item-3 follow-up: an item with no usable term is no
+longer searched on the species alone. It came after `014` and `015`, so both gates were
+re-measured at the final tip. Cite `018` and `019`.
+
+| File | Tree / SHA | What | Result |
+|---|---|---|---|
+| `018-mining-suite-orch743-final` | `C:/t/mining` @ `db3a46de` | `tests/test_mining_*.py` (16 files) | **252 passed** in 6.53 s (heavy lock `ORCH-743`) |
+| `019-smoke-feature-disabled-orch743-final` | `C:/t/mining` @ `db3a46de` | production SMOKE (22 files), `T2PW_PATHWAY_MINING_ENABLED` unset | **508 passed** in 38.93 s (heavy lock `ORCH-743`) |
