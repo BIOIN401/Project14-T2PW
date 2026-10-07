@@ -10770,3 +10770,19 @@ in parallel, at most 2 repair rounds each. **Nothing is merged into `sprint/pwml
 | G9 | every correction carries a behavioural base-SHA failure, run by the orchestrator in `C:/t/mining-rep-base`; evidence continues after `035` |
 | pilots | same frozen config as 001–003, `PATHWAY_MINING_REQUIRE_EMBEDDINGS=true`; each pre-registered here before any model call; one run per code version; ≤ 3 fix→pilot cycles; ≤ $2 estimated spend in total |
 | definition of done | ≥ 1 admitted target reaction rated `CORRECT_TARGET_SPECIES` on in-planta or properly graded evidence; 0 admissions against policy; bio verdict PLAUSIBLE or PLAUSIBLE_BUT_THIN with no blocking finding. Otherwise **BLOCKED** with reasons |
+
+### `ORCH-745` progress — three change sets in review, no pilot yet · 2026-10-07 14:10
+
+The session was suspended for about 12 hours overnight (the machine slept), so the morning deadline was missed.
+Work resumed at 13:30. **Nothing merged into `experiment/pathway-mining` yet. Nothing pushed. No live model call so far.**
+
+| change set | branch @ tip | defects | review state |
+|---|---|---|---|
+| A evidence hygiene | `orch745/a-evidence-hygiene` @ `92ab5be9` | F-2, F-4, A4, A7, IT2-N3 (+ repair 1: A1, A2, A4–A7) | first review: code APPROVE_WITH_FINDINGS, bio 2 blocking; repair 1 in re-review |
+| C run control | `orch745/c-run-control` @ `beb6d70e` | B1/F-7, A5, F-3, B2, F9 (+ repair 1: F3-ORDER) | **approved** after repair 1 (code APPROVE_WITH_FINDINGS, bio SOUND_WITH_FINDINGS) |
+| B species reading | `orch745/b-species-reading` @ `4f8d33a3` (A + C merged in, provisional) | F-5, F-1, F-6, B3, N-5 | code REQUEST_CHANGES (1), red-team bio UNSOUND (9 sentence families wrongly admitted); repair 1 running |
+
+- F-1 design was adjudicated by `pwml-bio-auditor` before coding (SOUND_WITH_CHANGES; 11 binding acceptance rows). The replay of
+  pilot-003's 16 recorded answers admits exactly GH3.10 JA → JA-Ile (in planta) and the two OPR3 steps (review grade).
+- G9 base arms run by the orchestrator: `036` (C, 12/12 fail at `f9556288`), `037` (A, 12 nodes / 16 cases), `038` (B, 8/8),
+  `039`/`040` (C repair, at `d01e0825` / `f9556288`), `041` (A repair, 13 nodes / 21 cases at `6ceef736`); 0 survivors everywhere.
