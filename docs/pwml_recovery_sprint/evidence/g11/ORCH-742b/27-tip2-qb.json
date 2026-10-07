@@ -1,0 +1,116 @@
+{
+  "label": "chunkd-qb",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/bt/ui/cd23/qb",
+    "--collect-only",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:\\t\\evidence-ui",
+  "started_at": "2026-09-23T23:30:14+00:00",
+  "finished_at": "2026-09-23T23:30:15+00:00",
+  "duration_seconds": 0.7369674000074156,
+  "timeout_seconds": 450.0,
+  "root_pid": 694224,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 688808,
+      "name": "python.exe",
+      "ppid": 694224
+    }
+  ],
+  "descendants_terminated": [
+    688808
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 626796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 627152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 668792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 669680,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693316,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693348,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693604,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693624,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693828,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 694112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 694120,
+      "name": "python.exe"
+    },
+    {
+      "pid": 694232,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\evidence-ui\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-742b\\27-tip2-qb.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\evidence-ui\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\evidence-ui",
+    "repo_head": "e828fcedcdbde77d60b23353988e518da7f227fb",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

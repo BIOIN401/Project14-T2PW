@@ -1,0 +1,155 @@
+{
+  "label": "r1-tip-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-742b/50-r1-tip-smoke.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/ui/smoke50",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\evidence-ui",
+  "started_at": "2026-09-24T00:08:58+00:00",
+  "finished_at": "2026-09-24T00:09:40+00:00",
+  "duration_seconds": 42.01137570000719,
+  "timeout_seconds": 500.0,
+  "root_pid": 748496,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 745840,
+      "name": "python.exe",
+      "ppid": 748496
+    },
+    {
+      "pid": 747712,
+      "name": "python.exe",
+      "ppid": 747944
+    },
+    {
+      "pid": 747944,
+      "name": "python.exe",
+      "ppid": 745840
+    },
+    {
+      "pid": 747668,
+      "name": "python.exe",
+      "ppid": 747940
+    },
+    {
+      "pid": 747940,
+      "name": "python.exe",
+      "ppid": 745840
+    },
+    {
+      "pid": 748288,
+      "name": "python.exe",
+      "ppid": 745840
+    },
+    {
+      "pid": 748424,
+      "name": "python.exe",
+      "ppid": 748288
+    }
+  ],
+  "descendants_terminated": [
+    745840,
+    747668,
+    747712,
+    747940,
+    747944,
+    748288,
+    748424
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 626796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 627152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 703656,
+      "name": "python.exe"
+    },
+    {
+      "pid": 705180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 748156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 748196,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\evidence-ui\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-742b\\50-r1-tip-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\evidence-ui\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\evidence-ui",
+    "repo_head": "ae208e1e7e14f81c05b6a3ca55c9fb654ef0cdd2",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-742b",
+    "token": "ORCH-742b:748196:e38330eff7137c5d",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,735 @@
+{
+ "coverage_summary.json": {
+  "requested_core_terms": [
+   "chorismate",
+   "isochorismate",
+   "2,3-dihydro-2,3-dihydroxybenzoate",
+   "2,3-dihydroxybenzoate",
+   "DHB-AMP",
+   "enterobactin",
+   "ferric-enterobactin",
+   "Fe3+",
+   "EntC",
+   "EntB",
+   "EntE",
+   "EntD",
+   "EntF",
+   "FepA",
+   "Fur",
+   "RyhB"
+  ],
+  "matched_terms": [
+   "chorismate",
+   "isochorismate",
+   "2,3-dihydro-2,3-dihydroxybenzoate",
+   "2,3-dihydroxybenzoate",
+   "enterobactin",
+   "ferric-enterobactin",
+   "Fe3+",
+   "EntE",
+   "FepA"
+  ],
+  "unmatched_terms": [
+   "DHB-AMP",
+   "EntC",
+   "EntB",
+   "EntD",
+   "EntF",
+   "Fur",
+   "RyhB"
+  ],
+  "coverage_ratio": 0.5625,
+  "surviving_processes": 6,
+  "quarantined_processes": 5,
+  "minimum_core_satisfied": true,
+  "reasons": [],
+  "requested_context": {
+   "pathway_name": "enterobactin biosynthesis",
+   "likely_organism": "Escherichia coli"
+  }
+ },
+ "quarantine_report.json": {
+  "export_mode": "pathwhiz",
+  "ok": false,
+  "release": {
+   "status": "diagnostic_only"
+  },
+  "accepted": [
+   {
+    "bucket": "reactions",
+    "name": "chorismate to isochorismate",
+    "state": "core_accepted"
+   },
+   {
+    "bucket": "reactions",
+    "name": "isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate",
+    "state": "core_accepted"
+   },
+   {
+    "bucket": "reactions",
+    "name": "enterobactin iron binding",
+    "state": "core_accepted"
+   },
+   {
+    "bucket": "reactions",
+    "name": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+    "state": "core_accepted"
+   }
+  ],
+  "quarantined": [
+   {
+    "name": "DHB activation to DHB-AMP",
+    "pointer": "/processes/reactions/2",
+    "process_kind": "reaction",
+    "state": "quarantined_broken_reference",
+    "reason": "ambiguous_entity_type:protein_complexes+proteins",
+    "essential_participant": "enterobactin synthase",
+    "original_process": {
+     "name": "DHB activation to DHB-AMP",
+     "locked_reaction_id": "rxn_lock_001",
+     "inputs": [
+      "2,3-dihydroxybenzoate"
+     ],
+     "outputs": [
+      "DHB-AMP"
+     ],
+     "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "enterobactin synthase",
+       "entity_type": "protein_complex",
+       "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "enterobactin assembly",
+    "pointer": "/processes/reactions/3",
+    "process_kind": "reaction",
+    "state": "quarantined_broken_reference",
+    "reason": "ambiguous_entity_type:protein_complexes+proteins",
+    "essential_participant": "enterobactin synthase",
+    "original_process": {
+     "name": "enterobactin assembly",
+     "locked_reaction_id": "rxn_lock_003",
+     "inputs": [
+      "2,3-dihydroxybenzoate"
+     ],
+     "outputs": [
+      "enterobactin"
+     ],
+     "evidence": "assembly of three DHB molecules into the cyclic trilactone structure of enterobactin catalyzed by the enterobactin synthase complex",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "enterobactin synthase complex",
+       "entity_type": "protein_complex",
+       "evidence": "catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF"
+      },
+      {
+       "entity": "enterobactin synthase",
+       "entity_type": "protein_complex",
+       "evidence": "ssembly assembly of three DHB molecules into the cyclic trilactone structure of enterobactin catalyzed by the enterobactin synthase complex"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    }
+   },
+   {
+    "name": "Fur binds Fe2+",
+    "pointer": "/processes/interactions/0",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "Fur",
+    "original_process": {
+     "name": "Fur binds Fe2+",
+     "evidence": "Fur binds ferrous iron (Fe2+) to form a complex"
+    }
+   },
+   {
+    "name": "RyhB inhibits EntC",
+    "pointer": "/processes/interactions/1",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "RyhB",
+    "original_process": {
+     "name": "RyhB inhibits EntC",
+     "evidence": "RyhB sRNA binds with complementarity to the mRNA of key biosynthetic genes entC and entF ... leading to the inhibition of their translation"
+    }
+   },
+   {
+    "name": "RyhB inhibits EntF",
+    "pointer": "/processes/interactions/2",
+    "process_kind": "interaction",
+    "state": "quarantined_unmapped_entity",
+    "reason": "protein_missing_external_identity",
+    "essential_participant": "RyhB",
+    "original_process": {
+     "name": "RyhB inhibits EntF",
+     "evidence": "RyhB sRNA binds with complementarity to the mRNA of key biosynthetic genes entC and entF ... leading to the inhibition of their translation"
+    }
+   }
+  ]
+ },
+ "removed_entity_report.json": {
+  "removed_entities": [
+   {
+    "bucket": "compounds",
+    "name": "2,3-dihydroxybenzoate",
+    "reason": "unreferenced_after_quarantine"
+   },
+   {
+    "bucket": "compounds",
+    "name": "DHB-AMP",
+    "reason": "unreferenced_after_quarantine"
+   },
+   {
+    "bucket": "compounds",
+    "name": "Fe2+",
+    "reason": "unreferenced_after_quarantine"
+   },
+   {
+    "bucket": "proteins",
+    "name": "EntF",
+    "reason": "degree_zero_after_quarantine"
+   },
+   {
+    "bucket": "proteins",
+    "name": "Fur",
+    "reason": "degree_zero_after_quarantine"
+   },
+   {
+    "bucket": "proteins",
+    "name": "RyhB",
+    "reason": "degree_zero_after_quarantine"
+   },
+   {
+    "bucket": "proteins",
+    "name": "enterobactin synthase",
+    "reason": "degree_zero_after_quarantine"
+   },
+   {
+    "bucket": "protein_complexes",
+    "name": "enterobactin synthase complex",
+    "reason": "degree_zero_after_quarantine"
+   },
+   {
+    "bucket": "protein_complexes",
+    "name": "enterobactin synthase",
+    "reason": "degree_zero_after_quarantine"
+   }
+  ]
+ },
+ "final_mapped.json": {
+  "entities": {
+   "species": [
+    {
+     "name": "Escherichia coli",
+     "taxonomy_id": "562"
+    }
+   ],
+   "compounds": [
+    {
+     "name": "chorismate",
+     "pathbank_compound_id": 7748,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "isochorismate",
+     "mapping_meta": {
+      "resolution": {
+       "status": "ambiguous"
+      }
+     }
+    },
+    {
+     "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+     "mapping_meta": {
+      "resolution": {
+       "status": "ambiguous"
+      }
+     }
+    },
+    {
+     "name": "2,3-dihydroxybenzoate",
+     "mapping_meta": {
+      "resolution": {
+       "status": "ambiguous"
+      }
+     }
+    },
+    {
+     "name": "DHB-AMP",
+     "mapping_meta": {
+      "resolution": {
+       "status": "novel"
+      }
+     }
+    },
+    {
+     "name": "enterobactin",
+     "pathbank_compound_id": 40793,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "Fe3",
+     "pathbank_compound_id": 8133,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "ferric-enterobactin",
+     "pathbank_compound_id": 41655,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "Fe2+",
+     "pathbank_compound_id": 544,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+     "mapping_meta": {
+      "resolution": {
+       "status": "ambiguous"
+      }
+     }
+    }
+   ],
+   "proteins": [
+    {
+     "name": "EntC",
+     "species": "Escherichia coli",
+     "pathbank_protein_id": 6238,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "EntB",
+     "species": "Escherichia coli",
+     "pathbank_protein_id": 6224,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "EntE",
+     "species": "Escherichia coli",
+     "pathbank_protein_id": 6301,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "EntF",
+     "species": "Escherichia coli",
+     "pathbank_protein_id": 6312,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "FepA",
+     "species": "Escherichia coli",
+     "pathbank_protein_id": 7426,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "Fur",
+     "species": "Escherichia coli",
+     "mapping_meta": {
+      "resolution": {
+       "status": "novel"
+      }
+     }
+    },
+    {
+     "name": "RyhB",
+     "species": "Escherichia coli",
+     "mapping_meta": {
+      "resolution": {
+       "status": "novel"
+      }
+     }
+    },
+    {
+     "name": "Isochorismatase (EntB)",
+     "species": "Escherichia coli",
+     "pathbank_protein_id": 6224,
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "enterobactin synthase",
+     "species": "Escherichia coli",
+     "mapping_meta": {
+      "resolution": {
+       "status": "novel"
+      }
+     }
+    }
+   ],
+   "protein_complexes": [
+    {
+     "name": "enterobactin synthase complex",
+     "species": "Escherichia coli",
+     "components": [
+      {
+       "name": "EntE"
+      }
+     ],
+     "mapping_meta": {
+      "resolution": {
+       "status": "ambiguous"
+      }
+     }
+    },
+    {
+     "name": "Isochorismate synthase",
+     "species": "Escherichia coli",
+     "pathbank_protein_complex_id": 1143,
+     "components": [
+      {
+       "name": "EntC"
+      }
+     ],
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "isochorismatase",
+     "species": "Escherichia coli",
+     "pathbank_protein_complex_id": 1189,
+     "components": [
+      {
+       "name": "EntB"
+      }
+     ],
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    },
+    {
+     "name": "enterobactin synthase",
+     "species": "Escherichia coli",
+     "pathbank_protein_complex_id": 3623,
+     "components": [
+      {
+       "name": "EntB"
+      },
+      {
+       "name": "4'-phosphopantetheinyl transferase entD"
+      },
+      {
+       "name": "EntF"
+      },
+      {
+       "name": "EntE"
+      }
+     ],
+     "mapping_meta": {
+      "resolution": {
+       "status": "matched"
+      }
+     }
+    }
+   ]
+  },
+  "processes": {
+   "reactions": [
+    {
+     "name": "chorismate to isochorismate",
+     "locked_reaction_id": "rxn_lock_002",
+     "inputs": [
+      "chorismate"
+     ],
+     "outputs": [
+      "isochorismate"
+     ],
+     "evidence": "conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC)",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "Isochorismate synthase",
+       "entity_type": "protein_complex",
+       "evidence": "catalyzed by isochorismate synthase (EntC)"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    },
+    {
+     "name": "isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate",
+     "locked_reaction_id": "rxn_lock_004",
+     "inputs": [
+      "isochorismate"
+     ],
+     "outputs": [
+      "2,3-dihydro-2,3-dihydroxybenzoate"
+     ],
+     "evidence": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "isochorismatase",
+       "entity_type": "protein_complex",
+       "evidence": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    },
+    {
+     "name": "DHB activation to DHB-AMP",
+     "locked_reaction_id": "rxn_lock_001",
+     "inputs": [
+      "2,3-dihydroxybenzoate"
+     ],
+     "outputs": [
+      "DHB-AMP"
+     ],
+     "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "enterobactin synthase",
+       "entity_type": "protein_complex",
+       "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    },
+    {
+     "name": "enterobactin assembly",
+     "locked_reaction_id": "rxn_lock_003",
+     "inputs": [
+      "2,3-dihydroxybenzoate"
+     ],
+     "outputs": [
+      "enterobactin"
+     ],
+     "evidence": "assembly of three DHB molecules into the cyclic trilactone structure of enterobactin catalyzed by the enterobactin synthase complex",
+     "scope_membership": "core",
+     "enzymes": [
+      {
+       "entity": "enterobactin synthase complex",
+       "entity_type": "protein_complex",
+       "evidence": "catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF"
+      },
+      {
+       "entity": "enterobactin synthase",
+       "entity_type": "protein_complex",
+       "evidence": "ssembly assembly of three DHB molecules into the cyclic trilactone structure of enterobactin catalyzed by the enterobactin synthase complex"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "paper_explicit": "explicit",
+       "review_required": false,
+       "sources": []
+      }
+     ]
+    },
+    {
+     "name": "enterobactin iron binding",
+     "inputs": [
+      "enterobactin",
+      "Fe3"
+     ],
+     "outputs": [
+      "ferric-enterobactin"
+     ],
+     "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity",
+     "enzymes": []
+    },
+    {
+     "name": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+     "inputs": [
+      "isochorismate"
+     ],
+     "outputs": [
+      "2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+     ],
+     "evidence": "to isochorismate (catalyzed by EntC), formation of 2,3-dihydroxybenzoate (DHB) by EntB, activation of DHB to DHB-AMP by EntE, and final assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex. Numbers in parentheses correspond to referenced studies. Chorismate to Isochorismate : The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) . This step is the first committed step in enterobactin biosynthesis. Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB) : Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB), a key intermediate in the pathway. EntB also functions as a carrier protein, binding DHB for subsequent steps. Activation of DHB : 2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP. This activated intermediate is essential for the assembly of enterobactin. Assembly of Enterobactin : The final steps involve the assembly of three DHB molecules into the cyclic trilactone structure of enterobactin. This process is catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF. EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins. EntF is a nonribosomal peptide synthetase (NRPS) that facilitates the condensation and cyclization of DHB molecules to form enterobactin ( Figure 1 ). Regulation of enterobactin production The production of enterobactin is tightly regulated to ensure that bacteria synthesize siderophores only when iron is scarce [ 30 ]. This regulation is primarily mediated by the Ferric Uptake Regulator (Fur) protein and responsive to environmental signals, particularly iron availability ( Figure 2 ). Figure 2. Transcriptional regulation of the enterobactin ( ent operon) by the Ferric uptake regulator (Fur) in response to iron availability. (A) Schematic representation of the regulatory mechanism. Under high-iron conditions (left), iron-loaded Fur (Fe-Fur) dimerizes and binds to the Fur binding site in the promoter region of the ent operon, acting as a repressor and inhibiting transcription. Under low-iron conditions (right), the apo-form of Fur cannot bind to the DNA (Deoxyribonucleic acid), resulting in derepression and active transcription of the ent operon for the biosynthesis of the siderophore enterobactin. (B) Post-transcriptional repression of enterobactin synthesis by the RyhB sRNA (small RNA) under high-iron conditions. The model depicts the dual regulatory circuit controlling enterobactin production. Under high iron, the Fe-Fur complex represses transcription of the ent operon (not shown) and activates transcription of the RyhB small RNA (sRNA). The synthesized RyhB sRNA binds with complementarity to the mRNA (messenger RNA) of key biosynthetic genes entC and entF via their target sequences. This binding leads to the inhibition of their translation and/or degradation of the mRNA transcripts, providing a crucial post-transcriptional layer of repression to prevent unnecessary siderophore production when iron is abundant. (C) Integration of oxygen sensing into the regulation of enterobactin synthesis via the Fnr (Fumarate and nitrate reduction regulator) and Fur regulators. The model illustrates how enterobactin production is coupled to oxidative stress and iron availability. The anaerobic regulator Fnr, activated under low oxygen conditions, directly represses transcription of the RyhB sRNA. This relief of RyhB-mediated repression allows for enterobactin synthesis when needed. Under high oxygen conditions, Fnr is inactivated, de-repressing RyhB transcription. Concurrently, high iron levels activate Fur, which further promotes RyhB expression and directly represses the ent operon. This creates a concerted repressive signal under high-oxygen/high-iron conditions to prevent siderophore production. Thus, the ent operon is only fully expressed under low-iron and microaerobic/anaerobic conditions. Fur protein plays a central role in regulating enterobactin production. Under iron-replete conditions, Fur binds ferrous iron (Fe 2 + ) to form a complex that represses the transcription of enterobactin biosynthesis genes ( entA-entF ) by binding to their promoter regions. However, under iron-limiting conditions, the Fur-Fe 2 + complex dissociates, relieving repression and allowing the expression of the ent operon [ 31 , 32 ]. Iron availability is the primary environmental signal regulating enterobactin production, with low-iron environments, such as host tissues or fluids, triggering the upregulation of ent genes to enhance iron acquisition [ 33 ]. Other environmental factors, such as oxidative stress and pH, can also influence enterobactin production indirectly by modulating iron availability or Fur activity [ 34 ]. Beyond transcriptional regulation, post-transcriptional mechanisms involving small regulatory RNAs (sRNAs) and RNA-binding proteins fine-tune enterobactin production. For example, the sRNA RyhB downregulates siderophore production under certain conditions by modulating the stability or translation of ent mRNA [ 35–37 ]. Evolutionary and functional insights The enterobactin biosynthesis pathway is highly conserved among enteric bacteria, reflecting its critical role in iron acquisition and survival. However, some pathogens have evolved additional siderophores (e.g. salmochelin) to evade host defenses, such as the siderophore-binding protein lipocalin-2 [ 6 , 38 ]. This evolutionary adaptation highlights the importance of siderophore diversity in bacterial pathogenesis. Role of enterobactin in bacterial virulence Enterobactin plays a pivotal role in bacterial virulence by enabling pathogens to",
+     "scope_membership": "core",
+     "rag_provenance": {
+      "source_id": "seed_paper",
+      "source_title": "enterobactin biosynthesis",
+      "source_type": "paper",
+      "source_uri": "",
+      "section": "introduction",
+      "organism": "Escherichia coli",
+      "chunk_id": "cbea424a0ce3ebb83a7dacb98484ae4c",
+      "gap_id": "gap-dangling_reaction-010d3ddd",
+      "gap_ids": [
+       "gap-dangling_reaction-010d3ddd",
+       "gap-dangling_reaction-2e1508dd"
+      ]
+     },
+     "source_papers": [
+      {
+       "source_id": "seed_paper",
+       "title": "enterobactin biosynthesis",
+       "uri": "",
+       "source_type": "paper",
+       "organism": "Escherichia coli"
+      }
+     ],
+     "enzymes": [
+      {
+       "entity": "isochorismatase",
+       "entity_type": "protein_complex",
+       "evidence": "to isochorismate (catalyzed by EntC), formation of 2,3-dihydroxybenzoate (DHB) by EntB, activation of DHB to DHB-AMP by EntE, and final assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex. Numbers in parentheses correspond to referenced studies. Chorismate to Isochorismate : The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) . This step is the first committed step in enterobactin biosynthesis. Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB) : Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB), a key intermediate in the pathway. EntB also functions as a carrier protein, binding DHB for subsequent steps. Activation of DHB : 2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP. This activated intermediate is essential for the assembly of enterobactin. Assembly of Enterobactin : The final steps involve the assembly of three DHB molecules into the cyclic trilactone structure of enterobactin. This process is catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF. EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins. EntF is a nonribosomal peptide synthetase (NRPS) that facilitates the condensation and cyclization of DHB molecules to form enterobactin ( Figure 1 ). Regulation of enterobactin production The production of enterobactin is tightly regulated to ensure that bacteria synthesize siderophores only when iron is scarce [ 30 ]. This regulation is primarily mediated by the Ferric Uptake Regulator (Fur) protein and responsive to environmental signals, particularly iron availability ( Figure 2 ). Figure 2. Transcriptional regulation of the enterobactin ( ent operon) by the Ferric uptake regulator (Fur) in response to iron availability. (A) Schematic representation of the regulatory mechanism. Under high-iron conditions (left), iron-loaded Fur (Fe-Fur) dimerizes and binds to the Fur binding site in the promoter region of the ent operon, acting as a repressor and inhibiting transcription. Under low-iron conditions (right), the apo-form of Fur cannot bind to the DNA (Deoxyribonucleic acid), resulting in derepression and active transcription of the ent operon for the biosynthesis of the siderophore enterobactin. (B) Post-transcriptional repression of enterobactin synthesis by the RyhB sRNA (small RNA) under high-iron conditions. The model depicts the dual regulatory circuit controlling enterobactin production. Under high iron, the Fe-Fur complex represses transcription of the ent operon (not shown) and activates transcription of the RyhB small RNA (sRNA). The synthesized RyhB sRNA binds with complementarity to the mRNA (messenger RNA) of key biosynthetic genes entC and entF via their target sequences. This binding leads to the inhibition of their translation and/or degradation of the mRNA transcripts, providing a crucial post-transcriptional layer of repression to prevent unnecessary siderophore production when iron is abundant. (C) Integration of oxygen sensing into the regulation of enterobactin synthesis via the Fnr (Fumarate and nitrate reduction regulator) and Fur regulators. The model illustrates how enterobactin production is coupled to oxidative stress and iron availability. The anaerobic regulator Fnr, activated under low oxygen conditions, directly represses transcription of the RyhB sRNA. This relief of RyhB-mediated repression allows for enterobactin synthesis when needed. Under high oxygen conditions, Fnr is inactivated, de-repressing RyhB transcription. Concurrently, high iron levels activate Fur, which further promotes RyhB expression and directly represses the ent operon. This creates a concerted repressive signal under high-oxygen/high-iron conditions to prevent siderophore production. Thus, the ent operon is only fully expressed under low-iron and microaerobic/anaerobic conditions. Fur protein plays a central role in regulating enterobactin production. Under iron-replete conditions, Fur binds ferrous iron (Fe 2 + ) to form a complex that represses the transcription of enterobactin biosynthesis genes ( entA-entF ) by binding to their promoter regions. However, under iron-limiting conditions, the Fur-Fe 2 + complex dissociates, relieving repression and allowing the expression of the ent operon [ 31 , 32 ]. Iron availability is the primary environmental signal regulating enterobactin production, with low-iron environments, such as host tissues or fluids, triggering the upregulation of ent genes to enhance iron acquisition [ 33 ]. Other environmental factors, such as oxidative stress and pH, can also influence enterobactin production indirectly by modulating iron availability or Fur activity [ 34 ]. Beyond transcriptional regulation, post-transcriptional mechanisms involving small regulatory RNAs (sRNAs) and RNA-binding proteins fine-tune enterobactin production. For example, the sRNA RyhB downregulates siderophore production under certain conditions by modulating the stability or translation of ent mRNA [ 35–37 ]. Evolutionary and functional insights The enterobactin biosynthesis pathway is highly conserved among enteric bacteria, reflecting its critical role in iron acquisition and survival. However, some pathogens have evolved additional siderophores (e.g. salmochelin) to evade host defenses, such as the siderophore-binding protein lipocalin-2 [ 6 , 38 ]. This evolutionary adaptation highlights the importance of siderophore diversity in bacterial pathogenesis. Role of enterobactin in bacterial virulence Enterobactin plays a pivotal role in bacterial virulence by enabling pathogens to"
+      }
+     ],
+     "provenance_lineage": [
+      {
+       "stage": "rag_retrieval",
+       "origin": "rag_literature",
+       "paper_explicit": "not_evaluated",
+       "review_required": false,
+       "sources": [
+        {
+         "source_type": "paper",
+         "source_id": "seed_paper",
+         "locator": "cbea424a0ce3ebb83a7dacb98484ae4c"
+        }
+       ]
+      },
+      {
+       "stage": "rag_admission",
+       "origin": "rag_literature",
+       "paper_explicit": "not_evaluated",
+       "review_required": false,
+       "sources": [
+        {
+         "source_type": "paper",
+         "source_id": "seed_paper",
+         "locator": "cbea424a0ce3ebb83a7dacb98484ae4c"
+        }
+       ]
+      },
+      {
+       "stage": "rag_admission",
+       "origin": "rag_literature",
+       "paper_explicit": "not_evaluated",
+       "review_required": false,
+       "sources": [
+        {
+         "source_type": "paper",
+         "source_id": "seed_paper",
+         "locator": "cbea424a0ce3ebb83a7dacb98484ae4c"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "transports": [
+    {
+     "name": "ferric-enterobactin import via FepA"
+    },
+    {
+     "name": "enterobactin secretion"
+    }
+   ],
+   "interactions": [
+    {
+     "name": "Fur binds Fe2+"
+    },
+    {
+     "name": "RyhB inhibits EntC"
+    },
+    {
+     "name": "RyhB inhibits EntF"
+    }
+   ]
+  },
+  "quarantined_locked_reactions": []
+ }
+}
