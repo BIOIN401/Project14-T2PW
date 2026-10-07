@@ -163,8 +163,8 @@ _DECLARED_REVIEW = re.compile(r"(?<!peer )(?<!peer-)\b(?:mini-?)?review(?!ed)", 
 #: biosynthesis" (PMC12444477). Anchored to the end of the words before the title, and
 #: case-sensitive, so a CRediT "Writing - review & editing" or a "Reviewed by:" never counts.
 _SUBJECT_REVIEW = re.compile(
-    r"(?<![\w-])(?:JBC Reviews|Systematic Review|Mini-?[Rr]eview|Minireview|MiniReview"
-    r"|Review [Aa]rticle|Reviews?|REVIEW)\s*$")
+    r"(?<![\w-])(?:JBC Reviews|Systematic Review|Review Essay|REVIEW ARTICLE|Mini-?[Rr]eviews?"
+    r"|Minireviews?|MiniReviews?|Review [Aa]rticle|Reviews?|REVIEW)\s*$")
 _PREPRINT_MARKERS = ("biorxiv", "medrxiv", "chemrxiv", "preprint", "research square")
 #: Declared types that mark a primary paper. Not "Journal Article": PubMed gives it to
 #: reviews too, so a review whose record lists only that would be graded primary.

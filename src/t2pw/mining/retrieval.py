@@ -123,6 +123,9 @@ _ENTRY_HEAD = 300
 _ABSTRACT_HEADING = re.compile(r"(?<![\w-])(?:Abstract|ABSTRACT)(?![\w-])")
 _ABSTRACT_END = re.compile(
     r"(?<![\w-])(?:Keywords|KEYWORDS|Key words|Key Words)(?![\w-])|(?:https?://dx\.doi\.org/)?\b10\.13039/")
+#: Shorter than this is not an abstract (PMC12864622's "Abstract" passage was a 117-character
+#: supplementary-material note).
+_MIN_ABSTRACT_CHARS = 200
 
 
 def citation_dense(text: str) -> bool:
@@ -204,7 +207,8 @@ def front_matter_abstract(text: str) -> str:
     PMCID: "In flowers and wounded leaves of gh3.10 jar1 knockout lines JA-Ile was
     below the detection limit."). The passage runs from the heading to the keyword,
     funding or flag block that follows it, cut back to its last full stop; it needs
-    an "Abstract" heading (PMC8508710's front matter has none).
+    an "Abstract" heading (PMC8508710's front matter has none), and it must read as an
+    abstract: at least ``_MIN_ABSTRACT_CHARS`` long, with at least one sentence.
     """
     norm = " ".join(str(text or "").split())
     front = next((end for _, end, reason in text_regions(norm) if reason == "front_matter"), 0)
@@ -214,7 +218,8 @@ def front_matter_abstract(text: str) -> str:
     stops = [m.start() for m in (_ABSTRACT_END.search(norm, heading.end(), front),
                                   _FRONT_FLAG.search(norm, heading.end(), front)) if m]
     passage = norm[heading.end():min(stops, default=front)]
-    return passage[:passage.rfind(".") + 1].strip()
+    passage = passage[:passage.rfind(".") + 1].strip()
+    return passage if len(passage) >= _MIN_ABSTRACT_CHARS and re.search(r"\w[.!?](?:\s|$)", passage) else ""
 
 
 def body_text(text: str) -> str:
