@@ -70,7 +70,7 @@ def test_the_extraction_settings_and_prompt_shape_are_pinned():
 
     model = MiningModelConfig()
     assert (model.max_tokens, model.request_timeout_seconds, model.prompt_version) == (
-        12000, 360.0, "mining-extract/1.1.0")
+        12000, 360.0, "mining-extract/1.2.0")  # ORCH-745 N-5 (base: 1.1.0)
     assert MiningBudgets().max_passages_per_call == 5
     assert all(key in SYSTEM_PROMPT for key in PER_FIELD_LISTS)
     assert "a filled\n   field whose own list is missing or empty will be discarded" in SYSTEM_PROMPT

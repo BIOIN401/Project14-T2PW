@@ -33,7 +33,9 @@ from t2pw.paths import PROJECT_ROOT
 ARTIFACT_SCHEMA_VERSION = "t2pw.mining/1.2.0"
 
 #: Bumped whenever an extraction prompt changes in a way that could change a claim.
-PROMPT_VERSION = "mining-extract/1.1.0"
+#: 1.2.0 (ORCH-745 N-5): the JSON example no longer pre-fills "species_inferred": false
+#: and "hypothesis": false; the rules ask for both, true or false, on every claim.
+PROMPT_VERSION = "mining-extract/1.2.0"
 #: Extraction defaults (IT2-1, evidence 032): one batch's reasoning plus answer.
 EXTRACTION_MAX_TOKENS = 12000
 EXTRACTION_REQUEST_TIMEOUT_SECONDS = 360.0

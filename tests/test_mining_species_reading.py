@@ -603,3 +603,18 @@ def test_new_acceptance_745b_f6_a_claim_without_a_sentence_reading_can_only_weak
         for claim in order:
             stored, _ = store.register(ExtractedClaim.from_dict(claim.to_dict()))
         assert (stored.species_state, stored.species_reason) == (IVO, "legacy")
+
+
+# ===========================================================================
+# N-5: the prompt pre-fills no boolean
+# ===========================================================================
+def test_new_acceptance_745b_n5_the_prompt_shows_no_prefilled_booleans():
+    from t2pw.mining.config import PROMPT_VERSION
+    from t2pw.mining.extraction import SYSTEM_PROMPT
+
+    assert '"species_inferred": false' not in SYSTEM_PROMPT
+    assert '"hypothesis": false' not in SYSTEM_PROMPT
+    assert "species_inferred" in SYSTEM_PROMPT and "hypothesis" in SYSTEM_PROMPT
+    assert "true or false" in SYSTEM_PROMPT
+    assert PROMPT_VERSION == "mining-extract/1.2.0"
+

@@ -79,11 +79,11 @@ Absolute rules:
      "enzyme": "...", "enzyme_evidence_ids": ["ev_..."],
      "gene": "...", "gene_evidence_ids": ["ev_..."],
      "species": "...", "species_evidence_ids": ["ev_..."],
-     "species_inferred": false,
      "direction": "forward", "direction_evidence_ids": ["ev_..."],
      "compartment": "...", "compartment_evidence_ids": ["ev_..."],
-     "hypothesis": false,
      "evidence_ids": ["ev_..."]}]}
+   Every claim also carries "species_inferred" and "hypothesis", each set to
+   true or false as rules 4 and 5 decide for THAT claim; neither has a default.
    If the passages support no reaction, return {"claims": []} -- an empty list
    is a correct answer.
 """
