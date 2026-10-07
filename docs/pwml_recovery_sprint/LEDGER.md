@@ -10722,3 +10722,33 @@ Integration of two approved lanes into `sprint/pwml-recovery`, in this order:
 
 Verification on a clean worktree of the merged tip: SMOKE, Chunk D, reaction-evidence 19/9/1, eval_v2, gold-readers.
 Not merged: pathway mining, the pilot records, the `candidate/*` branches. `main` is untouched.
+
+### `ORCH-744` close — eval-v2 and the reaction-evidence UI MERGED; integration verified · 2026-10-06
+
+| | |
+|---|---|
+| eval merge | `e0eeb7d5` = `eval/reaction-rag-metrics` @ `4bd6ff46` (D-103 patch `c936c5e5` reviewed `APPROVE_WITH_FINDINGS`, nothing blocking) |
+| UI merge | `b724023b` = `feature/reaction-evidence-ui` @ `e328961e` (the 8-line end-of-file hook authorized by D-103) |
+| not merged | `experiment/pathway-mining` and its pilot-record branches, both `candidate/*` branches. `main` untouched at `9f13188e` |
+
+**Verification on a clean worktree of `b724023b`** (G11 `ORCH-744/07`–`45`, 45 reports, 0 non-compliant, **0 survivors everywhere**):
+
+| gate | result |
+|---|---|
+| SMOKE (22 files) | **508 passed** |
+| Chunk D (split-process gate) | **187/187, failed=none**, `SETS_EQUAL=True` |
+| reaction evidence: model / view / hook | **19 / 9 / 1 passed** (AppTests each alone) |
+| eval-v2 focused | **61 passed, 1 xfailed** (the xfail is the strict ORCH-742c embedding-cache finding) |
+| gold-readers (22 files) | **465 passed, 8 skipped**, identical to the pre-merge baseline |
+
+**Protected state.** The owner's uncommitted `streamlit_app.py` edit was set aside from its byte-exact saved patch before the UI
+merge and re-applied after it. The re-applied diff is identical to the original apart from hunk offsets (still 35 ins / 2 del).
+- **The protected-file fingerprint moves `47e4fafa…` → `b77a363c5ca855b1…`.** This matches the value pre-computed in a scratch rehearsal.
+- The other 9 dirty files are byte-identical, and the dirty set (20 entries) is unchanged.
+- Baseline and copies: `C:/t/protected/merge-2026-10-06/`.
+
+**Remaining, not fixed** (all non-blocking):
+- `docs/evaluation_v2/retrieval_live.json` predates D-103. 3 of 18 positive and 24 of 49 negative queries involve the now-uncertified PMC12657337. Re-measure it (embedding calls) at the next results run.
+- `tests/test_eval_v2_report.py` is now a registered census pin: regenerate the eval fixture whenever committed runs or reference tables change.
+- Two failing tests that predate this work and are unrecorded (`test_rag_seed_entity_reimport::test_the_orchestrator_passes_the_merge_base_to_conform`, `test_c075` corpus); neither is in SMOKE or Chunk D.
+- Pathway mining moves to a separate agent; see `ORCH-743-RESULT.md`.

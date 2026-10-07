@@ -1,0 +1,91 @@
+{
+  "label": "chunkd-node21",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/bt/final744/cd/node21",
+    "tests/test_streamlit_quarantine_boundary.py::test_the_exporter_only_quarantines_when_no_decision_reached_it"
+  ],
+  "cwd": "C:\\t\\final-verify",
+  "started_at": "2026-10-07T04:36:15+00:00",
+  "finished_at": "2026-10-07T04:36:16+00:00",
+  "duration_seconds": 0.9506728000706062,
+  "timeout_seconds": 300.0,
+  "root_pid": 213728,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 214348,
+      "name": "python.exe",
+      "ppid": 213728
+    }
+  ],
+  "descendants_terminated": [
+    214348
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 182844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 182952,
+      "name": "python.exe"
+    },
+    {
+      "pid": 196832,
+      "name": "python.exe"
+    },
+    {
+      "pid": 206628,
+      "name": "python.exe"
+    },
+    {
+      "pid": 210104,
+      "name": "python.exe"
+    },
+    {
+      "pid": 210792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 211316,
+      "name": "python.exe"
+    },
+    {
+      "pid": 213884,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\final-verify\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-744\\35-final-node21.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\final-verify\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\final-verify",
+    "repo_head": "b724023bbd734d8baa86c086e9df9b3de9af9a59",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
