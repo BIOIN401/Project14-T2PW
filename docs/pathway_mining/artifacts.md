@@ -39,7 +39,7 @@ runs_mining/<run_id>/
 
 | Constant | Value | Bumped when |
 |---|---|---|
-| `ARTIFACT_SCHEMA_VERSION` | `t2pw.mining/1.0.0` | a persisted field changes meaning |
+| `ARTIFACT_SCHEMA_VERSION` | `t2pw.mining/1.1.0` | a persisted field changes meaning |
 | `PROMPT_VERSION` | `mining-extract/1.1.0` | an extraction prompt changes in a way that could change a claim |
 | `VIEW_SCHEMA_VERSION` | `t2pw.mining.view/1.0.0` | a view payload's shape changes |
 
@@ -53,7 +53,7 @@ and both view payloads carry their own.
 ```json
 {
   "run_id": "2026-09-17_142233_9f1b2c3d",
-  "schema_version": "t2pw.mining/1.0.0",
+  "schema_version": "t2pw.mining/1.1.0",
   "prompt_version": "mining-extract/1.1.0",
   "started_at": "...Z", "updated_at": "...Z", "finished_at": "...Z",
   "completion_state": "stopped_at_limit",
