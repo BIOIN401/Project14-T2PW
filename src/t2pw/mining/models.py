@@ -149,6 +149,9 @@ class PaperRecord:
     inclusion_reasons: List[str] = field(default_factory=list)
     exclusion_reasons: List[str] = field(default_factory=list)
     evidence_type: str = EVIDENCE_UNKNOWN
+    #: The rule that decided ``evidence_type``, quoting what it matched, so an
+    #: auditor can see why a paper is a review. "" when nothing decided it.
+    evidence_type_basis: str = ""
     discovered_round: int = 0
     processed_round: int = -1
     abstract: str = ""

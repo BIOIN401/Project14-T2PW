@@ -162,6 +162,8 @@ def build_summary(
             "primary_selection_rationale": graph.primary_selection_rationale,
             "multi_paper_reactions": len(multi_paper),
             "species_states": dict(species_counts),
+            "evidence_levels": dict(Counter(
+                r.evidence_level or "unrecorded" for r in graph.reactions.values())),
             "graph_hash": graph.graph_hash(),
             "promoted_components": [
                 {
@@ -309,6 +311,10 @@ def build_report(summary: Mapping[str, Any], *, state: Any, config: MiningConfig
         for state_name, count in sorted(g["species_states"].items()):
             marker = " (admitted to the target-species graph)" if state_name == SPECIES_TARGET_SUPPORTED else ""
             add(f"- `{state_name}`: {count}{marker}")
+        add("")
+    if g.get("evidence_levels"):
+        add("Evidence level of every reaction node: "
+            + ", ".join(f"`{k}` x{v}" for k, v in sorted(g["evidence_levels"].items())))
         add("")
     if g["promoted_components"]:
         add("Candidate components promoted after a chemical bridge was found:")

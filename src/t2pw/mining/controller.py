@@ -670,6 +670,7 @@ class MiningController:
         )
         stored_reaction.decision_status = decision.status
         stored_reaction.decision_reason = decision.reason
+        stored_reaction.evidence_level = decision.evidence_level
         for cid in outcome.conflict_ids:
             if cid not in stored_reaction.conflict_ids:
                 stored_reaction.conflict_ids.append(cid)

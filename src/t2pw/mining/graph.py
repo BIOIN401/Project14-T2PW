@@ -139,6 +139,9 @@ class ResearchReaction:
     conflict_ids: List[str] = field(default_factory=list)
     decision_status: str = ""
     decision_reason: str = ""
+    #: The latest decision's ``evidence_level`` (``review_article_only`` for a
+    #: reaction only a review supports), carried so the node itself says it.
+    evidence_level: str = ""
     #: Did the admission policy admit this reaction to the research graph proper?
     #: A quarantined reaction (wrong/ambiguous species, hypothesis-only,
     #: incomplete) is placed in a labelled quarantine component and can NEVER
