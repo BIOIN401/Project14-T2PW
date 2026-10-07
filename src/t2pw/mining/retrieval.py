@@ -218,13 +218,23 @@ class PassageIndex:
 
         ``paper_ids`` restricts retrieval to a subset -- used when extracting
         from one specific paper, so passages from a different paper can never be
-        cited as that paper's evidence.
+        cited as that paper's evidence. Each requested paper's OWN chunks are
+        ranked (the store's ``source_id`` filter): a store-wide top ``3k`` filtered
+        afterwards gave a paper whose chunks rank below other papers' nothing at
+        all (A7: pilot-002's PMC5104190, "no passages retrieved").
         """
         if not self.papers:
             return []
         k = int(top_k or self.config.retrieve_top_k or 8)
+        query = str(query_text or "")
         try:
-            hits = self.store.query(str(query_text or ""), top_k=max(k * 3, k))
+            if paper_ids:
+                hits = sorted(
+                    (hit for pid in dict.fromkeys(paper_ids)
+                     for hit in self.store.query(query, top_k=k, filters={"source_id": pid})),
+                    key=lambda hit: float(getattr(hit, "score", 0.0) or 0.0), reverse=True)
+            else:
+                hits = self.store.query(query, top_k=max(k * 3, k))
         except Exception as exc:  # noqa: BLE001
             self.warnings.append(f"retrieval failed: {type(exc).__name__}: {exc}")
             return []
