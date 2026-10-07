@@ -92,7 +92,7 @@ One JSON object per line; safe to stream.
 | `evidence_spans.jsonl` | quoted passage | exact text, section, page, paragraph, locator, chunk, offsets, round, query, frontier item, score |
 | `claims.jsonl` | extracted claim | everything in [`evidence_policy.md`](evidence_policy.md) § claims, including `field_evidence` |
 | `decisions.jsonl` | admission decision | status, reason, round, target, evidence level, species state, `supersedes` |
-| `model_calls.jsonl` | model call | requested vs **actual** model, provider, prompt/schema version, reasoning, input/output/cached tokens, estimated cost, latency, retries, finish reason, parse and schema errors, fallback used + reason, request/response hashes, attempt log (every provider request of every rung, each tagged with its `rung` and `shrink_fraction`) |
+| `model_calls.jsonl` | model call | requested vs **actual** model, provider (`not_reported_by_llm_client` when the shared client says nothing, which it does today; `""` only for a call that made no request), prompt/schema version, reasoning, input/output/cached tokens, estimated cost, latency, retries, finish reason, parse and schema errors, fallback used + reason, request/response hashes, attempt log (every provider request of every rung, each tagged with its `rung` and `shrink_fraction`), `answer_quality` (`ok`, `retried_after_thin`, `thin_after_retry`, `thin_not_retried`; `""` when no answer was accepted; see [`evidence_policy.md`](evidence_policy.md) § A thin answer) |
 
 ## `costs.json`
 
@@ -155,7 +155,8 @@ frontier cap and the species reserve.
 ### `model_raw.jsonl` — raw completion lineage
 
 One row per **attempt** of every extraction call made in that round (a call that
-climbs the shrink-and-retry ladder has one row per rung). `model_calls.jsonl`
+climbs the shrink-and-retry ladder has one row per rung, and the one re-ask of a thin
+answer is a row of its own). `model_calls.jsonl`
 keeps only a `response_hash`; this file keeps what the model actually said, so a
 dropped field or a failed parse can be attributed to the completion itself.
 
@@ -164,11 +165,15 @@ dropped field or a failed parse can be attributed to the completion itself.
 | `call_id` | links the row to its `model_calls.jsonl` record |
 | `round_index` · `purpose` · `paper_id` | as on the call record |
 | `call_status` | the call's final status (`ok`, `parse_error`, `truncated`, ...) |
+| `answer_quality` | the call's `answer_quality`, as on its record |
 | `attempt` · `model` | ladder rung (1-based) and the slug asked |
 | `shrink_fraction` · `passages_sent` · `chars_sent` · `schema` | what the rung sent: the fraction of the user message kept (1.0, 0.6, 0.35), how many passages it held (a passage cut mid-text counts), its length, and `full` / `tight` / `none` |
+| `provider` | the provider the client reported for this attempt, or `not_reported_by_llm_client` |
 | `provider_requests` | every provider request the shared client made for this rung (it re-sends an empty 200), from its diagnostics `attempt_log` |
 | `finish_reason` | as the provider reported it for that attempt |
-| `parse_outcome` | `ok`, `parse_error`, `truncated_completion`, `truncated_but_parseable`, `schema_error`, `empty_completion` or `provider_error` |
+| `parse_outcome` | `ok`, `thin_answer`, `parse_error`, `truncated_completion`, `truncated_but_parseable`, `schema_error`, `empty_completion` or `provider_error` |
+| `thin_reason` · `retry_of_thin_answer` | why a `thin_answer` is thin; `true` on the row of the one re-ask it caused |
+| `input_tokens` · `output_tokens` · `latency_ms` | this attempt's own usage (the client's token counter, else the 4-chars-per-token estimate), so a thin answer is measurable. It is per attempt, not per provider request: the client's counter cannot split one attempt's re-sent empty replies |
 | `error` | the parse / schema / provider error, if any (a key-like `sk-…` token is redacted) |
 | `response_hash` | the provider diagnostics' hash of that attempt's text |
 | `raw_text` | the completion text exactly as returned |

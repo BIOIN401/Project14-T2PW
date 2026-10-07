@@ -295,3 +295,150 @@ def test_new_acceptance_745c_f3_on_route_relevance_is_scored_per_lead(tmp_path):
     items = {i.target: i.relevance for i in _generate(state)
              if i.kind == "missing_species_evidence"}
     assert items[f"{sub.name} -> unrelated s"] == 3
+
+
+# ---------------------------------------------------------------------------
+# B2: a thin, reasoning-free answer is re-asked once and marked; provider recorded
+# ---------------------------------------------------------------------------
+THIN_FIXTURE = ROOT / "tests" / "fixtures" / "mining" / "pilot003_thin_answers.json"
+
+
+def _pilot003_answers():
+    data = json.loads(THIN_FIXTURE.read_text(encoding="utf-8"))
+    return {row["call_id"][-4:]: row for row in data["thin"] + data["cited"]}
+
+
+def _cited_answer(evidence_ids):
+    ev = evidence_ids[0]
+    return json.dumps({"claims": [{
+        "substrates": [{"name": "alpha-linolenic acid", "evidence_ids": [ev]}],
+        "products": [{"name": "13-HPOT", "evidence_ids": [ev]}],
+        "enzyme": "LOX2", "enzyme_evidence_ids": [ev],
+        "species": "Arabidopsis thaliana", "species_evidence_ids": [ev],
+        "evidence_ids": [ev],
+    }]})
+
+
+def _scripted_chat(texts, calls, **diagnostics):
+    """A chat_detailed stand-in that answers ``texts`` in turn, like a provider route."""
+
+    def chat(messages, **kwargs):
+        calls.append({"messages": messages, "kwargs": kwargs})
+        text = texts[min(len(calls), len(texts)) - 1]
+        return SimpleNamespace(text=text, diagnostics=SimpleNamespace(
+            finish_reason="stop", attempts=1, model="deepseek/deepseek-v4-flash",
+            request_hash="", response_hash=f"sha256:{len(calls)}", attempt_log=[
+                {"attempt": 1, "status": "ok", "content_chars": len(text), "finish_reason": "stop"}],
+            **diagnostics))
+
+    return chat
+
+
+def _client(chat, max_llm_calls=20):
+    from t2pw.mining.budget import BudgetLedger
+    from t2pw.mining.config import MiningBudgets, MiningModelConfig
+    from t2pw.mining.modelclient import MiningModelClient
+
+    ledger = BudgetLedger(MiningBudgets(max_llm_calls=max_llm_calls, max_cost_usd=10.0))
+    return MiningModelClient(MiningModelConfig(model="deepseek/deepseek-v4-flash"), ledger,
+                             chat_fn=chat, token_stats_fn=lambda: {}), ledger
+
+
+def _call(client, evidence_ids):
+    from t2pw.mining.extraction import CLAIM_SCHEMA, TIGHT_CLAIM_SCHEMA
+
+    user = "\n".join(f"[evidence_id: {e}]\nPassage." for e in evidence_ids)
+    return client.call_json(purpose="extract_claims", system="extract", user=user,
+                            schema=CLAIM_SCHEMA, tight_schema=TIGHT_CLAIM_SCHEMA, round_index=1,
+                            paper_id="PMC:PMC8508710", evidence_ids=evidence_ids)
+
+
+def test_g9_745c_b2_a_thin_answer_is_re_asked_and_the_cited_answer_is_used():
+    """Pilot-003 call _0003 (209 output tokens, 4.8 s; stoichiometry
+    "has_stoichiometry", no citation but the claim-level list) was accepted as ok.
+    At f9556288 the call returns that payload after 1 request."""
+    thin = _pilot003_answers()["0003"]
+    cited = _cited_answer(thin["evidence_ids"])
+    calls = []
+    client, ledger = _client(_scripted_chat([thin["raw_text"], cited], calls))
+    outcome = _call(client, thin["evidence_ids"])
+
+    assert len(calls) == 2
+    assert outcome.ok
+    assert outcome.payload == json.loads(cited)
+    assert ledger.usage.llm_calls == 2, "the re-ask is a counted call"
+    record = outcome.record.to_dict()
+    assert record["answer_quality"] == "retried_after_thin"
+    assert [r["parse_outcome"] for r in outcome.raw_attempts] == ["thin_answer", "ok"]
+    assert "has_stoichiometry" in outcome.raw_attempts[0]["thin_reason"]
+    assert outcome.raw_attempts[1]["retry_of_thin_answer"] is True
+    assert {r["answer_quality"] for r in outcome.lineage_rows()} == {"retried_after_thin"}
+    assert outcome.raw_attempts[0]["output_tokens"] > 0
+
+
+def test_g9_745c_b2_a_thin_answer_twice_is_kept_and_marked():
+    """Pilot-003 call _0014 twice: the second thin answer is kept, never upgraded.
+    At f9556288 the first was returned after 1 request and nothing marked it."""
+    thin = _pilot003_answers()["0014"]
+    calls = []
+    client, _ = _client(_scripted_chat([thin["raw_text"], thin["raw_text"]], calls))
+    outcome = _call(client, thin["evidence_ids"])
+
+    assert len(calls) == 2
+    assert outcome.ok and outcome.payload == json.loads(thin["raw_text"])
+    assert outcome.record.to_dict().get("answer_quality") == "thin_after_retry"
+    assert [r["parse_outcome"] for r in outcome.raw_attempts] == ["thin_answer", "thin_answer"]
+
+
+def test_g9_745c_b2_the_provider_is_recorded_or_said_to_be_unreported():
+    """Pilot-003: provider was "" on all 16 records. The shared client reports no
+    provider, and at f9556288 the record stayed "" either way."""
+    answer = _pilot003_answers()["0010"]
+    calls = []
+    client, _ = _client(_scripted_chat([answer["raw_text"]], calls))
+    outcome = _call(client, answer["evidence_ids"])
+    assert outcome.record.provider == "not_reported_by_llm_client"
+    assert outcome.record.to_dict().get("answer_quality") == "ok"
+    assert len(calls) == 1, "a cited answer is not re-asked"
+
+    client, _ = _client(_scripted_chat([answer["raw_text"]], [], provider="DeepInfra"))
+    outcome = _call(client, answer["evidence_ids"])
+    assert outcome.record.provider == "DeepInfra"
+    assert outcome.raw_attempts[0]["provider"] == "DeepInfra"
+
+
+def test_new_acceptance_745c_b2_thin_answer_names_the_pilot_shapes():
+    from t2pw.mining.modelclient import thin_answer
+
+    answers = _pilot003_answers()
+    for key in ("0001", "0003", "0014"):
+        assert thin_answer(json.loads(answers[key]["raw_text"])), key
+    assert "has_stoichiometry" in thin_answer(json.loads(answers["0003"]["raw_text"]))
+    assert "products_evidence_ids_placeholder" in thin_answer(json.loads(answers["0014"]["raw_text"]))
+    assert thin_answer(json.loads(answers["0010"]["raw_text"])) == ""
+    assert thin_answer({"claims": []}) == "", "an empty list is a legitimate answer"
+    assert thin_answer({"claims": [{"substrates": [{"name": "x"}], "products": [{"name": "y"}],
+                                    "species_evidence_ids": ["ev_1"], "evidence_ids": ["ev_1"]}]}) == ""
+    assert thin_answer({"claims": [{"substrates": [{"name": "x", "evidence_ids": ["ev_..."]}],
+                                    "products": [], "evidence_ids": ["ev_1"]}]})
+
+
+def test_new_acceptance_745c_b2_no_budget_for_the_re_ask_keeps_the_thin_answer_marked():
+    thin = _pilot003_answers()["0001"]
+    calls = []
+    client, _ = _client(_scripted_chat([thin["raw_text"], "{}"], calls), max_llm_calls=1)
+    outcome = _call(client, thin["evidence_ids"])
+    assert len(calls) == 1
+    assert outcome.ok and outcome.record.answer_quality == "thin_not_retried"
+
+
+def test_new_acceptance_745c_b2_a_failed_re_ask_keeps_the_first_thin_answer():
+    thin = _pilot003_answers()["0003"]
+    calls = []
+    client, _ = _client(_scripted_chat([thin["raw_text"], "not json at all"], calls))
+    outcome = _call(client, thin["evidence_ids"])
+    assert len(calls) == 2
+    assert outcome.ok and outcome.payload == json.loads(thin["raw_text"])
+    assert outcome.record.answer_quality == "thin_after_retry"
+    assert outcome.record.response_hash == "sha256:1"
+    assert outcome.record.response_chars == len(thin["raw_text"])

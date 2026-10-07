@@ -681,6 +681,12 @@ class ModelCallRecord:
     paper_id: str = ""
     evidence_ids: List[str] = field(default_factory=list)
     started_at: str = ""
+    #: ``ok``; ``retried_after_thin`` (a thin answer was re-asked once and the
+    #: re-ask was used); ``thin_after_retry`` (the answer kept is thin, or the re-ask
+    #: failed and the thin answer was kept); ``thin_not_retried`` (no budget for the
+    #: re-ask); ``""`` when no answer was accepted. See
+    #: :func:`t2pw.mining.modelclient.thin_answer`.
+    answer_quality: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
