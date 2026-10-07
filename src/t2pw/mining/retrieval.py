@@ -75,12 +75,17 @@ _CITATION_MARK = re.compile(
 _CITATION_DENSITY = 5.0
 #: How far apart a reference list's marks may be (pilot maximum: 462 characters).
 _CITATION_GAP = 600
-#: Where the legends resume after a reference list.
-_CAPTION = re.compile(r"(?<![\w.])(?:Figure|FIGURE|Fig\.|Table|TABLE|Scheme)\s*S?\d+")
+#: Where the legends resume after a reference list: a figure or table LABEL ("Figure 1 In
+#: silico", "Table 2.", "FIG. 3", "Fig 4:"), not a mention of one ("(Supplemental Table S3) ,").
+_CAPTION = re.compile(
+    r"(?<![\w.(])(?<!Supplemental )(?<!Supplementary )(?:Figure|FIGURE|Fig\.?|FIG\.?|Table|TABLE|Scheme)"
+    r"\s*S?\d+[A-Za-z]?(?=\s*[.:]|\s+[A-Z])")
 #: The processing flags that close EuropePMC's flattened front matter:
-#: "pmc-prop-open-access yes", "is-retracted no", "pmc-license-ref", "Issue date 2019 Jul 9.".
+#: "pmc-prop-open-access yes", "is-retracted no", "pmc-license-ref", "Issue date 2019 Jul 9.",
+#: and ACS's "document-id-old-9 id5c00566", "production-flag-si-avail yes", "document-id-alt-64 <hash>".
 _FRONT_FLAG = re.compile(
     r"\b(?:pmc|is)-[a-z][a-z-]* (?:yes|no|\d+)\b|\bpmc-license-ref\b|\bdisplay-pdf (?:yes|no)\b"
+    r"|\b(?:document-id|production-flag)-[\w-]+ \S+"
     r"|\bCollection date (?:19|20)\d\d\b(?: [A-Z][a-z]{2}\.?)?"
     r"|\bIssue date (?:19|20)\d\d [A-Z][a-z]{2}\.? \d{1,2}\.?")
 #: Flags are only looked for in this leading share of the text.
@@ -99,6 +104,23 @@ _PUBLISHER_NOTE = re.compile(
     r"(?:referred to in the content|institutional affiliations|endorsed by the publisher)\.")
 #: A chunk trimmed to less than this is a fragment, not a passage.
 _MIN_TRIMMED_CHARS = 100
+#: A reference list with no heading (EuropePMC's flattening of ACS and IUCr articles) is
+#: found from its density: the first 1500-character window, anchored on a citation mark past
+#: the first third of the text, that is citation-dense AND names this many authors with
+#: initials ("Andrade F. F.", "Aragão, D.,", "Moskowitz SM,", "Siegel RL Kratzer TB"). The
+#: authors keep out DOI-dense data and supplement lists (PMC13233763's key resources table,
+#: PMC12782028's supplement list).
+_AUTHOR = re.compile(
+    r"\b[A-Z][a-z'’‐-]+(?:,? (?:[A-Z]\.[ -]?)+| [A-Z]{1,3}(?: ?[,.]|(?= [A-Z][a-z'’‐-]+ [A-Z]{1,3}\b)))")
+_MIN_AUTHORS = 3
+#: The list's first entry starts before its first citation mark: the start backs over
+#: author names no further apart than this.
+_ENTRY_HEAD = 300
+#: The abstract inside EuropePMC's front matter: from its heading to the keyword, funding
+#: or flag block that follows it, cut back to its last full stop.
+_ABSTRACT_HEADING = re.compile(r"(?<![\w-])(?:Abstract|ABSTRACT)(?![\w-])")
+_ABSTRACT_END = re.compile(
+    r"(?<![\w-])(?:Keywords|KEYWORDS|Key words|Key Words)(?![\w-])|(?:https?://dx\.doi\.org/)?\b10\.13039/")
 
 
 def citation_dense(text: str) -> bool:
@@ -113,9 +135,11 @@ def text_regions(text: str) -> List[Tuple[int, int, str]]:
     the last processing flag, plus a short tail up to the first section heading),
     ``publisher_note``, ``reference_list`` (a heading followed by citation-dense
     text, to the end of its run of citation marks and then to the next figure or
-    table legend, or to the end of the text). Without a flag block there is no
-    front-matter region: ponytail: the rule knows EuropePMC's flattening only; a PDF
-    upload's title page is not recognised.
+    table label, or to the end of the text). When no heading is found, the list is
+    found from its density (:func:`_unheaded_list_start`, A2: PMC12624714's ACS
+    bibliography leaked into the chunk that straddles it). Without a flag block there
+    is no front-matter region: ponytail: the rule knows EuropePMC's flattening only; a
+    PDF upload's title page is not recognised.
     """
     regions: List[Tuple[int, int, str]] = []
     flags = list(_FRONT_FLAG.finditer(text, 0, int(len(text) * _FRONT_SHARE)))
@@ -129,14 +153,61 @@ def text_regions(text: str) -> List[Tuple[int, int, str]]:
             continue
         if not citation_dense(text[heading.end():heading.end() + 1500]):
             continue
-        end = heading.end()
-        for mark in _CITATION_MARK.finditer(text, heading.end()):
-            if mark.start() - end > _CITATION_GAP:
-                break
-            end = mark.end()
-        caption = _CAPTION.search(text, end)
-        regions.append((heading.start(), caption.start() if caption else len(text), "reference_list"))
+        regions.append((heading.start(), _list_end(text, heading.end()), "reference_list"))
+    if not any(reason == "reference_list" for _, _, reason in regions):
+        front_end = max((end for _, end, reason in regions if reason == "front_matter"), default=0)
+        start = _unheaded_list_start(text, max(front_end, len(text) // 3))
+        if start is not None:
+            regions.append((start, _list_end(text, start), "reference_list"))
     return sorted(regions)
+
+
+def _list_end(text: str, start: int) -> int:
+    """Where a reference list starting at ``start`` ends: past its run of citation marks
+    (no two further apart than ``_CITATION_GAP``), at the next figure or table label, or
+    at the end of the text."""
+    end = start
+    for mark in _CITATION_MARK.finditer(text, start):
+        if mark.start() - end > _CITATION_GAP:
+            break
+        end = mark.end()
+    caption = _CAPTION.search(text, end)
+    return caption.start() if caption else len(text)
+
+
+def _unheaded_list_start(text: str, after: int) -> Optional[int]:
+    """The start of a reference list that has no heading, or ``None``."""
+    for mark in _CITATION_MARK.finditer(text, after):
+        window = text[mark.start():mark.start() + 1500]
+        if citation_dense(window) and len(_AUTHOR.findall(window)) >= _MIN_AUTHORS:
+            start = mark.start()
+            while True:
+                names = list(_AUTHOR.finditer(text, max(after, start - _ENTRY_HEAD), start))
+                if not names:
+                    return start
+                start = names[0].start()
+    return None
+
+
+def front_matter_abstract(text: str) -> str:
+    """The "Abstract ..." passage inside EuropePMC's front matter, or ``""`` (A5).
+
+    For a record with no abstract of its own: the front-matter region is never indexed,
+    and it may hold the paper's only copy of its abstract (GH3.10 supplied as a bare
+    PMCID: "In flowers and wounded leaves of gh3.10 jar1 knockout lines JA-Ile was
+    below the detection limit."). The passage runs from the heading to the keyword,
+    funding or flag block that follows it, cut back to its last full stop; it needs
+    an "Abstract" heading (PMC8508710's front matter has none).
+    """
+    norm = " ".join(str(text or "").split())
+    front = next((end for _, end, reason in text_regions(norm) if reason == "front_matter"), 0)
+    heading = _ABSTRACT_HEADING.search(norm, 0, front)
+    if not heading:
+        return ""
+    stops = [m.start() for m in (_ABSTRACT_END.search(norm, heading.end(), front),
+                                  _FRONT_FLAG.search(norm, heading.end(), front)) if m]
+    passage = norm[heading.end():min(stops, default=front)]
+    return passage[:passage.rfind(".") + 1].strip()
 
 
 def body_text(text: str) -> str:
@@ -354,7 +425,7 @@ class PassageIndex:
             id=record.paper_id,
             source=record.acquisition_source or "mining",
             title=record.title,
-            abstract=record.abstract,
+            abstract=record.abstract or front_matter_abstract(paper.text),
             full_text=paper.text,
             source_uri=record.url,
             year=record.year,
@@ -503,5 +574,6 @@ __all__ = [
     "PassageIndex",
     "body_text",
     "citation_dense",
+    "front_matter_abstract",
     "text_regions",
 ]
