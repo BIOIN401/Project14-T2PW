@@ -95,7 +95,9 @@ class Usage:
     claims_extracted: int = 0
     elapsed_seconds: float = 0.0
     unproductive_streak: int = 0
-    #: Reactions new to the graph (admitted or quarantined) in the last round.
+    #: Reactions newly ADMITTED to the target graph in the last round. Quarantined
+    #: candidates and leads do not count (ORCH-745 B1): in pilot-003 one off-species
+    #: review gave 23 of 35 never-admissible candidates and ended the run after round 1.
     last_round_new_reactions: int = 0
 
     def to_dict(self) -> Dict[str, Any]:
@@ -197,11 +199,18 @@ class BudgetLedger:
         candidate_reactions: int = 0,
         candidate_components: int = 0,
     ) -> Optional[str]:
-        """The stop reason that forbids starting another round, or ``None``."""
+        """The stop reason that forbids starting another round, or ``None``.
+
+        A stop already recorded mid-round (the discovery budget, the call budget)
+        forbids the next round too: pilot-002 started a round 3 that could not
+        search (ORCH-745 A5).
+        """
         self.refresh()
         if self._cancelled:
             self.stop(STOP_CANCELLED, "cancellation requested")
             return STOP_CANCELLED
+        if self.stop_reason:
+            return self.stop_reason
         b = self.budgets
         for reason in (
             self._limit(STOP_MAX_ROUNDS, self.usage.rounds, b.max_rounds, "rounds"),
@@ -210,6 +219,7 @@ class BudgetLedger:
             self._limit(STOP_MAX_INPUT_TOKENS, self.usage.input_tokens, b.max_input_tokens, "input tokens"),
             self._limit(STOP_MAX_OUTPUT_TOKENS, self.usage.output_tokens, b.max_output_tokens, "output tokens"),
             self._limit(STOP_MAX_COST, self.usage.estimated_cost_usd, b.max_cost_usd, "estimated usd"),
+            self._limit(STOP_MAX_PAPERS_DISCOVERED, self.usage.papers_discovered, b.max_papers_discovered, "papers discovered"),
             self._limit(STOP_MAX_PAPERS_PROCESSED, self.usage.papers_processed, b.max_papers_processed, "papers processed"),
             self._limit(STOP_MAX_PRIMARY_REACTIONS, primary_reactions, b.max_primary_reactions, "primary reactions"),
             self._limit(STOP_MAX_CANDIDATE_REACTIONS, candidate_reactions, b.max_candidate_reactions, "candidate reactions"),
@@ -218,7 +228,7 @@ class BudgetLedger:
                 STOP_MAX_NEW_REACTIONS_PER_ROUND,
                 self.usage.last_round_new_reactions,
                 b.max_new_reactions_per_round,
-                f"new reactions in round {self.usage.rounds}",
+                f"newly admitted reactions in round {self.usage.rounds}",
             ),
         ):
             if reason:

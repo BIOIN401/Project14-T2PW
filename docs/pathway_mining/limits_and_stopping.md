@@ -13,7 +13,7 @@ crawl is both expensive and useless.
 | Max rounds | 8 | `MAX_ROUNDS` | `--max-rounds` |
 | Max papers discovered | 150 | `MAX_PAPERS_DISCOVERED` | `--max-papers-discovered` |
 | Max papers fully processed | 40 | `MAX_PAPERS_PROCESSED` | `--max-papers-processed` |
-| Max new reactions per round | 25 | `MAX_NEW_REACTIONS_PER_ROUND` | — |
+| Max reactions newly admitted per round | 25 | `MAX_NEW_REACTIONS_PER_ROUND` | — |
 | Max passages per paper | 20 | `MAX_PASSAGES_PER_PAPER` | — |
 | Max passages per extraction call | 5 | `MAX_PASSAGES_PER_CALL` | — |
 | Max primary-graph reactions | 200 | `MAX_PRIMARY_REACTIONS` | — |
@@ -97,8 +97,39 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
   budget cannot fund it. In pilot-002, 21 of 25 exhausted items had only been asked through
   1-result windows. Once `max_papers_discovered` is reached, the round issues no further
   query (`check_papers_discovered`, before each item and each further attempt). The stop
-  reason `max_papers_discovered_reached` is recorded, and the items left unasked or cut stay
-  open on the frontier.
+  reason `max_papers_discovered_reached` is recorded, the items left unasked or cut stay
+  open on the frontier, and no further round starts.
+
+## The frontier cap and the species reserve
+
+`max_frontier_size` (60) caps the frontier twice per round: the newly generated items
+(`frontier.generate`), then the merge with the items carried forward
+(`frontier.merge_frontier`). Both go through one helper, `frontier.cap_frontier`.
+
+* **The reserve.** `ceil(0.25 × cap)` slots (15 of 60) go to `missing_species_evidence`
+  items whenever that many exist; with fewer, all of them are kept. They are the only items
+  that ask for direct target-species evidence for a held lead. In pilot-003 the cap kept
+  everything at priority 6.5 or higher and cut 137 of 194 items, all 33 species items among
+  them, so no target-species search was ever asked (ORCH-745 F-3). The other slots are filled
+  in the priority order, as before.
+* **Which species items.** The reserved slots go to the most on-route leads first, by
+  `FrontierItem.relevance` (0-3), one point each when:
+  1. a claim behind the lead names the run's target species (its `species_text` contains
+     the target species or its normalized form, after `comparison_key`);
+  2. a substrate, product or enzyme of the lead is a seed or a participant or enzyme of a
+     `target_species_supported` reaction (`queries.rescue_terms`, the same vocabulary the
+     screen rescue uses; cofactors are left out);
+  3. the lead's quarantine component shares a non-cofactor chemical with the primary graph.
+
+  Ties keep the priority order (priority, kind, target, id), so the choice is deterministic.
+  A carried item keeps the relevance it was generated with.
+* **The order.** The frontier's order is the order a round asks in, and a round usually
+  stops on its discovery or processing budget after a few items. A reserved item therefore
+  takes every fourth place (4th, 8th, ...); appended at the end, it would never be asked.
+* **The cut is recorded.** Every item the cap drops that is not on the new frontier anyway
+  is written to `rounds/round_NNN/frontier_cut.jsonl` (id, kind, target, priority,
+  relevance), and `metrics.frontier_cut` holds its `count` and `by_kind`. A cut item is not
+  exhausted; it can be generated again in a later round.
 
 ## Extraction in passage batches
 
@@ -136,7 +167,7 @@ request came back empty on `finish_reason=length`. The output budget (`PATHWAY_M
 | `max_primary_reactions_reached` | primary graph full |
 | `max_candidate_reactions_reached` | candidate quarantine full |
 | `max_candidate_components_reached` | too many components |
-| `max_new_reactions_per_round_reached` | the last round added at least that many reactions new to the graph (admitted or quarantined). That round is complete and kept; the next one does not start |
+| `max_new_reactions_per_round_reached` | the last round newly admitted at least that many reactions to the target graph (`GraphDelta.added_reaction_ids`: decisions `accepted` / `conflicting`). Quarantined candidates and leads do not count. That round is complete and kept; the next one does not start |
 | `max_llm_calls_reached` | call budget spent |
 | `max_input_tokens_reached` / `max_output_tokens_reached` | token budget spent |
 | `max_estimated_cost_reached` | estimated cost budget spent |
@@ -151,6 +182,17 @@ request came back empty on `finish_reason=length`. The output budget (`PATHWAY_M
 The **first** limit reached is the one recorded; a later one does not overwrite
 it.
 
+### What the per-round cap counts
+
+`max_new_reactions_per_round` counts only reactions newly **admitted** to the target
+graph in the last round. A quarantined candidate (wrong species, inferred only, in vitro,
+hypothesis, incomplete) is kept, placed and shown, but it does not count. In pilot-003 one
+bryophyte review gave 23 of round 1's 35 quarantined candidates, not one of them
+admissible, and the old count (admitted plus quarantined, 35 >= 25) ended the run after
+round 1 with nothing admitted. Quarantined growth is still bounded: by
+`max_candidate_reactions`, `max_candidate_components`, and the discovery, processing, call,
+token, cost and wall-clock caps.
+
 ### What "useful" means
 
 `GraphDelta.useful` is true when a round added a reaction, added a candidate
@@ -161,9 +203,11 @@ useful round resets the streak.
 
 ## Where limits are checked
 
-* `check_before_round` — rounds, wall clock, calls, tokens, cost, papers
-  processed, graph sizes, new reactions added by the last round, cancellation,
-  convergence.
+* `check_before_round` — a stop reason already recorded (mid-round, by any check
+  below), then rounds, wall clock, calls, tokens, cost, papers discovered, papers
+  processed, graph sizes, reactions newly admitted by the last round, cancellation,
+  convergence. A stop recorded inside a round is final: pilot-002 spent its discovery
+  budget in round 2 and still started a round 3 that could not search (ORCH-745 A5).
 * `check_before_call` — calls, tokens, cost, wall clock, cancellation. Checked
   before **every** attempt, so a run that has exhausted its token allowance stops
   in `MiningModelClient` rather than inside the provider.

@@ -22,8 +22,11 @@ from typing import Any, Dict, List, Mapping, Optional
 
 from t2pw.paths import PROJECT_ROOT
 
-#: Bumped whenever the meaning of a persisted artifact field changes.
-ARTIFACT_SCHEMA_VERSION = "t2pw.mining/1.0.0"
+#: Bumped whenever the meaning of a persisted artifact field changes. 1.1.0 (ORCH-745 C):
+#: usage.last_round_new_reactions counts admitted reactions only; ModelCallRecord.provider
+#: says not_reported_by_llm_client instead of ""; FrontierItem.relevance,
+#: ModelCallRecord.answer_quality and rounds/round_NNN/frontier_cut.jsonl are new.
+ARTIFACT_SCHEMA_VERSION = "t2pw.mining/1.1.0"
 
 #: Bumped whenever an extraction prompt changes in a way that could change a claim.
 PROMPT_VERSION = "mining-extract/1.1.0"

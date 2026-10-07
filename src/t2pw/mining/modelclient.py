@@ -20,6 +20,18 @@ used to look like "the model found nothing". Here each one:
 A partial parse is kept **only** as a diagnostic, labelled
 ``partial_repair_diagnostic_only``, and can never become a reaction.
 
+A thin answer
+-------------
+A payload can parse and validate and still be nothing: pilot-003's calls
+``_0001``, ``_0003`` and ``_0014`` answered in 150-210 output tokens and 4-8 s with
+no participant citation, no per-field citation, and schema placeholders as values
+(``"stoichiometry": "has_stoichiometry"``). Most likely a provider route that did
+no reasoning; the shared client neither pins the provider nor reports it.
+:func:`thin_answer` names that shape, and :meth:`MiningModelClient.call_json`
+re-asks a thin answer once -- a fresh, counted request, which on this stack can
+reach another provider -- and marks the record's ``answer_quality``. A thin
+answer is never upgraded silently.
+
 The underlying LLM client is imported lazily inside the call, so importing
 ``t2pw.mining`` never constructs a provider client or reads an API key.
 """
@@ -31,7 +43,7 @@ import re
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Callable, Dict, Iterator, List, Mapping, Optional, Sequence, Tuple
 
 from t2pw.mining.budget import BudgetLedger
 from t2pw.mining.config import MiningModelConfig
@@ -53,6 +65,21 @@ _FENCE = re.compile(r"^\s*```(?:json)?\s*|\s*```\s*$", re.IGNORECASE)
 
 #: A provider error can quote a masked key prefix; the lineage file never keeps it.
 _SECRETISH = re.compile(r"sk-[A-Za-z0-9_.\-]*")
+
+#: A value that echoes the prompt's schema instead of reading a passage:
+#: ``has_stoichiometry``, ``products_evidence_ids_placeholder``, ``...``, ``ev_...``.
+#: Case-sensitive: the template echoes lowercase, and a gene symbol such as
+#: ``HAS_1`` is not an echo.
+_PLACEHOLDER = re.compile(r"^(?:has_\w+|\w+_placeholder|\.\.\.|ev_\.\.\.)$")
+
+#: ``ModelCallRecord.provider`` when the shared LLM client reports none. It
+#: reports none today: ``CompletionDiagnostics`` has no provider field.
+PROVIDER_NOT_REPORTED = "not_reported_by_llm_client"
+
+ANSWER_OK = "ok"
+ANSWER_RETRIED_AFTER_THIN = "retried_after_thin"
+ANSWER_THIN_AFTER_RETRY = "thin_after_retry"
+ANSWER_THIN_NOT_RETRIED = "thin_not_retried"
 
 
 def _utcnow() -> str:
@@ -131,6 +158,60 @@ def validate_against_schema(payload: Any, schema: Optional[Dict[str, Any]]) -> s
     return ""
 
 
+def _strings(value: Any) -> Iterator[str]:
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, Mapping):
+        for item in value.values():
+            yield from _strings(item)
+    elif isinstance(value, (list, tuple)):
+        for item in value:
+            yield from _strings(item)
+
+
+def _field_cited(record: Mapping[str, Any]) -> bool:
+    """Does the record cite evidence for one of its fields, not only for itself?
+
+    A ``*_evidence_ids`` list, or a nested row (a substrate, a product) with its
+    own ``evidence_ids``. The record-level ``evidence_ids`` does not count, exactly
+    as it counts for no field in extraction.
+    """
+    for key, value in record.items():
+        if str(key).endswith("_evidence_ids") and value:
+            return True
+        if isinstance(value, list) and any(
+            isinstance(row, Mapping) and row.get("evidence_ids") for row in value
+        ):
+            return True
+    return False
+
+
+def thin_answer(payload: Any) -> str:
+    """Why a parsed, schema-valid payload is too thin to trust, or ``""``.
+
+    Thin is one of two shapes:
+
+    * any value is a schema placeholder echoed back (``has_*``, ``*_placeholder``,
+      ``...``, ``ev_...``);
+    * the payload holds records (a top-level list of objects, e.g. ``claims``) and
+      not one of them cites evidence for a single field.
+
+    An empty list (``{"claims": []}``) is a legitimate answer and is never thin.
+    The check is structural: whether the cited ids were shown, and whether a value
+    is supported, is still decided by extraction and admission.
+    """
+    echo = next((v for v in _strings(payload) if _PLACEHOLDER.match(v.strip())), "")
+    if echo:
+        return f"schema placeholder echoed as a value: {echo!r}"
+    if isinstance(payload, Mapping):
+        records = [row for value in payload.values() if isinstance(value, list)
+                   for row in value if isinstance(row, Mapping)]
+        if records and not any(_field_cited(row) for row in records):
+            return (f"{len(records)} record(s) and not one field cites evidence "
+                    "(no participant evidence_ids, no *_evidence_ids)")
+    return ""
+
+
 @dataclass
 class ModelCallOutcome:
     """What one logical model call produced."""
@@ -160,6 +241,7 @@ class ModelCallOutcome:
             "purpose": self.record.purpose,
             "paper_id": self.record.paper_id,
             "call_status": self.status,
+            "answer_quality": self.record.answer_quality,
         }
         return [{**base, **row} for row in self.raw_attempts]
 
@@ -237,7 +319,9 @@ class MiningModelClient:
 
         Returns an outcome whose ``status`` says exactly what happened. The
         budget is consulted before every attempt, so a run that has exhausted its
-        token allowance stops here rather than inside the provider.
+        token allowance stops here rather than inside the provider. A
+        :func:`thin_answer` is re-asked once, as a counted request; the record's
+        ``answer_quality`` says what was kept.
         """
         self._ordinal += 1
         cid = make_call_id(round_index, purpose or "call", self._ordinal)
@@ -266,6 +350,54 @@ class MiningModelClient:
         if self.config.fallback_model:
             models_to_try.append((self.config.fallback_model, True))
 
+        def rung(model_slug: str, is_fallback: bool, index: int, fraction: float, passage: str,
+                 use_schema: Optional[Dict[str, Any]], schema_label: str,
+                 thin_retry: bool = False) -> Dict[str, Any]:
+            attempt = self._attempt(
+                record=record,
+                model_slug=model_slug,
+                is_fallback=is_fallback,
+                system=system,
+                user=passage,
+                schema=use_schema,
+                max_tokens=max_tokens,
+                attempt_index=index + 1,
+                shrink_fraction=fraction,
+                schema_label=schema_label,
+            )
+            attempt["thin"] = thin_answer(attempt["payload"]) if attempt["status"] == EXTRACTION_OK else ""
+            if attempt["thin"]:
+                attempt["log"]["classification"] = "thin_answer"
+                attempt["log"]["thin_reason"] = attempt["thin"]
+            outcome.attempts.append(attempt["log"])
+            # One row per ladder rung (and per re-ask of a thin answer), with what it
+            # sent, every provider request it made (IT2-5: pilot-002 kept neither) and
+            # its own tokens, so a thin answer is measurable.
+            row = {
+                "attempt": index + 1,
+                "model": model_slug,
+                "shrink_fraction": fraction,
+                "passages_sent": passage.count("[evidence_id: "),
+                "chars_sent": len(passage),
+                "schema": schema_label,
+                "provider": attempt["log"].get("provider", ""),
+                "provider_requests": attempt["provider_requests"],
+                "finish_reason": attempt["log"].get("finish_reason", ""),
+                "parse_outcome": attempt["log"].get("classification", ""),
+                "error": _SECRETISH.sub("[redacted]", str(attempt.get("error") or "")),
+                "input_tokens": attempt["log"].get("input_tokens", 0),
+                "output_tokens": attempt["log"].get("output_tokens", 0),
+                "latency_ms": attempt["log"].get("latency_ms", 0),
+                "response_hash": attempt["log"].get("response_hash", ""),
+                "raw_text": attempt["raw"],
+            }
+            if attempt["thin"]:
+                row["thin_reason"] = attempt["thin"]
+            if thin_retry:
+                row["retry_of_thin_answer"] = True
+            outcome.raw_attempts.append(row)
+            return attempt
+
         last_error = ""
         for model_slug, is_fallback in models_to_try:
             for index, fraction in enumerate(_SHRINK_LADDER[: max(1, self.config.max_attempts)]):
@@ -278,38 +410,29 @@ class MiningModelClient:
                     use_schema = tight_schema
                 schema_label = "tight" if use_schema is tight_schema and tight_schema is not None else (
                     "full" if use_schema is not None else "none")
-                attempt = self._attempt(
-                    record=record,
-                    model_slug=model_slug,
-                    is_fallback=is_fallback,
-                    system=system,
-                    user=passage,
-                    schema=use_schema,
-                    max_tokens=max_tokens,
-                    attempt_index=index + 1,
-                    shrink_fraction=fraction,
-                    schema_label=schema_label,
-                )
-                outcome.attempts.append(attempt["log"])
-                # One row per ladder rung, with what the rung sent and every
-                # provider request it made (IT2-5: pilot-002 kept neither).
-                outcome.raw_attempts.append(
-                    {
-                        "attempt": index + 1,
-                        "model": model_slug,
-                        "shrink_fraction": fraction,
-                        "passages_sent": passage.count("[evidence_id: "),
-                        "chars_sent": len(passage),
-                        "schema": schema_label,
-                        "provider_requests": attempt["provider_requests"],
-                        "finish_reason": attempt["log"].get("finish_reason", ""),
-                        "parse_outcome": attempt["log"].get("classification", ""),
-                        "error": _SECRETISH.sub("[redacted]", str(attempt.get("error") or "")),
-                        "response_hash": attempt["log"].get("response_hash", ""),
-                        "raw_text": attempt["raw"],
-                    }
-                )
+                args = (model_slug, is_fallback, index, fraction, passage, use_schema, schema_label)
+                attempt = rung(*args)
                 if attempt["status"] == EXTRACTION_OK:
+                    record.answer_quality = ANSWER_OK
+                    if attempt["thin"] and self.ledger.check_before_call():
+                        record.answer_quality = ANSWER_THIN_NOT_RETRIED
+                    elif attempt["thin"]:
+                        # One fresh request, not a ladder rung: the same passage and
+                        # schema again. Kept only if it is not thin; otherwise the
+                        # last thin answer stays, marked.
+                        retry = rung(*args, thin_retry=True)
+                        if retry["status"] == EXTRACTION_OK and not retry["thin"]:
+                            record.answer_quality = ANSWER_RETRIED_AFTER_THIN
+                            attempt = retry
+                        else:
+                            record.answer_quality = ANSWER_THIN_AFTER_RETRY
+                            if retry["status"] == EXTRACTION_OK:
+                                attempt = retry
+                    # The record describes the answer kept, which after a failed
+                    # re-ask is not the last one received.
+                    record.finish_reason = attempt["log"].get("finish_reason") or record.finish_reason
+                    record.response_hash = attempt["log"].get("response_hash") or record.response_hash
+                    record.response_chars = len(attempt["raw"])
                     outcome.payload = attempt["payload"]
                     outcome.status = EXTRACTION_OK
                     outcome.raw_text = attempt["raw"]
@@ -399,6 +522,13 @@ class MiningModelClient:
         except Exception as exc:  # noqa: BLE001 - a provider error is a recorded outcome
             error = f"{type(exc).__name__}: {exc}"
 
+        # The provider that answered, if the client says. It does not today, so the
+        # record says that explicitly rather than leaving an empty string.
+        provider = str(getattr(diagnostics, "provider", "") or "") or next(
+            (str(row["provider"]) for row in provider_requests
+             if isinstance(row, dict) and row.get("provider")), "")
+        record.provider = provider or record.provider or PROVIDER_NOT_REPORTED
+
         latency_ms = int((float(self._clock()) - started) * 1000)
         record.latency_ms += latency_ms
         record.finish_reason = finish_reason or record.finish_reason
@@ -429,6 +559,7 @@ class MiningModelClient:
             "output_tokens": output_tokens,
             "schema": schema_label or ("full" if schema is not None else "none"),
             "response_hash": str(getattr(diagnostics, "response_hash", "") or ""),
+            "provider": provider or PROVIDER_NOT_REPORTED,
         }
 
         if error:
@@ -484,9 +615,15 @@ class MiningModelClient:
 
 
 __all__ = [
+    "ANSWER_OK",
+    "ANSWER_RETRIED_AFTER_THIN",
+    "ANSWER_THIN_AFTER_RETRY",
+    "ANSWER_THIN_NOT_RETRIED",
+    "PROVIDER_NOT_REPORTED",
     "MiningModelClient",
     "ModelCallOutcome",
     "looks_truncated",
     "parse_json_object",
+    "thin_answer",
     "validate_against_schema",
 ]

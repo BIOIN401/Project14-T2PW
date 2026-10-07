@@ -375,3 +375,24 @@ labelled `partial_repair_diagnostic_only` and can never become a reaction.
 Each failure is a row in `model_calls.jsonl` with its real `finish_reason`,
 token counts, latency and retry ladder — so "the literature had nothing to say"
 and "the model returned nothing" are never confused.
+
+### A thin answer is re-asked once, and stays marked
+
+A payload can parse and validate and still be empty of reading. Pilot-003's calls
+`_0001`, `_0003` and `_0014` answered in 150-210 output tokens and 4-8 s, where every
+other call spent hundreds to thousands: alphabetical keys, no enzyme or species field,
+no participant `evidence_ids`, and schema placeholders as values (`"stoichiometry":
+"has_stoichiometry"`, `"products_evidence_ids_placeholder"`). Most likely a provider route
+that did no reasoning; the shared client neither pins nor reports the provider.
+
+`modelclient.thin_answer` names two shapes: any value that echoes a schema placeholder
+(`has_*`, `*_placeholder`, `...`, `ev_...`), or records (`claims`) of which not one cites
+evidence for a single field (no participant `evidence_ids`, no non-empty `*_evidence_ids`;
+the claim-level list does not count). `{"claims": []}` is a legitimate answer and is never
+thin. `MiningModelClient.call_json` re-asks a thin answer **once**, with the same passage and
+schema: a fresh request, which on this stack can reach another provider, and a counted call.
+A re-ask that is not thin is used. Otherwise the thin answer is kept and marked: the record's
+`answer_quality` is `thin_after_retry` (or `thin_not_retried` when the call budget forbade the
+re-ask). A thin answer is never upgraded silently. It is not dropped either: its claims go
+through the same citation check and admission gates as any other, which is what keeps an
+uncited participant out of the graph.
