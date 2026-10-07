@@ -140,6 +140,11 @@ class ResearchReaction:
     claim_ids: List[str] = field(default_factory=list)
     paper_ids: List[str] = field(default_factory=list)
     evidence_ids: List[str] = field(default_factory=list)
+    #: Sibling claims of an ADMITTED reaction that are not support (another paper's
+    #: in-vitro or ambiguous claim of the same chemistry): ``{"claim_id", "paper_id",
+    #: "species_state"}``. Kept auditable; never counted in ``paper_ids`` /
+    #: ``evidence_ids`` / ``claim_ids`` (ORCH-745 A3).
+    non_supporting_claims: List[Dict[str, str]] = field(default_factory=list)
     conflict_ids: List[str] = field(default_factory=list)
     decision_status: str = ""
     decision_reason: str = ""
@@ -171,6 +176,10 @@ class ResearchReaction:
 
     @property
     def multi_paper_supported(self) -> bool:
+        """Independent support: a review never counts toward it (ORCH-745 A3), so a
+        node with a decided evidence level says so; otherwise two papers."""
+        if self.evidence_level:
+            return self.evidence_level == "multiple_independent_papers"
         return self.independent_paper_count > 1
 
     def chemical_ids(self) -> Set[str]:
@@ -468,7 +477,44 @@ class ResearchGraph:
         Deduplication never discards a supporting source. Two papers reporting
         the same chemistry produce one reaction with two paper ids, which is
         exactly what "reactions supported by multiple papers" later counts.
+
+        Support is never overstated (ORCH-745 A3): a reaction admitted on new
+        evidence replaces its quarantined leads' papers, spans and claims with the
+        admitted support (the leads move to ``non_supporting_claims``), and a
+        non-admitted claim never adds anything to an admitted reaction.
         """
+        if incoming.admitted:
+            for row in incoming.non_supporting_claims:
+                if row.get("claim_id") not in {r.get("claim_id") for r in existing.non_supporting_claims}:
+                    existing.note(round_index, "non_supporting_claim",
+                                  f"{row.get('claim_id')} ({row.get('paper_id')}): species state "
+                                  f"{row.get('species_state')}; not counted as support", at)
+            existing.non_supporting_claims = [dict(r) for r in incoming.non_supporting_claims]
+        if existing.admitted and not incoming.admitted:
+            known = {r.get("claim_id") for r in existing.non_supporting_claims}
+            for cid in incoming.claim_ids:
+                if cid and cid not in existing.claim_ids and cid not in known:
+                    existing.non_supporting_claims.append(
+                        {"claim_id": cid, "paper_id": ", ".join(incoming.paper_ids),
+                         "species_state": incoming.species_state})
+                    existing.note(round_index, "non_supporting_claim",
+                                  f"{cid}: {incoming.decision_status or 'not admitted'}; not counted as "
+                                  "support", at)
+            return existing
+        if incoming.admitted and not existing.admitted:
+            existing.paper_ids = list(incoming.paper_ids)
+            existing.claim_ids = list(incoming.claim_ids)
+            existing.evidence_ids = list(incoming.evidence_ids)
+            existing.enzyme_names = list(incoming.enzyme_names)
+            existing.enzyme_entity_ids = list(incoming.enzyme_entity_ids)
+            existing.pathway_names = list(incoming.pathway_names)
+            existing.compartment = incoming.compartment
+            existing.reversible = incoming.reversible
+            existing.direction = incoming.direction
+            existing.note(round_index, "support_replaced",
+                          f"admitted on paper(s) {', '.join(incoming.paper_ids) or '-'}; earlier leads "
+                          "are not support", at)
+            return existing
         added_paper = False
         for pid in incoming.paper_ids:
             if pid and pid not in existing.paper_ids:

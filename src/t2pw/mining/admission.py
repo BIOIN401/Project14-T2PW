@@ -102,19 +102,52 @@ class AdmissionOutcome:
         }
 
 
+def _is_review(paper_id: str, papers: Mapping[str, PaperRecord]) -> bool:
+    record = papers.get(paper_id)
+    return record is not None and record.evidence_type == "review"
+
+
 def evidence_level(
     *, paper_ids: Sequence[str], papers: Mapping[str, PaperRecord]
 ) -> str:
-    """Classify support strength from the *papers*, not from model confidence."""
+    """Classify support strength from the *papers*, not from model confidence.
+
+    A review never counts toward independence (ORCH-745 A3; a decision the product
+    owner may revisit): only reviews -> ``review_article_only``; two or more
+    non-review papers -> ``multiple_independent_papers``; otherwise ``single_paper``
+    (a review beside one primary paper corroborates, it does not make two).
+    ``judge`` passes the papers of the claims that are themselves
+    ``target_species_supported`` when the reaction is admitted.
+    """
     distinct = [p for p in dict.fromkeys(paper_ids) if p]
     if not distinct:
         return EVIDENCE_LEVEL_NONE
-    if len(distinct) > 1:
-        return EVIDENCE_LEVEL_MULTI_PAPER
-    record = papers.get(distinct[0])
-    if record is not None and record.evidence_type == "review":
+    primary = [p for p in distinct if not _is_review(p, papers)]
+    if not primary:
         return EVIDENCE_LEVEL_REVIEW_ONLY
+    if len(primary) > 1:
+        return EVIDENCE_LEVEL_MULTI_PAPER
     return EVIDENCE_LEVEL_SINGLE_PAPER
+
+
+def supports(claim: ExtractedClaim, evidence: Mapping[str, EvidenceSpan]) -> bool:
+    """Is this claim, on its own, support for an admitted reaction?
+
+    The gates it would pass: a clean extraction, resolvable evidence, both sides,
+    not a hypothesis, and ``target_species_supported``. A sibling claim that is not
+    support never adds its paper, spans or id to an admitted reaction (ORCH-745 A3):
+    another paper's in-vitro or ambiguous claim of the same chemistry is a lead,
+    listed on the node as non-supporting, not independent evidence.
+    """
+    return (claim.species_state == SPECIES_TARGET_SUPPORTED and claim.admissible_extraction
+            and bool(claim.substrates) and bool(claim.products) and not claim.hypothesis
+            and any(eid in evidence for eid in claim.evidence_ids))
+
+
+def _non_supporting(siblings: Sequence[ExtractedClaim], support: Sequence[ExtractedClaim]) -> List[Dict[str, str]]:
+    kept = {c.claim_id for c in support}
+    return [{"claim_id": c.claim_id, "paper_id": c.paper_id, "species_state": c.species_state}
+            for c in siblings if c.claim_id not in kept]
 
 
 def _strip_unsupported(claim: ExtractedClaim) -> List[str]:
@@ -274,11 +307,71 @@ def judge(
 
     ``claim`` must already be registered in ``store`` (so its siblings, and any
     independent support, are visible to the evidence-level and conflict tests).
+
+    A claim that is not support never downgrades a reaction its identity already
+    admitted on other claims (ORCH-745 A3): the decision stays admitted, the claim's
+    own verdict is kept in ``detail`` (``claim_verdict``, ``claim_reason``,
+    ``claim_species_state``), and the claim is listed on the node as non-supporting.
     """
+    outcome = _judge_claim(claim, store=store, registry=registry, papers=papers,
+                           evidence=evidence, round_index=round_index, decided_at=decided_at)
+    if outcome.admitted:
+        return outcome
+    identity = claim.claim_identity
+    history = store.history(identity)
+    current = history.current if history else None
+    siblings = store.siblings(identity) or [claim]
+    support = [c for c in siblings if c.claim_id != claim.claim_id and supports(c, evidence)]
+    if current is None or current.status not in ADMITTED_STATUSES or not support:
+        return outcome
+    own = outcome.decision
+    paper_ids = list(dict.fromkeys(c.paper_id for c in support if c.paper_id))
+    evidence_ids = list(dict.fromkeys(e for c in support for e in c.evidence_ids))
+    claim_ids = [c.claim_id for c in support]
+    level = evidence_level(paper_ids=paper_ids, papers=papers)
+    reason = (
+        f"the reaction stays {current.status} on {', '.join(claim_ids)}; claim {claim.claim_id} is "
+        f"not support ({own.status}: {own.reason})"
+    )
+    reaction = build_reaction(
+        support[0], registry=registry, round_index=round_index, paper_ids=paper_ids,
+        evidence_ids=evidence_ids, claim_ids=claim_ids, status=current.status, reason=reason,
+        admitted=True,
+    )
+    reaction.non_supporting_claims = _non_supporting(siblings, support)
+    reaction.conflict_ids = sorted(c.conflict_id for c in store.conflicts_for(identity))
+    decision = ClaimDecision.build(
+        claim=claim, status=current.status, reason=reason, round_index=round_index, target="graph",
+        evidence_level=level, supersedes=current.decision_id, decided_at=decided_at,
+        detail={**own.detail, "claim_verdict": own.status, "claim_reason": own.reason,
+                "claim_species_state": claim.species_state, "supported_by": claim_ids},
+        supporting_paper_ids=paper_ids,
+    )
+    # The decision is the identity's: its species and evidence are the support's.
+    decision.species_state = support[0].species_state
+    decision.species_grade = str((support[0].species_support or {}).get("grade") or "")
+    decision.supporting_evidence_ids = evidence_ids
+    return AdmissionOutcome(decision=decision, reaction=reaction, stripped_fields=outcome.stripped_fields,
+                            conflict_ids=list(reaction.conflict_ids),
+                            notes=[*outcome.notes, f"claim {claim.claim_id} recorded as non-supporting"])
+
+
+def _judge_claim(
+    claim: ExtractedClaim,
+    *,
+    store: ClaimStore,
+    registry: EntityRegistry,
+    papers: Mapping[str, PaperRecord],
+    evidence: Mapping[str, EvidenceSpan],
+    round_index: int,
+    decided_at: str = "",
+) -> AdmissionOutcome:
+    """The ordered gates for one claim, on its own."""
     notes: List[str] = []
     identity = claim.claim_identity
     previous = store.history(identity)
     supersedes = previous.current.decision_id if previous and previous.current else ""
+    supporting: List[str] = [claim.paper_id]
 
     def decide(status: str, reason: str, target: str = "none", level: str = "",
                detail: Optional[Dict[str, Any]] = None) -> ClaimDecision:
@@ -292,7 +385,7 @@ def judge(
             supersedes=supersedes,
             decided_at=decided_at,
             detail=detail or {},
-            supporting_paper_ids=store.supporting_papers(identity) or [claim.paper_id],
+            supporting_paper_ids=supporting,
         )
 
     # -- gate 1: extraction integrity ---------------------------------------
@@ -337,9 +430,19 @@ def judge(
             "stripped unsupported field(s) rather than believing them: " + ", ".join(stripped)
         )
 
-    paper_ids = store.supporting_papers(identity) or [claim.paper_id]
-    all_evidence = store.evidence_ids(identity) or resolvable
-    claim_ids = [c.claim_id for c in store.siblings(identity)] or [claim.claim_id]
+    siblings = store.siblings(identity) or [claim]
+    support = [c for c in siblings if supports(c, evidence)]
+    if any(c.claim_id == claim.claim_id for c in support):
+        # Admissible: the reaction's support is the target-species claims only.
+        paper_ids = list(dict.fromkeys(c.paper_id for c in support if c.paper_id)) or [claim.paper_id]
+        all_evidence = list(dict.fromkeys(e for c in support for e in c.evidence_ids)) or resolvable
+        claim_ids = [c.claim_id for c in support]
+    else:
+        # A lead: every sibling's evidence stays visible on the quarantined node.
+        paper_ids = store.supporting_papers(identity) or [claim.paper_id]
+        all_evidence = store.evidence_ids(identity) or resolvable
+        claim_ids = [c.claim_id for c in siblings] or [claim.claim_id]
+    supporting[:] = paper_ids
     level = evidence_level(paper_ids=paper_ids, papers=papers)
 
     # -- gate 4: chemical completeness --------------------------------------
@@ -446,6 +549,9 @@ def judge(
             f"paper-supported, target-species reaction with {level.replace('_', ' ')}; "
             "no external database lookup was required or performed"
         )
+    reviews = [p for p in paper_ids if _is_review(p, papers)]
+    if reviews and level == EVIDENCE_LEVEL_SINGLE_PAPER:
+        reason += f"; corroborated by {len(reviews)} review(s), which do not count toward independence"
 
     reaction = build_reaction(
         claim,
@@ -459,9 +565,11 @@ def judge(
         admitted=True,
     )
     reaction.conflict_ids = sorted({c.conflict_id for c in conflicts})
+    reaction.non_supporting_claims = _non_supporting(siblings, support)
 
     return AdmissionOutcome(
-        decision=decide(status, reason, target="graph", level=level),
+        decision=decide(status, reason, target="graph", level=level,
+                        detail={"corroborating_reviews": reviews} if reviews else None),
         reaction=reaction,
         stripped_fields=stripped,
         conflict_ids=sorted({c.conflict_id for c in conflicts}),
@@ -479,6 +587,7 @@ __all__ = [
     "EVIDENCE_LEVEL_NONE",
     "AdmissionOutcome",
     "evidence_level",
+    "supports",
     "build_reaction",
     "clear_disputed_attributes",
     "judge",

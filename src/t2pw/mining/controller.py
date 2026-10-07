@@ -670,13 +670,16 @@ class MiningController:
         decision = self.state.store.record_decision(outcome.decision)
         decisions.append(decision)
 
-        if decision.status == STATUS_REJECTED or not outcome.admitted:
+        # A claim that is not support for an identity admitted on other claims gets an
+        # admitted decision for the identity; its own verdict is in the detail.
+        verdict = str(decision.detail.get("claim_verdict") or decision.status)
+        if verdict == STATUS_REJECTED or not outcome.admitted or "claim_verdict" in decision.detail:
             rejections.append(
                 {
                     "claim_id": stored.claim_id,
                     "claim_identity": stored.claim_identity,
-                    "status": decision.status,
-                    "reason": decision.reason,
+                    "status": verdict,
+                    "reason": str(decision.detail.get("claim_reason") or decision.reason),
                     "paper_id": stored.paper_id,
                     "species_state": stored.species_state,
                     "stripped_fields": outcome.stripped_fields,
@@ -690,9 +693,12 @@ class MiningController:
         stored_reaction = self.state.graph.add_reaction(
             outcome.reaction, round_index=index, at=art.utcnow()
         )
-        stored_reaction.decision_status = decision.status
-        stored_reaction.decision_reason = decision.reason
-        stored_reaction.evidence_level = decision.evidence_level
+        # A non-admitted decision never relabels an admitted node (ORCH-745 A3): the
+        # graph cannot un-admit a reaction, so its status must not say "candidate".
+        if decision.status in ADMITTED_STATUSES or not stored_reaction.admitted:
+            stored_reaction.decision_status = decision.status
+            stored_reaction.decision_reason = decision.reason
+            stored_reaction.evidence_level = decision.evidence_level
         for cid in outcome.conflict_ids:
             if cid not in stored_reaction.conflict_ids:
                 stored_reaction.conflict_ids.append(cid)

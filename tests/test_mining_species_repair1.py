@@ -463,3 +463,104 @@ def test_repair1_745b_f6_three_batches_give_one_state_in_any_order():
             stored, _ = store.register(ExtractedClaim.from_dict(claim.to_dict()))
         results.add(stored.species_state)
     assert results == {IVO}
+
+
+# ===========================================================================
+# A3 / ORCH-2: support is the target-species claims only
+# ===========================================================================
+def _sibling(paper_id, eid, state, *, grade="in_planta"):
+    identity = reaction_identity(["jasmonic acid"], ["JA-Ile"], species=TARGET)
+    return ExtractedClaim(
+        claim_id=f"cl_{paper_id[-4:]}_{eid}", claim_identity=identity, paper_id=paper_id,
+        subject="jasmonic acid", relationship="converted_to", object="JA-Ile",
+        species_text="Arabidopsis thaliana", species_state=state, species_reason=f"{state} (test)",
+        species_support={"grade": grade},
+        substrates=[ReactionParticipant(name="jasmonic acid", evidence_ids=[eid])],
+        products=[ReactionParticipant(name="JA-Ile", evidence_ids=[eid])],
+        field_evidence={"substrates": [eid], "products": [eid], "species": [eid]},
+        evidence_ids=[eid], first_seen_round=1, last_updated_round=1)
+
+
+def _controller(tmp_path, papers):
+    controller = MiningController(H.make_config(tmp_path), enabled_override=True)
+    controller.state.papers = {pid: PaperRecord(paper_id=pid, pmcid=pid.split(":")[-1], evidence_type=kind)
+                               for pid, kind in papers.items()}
+    return controller
+
+
+def _admit(controller, *claims):
+    rejections = []
+    for claim in claims:
+        for eid in claim.evidence_ids:
+            controller.state.evidence[eid] = EvidenceSpan(evidence_id=eid, paper_id=claim.paper_id,
+                                                          text="(test span)", section="results")
+        controller._admit(claim, index=1, delta=GraphDelta(round_index=1), decisions=[], rejections=rejections)
+    reaction = controller.state.graph.by_identity(claims[0].claim_identity)
+    return reaction, controller.state.store.history(claims[0].claim_identity), rejections
+
+
+def test_repair1_745b_a3_two_reviews_are_review_article_only(tmp_path):
+    """Base: two papers -> multiple_independent_papers, though both are reviews."""
+    controller = _controller(tmp_path, {"PMC:PMCR1": "review", "PMC:PMCR2": "review"})
+    reaction, history, _ = _admit(controller, _sibling("PMC:PMCR1", "ev_r1", TSS, grade="review"),
+                                  _sibling("PMC:PMCR2", "ev_r2", TSS, grade="review"))
+    assert history.current.evidence_level == "review_article_only"
+    assert reaction.evidence_level == "review_article_only"
+    assert reaction.multi_paper_supported is False
+    assert sorted(reaction.paper_ids) == ["PMC:PMCR1", "PMC:PMCR2"]
+
+
+def test_repair1_745b_a3_an_in_vitro_sibling_is_not_independent_support(tmp_path):
+    """Base: a review's admitted claim plus another paper's in-vitro claim of the same
+    reaction -> multiple_independent_papers, the in-vitro paper's spans on the node."""
+    controller = _controller(tmp_path, {"PMC:PMCR1": "review", "PMC:PMCP1": "primary"})
+    reaction, history, _ = _admit(controller, _sibling("PMC:PMCR1", "ev_r1", TSS, grade="review"),
+                                  _sibling("PMC:PMCP1", "ev_p1", IVO, grade="in_vitro"))
+    assert history.current.evidence_level == "review_article_only"
+    assert reaction.paper_ids == ["PMC:PMCR1"]
+    assert "ev_p1" not in reaction.evidence_ids
+    assert [r["claim_id"] for r in reaction.non_supporting_claims] == ["cl_MCP1_ev_p1"]
+    assert reaction.non_supporting_claims[0]["species_state"] == IVO
+
+
+def test_repair1_745b_a3_a_later_ambiguous_sibling_never_downgrades_an_admitted_reaction(tmp_path):
+    """Base: the node stays admitted but is relabelled ``candidate`` and lists the second
+    paper as support."""
+    controller = _controller(tmp_path, {"PMC:PMCP1": "primary", "PMC:PMCP2": "primary"})
+    reaction, history, rejections = _admit(controller, _sibling("PMC:PMCP1", "ev_p1", TSS),
+                                           _sibling("PMC:PMCP2", "ev_p2", AMBIGUOUS, grade="none"))
+    assert reaction.admitted is True
+    assert reaction.decision_status in ADMITTED_STATUSES
+    assert history.current.status in ADMITTED_STATUSES
+    assert reaction.paper_ids == ["PMC:PMCP1"]
+    assert [r["claim_id"] for r in reaction.non_supporting_claims] == ["cl_MCP2_ev_p2"]
+    assert history.current.detail["claim_verdict"] == "candidate"
+    assert history.current.species_state == TSS
+    assert [r["status"] for r in rejections] == ["candidate"]
+    assert "non_supporting_claim" in [h.event for h in reaction.history]
+
+
+def test_repair1_745b_a3_a_lifted_reaction_is_supported_by_its_target_species_claims_only(tmp_path):
+    """Base: lifting a quarantined lead keeps the lead's paper and spans as support."""
+    controller = _controller(tmp_path, {"PMC:PMCP1": "primary", "PMC:PMCP2": "primary"})
+    reaction, history, _ = _admit(controller, _sibling("PMC:PMCP1", "ev_p1", IVO, grade="in_vitro"),
+                                  _sibling("PMC:PMCP2", "ev_p2", TSS))
+    assert reaction.admitted is True and history.current.status == "accepted"
+    assert reaction.paper_ids == ["PMC:PMCP2"]
+    assert reaction.evidence_ids == ["ev_p2"]
+    assert [r["claim_id"] for r in reaction.non_supporting_claims] == ["cl_MCP1_ev_p1"]
+    assert history.current.evidence_level == "single_paper"
+
+
+def test_repair1_745b_a3_a_review_beside_one_primary_corroborates_but_is_not_independent(tmp_path):
+    """Base: a primary and a review -> multiple_independent_papers."""
+    controller = _controller(tmp_path, {"PMC:PMCP1": "primary", "PMC:PMCR1": "review"})
+    reaction, history, _ = _admit(controller, _sibling("PMC:PMCP1", "ev_p1", TSS),
+                                  _sibling("PMC:PMCR1", "ev_r1", TSS, grade="review"))
+    assert history.current.evidence_level == "single_paper"
+    assert "corroborated by 1 review" in history.current.reason
+    assert sorted(reaction.paper_ids) == ["PMC:PMCP1", "PMC:PMCR1"]
+    assert reaction.multi_paper_supported is False
+    controller = _controller(tmp_path / "two", {"PMC:PMCP1": "primary", "PMC:PMCP2": "primary"})
+    _, history, _ = _admit(controller, _sibling("PMC:PMCP1", "ev_p1", TSS), _sibling("PMC:PMCP2", "ev_p2", TSS))
+    assert history.current.evidence_level == "multiple_independent_papers"

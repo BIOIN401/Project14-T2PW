@@ -30,7 +30,12 @@ from t2pw.paths import PROJECT_ROOT
 #: ExtractedClaim.species_support and .unsupported_participants,
 #: ReactionParticipant.attribution, ClaimDecision.species_grade and
 #: ResearchReaction.species_grade are new; tissue is kept only with a cited span.
-ARTIFACT_SCHEMA_VERSION = "t2pw.mining/1.2.0"
+#: 1.3.0 (ORCH-745 B repair 1): a reaction's paper_ids / evidence_ids / claim_ids and its
+#: evidence_level count only target_species_supported claims, a review never toward
+#: independence; ResearchReaction.non_supporting_claims, species_support.floor_state /
+#: floor_reason and the decision detail keys claim_verdict / claim_reason /
+#: claim_species_state / supported_by / corroborating_reviews are new.
+ARTIFACT_SCHEMA_VERSION = "t2pw.mining/1.3.0"
 
 #: Bumped whenever an extraction prompt changes in a way that could change a claim.
 #: 1.2.0 (ORCH-745 N-5): the JSON example no longer pre-fills "species_inferred": false
