@@ -330,16 +330,36 @@ class PaperSource:
             paper.id = self._pmcid_for(paper.pmid, capture.inner) or paper.pmid
         return out
 
-    def _pmcid_for(self, pmid: str, http: Any) -> str:
-        """The article's own PMCID from EuropePMC, by PMID. ``""`` when it has none."""
+    def _europepmc_item(self, http: Any, query: str) -> Optional[Dict[str, Any]]:
+        """EuropePMC's ``core`` record for ``query``, cached for the run.
+
+        ``{}`` when EuropePMC answered with no record (cached: asking again changes
+        nothing); ``None`` when the lookup itself failed -- an exception, a non-200
+        or an unreadable body. A failure is NOT cached, so the next call asks again.
+        rag's ``_resolve_europepmc_item`` returns the same empty item for both, which
+        is how a failed lookup used to stand as "no PMCID" for the whole run (IT2-N3)
+        and one article was counted as a ``PMID:`` and a ``PMC:`` paper.
+        """
         from t2pw.rag import acquire as ra
 
-        cache: Dict[str, str] = self.__dict__.setdefault("_pmcid_by_pmid", {})
-        if pmid not in cache:
-            item = ra._resolve_europepmc_item(http, ra.CandidatePaper(id=pmid, source="ncbi"))
-            pmcid = str(item.get("pmcid") or "").strip()
-            cache[pmid] = (pmcid if pmcid.upper().startswith("PMC") else f"PMC{pmcid}") if pmcid else ""
-        return cache[pmid]
+        cache: Dict[str, Dict[str, Any]] = self.__dict__.setdefault("_europepmc_items", {})
+        if query in cache:
+            return cache[query]
+        params = {"query": query, "format": "json", "pageSize": 1, "resultType": "core"}
+        try:
+            resp = http.get(ra._EUROPEPMC_SEARCH, params=params)
+            if getattr(resp, "status_code", 0) != 200:
+                return None
+            results = ra._safe_list(ra._safe_dict(ra._safe_dict(resp.json()).get("resultList")).get("result"))
+        except Exception:  # noqa: BLE001 - a failed lookup is reported as None, never raised
+            return None
+        cache[query] = dict(results[0]) if results and isinstance(results[0], dict) else {}
+        return cache[query]
+
+    def _pmcid_for(self, pmid: str, http: Any) -> str:
+        """The article's own PMCID from EuropePMC, by PMID. ``""`` when it has none or the lookup failed."""
+        pmcid = str((self._europepmc_item(http, f"EXT_ID:{pmid} AND SRC:MED") or {}).get("pmcid") or "")
+        return _as_pmcid(pmcid)
 
     def full_text(self, candidate: Any) -> str:
         from t2pw.rag.acquire import fetch_full_text
@@ -362,6 +382,11 @@ class OfflinePaperSource(PaperSource):
 
     def full_text(self, candidate: Any) -> str:
         return str(getattr(candidate, "full_text", "") or "")
+
+
+def _as_pmcid(value: Any) -> str:
+    text = str(value or "").strip().upper()
+    return (text if text.startswith("PMC") else f"PMC{text}") if text else ""
 
 
 def record_from_candidate(
