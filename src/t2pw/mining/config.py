@@ -26,8 +26,10 @@ from t2pw.paths import PROJECT_ROOT
 #: usage.last_round_new_reactions counts admitted reactions only; ModelCallRecord.provider
 #: says not_reported_by_llm_client instead of ""; FrontierItem.relevance,
 #: ModelCallRecord.answer_quality and rounds/round_NNN/frontier_cut.jsonl are new.
-#: 1.2.0 (ORCH-745 B): ExtractedClaim.unsupported_participants and
-#: ReactionParticipant.attribution are new; tissue is kept only with a cited span.
+#: 1.2.0 (ORCH-745 B): species_state is decided on the claim's own supporting sentences;
+#: ExtractedClaim.species_support and .unsupported_participants,
+#: ReactionParticipant.attribution, ClaimDecision.species_grade and
+#: ResearchReaction.species_grade are new; tissue is kept only with a cited span.
 ARTIFACT_SCHEMA_VERSION = "t2pw.mining/1.2.0"
 
 #: Bumped whenever an extraction prompt changes in a way that could change a claim.

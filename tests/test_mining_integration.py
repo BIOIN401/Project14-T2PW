@@ -37,8 +37,8 @@ from t2pw.mining.models import (  # noqa: E402
     provenance_chain_complete,
 )
 from t2pw.mining.species import (  # noqa: E402
-    SPECIES_AMBIGUOUS,
     SPECIES_NON_TARGET,
+    SPECIES_NOT_STATED,
     SPECIES_TARGET_SUPPORTED,
 )
 
@@ -109,7 +109,10 @@ def test_3b_an_ambiguous_species_claim_is_also_held_back(mined):
     ]
     assert candidates, "the ambiguous-species claim must be retained as a labelled lead"
     held = candidates[0]
-    assert held.species_state == SPECIES_AMBIGUOUS
+    # ORCH-745 B3, a deliberate move: P6's claim names the target but cites nothing
+    # for it, so its species is dropped. Base then used the paper's screen organism
+    # and read species_ambiguous; a paper-level organism is never the claim's species.
+    assert held.species_state == SPECIES_NOT_STATED
     assert held.admitted is False
     assert held.graph_status == GRAPH_CANDIDATE
     assert ambiguous is not None  # the target-species 12-OPDA chemistry is separate

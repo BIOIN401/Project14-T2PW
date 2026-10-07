@@ -501,6 +501,9 @@ class MiningController:
                         round_index=index,
                         topic=self.config.topic,
                         paper_observed_organisms=record.observed_organisms,
+                        # Settled at inclusion (Acquirer._settle_included), before any
+                        # extraction: a review is read by the review rule (F-1).
+                        paper_evidence_type=record.evidence_type,
                     )
                     if extraction.outcome is not None:
                         self.state.model_calls.append(extraction.outcome.record)

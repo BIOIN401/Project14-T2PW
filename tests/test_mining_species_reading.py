@@ -221,3 +221,314 @@ def test_new_acceptance_745b_f5_an_all_unsupported_claim_is_a_separate_incomplet
                               delta=GraphDelta(round_index=1), config=config, round_index=1)
     upstream = [i for i in items if i.kind == FRONTIER_UPSTREAM and i.claim_identity == claim.claim_identity]
     assert upstream and "α-linolenic acid (LeA)" in upstream[0].target
+
+
+# ===========================================================================
+# F-1: the species markers are read on the claim's own supporting sentences
+# ===========================================================================
+def test_g9_745b_f1_t1_gh3_10_jasmonic_acid_to_ja_ile_is_admitted_on_its_knockout_evidence():
+    """T1, pilot-003 #14 (call 0009 row 0): "In flowers and wounded leaves of gh3.10 jar1
+    knockout lines JA-Ile was below the detection limit." (ev_7d27 [7]). Base reads the whole
+    abstract, finds "in vitro" in [5], and stores ``in_vitro_or_cell_free``; now the claim is
+    ``target_species_supported`` on the knockout sentence, graded ``in_planta``, and admitted
+    with a primary paper's evidence level."""
+    call = _call(9)
+    claims, _ = _build(_payload(call, [0]), _shown(call), GH3_10)
+    claim = claims[0]
+    assert claim.species_state == TSS
+    assert claim.claim_id == "cl_b89be46f92d4c4e1"
+    assert claim.species_support["grade"] == "in_planta"
+    assert _graded(claim, "ev_7d2787cbb14b4905", "knockout lines JA-Ile was below") == ["in_planta"]
+    _, decisions = _judge(claims, _shown(call))
+    assert decisions[0].status in ADMITTED_STATUSES
+    assert decisions[0].evidence_level == "single_paper"
+
+
+def _bryophyte_run(tmp_path):
+    """Pilot-003's bryophyte review through the controller: the paper is acquired and graded
+    as change set A grades it (its introduction says "this review makes four specific
+    contributions"), retrieval returns the passages call 0006 was shown, and the model
+    returns call 0006's recorded answer."""
+    paper = PAPERS[BRYOPHYTE]
+    candidate = CandidatePaper(id=paper["pmcid"], source="europepmc", title=paper["title"],
+                               abstract=paper["abstract"], full_text=paper["full_text"],
+                               source_uri=paper["url"], year=paper["year"])
+    call = _call(6)
+    config = H.make_config(tmp_path, budgets={"max_rounds": 1})
+    index = H.offline_index(config, tmp_path)
+    index.spans_for_paper = lambda pid, text, **kw: [  # noqa: ARG005
+        dataclasses.replace(s, paper_id=pid) for s in _shown(call)]
+    controller = MiningController(
+        config, source=OfflinePaperSource([candidate]), index=index, enabled_override=True,
+        chat_fn=lambda *a, **k: SimpleNamespace(text=call["raw_text"], diagnostics=None))
+    return controller.run(probe_model=False, probe_embeddings=False)
+
+
+def test_g9_745b_f1_t2_t3_opr3_steps_of_the_bryophyte_review_are_review_grade(tmp_path):
+    """T2 (#34 OPDA -> OPC-8:0) and T3 (#3 dn-cis-OPDA -> OPC-6:0), OPR3, cited to ev_c98d:
+    "In Arabidopsis, OPDA and dn- cis -OPDA are reduced by OPR3 in the peroxisomes to produce
+    OPC-8:0 and OPC-6:0, respectively." ([12]). Base reads "orthologs" / "orthologous"
+    elsewhere in the 5,700-character span and stores ``inferred_only`` for both; now both are
+    ``target_species_supported`` with grade ``review`` and ``review_article_only``, never
+    ``in_planta``, and the Marchantia knockout sentences [27], [30] give no credit."""
+    outcome = _bryophyte_run(tmp_path)
+    claims = {c.claim_id: c for c in outcome.state.store.claims.values()}
+    for claim_id in ("cl_0bc93d248b7f31db", "cl_5338b4fc07a47cea"):
+        claim = claims[claim_id]
+        assert claim.species_state == TSS
+        assert claim.species_support["grade"] == "review"
+        assert "in_planta" not in {s["grade"] for s in claim.species_support["sentences"]}
+        assert _graded(claim, "ev_c98d84c7d84855c1", "are reduced by OPR3") == ["review"]
+        decision = outcome.state.store.history(claim.claim_identity).current
+        assert decision.status in ADMITTED_STATUSES
+        assert decision.evidence_level == "review_article_only"
+    marchantia = claims["cl_0bc93d248b7f31db"]
+    assert _graded(marchantia, "ev_c98d84c7d84855c1", "Genetic knockout of Mp FAD5") == ["none"]
+    assert _graded(marchantia, "ev_c98d84c7d84855c1", "Mp fad5 mutant plants") == ["none"]
+
+
+def test_new_acceptance_745b_f1_the_grade_reaches_claims_decisions_and_the_reaction_node(tmp_path):
+    outcome = _bryophyte_run(tmp_path)
+    assert outcome.state.papers[BRYOPHYTE].evidence_type == "review"
+    root = outcome.run_dir.root
+    claims = {json.loads(l)["claim_id"]: json.loads(l)
+              for l in (root / "claims.jsonl").read_text(encoding="utf-8").splitlines()}
+    assert claims["cl_0bc93d248b7f31db"]["species_support"]["grade"] == "review"
+    assert claims["cl_0bc93d248b7f31db"]["species_support"]["paper_evidence_type"] == "review"
+    decisions = [json.loads(l) for l in (root / "decisions.jsonl").read_text(encoding="utf-8").splitlines()]
+    assert {d["species_grade"] for d in decisions if d["claim_id"] == "cl_0bc93d248b7f31db"} == {"review"}
+    primary = json.loads((root / "primary_graph.json").read_text(encoding="utf-8"))
+    candidates = json.loads((root / "candidate_subgraphs.json").read_text(encoding="utf-8"))
+    nodes = [*primary["reactions"], *(r for c in candidates["components"] for r in c["reactions"])]
+    grades = {" + ".join(r["product_names"]): r["species_grade"] for r in nodes}
+    assert grades["OPC-8:0"] == grades["OPC-6:0"] == "review"
+    assert all("species_grade" in r for r in nodes)
+
+
+def test_new_acceptance_745b_f1_t1b_without_the_knockout_sentence_there_is_no_credit():
+    """T1b: [7] removed from ev_7d27. No credit from [9] "...in the absence of JA-Ile..." or
+    [2] "gh3.10 jar1 knockout lines are still fertile"."""
+    call = _call(9)
+    stripped = dataclasses.replace(SPANS["ev_7d2787cbb14b4905"], text=SPANS["ev_7d2787cbb14b4905"].text.replace(
+        "In flowers and wounded leaves of gh3.10 jar1 knockout lines JA-Ile was below the detection limit. ", ""))
+    assert "below the detection limit" not in stripped.text
+    spans = [stripped if s.evidence_id == stripped.evidence_id else s for s in _shown(call)]
+    claims, _ = _build(_payload(call, [0]), spans, GH3_10, **_typed(GH3_10))
+    claim = claims[0]
+    assert claim.species_state != TSS
+    assert claim.species_state == IVO
+    assert set(_graded(claim, stripped.evidence_id, "in the absence of JA-Ile")) == {"none"}
+    assert _graded(claim, stripped.evidence_id, "knockout lines are still fertile") == ["none"]
+
+
+def test_new_acceptance_745b_f1_t4_pilot002_13lox_is_in_vitro():
+    """T4: pilot-002's only primary reaction, LeA -> 13-HPOT (13-LOX), cited to the 13-LOX
+    abstract ev_b58e: "LOX-catalyzed LeA oxidation ... Km value of 5.8 µM"."""
+    record = RECORDED["pilot002"]
+    span = next(EvidenceSpan(**s) for s in record["spans"] if s["evidence_id"] == "ev_b58e2cb64e2f1d87")
+    claims, _ = build_claims(json.loads(record["call"]["raw_text"]), spans=[span],
+                             paper_id=record["paper"]["paper_id"], target_species_normalized=TARGET,
+                             round_index=1, model="recorded",
+                             paper_observed_organisms=record["paper"]["observed_organisms"],
+                             paper_evidence_type="primary")
+    claim = claims[0]
+    assert claim.species_state == IVO
+    assert _graded(claim, span.evidence_id, "Km value of 5.8") == ["in_vitro"]
+
+
+def test_new_acceptance_745b_f1_t5_recombinant_13lox_with_a_cited_species_stays_out():
+    """T5: #11 (call 0002) with species "Arabidopsis thaliana" cited to the abstract ev_5863:
+    in vitro from ev_baf1 [8] "...when incubated with LA or LeA"; no credit from the pea
+    tissue extract (ev_4dcc [3]), others' work (ev_baf1 [5]) or hedges (ev_baf1 [9], [10])."""
+    call = _call(2)
+    payload = _payload(call)
+    payload["claims"][0].update(species="Arabidopsis thaliana", species_evidence_ids=["ev_5863efff93736770"])
+    claims, _ = _build(payload, _shown(call, extra=["ev_5863efff93736770"]), LOX13, **_typed(LOX13))
+    claim = claims[0]
+    assert claim.species_state == IVO
+    assert "in_planta" not in {s["grade"] for s in claim.species_support["sentences"]}
+    assert _graded(claim, "ev_baf1514923696f5c", "when incubated with LA or LeA") == ["in_vitro"]
+    assert _graded(claim, "ev_4dcc372e77b84976", "injection of plant tissue extract") == ["in_vitro"]
+    for text in ("who observed that Cd 2+ increased the content of 13-HPOT", "This might imply",
+                 "The results support the view"):
+        grades = _graded(claim, "ev_baf1514923696f5c", text)
+        assert grades and "in_planta" not in grades, text
+
+
+def test_new_acceptance_745b_f1_t6_the_collapsed_13lox_cascade_with_a_cited_species_stays_out():
+    """T6: #24 (call 0003) with species cited to ev_6915 (and, so that its participants are
+    kept and could earn credit, each participant cited to ev_6915 / ev_bb4c): in vitro from
+    ev_bb4c [15] "...with 13-LOX-, AOS- and AOC-lysates"; no credit from the pea roots ex
+    vivo method (ev_bb4c [26], [27])."""
+    call = _call(3)
+    payload = _payload(call)
+    row = payload["claims"][0]
+    row.update(species="Arabidopsis thaliana", species_evidence_ids=["ev_6915f534ca2dfd74"])
+    for side in ("substrates", "products"):
+        for participant in row[side]:
+            participant["evidence_ids"] = ["ev_6915f534ca2dfd74", "ev_bb4c9802d1637278"]
+    claims, _ = _build(payload, _shown(call), LOX13, **_typed(LOX13))
+    claim = claims[0]
+    assert claim.substrates and claim.products
+    assert claim.species_state == IVO
+    assert "in_planta" not in {s["grade"] for s in claim.species_support["sentences"]}
+    assert _graded(claim, "ev_bb4c9802d1637278", "AOS- and AOC-lysates") == ["in_vitro"]
+    assert set(_graded(claim, "ev_bb4c9802d1637278", "we employed pea roots")) <= {"in_vitro"}
+    assert set(_graded(claim, "ev_bb4c9802d1637278", "injection of plant tissue extract")) <= {"in_vitro"}
+
+
+def test_new_acceptance_745b_f1_t7_gh3_10_conversion_and_mutant_in_different_clauses_stay_out():
+    """T7: #30 (call 0010) with ev_1f2c reduced to its text from "Abstract" onward, U+2010
+    normalised. [17] "12-hydroxy jasmonate is directly converted into 12-hydroxy
+    jasmonoyl-isoleucine and fertile jasmonoyl-isoleucine deficient Arabidopsis mutants point
+    towards..." -- the mutants are another clause's subject."""
+    call = _call(10)
+    full = SPANS["ev_1f2c624a181ba5ef"]
+    text = full.text[full.text.index("Abstract"):].replace("‐", "-")
+    reduced = dataclasses.replace(full, text=text)
+    claims, _ = _build(_payload(call), _shown(call, extra=[reduced]), GH3_10, **_typed(GH3_10))
+    claim = claims[0]
+    assert claim.species_state != TSS
+    assert claim.species_state == IVO
+    assert _graded(claim, reduced.evidence_id, "is directly converted into") == ["none"]
+
+
+@pytest.mark.parametrize("every_span", [False, True], ids=["as_change_set_A_mints", "as_pilot003_held"])
+def test_new_acceptance_745b_f1_t8_gh3_10_purified_enzyme_stays_out(every_span):
+    """T8: #31 (call 0011), JA + Ile + ATP -> JA-Ile: in vitro from ev_c7a1 [7] "...purified in
+    parallel and tested for enzyme activity by in vitro incubations...". The species was cited
+    only to ev_ae0d, which is the paper's reference list: change set A never mints it, and
+    even shown as pilot-003 showed it, none of its text is positive evidence."""
+    call = _call(11)
+    claims, _ = _build(_payload(call, [0]), _shown(call, every_span=every_span), GH3_10, **_typed(GH3_10))
+    claim = claims[0]
+    assert claim.species_state == IVO
+    assert _graded(claim, "ev_c7a1b8c0ccdfe997", "were purified in parallel") == ["in_vitro"]
+    assert "in_planta" not in {s["grade"] for s in claim.species_support["sentences"]}
+    if not every_span:
+        assert "ev_ae0d92db16547d2c" not in claim.evidence_ids
+        assert not [s for s in claim.species_support["sentences"] if s["evidence_id"] == "ev_ae0d92db16547d2c"]
+
+
+@pytest.mark.parametrize("row,product", [(2, "JA-Gln"), (3, "JA-Asn"), (4, "JA-Glu")])
+def test_new_acceptance_745b_f1_t9_ja_conjugates_found_in_wounded_leaves_are_ambiguous(row, product):
+    """T9 (#12, #13, #15; product-owner hinge): ev_7d27 [9] "Additional JA conjugates found in
+    wounded leaves (JA-Gln) or formed in flowers upon MeJA treatment in the absence of JA-Ile
+    (JA-Gln, JA-Asn, JA-Glu) were identified." is occurrence, not conversion."""
+    call = _call(9)
+    claims, _ = _build(_payload(call, [row]), _shown(call), GH3_10, **_typed(GH3_10))
+    claim = claims[0]
+    assert claim.object == product
+    assert claim.species_state == AMBIGUOUS
+    assert _graded(claim, "ev_7d2787cbb14b4905", "Additional JA conjugates") == ["none"]
+    # H4: with the substrate written "JA" [9] is still no conversion (and "JA" now also
+    # names 12-hydroxy-JA's recombinant sentence [8], loosely: in vitro).
+    payload = _payload(call, [row])
+    payload["claims"][0]["substrates"][0]["name"] = "JA"
+    claims, _ = _build(payload, _shown(call), GH3_10, **_typed(GH3_10))
+    assert claims[0].species_state != TSS
+    assert _graded(claims[0], "ev_7d2787cbb14b4905", "Additional JA conjugates") == ["none"]
+
+
+def test_new_acceptance_745b_f1_t10_an_ortholog_sentence_never_transfers_the_species():
+    """T10: #29 (call 0005 row 0, 16:0 -> 16:1n9, MpFAD5) with species "Arabidopsis thaliana"
+    cited to ev_c98d: "MpFAD5 is orthologous to AtFAD5, an Arabidopsis enzyme known to
+    synthesize 16:1n9..." ([28])."""
+    call = _call(5)
+    payload = _payload(call, [0])
+    payload["claims"][0].update(species="Arabidopsis thaliana", species_evidence_ids=["ev_c98d84c7d84855c1"])
+    claims, _ = _build(payload, _shown(call, extra=["ev_c98d84c7d84855c1"]), BRYOPHYTE, **_typed(BRYOPHYTE))
+    claim = claims[0]
+    assert claim.species_state == "inferred_only"
+    assert _graded(claim, "ev_c98d84c7d84855c1", "MpFAD5 is orthologous to AtFAD5") == ["inference"]
+
+
+def test_new_acceptance_745b_f1_t11_an_introduction_only_mutant_tool_earns_nothing():
+    """T11: #14 citing only the GH3.10 introduction ev_d216 (species cited to it): [39] "We
+    introduce the aos gh3.10 jar1 mutant as a new tool to study jasmonate signalling in the
+    absence of JA-Ile..." -- an introduction, a purpose clause, a tool."""
+    call = _call(9)
+    payload = _payload(call, [0])
+    text = json.dumps(payload).replace("ev_7d2787cbb14b4905", "ev_d216d8e2a43cb218")
+    claims, _ = _build(json.loads(text), [SPANS["ev_d216d8e2a43cb218"]], GH3_10, **_typed(GH3_10))
+    claim = claims[0]
+    assert claim.species_state == AMBIGUOUS
+    assert _graded(claim, "ev_d216d8e2a43cb218", "We introduce the aos gh3.10 jar1 mutant") == ["none"]
+
+
+def test_new_acceptance_745b_f1_33_a_marchantia_table_row_is_non_target_not_an_inference():
+    """Recommended #33 (call 0005 row 2, HDA (16:2n6) -> HTA (16:3n3), MpFAD7): its row of the
+    summary table, ev_20a7 [10], has no ortholog marker; the claim is ``non_target_species``.
+    The neighbouring row's "Inferred by pathway logic" ([9]) is about 16:2(n6) (HDA) as a
+    product of MpFAD6 and does not name this claim's "HDA (16:2n6)" (a name keeps its note)."""
+    call = _call(5)
+    claims, _ = _build(_payload(call, [2]), _shown(call), BRYOPHYTE, **_typed(BRYOPHYTE))
+    assert claims[0].species_state == "non_target_species"
+
+
+def test_g9_745b_b3_the_papers_screen_organisms_are_never_the_claims_species():
+    """B3, pilot-003 #25 (call 0001): the model gave no species. Base fed the paper's screen
+    organisms (Arabidopsis thaliana, and Homo sapiens from "human LOX homologs") in as the
+    claim's species and stored ``multiple_species``; now the claim states none, and its own
+    sentences say in vitro: ev_5863 [4] "...LeA oxidation ... with a Km value of 5.8 µM"."""
+    call = _call(1)
+    claims, _ = _build(_payload(call), _shown(call), LOX13)
+    claim = claims[0]
+    assert claim.species_state == IVO
+    assert claim.species_text == ""
+
+
+def _replay():
+    """All 16 recorded calls, in order, through extraction, the claim store and admission,
+    as the controller runs them (change set A's spans; each paper graded as A grades it)."""
+    store, registry = ClaimStore(), EntityRegistry()
+    papers = {pid: PaperRecord(paper_id=pid, evidence_type=TYPES[pid]) for pid in TYPES}
+    evidence = dict(SPANS)
+    identity_of = {}
+    admitted = set()
+    for call in RECORDED["pilot003"]["calls"]:
+        claims, _ = _build(json.loads(call["raw_text"]), _shown(call), call["paper_id"],
+                           **_typed(call["paper_id"]))
+        for row, claim in enumerate(claims):
+            identity_of[(call["call_id"], row)] = claim.claim_identity
+            stored, _ = store.register(claim)
+            outcome = judge(stored, store=store, registry=registry, papers=papers, evidence=evidence,
+                            round_index=1)
+            store.record_decision(outcome.decision)
+            if outcome.admitted:
+                admitted.add(stored.claim_id)
+    return store, identity_of, admitted
+
+
+#: Where this implementation's state differs from the adjudication table (section 2). Every
+#: one is a non-admissible state either way; none is a T-row.
+TABLE_DELTAS = {
+    # ev_3b1f [6] is one "sentence" of the summary table: the cis-to-iso isomerase row
+    # ("Enzymatic activity in crude extracts", a W7 in-vitro marker) glued to the MpGH3A row.
+    # The table read "crude extracts" as no marker (it notes #4 "Mp; cell-free" itself).
+    "2": IVO, "4": IVO, "6": IVO,
+    # Adjudication 1b: "header glued to row 1 (#29 inferred_only instead of non_target)".
+    "29": "inferred_only",
+    # Its product and species cite only ev_1f2c, the GH3.10 front matter change set A never
+    # mints: the product is unsupported (claim incomplete) and the species uncited. The
+    # table: "IVO (species_ambiguous if ev_1f2c fully excluded)".
+    "30": "species_not_stated",
+}
+
+
+def test_new_acceptance_745b_f1_the_full_pilot003_replay_admits_exactly_3_14_and_34():
+    store, identity_of, admitted = _replay()
+    by_number = {row["n"]: row for row in ADJUDICATION}
+    assert admitted == {by_number[n]["claim_id"] for n in ("3", "14", "34")}
+    assert {row["n"] for row in ADJUDICATION if row["admit"]} == {"3", "14", "34"}
+    states = {}
+    for row in ADJUDICATION:
+        identity = identity_of[(row["call"], row["row"])]
+        claim = next(c for c in store.siblings(identity))
+        states[row["n"]] = claim.species_state
+    expected = {row["n"]: TABLE_DELTAS.get(row["n"], row["required_state"]) for row in ADJUDICATION}
+    assert states == expected
+    assert all(state != TSS for state in TABLE_DELTAS.values())
+    grades = {n: next(iter(store.siblings(identity_of[(by_number[n]["call"], by_number[n]["row"])]))).species_support["grade"]
+              for n in ("3", "14", "34")}
+    assert grades == {"3": "review", "14": "in_planta", "34": "review"}

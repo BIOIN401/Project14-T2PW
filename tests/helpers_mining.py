@@ -11,8 +11,8 @@ policy, not to be biochemically authoritative. It deliberately contains:
 * a relevant but disconnected paper-supported reaction (P3);
 * a later paper supplying a legitimate biochemical bridge (P4, round 3);
 * a wrong-species reaction (P5, *Zea mays*);
-* an ambiguous-species claim (P6: names the target species but cites no evidence
-  span for it);
+* a claim with no species evidence (P6: names the target species but cites no
+  evidence span for it; since ORCH-745 B3 ``species_not_stated``, not ambiguous);
 * two papers that conflict about a reaction attribute (P2 vs P7, enzyme);
 * independent support for one reaction from a second paper (P8 repeats P1);
 * a truncated model response (P9).
@@ -86,13 +86,13 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000002",
         title="Allene oxide synthase converts 13-HPOT to 12-OPDA in Arabidopsis thaliana",
         abstract=(
-            "13-HPOT is converted to 12-oxophytodienoic acid (12-OPDA) by allene oxide "
-            "synthase (AOS) in Arabidopsis thaliana chloroplasts."
+            "In Arabidopsis thaliana leaves, 13-HPOT is converted to 12-oxophytodienoic acid "
+            "(12-OPDA) by allene oxide synthase (AOS) in the chloroplasts."
         ),
         full_text=(
-            "Results. Recombinant AOS from Arabidopsis thaliana converted 13-HPOT to 12-OPDA. "
-            "The product was confirmed by mass spectrometry in Arabidopsis thaliana leaf "
-            "extracts. The reaction proceeds in the chloroplast."
+            "Results. In Arabidopsis thaliana leaves, AOS converted 13-HPOT to 12-OPDA. "
+            "The product was confirmed by mass spectrometry in Arabidopsis thaliana leaves. "
+            "The reaction proceeds in the chloroplast."
         ),
     ),
     "P3": FixturePaper(
@@ -100,8 +100,8 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000003",
         title="CYP94B3 hydroxylates JA-Ile in Arabidopsis thaliana",
         abstract=(
-            "The cytochrome P450 CYP94B3 converts JA-Ile to 12OH-JA-Ile in Arabidopsis "
-            "thaliana, attenuating jasmonate signalling."
+            "In Arabidopsis thaliana leaves, the cytochrome P450 CYP94B3 converts JA-Ile to "
+            "12OH-JA-Ile, attenuating jasmonate signalling."
         ),
         full_text=(
             "Results. In Arabidopsis thaliana, CYP94B3 converts JA-Ile to 12OH-JA-Ile. "
@@ -113,8 +113,9 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000004",
         title="From 12-OPDA to JA-Ile: the conjugation route in Arabidopsis thaliana",
         abstract=(
-            "12-OPDA is converted to jasmonic acid, and JAR1 conjugates jasmonic acid with "
-            "L-isoleucine to give JA-Ile, in Arabidopsis thaliana."
+            "In Arabidopsis thaliana leaves, 12-OPDA is converted to jasmonic acid. In "
+            "Arabidopsis thaliana leaves, JAR1 converts jasmonic acid to JA-Ile, conjugating it "
+            "with L-isoleucine."
         ),
         full_text=(
             "Results. In Arabidopsis thaliana peroxisomes, 12-OPDA is converted to jasmonic "
@@ -148,7 +149,8 @@ PAPERS: Dict[str, FixturePaper] = {
             "mentioned only in the introduction as general background."
         ),
         # The screen read the target species off the paper, but no passage ties it
-        # to THIS reaction -- the definition of an ambiguous-species claim.
+        # to THIS reaction. A paper-level organism is never the claim's species
+        # (ORCH-745 B3): the claim is species_not_stated and held back.
         observed_organisms=[TARGET_SPECIES],
     ),
     "P7": FixturePaper(
@@ -156,11 +158,11 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000007",
         title="Allene oxide cyclase is responsible for 12-OPDA formation",
         abstract=(
-            "We report that allene oxide cyclase, not allene oxide synthase, converts 13-HPOT "
-            "to 12-OPDA in Arabidopsis thaliana."
+            "We report that in Arabidopsis thaliana leaves allene oxide cyclase, not allene "
+            "oxide synthase, converts 13-HPOT to 12-OPDA."
         ),
         full_text=(
-            "Results. Purified allene oxide cyclase of Arabidopsis thaliana converted 13-HPOT "
+            "Results. In Arabidopsis thaliana leaves, allene oxide cyclase converted 13-HPOT "
             "to 12-OPDA. We could not reproduce the assignment to allene oxide synthase in "
             "Arabidopsis thaliana."
         ),
@@ -171,7 +173,7 @@ PAPERS: Dict[str, FixturePaper] = {
         title="Independent confirmation of alpha-linolenic acid oxygenation in Arabidopsis",
         abstract=(
             "An independent laboratory confirms that alpha-linolenic acid is converted to "
-            "13-HPOT in Arabidopsis thaliana."
+            "13-HPOT in Arabidopsis thaliana leaves."
         ),
         full_text=(
             "Results. Using a different assay in Arabidopsis thaliana, we confirm the "

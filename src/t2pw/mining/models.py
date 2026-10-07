@@ -290,6 +290,13 @@ class ExtractedClaim:
     #: the claim cites).
     field_attribution: Dict[str, str] = field(default_factory=dict)
     evidence_ids: List[str] = field(default_factory=list)
+    #: The sentence-level species reading (:func:`t2pw.mining.species.grade_sentences`):
+    #: ``grade`` (``in_planta`` / ``review`` / ``in_vitro`` / ``inference`` / ``host`` /
+    #: ``none``), the graded supporting ``sentences``, and what a same-paper merge
+    #: needs to recompute the state: ``species_evidence_ids`` (model-cited only),
+    #: ``species_span_ok``, ``claimed_inferred``, ``target_species``,
+    #: ``paper_evidence_type``.
+    species_support: Dict[str, Any] = field(default_factory=dict)
     #: Participants the model asserted that no evidence supports (no valid citation
     #: and not verbatim in a cited span): ``{"side", "name", "reason"}``.
     unsupported_participants: List[Dict[str, str]] = field(default_factory=list)
@@ -428,6 +435,8 @@ class ClaimDecision:
     target: str = "none"
     evidence_level: str = ""
     species_state: str = ""
+    #: The claim's ``species_support["grade"]`` when it was decided.
+    species_grade: str = ""
     supersedes: str = ""
     decided_at: str = ""
     supporting_paper_ids: List[str] = field(default_factory=list)
@@ -466,6 +475,7 @@ class ClaimDecision:
             target=target,
             evidence_level=evidence_level,
             species_state=claim.species_state,
+            species_grade=str((claim.species_support or {}).get("grade") or ""),
             supersedes=supersedes,
             decided_at=decided_at,
             supporting_paper_ids=_str_list(supporting_paper_ids or [claim.paper_id]),

@@ -215,6 +215,7 @@ def build_reaction(
         tissue=claim.tissue,
         species_text=claim.species_text,
         species_state=claim.species_state,
+        species_grade=str((claim.species_support or {}).get("grade") or ""),
         pathway_names=list(claim.pathway_names),
         discovery_round=int(round_index),
         claim_ids=list(dict.fromkeys(claim_ids)),

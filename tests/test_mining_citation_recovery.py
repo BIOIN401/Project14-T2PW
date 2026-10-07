@@ -251,9 +251,19 @@ def test_b1_c3_a_contrast_mention_does_not_make_a_target_species_reaction():
 
 
 def test_a_model_cited_target_species_is_still_supported():
-    """The guardrail's own path is untouched: a species the model cites is evidence."""
+    """A species the model cites is species evidence; a recovered one never is.
+
+    ORCH-745 F-1, a deliberate move: base read this transgenic-host span as
+    ``target_species_supported`` once the model cited it. The span's only sentence
+    naming the target is "expression of bryophyte LCPUFA genes in transgenic
+    Arabidopsis" (W7: a host system never performs its own reaction), so the
+    claim is now ``species_ambiguous`` with grade ``host``. A cited in-planta
+    sentence is still supported."""
     claim, _ = _uncited_species_claim("ev_f42c0ce97d79b1e7", PILOT_TRANSGENE_SPAN,
                                       "DGLA (20:3n6)", "ARA (20:4n6)", "Arabidopsis",
                                       species_evidence_ids=["ev_f42c0ce97d79b1e7"])
-    assert claim.species_state == "target_species_supported"
+    assert claim.species_state == "species_ambiguous"
+    assert claim.field_attribution["species"] == "model_citation"
+    claims, _ = _build(_pilot_shaped(species_evidence_ids=["ev_one"]))
+    assert claims[0].species_state == "target_species_supported"
     assert claim.field_attribution["species"] == "model_citation"

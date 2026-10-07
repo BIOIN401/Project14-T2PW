@@ -52,7 +52,11 @@ def spans():
         EvidenceSpan(
             evidence_id="ev_one",
             paper_id="PMC1",
-            text="LOX2 converts alpha-linolenic acid to 13-HPOT in Arabidopsis thaliana.",
+            # ORCH-745 F-1: "in Arabidopsis thaliana leaves" (base: "in Arabidopsis
+            # thaliana."). A species is supported only by a sentence showing the
+            # organism perform the reaction; without the in-planta context the claim
+            # of test_each_field_keeps_its_own_evidence is species_ambiguous.
+            text="LOX2 converts alpha-linolenic acid to 13-HPOT in Arabidopsis thaliana leaves.",
             section="results",
             locator="results#0",
             chunk_id="c0",
@@ -204,7 +208,10 @@ def test_species_not_stated_when_nothing_names_one():
     assert claims[0].species_state == SPECIES_NOT_STATED
 
 
-def test_a_papers_observed_species_yields_ambiguous_not_supported():
+def test_a_papers_observed_species_is_never_the_claims_species():
+    """ORCH-745 B3, a deliberate move: base fed the screen's paper-level organisms in
+    as the claim's species, so this claim was ``species_ambiguous``. A paper-level
+    organism is a fact about the paper, not about this reaction: ``species_not_stated``."""
     payload = {
         "claims": [
             {
@@ -219,7 +226,8 @@ def test_a_papers_observed_species_yields_ambiguous_not_supported():
         round_index=1, model="test/model",
         paper_observed_organisms=["Arabidopsis thaliana"],
     )
-    assert claims[0].species_state == "species_ambiguous"
+    assert claims[0].species_state == SPECIES_NOT_STATED
+    assert claims[0].species_text == ""
 
 
 def test_a_hypothesis_is_carried_as_a_hypothesis():

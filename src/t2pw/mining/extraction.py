@@ -27,6 +27,8 @@ from t2pw.mining.models import (
     DIRECTION_FORWARD,
     DIRECTION_REVERSE,
     DIRECTION_UNSPECIFIED,
+    EVIDENCE_REVIEW,
+    EVIDENCE_UNKNOWN,
     EXTRACTION_OK,
     EvidenceSpan,
     ExtractedClaim,
@@ -35,7 +37,12 @@ from t2pw.mining.models import (
     reaction_identity,
 )
 from t2pw.mining.modelclient import MiningModelClient, ModelCallOutcome
-from t2pw.mining.species import classify_species, fold_text
+from t2pw.mining.species import (
+    aggregate_species,
+    fold_text,
+    grade_sentences,
+    species_span_names_target,
+)
 
 SYSTEM_PROMPT = """You are a biochemical literature analyst building a research graph.
 
@@ -369,16 +376,23 @@ def build_claims(
     prompt_version: str = PROMPT_VERSION,
     extraction_status: str = EXTRACTION_OK,
     paper_observed_organisms: Sequence[str] = (),
+    paper_evidence_type: str = EVIDENCE_UNKNOWN,
 ) -> Tuple[List[ExtractedClaim], List[str]]:
     """Turn a validated model payload into claims. Returns ``(claims, dropped)``.
 
     ``dropped`` names every field and participant discarded for lack of a valid
     citation (or as a placeholder echo), so the round artifact can show what the
     model asserted and could not support.
+
+    ``paper_evidence_type`` is the paper's grade (``review`` routes the species
+    reading through the review rule) and ``paper_observed_organisms`` the
+    organisms the screen read off the paper: context for the sentence rules only,
+    never the claim's species (ORCH-745 B3).
     """
     allowed = {s.evidence_id: s for s in spans}
     claims: List[ExtractedClaim] = []
     dropped: List[str] = []
+    review = str(paper_evidence_type or "") == EVIDENCE_REVIEW
 
     rows = payload.get("claims") if isinstance(payload, Mapping) else payload
     for index, row in enumerate(rows or []):
@@ -491,32 +505,40 @@ def build_claims(
             reversible = bool(reversible)
             attribution["reversible"] = ATTRIBUTION_MODEL_CITATION
 
-        evidence_text = "\n".join(allowed[e].text for e in claim_evidence if e in allowed)
-        # When the claim cites no species evidence of its own, the paper's own
-        # observed organisms are still a fact about the SOURCE -- but a fact
-        # about the paper, not about this reaction. Feeding them in uncited is
-        # exactly what yields `species_ambiguous`: a species is named somewhere
-        # and nothing ties it to this claim.
-        observed = (
-            [species_text]
-            if species_text
-            else [str(o) for o in paper_observed_organisms if str(o or "").strip()]
-        )
         # A species kept only by the verbatim fallback is a name that occurs in a
         # cited passage, not evidence that the passage ties it to THIS reaction
         # ("expression of bryophyte genes in transgenic Arabidopsis", "equivalent
         # to Arabidopsis AtFAD3"). It is still the observed value, so a non-target
-        # or second species is recognised and quarantines the claim; but it never
-        # counts as species evidence, so the target species fails closed to
+        # species is recognised and quarantines the claim; but it never counts as
+        # species evidence, so the target species fails closed to
         # ``species_ambiguous`` and stays a lead.
         if attribution.get("species") == ATTRIBUTION_VERBATIM_CITED_SPAN:
             species_ids = []
-        verdict = classify_species(
+        # F-1: read the sentences of the claim's own cited passages, not the whole
+        # passage. B3: the species is what the model stated for THIS claim; the
+        # paper's screen organisms are context for the sentence rules only (base
+        # made "human LOX homologs" in an abstract a second species of every claim).
+        claimed_inferred = bool(row.get("species_inferred"))
+        species_span_ok = species_span_names_target(
+            [allowed[e] for e in species_ids], target_species_normalized)
+        sentences = grade_sentences(
+            [allowed[e] for e in claim_evidence],
             target_species_normalized=target_species_normalized,
-            observed=observed,
+            substrates=[p.name for p in substrates],
+            products=[p.name for p in products],
+            enzyme=enzyme,
+            gene=gene,
+            asserted=[*(p.name for p in (*asserted_subs, *asserted_prods)), *_catalyst_values(row)],
+            review=review,
+            paper_observed_organisms=paper_observed_organisms,
+        )
+        verdict = aggregate_species(
+            target_species_normalized=target_species_normalized,
+            observed=[species_text] if species_text else [],
             species_evidence_ids=species_ids,
-            evidence_text=evidence_text,
-            claimed_inferred=bool(row.get("species_inferred")),
+            sentences=sentences,
+            species_span_ok=species_span_ok,
+            claimed_inferred=claimed_inferred,
         )
 
         # Species is part of the reaction identity, so the same chemistry in two
@@ -567,6 +589,15 @@ def build_claims(
             field_evidence=field_evidence,
             field_attribution=attribution,
             evidence_ids=claim_evidence,
+            species_support={
+                "grade": verdict.grade,
+                "sentences": verdict.sentences,
+                "species_evidence_ids": list(species_ids),
+                "species_span_ok": species_span_ok,
+                "claimed_inferred": claimed_inferred,
+                "target_species": target_species_normalized,
+                "paper_evidence_type": str(paper_evidence_type or ""),
+            },
             unsupported_participants=unsupported,
             model=model,
             actual_model=actual_model or model,
@@ -582,6 +613,12 @@ def build_claims(
     return claims, dropped
 
 
+def _catalyst_values(row: Mapping[str, Any]) -> List[str]:
+    """The enzyme and gene the model asserted, cited or not: their sentences'
+    negative markers count even when the value itself is dropped."""
+    return [str(row.get(k) or "").strip() for k in ("enzyme", "gene") if str(row.get(k) or "").strip()]
+
+
 def extract_claims(
     *,
     client: MiningModelClient,
@@ -593,6 +630,7 @@ def extract_claims(
     round_index: int,
     topic: str = "",
     paper_observed_organisms: Sequence[str] = (),
+    paper_evidence_type: str = EVIDENCE_UNKNOWN,
 ) -> ExtractionResult:
     """Run one extraction call over ``spans`` and build the resulting claims.
 
@@ -647,6 +685,7 @@ def extract_claims(
         prompt_version=client.config.prompt_version,
         extraction_status=outcome.status,
         paper_observed_organisms=paper_observed_organisms,
+        paper_evidence_type=paper_evidence_type,
     )
     notes = []
     if dropped:

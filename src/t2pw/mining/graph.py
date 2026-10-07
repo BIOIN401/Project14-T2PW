@@ -126,6 +126,10 @@ class ResearchReaction:
     tissue: str = ""
     species_text: str = ""
     species_state: str = ""
+    #: What kind of evidence decided ``species_state`` (``in_planta``, ``review``,
+    #: ``in_vitro``, ``inference``, ``host``, ``none``; see
+    #: :func:`t2pw.mining.species.aggregate_species`). "" for a starting-graph node.
+    species_grade: str = ""
     pathway_names: List[str] = field(default_factory=list)
 
     graph_status: str = GRAPH_CANDIDATE
@@ -427,6 +431,7 @@ class ResearchGraph:
                 merged.decision_status = reaction.decision_status
                 merged.decision_reason = reaction.decision_reason
                 merged.species_state = reaction.species_state or merged.species_state
+                merged.species_grade = reaction.species_grade or merged.species_grade
                 component = self.components.get(old_component)
                 if component is not None and merged.reaction_id in component.reaction_ids:
                     component.reaction_ids.remove(merged.reaction_id)
