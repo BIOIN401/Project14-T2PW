@@ -163,8 +163,8 @@ _DECLARED_REVIEW = re.compile(r"(?<!peer )(?<!peer-)\b(?:mini-?)?review(?!ed)", 
 #: biosynthesis" (PMC12444477). Anchored to the end of the words before the title, and
 #: case-sensitive, so a CRediT "Writing - review & editing" or a "Reviewed by:" never counts.
 _SUBJECT_REVIEW = re.compile(
-    r"(?<![\w-])(?:JBC Reviews|Systematic Review|Mini-?[Rr]eview|Minireview|MiniReview"
-    r"|Review [Aa]rticle|Reviews?|REVIEW)\s*$")
+    r"(?<![\w-])(?:JBC Reviews|Systematic Review|Review Essay|REVIEW ARTICLE|Mini-?[Rr]eviews?"
+    r"|Minireviews?|MiniReviews?|Review [Aa]rticle|Reviews?|REVIEW)\s*$")
 _PREPRINT_MARKERS = ("biorxiv", "medrxiv", "chemrxiv", "preprint", "research square")
 #: Declared types that mark a primary paper. Not "Journal Article": PubMed gives it to
 #: reviews too, so a review whose record lists only that would be graded primary.
@@ -233,9 +233,15 @@ def make_paper_starting_input(raw: Any) -> StartingInput:
     return StartingInput(kind="paper", raw=str(raw), value=value, id_type=id_type)
 
 
+#: Tag-shaped markup only: "<" then a letter. A "<" before a space or a digit is text
+#: ("P < 0.05", "p <0.05"): stripping "<...>" spliced "(P &lt; 0.05) and OPDA rose &gt;2-fold"
+#: into "(P 2-fold", a quote the paper never printed.
+_TAG = re.compile(r"</?[A-Za-z][A-Za-z0-9]*\b[^<>]*>")
+
+
 def _plain(text: str) -> str:
     """Tags stripped, entities decoded (EuropePMC titles arrive double-escaped), spaces folded."""
-    return " ".join(re.sub(r"<[^>]+>", " ", html.unescape(html.unescape(str(text or "")))).split())
+    return " ".join(_TAG.sub(" ", html.unescape(html.unescape(str(text or "")))).split())
 
 
 def _subject_heading(text: str, title: str) -> str:

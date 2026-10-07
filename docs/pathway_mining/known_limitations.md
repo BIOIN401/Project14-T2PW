@@ -109,15 +109,28 @@ URL-only references frequently resolve to an abstract.
 ## Index hygiene knows the pilots' layouts
 
 What indexing keeps out ([`evidence_policy.md`](evidence_policy.md) § what text can be
-evidence) is fit on the seven EuropePMC full texts pilots 002 and 003 fetched. Front matter
+evidence) was fit on 35 EuropePMC full texts: the seven pilots 002 and 003 fetched and the 28
+committed under `runs/2026-07-27_*` at f9556288. It was then checked, read only, on the 200
+unique EuropePMC full texts in the project's acquire cache (`data/rag_index/acquire_cache/
+fulltext`), indexing each with no abstract and no passage cap at 6ceef736 and at the repair-2
+tip. Text kept at 6ceef736 and not at the tip, on 8 of the 200: reference entries (4 texts),
+ACS processing flags (4), a data-availability and acknowledgments paragraph before a
+headingless list (PMC10055903, 945 characters) and a Supporting Information file list
+(PMC13418202, 428 characters). No body prose. Front matter
 is recognised by EuropePMC's processing flags only: a PDF upload's title page, or a source
 without those flags, keeps its front matter. Publisher notes are recognised by three endings:
 the two MDPI notes in the pilot texts and Frontiers' standard note. A reference list needs a
-`References` / `Literature Cited` / `Bibliography` heading to be cut as a region; without one,
-only a chunk that is citation-dense
-as a whole is dropped, and a chunk that is only partly bibliography can keep that part. The
-density bar (5 marks per 1,000 characters) separates every reference chunk (13 or more) from
-every body window (1.6 at most) in those texts; it has not been tried on other publishers.
+`References` / `Literature Cited` / `Bibliography` heading or, without one, three authors with
+initials in a citation-dense window to be cut as a region; otherwise only a chunk that is
+citation-dense as a whole is dropped, and a chunk that is only partly bibliography can keep
+that part. The density bar (5 marks per 1,000 characters) separates every reference chunk (13
+or more) from every body window (1.6 at most) in the 35 texts. A list ends at the next figure
+or table label OR mention after its run of citation marks, as at 6ceef736 (repair 1's
+label-only rule was reverted: it dropped body prose). So a mention can end a list early and
+leave a fragment outside it (the pepper paper's "(Supplemental Table S3) , and the raw read
+data ..." sentence), and a table whose "References" column holds author-year cells still opens
+a false list that runs to the table's own mention: PMC8510960 loses that table's rows and the
+text up to "(Table 1 )", exactly as at 6ceef736.
 The front matter can hold an abstract, a significance statement or highlights; only the
 record's abstract survives as `abstract#0` (the metadata lookup fills an empty one), so a
 PNAS significance statement is not indexed. A record with no abstract takes the front
@@ -131,6 +144,14 @@ its first entry. "Survive" in these rules means the text stays retrievable: a tr
 gets a new evidence id, and a figure snippet contained in a body chunk is deduplicated (A4).
 
 ## A review must say it is one
+
+**Product-owner decision (A1-R1-UNKNOWN-WITHOUT-FAILED-LOOKUP, recorded per the ORCH-745 CS-A
+repair-2 brief).** A paper graded `unknown` WITHOUT a failed lookup remains eligible for
+primary-strength credit: an offline run or an upload (no lookup is made), a paper EuropePMC has
+no record of (DOI- or URL-only), a bare PMCID with no title (the subject heading has nothing to
+anchor to), a PubMed record declaring only "Journal Article", and subject headings the rule does
+not read (e.g. "Systematic Review and Meta-Analysis", "Review Paper"). Only a lookup that failed
+twice marks a paper `evidence_type_verified: false`, the case a gate may fail closed on.
 
 Without a declared review type (NCBI, or EuropePMC's metadata lookup, which an offline run
 never makes), a review is recognised only by its JATS subject heading (which needs the record's
