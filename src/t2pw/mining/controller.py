@@ -504,6 +504,9 @@ class MiningController:
                         # Settled at inclusion (Acquirer._settle_included), before any
                         # extraction: a review is read by the review rule (F-1).
                         paper_evidence_type=record.evidence_type,
+                        # False after two failed EuropePMC lookups: an "unknown" grade is
+                        # then read by the review rule (CS-B repair 1, A1-R1).
+                        paper_evidence_type_verified=record.evidence_type_verified,
                     )
                     if extraction.outcome is not None:
                         self.state.model_calls.append(extraction.outcome.record)

@@ -30,11 +30,13 @@ from t2pw.mining.models import (
     EVIDENCE_REVIEW,
     EVIDENCE_UNKNOWN,
     EXTRACTION_OK,
+    UNVERIFIED_EVIDENCE_TYPE_NOTE,
     EvidenceSpan,
     ExtractedClaim,
     ReactionParticipant,
     make_claim_id,
     reaction_identity,
+    reads_as_review,
 )
 from t2pw.mining.modelclient import MiningModelClient, ModelCallOutcome
 from t2pw.mining.species import (
@@ -377,6 +379,7 @@ def build_claims(
     extraction_status: str = EXTRACTION_OK,
     paper_observed_organisms: Sequence[str] = (),
     paper_evidence_type: str = EVIDENCE_UNKNOWN,
+    paper_evidence_type_verified: Optional[bool] = None,
 ) -> Tuple[List[ExtractedClaim], List[str]]:
     """Turn a validated model payload into claims. Returns ``(claims, dropped)``.
 
@@ -387,12 +390,15 @@ def build_claims(
     ``paper_evidence_type`` is the paper's grade (``review`` routes the species
     reading through the review rule) and ``paper_observed_organisms`` the
     organisms the screen read off the paper: context for the sentence rules only,
-    never the claim's species (ORCH-745 B3).
+    never the claim's species (ORCH-745 B3). ``paper_evidence_type_verified`` is
+    ``PaperRecord.evidence_type_verified``: an ``unknown`` grade after a failed lookup
+    is read by the review rule too (:func:`t2pw.mining.models.reads_as_review`).
     """
     allowed = {s.evidence_id: s for s in spans}
     claims: List[ExtractedClaim] = []
     dropped: List[str] = []
-    review = str(paper_evidence_type or "") == EVIDENCE_REVIEW
+    review = reads_as_review(paper_evidence_type, paper_evidence_type_verified)
+    unverified = review and str(paper_evidence_type or "") != EVIDENCE_REVIEW
 
     rows = payload.get("claims") if isinstance(payload, Mapping) else payload
     for index, row in enumerate(rows or []):
@@ -574,7 +580,8 @@ def build_claims(
             object=" + ".join(p.name for p in named_prods),
             species_text=species_text,
             species_state=verdict.state,
-            species_reason=verdict.reason,
+            species_reason=(f"{UNVERIFIED_EVIDENCE_TYPE_NOTE}; read by the review rule. {verdict.reason}"
+                            if unverified else verdict.reason),
             substrates=substrates,
             products=products,
             enzyme=enzyme,
@@ -597,6 +604,9 @@ def build_claims(
                 "claimed_inferred": claimed_inferred,
                 "target_species": target_species_normalized,
                 "paper_evidence_type": str(paper_evidence_type or ""),
+                "paper_evidence_type_verified": paper_evidence_type_verified,
+                **({"gate_evidence_type": EVIDENCE_REVIEW, "reason": UNVERIFIED_EVIDENCE_TYPE_NOTE}
+                   if unverified else {}),
             },
             unsupported_participants=unsupported,
             model=model,
@@ -631,6 +641,7 @@ def extract_claims(
     topic: str = "",
     paper_observed_organisms: Sequence[str] = (),
     paper_evidence_type: str = EVIDENCE_UNKNOWN,
+    paper_evidence_type_verified: Optional[bool] = None,
 ) -> ExtractionResult:
     """Run one extraction call over ``spans`` and build the resulting claims.
 
@@ -686,6 +697,7 @@ def extract_claims(
         extraction_status=outcome.status,
         paper_observed_organisms=paper_observed_organisms,
         paper_evidence_type=paper_evidence_type,
+        paper_evidence_type_verified=paper_evidence_type_verified,
     )
     notes = []
     if dropped:

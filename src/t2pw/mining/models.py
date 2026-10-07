@@ -96,6 +96,23 @@ DIRECTION_UNSPECIFIED = "unspecified"
 
 _WS = re.compile(r"\s+")
 
+#: What a gate reads when a paper's grade could not be checked (ORCH-745 CS-B repair 1,
+#: A1-R1): an ``unknown`` grade after two failed EuropePMC lookups
+#: (``evidence_type_verified is False``) may be an unrecognised review, so the species
+#: gate reads the paper by the review rule and the evidence level never counts it as an
+#: independent primary. The paper's own ``evidence_type`` is never rewritten. An
+#: ``unknown`` grade WITHOUT a failed lookup stays eligible for primary-strength credit
+#: (a product-owner decision recorded by change set A).
+UNVERIFIED_EVIDENCE_TYPE_NOTE = "evidence type unverified: EuropePMC lookup failed"
+
+
+def reads_as_review(evidence_type: Any, verified: Any = None) -> bool:
+    """Does a gate treat this paper as a review? A declared review, or a grade that
+    is not primary / review / preprint after a failed lookup."""
+    grade = str(evidence_type or "")
+    return grade == EVIDENCE_REVIEW or (
+        verified is False and grade not in (EVIDENCE_PRIMARY, EVIDENCE_REVIEW, EVIDENCE_PREPRINT))
+
 
 def _clean(value: Any) -> str:
     return _WS.sub(" ", str(value if value is not None else "")).strip()
@@ -823,6 +840,8 @@ __all__ = [
     "EXTRACTION_PARTIAL_REPAIR",
     "NON_ADMISSIBLE_EXTRACTION_STATUSES",
     "EVIDENCE_PRIMARY",
+    "UNVERIFIED_EVIDENCE_TYPE_NOTE",
+    "reads_as_review",
     "EVIDENCE_REVIEW",
     "EVIDENCE_PREPRINT",
     "EVIDENCE_UNKNOWN",

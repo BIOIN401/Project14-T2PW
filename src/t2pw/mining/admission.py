@@ -49,6 +49,7 @@ from t2pw.mining.models import (
     STATUS_HYPOTHESIS_ONLY,
     STATUS_INCOMPLETE,
     STATUS_REJECTED,
+    reads_as_review,
 )
 from t2pw.mining.normalize import EntityRegistry
 from t2pw.mining.species import (
@@ -103,8 +104,11 @@ class AdmissionOutcome:
 
 
 def _is_review(paper_id: str, papers: Mapping[str, PaperRecord]) -> bool:
+    """A review, or a paper whose ``unknown`` grade could not be verified (A1-R1): it
+    never counts as an independent primary."""
     record = papers.get(paper_id)
-    return record is not None and record.evidence_type == "review"
+    return record is not None and reads_as_review(record.evidence_type,
+                                                  getattr(record, "evidence_type_verified", None))
 
 
 def evidence_level(
@@ -115,7 +119,8 @@ def evidence_level(
     A review never counts toward independence (ORCH-745 A3; a decision the product
     owner may revisit): only reviews -> ``review_article_only``; two or more
     non-review papers -> ``multiple_independent_papers``; otherwise ``single_paper``
-    (a review beside one primary paper corroborates, it does not make two).
+    (a review beside one primary paper corroborates, it does not make two). A paper
+    whose ``unknown`` grade could not be verified counts as a review here.
     ``judge`` passes the papers of the claims that are themselves
     ``target_species_supported`` when the reaction is admitted.
     """
@@ -551,7 +556,8 @@ def _judge_claim(
         )
     reviews = [p for p in paper_ids if _is_review(p, papers)]
     if reviews and level == EVIDENCE_LEVEL_SINGLE_PAPER:
-        reason += f"; corroborated by {len(reviews)} review(s), which do not count toward independence"
+        reason += (f"; corroborated by {len(reviews)} review(s) or unverified paper(s), which do not "
+                   "count toward independence")
 
     reaction = build_reaction(
         claim,

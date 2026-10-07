@@ -34,7 +34,10 @@ from t2pw.paths import PROJECT_ROOT
 #: evidence_level count only target_species_supported claims, a review never toward
 #: independence; ResearchReaction.non_supporting_claims, species_support.floor_state /
 #: floor_reason and the decision detail keys claim_verdict / claim_reason /
-#: claim_species_state / supported_by / corroborating_reviews are new.
+#: claim_species_state / supported_by / corroborating_reviews are new; a paper whose
+#: "unknown" grade could not be verified (evidence_type_verified False) is read as a
+#: review by the species gate and the evidence level (species_support keys
+#: paper_evidence_type_verified, gate_evidence_type, reason).
 ARTIFACT_SCHEMA_VERSION = "t2pw.mining/1.3.0"
 
 #: Bumped whenever an extraction prompt changes in a way that could change a claim.

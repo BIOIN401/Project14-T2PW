@@ -564,3 +564,101 @@ def test_repair1_745b_a3_a_review_beside_one_primary_corroborates_but_is_not_ind
     controller = _controller(tmp_path / "two", {"PMC:PMCP1": "primary", "PMC:PMCP2": "primary"})
     _, history, _ = _admit(controller, _sibling("PMC:PMCP1", "ev_p1", TSS), _sibling("PMC:PMCP2", "ev_p2", TSS))
     assert history.current.evidence_level == "multiple_independent_papers"
+
+
+# ===========================================================================
+# A1-R1 (addendum): a paper whose grade could not be verified reads as a review
+# ===========================================================================
+def _unverified_run(tmp_path, text, *, verified, sub="13-HPOT", prod="12-OPDA", enzyme="AOS"):
+    """One paper through MiningController. Change set A grades a paper whose EuropePMC
+    lookup failed twice ``unknown`` with ``evidence_type_verified=False``; the acquirer is
+    wrapped to give the record exactly that outcome (an offline run never looks up)."""
+    import dataclasses
+    from types import SimpleNamespace
+    from t2pw.mining.acquisition import OfflinePaperSource
+    from t2pw.rag.acquire import CandidatePaper
+
+    candidate = CandidatePaper(id="PMC4242424", source="europepmc", title="Jasmonate conversions",
+                               abstract="Jasmonate metabolism was studied in Arabidopsis thaliana.",
+                               full_text="Results. " + text, source_uri="https://example.org/x", year="2024")
+    config = H.make_config(tmp_path, budgets={"max_rounds": 1})
+    index = H.offline_index(config, tmp_path)
+    spans = [EvidenceSpan(evidence_id="ev_u1", paper_id="", text=text, section="results"),
+             dataclasses.replace(SPECIES_SPAN, evidence_id="ev_u2", paper_id="")]
+    index.spans_for_paper = lambda pid, q, **kw: [dataclasses.replace(s, paper_id=pid) for s in spans]  # noqa: ARG005
+    payload = {"claims": [{"substrates": [{"name": sub, "evidence_ids": ["ev_u1"]}],
+                           "products": [{"name": prod, "evidence_ids": ["ev_u1"]}],
+                           "enzyme": enzyme, "enzyme_evidence_ids": ["ev_u1"],
+                           "species": "Arabidopsis thaliana", "species_evidence_ids": ["ev_u2"],
+                           "evidence_ids": ["ev_u1"]}]}
+    controller = MiningController(config, source=OfflinePaperSource([candidate]), index=index,
+                                  enabled_override=True,
+                                  chat_fn=lambda *a, **k: SimpleNamespace(text=json.dumps(payload), diagnostics=None))
+    acquire = controller.acquirer.acquire
+
+    def failed_lookup(*args, **kwargs):
+        result = acquire(*args, **kwargs)
+        for loaded in result.papers:
+            loaded.record.evidence_type, loaded.record.evidence_type_verified = "unknown", verified
+        return result
+
+    controller.acquirer.acquire = failed_lookup
+    outcome = controller.run(probe_model=False, probe_embeddings=False)
+    claims = list(outcome.state.store.claims.values())
+    assert len(claims) == 1, "the claim is never dropped"
+    claim = claims[0]
+    paper = outcome.state.papers[claim.paper_id]
+    return claim, outcome.state.store.history(claim.claim_identity).current, paper
+
+
+def test_repair1_745b_a1r1_an_unverified_paper_never_earns_in_planta(tmp_path):
+    """Base (4f8d33a3): the controller ignores evidence_type_verified; 'unknown' reads as
+    primary and the sentence earns in_planta, single_paper."""
+    claim, decision, paper = _unverified_run(
+        tmp_path, "In Arabidopsis leaves, 13-HPOT is converted to 12-OPDA by AOS.", verified=False)
+    assert claim.species_support["grade"] != "in_planta"
+    assert claim.species_support["grade"] == "review"
+    assert decision.evidence_level == "review_article_only"
+    assert "evidence type unverified: EuropePMC lookup failed" in claim.species_reason
+    assert claim.species_support["reason"] == "evidence type unverified: EuropePMC lookup failed"
+    assert (paper.evidence_type, paper.evidence_type_verified) == ("unknown", False)
+
+
+def test_new_acceptance_745b_r1_a1r1_the_review_rule_failing_keeps_a_lead(tmp_path):
+    claim, decision, _ = _unverified_run(
+        tmp_path, "In leaves of the opr3 mutant, OPC-8:0 was undetectable.", verified=False,
+        sub="OPDA", prod="OPC-8:0", enzyme="OPR3")
+    assert claim.species_state == AMBIGUOUS
+    assert decision.status == "candidate"
+
+
+@pytest.mark.parametrize("text,sub,prod,enzyme", [
+    ("In Arabidopsis leaves, 13-HPOT is converted to 12-OPDA by AOS.", "13-HPOT", "12-OPDA", "AOS"),
+    ("In Arabidopsis leaves, OPDA is converted to OPC-8:0 by OPR3.", "OPDA", "OPC-8:0", "OPR3"),
+], ids=["13-HPOT", "OPC-8:0"])
+def test_new_acceptance_745b_r1_a1r1_an_unknown_grade_without_a_failed_lookup_keeps_primary_credit(
+        tmp_path, text, sub, prod, enzyme):
+    """Change set A's product-owner decision: 'unknown' without a failed lookup is not a review."""
+    claim, decision, _ = _unverified_run(tmp_path, text, verified=None, sub=sub, prod=prod, enzyme=enzyme)
+    assert claim.species_support["grade"] == "in_planta"
+    assert decision.evidence_level == "single_paper"
+
+
+def test_new_acceptance_745b_r1_a1r1_the_coordinator_sentence_is_read_by_the_review_rule(tmp_path):
+    claim, _, _ = _unverified_run(tmp_path, "In Arabidopsis leaves, OPDA is converted to OPC-8:0 by OPR3.",
+                                  verified=False, sub="OPDA", prod="OPC-8:0", enzyme="OPR3")
+    assert claim.species_support["grade"] != "in_planta"
+
+
+def test_repair1_745b_a1r1_an_unverified_paper_is_never_an_independent_primary():
+    """Base (4f8d33a3): an 'unknown' paper counts as a primary: [A, B] ->
+    multiple_independent_papers, [A] -> single_paper."""
+    from t2pw.mining.admission import evidence_level
+
+    papers = {"A": PaperRecord(paper_id="A", evidence_type="unknown", evidence_type_verified=False),
+              "B": PaperRecord(paper_id="B", evidence_type="primary"),
+              "C": PaperRecord(paper_id="C", evidence_type="unknown")}
+    assert evidence_level(paper_ids=["A", "B"], papers=papers) != "multiple_independent_papers"
+    assert evidence_level(paper_ids=["A", "B"], papers=papers) == "single_paper"
+    assert evidence_level(paper_ids=["A"], papers=papers) == "review_article_only"
+    assert evidence_level(paper_ids=["C", "B"], papers=papers) == "multiple_independent_papers"
