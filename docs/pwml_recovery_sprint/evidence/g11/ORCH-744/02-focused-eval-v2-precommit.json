@@ -1,0 +1,143 @@
+{
+  "label": "focused-eval-v2-precommit",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-744/02-focused-eval-v2-precommit.pin.json",
+    "-q",
+    "-rx",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/eval744/f02",
+    "tests/test_eval_v2_gold_matcher.py",
+    "tests/test_eval_v2_metrics.py",
+    "tests/test_eval_v2_embedding_cache.py",
+    "tests/test_eval_v2_report.py"
+  ],
+  "cwd": "C:\\t\\eval",
+  "started_at": "2026-10-07T04:21:22+00:00",
+  "finished_at": "2026-10-07T04:21:36+00:00",
+  "duration_seconds": 13.584873600048013,
+  "timeout_seconds": 400.0,
+  "root_pid": 197804,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 197164,
+      "name": "python.exe",
+      "ppid": 197804
+    },
+    {
+      "pid": 198264,
+      "name": "git.exe",
+      "ppid": 197164
+    },
+    {
+      "pid": 195428,
+      "name": "git.exe",
+      "ppid": 197164
+    },
+    {
+      "pid": 197116,
+      "name": "git.exe",
+      "ppid": 197164
+    },
+    {
+      "pid": 194860,
+      "name": "git.exe",
+      "ppid": 197164
+    },
+    {
+      "pid": 194828,
+      "name": "git.exe",
+      "ppid": 197164
+    },
+    {
+      "pid": 199096,
+      "name": "git.exe",
+      "ppid": 197164
+    },
+    {
+      "pid": 196560,
+      "name": "git.exe",
+      "ppid": 197164
+    },
+    {
+      "pid": 197352,
+      "name": "git.exe",
+      "ppid": 197164
+    },
+    {
+      "pid": 189620,
+      "name": "git.exe",
+      "ppid": 197164
+    },
+    {
+      "pid": 192140,
+      "name": "git.exe",
+      "ppid": 197164
+    }
+  ],
+  "descendants_terminated": [
+    189620,
+    192140,
+    194828,
+    194860,
+    195428,
+    196560,
+    197116,
+    197164,
+    197352,
+    198264,
+    199096
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 182844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 182952,
+      "name": "python.exe"
+    },
+    {
+      "pid": 192980,
+      "name": "python.exe"
+    },
+    {
+      "pid": 195632,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-744\\02-focused-eval-v2-precommit.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\eval",
+    "repo_head": "a51e9609ad92d75485c5b3c198e779d991bc815a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

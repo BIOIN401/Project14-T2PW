@@ -901,3 +901,31 @@ documentation, each proved false-at-base / true-at-tip against **committed blobs
 classes — *the number now points somewhere else* and *the number still points here but the content
 under it changed*. Both are worth converting to anchors. **Only the first is a false-at-base
 correction.** Counting them together is what produced this card's one mislabel.
+
+---
+
+## Repo-wide census pin: `tests/test_eval_v2_report.py` (D-103, ORCH-744) — appended end-of-file by rule
+
+**Registered under product-owner decision D-103 § 1.** A sibling of the C-106 census pins (the
+heading *"The census pins the c102 file carries, and their cost"* above). It is appended here, not
+beside that heading, because addresses below it are cited by line number and an insertion there
+would shift them (the F-154 rule).
+
+`tests/test_eval_v2_report.py` re-runs the offline evaluation-v2 evaluator over the whole committed
+corpus and requires exact equality with its committed report fixture,
+`docs/evaluation_v2/sample_report.json` (and the rendered `SAMPLE_REPORT.md`). **That fixture
+intentionally changes whenever committed run results, `final_mapped.json` legs or the three ID
+reference tables (`data/id_mapping_cache.json`, `data/enrichment_cache.json`,
+`data/pathwhiz_id_db.json`, read as committed at HEAD) change**, the upcoming results run included.
+The fixture is then regenerated deliberately, through the bounded wrapper:
+
+```bash
+PYTHONPATH=<tree>/src python -m t2pw.bench.eval_v2.report evaluate --repo . --out docs/evaluation_v2 \
+    --live-json docs/evaluation_v2/retrieval_live.json
+```
+
+**A red here after such a commit is not a regression.** Regenerating is the moment someone confirms
+the new legs or blobs were meant to be there, the same cost the C-106 pins carry. A red with no such
+commit is a finding.
+
+It is in **no chunk and not in SMOKE**. Its focused selection is **`tests/test_eval_v2_*.py`**.

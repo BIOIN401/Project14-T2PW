@@ -1,0 +1,74 @@
+{
+  "label": "g9-probe-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-c",
+    "\"\"\"ORCH-744 G9 probe: at git ref argv[1], does the committed gold, read by the\nevaluator's own loader, certify exactly three complete cases, and does the committed\nsample report score no PMC12657337 leg? Exit 0 iff yes. Reads git blobs only; the\none file it writes is a scratch copy of the gold blob outside the repository.\"\"\"\nimport json\nimport subprocess\nimport sys\nfrom pathlib import Path\n\nfrom t2pw.bench.eval_v2.gold import load_supplement\n\nref = sys.argv[1]\nshow = lambda p: subprocess.run([\"git\", \"show\", f\"{ref}:{p}\"], capture_output=True, check=True).stdout  # noqa: E731\ntmp = Path(\"C:/t/bt/eval744/g9\") / f\"{ref}.json\"\ntmp.parent.mkdir(parents=True, exist_ok=True)\ntmp.write_bytes(show(\"src/t2pw/bench/eval_v2/gold_v2_supported_reactions.json\"))\ncomplete = sorted(pid for pid, c in load_supplement(tmp).items() if c.complete)\nrep = json.loads(show(\"docs/evaluation_v2/sample_report.json\").decode(\"utf-8\"))\nlegs = [l[\"leg_dir\"] for l in rep[\"reaction_metrics\"][\"legs\"] if l[\"target_paper\"] == \"PMC12657337\"]\nsplit = [s[\"leg_dir\"] for s in rep[\"rag_archived_failure_split\"][\"legs\"] if s[\"target_paper\"] == \"PMC12657337\"]\nfb = rep[\"reaction_metrics\"][\"aggregate\"][\"fallback\"]\nprint(\"ref\", ref, \"| complete by loader:\", complete, \"| report complete_cases:\", rep[\"gold_supplement\"][\"complete_cases\"])\nprint(\"PMC12657337 reaction legs scored:\", len(legs), \"| archived-split legs:\", len(split),\n      \"| fallback legs:\", fb[\"legs\"], \"P\", fb[\"precision_num_den\"], \"unsupported\", fb[\"unsupported_num_den\"])\nwant = [\"PMC12096016\", \"PMC12312563\", \"PMC12421875\"]\nok = complete == want and rep[\"gold_supplement\"][\"complete_cases\"] == want and not legs and not split\nprint(\"D-103 HOLDS\" if ok else \"D-103 VIOLATED\")\nsys.exit(0 if ok else 1)",
+    "c936c5e5"
+  ],
+  "cwd": "C:\\t\\eval",
+  "started_at": "2026-10-07T04:22:48+00:00",
+  "finished_at": "2026-10-07T04:22:49+00:00",
+  "duration_seconds": 0.3278408000478521,
+  "timeout_seconds": 120.0,
+  "root_pid": 201300,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 201312,
+      "name": "python.exe",
+      "ppid": 201300
+    }
+  ],
+  "descendants_terminated": [
+    201312
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 182844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 182952,
+      "name": "python.exe"
+    },
+    {
+      "pid": 201000,
+      "name": "python.exe"
+    },
+    {
+      "pid": 201012,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-744\\04-g9-probe-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\eval",
+    "repo_head": "c936c5e51498150723749e5d6e8fc0258e497fa1",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

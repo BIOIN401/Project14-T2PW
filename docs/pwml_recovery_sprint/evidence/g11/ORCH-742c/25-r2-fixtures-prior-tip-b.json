@@ -1,0 +1,100 @@
+{
+  "label": "r2-fixtures-prior-tip-b",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-c",
+    "\"\"\"B-R2-1 / B-1 regression fixtures as a standalone behavioural probe, using ONLY each\ntree's own public API (build_reference_index, id_correctness, load_lineage, score_leg),\nso the same code runs against the previous tip a0c0115a and the repaired tip.\nExit 0 iff the repaired behaviour holds. Nothing in the primary checkout is written:\nit is only read (the old code reads its working-tree caches; the new code runs\ngit rev-parse / git cat-file there).\"\"\"\nimport collections\nimport json\nimport shutil\nimport subprocess\nimport sys\nfrom pathlib import Path\n\nimport t2pw.bench.eval_v2.reactions as R\nfrom t2pw.bench.eval_v2.gold import load_supplement\n\nprint(\"reactions module:\", R.__file__)\narm = sys.argv[1]\ntmp = Path(\"C:/t/bt/eval/probe_r2\") / arm\nshutil.rmtree(tmp, ignore_errors=True)\n(tmp / \"data\").mkdir(parents=True)\n\n\ndef write(mapper_name, kegg_name):\n    (tmp / \"data/id_mapping_cache.json\").write_text(json.dumps(\n        {\"compounds\": {\"x\": {\"candidates\": [{\"name\": mapper_name, \"pathbank_compound_id\": 9}]}}}))\n    (tmp / \"data/enrichment_cache.json\").write_text(json.dumps(\n        {\"compounds\": {\"kegg:C00019\": {\"status\": \"ok\", \"primary_name\": kegg_name}}}))\n    (tmp / \"data/pathwhiz_id_db.json\").write_text(\"{}\")\n\n\ngit = [\"git\", \"-C\", str(tmp)]\nsubprocess.run([\"git\", \"init\", \"-q\", str(tmp)], check=True)\nwrite(\"Glycine\", \"S-Adenosyl-L-methionine\")\nsubprocess.run(git + [\"add\", \"data\"], check=True)\nsubprocess.run(git + [\"-c\", \"user.email=eval@t2pw.local\", \"-c\", \"user.name=ORCH-742c\",\n                      \"commit\", \"-q\", \"-m\", \"tables\"], check=True)\nwrite(\"Serine\", \"Oxoglutaric acid\")\nsam = {\"entities\": {\"compounds\": [{\"name\": \"S-adenosyl-L-methionine\", \"mapped_ids\": {\"kegg\": \"C00019\"}}]}}\nfixture = R.id_correctness(sam, R.build_reference_index(tmp))[\"counts\"]\n\n# The reviewer's measurement: the same committed canonical legs (C:/t/eval), judged\n# against a reference built from the primary checkout, whose caches are dirty.\nrepo = Path(\"C:/t/eval\")\nrd = R.load_lineage(repo)\nref = R.build_reference_index(Path(\"C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW\"))\nc = collections.Counter()\nfor p in rd.committed_paths(repo):\n    if p.endswith(\"/final_mapped.json\"):\n        payload = rd.load_json(repo / p)\n        if isinstance(payload, dict):\n            c.update(R.id_correctness(payload, ref)[\"counts\"])\n\ncase = load_supplement()[\"PMC12657337\"]\nrow = {\"inputs\": [\"pyruvate\"], \"outputs\": [\"acetate\"], \"enzymes\": [\"pyruvate oxidase\"]}\npoxb = R.score_leg(case, {\"processes\": {\"reactions\": [row]}}, [], None)[\"rows\"][0]\nout = {\"B_R2_1_dirty_tree_fixture\": fixture,\n       \"B_R2_1_primary_checkout_reference\": {k: c[k] for k in (\"correct_identity\", \"wrong_identity\")},\n       \"B_R2_1_tables\": ref.get(\"tables\", \"NOT RECORDED\"),\n       \"B_1_poxb_row\": {\"class\": poxb[\"class\"], \"gold_ids\": poxb.get(\"gold_ids\")}}\nprint(json.dumps(out, indent=1))\nok = (fixture == {\"correct_identity\": 1}\n      and out[\"B_R2_1_primary_checkout_reference\"] == {\"correct_identity\": 1184, \"wrong_identity\": 119}\n      and poxb[\"class\"] == \"paper_stated_off_pathway\" and poxb.get(\"gold_ids\") == [\"O3\"])\nprint(\"REPAIRED BEHAVIOUR HOLDS\" if ok else \"REPAIRED BEHAVIOUR DOES NOT HOLD\")\nshutil.rmtree(tmp, ignore_errors=True)\nsys.exit(0 if ok else 1)",
+    "prior"
+  ],
+  "cwd": "C:/t/eval",
+  "started_at": "2026-09-24T01:05:50+00:00",
+  "finished_at": "2026-09-24T01:05:52+00:00",
+  "duration_seconds": 2.140764500014484,
+  "timeout_seconds": 300.0,
+  "root_pid": 827920,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 828080,
+      "name": "python.exe",
+      "ppid": 827920
+    },
+    {
+      "pid": 828260,
+      "name": "git.exe",
+      "ppid": 828080
+    },
+    {
+      "pid": 828236,
+      "name": "git.exe",
+      "ppid": 828080
+    },
+    {
+      "pid": 827608,
+      "name": "git.exe",
+      "ppid": 828080
+    }
+  ],
+  "descendants_terminated": [
+    827608,
+    828080,
+    828236,
+    828260
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 626796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 627152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 796564,
+      "name": "python.exe"
+    },
+    {
+      "pid": 796572,
+      "name": "python.exe"
+    },
+    {
+      "pid": 827884,
+      "name": "python.exe"
+    },
+    {
+      "pid": 827896,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-742c\\25-r2-fixtures-prior-tip-b.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\eval",
+    "repo_head": "a0c0115acba51eb75f36c8c7749d9e72cc88b154",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

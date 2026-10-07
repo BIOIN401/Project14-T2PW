@@ -1,0 +1,173 @@
+{
+  "label": "goldreaders22-r1-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-742c/23-goldreaders22-r1-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt/eval/g23",
+    "tests/test_protein_export_policy.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c077_stage0_conflict_disposition.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c085_priority2_honesty.py",
+    "tests/test_c088_extracted_not_serialized_disposition.py",
+    "tests/test_cofactor_policy.py",
+    "tests/test_rag_multi_relation_spans.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c089_participant_schema.py",
+    "tests/test_c090_wrapper_identity_actor_evidence.py",
+    "tests/test_c097_semantic_name_keys.py",
+    "tests/test_semantic_release_gating.py"
+  ],
+  "cwd": "C:/t/eval",
+  "started_at": "2026-09-24T00:35:34+00:00",
+  "finished_at": "2026-09-24T00:36:18+00:00",
+  "duration_seconds": 44.38828360004118,
+  "timeout_seconds": 500.0,
+  "root_pid": 788728,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 788740,
+      "name": "python.exe",
+      "ppid": 788728
+    },
+    {
+      "pid": 789500,
+      "name": "git.exe",
+      "ppid": 788740
+    },
+    {
+      "pid": 789404,
+      "name": "git.exe",
+      "ppid": 788740
+    },
+    {
+      "pid": 765404,
+      "name": "git.exe",
+      "ppid": 788740
+    },
+    {
+      "pid": 788816,
+      "name": "git.exe",
+      "ppid": 788740
+    },
+    {
+      "pid": 788968,
+      "name": "git.exe",
+      "ppid": 788740
+    },
+    {
+      "pid": 766632,
+      "name": "python.exe",
+      "ppid": 788740
+    },
+    {
+      "pid": 788652,
+      "name": "python.exe",
+      "ppid": 766632
+    },
+    {
+      "pid": 755748,
+      "name": "git.exe",
+      "ppid": 788740
+    }
+  ],
+  "descendants_terminated": [
+    755748,
+    765404,
+    766632,
+    788652,
+    788740,
+    788816,
+    788968,
+    789404,
+    789500
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 626796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 627152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 742016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 745256,
+      "name": "python.exe"
+    },
+    {
+      "pid": 761556,
+      "name": "python.exe"
+    },
+    {
+      "pid": 783848,
+      "name": "python.exe"
+    },
+    {
+      "pid": 784880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 785784,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-742c\\23-goldreaders22-r1-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\eval",
+    "repo_head": "e45b1c43e3b41043288ba4e54bf7acfc851b6687",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-742c",
+    "token": "ORCH-742c:761556:5ad2615029d33979",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

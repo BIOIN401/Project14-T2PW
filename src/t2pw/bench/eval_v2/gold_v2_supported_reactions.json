@@ -1,0 +1,1256 @@
+{
+  "schema": "t2pw.eval_v2.gold_supplement/1",
+  "version": "2026-09-23.1",
+  "evaluator": "eval-v2.0 (ORCH-742c)",
+  "description": "NEW, separately versioned supported-reaction labels for evaluation v2. A SUPPLEMENT keyed by gold case id: it adds reaction inventories to four pinned_v1 cases, three of them certified exhaustive (supported_reactions_complete=true; PMC12657337 is labelled but not certified, D-103), and changes nothing in pinned_v1.json, which stays byte-identical so T-107/T-108/T-109 scoring cannot move. It deliberately lives OUTSIDE src/t2pw/bench/gold/ so no existing reader (goldset.pinned_gold_set_path, or any glob over gold/*.json such as evidence/c122_cohort_candidates.py) can pick it up. Every reaction cites a verbatim quote verified against the EuropePMC full text whose sha256 is recorded per case; verification folds case, whitespace and punctuation exactly like bench.goldset.fold_for_quote.",
+  "base_gold": {
+    "path": "src/t2pw/bench/gold/pinned_v1.json",
+    "git_blob_sha1": "98739a59dd6c376f8a19968c7fa5dc3145be5b15",
+    "relationship": "supplement; case metadata (organism, pathway, forbidden identifiers) is read from pinned_v1 unchanged"
+  },
+  "completeness_definition": "supported_reactions_complete=true means: the whole fetched full text (body, figure legends, methods; the reference list only to read citations) was read and EVERY transformation it states with both a substrate side and a product side named is listed here -- in 'reactions' when it belongs to the requested pathway in the declared scope, in 'off_pathway_reactions' when the paper states it but it belongs to another pathway, an assay, or transport, and in 'summary_statements' when it is an overall multi-step conversion. Statements that name a catalyst but not both sides, covalent enzyme- or carrier-bound states, protein modification and regulation are listed in 'excluded_statements' with the reason. It is a statement about the TARGET PAPER only. Per D-093 it does NOT license calling a retained row invented: an unmatched row is unsupported only when the row-level lineage classifier also finds no external RAG support (see docs/evaluation_v2/README.md).",
+  "summary_definition": "'summary_statements' are overall conversions the paper states across several steps (e.g. 'chorismate ... through a seven-enzyme pathway ... to produce DHNA'). A row matching one is classed paper_stated_summary: the paper does say it, so it is not invented, and it is not a correct single reaction either, so it is never a true positive.",
+  "participant_roles": {
+    "defining": "the chemistry that makes the reaction what it is; a matched row must carry every defining participant on the correct side",
+    "cofactor": "a currency co-substrate or co-product the paper names for this step (ATP, NAD(P)H, ...); its absence from a row is reported separately as a missing minor cofactor and never fails the reaction match"
+  },
+  "cases": {
+    "PMC12096016": {
+      "supported_reactions_complete": true,
+      "species": "Escherichia coli",
+      "scope": "Enterobactin biosynthesis in E. coli as the paper lays it out: the DHB arm (EntC, EntB isochorismatase, EntA) and the assembly arm (EntE adenylation, EntF condensation/cyclization). Carrier-protein loading and EntD phosphopantetheinylation are protein-state changes, not free-metabolite conversions, and are excluded exactly as the D-091 audit excluded ThDP-bound adducts. MenD, the LDH coupled assay, secretion, chelation and uptake are stated but are not the requested pathway (pinned_v1 export_rationale: 'Export must exclude MenD, LDH and the transport mentions').",
+      "source": {
+        "pmcid": "PMC12096016",
+        "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12096016/fullTextXML",
+        "fetch_date": "2026-09-23",
+        "xml_sha256": "f87154bb42dbadb0d6b0a5134bd52f1730e24f981dffa0a95d2e78c9a459e232",
+        "text_sha256": "b7d583c0835c64cb6a55799e1d94f58442cfa6d8d122d83e581de38887f3a5b8",
+        "text_chars": 45763
+      },
+      "audit": "Read in full (Introduction, Methods 2.1-2.7, Results and Discussion 3.1-3.5, Conclusions, Supporting-information legend). Enzymes with a stated catalytic role: EntC, EntB (IC domain), EntA, EntE, EntF, EntD, MenD, LDH; TrpE/TrpD are named in a comparison with no substrate or product. Figure 1 legend: '(a) Reactions catalyzed by EntB, EntC, and EntA. (b) Reaction catalyzed by MenD.'",
+      "reactions": [
+        {
+          "id": "R1",
+          "label": "EntC: chorismate <-> isochorismate",
+          "inputs": [
+            {
+              "name": "chorismate",
+              "aliases": [
+                "chorismic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "isochorismate",
+              "aliases": [
+                "isochorismic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "catalytic_cofactors": [
+            {
+              "name": "Mg2+",
+              "aliases": [
+                "magnesium",
+                "Mg(2+)",
+                "magnesium ion",
+                "MgCl2"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "EntC",
+            "aliases": [
+              "isochorismate synthase",
+              "entC"
+            ],
+            "identifier": "EC 5.4.4.2"
+          },
+          "reversible": true,
+          "quote": "suggesting that the EntC-catalyzed isomerization of chorismate to isochorismate has a relatively low enthalpy change",
+          "supporting_quotes": [
+            "(i) EntC (isochorismate synthase; EC 5.4.4.2)",
+            "it has previously been reported that the EntC-catalyzed reaction is highly reversible",
+            "confirming that the observed heats were indeed due to magnesium-dependent EntC enzymatic activity"
+          ]
+        },
+        {
+          "id": "R2",
+          "label": "EntB isochorismatase: isochorismate -> 2,3-diDHB + pyruvate",
+          "inputs": [
+            {
+              "name": "isochorismate",
+              "aliases": [
+                "isochorismic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+              "aliases": [
+                "2,3-diDHB",
+                "2,3-dihydro-2,3-dihydroxybenzoic acid"
+              ],
+              "role": "defining"
+            },
+            {
+              "name": "pyruvate",
+              "aliases": [
+                "pyruvic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "EntB",
+            "aliases": [
+              "isochorismatase",
+              "EntB isochorismatase",
+              "entB"
+            ],
+            "identifier": "EC 3.3.2.1"
+          },
+          "reversible": false,
+          "quote": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity",
+          "supporting_quotes": [
+            "(ii) the N-terminal isochorismatase (IC) domain of EntB (EC 3.3.2.1)"
+          ]
+        },
+        {
+          "id": "R3",
+          "label": "EntA: 2,3-diDHB -> 2,3-DHB",
+          "inputs": [
+            {
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+              "aliases": [
+                "2,3-diDHB",
+                "2,3-dihydro-2,3-dihydroxybenzoic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "2,3-dihydroxybenzoic acid",
+              "aliases": [
+                "2,3-DHB",
+                "2,3-dihydroxybenzoate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "EntA",
+            "aliases": [
+              "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+              "entA"
+            ],
+            "identifier": "EC 1.3.1.28"
+          },
+          "reversible": false,
+          "quote": "the biosynthetic intermediate 2,3-DHB is produced from chorismate by sequential reactions catalyzed by three enzymes: (i) EntC (isochorismate synthase; EC 5.4.4.2), (ii) the N-terminal isochorismatase (IC) domain of EntB (EC 3.3.2.1), and (iii) EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)",
+          "supporting_quotes": [
+            "EntB may assist in metabolic flux in the direction of 2,3-DHB formation by rapidly converting isochorismate to 2,3-diDHB"
+          ],
+          "notes": "The substrate is named by the enzyme's systematic name and the product by the three-step sequence ending in 2,3-DHB. The redox cofactor is not stated in this paper, so none is listed."
+        },
+        {
+          "id": "R4",
+          "label": "EntE: 2,3-DHB + ATP -> 2,3-dihydroxybenzoyl-AMP",
+          "inputs": [
+            {
+              "name": "2,3-dihydroxybenzoic acid",
+              "aliases": [
+                "2,3-DHB",
+                "2,3-dihydroxybenzoate"
+              ],
+              "role": "defining"
+            },
+            {
+              "name": "ATP",
+              "aliases": [
+                "adenosine triphosphate",
+                "adenosine 5'-triphosphate"
+              ],
+              "role": "cofactor"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "2,3-dihydroxybenzoyl-AMP",
+              "aliases": [
+                "2,3-DHB-AMP",
+                "DHB-AMP",
+                "2,3-dihydroxybenzoyl adenylate",
+                "2,3-dihydroxybenzoyl-adenylate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "EntE",
+            "aliases": [
+              "2,3-dihydroxybenzoyl-AMP ligase",
+              "entE"
+            ],
+            "identifier": "EC 6.2.1.71"
+          },
+          "reversible": false,
+          "quote": "In the second stage of the pathway, 2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction",
+          "notes": "The product is named through 'adenylated' and the enzyme's name. Pyrophosphate is not stated and is not listed."
+        },
+        {
+          "id": "R5",
+          "label": "EntF: activated 2,3-DHB + L-serine -> enterobactin",
+          "inputs": [
+            {
+              "name": "2,3-dihydroxybenzoic acid",
+              "aliases": [
+                "activated 2,3-DHB",
+                "2,3-DHB",
+                "2,3-dihydroxybenzoate",
+                "2,3-dihydroxybenzoyl-AMP",
+                "2,3-DHB-AMP",
+                "DHB-AMP"
+              ],
+              "role": "defining"
+            },
+            {
+              "name": "L-serine",
+              "aliases": [
+                "serine"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "enterobactin",
+              "aliases": [
+                "enterochelin"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "EntF",
+            "aliases": [
+              "enterobactin synthase",
+              "entF"
+            ],
+            "identifier": ""
+          },
+          "reversible": false,
+          "quote": "Enterobactin production from activated 2,3-DHB then involves three EntF-catalyzed cycles of condensation with L-serine via the formation of non-ribosomal peptide bonds followed by cyclization and product release",
+          "notes": "The paper writes the substrate as 'activated 2,3-DHB', reached via EntE adenylation and EntB carrier loading. Because carrier loading is excluded as a protein-bound state, a row that feeds 2,3-DHB or its AMP ester straight into EntF represents the paper's own chemistry and matches. 'serine' is accepted for L-serine because no other stereoisomer is in play in this paper."
+        }
+      ],
+      "off_pathway_reactions": [
+        {
+          "id": "O1",
+          "kind": "competing_branch_menaquinone",
+          "label": "MenD: isochorismate + 2-ketoglutarate -> SEPHCHC",
+          "inputs": [
+            {
+              "name": "isochorismate",
+              "role": "defining"
+            },
+            {
+              "name": "2-ketoglutarate",
+              "aliases": [
+                "2-oxoglutarate",
+                "alpha-ketoglutarate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "SEPHCHC",
+              "aliases": [
+                "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenD"
+          },
+          "quote": "(b) Reaction catalyzed by MenD. SEPHCHC: 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+          "supporting_quotes": [
+            "2-ketoglutarate (the latter two reagents being MenD co-substrates)"
+          ],
+          "reason": "a competing isochorismate sink used as an assay competitor; menaquinone branch, not enterobactin (pinned_v1 forbidden_identifiers: MenD)"
+        },
+        {
+          "id": "O2",
+          "kind": "assay_reporter",
+          "label": "LDH: pyruvate + NADH -> lactate + NAD+",
+          "inputs": [
+            {
+              "name": "pyruvate",
+              "role": "defining"
+            },
+            {
+              "name": "NADH",
+              "role": "cofactor"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "lactate",
+              "aliases": [
+                "lactic acid"
+              ],
+              "role": "defining"
+            },
+            {
+              "name": "NAD+",
+              "aliases": [
+                "NAD"
+              ],
+              "role": "cofactor"
+            }
+          ],
+          "enzyme": {
+            "name": "lactate dehydrogenase",
+            "aliases": [
+              "LDH"
+            ]
+          },
+          "quote": "LDH-catalyzed conversion of pyruvate to lactate is then monitored by loss of OD 340 following oxidation of NADH to NAD +",
+          "reason": "porcine coupled-assay reporter"
+        },
+        {
+          "id": "O3",
+          "kind": "transport",
+          "label": "enterobactin secretion (TolC-dependent)",
+          "inputs": [
+            {
+              "name": "enterobactin",
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "enterobactin",
+              "role": "defining"
+            }
+          ],
+          "quote": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+          "reason": "transport, stated without mechanism"
+        },
+        {
+          "id": "O4",
+          "kind": "binding",
+          "label": "enterobactin + ferric iron -> ferric-enterobactin",
+          "inputs": [
+            {
+              "name": "enterobactin",
+              "role": "defining"
+            },
+            {
+              "name": "ferric iron",
+              "aliases": [
+                "Fe3+",
+                "Fe(III)",
+                "iron(III)"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "ferric-enterobactin",
+              "aliases": [
+                "ferric-enterobactin complex",
+                "ferric enterobactin",
+                "Fe-enterobactin"
+              ],
+              "role": "defining"
+            }
+          ],
+          "quote": "Following secretion, enterobactin chelates extracellular ferric iron, and the ferric-enterobactin complex is then imported via TonB-dependent uptake",
+          "reason": "extracellular chelation and TonB-dependent uptake; not biosynthesis"
+        }
+      ],
+      "summary_statements": [
+        {
+          "id": "S1",
+          "label": "chorismate -> 2,3-DHB (three enzymes)",
+          "inputs": [
+            {
+              "name": "chorismate",
+              "aliases": [
+                "chorismic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "2,3-dihydroxybenzoic acid",
+              "aliases": [
+                "2,3-DHB",
+                "2,3-dihydroxybenzoate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "quote": "the biosynthetic intermediate 2,3-DHB is produced from chorismate by sequential reactions catalyzed by three enzymes"
+        },
+        {
+          "id": "S2",
+          "label": "chorismate -> 2,3-diDHB (EntC-EntB coupled)",
+          "inputs": [
+            {
+              "name": "chorismate",
+              "aliases": [
+                "chorismic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+              "aliases": [
+                "2,3-diDHB",
+                "2,3-dihydro-2,3-dihydroxybenzoic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "quote": "ITC experiments revealed that the rate of conversion of chorismate to 2,3-diDHB increased in an EntB-dependent manner"
+        }
+      ],
+      "excluded_statements": [
+        {
+          "quote": "in order to facilitate its covalent attachment to the aryl carrier protein (ArCP) domain of EntB and subsequent delivery to phosphopantetheinylated EntF (enterobactin synthase)",
+          "reason": "carrier-protein loading: a covalent protein-bound state, not a free-metabolite conversion"
+        },
+        {
+          "quote": "the ArCP domain of apo-EntB itself must be phosphopantetheinylated at Ser 245 by the accessory enzyme EntD to form holo-EntB",
+          "reason": "protein modification (apo -> holo EntB)"
+        },
+        {
+          "quote": "2,3-DHB is a competitive inhibitor of apo-EntB isochorismatase activity",
+          "reason": "regulation (inhibition), not a transformation"
+        },
+        {
+          "quote": "In iron-replete conditions, holo-Fur binds to the promoters of three ent gene clusters, silencing gene expression.",
+          "reason": "gene regulation"
+        },
+        {
+          "quote": "accumulation of intracellular iron is toxic due to the Fenton reaction",
+          "reason": "no participants stated"
+        },
+        {
+          "quote": "anthranilate synthetase (TrpE) and phosphoribosyl transferase (TrpD)",
+          "reason": "a different pathway named for comparison; no substrate or product stated"
+        }
+      ]
+    },
+    "PMC12657337": {
+      "supported_reactions_complete": false,
+      "completeness_status": "not certified (D-103; bio-audit B-R3-1: the lumped FPP + IPP + DHNA -> MK-7 conversion stated in Results 3.2 is unbooked). The labelled reactions below are kept as data, but the case is not exhaustive, so the evaluator scores none of its legs (reaction precision, recall and unsupported rate, and the archived RAG split, are defined over complete cases only).",
+      "species": "Escherichia coli",
+      "scope": "The paper's own 'MK-7 pathway' module (Fig. 1 divides MK-7 biosynthesis into the MVA pathway, DHNA pathway and MK-7 pathway modules): HepPPS, MenA, UbiE, run in engineered E. coli. The DHNA module is named but no DHNA-forming reaction is stated in the text. Precursor-supply and central-carbon conversions the paper states (Idi, acs, PoxB) are listed as off-pathway. Two catalysts are B. subtilis-derived genes expressed in E. coli; the reaction organism is E. coli (pinned_v1 export_rationale).",
+      "source": {
+        "pmcid": "PMC12657337",
+        "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12657337/fullTextXML",
+        "fetch_date": "2026-09-23",
+        "xml_sha256": "e34d4b612e35bb9a9c143c423141c3aedd3f82653247429152c28b40ef915e88",
+        "text_sha256": "c6b706f14707672bec1db55624c8cb94dd1c7dd2a376f9df47dde7ce280c97e1",
+        "text_chars": 57863
+      },
+      "audit": "Read in full to the reference list. Swept for convert|catalyz|methylat|conjugat|produce|yield|to form|isomer and every Men/Idi/ispA/MetK/SAM token. Fig. 1's legend lists MVA-module enzyme names (MvaE, MvaS, MVK, PMK, MVD, ispA, MetK) and SAM/SAH as abbreviations only; the figure image is not text and no conversion by them is stated. PoxB is NOT legend-only: the Results state 'knockout of the PoxB gene reduces acetate accumulation, a byproduct of pyruvate oxidase activity' (product acetate named; substrate pyruvate named in the enzyme name, which the legend also gives as 'PoxB, pyruvate oxidase'), listed as off-pathway O3 (repair round 2, bio-audit finding B-1; the first audit string wrongly called PoxB an abbreviation only).",
+      "reactions": [
+        {
+          "id": "R1",
+          "label": "HepPPS: FPP -> HepPP",
+          "inputs": [
+            {
+              "name": "farnesyl pyrophosphate",
+              "aliases": [
+                "FPP",
+                "farnesyl diphosphate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "heptaprenyl pyrophosphate",
+              "aliases": [
+                "HepPP",
+                "heptaprenyl diphosphate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "HepPPS",
+            "aliases": [
+              "heptaprenyl pyrophosphate synthase",
+              "BsHepPPS",
+              "HepS",
+              "Heps",
+              "heptaprenyl pyrophosphate synthetase I"
+            ],
+            "identifier": ""
+          },
+          "reversible": false,
+          "quote": "BsHepPPS encodes heptaprenyl pyrophosphate synthase, which catalyzes the conversion of farnesyl pyrophosphate to heptaprenyl pyrophosphate",
+          "supporting_quotes": [
+            "In this pathway, HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP), MenA converts HepPP to DMK-7, and UbiE methylates DMK-7 to yield MK-7"
+          ]
+        },
+        {
+          "id": "R2",
+          "label": "MenA: HepPP + DHNA -> DMK-7",
+          "inputs": [
+            {
+              "name": "heptaprenyl pyrophosphate",
+              "aliases": [
+                "HepPP",
+                "heptaprenyl diphosphate"
+              ],
+              "role": "defining"
+            },
+            {
+              "name": "DHNA",
+              "aliases": [
+                "1,4-dihydroxy-2-naphthoate",
+                "1,4-dihydroxy-2-naphthoic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "demethylmenaquinone-7",
+              "aliases": [
+                "DMK-7",
+                "demethylmenaquinone"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenA",
+            "aliases": [
+              "EcMenA",
+              "DHNA heptaprenyltransferase",
+              "prenyltransferase"
+            ],
+            "identifier": ""
+          },
+          "reversible": false,
+          "quote": "EcMenA encodes a prenyltransferase that catalyzes the conjugation of heptaprenyl pyrophosphate with DHNA to form demethylmenaquinone",
+          "notes": "'demethylmenaquinone' without a chain length is the paper's own wording for DMK-7 here; DMK-8 is a different congener and does not match."
+        },
+        {
+          "id": "R3",
+          "label": "UbiE: DMK-7 -> MK-7",
+          "inputs": [
+            {
+              "name": "demethylmenaquinone-7",
+              "aliases": [
+                "DMK-7",
+                "demethylmenaquinone"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "menaquinone-7",
+              "aliases": [
+                "MK-7"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "UbiE",
+            "aliases": [
+              "BsUbiE",
+              "ubiquinone/menaquinone biosynthesis methyltransferase",
+              "MenG"
+            ],
+            "identifier": ""
+          },
+          "reversible": false,
+          "quote": "BsUbiE encodes a methyltransferase that catalyzes the methylation of demethylmenaquinone to produce MK-7",
+          "notes": "The methyl donor is not stated in the text (SAM/SAH appear only in the Fig. 1 abbreviation list), so no cofactor is listed; a row carrying SAM is not penalised. 'vitamin K2' is a class (MK-n) and is deliberately NOT an alias. MenG is retained from pinned_v1 as the menaquinone-specific name of the same C-methyltransferase activity."
+        }
+      ],
+      "off_pathway_reactions": [
+        {
+          "id": "O1",
+          "kind": "precursor_supply",
+          "label": "Idi: IPP -> FPP (as stated by the paper)",
+          "inputs": [
+            {
+              "name": "isopentenyl pyrophosphate",
+              "aliases": [
+                "IPP",
+                "isopentenyl diphosphate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "farnesyl pyrophosphate",
+              "aliases": [
+                "FPP",
+                "farnesyl diphosphate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "Idi",
+            "aliases": [
+              "ECidi",
+              "IPP isomerase"
+            ]
+          },
+          "quote": "The enzyme Idi, which converts IPP to farnesyl pyrophosphate (FPP), was crucial for further conversion by HepPPS to form heptaprenyl pyrophosphate (HepPP)",
+          "reason": "MVA/precursor-supply module, not the MK-7 module; the paper's own legend calls Idi an IPP isomerase, a paper-internal inconsistency (pinned_v1 notes)"
+        },
+        {
+          "id": "O2",
+          "kind": "precursor_supply",
+          "label": "acs: acetate -> acetyl-CoA",
+          "inputs": [
+            {
+              "name": "acetate",
+              "aliases": [
+                "acetic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "acetyl-CoA",
+              "aliases": [
+                "acetyl coenzyme A"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "acetyl-CoA synthetase",
+            "aliases": [
+              "acs",
+              "Acs"
+            ]
+          },
+          "quote": "We also overexpressed acetyl-CoA synthetase ( acs ), an enzyme that converts acetate into acetyl-CoA",
+          "reason": "central-carbon precursor supply for the MVA module"
+        },
+        {
+          "id": "O3",
+          "kind": "precursor_supply",
+          "label": "PoxB: pyruvate -> acetate (pyruvate oxidase)",
+          "inputs": [
+            {
+              "name": "pyruvate",
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "acetate",
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "PoxB",
+            "aliases": [
+              "pyruvate oxidase"
+            ]
+          },
+          "quote": "knockout of the PoxB gene reduces acetate accumulation, a byproduct of pyruvate oxidase activity",
+          "supporting_quotes": [
+            "PoxB, pyruvate oxidase"
+          ],
+          "reason": "acetate overflow from pyruvate oxidase; central-carbon side reaction knocked out to improve precursor supply, not the MK-7 module"
+        }
+      ],
+      "summary_statements": [],
+      "excluded_statements": [
+        {
+          "quote": "Chemical synthesis uses menadione, isoprene, and trans -phytonadione as substrates to successfully produce menaquinone-7 (MK-7)",
+          "reason": "chemical synthesis, not biology"
+        },
+        {
+          "quote": "MvaE, HMG-CoA synthase; MvaS, HMG-CoA reductase; MVK, mevalonate kinase; PMK, phosphomevalonate kinase; and MVD, mevalonate pyrophosphate decarboxylase",
+          "reason": "figure-legend enzyme names without a stated conversion; the figure image is not text"
+        },
+        {
+          "quote": "E. coli naturally synthesizes three quinone types: ubiquinone-8 (Q-8), menaquinone-8 (MK-8), and demethylmenaquinone-8 (DMK-8)",
+          "reason": "products named, no reaction stated"
+        },
+        {
+          "quote": "the latter overexpressing octaprenyl pyrophosphate synthase",
+          "reason": "enzyme named in a cited co-culture study; no substrate or product"
+        }
+      ]
+    },
+    "PMC12312563": {
+      "supported_reactions_complete": true,
+      "species": "Listeria monocytogenes",
+      "scope": "The free-metabolite transformations of the classical menaquinone pathway stated in the paper, in L. monocytogenes: exactly the MenD step. Adopts the biology of the independent audit docs/pwml_recovery_sprint/PRIORITY2-AUDIT-PMC12312563.md (D-091, biology upheld by D-092), re-verified here against the fetched EuropePMC text rather than 01_source_text.txt. D-092 withdrew the pinned_v1 FLAG because the old scorer charged correctly-attributed cross-paper RAG rows as invented; evaluation v2 answers that with the D-093 three-class lineage split instead of a binary flag.",
+      "source": {
+        "pmcid": "PMC12312563",
+        "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12312563/fullTextXML",
+        "fetch_date": "2026-09-23",
+        "xml_sha256": "1d66cad83ccf09ef737050514cd2b055c843237ab8bfa380339d86ded1db6770",
+        "text_sha256": "f84f1f83b735258f41e86c3b0a6793cf39fdd89d26686c7cdd19443458316f44",
+        "text_chars": 47416
+      },
+      "audit": "Re-measured on the fetched text (47,416 chars): MenD 133; MenA/B/C/E/F/G/H/I 0 each; SEPHCHC 9; isochorismate 9; 2-oxoglutarate 8; ketoglutarate 0; free chorismate 0; SHCHC/OSB/pyruvate/CO2/prenyl 0. Every -ase token in the body: decarboxylase, synthase, protease, polymerase, genase (plus non-words case/decrease/release). Identical to the audit's counts on 01_source_text.txt. Supplementary Fig. S1 is not in the fetched text; the audit's void condition 1 still applies.",
+      "reactions": [
+        {
+          "id": "R1",
+          "label": "MenD: 2-oxoglutarate + isochorismate -> SEPHCHC",
+          "inputs": [
+            {
+              "name": "2-oxoglutarate",
+              "aliases": [
+                "alpha-ketoglutarate",
+                "alpha-ketoglutaric acid",
+                "2-ketoglutarate",
+                "2-oxoglutaric acid",
+                "oxoglutaric acid",
+                "2-oxopentanedioate"
+              ],
+              "role": "defining"
+            },
+            {
+              "name": "isochorismate",
+              "aliases": [
+                "isochorismic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "SEPHCHC",
+              "aliases": [
+                "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "catalytic_cofactors": [
+            {
+              "name": "ThDP",
+              "aliases": [
+                "thiamine diphosphate",
+                "thiamine pyrophosphate",
+                "TPP"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "MenD",
+            "aliases": [
+              "LmoMenD",
+              "Lmo MenD",
+              "SEPHCHC synthase"
+            ],
+            "identifier": "menD"
+          },
+          "reversible": false,
+          "quote": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC",
+          "supporting_quotes": [
+            "the SEPHCHC enzyme activity of Lmo MenD was kinetically characterized with respect to the ThDP cofactor and the two substrates 2-oxoglutarate and isochorismate"
+          ],
+          "notes": "CO2 is implied by decarboxylation but never named, so it is not listed; a row carrying CO2 still matches."
+        }
+      ],
+      "off_pathway_reactions": [],
+      "summary_statements": [],
+      "excluded_statements": [
+        {
+          "quote": "decarboxylation of 2-oxoglutarate produces intermediate I",
+          "reason": "covalent ThDP-bound adduct: internal mechanism of R1 (pinned_v1 forbidden_identifiers: intermediate I/II, placeholder_product)"
+        },
+        {
+          "quote": "enabling proton abstraction and formation of the activated ThDP ylide",
+          "reason": "cofactor activation"
+        },
+        {
+          "quote": "After rTEV cleavage",
+          "reason": "purification-tag cleavage"
+        },
+        {
+          "quote": "in the presence of 12.5",
+          "reason": "DHNA inhibition: regulation, not a transformation"
+        }
+      ]
+    },
+    "PMC12421875": {
+      "supported_reactions_complete": true,
+      "species": "Lactococcus lactis",
+      "scope": "The classical menaquinone pathway as the paper states it for L. lactis: the seven DHNA-forming steps (MenF, MenD, MenH, MenC, MenE, MenB, MenI -- the last five stated through the steady-state model's letter-assigned intermediates, equations 5-11) plus MenA and MenG. The L. plantarum biosensor chemistry and DHNA efflux are stated but are an assay and a transport.",
+      "source": {
+        "pmcid": "PMC12421875",
+        "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12421875/fullTextXML",
+        "fetch_date": "2026-09-23",
+        "xml_sha256": "1567d1f72ec3e4f65959d8f2dacb3195f798a413d702f76f220d281aa6ea6c6d",
+        "text_sha256": "3c5635652c3e8c00589ca6d53fff7258a66eb03e4000cffa7647c563ddb0571b",
+        "text_chars": 69368
+      },
+      "audit": "Read in full to REFERENCES, including the Methods model section. 2-oxoglutarate/ketoglutarate, pyruvate, CO2, ATP, SAM, shikimate, DAHP, cytochrome and heme all occur 0 times; 'CoA' occurs only inside OSB-CoA/DHNA-CoA. MenG occurs once. Model 2's chorismate supply J0 is a source term with no enzyme or substrate.",
+      "reactions": [
+        {
+          "id": "R1",
+          "label": "MenF: chorismate <-> isochorismate",
+          "inputs": [
+            {
+              "name": "chorismate",
+              "aliases": [
+                "chorismic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "isochorismate",
+              "aliases": [
+                "isochorismic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenF",
+            "aliases": [
+              "isochorismate synthase",
+              "menF"
+            ]
+          },
+          "reversible": true,
+          "quote": "The enzyme MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)"
+        },
+        {
+          "id": "R2",
+          "label": "MenD: isochorismate -> SEPHCHC",
+          "inputs": [
+            {
+              "name": "isochorismate",
+              "aliases": [
+                "isochorismic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "SEPHCHC",
+              "aliases": [
+                "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenD",
+            "aliases": [
+              "SEPHCHC synthase",
+              "menD"
+            ]
+          },
+          "reversible": false,
+          "quote": "MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)",
+          "notes": "2-oxoglutarate is never named in this paper, so it is not a signature input; a row carrying it still matches."
+        },
+        {
+          "id": "R3",
+          "label": "MenH: SEPHCHC -> SHCHC",
+          "inputs": [
+            {
+              "name": "SEPHCHC",
+              "aliases": [
+                "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "SHCHC",
+              "aliases": [
+                "2-succinyl-6-hydroxy-2,4-cyclohexadiene-1-carboxylate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenH",
+            "aliases": [
+              "menH"
+            ]
+          },
+          "reversible": false,
+          "quote": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC, E for OSB, F for OSB-CoA, and G for DHNA-CoA",
+          "supporting_quotes": [
+            "d [ D ] d t = k c a t H [ M e n H ] [ C ] K M H + [ C ]",
+            "stands for MenH, MenC, MenE, MenB, and MenI, respectively"
+          ],
+          "notes": "Stated through the model: equation (7) makes D (SHCHC) the product of the MenH rate law acting on C (SEPHCHC)."
+        },
+        {
+          "id": "R4",
+          "label": "MenC: SHCHC -> OSB",
+          "inputs": [
+            {
+              "name": "SHCHC",
+              "aliases": [
+                "2-succinyl-6-hydroxy-2,4-cyclohexadiene-1-carboxylate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "OSB",
+              "aliases": [
+                "o-succinylbenzoate",
+                "2-succinylbenzoate",
+                "o-succinylbenzoic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenC",
+            "aliases": [
+              "o-succinylbenzoate synthase",
+              "menC"
+            ]
+          },
+          "reversible": false,
+          "quote": "d [ E ] d t = k c a t C [ M e n C ] [ D ] K M C + [ D ]",
+          "supporting_quotes": [
+            "The o-succinylbenzoate synthase MenC catalyzes one of the intermediate reactions"
+          ],
+          "notes": "Equation (8): E (OSB) is produced by the MenC rate law acting on D (SHCHC)."
+        },
+        {
+          "id": "R5",
+          "label": "MenE: OSB -> OSB-CoA",
+          "inputs": [
+            {
+              "name": "OSB",
+              "aliases": [
+                "o-succinylbenzoate",
+                "2-succinylbenzoate",
+                "o-succinylbenzoic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "OSB-CoA",
+              "aliases": [
+                "o-succinylbenzoyl-CoA",
+                "2-succinylbenzoyl-CoA"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenE",
+            "aliases": [
+              "menE"
+            ]
+          },
+          "reversible": false,
+          "quote": "d [ F ] d t = k c a t E [ M e n E ] [ E ] K M E + [ E ]",
+          "notes": "Equation (9). CoA and ATP are not named in this paper and are not listed."
+        },
+        {
+          "id": "R6",
+          "label": "MenB: OSB-CoA -> DHNA-CoA",
+          "inputs": [
+            {
+              "name": "OSB-CoA",
+              "aliases": [
+                "o-succinylbenzoyl-CoA",
+                "2-succinylbenzoyl-CoA"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "DHNA-CoA",
+              "aliases": [
+                "1,4-dihydroxy-2-naphthoyl-CoA"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenB",
+            "aliases": [
+              "menB"
+            ]
+          },
+          "reversible": false,
+          "quote": "d [ G ] d t = k c a t B [ M e n B ] [ F ] K M B + [ F ]",
+          "notes": "Equation (10)."
+        },
+        {
+          "id": "R7",
+          "label": "MenI: DHNA-CoA -> DHNA",
+          "inputs": [
+            {
+              "name": "DHNA-CoA",
+              "aliases": [
+                "1,4-dihydroxy-2-naphthoyl-CoA"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "DHNA",
+              "aliases": [
+                "1,4-dihydroxy-2-naphthoic acid",
+                "1,4-dihydroxy-2-naphthoate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenI",
+            "aliases": [
+              "menI"
+            ]
+          },
+          "reversible": false,
+          "quote": "d [ D H N A ] i n d t = k c a t I [ M e n I ] [ G ] K M I + [ G ]",
+          "supporting_quotes": [
+            "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
+          ],
+          "notes": "Equation (11)."
+        },
+        {
+          "id": "R8",
+          "label": "MenA: DHNA + prenyl diphosphate -> DMK",
+          "inputs": [
+            {
+              "name": "DHNA",
+              "aliases": [
+                "1,4-dihydroxy-2-naphthoic acid",
+                "1,4-dihydroxy-2-naphthoate"
+              ],
+              "role": "defining"
+            },
+            {
+              "name": "prenyl diphosphate",
+              "aliases": [
+                "polyprenyl diphosphate",
+                "prenyl pyrophosphate",
+                "polyprenyl pyrophosphate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "demethylmenaquinone",
+              "aliases": [
+                "DMK"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenA",
+            "aliases": [
+              "DHNA prenyltransferase",
+              "menA"
+            ]
+          },
+          "reversible": false,
+          "quote": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+        },
+        {
+          "id": "R9",
+          "label": "MenG: DMK -> MK",
+          "inputs": [
+            {
+              "name": "demethylmenaquinone",
+              "aliases": [
+                "DMK"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "menaquinone",
+              "aliases": [
+                "MK"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "MenG",
+            "aliases": [
+              "menG"
+            ]
+          },
+          "reversible": false,
+          "quote": "MenG demethylates DMK to generate MK",
+          "notes": "The paper's verb is wrong (MenG methylates), but the substrate/product pair it states, DMK -> MK, is the correct direction; the pair is what is scored. No chain length is stated, so MK-8/MK-9 are congeners that do not match."
+        }
+      ],
+      "off_pathway_reactions": [
+        {
+          "id": "O1",
+          "kind": "assay_other_organism",
+          "label": "L. plantarum EET: Fe3+ -> Fe2+ using DHNA",
+          "inputs": [
+            {
+              "name": "Fe3+",
+              "aliases": [
+                "ferric iron",
+                "iron(III)",
+                "Fe(III)"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Fe2+",
+              "aliases": [
+                "ferrous iron",
+                "iron(II)",
+                "Fe(II)"
+              ],
+              "role": "defining"
+            }
+          ],
+          "quote": "L. plantarum uses DHNA to reduce Fe 3+ to Fe 2+ through extracellular electron transfer",
+          "reason": "biosensor chemistry in a different organism"
+        },
+        {
+          "id": "O2",
+          "kind": "assay_reporter",
+          "label": "Fe2+ + ferrozine -> magenta complex",
+          "inputs": [
+            {
+              "name": "Fe2+",
+              "aliases": [
+                "ferrous iron"
+              ],
+              "role": "defining"
+            },
+            {
+              "name": "ferrozine",
+              "aliases": [
+                "FZ"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "magenta-colored product",
+              "aliases": [
+                "Fe2+-ferrozine complex",
+                "ferrozine-Fe2+ complex"
+              ],
+              "role": "defining"
+            }
+          ],
+          "quote": "Fe 2+ subsequently reacts with ferrozine to form a magenta-colored product",
+          "reason": "colorimetric assay chemistry"
+        },
+        {
+          "id": "O3",
+          "kind": "transport",
+          "label": "DHNA passive efflux",
+          "inputs": [
+            {
+              "name": "DHNA",
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "DHNA",
+              "role": "defining"
+            }
+          ],
+          "quote": "we modeled the DHNA outflux due to its passive diffusion to the extracellular space",
+          "reason": "transport"
+        }
+      ],
+      "summary_statements": [
+        {
+          "id": "S1",
+          "label": "chorismate -> DHNA (seven enzymes)",
+          "inputs": [
+            {
+              "name": "chorismate",
+              "aliases": [
+                "chorismic acid"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "DHNA",
+              "aliases": [
+                "1,4-dihydroxy-2-naphthoic acid",
+                "1,4-dihydroxy-2-naphthoate"
+              ],
+              "role": "defining"
+            }
+          ],
+          "quote": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+          "supporting_quotes": [
+            "To elucidate the rate-limiting step in the biosynthesis of DHNA from chorismate in L. lactis"
+          ]
+        }
+      ],
+      "excluded_statements": [
+        {
+          "quote": "DHNA allosterically inhibits MenD",
+          "reason": "regulation"
+        },
+        {
+          "quote": "chorismate production rate J 0 sets the absolute limit to DHNA production flux",
+          "reason": "a model source term, no enzyme or substrate"
+        },
+        {
+          "quote": "we knocked out noxAB (encodes for NADH:quinone oxidoreductases) to prevent DHNA from interacting with quinone reductases",
+          "reason": "enzyme named without a stated conversion"
+        }
+      ]
+    }
+  }
+}
