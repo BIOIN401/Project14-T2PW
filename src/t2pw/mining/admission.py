@@ -328,6 +328,9 @@ def judge(
     siblings = store.siblings(identity) or [claim]
     support = [c for c in siblings if c.claim_id != claim.claim_id and supports(c, evidence)]
     if current is None or current.status not in ADMITTED_STATUSES or not support:
+        if outcome.reaction is not None:
+            # Per-claim rows, used only if this node merges into an admitted one (R1-N5b).
+            outcome.reaction.non_supporting_claims = _non_supporting(siblings, support)
         return outcome
     own = outcome.decision
     paper_ids = list(dict.fromkeys(c.paper_id for c in support if c.paper_id))

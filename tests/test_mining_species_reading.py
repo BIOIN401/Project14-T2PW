@@ -481,22 +481,31 @@ def test_g9_745b_b3_the_papers_screen_organisms_are_never_the_claims_species():
 
 def _replay():
     """All 16 recorded calls, in order, through extraction, the claim store and admission,
-    as the controller runs them (change set A's spans; each paper graded as A grades it)."""
+    as the controller runs them (change set A's spans; each paper graded as A grades it).
+
+    CS-B repair 2: as the controller now does (R1-N1), every call of a paper is registered
+    before any of its claims is judged, and each distinct stored claim is judged once; a
+    claim counts as admitted only on its own verdict -- an outcome kept admitted for an
+    identity other claims support carries ``claim_verdict`` and is not counted (R1-N5a)."""
     store, registry = ClaimStore(), EntityRegistry()
     papers = {pid: PaperRecord(paper_id=pid, evidence_type=TYPES[pid]) for pid in TYPES}
     evidence = dict(SPANS)
     identity_of = {}
     admitted = set()
-    for call in RECORDED["pilot003"]["calls"]:
-        claims, _ = _build(json.loads(call["raw_text"]), _shown(call), call["paper_id"],
-                           **_typed(call["paper_id"]))
-        for row, claim in enumerate(claims):
-            identity_of[(call["call_id"], row)] = claim.claim_identity
-            stored, _ = store.register(claim)
+    calls = RECORDED["pilot003"]["calls"]
+    for paper_id in dict.fromkeys(call["paper_id"] for call in calls):
+        stored_claims = {}
+        for call in (c for c in calls if c["paper_id"] == paper_id):
+            claims, _ = _build(json.loads(call["raw_text"]), _shown(call), paper_id, **_typed(paper_id))
+            for row, claim in enumerate(claims):
+                identity_of[(call["call_id"], row)] = claim.claim_identity
+                stored, _ = store.register(claim)
+                stored_claims.setdefault(stored.claim_id, stored)
+        for stored in stored_claims.values():
             outcome = judge(stored, store=store, registry=registry, papers=papers, evidence=evidence,
                             round_index=1)
             store.record_decision(outcome.decision)
-            if outcome.admitted:
+            if outcome.admitted and "claim_verdict" not in outcome.decision.detail:
                 admitted.add(stored.claim_id)
     return store, identity_of, admitted
 

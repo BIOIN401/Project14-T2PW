@@ -458,6 +458,9 @@ class ResearchGraph:
 
         if not reaction.reaction_id:
             reaction.reaction_id = make_reaction_id(reaction.claim_identity)
+        if not reaction.admitted:
+            # Rows a non-admitted claim carries only for merging into an admitted node.
+            reaction.non_supporting_claims = []
         reaction.discovery_round = int(round_index)
         self.reactions[reaction.reaction_id] = reaction
         reaction.note(round_index, "discovered", reaction.label(), at)
@@ -491,12 +494,17 @@ class ResearchGraph:
                                   f"{row.get('species_state')}; not counted as support", at)
             existing.non_supporting_claims = [dict(r) for r in incoming.non_supporting_claims]
         if existing.admitted and not incoming.admitted:
+            # Per-claim rows (CS-B repair 2, R1-N5b): the judge puts one row per sibling
+            # claim, with that claim's own paper and species state, on the incoming node.
             known = {r.get("claim_id") for r in existing.non_supporting_claims}
-            for cid in incoming.claim_ids:
+            rows = incoming.non_supporting_claims or [
+                {"claim_id": cid, "paper_id": ", ".join(incoming.paper_ids), "species_state": incoming.species_state}
+                for cid in incoming.claim_ids]
+            for row in rows:
+                cid = row.get("claim_id")
                 if cid and cid not in existing.claim_ids and cid not in known:
-                    existing.non_supporting_claims.append(
-                        {"claim_id": cid, "paper_id": ", ".join(incoming.paper_ids),
-                         "species_state": incoming.species_state})
+                    existing.non_supporting_claims.append(dict(row))
+                    known.add(cid)
                     existing.note(round_index, "non_supporting_claim",
                                   f"{cid}: {incoming.decision_status or 'not admitted'}; not counted as "
                                   "support", at)
@@ -511,6 +519,15 @@ class ResearchGraph:
             existing.compartment = incoming.compartment
             existing.reversible = incoming.reversible
             existing.direction = incoming.direction
+            # Every displayed attribute is the support's, never the lead's (CS-B repair 2,
+            # R1-B6): a lifted node must not show another paper's foreign gene or tissue.
+            existing.gene = incoming.gene
+            existing.tissue = incoming.tissue
+            existing.conditions = incoming.conditions
+            existing.species_text = incoming.species_text
+            existing.hypothesis = incoming.hypothesis
+            existing.substrate_names = list(incoming.substrate_names)
+            existing.product_names = list(incoming.product_names)
             existing.note(round_index, "support_replaced",
                           f"admitted on paper(s) {', '.join(incoming.paper_ids) or '-'}; earlier leads "
                           "are not support", at)

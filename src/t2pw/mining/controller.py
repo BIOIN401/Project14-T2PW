@@ -484,6 +484,7 @@ class MiningController:
                 # (evidence 032). Each batch is its own logical call; its claims
                 # merge through the claim store like any other paper's.
                 per_call = max(1, self.config.budgets.max_passages_per_call)
+                paper_claims: List[ExtractedClaim] = []
                 for start in range(0, len(spans), per_call):
                     if start and self.ledger.check_before_call():
                         record.notes.append(
@@ -517,15 +518,22 @@ class MiningController:
                         round_errors.extend(extraction.dropped_fields)
                     self.ledger.record_claims(len(extraction.claims))
                     round_claims.extend(extraction.claims)
+                    paper_claims.extend(extraction.claims)
 
-                    for claim in extraction.claims:
-                        self._admit(
-                            claim,
-                            index=index,
-                            delta=delta,
-                            decisions=round_decisions,
-                            rejections=round_rejections,
-                        )
+                # Register EVERY batch's claims of this paper before judging any of them
+                # (CS-B repair 2, R1-N1): the same-paper union (F-6) is then complete when
+                # a claim is judged, so a later batch can never downgrade a reaction an
+                # earlier batch of the same paper admitted. Each distinct stored claim is
+                # judged once.
+                stored_claims = list({c.claim_id: c for c in map(self._register, paper_claims)}.values())
+                for stored in stored_claims:
+                    self._judge(
+                        stored,
+                        index=index,
+                        delta=delta,
+                        decisions=round_decisions,
+                        rejections=round_rejections,
+                    )
                 record.processed_round = index
                 processed_this_round += 1
                 self.ledger.record_paper_processed()
@@ -660,7 +668,24 @@ class MiningController:
         decisions: List[ClaimDecision],
         rejections: List[Dict[str, Any]],
     ) -> None:
+        """Register one claim and judge it at once (a single-claim convenience; a
+        paper's batches go through :meth:`_register` then :meth:`_judge`)."""
+        self._judge(self._register(claim), index=index, delta=delta, decisions=decisions,
+                    rejections=rejections)
+
+    def _register(self, claim: ExtractedClaim) -> ExtractedClaim:
         stored, _new_support = self.state.store.register(claim)
+        return stored
+
+    def _judge(
+        self,
+        stored: ExtractedClaim,
+        *,
+        index: int,
+        delta: GraphDelta,
+        decisions: List[ClaimDecision],
+        rejections: List[Dict[str, Any]],
+    ) -> None:
         outcome = judge(
             stored,
             store=self.state.store,
