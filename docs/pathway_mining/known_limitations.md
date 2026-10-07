@@ -76,13 +76,22 @@ density bar (5 marks per 1,000 characters) separates every reference chunk (13 o
 every body window (1.6 at most) in those texts; it has not been tried on other publishers.
 The front matter can hold an abstract, a significance statement or highlights; only the
 record's abstract survives as `abstract#0` (the metadata lookup fills an empty one), so a
-PNAS significance statement is not indexed.
+PNAS significance statement is not indexed. A record with no abstract takes the front
+matter's "Abstract ..." passage instead, which needs that heading: PMC8508710's front matter
+has none. Figure and table legends printed after a reference list that sits in the last 45 %
+of the text are not indexed at all: rag's chunker drops everything after that heading before
+mining sees the chunks. The headingless-list rule needs three authors with initials in its
+first 1,500 characters and backs over at most 300 characters of the first entry's authors, so
+a list opening with a corporate author (Cureus: "1. World Health Organization ...") can keep
+its first entry. "Survive" in these rules means the text stays retrievable: a trimmed chunk
+gets a new evidence id, and a figure snippet contained in a body chunk is deduplicated (A4).
 
 ## A review must say it is one
 
 Without a declared review type (NCBI, or EuropePMC's metadata lookup, which an offline run
-never makes), a review is recognised only by a title marker or a self-referential sentence
-("this review", "here we review", ...). A review that never describes itself in those words
+never makes), a review is recognised only by its JATS subject heading (which needs the record's
+title to anchor it, so a bare PMCID with no title has none), a title marker or a
+self-referential sentence ("this review", "here we review", ...). A review that never describes itself in those words
 stays `unknown`, and its reactions are graded `single_paper`. Two reviews, or a review and a
 primary paper, supporting one reaction still grade `multiple_independent_papers`:
 `admission.evidence_level` counts papers, not their types.

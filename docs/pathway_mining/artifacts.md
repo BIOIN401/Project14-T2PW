@@ -86,7 +86,7 @@ One JSON object per line; safe to stream.
 
 | File | One row per | Key fields |
 |---|---|---|
-| `papers.jsonl` | paper (included **and** excluded) | ids, metadata, screening outcome (`mining_rescue` when the rescue re-admitted it; the production reason is then in `notes`), inclusion/exclusion reasons, evidence type and the rule that decided it (`evidence_type_basis`), declared `article_type`, discovery round + query; `notes` say what indexing kept out of the paper (front matter, reference list, ...) |
+| `papers.jsonl` | paper (included **and** excluded) | ids, metadata, screening outcome (`mining_rescue` when the rescue re-admitted it; the production reason is then in `notes`), inclusion/exclusion reasons, evidence type and the rule that decided it (`evidence_type_basis`), whether the declared type was checked against EuropePMC (`evidence_type_verified`), declared `article_type`, discovery round + query; `notes` say what indexing kept out of the paper (front matter, reference list, ...) |
 | `queries.jsonl` | literature query | query text, frontier item + kind, round, attempt (formulation 1 or 2), sources, source terms, result count, new paper ids, cache hit, error |
 | `frontier.jsonl` | open frontier item | kind, target, reason, priority, origin round, attempts, exhausted |
 | `evidence_spans.jsonl` | quoted passage | exact text, section, page, paragraph, locator, chunk, offsets, round, query, frontier item, score |

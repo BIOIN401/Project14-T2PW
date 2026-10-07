@@ -67,9 +67,13 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
   body) is not: the next search asks again. rag's `_resolve_europepmc_item` returns the same
   empty item for both, so one failure used to make an article a `PMID:` paper for the whole run,
   and the same article from EuropePMC a second, `PMC:` paper, two "independent" papers for
-  `multiple_independent_papers`. An included paper's metadata lookup asks the same query again;
-  when it now reveals the PMCID, the record keeps its `PMID:` id, gains its `pmcid`, and the
-  `PMC:` id is marked seen, so EuropePMC's record of the article is the same paper.
+  `multiple_independent_papers`. An included paper's metadata lookup asks the same query again
+  and fills an empty PMID or PMCID. Every id of every included paper (`PMC:`, `PMID:`, `DOI:`)
+  is marked seen, so a later record of the same article under another id is skipped like any
+  seen paper. When the other order happens (EuropePMC's copy included first, then a `PMID:`
+  record whose discovery lookup failed and whose inclusion lookup only now names the PMCID),
+  the second record is excluded with "same article as PMC:..., already included". A resumed
+  run marks the ids of every restored included paper the same way.
 * **Full-text check.** A fetched full text must open with the record's title: at least 70 % of
   the title's words (3+ letters, HTML unescaped) in its first 3,000 characters. Otherwise it is
   another article, it is refused, the abstract is used, and the paper's `notes` say so. Fixture
