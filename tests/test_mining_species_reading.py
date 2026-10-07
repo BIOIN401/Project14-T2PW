@@ -532,3 +532,74 @@ def test_new_acceptance_745b_f1_the_full_pilot003_replay_admits_exactly_3_14_and
     grades = {n: next(iter(store.siblings(identity_of[(by_number[n]["call"], by_number[n]["row"])]))).species_support["grade"]
               for n in ("3", "14", "34")}
     assert grades == {"3": "review", "14": "in_planta", "34": "review"}
+
+
+# ===========================================================================
+# F-6 (IT2-N2): a same-paper merge decides on the combined evidence
+# ===========================================================================
+#: Batch A: pilot-003's GH3.10 abstract cut to [1] and [7] (no "in vitro" anywhere, so
+#: base reads it ``target_species_supported``). Batch B: the GH3.10 methods passage ev_c7a1,
+#: purified enzymes in vitro. One paper, one reaction identity, two extraction batches.
+_GH3_ABSTRACT = SPANS["ev_7d2787cbb14b4905"].text
+_BATCH_A = dataclasses.replace(SPANS["ev_7d2787cbb14b4905"], evidence_id="ev_batch_a", text=" ".join(
+    s for s in re.split(r"(?<=\.)\s+", _GH3_ABSTRACT)
+    if s.startswith(("In angiosperms", "In flowers and wounded leaves"))))
+
+
+def _gh3_claims(order):
+    payload = _payload(_call(9), [0])
+    claims = []
+    for which in order:
+        eid = "ev_batch_a" if which == "A" else "ev_c7a1b8c0ccdfe997"
+        span = _BATCH_A if which == "A" else SPANS[eid]
+        row = json.loads(json.dumps(payload).replace("ev_7d2787cbb14b4905", eid))
+        built, _ = _build(row, [span], GH3_10)
+        claims.extend(built)
+    return claims
+
+
+def test_g9_745b_f6_a_same_paper_merge_does_not_depend_on_batch_order():
+    """Base copies the later batch's species state over the earlier one: A then B stores
+    ``in_vitro_or_cell_free``, B then A ``target_species_supported``. Now both orders decide
+    on the union of both batches' graded sentences: ``target_species_supported``, in planta."""
+    assert "in vitro" not in _BATCH_A.text and "knockout lines JA-Ile" in _BATCH_A.text
+    results = {}
+    for order in (("A", "B"), ("B", "A")):
+        claims = _gh3_claims(order)
+        assert len({c.claim_identity for c in claims}) == 1
+        store, decisions = _judge(claims, [_BATCH_A, SPANS["ev_c7a1b8c0ccdfe997"]])
+        stored = store.siblings(claims[0].claim_identity)
+        assert len(stored) == 1
+        results[order] = (stored[0].species_state, decisions[-1].status)
+    assert results[("A", "B")] == results[("B", "A")]
+    assert results[("A", "B")][0] == TSS
+
+
+def test_g9_745b_f6_a_merged_field_keeps_model_citation_if_either_batch_cited_it():
+    """IT2 N3/N4: evidence ids are unioned but the first batch's attribution label is kept,
+    so a verbatim-only label survives a later batch that cited the field. Base: A (gene kept
+    by the verbatim fallback) then B (gene model-cited) keeps ``verbatim_cited_span``."""
+    payload = _payload(_call(9), [0])
+    verbatim = json.loads(json.dumps(payload))
+    del verbatim["claims"][0]["gene_evidence_ids"]
+    first, _ = _build(verbatim, _shown(_call(9)), GH3_10)
+    second, _ = _build(payload, _shown(_call(9)), GH3_10)
+    assert first[0].field_attribution["gene"] == "verbatim_cited_span"
+    for order in ((first, second), (second, first)):
+        store = ClaimStore()
+        for claims in order:
+            stored, _ = store.register(ExtractedClaim.from_dict(claims[0].to_dict()))
+        assert stored.field_attribution["gene"] == "model_citation"
+
+
+def test_new_acceptance_745b_f6_a_claim_without_a_sentence_reading_can_only_weaken_a_merge():
+    """A claim restored from a run older than schema 1.2.0 carries no ``species_support``:
+    nothing to union, so its state is a floor, in either order."""
+    claims = _gh3_claims(("A",))
+    legacy = ExtractedClaim.from_dict({**claims[0].to_dict(), "species_support": {},
+                                       "species_state": IVO, "species_reason": "legacy"})
+    for order in ((claims[0], legacy), (legacy, claims[0])):
+        store = ClaimStore()
+        for claim in order:
+            stored, _ = store.register(ExtractedClaim.from_dict(claim.to_dict()))
+        assert (stored.species_state, stored.species_reason) == (IVO, "legacy")

@@ -36,11 +36,91 @@ from t2pw.mining.models import (
     ExtractedClaim,
 )
 from t2pw.mining.normalize import comparison_key
+from t2pw.mining.species import (
+    SPECIES_AMBIGUOUS,
+    SPECIES_IN_VITRO,
+    SPECIES_INFERRED_ONLY,
+    SPECIES_MULTIPLE,
+    SPECIES_NON_TARGET,
+    SPECIES_NOT_STATED,
+    SPECIES_TARGET_SUPPORTED,
+    aggregate_species,
+)
 
 #: Attributes compared across papers for the same reaction identity. Substrates,
 #: products and species are excluded because they are part of the identity --
 #: a difference there is a different reaction, not a conflict about one.
 CONFLICT_ATTRIBUTES = ("enzyme", "direction", "reversible", "compartment")
+
+
+#: ``extraction.ATTRIBUTION_MODEL_CITATION``, spelled out so this module does not
+#: import the extraction stack.
+_MODEL_CITATION = "model_citation"
+
+#: Strongest reason against admission first, as in
+#: :func:`t2pw.mining.species.aggregate_species`. Used only for a claim that
+#: carries no sentence reading to recompute from.
+_SPECIES_PRECEDENCE = (
+    SPECIES_INFERRED_ONLY,
+    SPECIES_IN_VITRO,
+    SPECIES_NOT_STATED,
+    SPECIES_MULTIPLE,
+    SPECIES_NON_TARGET,
+    SPECIES_AMBIGUOUS,
+    SPECIES_TARGET_SUPPORTED,
+)
+
+
+def _weakest(*states: str) -> str:
+    """The state with the strongest reason against admission (unknown ranks first)."""
+    present = [s for s in states if s]
+    return min(present, key=lambda s: _SPECIES_PRECEDENCE.index(s) if s in _SPECIES_PRECEDENCE else -1,
+               default="")
+
+
+def _recompute_species(stored: ExtractedClaim, incoming: ExtractedClaim) -> None:
+    """The same paper, the same identity, two batches: decide the species state on
+    the COMBINED evidence (ORCH-745 F-6). Base copied the later batch's state over
+    the earlier one, so an in-vitro-only batch read after the knockout batch
+    demoted the reaction, and the result depended on batch order.
+
+    The graded sentences, the model-cited species spans and the flags are unioned
+    (same paper only: a claim from another paper is never merged here) and the
+    aggregation re-run, so ``register(A); register(B)`` == ``register(B); register(A)``.
+    A side with no sentence reading (a claim built outside extraction, or restored
+    from a run older than schema 1.2.0) has nothing to union: its state can only
+    weaken the result, whichever side it is on.
+    """
+    readings = [dict(c.species_support) for c in (stored, incoming) if c.species_support]
+    unread = [(c.species_state, c.species_reason) for c in (stored, incoming) if not c.species_support]
+    if readings:
+        rows = {(r.get("evidence_id"), r.get("sentence"), r.get("grade")): dict(r)
+                for reading in readings for r in reading.get("sentences") or []}
+        sentences = [rows[k] for k in sorted(rows, key=lambda k: (str(k[0]), int(k[1] or 0), str(k[2])))]
+        merged = {**readings[-1], **readings[0],
+                  "sentences": sentences,
+                  "species_evidence_ids": sorted({e for r in readings for e in r.get("species_evidence_ids") or []}),
+                  "species_span_ok": any(r.get("species_span_ok") for r in readings),
+                  "claimed_inferred": any(r.get("claimed_inferred") for r in readings)}
+        # ponytail: a claim in the "unspecified:<state>" namespace keeps its identity
+        # even if the union moves its state; both states are non-admissible.
+        verdict = aggregate_species(
+            target_species_normalized=str(merged.get("target_species") or ""),
+            observed=[stored.species_text] if stored.species_text else [],
+            species_evidence_ids=merged["species_evidence_ids"],
+            sentences=sentences,
+            species_span_ok=merged["species_span_ok"],
+            claimed_inferred=merged["claimed_inferred"],
+        )
+        merged["grade"] = verdict.grade
+        stored.species_support = merged
+        state, reason = verdict.state, verdict.reason
+    else:
+        state, reason = stored.species_state, stored.species_reason
+    weakest = _weakest(state, *(s for s, _ in unread))
+    if weakest and weakest != state:
+        state, reason = next((s, r) for s, r in unread if s == weakest)
+    stored.species_state, stored.species_reason = state, reason
 
 
 def _attr_value(claim: ExtractedClaim, attribute: str) -> str:
@@ -128,8 +208,11 @@ class ClaimStore:
                 for eid in ids:
                     if eid not in bucket:
                         bucket.append(eid)
+            # A field is model-cited if either pass cited it: the evidence ids are
+            # unioned above, so the label must not stay "verbatim" (IT2 N3/N4).
             for fname, how in claim.field_attribution.items():
-                same_paper.field_attribution.setdefault(fname, how)
+                if how == _MODEL_CITATION or fname not in same_paper.field_attribution:
+                    same_paper.field_attribution[fname] = how
             # A field the earlier pass could not support may now be supported.
             for fname in ("enzyme", "protein", "gene", "compartment", "conditions", "tissue"):
                 if not getattr(same_paper, fname, "") and getattr(claim, fname, ""):
@@ -138,10 +221,8 @@ class ClaimStore:
                 same_paper.reversible = claim.reversible
             if same_paper.direction in ("", DIRECTION_UNSPECIFIED) and claim.direction not in ("", DIRECTION_UNSPECIFIED):
                 same_paper.direction = claim.direction
-            if claim.species_state and same_paper.species_state != claim.species_state:
-                same_paper.species_state = claim.species_state
-                same_paper.species_reason = claim.species_reason
-                same_paper.species_text = claim.species_text or same_paper.species_text
+            same_paper.species_text = same_paper.species_text or claim.species_text
+            _recompute_species(same_paper, claim)
             same_paper.last_updated_round = max(
                 same_paper.last_updated_round, claim.last_updated_round, claim.first_seen_round
             )
