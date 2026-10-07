@@ -96,10 +96,14 @@ says so in `costs.json`, in `report.md` and in the CLI status output.
 mitigate what it does:
 
 * **Provider routing is unpinned.** `chat_detailed` sends no OpenRouter `provider`
-  preference, so identical requests can be served by different providers. Pilot-003's thin
-  answers (150-210 output tokens in 4-8 s, schema placeholders as values) look like a route
-  that did no reasoning. Mining re-asks a thin answer once and marks what it kept
-  (`answer_quality`); it cannot choose the route.
+  preference, so identical requests can be served by different providers. Pilot-003 had 7
+  thin answers of 16 (no field cited; two with schema placeholders as values). Three took
+  150-210 output tokens, four took 5k-24k, and all seven share one alphabetically sorted key
+  set: the shape follows the provider route, not the amount of reasoning. Mining therefore
+  detects it structurally, re-asks a thin answer once (at most one extra call per thin answer)
+  and marks what it kept (`answer_quality`); it cannot choose the route. With no usage
+  reported, the token counts are estimates from the visible text, so the structural rule
+  decides alone; a future token rule needs an explicit per-attempt `usage_reported` flag.
 * **The provider is never reported.** `CompletionDiagnostics` has no provider field, so
   `ModelCallRecord.provider` reads `not_reported_by_llm_client` on every live call.
 * **The reasoning setting is never sent.** `MiningModelConfig.reasoning` is recorded but
