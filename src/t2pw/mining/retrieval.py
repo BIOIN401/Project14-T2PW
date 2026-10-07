@@ -75,11 +75,13 @@ _CITATION_MARK = re.compile(
 _CITATION_DENSITY = 5.0
 #: How far apart a reference list's marks may be (pilot maximum: 462 characters).
 _CITATION_GAP = 600
-#: Where the legends resume after a reference list: a figure or table LABEL ("Figure 1 In
-#: silico", "Table 2.", "FIG. 3", "Fig 4:"), not a mention of one ("(Supplemental Table S3) ,").
-_CAPTION = re.compile(
-    r"(?<![\w.(])(?<!Supplemental )(?<!Supplementary )(?:Figure|FIGURE|Fig\.?|FIG\.?|Table|TABLE|Scheme)"
-    r"\s*S?\d+[A-Za-z]?(?=\s*[.:]|\s+[A-Z])")
+#: Where the legends resume after a reference list: the next figure or table label OR mention
+#: ("Figure 1 In silico", "FIG. 3", "Fig 4", "(Table 1 )"). A mention ends a list early (the
+#: pepper paper's at "(Supplemental Table S3) ,") but never late: a stricter label-only rule
+#: let a FALSE list -- a table's "References" column with author-year cells -- run past the
+#: table's own mentions to the end of the text and drop the body prose after it (PMC8510960,
+#: PMC12925505), and lost legends that open "(A)", "|", a dash, "jar1", "13-LOX" or "Δ".
+_CAPTION = re.compile(r"(?<![\w.])(?:Figure|FIGURE|Fig\.?|FIG\.?|Table|TABLE|Scheme)\s*S?\d+")
 #: The processing flags that close EuropePMC's flattened front matter:
 #: "pmc-prop-open-access yes", "is-retracted no", "pmc-license-ref", "Issue date 2019 Jul 9.",
 #: and ACS's "document-id-old-9 id5c00566", "production-flag-si-avail yes", "document-id-alt-64 <hash>".
@@ -135,7 +137,7 @@ def text_regions(text: str) -> List[Tuple[int, int, str]]:
     the last processing flag, plus a short tail up to the first section heading),
     ``publisher_note``, ``reference_list`` (a heading followed by citation-dense
     text, to the end of its run of citation marks and then to the next figure or
-    table label, or to the end of the text). When no heading is found, the list is
+    table label or mention, or to the end of the text). When no heading is found, the list is
     found from its density (:func:`_unheaded_list_start`, A2: PMC12624714's ACS
     bibliography leaked into the chunk that straddles it). Without a flag block there
     is no front-matter region: ponytail: the rule knows EuropePMC's flattening only; a
@@ -157,15 +159,20 @@ def text_regions(text: str) -> List[Tuple[int, int, str]]:
     if not any(reason == "reference_list" for _, _, reason in regions):
         front_end = max((end for _, end, reason in regions if reason == "front_matter"), default=0)
         start = _unheaded_list_start(text, max(front_end, len(text) // 3))
-        if start is not None:
-            regions.append((start, _list_end(text, start), "reference_list"))
+        while start is not None:
+            # A mention ends a list early, so look again after it: PMC13418202's run opened at
+            # its Supporting Information DOI, ended at "(Table S1, PDF)", and its ACS
+            # bibliography ("De Vreese R. D'hooghe M. ...") followed with no heading.
+            end = _list_end(text, start)
+            regions.append((start, end, "reference_list"))
+            start = _unheaded_list_start(text, end)
     return sorted(regions)
 
 
 def _list_end(text: str, start: int) -> int:
     """Where a reference list starting at ``start`` ends: past its run of citation marks
-    (no two further apart than ``_CITATION_GAP``), at the next figure or table label, or
-    at the end of the text."""
+    (no two further apart than ``_CITATION_GAP``), at the next figure or table label or
+    mention (:data:`_CAPTION`), or at the end of the text."""
     end = start
     for mark in _CITATION_MARK.finditer(text, start):
         if mark.start() - end > _CITATION_GAP:
