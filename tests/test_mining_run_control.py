@@ -2,8 +2,10 @@
 
 The pilot-003 audit's run-control defects: the per-round cap stopped the run on
 quarantined junk (B1 / F-7), a round started after the discovery budget was spent
-(A5), the frontier cap cut every target-species search (F-3), thin reasoning-free
-answers passed as ``ok`` (B2), and the CLI never loaded ``.env`` (F9).
+(A5), the frontier cap cut every target-species search (F-3), thin answers (no
+field cited; a structural rule) passed as ``ok`` (B2), and the CLI never loaded
+``.env`` (F9). Repair round 1 adds F3-ORDER and B2-RECORD nodes
+(``test_repair1_745c_*``: they fail at the first tip, d01e0825).
 
 Every ``test_g9_745c_*`` node fails behaviourally at base ``f9556288`` (a wrong
 value or a failed assertion, never an ImportError) and imports only what the base
@@ -347,7 +349,7 @@ def test_new_acceptance_745c_f3_on_route_relevance_is_scored_per_lead(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# B2: a thin, reasoning-free answer is re-asked once and marked; provider recorded
+# B2: a thin answer (structural) is re-asked once and marked; provider recorded
 # ---------------------------------------------------------------------------
 THIN_FIXTURE = ROOT / "tests" / "fixtures" / "mining" / "pilot003_thin_answers.json"
 
@@ -494,6 +496,57 @@ def test_new_acceptance_745c_b2_a_failed_re_ask_keeps_the_first_thin_answer():
     assert outcome.record.answer_quality == "thin_after_retry"
     assert outcome.record.response_hash == "sha256:1"
     assert outcome.record.response_chars == len(thin["raw_text"])
+
+
+def _routed_chat(answers, calls):
+    """Like _scripted_chat, but each answer comes from its own provider route."""
+
+    def chat(messages, **kwargs):
+        calls.append(kwargs)
+        text, provider = answers[min(len(calls), len(answers)) - 1]
+        return SimpleNamespace(text=text, diagnostics=SimpleNamespace(
+            finish_reason="stop", attempts=1, model="deepseek/deepseek-v4-flash",
+            request_hash="", response_hash=f"sha256:{len(calls)}", attempt_log=[],
+            provider=provider))
+
+    return chat
+
+
+def test_repair1_745c_b2record_a_failed_re_ask_leaves_the_record_describing_the_kept_answer():
+    """B2-RECORD (review of d01e0825): when the re-ask fails and the first thin answer
+    is kept, the record must not carry the re-ask's parse / schema error or its
+    provider. At d01e0825 parse_error / schema_error held the re-ask's error and
+    provider was "RouteB"; at f9556288 there was no re-ask at all."""
+    thin = _pilot003_answers()["0003"]
+    for failed, field in (("not json at all", "parse_error"), ('{"claims": "x"}', "schema_error")):
+        calls = []
+        client, _ = _client(_routed_chat([(thin["raw_text"], "RouteA"), (failed, "RouteB")], calls))
+        outcome = _call(client, thin["evidence_ids"])
+        assert len(calls) == 2
+        assert outcome.ok and outcome.payload == json.loads(thin["raw_text"])
+        record = outcome.record.to_dict()
+        assert record["answer_quality"] == "thin_after_retry"
+        assert (record["status"], record["parse_error"], record["schema_error"]) == ("ok", "", "")
+        assert record["provider"] == "RouteA"
+        # The failed re-ask is still on its own lineage row.
+        assert outcome.raw_attempts[1]["parse_outcome"] == field
+        assert outcome.raw_attempts[1]["provider"] == "RouteB"
+
+
+def test_new_acceptance_745c_b2scope_answer_check_is_per_call():
+    """thin_answer assumes evidence-cited records; another payload shape passes its
+    own predicate, or None to check nothing."""
+    thin = _pilot003_answers()["0001"]
+    calls = []
+    client, _ = _client(_scripted_chat([thin["raw_text"]], calls))
+    from t2pw.mining.extraction import CLAIM_SCHEMA
+
+    outcome = client.call_json(purpose="other", system="s", user="u", schema=CLAIM_SCHEMA,
+                               answer_check=None)
+    assert len(calls) == 1 and outcome.record.answer_quality == "ok"
+    outcome = client.call_json(purpose="other", system="s", user="u", schema=CLAIM_SCHEMA,
+                               answer_check=lambda payload: "always thin")
+    assert len(calls) == 3 and outcome.record.answer_quality == "thin_after_retry"
 
 
 # ---------------------------------------------------------------------------
