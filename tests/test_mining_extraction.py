@@ -52,11 +52,13 @@ def spans():
         EvidenceSpan(
             evidence_id="ev_one",
             paper_id="PMC1",
-            # ORCH-745 F-1: "in Arabidopsis thaliana leaves" (base: "in Arabidopsis
-            # thaliana."). A species is supported only by a sentence showing the
-            # organism perform the reaction; without the in-planta context the claim
-            # of test_each_field_keeps_its_own_evidence is species_ambiguous.
-            text="LOX2 converts alpha-linolenic acid to 13-HPOT in Arabidopsis thaliana leaves.",
+            # ORCH-745 F-1 / CS-B repair 2: a species is supported only by loss-of-function
+            # genetics of the claim's enzyme (was "LOX2 converts alpha-linolenic acid to
+            # 13-HPOT in Arabidopsis thaliana leaves.", and at base "... in Arabidopsis
+            # thaliana."); otherwise the claim of test_each_field_keeps_its_own_evidence is
+            # species_ambiguous.
+            text=("In Arabidopsis thaliana lox2 knockout lines, 13-HPOT formed from "
+                  "alpha-linolenic acid was undetectable in wounded leaves."),
             section="results",
             locator="results#0",
             chunk_id="c0",

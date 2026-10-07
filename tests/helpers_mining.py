@@ -5,7 +5,11 @@ function, the literature service is a scripted source, and embeddings run in the
 offline lexical mode with a temp-directory cache.
 
 The corpus is a *synthetic* jasmonate-flavoured scenario built to exercise the
-policy, not to be biochemically authoritative. It deliberately contains:
+policy, not to be biochemically authoritative. Since ORCH-745 CS-B repair 2 a
+target-species reaction earns its species support only from loss-of-function
+genetics, so each paper meant to support one says so ("In Arabidopsis thaliana lox2
+knockout lines, 13-HPOT was undetectable in wounded leaves."), and every scripted
+claim it supports names that enzyme. It deliberately contains:
 
 * two paper-supported reactions that chemically connect (P1, P2);
 * a relevant but disconnected paper-supported reaction (P3);
@@ -70,15 +74,12 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000001",
         title="Lipoxygenase LOX2 oxygenates alpha-linolenic acid in Arabidopsis thaliana leaves",
         abstract=(
-            "In Arabidopsis thaliana leaves, the chloroplastic lipoxygenase LOX2 converts "
-            "alpha-linolenic acid to 13-hydroperoxyoctadecatrienoic acid (13-HPOT). "
-            "The reaction was measured in planta in Arabidopsis thaliana."
+            "In Arabidopsis thaliana lox2 knockout lines, 13-hydroperoxyoctadecatrienoic acid "
+            "(13-HPOT) formed from alpha-linolenic acid was undetectable in wounded leaves."
         ),
         full_text=(
-            "Results. We assayed leaf extracts of Arabidopsis thaliana. LOX2 converts "
-            "alpha-linolenic acid to 13-HPOT in the chloroplast. Activity was abolished in "
-            "the lox2 mutant, confirming that LOX2 catalyses this step in Arabidopsis "
-            "thaliana."
+            "Results. In Arabidopsis thaliana lox2 knockout lines, 13-HPOT was undetectable in "
+            "wounded leaves. The reaction proceeds in the chloroplast."
         ),
     ),
     "P2": FixturePaper(
@@ -86,13 +87,12 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000002",
         title="Allene oxide synthase converts 13-HPOT to 12-OPDA in Arabidopsis thaliana",
         abstract=(
-            "In Arabidopsis thaliana leaves, 13-HPOT is converted to 12-oxophytodienoic acid "
-            "(12-OPDA) by allene oxide synthase (AOS) in the chloroplasts."
+            "In Arabidopsis thaliana allene oxide synthase knockout lines, 12-oxophytodienoic "
+            "acid (12-OPDA) was undetectable in wounded leaves."
         ),
         full_text=(
-            "Results. In Arabidopsis thaliana leaves, AOS converted 13-HPOT to 12-OPDA. "
-            "The product was confirmed by mass spectrometry in Arabidopsis thaliana leaves. "
-            "The reaction proceeds in the chloroplast."
+            "Results. In Arabidopsis thaliana allene oxide synthase knockout lines, 12-OPDA was "
+            "undetectable in wounded leaves. The reaction proceeds in the chloroplast."
         ),
     ),
     "P3": FixturePaper(
@@ -100,12 +100,12 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000003",
         title="CYP94B3 hydroxylates JA-Ile in Arabidopsis thaliana",
         abstract=(
-            "In Arabidopsis thaliana leaves, the cytochrome P450 CYP94B3 converts JA-Ile to "
-            "12OH-JA-Ile, attenuating jasmonate signalling."
+            "In Arabidopsis thaliana cyp94b3 knockout lines, 12OH-JA-Ile was undetectable in "
+            "wounded leaves."
         ),
         full_text=(
-            "Results. In Arabidopsis thaliana, CYP94B3 converts JA-Ile to 12OH-JA-Ile. "
-            "Accumulation of 12OH-JA-Ile was lost in cyp94b3 plants of Arabidopsis thaliana."
+            "Results. In Arabidopsis thaliana cyp94b3 knockout lines, 12OH-JA-Ile was "
+            "undetectable in wounded leaves."
         ),
     ),
     "P4": FixturePaper(
@@ -113,14 +113,14 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000004",
         title="From 12-OPDA to JA-Ile: the conjugation route in Arabidopsis thaliana",
         abstract=(
-            "In Arabidopsis thaliana leaves, 12-OPDA is converted to jasmonic acid. In "
-            "Arabidopsis thaliana leaves, JAR1 converts jasmonic acid to JA-Ile, conjugating it "
-            "with L-isoleucine."
+            "In Arabidopsis thaliana opr3 knockout lines, jasmonic acid was undetectable in "
+            "wounded leaves. In Arabidopsis thaliana jar1 knockout lines, JA-Ile was "
+            "undetectable in wounded leaves."
         ),
         full_text=(
-            "Results. In Arabidopsis thaliana peroxisomes, 12-OPDA is converted to jasmonic "
-            "acid. JAR1 of Arabidopsis thaliana then conjugates jasmonic acid with "
-            "L-isoleucine to form JA-Ile, as shown by in planta feeding experiments."
+            "Results. In Arabidopsis thaliana opr3 knockout lines, jasmonic acid was "
+            "undetectable in wounded leaves. In Arabidopsis thaliana jar1 knockout lines, "
+            "JA-Ile was undetectable in wounded leaves."
         ),
     ),
     "P5": FixturePaper(
@@ -158,13 +158,13 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000007",
         title="Allene oxide cyclase is responsible for 12-OPDA formation",
         abstract=(
-            "We report that in Arabidopsis thaliana leaves allene oxide cyclase, not allene "
-            "oxide synthase, converts 13-HPOT to 12-OPDA."
+            "We report that in Arabidopsis thaliana allene oxide cyclase knockout lines, 12-OPDA "
+            "was undetectable in wounded leaves."
         ),
         full_text=(
-            "Results. In Arabidopsis thaliana leaves, allene oxide cyclase converted 13-HPOT "
-            "to 12-OPDA. We could not reproduce the assignment to allene oxide synthase in "
-            "Arabidopsis thaliana."
+            "Results. In Arabidopsis thaliana allene oxide cyclase knockout lines, 12-OPDA was "
+            "undetectable in wounded leaves. We could not reproduce the assignment to allene "
+            "oxide synthase in Arabidopsis thaliana."
         ),
     ),
     "P8": FixturePaper(
@@ -172,12 +172,12 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000008",
         title="Independent confirmation of alpha-linolenic acid oxygenation in Arabidopsis",
         abstract=(
-            "An independent laboratory confirms that alpha-linolenic acid is converted to "
-            "13-HPOT in Arabidopsis thaliana leaves."
+            "An independent laboratory confirms that in Arabidopsis thaliana lox2 knockout "
+            "lines, 13-HPOT is undetectable in wounded leaves."
         ),
         full_text=(
-            "Results. Using a different assay in Arabidopsis thaliana, we confirm the "
-            "conversion of alpha-linolenic acid to 13-HPOT."
+            "Results. In an independent set of Arabidopsis thaliana lox2 knockout lines, "
+            "13-HPOT was undetectable in wounded leaves."
         ),
     ),
     "P9": FixturePaper(
@@ -311,6 +311,7 @@ def _responses(evidence: str) -> Dict[str, Any]:
                     substrates=["12-OPDA"],
                     products=["jasmonic acid"],
                     evidence=evidence,
+                    enzyme="OPR3",
                 ),
                 _claim(
                     substrates=["jasmonic acid", "L-isoleucine"],
@@ -359,6 +360,7 @@ def _responses(evidence: str) -> Dict[str, Any]:
                     substrates=["alpha-linolenic acid"],
                     products=["13-HPOT"],
                     evidence=evidence,
+                    enzyme="LOX2",
                 )
             ]
         },

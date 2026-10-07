@@ -53,8 +53,11 @@ def _span(eid, text):
 
 
 SHOWN = [
-    _span("ev_one", "In Arabidopsis   thaliana leaves, LOX2 (At3g45140) converts "
-                    "alpha-linolenic acid to 13-HPOT."),
+    # ORCH-745 CS-B repair 2: species support comes only from loss-of-function genetics,
+    # so the in-planta passage is a knockout result (was "In Arabidopsis   thaliana leaves,
+    # LOX2 (At3g45140) converts alpha-linolenic acid to 13-HPOT.").
+    _span("ev_one", "In Arabidopsis   thaliana lox2 (At3g45140) knockout lines, 13-HPOT formed from "
+                    "alpha-linolenic acid was undetectable."),
     _span("ev_two", "Zea mays ZmLOX10 is unrelated to this step."),
 ]
 

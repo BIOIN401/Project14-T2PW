@@ -38,6 +38,7 @@ documented ceiling, like the screen rescue's host list.
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
@@ -383,12 +384,13 @@ def _any(*patterns: str) -> "re.Pattern[str]":
 _INFERENCE = _any(r"by analogy", r"presumably", r"is expected to", r"likely cataly[sz]",
                   r"ortholog", r"homolog(?:ue)? of", r"extrapolat", r"\binferred\b",
                   r"by similarity")
-#: Homology transfer without the word "ortholog" (repair B4): graded ``inference``
-#: like it. Not "compared with / to", which is ordinary loss-of-function prose.
+#: Homology transfer without the word "ortholog" (repair B4, R2-B6): graded
+#: ``inference`` like it. Not "compared with / to", which is ordinary loss-of-function
+#: prose (a comparison still vetoes positive credit, see ``_COMPARISON_ANY``).
 _HOMOLOGY = _any(r"\bcounterpart", r"closest .{0,24}relative", r"\brelative of\b",
                  r"corresponding .{0,24}(?:enzyme|protein|gene|reaction)", r"\bequivalent\b",
                  r"by (?:sequence )?similarity", r"\bhomologous\b", r"\bresembl", r"\banalogous\b",
-                 r"the same (?:conversion|reaction)")
+                 r"the same (?:conversion|reaction)", r"\bhomolog(?:ue)?s?\b")
 _HOST = _any(r"transgenic", r"heterologous", r"ectopic", r"over-?express", r"\b35s\b",
              r"\bexpressing\b", r"\bexpression of\b", r"\btransient", r"agro-?infiltrat",
              r"\binfiltrated\b", r"protoplast", r"\btransformed\b",
@@ -400,7 +402,7 @@ _HOST = _any(r"transgenic", r"heterologous", r"ectopic", r"over-?express", r"\b3
 #: complementation ("jar1 complemented with JAR1") stays readable.
 _COMPLEMENT = re.compile(r"\bcomplement")
 _FOREIGN_CUE = re.compile(r"\bbryophyte|\bmoss\b|\bliverwort|\bforeign\b|\bheterolog")
-_IN_VITRO = _any(r"in vitro", r"cell-?free", r"cell free", r"recombinant", r"purified",
+_IN_VITRO = _any(r"in[- ]vitro", r"cell-?free", r"cell free", r"recombinant", r"purified",
                  r"reconstitut", r"expressed in (?:e\. ?coli|escherichia|yeast|pichia|insect cells|sf9)",
                  r"enzyme assays?", r"\bincubations?\b", r"incubated with", r"\bk ?m\b", r"\bv ?max\b",
                  r"\bk ?cat\b", r"kinetic", r"\blysates?\b", r"ex vivo",
@@ -419,28 +421,36 @@ _IN_VITRO = _any(r"in vitro", r"cell-?free", r"cell free", r"recombinant", r"pur
                  r"insect[-\s]cell", r"baculovirus", r"\bassays? with",
                  r"cell (?:suspension|culture)s?", r"suspension cultures?", r"\bcall(?:us|i)\b")
 
-# Positive credit (rules 3 and 5 of the adjudication).
-_IN_PLANTA_CONTEXT = _any(r"in planta", r"in vivo", r"\bmutants?\b", r"knock-?outs?",
-                          r"knock-?downs?", r"loss-of-function", r"null alleles?", r"t-dna",
-                          r"salk_", r"wild-?type", r"wild type", r"\bcol-0\b", r"\bseedlings?\b",
-                          r"\bleaf\b", r"\bleaves\b", r"\bflowers?\b", r"\broots?\b", r"\brosettes?\b",
-                          r"\bsiliques?\b", r"\btissues?\b", r"\bwounded\b", r"\bwounding\b", r"\blines\b")
+# Positive credit (ORCH-745 CS-B repair 2, an orchestrator decision the product owner may
+# revisit): in a primary paper ONLY loss-of-function genetics earns in_planta. The old
+# rule 5(a) -- a conversion stated in an organ / genotype context -- is removed: under
+# the adjudicated policy such a sentence is background, a fed precursor or an in-vitro
+# description, and every round of word lists guarding it let paraphrases through.
+#: A plant loss-of-function genotype.
 _LOSS_OF_FUNCTION = _any(r"\bmutants?\b", r"knock-?outs?", r"knock-?downs?", r"loss-of-function",
                          r"null alleles?", r"t-dna", r"salk_", r"\brnai\b", r"amirna", r"crispr")
-_NO_EFFECT = _any(r"unchanged", r"unaffected", r"not altered", r"no significant",
-                  r"similar to (?:the )?wild-?type", r"comparable to")
-#: A negation governing the conversion (repair B2): "was not converted", "no
-#: conversion", "lack the ability to convert", "failed to convert", or the conversion
-#: then reported absent. Rule 5(a) only: a loss-of-function sentence keeps its "no"
-#: ("no JA-Ile was detected in gh3.10 jar1 lines"). Words between the negation and
-#: the verb are joined by spaces only, so "cyclase, not synthase, converts" keeps its
-#: credit.
-_NEGATED_CONVERSION = _any(
-    r"\b(?:not|no|never|nor|without|cannot|fail(?:s|ed)? to|unable to|lacks?|lacking)\b"
-    r"(?:\s+[\w-]+){0,3}?\s+(?:be\s+)?(?:convert|conversion|formed|formation|produced|"
-    r"metaboli[sz]|synthesi[sz])",
-    r"\b(?:convert\w*|conversion)\b(?:\s+[\w()-]+){0,8}?\s+(?:was|were|is|are)\s+"
-    r"(?:not|never|undetect\w*|absent)\b")
+#: ...but not a protein made mutant on the bench (on folded text; the substitution
+#: notation "R117A" is matched on the original text by ``_SUBSTITUTION``).
+_PROTEIN_MUTANT = _any(r"mutant (?:proteins?|enzymes?|variants?|forms?)", r"\bvariants?\b",
+                       r"site-directed", r"wild-?type (?:enzymes?|proteins?)", r"\b(?:in)?active\b")
+_SUBSTITUTION = re.compile(r"\b[A-Z]\d{2,4}[A-Z]\b")
+#: The effect a loss of function must show. Absence forms count as they stand;
+#: a change form counts only when no negation precedes it in the clause ("were not
+#: reduced" fails, "No JA-Ile was detected" is an absence form and passes).
+_EFFECT_ABSENCE = _any(r"\bnot detect(?:ed|able)\b", r"\bno detectable\b", r"\bundetectable\b",
+                       r"\bbelow (?:the )?(?:detection|quantification) limit", r"\babsent\b",
+                       r"\babolish\w*", r"\babrogat\w*", r"\beliminat\w*", r"\black(?:ed|ing)\b",
+                       r"\bdeficient\b", r"\bdepleted\b",
+                       r"\bno\b(?:\s+[\w:()+-]+){1,4}?\s+(?:was|were)\s+(?:detected|found|formed)\b")
+_EFFECT_CHANGE = re.compile(r"\b(?:reduced|decreased|lower|diminished|impaired|compromised|accumulated|"
+                            r"increased|elevated|higher)\b")
+_CHANGE_NEGATION = re.compile(r"\b(?:not|no|never|neither|nor|without|none)\b|n't")
+_NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
+                  r"\bnot\s+(?:significantly\s+)?(?:affected|changed|altered|different)\b",
+                  r"\bnot significantly\b", r"\bno significant", r"\bdid not (?:differ|change)\b",
+                  r"(?:similar|comparable) to (?:the )?wild-?type", r"\bwild-?type levels\b",
+                  r"\bnormal levels\b", r"\bno (?:change|difference|effect)s?\b")
+#: The participant + enzyme branch of the review route (rule 7) keeps the strict set.
 _CONVERSION = _any(r"\bconvert", r"\bconversion\b", r"formed from", r"metaboli[sz]ed to",
                    r"produced from", r"synthesi[sz]ed from")
 _APPLICATION = _any(r"\btreat", r"\bappl(?:y|ied|ication)", r"\bspray", r"exogenous", r"\bfed\b",
@@ -449,15 +459,15 @@ _APPLICATION = _any(r"\btreat", r"\bappl(?:y|ied|ication)", r"\bspray", r"exogen
                     r"\bsuppl(?:y|ied|ies|ement)", r"\binfiltrat", r"\binject", r"\bdosed?\b",
                     r"\badministered\b", r"\bwatered\b", r"\bsoaked\b", r"\bdipped\b",
                     r"\bperfused\b", r"\bdeuterated\b", r"\blabell?ed\b")
-_HEDGE = _any(r"\bmay\b", r"\bmight\b", r"\bcould\b", r"\bwould\b", r"\bpotential", r"\bpossibl",
-              r"\bputative", r"\blikely\b", r"\bsuggest", r"\banticipated\b", r"supports? the view",
-              r"\bappears?\b", r"\bpresumabl", r"\bpropos", r"\bhypothe", r"\bpredicted\b",
-              r"\bperhaps\b",
-              # repair B3
-              r"thought to", r"\bpresumed\b", r"\bseems? to\b", r"consistent with",
-              r"\bpoints? (?:to|towards)\b", r"\bspeculat", r"\bimpl(?:y|ies|ied)\b", r"\bunclear\b",
-              r"remains? (?:unknown|unclear|to be|an open)", r"open question", r"\bassume[ds]?\b",
-              r"\bconceivabl")
+#: Hedge and modality (repair 2): a broad STEM set, matched at a word start, plus the
+#: earlier phrases. Any one refuses positive credit and review credit.
+_HEDGE = _any(r"\b(?:may|might|could|would|should|probabl|possibl|likely|unlikely|believ|thought|"
+              r"suggest|propos|postulat|hypothe|presum|assum|apparent|seem|appear|putative|potential|"
+              r"speculat|conceivabl|yet to|remain|unclear|unknown|whether|debat|controvers|elusive|"
+              r"unresolved|expected|perhaps|anticipated|predicted|indicat|reportedly)",
+              r"\bconsider(?:ed)? to\b", r"supports? the view", r"consistent with",
+              r"\bpoints? (?:to|towards)\b", r"\bimpl(?:y|ies|ied)\b", r"open question",
+              r"\bcannot (?:be )?(?:exclud|rul)", r"\bnot (?:be )?(?:exclud|ruled? out)")
 _PROCEDURAL = _any(r"\b(?:was|were)\s+(?:\w+\s+)?(?:grown|sown|harvested|sprayed|treated|extracted|"
                    r"analy[sz]ed|quantified|measured|incubated|used)\b",
                    r"\bwe\s+(?:employed|used)\b",
@@ -477,7 +487,8 @@ _CITATION = re.compile(
     r"|[A-Za-z)\]]\.\d{1,3}(?:[,\u2013-]\d{1,3})*(?=\s|$)"
     r"|previously (?:reported|shown|described|demonstrated)|as (?:shown|reported|described) (?:by|in)"
     r"|(?:prior|earlier) (?:work|studies|reports)|(?:has|had|have) been (?:shown|reported|described|demonstrated)"
-    r"|co-?workers",
+    r"|co-?workers|\(\s*refs?\.?\s*\d|well[- ]known|it is (?:well )?established that"
+    r"|as (?:we )?reported|is known to",
     re.IGNORECASE)
 _COMPARISON = _any(r"\bunlike\b", r"in contrast", r"by contrast", r"\bwhereas\b",
                    r"compared (?:with|to)", r"relative to", r"equivalent to", r"\bversus\b",
@@ -485,11 +496,14 @@ _COMPARISON = _any(r"\bunlike\b", r"in contrast", r"by contrast", r"\bwhereas\b"
                    # repair N2: the target named only by comparison
                    r"\bresembl", r"similar to", r"\banalogous\b", r"\bas in\b",
                    r"also (?:found|present) in", r"\bboth\b")
-_NEGATION = _any(r"\blacks?\b", r"\blacking\b", r"\babsen(?:t|ce)\b", r"\bnot\b", r"\bno\b",
-                 r"\bnever\b", r"\bwithout\b",
-                 # repair B7
-                 r"\bfail(?:s|ed)? to\b", r"\bunclear\b", r"open question",
-                 r"remains? (?:unknown|unclear|to be)", r"\bwhether\b")
+#: Any comparison at all refuses positive credit and review credit (repair 2): the
+#: list above plus bare "as" and "like" and a homologue.
+_COMPARISON_ANY = _any(_COMPARISON.pattern, r"\bas\b", r"\blike\b", r"in contrast to",
+                       r"\bhomolog(?:ue)?s?\b")
+#: The review route's negation veto (repair 2).
+_NEGATION = _any(r"\b(?:not|no|never|neither|nor|none|without|cannot|unable|incapable|absent|absence|"
+                 r"negligible)\b", r"\b(?:fail|lack|undetect)\w*", r"n't", r"rather than",
+                 r"to be (?:determined|established|shown|demonstrated)")
 #: A review's statement names the conversion itself (repair F4): co-occurrence ("OPDA
 #: and OPC-8:0 accumulate") is not one.
 _REVIEW_CONVERSION = _any(r"\bconvert", r"\bconversion\b", r"\breduc(?:e|es|ed|ing|tion)\b",
@@ -514,13 +528,15 @@ _ORGANISM_WORDS = re.compile(
     r"saccharomyces|pichia|human|humans|homo sapiens|mouse|mice|murine|rats?|drosophila|"
     r"zebrafish|liverworts?|moss|mosses|hornworts?|bryophytes?|algae|alga)\b"
 )
-#: A gene symbol carrying another species' prefix ("MpFAD5", "Mp gh3a", "PpAOC1",
-#: "CaLOX2") names that organism (repair B8). Matched on the ORIGINAL text, and only
-#: where the sentence does not name the target. A documented ceiling like the organism
-#: words: an unlisted prefix is not seen.
+#: A gene symbol carrying another species' prefix ("MpFAD5", "Mp FAD5", "Mpgh3a",
+#: "Mp gh3a", "Mp-aos1", "PpAOC1", "CaLOX2") names that organism (repair B8, R2-B7).
+#: Matched on the ORIGINAL text, always: a sentence naming the target AND a foreign gene
+#: is a host or comparison construct, never native evidence. A documented ceiling like
+#: the organism words: an unlisted prefix is not seen, and a word such as "Table1" can be
+#: read as one (fail closed).
 _FOREIGN_GENE = re.compile(
-    r"\b(?:Mp|Pp|Os|Sl|Zm|Ta|Hv|Gm|Nt|Nb|Bn|Ca|Vv|Md|St|Le|Cs|Sb|Br|Mt|Pt)"
-    r"(?:[A-Z]{2,}[0-9A-Za-z.]*|\s[a-z]{2,}[0-9a-z]*)\b")
+    r"\b(?:Mp|Pp|Os|Sl|Zm|Ta|Hv|Gm|Nt|Nb|Bn|Ca|Vv|Md|St|Le|Cs|Sb|Br|Mt|Pt|Lj|Ph|Ps|Sm|Gh)"
+    r"(?:[A-Z]{2,}[0-9A-Za-z.]*|[\s-]?[a-z]{2,}\d[0-9a-z]*|[\s-][A-Z]{2,}\d?[0-9A-Za-z.]*)\b")
 _ABBREVIATED_BINOMIAL = re.compile(r"\b[A-Z]\. ?[a-z]{4,}\b")
 #: Arabidopsis-only shorthands: an accession and an AGI locus name the plant.
 _ARABIDOPSIS_MARKS = re.compile(r"\bcol-0\b|\bat[1-5cm]g\d{5}\b")
@@ -541,11 +557,16 @@ def fold_text(text: Any) -> str:
     Greek letters as in :func:`t2pw.mining.normalize.normalize_name`; the italic
     gaps around hyphens closed ("dn- cis -OPDA" -> "dn-cis-opda"); "9, 11, 15" ->
     "9,11,15"; whitespace collapsed."""
-    folded = _SPACED_DASH.sub(", ", _NBSP.sub(" ", str(text or ""))).lower().translate(_DASHES)
+    folded = _SPACED_DASH.sub(", ", _NBSP.sub(" ", _nfkc(text))).lower().translate(_DASHES)
     for greek, latin in _GREEK.items():
         folded = folded.replace(greek, latin)
     folded = _DIGIT_COMMA.sub(",", _HYPHEN_GAP.sub("-", folded))
     return _WS.sub(" ", folded).strip()
+
+
+def _nfkc(text: Any) -> str:
+    """Compatibility-normalised text: a PDF ligature ("\ufb01") must not defeat a marker."""
+    return unicodedata.normalize("NFKC", str(text or ""))
 
 
 def split_sentences(text: Any) -> List[str]:
@@ -602,9 +623,10 @@ def _catalyst_names(*values: Any) -> List[str]:
 
 def organisms_named(text: Any) -> List[str]:
     """The organisms a piece of text names, as :func:`normalize_species` keys."""
+    text = _nfkc(text)
     folded = fold_text(text)
     hits = [m.group(0) for m in _ORGANISM_WORDS.finditer(folded)]
-    hits += [m.group(0) for m in _ABBREVIATED_BINOMIAL.finditer(str(text or ""))]
+    hits += [m.group(0) for m in _ABBREVIATED_BINOMIAL.finditer(text)]
     out = [normalize_species(h) for h in hits]
     if _ARABIDOPSIS_MARKS.search(folded):
         out.append("arabidopsis thaliana")
@@ -616,49 +638,102 @@ def _found(pattern: "re.Pattern[str]", text: str) -> str:
     return match.group(0) if match else ""
 
 
+def _without_target_comparisons(sentence: str, target: str) -> str:
+    """``sentence`` with every comparison mention of the target removed ("as in
+    Arabidopsis", "like its Arabidopsis homologue", "unlike (in) Arabidopsis", "similar
+    to Arabidopsis", "compared with Arabidopsis"; repair 2): such a mention does not
+    name the target as the organism of THIS statement."""
+    words = target.split()
+    if not words:
+        return sentence
+    names = [re.escape(words[0])]
+    if len(words) > 1:
+        names = [rf"{re.escape(words[0])}(?:\s+{re.escape(words[1])})?", rf"{words[0][0]}\.\s?{re.escape(words[1])}"]
+    pattern = (r"\b(?:as in|unlike(?: in)?|like(?: its| the| in)?|similar to|in contrast to|compared (?:with|to)|"
+               r"as (?:is the case|seen|observed) (?:in|for))\s+(?:the\s+)?(?:" + "|".join(names) + r")\b(?:\s+\w+)?")
+    return re.sub(pattern, " ", _nfkc(sentence), flags=re.IGNORECASE)
+
+
+def _names_target(sentence: str, target: str) -> bool:
+    """Does ``sentence`` name the target as its own organism (comparisons removed)?"""
+    return target in organisms_named(_without_target_comparisons(sentence, target))
+
+
 def _others_named(sentence: str, target: str) -> List[str]:
     """Organisms other than the target that ``sentence`` names: organism words,
-    abbreviated binomials, and -- when the sentence does not name the target -- a gene
-    symbol carrying another species' prefix ("MpFAD5", "Mp gh3a"; repair B8)."""
-    named = organisms_named(sentence)
-    others = [o for o in named if o != target]
-    if target not in named:
-        others += [f"gene {m.group(0)!r}" for m in _FOREIGN_GENE.finditer(sentence)]
-    return others
+    abbreviated binomials, and ALWAYS a gene symbol carrying another species' prefix
+    ("MpFAD5", "Mp gh3a"; repair B8, R2-B5): a sentence naming the target and a
+    foreign gene is a host or comparison construct, never native evidence."""
+    others = [o for o in organisms_named(sentence) if o != target]
+    return others + [f"gene {m.group(0)!r}" for m in _FOREIGN_GENE.finditer(_nfkc(sentence))]
 
 
 def _host_marker(sentence: str, folded: str, target: str) -> str:
-    """The host-system marker of a sentence, or "". Complementation counts only with
-    a foreign-gene cue (repair B5): native-gene complementation stays readable."""
+    """The host-system marker of a sentence, or "". A foreign gene in a sentence that
+    names the target is a host construct (repair 2); complementation counts only with
+    a foreign-gene cue (repair B5), so native-gene complementation is not a host marker."""
     found = _found(_HOST, folded)
     if found:
         return found
-    if _COMPLEMENT.search(folded) and (_FOREIGN_CUE.search(folded) or _FOREIGN_GENE.search(sentence)
-                                       or any(o != target for o in organisms_named(sentence))):
+    foreign = _FOREIGN_GENE.search(_nfkc(sentence))
+    if foreign and _names_target(sentence, target):
+        return f"a foreign gene ({foreign.group(0)!r}) in the target"
+    if _COMPLEMENT.search(folded) and (_FOREIGN_CUE.search(folded) or _others_named(sentence, target)):
         return "complementation with a foreign gene"
     return ""
 
 
 def species_span_names_target(spans: Iterable[Any], target_species_normalized: str) -> bool:
     """W13: a species span counts only if one of its sentences names the target
-    plainly -- not in an ortholog, host-system or comparison sentence ("Arabidopsis
-    Ortholog" as a table header, "MpFAD5 is orthologous to AtFAD5, an Arabidopsis
-    enzyme", "unlike Arabidopsis")."""
+    plainly -- not in an ortholog, homology, host-system or comparison sentence
+    ("Arabidopsis Ortholog" as a table header, "MpFAD5 is orthologous to AtFAD5, an
+    Arabidopsis enzyme", "unlike Arabidopsis"), and alone (no other organism, no
+    foreign gene symbol)."""
     target = str(target_species_normalized or "").strip().lower()
     for span in spans:
-        for sentence in split_sentences(getattr(span, "text", "")):
-            named = organisms_named(sentence)
-            if target not in named:
+        for sentence in split_sentences(_nfkc(getattr(span, "text", ""))):
+            if not _names_target(sentence, target):
                 continue
             folded = fold_text(sentence)
             if (_INFERENCE.search(folded) or _HOMOLOGY.search(folded) or _host_marker(sentence, folded, target)
                     or _COMPARISON.search(folded)):
                 continue
-            # Repair N2: the target alongside another organism is not a plain statement
-            # either ("Arabidopsis thaliana and Marchantia polymorpha both make ...").
-            if any(o != target for o in named) or _FOREIGN_GENE.search(sentence):
+            if _others_named(sentence, target):
                 continue
             return True
+    return False
+
+
+def _effect(clause: str) -> str:
+    """The positive effect phrase of a loss-of-function clause, or "": an absence form,
+    or a change form with no negation before it in the clause."""
+    absence = _EFFECT_ABSENCE.search(clause)
+    if absence:
+        return absence.group(0)
+    for change in _EFFECT_CHANGE.finditer(clause):
+        if not _CHANGE_NEGATION.search(clause[:change.start()]):
+            return change.group(0)
+    return ""
+
+
+def _linked(folded: str, subs: Sequence[Sequence["re.Pattern[str]"]],
+            prods: Sequence[Sequence["re.Pattern[str]"]]) -> bool:
+    """Are a substrate and a product LINKED by a conversion, not merely co-occurring
+    (repair 2, rule 7)? "X ... <verb> ... to / into Y", "Y ... <verb> ... from X", or a
+    "respectively" sentence with the verb between them."""
+    sub_hits = [m for variants in subs for p in variants for m in p.finditer(folded)]
+    prod_hits = [m for variants in prods for p in variants for m in p.finditer(folded)]
+    respectively = "respectively" in folded
+    for sub in sub_hits:
+        for prod in prod_hits:
+            if sub.end() <= prod.start():
+                between = folded[sub.end():prod.start()]
+                if _REVIEW_CONVERSION.search(between) and (re.search(r"\b(?:to|into)\b", between) or respectively):
+                    return True
+            elif prod.end() <= sub.start():
+                between = folded[prod.end():sub.start()]
+                if _REVIEW_CONVERSION.search(between) and re.search(r"\bfrom\b", between):
+                    return True
     return False
 
 
@@ -680,10 +755,16 @@ def grade_sentences(
     enzyme or its gene (loose naming; ``asserted`` adds names the model gave but
     extraction could not support, so their negative markers still count). Each
     supporting sentence gets one grade, tested in this order: ``inference``,
-    ``host``, ``in_vitro``, then -- only in a primary paper -- ``in_planta`` under
-    rules 3-6 of the adjudication, or -- only in a review -- ``review`` under rule
-    7. Positive credit names ``substrates`` / ``products`` strictly and never by a
-    cofactor or a free amino acid. Returns one dict per supporting sentence:
+    ``host``, ``in_vitro``, then -- only in a primary paper -- ``in_planta`` from
+    loss-of-function genetics alone (repair 2: a loss-of-function genotype, the claim's
+    own enzyme or gene and a participant in one clause, a whitelisted effect phrase,
+    and no hedge, modality, no-effect phrase, application, comparison, procedure,
+    protein mutant, citation, other organism or no-credit section), or -- only in a
+    review -- ``review`` under a strict rule 7 (a conversion LINKING substrate and
+    product, or the claim's enzyme with a strict conversion verb, and no negation,
+    hedge, comparison, homology, application or other organism). Positive credit
+    names ``substrates`` / ``products`` strictly and never by a cofactor or a free
+    amino acid. Returns one dict per supporting sentence:
     ``evidence_id``, ``sentence`` (index in its span), ``text``, ``grade``,
     ``reason``.
     """
@@ -692,14 +773,21 @@ def grade_sentences(
     loose = _matchers([*substrates, *products, *asserted, *catalysts], strict=False)
     subs = _matchers([n for n in substrates if _creditable(n)], strict=True)
     prods = _matchers([n for n in products if _creditable(n)], strict=True)
-    cats = _matchers(catalysts, strict=True)
+    # The claim's OWN enzyme or gene: a foreign-prefixed symbol never earns credit.
+    cats = _matchers([c for c in catalysts if not _FOREIGN_GENE.search(c)], strict=True)
     paper_other = any(normalize_species(o) not in ("", target) for o in paper_observed_organisms)
 
     def in_planta(sentence: str, folded: str, span: Any, span_other: bool) -> Tuple[str, str]:
-        for pattern, why in ((_HEDGE, "hedged"), (_PROCEDURAL, "a procedure, not a result"),
-                             (_PURPOSE, "a purpose clause")):
+        """Positive credit in a primary paper: loss-of-function genetics only (repair 2)."""
+        for pattern, why in ((_HEDGE, "hedged or modal"), (_NO_EFFECT, "no effect reported"),
+                             (_APPLICATION, "an applied compound"), (_COMPARISON_ANY, "a comparison"),
+                             (_PROCEDURAL, "a procedure, not a result"), (_PURPOSE, "a purpose clause"),
+                             (_PROTEIN_MUTANT, "a protein mutant, not a plant genotype")):
             if pattern.search(folded):
                 return GRADE_NONE, f"no positive credit: {why} ({_found(pattern, folded)!r})"
+        if _SUBSTITUTION.search(sentence):
+            return GRADE_NONE, (f"no positive credit: an amino-acid substitution "
+                                f"({_found(_SUBSTITUTION, sentence)!r}) is a protein mutant")
         if _CITATION.search(sentence):
             return GRADE_NONE, f"no positive credit: cites other work ({_found(_CITATION, sentence)!r})"
         section = str(getattr(span, "section", "") or "").lower()
@@ -708,44 +796,40 @@ def grade_sentences(
         other = _others_named(sentence, target)
         if other:
             return GRADE_NONE, f"no positive credit: names a non-target organism ({other[0]})"
-        if target not in organisms_named(sentence) and (paper_other or span_other):
+        if not _names_target(sentence, target) and (paper_other or span_other):
             return GRADE_NONE, ("no positive credit: the passage or the paper names another organism "
                                 "and this sentence does not name the target")
-        applied = _APPLICATION.search(folded)
-        no_effect = _NO_EFFECT.search(folded)
         for clause in _CLAUSE.split(folded):
-            if not _IN_PLANTA_CONTEXT.search(clause):
+            if not (_LOSS_OF_FUNCTION.search(clause) and _names(clause, cats)
+                    and (_names(clause, subs) or _names(clause, prods))):
                 continue
-            sub, prod = _names(clause, subs), _names(clause, prods)
-            if (sub and prod and _CONVERSION.search(clause) and not applied
-                    and not _NEGATED_CONVERSION.search(clause)):
-                return GRADE_IN_PLANTA, ("in planta: substrate, product and a conversion in one clause "
-                                         f"({_found(_IN_PLANTA_CONTEXT, clause)!r})")
-            if (sub or prod) and _names(clause, cats) and _LOSS_OF_FUNCTION.search(clause) and not no_effect:
-                return GRADE_IN_PLANTA, ("in planta: loss of function of the enzyme or gene changes a "
-                                         f"participant ({_found(_LOSS_OF_FUNCTION, clause)!r})")
-        return GRADE_NONE, "no in-planta statement of this reaction in one clause"
+            effect = _effect(clause)
+            if effect:
+                return GRADE_IN_PLANTA, (f"in planta: loss of function of the claim's enzyme or gene "
+                                         f"({_found(_LOSS_OF_FUNCTION, clause)!r}) {effect!r} a participant")
+        return GRADE_NONE, ("no positive credit: no loss-of-function genotype of the claim's enzyme or gene "
+                            "with an effect on a participant in one clause")
 
     def review_route(sentence: str, folded: str) -> Tuple[str, str]:
-        for pattern, why in ((_HEDGE, "hedged"), (_COMPARISON, "a comparison"), (_NEGATION, "a negation"),
-                             (_HOMOLOGY, "a homology transfer")):
+        for pattern, why in ((_HEDGE, "hedged or modal"), (_NEGATION, "a negation"),
+                             (_COMPARISON_ANY, "a comparison"), (_HOMOLOGY, "a homology transfer"),
+                             (_APPLICATION, "an applied compound"), (_PROCEDURAL, "a procedure")):
             if pattern.search(folded):
                 return GRADE_NONE, f"no review credit: {why} ({_found(pattern, folded)!r})"
-        named = organisms_named(sentence)
-        if target not in named:
+        if not _names_target(sentence, target):
             return GRADE_NONE, "no review credit: the sentence does not name the target"
-        if any(o != target for o in named) or _FOREIGN_GENE.search(sentence):
+        if _others_named(sentence, target):
             return GRADE_NONE, "no review credit: the sentence names another organism too"
-        if not _REVIEW_CONVERSION.search(folded):
-            return GRADE_NONE, "no review credit: no conversion is stated (co-occurrence is not one)"
         sub, prod = _names(folded, subs), _names(folded, prods)
-        if (sub and prod) or ((sub or prod) and _names(folded, cats)):
-            return GRADE_REVIEW, "a review states this reaction for the target species"
-        return GRADE_NONE, "no review credit: substrate and product are not both named"
+        if sub and prod and _linked(folded, subs, prods):
+            return GRADE_REVIEW, "a review states this conversion for the target species"
+        if (sub or prod) and _names(folded, cats) and _CONVERSION.search(folded):
+            return GRADE_REVIEW, "a review states this enzyme's conversion for the target species"
+        return GRADE_NONE, "no review credit: no conversion linking this reaction's participants"
 
     graded: List[Dict[str, Any]] = []
     for span in spans:
-        text = str(getattr(span, "text", "") or "")
+        text = _nfkc(getattr(span, "text", "") or "")
         span_other = any(o != target for o in organisms_named(text))
         for index, sentence in enumerate(split_sentences(text)):
             folded = fold_text(sentence)

@@ -135,17 +135,24 @@ def test_repair1_745b_b2_a_negated_conversion_is_not_in_planta(name, text, kw):
     assert claim.species_state == AMBIGUOUS
 
 
-def test_new_acceptance_745b_r1_b2_controls_keep_their_credit():
-    """A loss-of-function sentence keeps its "no" (T1), and "cyclase, not synthase,
-    converts" (the integration fixture's P7) is a positive conversion."""
+def test_new_acceptance_745b_r1_b2_controls_loss_of_function_keeps_its_credit():
+    """A loss-of-function sentence keeps its "no" (T1).
+
+    CS-B repair 2, a deliberate move: the fixture's old P7 sentence ("cyclase, not
+    synthase, converts 13-HPOT to 12-OPDA" in leaves) earned in_planta under rule 5(a),
+    which repair 2 removes; it is now species_ambiguous. The fixture's P7 states its
+    result by loss-of-function genetics instead, and that keeps the credit."""
     knockout = probe("In flowers and wounded leaves of gh3.10 jar1 knockout lines JA-Ile was below "
                      "the detection limit.", gene="GH3.10")
     assert (knockout.species_state, knockout.species_support["grade"]) == (TSS, "in_planta")
     absent = probe("No JA-Ile was detected in gh3.10 jar1 knockout lines.", gene="GH3.10")
     assert absent.species_state == TSS
-    p7 = probe("We report that in Arabidopsis thaliana leaves allene oxide cyclase, not allene oxide "
-               "synthase, converts 13-HPOT to 12-OPDA.", sub="13-HPOT", prod="12-OPDA",
-               enzyme="allene oxide cyclase")
+    old_p7 = probe("We report that in Arabidopsis thaliana leaves allene oxide cyclase, not allene oxide "
+                   "synthase, converts 13-HPOT to 12-OPDA.", sub="13-HPOT", prod="12-OPDA",
+                   enzyme="allene oxide cyclase")
+    assert old_p7.species_state == AMBIGUOUS
+    p7 = probe("We report that in Arabidopsis thaliana allene oxide cyclase knockout lines, 12-OPDA was "
+               "undetectable in wounded leaves.", sub="13-HPOT", prod="12-OPDA", enzyme="allene oxide cyclase")
     assert (p7.species_state, p7.species_support["grade"]) == (TSS, "in_planta")
 
 
@@ -353,9 +360,12 @@ def test_new_acceptance_745b_r1_b9_controls():
     assert probe("Jasmonic acid is converted to JA-Ile in Arabidopsis leaves [12].").species_state != TSS
     methods = probe(B9[-1][1], **{**B9[-1][2], "section": "methods"})
     assert methods.species_state != TSS
-    # An abstract-only paper is indexed whole as "body": it keeps its credit.
-    body = probe("In Arabidopsis thaliana leaves, 13-HPOT is converted to 12-OPDA.", sub="13-HPOT",
-                 prod="12-OPDA", enzyme="", section="body")
+    # An abstract-only paper is indexed whole as "body": it keeps its credit. (CS-B repair 2,
+    # a deliberate move: the body sentence is now a knockout result; the old conversion
+    # sentence "In Arabidopsis thaliana leaves, 13-HPOT is converted to 12-OPDA." earned
+    # credit only under the removed rule 5(a).)
+    body = probe("In Arabidopsis thaliana aos knockout lines, 12-OPDA was undetectable in wounded leaves.",
+                 sub="13-HPOT", prod="12-OPDA", enzyme="", gene="AOS", section="body")
     assert body.species_state == TSS
 
 
@@ -364,10 +374,9 @@ def test_new_acceptance_745b_r1_b9_controls():
 # ===========================================================================
 @pytest.mark.parametrize("text,kw", [
     ("In the opr3 knockout line, OPC-8:0 was undetectable in leaves.", {"gene": "OPR3"}),
-    ("In Arabidopsis leaves, OPDA is converted to OPC-8:0 by OPR3.", {}),
     ("In the fad5 mutant, 16:1n9 was absent from leaves.", {"sub": "16:0", "prod": "16:1n9", "enzyme": "",
                                                            "gene": "FAD5"}),
-], ids=["r1-opr3-knockout", "r4-converted-to-OPC-8:0", "r3-fad5-16:1n9"])
+], ids=["r1-opr3-knockout", "r3-fad5-16:1n9"])  # r4, a rule 5(a) sentence, moved to repair 2
 def test_repair1_745b_n1_a_colon_inside_a_name_does_not_split_the_clause(text, kw):
     claim = probe(text, **{"sub": "OPDA", "prod": "OPC-8:0", "enzyme": "OPR3", **kw})
     assert (claim.species_state, claim.species_support["grade"]) == (TSS, "in_planta")
@@ -633,12 +642,18 @@ def test_new_acceptance_745b_r1_a1r1_the_review_rule_failing_keeps_a_lead(tmp_pa
 
 
 @pytest.mark.parametrize("text,sub,prod,enzyme", [
-    ("In Arabidopsis leaves, 13-HPOT is converted to 12-OPDA by AOS.", "13-HPOT", "12-OPDA", "AOS"),
-    ("In Arabidopsis leaves, OPDA is converted to OPC-8:0 by OPR3.", "OPDA", "OPC-8:0", "OPR3"),
+    ("In Arabidopsis aos knockout lines, 12-OPDA was undetectable in wounded leaves.", "13-HPOT", "12-OPDA",
+     "AOS"),
+    ("In the opr3 knockout line, OPC-8:0 was undetectable in leaves.", "OPDA", "OPC-8:0", "OPR3"),
 ], ids=["13-HPOT", "OPC-8:0"])
 def test_new_acceptance_745b_r1_a1r1_an_unknown_grade_without_a_failed_lookup_keeps_primary_credit(
         tmp_path, text, sub, prod, enzyme):
-    """Change set A's product-owner decision: 'unknown' without a failed lookup is not a review."""
+    """Change set A's product-owner decision: 'unknown' without a failed lookup is not a review.
+
+    CS-B repair 2, a deliberate move: the two control sentences were conversions ("In
+    Arabidopsis leaves, 13-HPOT is converted to 12-OPDA by AOS." / "... OPDA is converted
+    to OPC-8:0 by OPR3."), credited only under the removed rule 5(a); they are now the
+    knockout forms of the same steps."""
     claim, decision, _ = _unverified_run(tmp_path, text, verified=None, sub=sub, prod=prod, enzyme=enzyme)
     assert claim.species_support["grade"] == "in_planta"
     assert decision.evidence_level == "single_paper"
