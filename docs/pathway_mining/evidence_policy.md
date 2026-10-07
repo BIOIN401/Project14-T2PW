@@ -62,7 +62,7 @@ or uploaded-file sha256). A "chain" ending at a title is not auditable.
 `article_type` · `url` · `acquisition_source` · `cache_ref` · `file_sha256` ·
 `file_name` · `retrieved_at` · `screening_outcome` · `screening_score` ·
 `inclusion_reasons` · `exclusion_reasons` · `evidence_type` ·
-`evidence_type_basis` · `discovered_round` · `processed_round` ·
+`evidence_type_basis` · `evidence_type_verified` · `discovered_round` · `processed_round` ·
 `discovered_via_query_id` · `discovered_via_frontier_id` · `observed_organisms` ·
 `observed_pathways` ·
 `abstract` · `full_text_chars` · `notes`
@@ -298,33 +298,58 @@ of span as not the paper's own prose:
 
 * **`front_matter`**: from the start of the text to the last EuropePMC
   processing flag (`pmc-prop-open-access yes`, `is-retracted no`,
-  `pmc-license-ref`, `Collection date 2026 Jan.`, `Issue date 2019 Jul 9.`) in
-  the first 40 % of the text, plus a short tail ("CC BY 1.", "Editor: F.
-  Loreto") when a section heading follows within 300 characters. The abstract
-  inside it is indexed separately, as `abstract#0`, from the paper record.
+  `pmc-license-ref`, `Collection date 2026 Jan.`, `Issue date 2019 Jul 9.`, and
+  ACS's `document-id-old-9 ...`, `production-flag-si-avail yes`,
+  `document-id-alt-64 <hash>`) in the first 40 % of the text, plus a short tail
+  ("CC BY 1.", "Editor: F. Loreto") when a section heading follows within 300
+  characters. The abstract inside it is indexed separately, as `abstract#0`,
+  from the paper record. A record with no abstract of its own takes the front
+  matter's "Abstract ..." passage instead (`retrieval.front_matter_abstract`: from
+  the heading to the keyword, funding or flag block after it, cut back to its last
+  full stop). GH3.10 supplied as a bare PMCID would otherwise lose "In flowers and
+  wounded leaves of gh3.10 jar1 knockout lines JA-Ile was below the detection
+  limit.", which appears nowhere else in its text.
 * **`publisher_note`**: the publisher disclaimers seen so far ("Publisher's Note:
   ... referred to in the content.", "... institutional affiliations.", "...
   endorsed by the publisher.").
 * **`reference_list`**: a `References` / `REFERENCES` / `Literature Cited` /
   `Bibliography` heading followed by citation-dense text, to the end of its run of
-  citation marks, then to the next figure or table legend, or to the end of the
-  text. A citation mark is a DOI, a PMCID, a bare 6-8 digit PMID, a `( 2019 )` or
-  `2020;298` year, or a `14 , 171 – 178` volume and page range; citation-dense
-  means at least 5 marks per 1,000 characters.
+  citation marks, then to the next figure or table **label** ("Figure 1 In
+  silico", "Table 2.", "FIG. 3", "Fig 4:"; not a mention such as "(Supplemental
+  Table S3) ,"), or to the end of the text. A citation mark is a DOI, a PMCID, a
+  bare 6-8 digit PMID, a `( 2019 )` or `2020;298` year, or a `14 , 171 – 178`
+  volume and page range; citation-dense means at least 5 marks per 1,000
+  characters. When no heading is found (EuropePMC prints none for ACS and some
+  IUCr articles), the list is found from its density instead: the first
+  1,500-character window, anchored on a citation mark past the first third of the
+  text, that is citation-dense **and** names at least three authors with initials
+  ("Andrade F. F.", "Aragão, D.,", "Moskowitz SM,", "Siegel RL Kratzer TB"); its
+  start backs over the first entry's author names. The authors keep DOI-dense data
+  and supplement lists out (PMC13233763's key resources table). Run alone on the
+  35 pilot and committed EuropePMC texts, the density rule starts within 20
+  characters of the headed list, or in the back matter just before it, on 34; on
+  PMC13278307 (Cureus) it starts at the second entry, because the first names a
+  corporate author ("World Health Organization"). PMC12624714 (ACS):
+  without it, the chunk running from the Abbreviations into the bibliography
+  carried "Andrade F. F. ... 10.3390/microorganisms8111716 ... PMC7692639" as a
+  passage.
 
 `PassageIndex.add_paper` lets rag chunk the full text as it is, so an untouched
 chunk keeps its id and text. Each chunk then loses what falls inside one of those
 spans and keeps its longest remaining piece (GH3.10's `results#0` keeps its
-results up to "...ID: MTBLS9749."). A chunk left with under 100 characters is
-dropped, and so is any chunk that is still citation-dense (a reference list with
-no recognised heading). This happens **before** `max_passages_per_paper` cuts the
+results up to "...ID: MTBLS9749."; PMC12624714's last methods chunk stops before
+"Andrade F. F."). A chunk left with under 100 characters is dropped, and so is
+any chunk that is still citation-dense. This happens **before** `max_passages_per_paper` cuts the
 list, so none of it can take a passage slot from the paper's prose.
 
 **One passage, one span (A4).** A chunk whose whitespace-normalised text equals,
 or is contained in, a chunk already kept for the same paper is dropped.
 Pilot-002 indexed each abstract-only paper's abstract twice, as `abstract#0` and
 `body#0`. rag's figure-caption chunks are 300-character snippets of the body and
-go the same way: their text stays retrievable inside the body chunk.
+go the same way: their text stays retrievable inside the body chunk. A passage
+"survives" hygiene when its text is retrievable, not necessarily under its old
+evidence id: a trimmed chunk and a deduplicated figure snippet get new ids or
+none.
 
 Every exclusion is recorded on the indexed paper, `IndexedPaper.excluded`
 (reason -> count and characters), totalled in the retrieval stats in
@@ -351,14 +376,26 @@ signal wins (`acquisition.grade_evidence_type`):
 
 1. a **declared** type naming a review: NCBI's `PublicationTypeList`
    ("Journal Article; Review"), read from the efetch XML mining already parses,
-   or EuropePMC's `pubTypeList` ("review-article", "Review");
-2. a **title** that calls the paper a review (`review`, `overview`,
+   or EuropePMC's `pubTypeList` ("review-article", "Review"). "review" is matched
+   as a word: "reviewed-preprint" and "Peer Review" are not review types;
+2. the **JATS subject heading** EuropePMC prints just before the record title in
+   the full text's front matter, read before the front matter is stripped:
+   "Review", "Reviews", "Review Article", "Mini-Review", "Minireview",
+   "Systematic Review", "JBC Reviews" ("... 779 1 Review Update of the
+   sideroflexin ...", PMC12180156; "... 1 JBC Reviews The regulation of lipid A
+   biosynthesis", PMC12444477: neither says it anywhere else). It is anchored to
+   the words right before the title and case-sensitive, so a CRediT "Writing -
+   review & editing" or a "Reviewed by:" line never counts;
+3. a **title** that calls the paper a review (`review`, `overview`,
    `mini-review`, `perspectives on`, `a survey of`, `current concepts`, `recent
    advances`, `recent progress`, as words);
-3. the **abstract** or the paper's **own full text** (`body_text`: no front
+4. the **abstract** or the paper's **own full text** (`body_text`: no front
    matter, no reference list) saying it is one: "this review", "in this review",
-   "the present review", "this mini-review", "here we review", "we briefly
-   review", "this article reviews", "we provide an overview".
+   "the present review", "this mini-review", "in this minireview", "here we
+   review", "we briefly review", "we summarize and review", "this article
+   reviews", "this article provides a comprehensive review of", "this work
+   reviews", "we provide an overview", "the aim of this paper is to review", "a
+   review of the literature ... is presented".
 
 Only self-reference counts. A primary paper citing someone else's review ("as
 reviewed in [3]", "for a review, see", "(reviewed by ...)", "recently
@@ -368,17 +405,28 @@ title never make it one. A bare "review article" in body text is almost always a
 citation of someone else's, so it is not a rule; "this review article" is.
 
 After that: `preprint` (declared, or by source or URL), `primary` (a declared
-"Journal Article", "research-article", "Article", "Research Article" or
-"Research Paper"), else honestly `unknown`.
+"research-article", "Article", "Research Article" or "Research Paper"), else
+honestly `unknown`. "Journal Article" alone does **not** make a paper primary:
+PubMed gives it to reviews too, and a review whose record lists only that, with
+its lookup failed, was graded primary on an authoritative-looking basis. Live
+EuropePMC records read `["research-article", "Journal Article"]` for GH3.10 and
+13-LOX (primary) and `["review-article", "Review", "Journal Article"]` for the
+bryophyte review (review).
 
 **When.** A paper is graded at discovery from its title, abstract and any
 declared type. Each paper that is actually **included** is graded again once its
 text is known (`Acquirer._settle_included`): first one EuropePMC `core` search
 by PMID or PMCID through the source seam (`PaperSource.paper_metadata`; an
 offline run never asks), which adds the declared publication types and fills an
-empty DOI, journal or abstract (A14: the DOI was empty on every pilot paper);
-then the grade is taken on the full text. A failed lookup is a note on the paper,
-never an exception, and the grade then rests on the text rules. Uploads and
+empty DOI, journal, abstract (stored as plain text: EuropePMC serves
+`<h4>`, `<i>`, `<sup>`), PMID or PMCID (A14: the DOI was empty on every pilot
+paper); then the grade is taken on the full text. A failed lookup is asked once
+more; failing twice it is a note on the paper, never an exception, the grade rests
+on the text rules, and the record says so in machine-readable form:
+`evidence_type_verified` is `false` and the basis ends "type unverified: EuropePMC
+lookup failed", so a later gate can fail closed. `evidence_type_verified` is
+`true` when EuropePMC's record was read, and `null` when no lookup was made
+(offline, or no PMID / PMCID) or EuropePMC has no record. Uploads and
 user-supplied identifiers are graded on their text the same way.
 
 Pilot-003's bryophyte review (PMC13364333) declared nothing the search returned,
@@ -392,7 +440,8 @@ the 400 abstract characters the old rule read.
 the latest decision's level is also on the reaction node
 (`ResearchReaction.evidence_level`, in `primary_graph.json`,
 `candidate_subgraphs.json` and the reaction-network view), and counted in
-`summary.json` (`graph.evidence_levels`) and `report.md`.
+`summary.json` (`graph.evidence_levels`) and `report.md` (a column of the admitted
+reactions table).
 
 **Independent support is never collapsed.** Two papers reporting the same
 chemistry produce one *reaction* with two `paper_ids`, two claim records and two

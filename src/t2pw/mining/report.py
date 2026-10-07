@@ -331,16 +331,17 @@ def build_report(summary: Mapping[str, Any], *, state: Any, config: MiningConfig
     if accepted:
         add("### Admitted reactions")
         add("")
-        add("| reaction | status | round | papers | enzyme | compartment |")
-        add("|---|---|---|---|---|---|")
+        add("| reaction | status | evidence level | round | papers | enzyme | compartment |")
+        add("|---|---|---|---|---|---|---|")
         for reaction in accepted[:100]:
             add(
                 f"| {reaction.label()} | `{reaction.decision_status}` | "
+                f"`{reaction.evidence_level or 'unrecorded'}` | "
                 f"{reaction.discovery_round} | {reaction.independent_paper_count} | "
                 f"{'; '.join(reaction.enzyme_names) or '-'} | {reaction.compartment or '-'} |"
             )
         if len(accepted) > 100:
-            add(f"| ... {len(accepted) - 100} more | | | | | |")
+            add(f"| ... {len(accepted) - 100} more | | | | | | |")
         add("")
 
     add("## Conflicts")
