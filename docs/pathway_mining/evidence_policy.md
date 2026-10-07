@@ -448,6 +448,45 @@ chemistry produce one *reaction* with two `paper_ids`, two claim records and two
 evidence spans — which is what `multi_paper_reactions` in the summary counts.
 Deduplication merges normalized *claims*, never *citations*.
 
+**Support is never overstated (ORCH-745 A3).** A claim whose stated species is the
+target shares the target's reaction identity even when it is not admissible (an
+in-vitro or ambiguous claim of the same chemistry), so the identity's siblings mix
+support and leads. Base counted them all. A review-only reaction graded
+`multiple_independent_papers`, an admitted reaction listed another paper's in-vitro
+claim as independent support, and a later lead relabelled an admitted node
+`candidate`. Now:
+
+1. An **admitted** reaction's `paper_ids`, `evidence_ids` and `claim_ids`, and its
+   decision's `evidence_level`, count only the sibling claims that are themselves
+   support (`admission.supports`: `target_species_supported`, a clean extraction,
+   both sides, not a hypothesis, resolvable evidence).
+2. **A review never counts toward independence**, a decision the product owner may
+   revisit. Only reviews support the reaction: `review_article_only`. Two or more
+   non-review papers: `multiple_independent_papers`. Otherwise `single_paper`. A
+   review beside one primary paper corroborates: the decision's reason says
+   "corroborated by N review(s) or unverified paper(s)" and
+   `detail.corroborating_reviews` names them; it does not make two.
+   `ResearchReaction.multi_paper_supported` follows the level. Two kinds of paper count
+   as reviews here (`models.reads_as_review`): a paper graded `review`, and a paper
+   graded `unknown` whose EuropePMC lookup failed twice (`evidence_type_verified`
+   False), which may be an unrecognised review. The second never counts as an
+   independent primary; its own `evidence_type` stays `unknown`.
+3. **A non-admissible sibling never adds support.** It is listed on the node in
+   `non_supporting_claims` (claim id, paper, species state), with a
+   `non_supporting_claim` history event. When a quarantined reaction is admitted on a
+   later target-species claim, its support becomes the target-species claims only
+   (a `support_replaced` event). The earlier leads move to `non_supporting_claims`.
+4. **A later non-admissible sibling never downgrades an admitted reaction.** The
+   identity's decision stays admitted, and the claim's own verdict is kept in the
+   decision's `detail` (`claim_verdict`, `claim_reason`, `claim_species_state`,
+   `supported_by`). The round's `rejections` list it with that verdict. The node
+   keeps its admitted status, so `summary.json` and `report.md` never count an
+   admitted reaction as a candidate. The controller also never writes a non-admitted
+   decision's status onto an admitted node.
+
+A quarantined (lead) reaction still shows every sibling's paper and spans: all of
+them are leads.
+
 ---
 
 ## Model-output failures never become evidence

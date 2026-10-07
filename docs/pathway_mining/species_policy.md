@@ -58,53 +58,124 @@ assays) and the bryophyte review's OPR3 statements as `inferred_only` (the span
 elsewhere mentions orthologs). The rule now:
 
 1. **Cited spans** are every span the claim cites, for any field or at claim level.
-   Each is split into sentences (no break after "A.", "et al.", "Fig.", "e.g.").
+   Each is split into sentences: no break after "et al.", "Fig." or "e.g."; after a
+   single capital only before a capital ("clade A. In opr3 mutant leaves ..." is two
+   sentences, "A. thaliana" never breaks).
 2. **Supporting sentences** name one of the claim's participants, its enzyme or its
    gene. Names are matched after folding case, whitespace, Unicode hyphens, Greek
-   letters and the italic gaps around hyphens ("dn- cis -OPDA"). A name
-   "X (Y)" is matched as written and as Y ("α-linolenic acid (LeA)" also as "LeA"),
-   never as X alone: the note may be what disambiguates it ("ALA (18:3n3)"; a bare
-   ALA is also 5-aminolevulinic acid), the rule `queries.rescue_terms` keeps. A
-   participant or enzyme the model asserted but extraction dropped still names
-   supporting sentences, so their negative markers still count.
+   letters and the italic gaps around hyphens ("dn- cis -OPDA"); a spaced em or en
+   dash is punctuation, not a hyphen ("JA-Ile — the" stays two tokens). A name
+   "X (Y)" is matched as written, as Y ("α-linolenic acid (LeA)" also as "LeA"), and,
+   for the negative markers only, as bare X ("ALA (18:3n3)" also as "ALA", so
+   "Recombinant enzyme assays ... compared with ALA" still vetoes). Positive credit
+   never uses bare X: the note may be what disambiguates it (a bare ALA is also
+   5-aminolevulinic acid), the rule `queries.rescue_terms` keeps. A participant or
+   enzyme the model asserted but extraction dropped still names supporting
+   sentences, so their negative markers still count.
 3. **Each supporting sentence gets one grade**, tested in this order:
    * `inference`: `ortholog`, `homolog of`, `by analogy`, `by similarity`,
      `presumably`, `is expected to`, `likely catalyses`, `extrapolat`, `inferred`;
+     and a homology transfer without those words: `counterpart`, `closest ...
+     relative`, `relative of`, `corresponding ... enzyme / protein / gene /
+     reaction`, `equivalent`, `by sequence similarity`, `homologous`, `resembl`,
+     `analogous`, `the same conversion / reaction` (not "compared with", which is
+     ordinary loss-of-function prose);
    * `host`: `transgenic`, `heterologous`, `ectopic`, `overexpress`, `35S`,
      `expressing`, `expression of`, `transient`, `agroinfiltrat`, `infiltrated`,
-     `protoplast`, `transformed`, `expressed in` a plant — the organism is a host
-     for a gene, never performing its own reaction;
+     `protoplast`, `transformed`, `expressed in` a plant, `carrying`, `harbouring`,
+     `introduced` / `introduction`, `construct`, `promoter`, `cDNA`, `transgene`; and
+     complementation when a foreign gene is named (a bryophyte / moss / liverwort /
+     foreign / heterologous gene, another species' gene symbol, or another organism).
+     The organism is a host for a gene, never performing its own reaction.
+     Complementation of a mutant with its own gene is not a host marker, so it is
+     not penalised here;
    * `in_vitro`: `in vitro`, `cell-free`, `recombinant`, `purified`, `reconstitut`,
-     `expressed in` *E. coli* / yeast / *Pichia* / insect cells, `enzyme assay`,
-     `incubation`, `incubated with`, `Km`, `Vmax`, `kcat` (also spaced, "K m"),
-     `kinetic`, `lysate`, `ex vivo`, `crude` / `tissue` / `protein extract`,
-     `homogenate`, `microsom`, `isolated chloroplasts`;
-   * in a paper not graded a review, `in_planta` only if ALL hold: no hedge (`may`, `might`,
-     `could`, `potential`, `putative`, `likely`, `suggest`, `support the view`,
-     `anticipated`, `proposed`, ...); no citation (`[n]`, `et al`, an author-year);
-     no procedure (`was/were grown, sprayed, treated, extracted, analysed, measured,
-     incubated, used ...`, `we employed/used`); no purpose clause (`to study`, `to
-     test`, `as a new tool`); the passage is not a methods or introduction section;
-     the sentence names no non-target organism, and names the target itself when
-     the passage or the paper's screen organisms name another; and within ONE
-     clause (split at `;` `:` and the words *and / but / whereas / while / or*) an
-     in-planta context (`in planta`, `in vivo`, `mutant`, `knockout`, `wild type`,
-     `Col-0`, `seedlings`, `leaves`, `flowers`, `roots`, `tissues`, `wounded`,
-     `lines`, ...) occurs with either (a) the substrate AND product, named strictly,
-     and a conversion (`convert`, `conversion`, `formed from`, `metabolised to`,
-     `produced from`, `synthesised from`), with no application (`treat`, `appl`,
-     `spray`, `exogenous`, `fed`, `feeding`) in the sentence; or (b) a
-     loss-of-function marker (`mutant`, `knockout`, `knockdown`, `loss-of-function`,
-     `null allele`, `T-DNA`, `SALK_`, `RNAi`, `amiRNA`, `CRISPR`), the claim's enzyme
-     or gene, and its substrate or product named strictly, with no no-effect phrase
-     (`unchanged`, `unaffected`, `not altered`, `no significant`, `similar to wild
-     type`, `comparable to`);
-   * in a **review** (the paper's `evidence_type`, settled at inclusion), `review`
-     only if the sentence names the target and no other organism, names the
-     substrate and the product strictly (or one of them, the enzyme and a
-     conversion), and carries no hedge, comparison (`unlike`, `in contrast`,
-     `whereas`, `compared with`, `equivalent to`, ...) or negation (`lacks`,
-     `absent`, `not`, `no`, `without`). A review never earns `in_planta`;
+     `expressed in` / `produced in` *E. coli* / bacteria / yeast / *Pichia* / insect
+     cells / baculovirus, `enzyme assay`, `assays with`, `incubation`, `incubated
+     with`, `Km`, `Vmax`, `kcat` (also spaced, "K m"), `kinetic`, `lysate`, `ex vivo`,
+     `homogenate`, `microsom`, a preparation of an organ, organelle or cell (`leaf /
+     flower / root / seedling / plant / cell / chloroplast ... extract / homogenate /
+     lysate / fraction / assay / disc / preparation / supernatant / powder`),
+     `soluble / membrane / stromal / microsomal / crude / desalted / clarified / total
+     (protein) extract or fraction`, `isolated / intact chloroplasts / plastids /
+     peroxisomes / mitochondria`, an affinity tag (His, Strep, GST, FLAG, 6xHis,
+     MBP), `insect-cell`, and cell culture (`cell suspension`, `cell culture`,
+     `callus`). An in-planta metabolite measurement made in an extract ("JA-Ile in
+     leaf extracts of jar1") is held back too: a recall cost accepted to keep
+     cell-free evidence out (see [`known_limitations.md`](known_limitations.md));
+   * in a paper not graded a review, `in_planta` only if ALL hold:
+     - no hedge: `may`, `might`, `could`, `would`, `potential`, `possibl`,
+       `putative`, `likely`, `suggest`, `support the view`, `anticipated`, `appear`,
+       `proposed`, `hypothe`, `predicted`, `perhaps`, `thought to`, `presumed`,
+       `seem(s) to`, `consistent with`, `point(s) to / towards`, `speculat`,
+       `imply`, `unclear`, `remains unknown / unclear / to be / an open`, `open
+       question`, `assume`, `conceivabl`;
+     - no citation: `[n]`, `et al`, an author-year, a numeric parenthetical `(12, 13)`,
+       a superscript flattened after a full stop ("...12-OPDA.12,13"), or a narrative
+       one: `previously reported / shown / described / demonstrated`, `as shown /
+       reported / described by / in`, `prior / earlier work / studies`, `has / had /
+       have been shown / reported`, `co-workers`;
+     - no procedure: `was/were grown, sown, harvested, sprayed, treated, extracted,
+       analysed, quantified, measured, incubated, used, obtained, purchased,
+       provided, surface-sterilised, stratified, transferred`, `we employed/used`,
+       `plant material`, `growth conditions`;
+     - no purpose clause: `to study`, `to test`, `as a new tool`;
+     - the passage is not a methods, materials, introduction or background section,
+       and not a discussion or conclusion (the section label is searched, so "2.
+       Materials and Methods" counts). Discussion and conclusion are interpretive:
+       they restate others' work and hedge. Excluding them is an orchestrator decision
+       the product owner may revisit. Abstract, results, figure legends and `body`
+       (an abstract-only paper is indexed whole as `body`) keep credit;
+     - the sentence names no non-target organism. When it does not name the target,
+       a gene symbol carrying another species' prefix ("MpFAD5", "Mp gh3a", "PpAOC1",
+       "CaLOX2"; `species._FOREIGN_GENE`, a documented ceiling) also counts as naming
+       another organism. The sentence must name the target itself when its passage or
+       the paper's screen organisms name another;
+     - within ONE clause (split at `;`, at a colon not followed by a digit, so
+       "OPC-8:0" and "16:1n9" stay whole, and at the words *and / but / whereas /
+       while / or*) an in-planta context occurs (`in planta`, `in vivo`, `mutant`,
+       `knockout`, `wild type`, `Col-0`, `seedlings`, `leaves`, `flowers`, `roots`,
+       `tissues`, `wounded`, `lines`, ...) with either:
+       - (a) the substrate AND product, named strictly, and a conversion (`convert`,
+         `conversion`, `formed from`, `metabolised to`, `produced from`,
+         `synthesised from`). There must be no application in the sentence (`treat`,
+         `appl`, `spray`, `exogenous`, `fed`, `feeding`, `supply`, `supplement`,
+         `infiltrat`, `inject`, `dosed`, `administered`, `watered`, `soaked`,
+         `dipped`, `perfused`, `deuterated`, `labelled`). No negation may govern the
+         conversion in the clause: `not`, `no`, `never`, `nor`, `without`, `cannot`,
+         `fail(s/ed) to`, `unable to` or `lack(s/ing)` before it, joined by spaces
+         only (so "cyclase, not synthase, converts" keeps its credit), or the
+         conversion then reported `not` / `never` / `undetectable` / `absent`; or
+       - (b) a loss-of-function marker (`mutant`, `knockout`, `knockdown`,
+         `loss-of-function`, `null allele`, `T-DNA`, `SALK_`, `RNAi`, `amiRNA`,
+         `CRISPR`), the claim's enzyme or gene, and its substrate or product named
+         strictly, with no no-effect phrase (`unchanged`, `unaffected`, `not altered`,
+         `no significant`, `similar to wild type`, `comparable to`). A
+         loss-of-function sentence keeps its "no" ("no JA-Ile was detected in gh3.10
+         jar1 lines").
+   * in a **review**, `review` only if all of these hold. A review here is the paper's
+     `evidence_type`, settled at inclusion. It is also a paper graded `unknown` whose
+     EuropePMC lookup failed twice (`evidence_type_verified` False): it may be an
+     unrecognised review, so it never earns `in_planta`. The claim's reason says
+     "evidence type unverified: EuropePMC lookup failed", and the paper's own grade is
+     not rewritten. If the review rule fails, the claim stays a lead. A paper graded
+     `unknown` without a failed lookup keeps primary-strength credit, a product-owner
+     decision recorded by change set A. The conditions:
+     - the sentence names the target and no other organism (nor another species'
+       gene symbol);
+     - it states a conversion (`convert`, `reduce`, `produce`, `form`, `synthesise`,
+       `catalyse`, `oxidise`, `oxygenate`, `conjugate`, `metabolise`, `yield`,
+       `generate`, `cyclise`, `give rise`), so co-occurrence ("OPDA and OPC-8:0
+       accumulate") is not one;
+     - it names the substrate and the product strictly (or one of them and the
+       enzyme);
+     - it carries no hedge (the list above), comparison (`unlike`, `in contrast`,
+       `whereas`, `compared with`, `equivalent to`, `resembl`, `similar to`,
+       `analogous`, `as in`, `also found in`, `both`, ...), homology transfer, or
+       negation (`lacks`, `absent`, `not`, `no`, `never`, `without`, `fail(s) to`,
+       `unclear`, `open question`, `remains unknown / unclear / to be`, `whether`).
+
+     A review never earns `in_planta`;
    * `none` otherwise, with the reason recorded.
 
    **Strict naming** treats a hyphen as part of the token: "OPDA" is not named by
@@ -112,6 +183,12 @@ elsewhere mentions orthologs). The rule now:
    amino acid (Ile, Gln, ...) never counts for positive credit: a sentence naming
    them is a buffer recipe as often as a result. The marker lists are loose
    matching on purpose; positive credit only shrinks.
+
+   **A supplied precursor is held back.** The pilot-003 JA-conjugate rows (JA ->
+   JA-Gln / -Asn / -Glu) are a product-owner hinge: whether in-planta formation from
+   a supplied precursor counts. Until it is decided, every application synonym above
+   refuses credit. Adding to that list holds evidence back; removing from it admits
+   evidence. Either is a decision for the product owner, not a list fix.
 4. **One state for the claim**, the order of the old classifier kept:
    1. **inference** — any `inference` sentence, or `species_inferred` true:
       `inferred_only`, even when the target is named and cited. This is the
@@ -121,15 +198,19 @@ elsewhere mentions orthologs). The rule now:
    3. **no species** — the model stated none: `species_not_stated`;
    4. **several species** — `multiple_species`;
    5. **another species** — `non_target_species`;
-   6. **the target** — `target_species_supported` only with a model-cited species
-      span (the verbatim fallback never counts, see
-      [`evidence_policy.md`](evidence_policy.md)) one of whose sentences names the
-      target plainly (not "Arabidopsis Ortholog" as a table header, not "MpFAD5 is
-      orthologous to AtFAD5, an Arabidopsis enzyme", not "unlike Arabidopsis"), AND
-      an `in_planta` sentence (grade `in_planta`) or a `review` sentence (grade
-      `review`, evidence level `review_article_only`, never primary). Otherwise
-      `species_ambiguous`: with a host reason when the only evidence is a host
-      system.
+   6. **the target** — `target_species_supported` needs two things:
+      - a model-cited species span (the verbatim fallback never counts, see
+        [`evidence_policy.md`](evidence_policy.md)) one of whose sentences names the
+        target plainly: alone, and not in an ortholog, homology, host-system or
+        comparison sentence (not "Arabidopsis Ortholog" as a table header, not
+        "MpFAD5 is orthologous to AtFAD5, an Arabidopsis enzyme", not "unlike
+        Arabidopsis", not "the pathway resembles that of Arabidopsis thaliana", not
+        "Arabidopsis thaliana and Marchantia polymorpha both make jasmonates");
+      - an `in_planta` sentence (grade `in_planta`) or a `review` sentence (grade
+        `review`, evidence level `review_article_only`, never primary).
+
+      Otherwise `species_ambiguous`, with a host reason when the only evidence is a
+      host system.
 
 **The claim's species is what the model stated for it (B3).** When the model leaves
 `species` empty the claim is `species_not_stated`. The paper's screen organisms are
@@ -142,27 +223,48 @@ species: "human LOX homologs" in the 13-LOX abstract made every claim citing it
 yields the same claim identity in two extraction batches, `ClaimStore.register`
 unions the two claims' graded sentences, model-cited species spans and flags and
 re-runs the aggregation, so the result never depends on batch order. Base copied
-the later batch's state over the earlier one.
+the later batch's state over the earlier one. A claim with no sentence reading (from
+a run older than schema 1.2.0) is a floor: its state is kept in the merged reading
+(`species_support.floor_state`) and the result never rises above it, however many
+batches follow and in any order.
 
-The rules are the pwml-bio-auditor's adjudication of ORCH-745 F-1. On pilot-003's
-16 recorded answers they admit exactly three reactions: GH3.10's jasmonic acid ->
-JA-Ile (`in_planta`, on "In flowers and wounded leaves of gh3.10 jar1 knockout lines
-JA-Ile was below the detection limit."), and the bryophyte review's OPR3 steps OPDA
--> OPC-8:0 and dn-cis-OPDA -> OPC-6:0 (`review`, on "In Arabidopsis, OPDA and dn-
-cis -OPDA are reduced by OPR3 in the peroxisomes to produce OPC-8:0 and OPC-6:0,
-respectively."). The recombinant 13-LOX steps, the purified-enzyme GH3.10 assays,
-the JA conjugates "found in wounded leaves" and every Marchantia row stay leads.
+The rules are the pwml-bio-auditor's adjudication of ORCH-745 F-1. Repair round 1
+closed the gaps an adversarial review found: in-vitro preparations, negated
+conversions, open hedges, homology without "ortholog", hosts without the old host
+words, fed precursors, the review route's negations and co-occurrence, foreign gene
+symbols, and narrative citations. On pilot-003's 16 recorded answers the rules admit
+exactly three reactions:
+- GH3.10's jasmonic acid -> JA-Ile (`in_planta`, on "In flowers and wounded leaves of
+  gh3.10 jar1 knockout lines JA-Ile was below the detection limit.");
+- the bryophyte review's OPR3 steps OPDA -> OPC-8:0 and dn-cis-OPDA -> OPC-6:0
+  (`review`, on "In Arabidopsis, OPDA and dn- cis -OPDA are reduced by OPR3 in the
+  peroxisomes to produce OPC-8:0 and OPC-6:0, respectively.").
 
-### What it still holds back
+The recombinant 13-LOX steps, the purified-enzyme GH3.10 assays, the JA conjugates
+"found in wounded leaves" and every Marchantia row stay leads.
 
-The rule is fail-closed and loses some correct evidence: one ortholog sentence in a
-cited span vetoes the claim; a negative marker in a sentence about another organism
-counts; occurrence ("found in wounded leaves"), hedged, introduction, methods,
-native-overexpression and complementation statements earn nothing. Such a claim is
-a `species_ambiguous` lead with a `missing_species_evidence` frontier item. The
-organism list (`species._ORGANISM_WORDS`, plus any abbreviated binomial such as "P.
-patens") is a documented ceiling: an organism named only by a word missing from it
-is not seen.
+### What it still holds back, and what it cannot see
+
+The rule is fail-closed and loses some correct evidence:
+- one ortholog or homology sentence in a cited span vetoes the claim;
+- a negative marker in a sentence about another organism counts;
+- these statements earn nothing: occurrence ("found in wounded leaves"), hedged,
+  introduction, methods, discussion, native-overexpression and host statements, and
+  in-planta measurements made in an extract.
+
+Such a claim is a `species_ambiguous` (or in vitro) lead with a
+`missing_species_evidence` frontier item. The organism list (`species._ORGANISM_WORDS`,
+any abbreviated binomial such as "P. patens", and the gene-symbol prefixes) is a
+documented ceiling: an organism named only by a word missing from it is not seen.
+
+**Ceiling (N4).** A primary paper's in-planta sentence that names no organism at all
+("The aos1 mutant accumulated no 12-OPDA in leaves.") is credited on the strength of
+the paper-level screen. It earns no credit only when its passage or the paper's
+screen organisms name another organism. So a screen that misses the paper's own
+organism (a rice paper whose screen read only *Arabidopsis*, which it cites) admits
+the wrong species. No sentence rule can see an organism the sentence does not name.
+Closing it would need a per-paper "principal organism" decided at inclusion, which
+does not exist today.
 
 ## The rule that matters most
 

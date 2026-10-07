@@ -39,7 +39,7 @@ runs_mining/<run_id>/
 
 | Constant | Value | Bumped when |
 |---|---|---|
-| `ARTIFACT_SCHEMA_VERSION` | `t2pw.mining/1.2.0` | a persisted field changes meaning |
+| `ARTIFACT_SCHEMA_VERSION` | `t2pw.mining/1.3.0` | a persisted field changes meaning |
 | `PROMPT_VERSION` | `mining-extract/1.2.0` | an extraction prompt changes in a way that could change a claim |
 | `VIEW_SCHEMA_VERSION` | `t2pw.mining.view/1.0.0` | a view payload's shape changes |
 
@@ -51,6 +51,16 @@ supporting sentences ([`species_policy.md`](species_policy.md)); new are
 `ExtractedClaim.species_support` and `.unsupported_participants`,
 `ReactionParticipant.attribution`, `ClaimDecision.species_grade` and
 `ResearchReaction.species_grade`; `tissue` is kept only with a cited span.
+`t2pw.mining/1.3.0` (ORCH-745 B repair 1): an admitted reaction's `paper_ids` /
+`evidence_ids` / `claim_ids` and every decision's `evidence_level` count only
+`target_species_supported` claims, and a review never counts toward independence;
+new are `ResearchReaction.non_supporting_claims`, `species_support.floor_state` /
+`floor_reason`, and the decision `detail` keys `claim_verdict`, `claim_reason`,
+`claim_species_state`, `supported_by` and `corroborating_reviews`
+([`evidence_policy.md`](evidence_policy.md) § Support is never overstated). A paper
+whose `unknown` grade could not be verified (`evidence_type_verified` False) is read
+as a review by the species gate and the evidence level; `species_support` then carries
+`paper_evidence_type_verified`, `gate_evidence_type` and `reason`.
 `mining-extract/1.2.0` (N-5): the prompt's JSON example no longer pre-fills
 `"species_inferred": false` and `"hypothesis": false`, which a model could copy;
 the rules ask for both, true or false, on every claim.
@@ -62,7 +72,7 @@ the rules ask for both, true or false, on every claim.
 ```json
 {
   "run_id": "2026-09-17_142233_9f1b2c3d",
-  "schema_version": "t2pw.mining/1.2.0",
+  "schema_version": "t2pw.mining/1.3.0",
   "prompt_version": "mining-extract/1.2.0",
   "started_at": "...Z", "updated_at": "...Z", "finished_at": "...Z",
   "completion_state": "stopped_at_limit",
@@ -100,7 +110,7 @@ One JSON object per line; safe to stream.
 | `frontier.jsonl` | open frontier item | kind, target, reason, priority, origin round, attempts, exhausted, `relevance` (the on-route score, 0-3, of a `missing_species_evidence` item; 0 otherwise) |
 | `evidence_spans.jsonl` | quoted passage | exact text, section, page, paragraph, locator, chunk, offsets, round, query, frontier item, score |
 | `claims.jsonl` | extracted claim | everything in [`evidence_policy.md`](evidence_policy.md) § claims, including `field_evidence`, each participant's `attribution`, `unsupported_participants` and `species_support` (the species grade and every graded supporting sentence) |
-| `decisions.jsonl` | admission decision | status, reason, round, target, evidence level, species state, species grade, `supersedes` |
+| `decisions.jsonl` | admission decision | status, reason, round, target, evidence level, species state, species grade, `supersedes`; for a claim that is not support of an identity admitted on other claims, the admitted status with the claim's own verdict in `detail` (`claim_verdict`, `claim_reason`, `claim_species_state`, `supported_by`) |
 | `model_calls.jsonl` | model call | requested vs **actual** model, provider (`not_reported_by_llm_client` when the shared client says nothing, which it does today; `""` only for a call that made no request), prompt/schema version, reasoning, input/output/cached tokens, estimated cost, latency, retries, finish reason, parse and schema errors, fallback used + reason, request/response hashes, attempt log (every provider request of every rung, each tagged with its `rung` and `shrink_fraction`), `answer_quality` (`ok`, `retried_after_thin`, `thin_after_retry`, `thin_not_retried`; `""` when no answer was accepted; see [`evidence_policy.md`](evidence_policy.md) § A thin answer). For an accepted answer, `finish_reason`, `response_hash`, `response_chars` and `provider` describe the answer kept; when a failed re-ask leaves the earlier thin answer kept, the re-ask's parse or schema error is not on the record, only on its `model_raw.jsonl` row |
 
 ## `costs.json`

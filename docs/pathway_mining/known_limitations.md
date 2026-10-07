@@ -31,6 +31,50 @@ strain tail. An unusual organism normalizes to itself, which is correct but
 means `Arabidopsis` and `A. thaliana` fold while some other genus abbreviation
 may not. It is not a taxonomy service and never pretends to be.
 
+## The species reader is word lists, and fails closed
+
+`species.grade_sentences` reads each supporting sentence against word lists (see
+[`species_policy.md`](species_policy.md)). They are documented ceilings, and their
+misses run in both directions:
+
+* **Recall cost, accepted.** A preparation of an organ is cell-free evidence, so an
+  in-planta metabolite measurement made in an extract ("JA-Ile was absent from leaf
+  extracts of jar1") earns no credit. So do hedged, discussion, conclusion,
+  introduction and methods statements, native complementation phrased with a host
+  word, and any sentence near an ortholog / homology / "equivalent" mention. Such a
+  reaction stays a lead for a `missing_species_evidence` query.
+* **What no sentence rule can see.** A sentence naming no organism is credited on the
+  paper-level organism screen; a screen that misses the paper's own organism admits
+  the wrong species (species policy, ceiling N4). An organism or gene-symbol prefix
+  missing from `species._ORGANISM_WORDS` / `species._FOREIGN_GENE` is not seen.
+* **A participant's citation is not checked against its text (BIO-745B-2, an
+  escalation to the product owner).** A participant kept by `model_citation` is not
+  checked against the text of the span it cites. A loss-of-function sentence
+  earns credit with ONE strictly-named participant, so the other side of an admitted
+  reaction can rest on the model's citation alone (#14's "jasmonic acid", where the
+  abstract says "JA"). That is correct biology there; a hallucinated substrate with a
+  valid citation would pass the same way. The tightening proposed by the bio-auditor
+  (label such a participant `model_citation_unverified` and require every participant
+  to be verbatim in the claim's spans or named in the credited sentence) awaits a
+  decision.
+
+## Support across siblings
+
+An admitted reaction's support and evidence level count only its
+`target_species_supported` claims, and a later lead never relabels it (evidence
+policy, ORCH-745 A3). Three edges remain:
+
+* The graph cannot un-admit a reaction. If a same-paper merge turns the ONLY
+  supporting claim into a non-admissible one (a second batch adds an ortholog
+  sentence), the decision history records the new verdict, but the node stays
+  admitted with its earlier status.
+* A reaction from a read-only starting graph has no decision history, so a mined lead
+  of the same identity is recorded as a `candidate` decision. The node keeps
+  `starting_graph`, and the lead is listed in `non_supporting_claims`.
+* Conflict detection still compares every sibling, a lead's enzyme included. A
+  disagreement with an in-vitro claim clears the attribute on the admitted node,
+  which overstates the disagreement and never the support.
+
 ## Conflict detection is attribute-level and literal
 
 Only `enzyme`, `direction`, `reversible` and `compartment` are compared, and
