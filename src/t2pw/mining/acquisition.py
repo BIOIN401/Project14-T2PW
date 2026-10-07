@@ -233,9 +233,15 @@ def make_paper_starting_input(raw: Any) -> StartingInput:
     return StartingInput(kind="paper", raw=str(raw), value=value, id_type=id_type)
 
 
+#: Tag-shaped markup only: "<" then a letter. A "<" before a space or a digit is text
+#: ("P < 0.05", "p <0.05"): stripping "<...>" spliced "(P &lt; 0.05) and OPDA rose &gt;2-fold"
+#: into "(P 2-fold", a quote the paper never printed.
+_TAG = re.compile(r"</?[A-Za-z][A-Za-z0-9]*\b[^<>]*>")
+
+
 def _plain(text: str) -> str:
     """Tags stripped, entities decoded (EuropePMC titles arrive double-escaped), spaces folded."""
-    return " ".join(re.sub(r"<[^>]+>", " ", html.unescape(html.unescape(str(text or "")))).split())
+    return " ".join(_TAG.sub(" ", html.unescape(html.unescape(str(text or "")))).split())
 
 
 def _subject_heading(text: str, title: str) -> str:
