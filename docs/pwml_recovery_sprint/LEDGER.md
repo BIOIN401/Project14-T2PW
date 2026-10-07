@@ -10752,3 +10752,21 @@ merge and re-applied after it. The re-applied diff is identical to the original 
 - `tests/test_eval_v2_report.py` is now a registered census pin: regenerate the eval fixture whenever committed runs or reference tables change.
 - Two failing tests that predate this work and are unrecorded (`test_rag_seed_entity_reimport::test_the_orchestrator_passes_the_merge_base_to_conform`, `test_c075` corpus); neither is in SMOKE or Chunk D.
 - Pathway mining moves to a separate agent; see `ORCH-743-RESULT.md`.
+
+---
+
+## `ORCH-745` — make pathway mining work (overnight, unattended) · 2026-10-06 · DISPATCHED
+
+Brief: `C:/t/mining-handoff/MINING-OVERNIGHT-HANDOFF.md`. Lead agent only coordinates; implementation goes through
+`general-purpose` subagents, every change set is reviewed by `pwml-reviewer` (the actual diff) and `pwml-bio-auditor`
+in parallel, at most 2 repair rounds each. **Nothing is merged into `sprint/pwml-recovery` or `main`. Nothing is pushed.**
+
+| item | value |
+|---|---|
+| base | `experiment/pathway-mining` @ `f9556288` (worktree `C:/t/mining`), mining suite 281, SMOKE 508 with mining off |
+| scope | `src/t2pw/mining/**` (incl. `species.py`), `tests/test_mining_*.py`, `tests/helpers_mining.py`, `tests/fixtures/mining/`, `docs/pathway_mining/**` |
+| frozen | `rag/`, `llm/`, `app/`, `pipeline/`, `TEST_MATRIX.md`, `DECISIONS.md`; T-107/T-108/T-109 not re-run |
+| blocking fixes | F-2 review grading and F-4 bibliography/front matter (both land **before** F-1); F-1 species markers on the claim's own supporting sentences; B1/F-7 per-round cap counts only admitted target reactions; F-3 ≥ 25 % frontier slots for `missing_species_evidence`, cuts recorded; IT2-N1/F-5 participant citation gate + placeholder rejection; IT2-N2/F-6 conservative same-paper merge; B2 thin-answer retry + provider/usage recorded (mining side only); F9 CLI loads `.env` |
+| G9 | every correction carries a behavioural base-SHA failure, run by the orchestrator in `C:/t/mining-rep-base`; evidence continues after `035` |
+| pilots | same frozen config as 001–003, `PATHWAY_MINING_REQUIRE_EMBEDDINGS=true`; each pre-registered here before any model call; one run per code version; ≤ 3 fix→pilot cycles; ≤ $2 estimated spend in total |
+| definition of done | ≥ 1 admitted target reaction rated `CORRECT_TARGET_SPECIES` on in-planta or properly graded evidence; 0 admissions against policy; bio verdict PLAUSIBLE or PLAUSIBLE_BUT_THIN with no blocking finding. Otherwise **BLOCKED** with reasons |
