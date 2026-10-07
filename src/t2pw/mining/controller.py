@@ -878,6 +878,9 @@ class MiningController:
         controller.state = MiningState.from_dict(state_payload)
         controller._setup_done = True
         controller.acquirer.seen_paper_ids.update(controller.state.papers)
+        for record in controller.state.papers.values():
+            if not record.exclusion_reasons:
+                controller.acquirer.remember(record)  # its PMCID / PMID / DOI too (IT2-N3)
         controller.ledger.restore(dict(checkpoint.get("usage") or {}))
         controller._round_index = int(checkpoint.get("round_index") or 0)
         manifest = run_dir.read_manifest()

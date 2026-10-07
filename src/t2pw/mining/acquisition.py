@@ -661,6 +661,8 @@ class Acquirer:
         self.source = source or (OfflinePaperSource() if config.offline else PaperSource())
         self._screener = screener
         self.seen_paper_ids: set = set()
+        #: Every id of every included paper -> that paper's ``paper_id`` (IT2-N3).
+        self._included: Dict[str, str] = {}
 
     # -- screening ----------------------------------------------------------
     def _scope(self) -> Any:
@@ -796,9 +798,9 @@ class Acquirer:
         and offline sources answer ``{}``): its publication types, and an empty DOI,
         journal or abstract filled (A14: the DOI was empty on every pilot paper; the
         abstract because indexing drops the front matter that may hold the only
-        copy; stored as plain text). A PMCID it reveals for a ``PMID:`` paper is
-        remembered, so the same article found later under its PMCID is the same paper
-        (IT2-N3). A failed lookup (failures are not cached) is asked once
+        copy; stored as plain text). Its PMID and PMCID fill empty ones, so the caller
+        can tell when this is an article already included under another id (IT2-N3,
+        :meth:`_same_article`). A failed lookup (failures are not cached) is asked once
         more; failing twice, it is a note, never an error, and
         ``evidence_type_verified`` is ``False``, so a later gate can fail closed: the
         grade then rests on the text rules. Then the paper is graded again, on its text
@@ -819,10 +821,8 @@ class Acquirer:
             record.doi = record.doi or str(meta.get("doi") or "").strip()
             record.journal = record.journal or _journal_title(meta)
             record.abstract = record.abstract or _plain(meta.get("abstractText"))
-            pmcid = _as_pmcid(meta.get("pmcid"))
-            if pmcid and not record.pmcid:
-                record.pmcid = pmcid
-                self.seen_paper_ids.add(make_paper_id(pmcid=pmcid))
+            record.pmid = record.pmid or str(meta.get("pmid") or "").strip()
+            record.pmcid = record.pmcid or _as_pmcid(meta.get("pmcid"))
 
         record.evidence_type, record.evidence_type_basis = grade_evidence_type(
             title=record.title, abstract=record.abstract, article_type=record.article_type,
@@ -830,6 +830,28 @@ class Acquirer:
         if record.evidence_type_verified is False:
             record.evidence_type_basis = "; ".join(
                 filter(None, [record.evidence_type_basis, "type unverified: EuropePMC lookup failed"]))
+
+    @staticmethod
+    def _handles(record: PaperRecord) -> List[str]:
+        """Every paper id this record's article could be found under."""
+        return [h for h in (record.paper_id,
+                            make_paper_id(pmcid=record.pmcid) if record.pmcid else "",
+                            make_paper_id(pmid=record.pmid) if record.pmid else "",
+                            make_paper_id(doi=record.doi.lower()) if record.doi else "") if h]
+
+    def _same_article(self, record: PaperRecord) -> str:
+        """The paper id of an already included paper that is this record's article, or ``""``."""
+        return next((self._included[h] for h in self._handles(record)
+                     if self._included.get(h, record.paper_id) != record.paper_id), "")
+
+    def remember(self, record: PaperRecord) -> None:
+        """Mark an included paper's every id as seen, so the article is one paper (IT2-N3).
+
+        The controller also calls this for each included paper a resumed run restores.
+        """
+        for handle in self._handles(record):
+            self._included.setdefault(handle, record.paper_id)
+            self.seen_paper_ids.add(handle)
 
     # -- acquisition --------------------------------------------------------
     def acquire(
@@ -916,9 +938,16 @@ class Acquirer:
                 continue
 
             self._settle_included(record, body)
+            same = self._same_article(record)
+            if same:
+                # The PMC copy came first and this PMID: record's lookup only now names it.
+                record.exclusion_reasons.append(f"same article as {same}, already included")
+                self.seen_paper_ids.add(record.paper_id)
+                result.excluded.append(record)
+                continue
             record.full_text_chars = len(body)
             record.cache_ref = f"{self.source.name}:{getattr(candidate, 'id', '')}"
-            self.seen_paper_ids.add(record.paper_id)
+            self.remember(record)
             query.new_paper_ids.append(record.paper_id)
             result.papers.append(LoadedPaper(record=record, text=body))
         return result
@@ -955,7 +984,11 @@ class Acquirer:
             if record.paper_id in self.seen_paper_ids:
                 continue
             self._settle_included(record, body)
-            self.seen_paper_ids.add(record.paper_id)
+            same = self._same_article(record)
+            if same:
+                errors.append(f"{item.raw!r} is the same article as {same}, already loaded; skipped")
+                continue
+            self.remember(record)
             loaded.append(LoadedPaper(record=record, text=body))
         return loaded, errors
 
