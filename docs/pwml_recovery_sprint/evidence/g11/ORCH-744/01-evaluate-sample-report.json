@@ -1,0 +1,92 @@
+{
+  "label": "evaluate-sample-report",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-m",
+    "t2pw.bench.eval_v2.report",
+    "evaluate",
+    "--repo",
+    ".",
+    "--out",
+    "docs/evaluation_v2",
+    "--live-json",
+    "docs/evaluation_v2/retrieval_live.json"
+  ],
+  "cwd": "C:\\t\\eval",
+  "started_at": "2026-10-07T04:18:01+00:00",
+  "finished_at": "2026-10-07T04:18:16+00:00",
+  "duration_seconds": 14.808240400045179,
+  "timeout_seconds": 500.0,
+  "root_pid": 196196,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 191200,
+      "name": "python.exe",
+      "ppid": 196196
+    },
+    {
+      "pid": 194192,
+      "name": "git.exe",
+      "ppid": 191200
+    },
+    {
+      "pid": 195176,
+      "name": "git.exe",
+      "ppid": 191200
+    }
+  ],
+  "descendants_terminated": [
+    191200,
+    194192,
+    195176
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 182844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 182952,
+      "name": "python.exe"
+    },
+    {
+      "pid": 196200,
+      "name": "python.exe"
+    },
+    {
+      "pid": 196300,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/eval/docs/pwml_recovery_sprint/evidence/g11/ORCH-744/01-evaluate-sample-report.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\eval\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\eval",
+    "repo_head": "a51e9609ad92d75485c5b3c198e779d991bc815a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
