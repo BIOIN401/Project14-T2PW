@@ -693,13 +693,16 @@ def test_g9_745a_r1_a2_a_reference_list_with_no_heading_never_becomes_a_span(tmp
         assert any(prose in t for t in texts), prose
 
 
-def test_g9_745a_r1_a2_a_mentioned_table_does_not_end_a_reference_list():
-    """The pepper paper's list runs into "(Supplemental Table S3) , and the raw read data
-    (FASTQ) have been deposited ...": a mention, not a legend. 6ceef736 ended the list there."""
-    from t2pw.mining.retrieval import text_regions
+def test_new_acceptance_745a_r2_a_mention_still_ends_a_reference_list():
+    """Repair 2 reverted R745A-6, which pinned the opposite here: a figure or table MENTION ends
+    a list, as at 6ceef736. The pepper paper's list ends at "(Supplemental Table S3) ,", leaving
+    its data-availability sentence outside the list -- harmless, it cites nothing."""
+    from t2pw.mining.retrieval import citation_dense, text_regions
 
     text = _norm(P3[PEPPER]["full_text"])
-    assert [(r, e) for _, e, r in text_regions(text) if r == "reference_list"] == [("reference_list", len(text))]
+    ends = [e for _, e, r in text_regions(text) if r == "reference_list"]
+    assert [text[e:].startswith("Table S3) , and the raw read data") for e in ends] == [True]
+    assert not citation_dense(text[ends[0]:])
 
 
 def test_g9_745a_r1_a7_a_fig_label_after_a_reference_list_is_a_legend():
@@ -848,3 +851,141 @@ def test_g9_745a_r1_r1_more_ways_a_review_says_it_is_one(phrase):
 def test_g9_745a_r1_r5_reviewed_and_peer_review_are_not_review_types(declared, grade):
     """6ceef736 matched the substring "review": ``review`` for both."""
     assert classify_evidence_type(article_type=declared) == grade
+
+
+# ===========================================================================
+# Repair round 2 (re-review of 92ab5be9). Each ``test_g9_745a_r2_*`` node fails
+# behaviourally at 92ab5be9 (this whole file runs there); its docstring says what
+# 92ab5be9 returns. ``tests/fixtures/mining/orch745a_repair2_excerpts.json``: excerpts of
+# two EuropePMC full texts from the project's acquire cache.
+# ===========================================================================
+REPAIR2 = {e["pmcid"]: e for e in json.loads(
+    (FIXTURES / "orch745a_repair2_excerpts.json").read_text(encoding="utf-8"))["excerpts"]}
+A2_LEAKS = ("10.3390/microorganisms8111716", "Tambadou", "PMC7692639")
+
+
+def _indexed_spans(tmp_path, paper_id, text):
+    index = H.offline_index(H.make_config(tmp_path, budgets={"max_passages_per_paper": 500}), tmp_path)
+    index.add_paper(LoadedPaper(record=PaperRecord(paper_id=paper_id, title="", acquisition_source="europepmc"),
+                                text=text))
+    return [_norm(s.text) for s in index.retrieve("pathway", top_k=1000, paper_ids=[paper_id])]
+
+
+# --- B1: the list ends at a figure or table label OR mention, as at 6ceef736 ----
+@pytest.mark.parametrize("pmcid", ["PMC8510960", "PMC12925505"])
+def test_g9_745a_r2_b1_a_table_references_column_does_not_swallow_the_body(tmp_path, pmcid):
+    """A table's "References" column (author-year cells) opens a citation-dense FALSE list; at
+    6ceef736 it ended at the table's own mention ("(Table 1 )", "( Fig. S3 )"). 92ab5be9 ran it
+    to the end of the text: the body prose after the table is not retrievable."""
+    excerpt = REPAIR2[pmcid]
+    texts = _indexed_spans(tmp_path, f"PMC:{pmcid}", excerpt["text"])
+    for probe in excerpt["body_probes"]:
+        assert any(probe in t for t in texts), probe
+
+
+LEGEND = ("Figure 7 {form} mellonella larvae survival after colistin treatment. The clcB, ptsI and ycaM "
+          "deletion mutants survived colistin treatment significantly better than the parent strain.")
+LEGEND_PROBE = ("The clcB, ptsI and ycaM deletion mutants survived colistin treatment significantly better "
+                "than the parent strain.")
+
+
+@pytest.mark.parametrize("form", ["(A)", "| Galleria", "clcB", "13-LOX", "ΔclcB"])
+def test_g9_745a_r2_b1_a_legend_after_a_headingless_list_is_retrievable(tmp_path, form):
+    """PMC12624714 (ACS, no reference heading) with a legend appended after its list, opening
+    with each form the bio-auditor listed. 92ab5be9 read none of them as a label, so the list ran
+    over the legend to the end of the text. The A2 bibliography stays out."""
+    text = REPAIR1["PMC12624714"]["full_text"] + " " + LEGEND.format(form=form)
+    texts = _indexed_spans(tmp_path, "PMC:PMC12624714", text)
+    assert any(LEGEND_PROBE in t for t in texts)
+    for leak in A2_LEAKS:
+        assert not [t for t in texts if leak in t], leak
+
+
+# --- B2: a "<" comparison is text, not a tag ---------------------------------
+def test_g9_745a_r2_b2_a_comparison_in_an_abstract_is_kept_verbatim(tmp_path, monkeypatch):
+    """EuropePMC's abstractText with "P &lt; 0.05" and a later "<i>" tag. 92ab5be9 stripped
+    everything from the "<" of the comparison to the next ">", storing "(P 2-fold in jar1 ."."""
+    abstract = ("<h4>Main conclusion</h4>JA-Ile was reduced (P &lt; 0.05) and OPDA rose &gt;2-fold in "
+                "<i>jar1</i> flowers.")
+    _fake_network(monkeypatch, tmp_path, pmid="", efetch_xml="",
+                  europepmc=lambda query: _epmc({"pmcid": "PMC13490264", "abstractText": abstract}))
+
+    class Scripted(PaperSource):
+        def search(self, context, *, sources, max_papers):  # noqa: ARG002
+            return [CandidatePaper(id="PMC13490264", source="europepmc", title="Jasmonate levels in jar1 flowers",
+                                   full_text="Results. Auxin conjugates are hydrolysed in the ER. " * 20)]
+
+        def full_text(self, candidate):
+            return candidate.full_text
+
+    record = Acquirer(H.make_config(tmp_path, offline=False), source=Scripted()).acquire(
+        LiteratureQuery(query_id="q", query_text="q"), {}, round_index=1, max_papers=1).papers[0].record
+    assert record.abstract == ("Main conclusion JA-Ile was reduced (P < 0.05) and OPDA rose >2-fold in "
+                               "jar1 flowers.")
+
+
+# --- N2: more subject headings ----------------------------------------------
+@pytest.mark.parametrize("heading", ["Review Essay Review Essay", "REVIEW ARTICLE", "Minireviews"])
+def test_g9_745a_r2_n2_more_review_subject_headings(tmp_path, heading):
+    """PMC12180156 with its subject heading printed as BioEssays ("Review Essay Review Essay",
+    PMC12376012 in the cache), "REVIEW ARTICLE" and "Minireviews". 92ab5be9: ``unknown``."""
+    paper = REPAIR1["PMC12180156"]
+    text = paper["full_text"].replace(" 779 1 Review Update of ", f" 779 1 {heading} Update of ", 1)
+    assert text != paper["full_text"]
+    candidate = CandidatePaper(id="PMC12180156", source="europepmc", title=paper["title"], full_text=text)
+    record = _acquire(tmp_path, candidate).papers[0].record
+    assert record.evidence_type == "review" and "subject heading" in record.evidence_type_basis
+
+
+# --- N4: a front-matter "abstract" must be one ---------------------------------
+def test_g9_745a_r2_n4_a_short_front_matter_passage_is_not_an_abstract():
+    """GH3.10's front matter with its abstract replaced by PMC12864622's 117-character note.
+    92ab5be9 returned the note as the abstract."""
+    from t2pw.mining.retrieval import front_matter_abstract
+
+    text = _norm(P3[GH3_10]["full_text"])
+    start = text.index("Abstract Jasmonates regulate")
+    end = text.index("GH3 enzymes jasmonate biosynthesis jasmonate catabolism")
+    note = ("Abstract Supplementary Information The online version contains supplementary material available "
+            "at 10.1007/s13659-025-00578-9. ")
+    assert front_matter_abstract(text[:start] + note + text[end:]) == ""
+    assert "wounded leaves of gh3.10 jar1 knockout lines" in front_matter_abstract(text)
+
+
+# --- N1: the load_explicit same-article branch ---------------------------------
+@pytest.mark.parametrize("pmc_lookup", ["answers", "fails"])
+def test_new_acceptance_745a_r2_n1_an_explicit_pmcid_then_its_pmid_is_one_paper(tmp_path, monkeypatch,
+                                                                                pmc_lookup):
+    """The user supplies 13-LOX's PMCID and then its PMID. One paper either way; when the PMCID's
+    own lookup failed (so its PMID was unknown), the PMID's lookup names the PMCID and the input
+    is reported as the same article."""
+    live = _epmc(LIVE_EPMC["PMC8508710"])
+    down = RuntimeError("HTTP request failed after retries")
+    _fake_network(monkeypatch, tmp_path, pmid="", efetch_xml="",
+                  europepmc=_answers(*([live] if pmc_lookup == "answers" else [down, down]), live))
+
+    class Fetches(PaperSource):
+        def full_text(self, candidate):  # noqa: ARG002
+            return P3[LOX13]["full_text"]
+
+    acquirer = Acquirer(H.make_config(tmp_path, offline=False), source=Fetches())
+    loaded, errors = acquirer.load_explicit([make_paper_starting_input("PMC8508710"),
+                                             make_paper_starting_input("34638573")])
+    assert [p.record.paper_id for p in loaded] == ["PMC:PMC8508710"]
+    if pmc_lookup == "fails":
+        assert errors == ["'34638573' is the same article as PMC:PMC8508710, already loaded; skipped"]
+    else:
+        assert errors == []
+
+
+def test_new_acceptance_745a_r2_b1_a_headingless_list_after_a_short_false_one_is_still_found(tmp_path):
+    """With mention-ended lists restored, PMC13418202's headingless run opens at its Supporting
+    Information DOI and ends at "(Table S1, PDF)"; the search for a list starts again after it and
+    finds the ACS bibliography. (92ab5be9 ran the first run to the end of the text instead;
+    6ceef736 had no headingless rule.)"""
+    excerpt = REPAIR2["PMC13418202"]
+    texts = _indexed_spans(tmp_path, "PMC:PMC13418202", excerpt["text"])
+    for probe in excerpt["body_probes"]:
+        assert any(probe in t for t in texts), probe
+    for leak in excerpt["bibliography_probes"]:
+        assert not [t for t in texts if leak in t], leak
