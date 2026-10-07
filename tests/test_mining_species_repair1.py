@@ -432,3 +432,34 @@ def test_repair1_745b_bio1_a_bare_name_still_carries_its_in_vitro_veto():
     assert claim.species_state == IVO
     assert any(s["grade"] == "in_vitro" and "Recombinant enzyme assays" in s["text"]
                for s in claim.species_support["sentences"])
+
+
+# ===========================================================================
+# F6: the legacy floor survives every later merge
+# ===========================================================================
+def test_repair1_745b_f6_three_batches_give_one_state_in_any_order():
+    """A legacy claim (no reading, in vitro), batch A (in planta) and batch B (in vitro) of one
+    paper. At 467a9faa: L,A,B -> target_species_supported; A,B,L -> in_vitro_or_cell_free."""
+    def built(text, eid):
+        span = EvidenceSpan(evidence_id=eid, paper_id="PMC:PMCX", text=text, section="results")
+        row = {"substrates": [{"name": "jasmonic acid", "evidence_ids": [eid]}],
+               "products": [{"name": "JA-Ile", "evidence_ids": [eid]}], "gene": "GH3.10",
+               "gene_evidence_ids": [eid], "species": "Arabidopsis thaliana", "species_evidence_ids": ["ev_sp"],
+               "evidence_ids": [eid]}
+        return build_claims({"claims": [row]}, spans=[span, SPECIES_SPAN], paper_id="PMC:PMCX",
+                            target_species_normalized=TARGET, round_index=1, model="probe")[0][0]
+
+    batch_a = built("In flowers and wounded leaves of gh3.10 jar1 knockout lines JA-Ile was below the "
+                    "detection limit.", "ev_a")
+    batch_b = built("Purified GH3.10 converted jasmonic acid to JA-Ile in vitro.", "ev_b")
+    assert (batch_a.species_state, batch_b.species_state) == (TSS, IVO)
+    legacy = ExtractedClaim.from_dict({**batch_a.to_dict(), "species_support": {}, "species_state": IVO,
+                                       "species_reason": "legacy"})
+    import itertools
+    results = set()
+    for order in itertools.permutations([("L", legacy), ("A", batch_a), ("B", batch_b)]):
+        store = ClaimStore()
+        for _, claim in order:
+            stored, _ = store.register(ExtractedClaim.from_dict(claim.to_dict()))
+        results.add(stored.species_state)
+    assert results == {IVO}

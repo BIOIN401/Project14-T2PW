@@ -88,11 +88,15 @@ def _recompute_species(stored: ExtractedClaim, incoming: ExtractedClaim) -> None
     (same paper only: a claim from another paper is never merged here) and the
     aggregation re-run, so ``register(A); register(B)`` == ``register(B); register(A)``.
     A side with no sentence reading (a claim built outside extraction, or restored
-    from a run older than schema 1.2.0) has nothing to union: its state can only
-    weaken the result, whichever side it is on.
+    from a run older than schema 1.2.0) has nothing to union: its state is a floor
+    the result can only fall to, whichever side it is on. The floor is kept in the
+    merged reading (``floor_state`` / ``floor_reason``) and applied on every later
+    recompute, so three or more batches give one result in any order.
     """
     readings = [dict(c.species_support) for c in (stored, incoming) if c.species_support]
     unread = [(c.species_state, c.species_reason) for c in (stored, incoming) if not c.species_support]
+    floors = [*unread, *((r["floor_state"], str(r.get("floor_reason") or ""))
+                         for r in readings if r.get("floor_state"))]
     if readings:
         rows = {(r.get("evidence_id"), r.get("sentence"), r.get("grade")): dict(r)
                 for reading in readings for r in reading.get("sentences") or []}
@@ -113,13 +117,17 @@ def _recompute_species(stored: ExtractedClaim, incoming: ExtractedClaim) -> None
             claimed_inferred=merged["claimed_inferred"],
         )
         merged["grade"] = verdict.grade
+        floor = _weakest(*(s for s, _ in floors))
+        if floor:
+            merged["floor_state"] = floor
+            merged["floor_reason"] = next(r for s, r in floors if s == floor)
         stored.species_support = merged
         state, reason = verdict.state, verdict.reason
     else:
         state, reason = stored.species_state, stored.species_reason
-    weakest = _weakest(state, *(s for s, _ in unread))
+    weakest = _weakest(state, *(s for s, _ in floors))
     if weakest and weakest != state:
-        state, reason = next((s, r) for s, r in unread if s == weakest)
+        state, reason = next((s, r) for s, r in floors if s == weakest)
     stored.species_state, stored.species_reason = state, reason
 
 
