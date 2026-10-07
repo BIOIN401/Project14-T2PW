@@ -23,9 +23,10 @@ acceptable description of an embeddings outage.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from t2pw.mining.acquisition import LoadedPaper
 from t2pw.mining.config import MiningConfig
@@ -41,6 +42,127 @@ def _utcnow() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+# ---------------------------------------------------------------------------
+# Text hygiene: what of a full text is the paper's own prose
+# ---------------------------------------------------------------------------
+# A EuropePMC full text is the whole JATS document flattened to one line: journal
+# front matter (ids, ISSNs, authors, affiliations, e-mails, dates, licence, the
+# abstract again, processing flags), the body, back matter, the reference list,
+# and in older layouts the figure and table legends AFTER the references
+# (PMC8508710). rag's chunker labels sections by keyword and cuts a reference list
+# only when its heading falls in the last 45% of the text. Pilot-003 therefore
+# indexed 25 kB of the GH3.10 paper's bibliography as "results" (claims #31/#32
+# cited it), every paper's front matter as "body#0", and an MDPI disclaimer as a
+# 61-character "methods" passage. None of that may become an evidence span. The
+# section labels cannot be trusted, so these rules read the text itself.
+
+#: A reference-list heading as printed: a heading, not "see references therein".
+_REF_HEADING = re.compile(
+    r"(?<![\w-])(?:References|REFERENCES|Literature Cited|LITERATURE CITED|Bibliography|BIBLIOGRAPHY)(?![\w-])")
+#: One bibliographic mark: a DOI, a PMCID, a bare 6-8 digit PMID, a "( 2019 )" or
+#: "2020;298" citation year, or a "14 , 171 – 178" volume and page range.
+_CITATION_MARK = re.compile(
+    r"\b10\.\d{4,9}/[^\s,;]+"
+    r"|\bPMC\d{5,9}\b"
+    r"|(?<![\w.,/:+-])\d{6,8}(?![\w.,/:+-])"
+    r"|\(\s*(?:19|20)\d\d[a-z]?\s*\)"
+    r"|\b(?:19|20)\d\d\s*;\s*\d+"
+    r"|\b\d+\s*[,:]\s*\d+\s*[–‐-]\s*\d+\b")
+#: Marks per 1000 characters (a text under 1000 characters counts as 1000).
+#: ponytail: fit on the seven pilot-002/003 full texts: every reference list reads
+#: >= 8.7 in the 1500 characters after its heading and every pilot-003 reference
+#: chunk >= 13, while no 5000-character window of body text reads above 1.6.
+_CITATION_DENSITY = 5.0
+#: How far apart a reference list's marks may be (pilot maximum: 462 characters).
+_CITATION_GAP = 600
+#: Where the legends resume after a reference list.
+_CAPTION = re.compile(r"(?<![\w.])(?:Figure|FIGURE|Fig\.|Table|TABLE|Scheme)\s*S?\d+")
+#: The processing flags that close EuropePMC's flattened front matter:
+#: "pmc-prop-open-access yes", "is-retracted no", "pmc-license-ref", "Issue date 2019 Jul 9.".
+_FRONT_FLAG = re.compile(
+    r"\b(?:pmc|is)-[a-z][a-z-]* (?:yes|no|\d+)\b|\bpmc-license-ref\b|\bdisplay-pdf (?:yes|no)\b"
+    r"|\bCollection date (?:19|20)\d\d\b(?: [A-Z][a-z]{2}\.?)?"
+    r"|\bIssue date (?:19|20)\d\d [A-Z][a-z]{2}\.? \d{1,2}\.?")
+#: Flags are only looked for in this leading share of the text.
+_FRONT_SHARE = 0.4
+#: A first section heading this close after the last flag also ends the front matter,
+#: taking a short tail ("CC BY 1.", "Editor: F. Loreto") with it. Case-sensitive: a
+#: heading, not the word in prose.
+_FRONT_TAIL = 300
+_FIRST_HEADING = re.compile(
+    r"(?<![\w-])(?:Introduction|INTRODUCTION|Background|BACKGROUND|Results|RESULTS"
+    r"|Materials? and Methods|MATERIALS? AND METHODS|Methods|METHODS)(?![\w-])")
+#: Publisher disclaimers: the two MDPI notes in the pilot-002/003 texts and Frontiers'
+#: standard one. ponytail: three endings; another publisher's note passes until one is seen.
+_PUBLISHER_NOTE = re.compile(
+    r"(?:Disclaimer/)?Publisher[’']s [Nn]ote:?.{0,600}?"
+    r"(?:referred to in the content|institutional affiliations|endorsed by the publisher)\.")
+#: A chunk trimmed to less than this is a fragment, not a passage.
+_MIN_TRIMMED_CHARS = 100
+
+
+def citation_dense(text: str) -> bool:
+    """Is ``text`` mostly bibliography? Marks per 1000 characters >= the density bar."""
+    return len(_CITATION_MARK.findall(text)) * 1000 >= _CITATION_DENSITY * max(len(text), 1000)
+
+
+def text_regions(text: str) -> List[Tuple[int, int, str]]:
+    """``(start, end, reason)`` for each span of ``text`` that is not the paper's own prose.
+
+    ``text`` is whitespace-normalised. Reasons: ``front_matter`` (from the start to
+    the last processing flag, plus a short tail up to the first section heading),
+    ``publisher_note``, ``reference_list`` (a heading followed by citation-dense
+    text, to the end of its run of citation marks and then to the next figure or
+    table legend, or to the end of the text). Without a flag block there is no
+    front-matter region: ponytail: the rule knows EuropePMC's flattening only; a PDF
+    upload's title page is not recognised.
+    """
+    regions: List[Tuple[int, int, str]] = []
+    flags = list(_FRONT_FLAG.finditer(text, 0, int(len(text) * _FRONT_SHARE)))
+    if flags:
+        end = flags[-1].end()
+        heading = _FIRST_HEADING.search(text, end, end + _FRONT_TAIL)
+        regions.append((0, heading.start() if heading else end, "front_matter"))
+    regions += [(m.start(), m.end(), "publisher_note") for m in _PUBLISHER_NOTE.finditer(text)]
+    for heading in _REF_HEADING.finditer(text):
+        if any(start <= heading.start() < end for start, end, _ in regions):
+            continue
+        if not citation_dense(text[heading.end():heading.end() + 1500]):
+            continue
+        end = heading.end()
+        for mark in _CITATION_MARK.finditer(text, heading.end()):
+            if mark.start() - end > _CITATION_GAP:
+                break
+            end = mark.end()
+        caption = _CAPTION.search(text, end)
+        regions.append((heading.start(), caption.start() if caption else len(text), "reference_list"))
+    return sorted(regions)
+
+
+def body_text(text: str) -> str:
+    """``text`` whitespace-normalised, without the :func:`text_regions` spans."""
+    norm = " ".join(str(text or "").split())
+    pieces: List[str] = []
+    at = 0
+    for start, end, _ in text_regions(norm):
+        pieces.append(norm[at:start])
+        at = max(at, end)
+    pieces.append(norm[at:])
+    return " ".join(p.strip() for p in pieces if p.strip())
+
+
+def _outside(start: int, end: int, regions: Sequence[Tuple[int, int, str]]) -> Tuple[int, int]:
+    """The longest part of ``[start, end)`` that no region covers. ``(0, 0)`` if none is left.
+
+    ponytail: one piece. A chunk with a region in its middle keeps its longer side
+    rather than gluing two pieces into a passage the paper never printed.
+    """
+    pieces = [(start, end)]
+    for r_start, r_end, _ in regions:
+        pieces = [p for s, e in pieces for p in ((s, min(e, r_start)), (max(s, r_end), e)) if p[1] > p[0]]
+    return max(pieces, key=lambda p: p[1] - p[0], default=(0, 0))
+
+
 class EmbeddingsUnavailable(RuntimeError):
     """The configured embeddings service did not answer and was required."""
 
@@ -53,6 +175,16 @@ class IndexedPaper:
     chunk_ids: List[str] = field(default_factory=list)
     chars: int = 0
     sections: Dict[str, int] = field(default_factory=dict)
+    #: What was kept out of the index and why: reason -> {"count", "chars"}. Text
+    #: regions (``front_matter``, ``publisher_note``, ``reference_list``) count
+    #: regions; ``chunk_inside_excluded_text``, ``citation_dense_chunk``,
+    #: ``duplicate_chunk`` and ``over_passage_cap`` count chunks.
+    excluded: Dict[str, Dict[str, int]] = field(default_factory=dict)
+
+    def exclude(self, reason: str, chars: int) -> None:
+        row = self.excluded.setdefault(reason, {"count": 0, "chars": 0})
+        row["count"] += 1
+        row["chars"] += int(chars)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -60,6 +192,7 @@ class IndexedPaper:
             "chunks": len(self.chunk_ids),
             "chars": self.chars,
             "sections": dict(self.sections),
+            "excluded": {k: dict(v) for k, v in self.excluded.items()},
         }
 
 
@@ -131,11 +264,19 @@ class PassageIndex:
         if record.paper_id in self.papers:
             return self.papers[record.paper_id]
 
-        chunks = self._chunk(paper)
-        cap = max(1, int(self.config.budgets.max_passages_per_paper or len(chunks) or 1))
-        chunks = chunks[:cap]
-
         indexed = IndexedPaper(paper_id=record.paper_id, chars=len(paper.text))
+        # Hygiene BEFORE the cap: a reference chunk must not displace a body chunk.
+        chunks = self._keep_prose(self._chunk(paper), paper.text, indexed)
+        cap = max(1, int(self.config.budgets.max_passages_per_paper or len(chunks) or 1))
+        for chunk in chunks[cap:]:
+            indexed.exclude("over_passage_cap", len(chunk.text))
+        chunks = chunks[:cap]
+        if indexed.excluded:
+            note = "indexing kept out: " + ", ".join(
+                f"{reason} x{row['count']} ({row['chars']} chars)" for reason, row in indexed.excluded.items())
+            if note not in record.notes:
+                record.notes.append(note)
+
         ordinals: Dict[str, int] = {}
         for chunk in chunks:
             section = str(getattr(chunk, "section", "") or "body")
@@ -163,6 +304,45 @@ class PassageIndex:
         self.texts[record.paper_id] = paper.text
         record.full_text_chars = len(paper.text)
         return indexed
+
+    @staticmethod
+    def _keep_prose(chunks: List[Any], text: str, indexed: IndexedPaper) -> List[Any]:
+        """The chunks that are the paper's own prose, each once (F-4, A4).
+
+        rag chunks the full text as it is (so an untouched chunk keeps its id and
+        text); here each chunk loses what falls in a :func:`text_regions` span,
+        keeping its longest remaining piece. A chunk left with a fragment, a chunk
+        that is still citation-dense (a reference list without a recognised
+        heading), and a chunk whose whitespace-normalised text equals or is
+        contained in a chunk already kept (an abstract-only paper's ``abstract#0``
+        and ``body#0``; a figure snippet inside its section) are dropped. Abstract
+        chunks come from the record, not the full text, so no region trims them.
+        """
+        norm = " ".join(str(text or "").split())
+        regions = text_regions(norm)
+        for start, end, reason in regions:
+            indexed.exclude(reason, end - start)
+        kept: List[Any] = []
+        bodies: List[str] = []
+        for chunk in chunks:
+            body = " ".join(str(chunk.text or "").split())
+            at = norm.find(body) if regions and chunk.section != "abstract" else -1
+            if at >= 0:
+                start, end = _outside(at, at + len(body), regions)
+                if (start, end) != (at, at + len(body)):
+                    piece = norm[start:end].strip()
+                    if len(piece) < _MIN_TRIMMED_CHARS:
+                        indexed.exclude("chunk_inside_excluded_text", len(body))
+                        continue
+                    chunk.text = body = piece
+            if citation_dense(body):
+                indexed.exclude("citation_dense_chunk", len(body))
+            elif any(body in other for other in bodies):
+                indexed.exclude("duplicate_chunk", len(body))
+            else:
+                bodies.append(body)
+                kept.append(chunk)
+        return kept
 
     def _chunk(self, paper: LoadedPaper) -> List[Any]:
         """Section-aware chunking through the existing RAG chunker."""
@@ -296,9 +476,18 @@ class PassageIndex:
         )
 
     def stats(self) -> Dict[str, Any]:
+        excluded: Dict[str, Dict[str, int]] = {}
+        for paper in self.papers.values():
+            for reason, row in paper.excluded.items():
+                total = excluded.setdefault(reason, {"count": 0, "chars": 0})
+                total["count"] += row["count"]
+                total["chars"] += row["chars"]
         return {
             "papers_indexed": len(self.papers),
             "chunks": sum(len(p.chunk_ids) for p in self.papers.values()),
+            "excluded": excluded,
+            "excluded_by_paper": {pid: {k: dict(v) for k, v in p.excluded.items()}
+                                  for pid, p in self.papers.items() if p.excluded},
             "embedding_mode": self.embedding_mode,
             "vector_backend": self.config.vector_backend,
             "warnings": list(self.warnings),
@@ -312,4 +501,7 @@ __all__ = [
     "EmbeddingsUnavailable",
     "IndexedPaper",
     "PassageIndex",
+    "body_text",
+    "citation_dense",
+    "text_regions",
 ]
