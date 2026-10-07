@@ -2,7 +2,7 @@
   "schema": "t2pw.eval_v2.gold_supplement/1",
   "version": "2026-09-23.1",
   "evaluator": "eval-v2.0 (ORCH-742c)",
-  "description": "NEW, separately versioned supported-reaction labels for evaluation v2. A SUPPLEMENT keyed by gold case id: it adds exhaustive reaction inventories to four pinned_v1 cases and changes nothing in pinned_v1.json, which stays byte-identical so T-107/T-108/T-109 scoring cannot move. It deliberately lives OUTSIDE src/t2pw/bench/gold/ so no existing reader (goldset.pinned_gold_set_path, or any glob over gold/*.json such as evidence/c122_cohort_candidates.py) can pick it up. Every reaction cites a verbatim quote verified against the EuropePMC full text whose sha256 is recorded per case; verification folds case, whitespace and punctuation exactly like bench.goldset.fold_for_quote.",
+  "description": "NEW, separately versioned supported-reaction labels for evaluation v2. A SUPPLEMENT keyed by gold case id: it adds reaction inventories to four pinned_v1 cases, three of them certified exhaustive (supported_reactions_complete=true; PMC12657337 is labelled but not certified, D-103), and changes nothing in pinned_v1.json, which stays byte-identical so T-107/T-108/T-109 scoring cannot move. It deliberately lives OUTSIDE src/t2pw/bench/gold/ so no existing reader (goldset.pinned_gold_set_path, or any glob over gold/*.json such as evidence/c122_cohort_candidates.py) can pick it up. Every reaction cites a verbatim quote verified against the EuropePMC full text whose sha256 is recorded per case; verification folds case, whitespace and punctuation exactly like bench.goldset.fold_for_quote.",
   "base_gold": {
     "path": "src/t2pw/bench/gold/pinned_v1.json",
     "git_blob_sha1": "98739a59dd6c376f8a19968c7fa5dc3145be5b15",
@@ -457,7 +457,8 @@
       ]
     },
     "PMC12657337": {
-      "supported_reactions_complete": true,
+      "supported_reactions_complete": false,
+      "completeness_status": "not certified (D-103; bio-audit B-R3-1: the lumped FPP + IPP + DHNA -> MK-7 conversion stated in Results 3.2 is unbooked). The labelled reactions below are kept as data, but the case is not exhaustive, so the evaluator scores none of its legs (reaction precision, recall and unsupported rate, and the archived RAG split, are defined over complete cases only).",
       "species": "Escherichia coli",
       "scope": "The paper's own 'MK-7 pathway' module (Fig. 1 divides MK-7 biosynthesis into the MVA pathway, DHNA pathway and MK-7 pathway modules): HepPPS, MenA, UbiE, run in engineered E. coli. The DHNA module is named but no DHNA-forming reaction is stated in the text. Precursor-supply and central-carbon conversions the paper states (Idi, acs, PoxB) are listed as off-pathway. Two catalysts are B. subtilis-derived genes expressed in E. coli; the reaction organism is E. coli (pinned_v1 export_rationale).",
       "source": {

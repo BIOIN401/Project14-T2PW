@@ -20,7 +20,10 @@ from t2pw.bench.eval_v2.gold import (SUPPLEMENT_PATH, GoldV2Error, load_fulltext
 from t2pw.bench.goldset import load_gold_set, pinned_gold_set_path
 
 ROOT = Path(__file__).resolve().parents[1]
-COMPLETE = {"PMC12096016", "PMC12657337", "PMC12312563", "PMC12421875"}
+# D-103 (ORCH-744): PMC12657337 stays labelled but is NOT certified complete (bio-audit
+# B-R3-1), so it is in LABELLED and not in COMPLETE. Its quotes are still verified.
+COMPLETE = {"PMC12096016", "PMC12312563", "PMC12421875"}
+LABELLED = COMPLETE | {"PMC12657337"}
 
 
 def _committed(pattern: str):
@@ -37,17 +40,17 @@ def test_supplement_is_invisible_to_every_existing_gold_reader():
     assert load_gold_set().source_path == str(pinned_gold_set_path())
 
 
-def test_supplement_loads_four_complete_cases_all_keyed_to_pinned_v1():
+def test_supplement_loads_three_complete_cases_all_keyed_to_pinned_v1():
     cases = load_supplement()
     pinned = {c.paper_id for c in load_gold_set().cases}
     assert {pid for pid, c in cases.items() if c.complete} == COMPLETE
-    assert set(cases) <= pinned
+    assert set(cases) == LABELLED and set(cases) <= pinned
     for c in cases.values():
         assert c.reactions and c.source["xml_sha256"] and c.source["text_sha256"]
         assert c.source["source_url"].startswith("https://www.ebi.ac.uk/europepmc/")
 
 
-@pytest.mark.parametrize("pid", sorted(COMPLETE))
+@pytest.mark.parametrize("pid", sorted(LABELLED))
 def test_every_in_scope_quote_is_verbatim_in_the_committed_paper_text(pid):
     """Reproducibility from the repository alone: the scored reactions' quotes are in
     the git-tracked 01_source_text.txt of the most recent committed run."""
@@ -63,9 +66,9 @@ def test_every_quote_is_verbatim_in_the_pinned_fetched_full_text():
     """Runs only where the EuropePMC texts were fetched (kept OUTSIDE the repo)."""
     ft_dir = Path(os.environ.get("T2PW_EVAL_FULLTEXT_DIR", "C:/t/eval-fulltext"))
     cases = load_supplement()
-    if not all((ft_dir / f"{pid}.txt").is_file() for pid in COMPLETE):
+    if not all((ft_dir / f"{pid}.txt").is_file() for pid in LABELLED):
         pytest.skip(f"fetched full texts not present in {ft_dir}")
-    for pid in COMPLETE:
+    for pid in LABELLED:
         text = load_fulltext(cases[pid], ft_dir)  # raises on a sha256 mismatch
         assert verify_quotes(cases[pid], text) == [], pid
 

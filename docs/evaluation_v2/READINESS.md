@@ -2,8 +2,9 @@
 
 ## Verdict
 
-**READY WITH GAPS:** (1) reaction precision/recall/F1 are measurable only on the four newly complete gold
-papers — any other paper needs its own exhaustive gold first; (2) per-call LLM reproducibility metadata is
+**READY WITH GAPS:** (1) reaction precision/recall/F1 are measurable only on the three certified-complete gold
+papers (PMC12657337 is labelled but not certified complete, D-103) — any other paper needs its own exhaustive
+gold first; (2) per-call LLM reproducibility metadata is
 incomplete at the source — 6 of 11 fields are not recorded (served model, per-call temperature, seed,
 provider identity, token usage, and a response hash that is written EMPTY on every committed record), and
 closing that needs production hooks this lane may not add; (3) the mapped-ID `wrong_identity` flag is a
@@ -25,16 +26,16 @@ and refreshing the snapshot means committing a cache, which is the product owner
 
 | capability | status | sample |
 |---|---|---|
-| exhaustive gold for positive cases | 4 cases, 18 in-scope reactions, every quote verified in the fetched text and every in-scope quote in the committed text | PMC12096016 (5), PMC12657337 (3), PMC12312563 (1), PMC12421875 (9) |
-| reaction P / R / F1, two tables (D-093) | ready for those 4 papers | canonical, 26 legs: P 86.0% (117/136), R 96.6% (114/118), F1 91.0%; fallback, 44 legs: P 64.2% (199/310), R 96.2%, F1 77.0% |
-| unsupported-reaction rate | ready; lineage-aware, upper bound reported | canonical 2.8% (4/141, ≤ 6.4%); fallback 16.8% (62/370, ≤ 33.2%, the bound including 1 `name_conflict` row; the PoxB gold correction moved 1 row from unsupported to off-pathway) |
+| exhaustive gold for positive cases | 3 cases certified complete, 15 in-scope reactions, every quote verified in the fetched text and every in-scope quote in the committed text; a 4th case is labelled but not certified (D-103) and is not scored | PMC12096016 (5), PMC12312563 (1), PMC12421875 (9); PMC12657337 (3) labelled only |
+| reaction P / R / F1, two tables (D-093) | ready for those 3 papers | canonical, 26 legs: P 86.0% (117/136), R 96.6% (114/118), F1 91.0%; fallback, 30 legs: P 70.0% (145/207), R 95.1%, F1 80.7% |
+| unsupported-reaction rate | ready; lineage-aware, upper bound reported | canonical 2.8% (4/141, ≤ 6.4%); fallback 21.5% (48/223, ≤ 28.7%; no `name_conflict` row remains, its case being unscored under D-103) |
 | entity accuracy | ready | canonical substrate 96.5%, product 97.9%, enzyme 100% of matched, species 100% of known (12 unknown) |
-| evidence support | ready | canonical 77.3% of rows carry a verbatim paper quote; fallback 50.8% (119 rows carry only document dumps) |
-| strict vs old matcher | reported side by side on the same rows; a parenthetical's inside never overrides a contradicting outer name (1 `name_conflict` row listed for hand review) | canonical old recall 90.7% vs v2 96.6% (7 rows the old matcher refused on an enzyme-name contradiction); fallback 2 rows credited by old only through congener containment (`DHNA` for `DHNA-CoA`) |
+| evidence support | ready | canonical 77.3% of rows carry a verbatim paper quote; fallback 51.6% (53 rows carry only document dumps) |
+| strict vs old matcher | reported side by side on the same rows; a parenthetical's inside never overrides a contradicting outer name (the one committed `name_conflict` row belongs to PMC12657337, unscored since D-103, and stays pinned by a test) | canonical old recall 90.7% vs v2 96.6% (7 rows the old matcher refused on an enzyme-name contradiction); fallback 2 rows credited by old only through congener containment (`DHNA` for `DHNA-CoA`) |
 | mapped-ID correctness | ready as a candidate flag, judged per identifier, against the reference tables as committed (blob ids in the report) | 115 canonical legs: 1184 correct (322 on the mapper cache only), 510 unresolved/novel, 119 wrong-identity candidates (47 on the mapper cache only), 17 not evaluable |
-| live retrieval (production retriever, `embedding_mode: api`) | ready | target-quote Recall@1/3/5 16.7% / 22.2% / 44.4%, P@5 8.9%, MRR 0.293; participants-named Recall@5 61.1%, MRR 0.437; negative rejection 0/49 |
-| retrieval vs LLM-use vs admission (A/B/C/D) | ready on archived reports | untruncated 34 legs: A 5, B 2, C 8, admitted 2, D 0 (137 already in Stage 1); truncated 28 legs: B 2, C 4 |
-| chunk provenance | ready | 144/144 live hits and 8,733/8,733 persisted candidates: provenance present, `validate_provenance` ok, valid source reference |
+| live retrieval (production retriever, `embedding_mode: api`) | ready; measured before D-103 and not re-measured, so 3 of 18 positive and 24 of 49 negative queries involve PMC12657337 | target-quote Recall@1/3/5 16.7% / 22.2% / 44.4%, P@5 8.9%, MRR 0.293; participants-named Recall@5 61.1%, MRR 0.437; negative rejection 0/49 |
+| retrieval vs LLM-use vs admission (A/B/C/D) | ready on archived reports | untruncated 32 legs: A 5, B 2, C 8, admitted 2, D 0 (131 already in Stage 1); truncated 18 legs: B 2, C 4 |
+| chunk provenance | ready | 144/144 live hits and 6,407/6,407 persisted candidates: provenance present, `validate_provenance` ok, valid source reference |
 | un-gated RAG influence audit | ready, report-only | Stage-2 merge output: 20 candidates in 13 of 162 legs (3 on external retrieved evidence); canonical final: 8 in 7 of 112 (3 external) |
 | reproducibility-metadata completeness | measured | 663 committed model_attempt records (T-108 only): model, finish_reason, request(=prompt) hash, retry count 100%; the other 6 fields 0% |
 

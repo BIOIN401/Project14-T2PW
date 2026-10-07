@@ -17,6 +17,8 @@ import re
 import subprocess
 from pathlib import Path
 
+from t2pw.bench.eval_v2 import reactions as R
+from t2pw.bench.eval_v2.gold import load_supplement
 from t2pw.bench.eval_v2.report import evaluate, render_markdown
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,17 +42,28 @@ def test_committed_sample_report_is_reproducible_from_tracked_artifacts():
     assert render_markdown(committed, commit) == md
 
 
-def test_committed_report_no_longer_credits_heptanoyl_hepp():
-    """Review finding B2 (ORCH-742c repair 1) on the committed artifact: row 17 of the
+def test_committed_report_scores_no_leg_of_the_uncertified_pmc12657337():
+    """D-103 (ORCH-744): PMC12657337 is labelled but NOT certified complete (bio-audit
+    B-R3-1), so none of its legs feeds reaction precision, recall, the unsupported rate
+    or the archived RAG split. Deliberately moved pin (merge rule 4): this replaces
+    test_committed_report_no_longer_credits_heptanoyl_hepp, whose row left the report
+    with its case; the B2 check on that committed row is kept in the next test."""
+    committed = json.loads((OUT / "sample_report.json").read_text(encoding="utf-8"))
+    assert committed["gold_supplement"]["complete_cases"] == ["PMC12096016", "PMC12312563", "PMC12421875"]
+    assert [l["leg_dir"] for l in committed["reaction_metrics"]["legs"] if l["target_paper"] == "PMC12657337"] == []
+    assert [s["leg_dir"] for s in committed["rag_archived_failure_split"]["legs"]
+            if s["target_paper"] == "PMC12657337"] == []
+    assert [c for l in committed["reaction_metrics"]["legs"] for c in l["metrics"]["name_conflicts_for_hand_review"]] == []
+
+
+def test_committed_heptanoyl_hepp_row_is_still_a_name_conflict():
+    """Review finding B2 (ORCH-742c repair 1) on the committed artifact, scored directly
+    now that the report no longer carries the case (D-103): row 17 of the
     runs/2026-07-28_2122 PMC12657337 fallback leg is a name conflict for hand review,
     not a true positive for R1."""
-    committed = json.loads((OUT / "sample_report.json").read_text(encoding="utf-8"))
-    legs = [l for l in committed["reaction_metrics"]["legs"]
-            if l["leg_dir"].startswith("runs/2026-07-28_2122/papers/PMC12657337")]
-    assert legs
-    conflicts = [c for l in legs for c in l["metrics"]["name_conflicts_for_hand_review"]]
-    assert [(c["row_index"], c["conflicting_names"]) for c in conflicts] == [
+    leg = ROOT / "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research"
+    payload = json.loads((leg / "merged_payload.json").read_text(encoding="utf-8"))
+    res = R.score_leg(load_supplement()["PMC12657337"], payload, [], None)
+    assert [(c["row_index"], c["conflicting_names"]) for c in res["name_conflicts_for_hand_review"]] == [
         (17, ["heptanoyl pyrophosphate (HepPP)"])]
-    for l in legs:
-        assert all(d["row_index"] != 17 or d["v2_class"] != "target_paper_supported"
-                   for d in l["metrics"]["old_lenient_matcher_same_rows"]["rows_where_old_and_v2_disagree"])
+    assert res["rows"][17]["class"] == R.CONFLICT and res["rows"][17]["gold_ids"] == ["R1"]

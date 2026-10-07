@@ -1,6 +1,6 @@
 # Evaluation v2 (ORCH-742c) — definitions, gold labels, and how to reproduce
 
-**A NEW, separately versioned evaluator (`eval-v2.0`, with the ORCH-742c repair-round-1 corrections B1/B2 described in §§ 2–4 and the repair-round-2 corrections: ID reference tables read from the commit, § 4; PMC12657337 PoxB off-pathway label, § 1).** It re-runs nothing and edits nothing: T-107,
+**A NEW, separately versioned evaluator (`eval-v2.0`, with the ORCH-742c repair-round-1 corrections B1/B2 described in §§ 2–4 and the repair-round-2 corrections: ID reference tables read from the commit, § 4; PMC12657337 PoxB off-pathway label, § 1; and, under product-owner decision D-103 (ORCH-744), PMC12657337 is no longer certified complete, § 1).** It re-runs nothing and edits nothing: T-107,
 T-108, T-109 and every committed benchmark report keep their meaning. These numbers come from a different
 instrument and are **not** a re-score, replacement or correction of any earlier result. Production is
 frozen (D-102); no production module imports this code (`tests/test_eval_v2_metrics.py::
@@ -16,7 +16,7 @@ biological correctness anywhere here.
 | `docs/evaluation_v2/READINESS.md` | verdict for the upcoming results run |
 | `tests/test_eval_v2_*.py` | new acceptance tests (+ one strict-xfail finding) |
 
-## 1. Gold: four newly complete positive cases
+## 1. Gold: four labelled positive cases, three certified complete (D-103)
 
 **Where, and why there.** `pinned_v1.json` is byte-identical (product-owner decision 1). The new labels are
 a **supplement** in `src/t2pw/bench/eval_v2/`, not in `src/t2pw/bench/gold/`: `goldset.pinned_gold_set_path()`
@@ -45,7 +45,7 @@ the target paper only; it never by itself makes an unmatched row "invented"** (s
 | case | species | in-scope | off-pathway | summaries | scope in one line |
 |---|---|---|---|---|---|
 | PMC12096016 | *E. coli* | 5 (EntC, EntB, EntA, EntE, EntF) | 4 (MenD, LDH assay, TolC secretion, Fe chelation) | 2 | DHB + assembly arms; ArCP loading and EntD phosphopantetheinylation excluded as protein-bound states (the D-091 audit's rule for ThDP adducts) |
-| PMC12657337 | *E. coli* | 3 (HepPPS, MenA, UbiE) | 3 (Idi IPP→FPP as stated, acs, PoxB pyruvate→acetate) | 0 | the paper's own "MK-7 pathway" module (Fig. 1); MVA/precursor modules stated only by enzyme names |
+| PMC12657337 (**not certified complete**, D-103) | *E. coli* | 3 (HepPPS, MenA, UbiE) | 3 (Idi IPP→FPP as stated, acs, PoxB pyruvate→acetate) | 0 | the paper's own "MK-7 pathway" module (Fig. 1); MVA/precursor modules stated only by enzyme names |
 | PMC12312563 | *L. monocytogenes* | 1 (MenD) | 0 | 0 | adopts the D-091 audit biology (upheld by D-092), re-verified on the fetched text: MenD 133, other Men symbols 0, free chorismate 0 |
 | PMC12421875 | *L. lactis* | 9 (MenF, D, H, C, E, B, I, A, G) | 3 (biosensor Fe reduction, ferrozine, DHNA efflux) | 1 | MenH–MenI stated through the steady-state model's letter-assigned equations (5)–(11); MenG's wrong verb noted, its DMK→MK pair scored |
 
@@ -57,14 +57,31 @@ abbreviation only. It is now off-pathway `O3` (pyruvate → acetate, PoxB/pyruva
 string is corrected. On the committed corpus exactly one row moved: `runs/2026-07-28_2122` PMC12657337
 strict (fallback) row 9, pyruvate → acetate, from `unsupported` to `paper_stated_off_pathway`. Fallback
 unsupported rate 17.0% (63/370) → 16.8% (62/370), upper bound 33.5% → 33.2%, off-pathway rows 33 → 34;
-precision (199/310), recall and F1 are unchanged, and canonical is unchanged.
+precision (199/310), recall and F1 are unchanged, and canonical is unchanged. (Since D-103, below, no
+PMC12657337 leg is scored at all; these deltas are the record of repair round 2.)
+
+**PMC12657337 is labelled but NOT certified complete (product-owner decision D-103, ORCH-744).** The final
+bio-audit (finding B-R3-1) did not certify it: the lumped FPP + IPP + DHNA → MK-7 conversion stated in
+Results 3.2 is unbooked. Under D-087 clause 3 an uncertified flag is set to `false`, so the case carries
+`supported_reactions_complete: false` with a `completeness_status` note. Its labelled reactions stay as data
+(the matcher regression fixtures in `tests/test_eval_v2_metrics.py` still use them, and every one of its quotes
+is still verified), but **none of its 14 committed legs (all fallback) feeds reaction precision, recall, F1, the
+unsupported rate or the archived RAG split**, which are defined over exhaustively labelled cases only: the
+evaluator already skipped any case whose flag is `false` (`report.evaluate`, `report.run_live`), so no code
+changed. On the committed corpus canonical is unchanged (PMC12657337 has no canonical leg); fallback went from
+44 legs, P 64.2% (199/310), R 96.2% (177/184), F1 77.0%, unsupported 16.8% (62/370; ≤ 33.2%), 34 off-pathway
+rows, 1 name-conflict row, to **30 legs, P 70.0% (145/207), R 95.1% (135/142), F1 80.7%, unsupported 21.5%
+(48/223; ≤ 28.7%), 2 off-pathway rows, 0 name-conflict rows**. The unsupported rate rises because the removed
+legs' 147 retained rows held only 14 unsupported ones (9.5%) beside 32 paper-stated off-pathway rows. This is a new evaluator version's number on a smaller gold population, not a re-score of
+T-107/T-108/T-109.
 
 **Not completed, and why.** PMC12782028: MSMO1's catalysis is stated on a compound *class* ("4,4-dimethyl and
 4alpha-methylsterols") with no named product, which a two-sided signature cannot represent honestly.
 PMC12856317: its protease statements are degradation of ALAS proteins, not metabolite conversions; a scope
 ruling on those belongs to the product owner. PMC12444477 (lipid A, a long regulation paper) and
 PMC12452463 (a broad review whose route PRODUCT_CONTRACT § 13 records as chemically broken) were not attempted in this lane. The two
-negative controls already carry `max_retained_reactions` ceilings. **So: 4 newly complete cases.**
+negative controls already carry `max_retained_reactions` ceilings. **So: 4 newly labelled cases, of which 3
+are certified complete (PMC12096016, PMC12312563, PMC12421875; D-103).**
 
 ## 2. Strict matcher (`matcher.py`)
 
@@ -87,7 +104,9 @@ lenient matcher — and `CoA`/`acetyl-CoA`, `PGE2`/`PGE1`, `2,3-DHB`/`2,5-DHB`, 
 credited a row if EITHER side of a parenthetical matched, so `heptanoyl pyrophosphate (HepPP)` — a C7 acyl
 diphosphate — was credited as heptaprenyl diphosphate for PMC12657337 R1 (`runs/2026-07-28_2122`, fallback
 row 17) through its abbreviation. Such a row is now class `name_conflict` and listed for hand review in
-`SAMPLE_REPORT.md`; it is the only one in the committed corpus (fallback precision 200/310 → 199/310). The
+`SAMPLE_REPORT.md`; it is the only one in the committed corpus (fallback precision 200/310 → 199/310). Since
+D-103 its case is not scored, so the report lists no name-conflict row; the rule stays pinned on that committed
+row by `tests/test_eval_v2_report.py::test_committed_heptanoyl_hepp_row_is_still_a_name_conflict`. The
 evaluator cannot tell a generic outer name (`oxidoreductase (entA)`) from a contradicting one
 (`isochorismate synthase (EntB)`), so an enzyme credited only through its parenthetical's inside is scored
 `name_conflict` as well (none occurs on a matched row today).
@@ -200,6 +219,11 @@ case whose exhaustive gold states no such reaction. The production retriever has
 hybrid score is min-max normalized per query (top hit ≈ 1.0), so retrieval-level negative rejection is 0 by
 construction; rejection happens only at admission.
 
+**`retrieval_live.json` predates D-103 and is reused, not re-measured** (ORCH-744 made no embedding call). It was
+measured while PMC12657337 was flagged complete: 3 of its 18 positive queries are PMC12657337's, and 24 of its 49
+negative queries are run from or against PMC12657337, whose gold is no longer certified exhaustive. A fresh
+`live-retrieval` run would query the three complete cases only (15 positive queries).
+
 **Archived (`rag.archived_failure_split`).** Over committed `rag_admission_report.json` of the complete cases'
 legs, for each in-scope gold reaction **not already in that leg's strict Stage-1 payload**: `A` no persisted
 retrieved span names every defining participant and no candidate matches · `B` a span names them all but no
@@ -260,10 +284,13 @@ committed at HEAD, with their blob ids recorded in the report. A dirty cache in 
 therefore never read; the test first checks the recorded blob ids against HEAD, so a cache committed after the
 report was generated fails it with an explicit "regenerate" message. The report is pinned to the committed corpus: a
 merge that adds committed runs for these papers, or `final_mapped.json` legs, also requires regenerating it.
+`docs/pwml_recovery_sprint/TEST_MATRIX.md` registers the test as a **repo-wide census pin** (D-103): such a red is
+regenerated deliberately with the command above and is not a regression.
 
 ## 10. Known unevaluated areas
 
-- Reaction P/R/F1 exists only for the four complete cases; any other paper needs its own exhaustive gold first.
+- Reaction P/R/F1 exists only for the three complete cases (PMC12657337 is labelled but not certified, D-103);
+  any other paper needs its own exhaustive gold first.
 - Stoichiometry, directionality beyond the reversible flag, compartments and transports are not scored.
 - The strict matcher has no synonym source: a correct row written with an unlisted synonym is `unsupported`
   or `partial_match` until a gold alias is added (the per-row detail shows every such row).

@@ -1,6 +1,6 @@
 # Evaluation v2 -- sample report (eval-v2.0 (ORCH-742c))
 
-Run artifacts read: git-tracked files at commit `a0c0115acba51eb75f36c8c7749d9e72cc88b154` (the run trees are unchanged on this branch). Regenerate: `python -m t2pw.bench.eval_v2.report evaluate --repo . --out docs/evaluation_v2 --live-json docs/evaluation_v2/retrieval_live.json`.
+Run artifacts read: git-tracked files at commit `a51e9609ad92d75485c5b3c198e779d991bc815a` (the run trees are unchanged on this branch). Regenerate: `python -m t2pw.bench.eval_v2.report evaluate --repo . --out docs/evaluation_v2 --live-json docs/evaluation_v2/retrieval_live.json`.
 
 > NEW evaluator version. Not a re-score, replacement or correction of T-107, T-108, T-109 or any committed benchmark result; those keep their meaning and were not re-run. Every number below is computed from git-tracked run artifacts at the commit this file was generated on. The mapped-ID reference tables (data/id_mapping_cache.json, data/enrichment_cache.json, data/pathwhiz_id_db.json) are mutable runtime caches; they are read as committed at HEAD, never from the working tree, and their blob ids are recorded under mapped_id_correctness.reference_tables. 'PWML produced' is not biological correctness and is not reported as such.
 
@@ -11,22 +11,20 @@ Run artifacts read: git-tracked files at commit `a0c0115acba51eb75f36c8c7749d9e7
 | PMC12096016 | 5 | 4 |
 | PMC12312563 | 1 | 0 |
 | PMC12421875 | 9 | 3 |
-| PMC12657337 | 3 | 3 |
 
 ## 2. Reaction-level metrics (strict v2 matcher; micro-averaged; populations never summed)
 
 | population | legs | precision | recall | F1 | unsupported rate (upper bound) | off-pathway rows | summary rows | name-conflict rows | partial rows | substrate acc | product acc | enzyme acc | species acc | evidence support | OLD lenient recall |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | canonical | 26 | 86.0% (117/136) | 96.6% (114/118) | 91.0% | 2.8% (4/141; <= 6.4%) | 5 | 1 | 0 | 9 | 96.5% | 97.9% | 100.0% | 100.0% | 77.3% | 90.7% |
-| fallback | 44 | 64.2% (199/310) | 96.2% (177/184) | 77.0% | 16.8% (62/370; <= 33.2%) | 34 | 5 | 1 | 9 | 95.6% | 97.8% | 100.0% | 100.0% | 50.8% | 96.2% |
+| fallback | 30 | 70.0% (145/207) | 95.1% (135/142) | 80.7% | 21.5% (48/223; <= 28.7%) | 2 | 5 | 0 | 7 | 94.2% | 97.2% | 100.0% | 100.0% | 51.6% | 95.1% |
 | T-107:canonical | 1 | 100.0% (5/5) | 100.0% (5/5) | 100.0% | 0.0% (0/5; <= 0.0%) | 0 | 0 | 0 | 0 | 100.0% | 100.0% | 100.0% | 100.0% | 100.0% | 100.0% |
-| T-107:fallback | 6 | 67.6% (25/37) | 92.3% (24/26) | 78.0% | 18.9% (7/37; <= 18.9%) | 4 | 0 | 0 | 1 | 90.6% | 96.2% | 100.0% | 100.0% | 56.8% | 92.3% |
+| T-107:fallback | 4 | 70.4% (19/27) | 90.0% (18/20) | 79.0% | 25.9% (7/27; <= 25.9%) | 0 | 0 | 0 | 1 | 87.5% | 95.0% | 100.0% | 100.0% | 48.1% | 90.0% |
 | T-108:canonical | 2 | 100.0% (10/10) | 100.0% (10/10) | 100.0% | 0.0% (0/10; <= 0.0%) | 0 | 0 | 0 | 0 | 100.0% | 100.0% | 100.0% | 100.0% | 90.0% | 100.0% |
-| T-108:fallback | 6 | 68.6% (24/35) | 92.3% (24/26) | 78.7% | 14.3% (5/35; <= 14.3%) | 5 | 1 | 0 | 0 | 90.6% | 92.3% | 100.0% | 100.0% | 68.6% | 92.3% |
+| T-108:fallback | 4 | 78.3% (18/23) | 90.0% (18/20) | 83.7% | 13.0% (3/23; <= 13.0%) | 1 | 1 | 0 | 0 | 87.5% | 90.0% | 100.0% | 100.0% | 60.9% | 90.0% |
 
-Name-conflict rows for hand review (1): a parenthetical's inside names a gold term its outer name does not match, so the row is not credited (it counts toward the unsupported upper bound):
+Name-conflict rows for hand review (0): a parenthetical's inside names a gold term its outer name does not match, so the row is not credited (it counts toward the unsupported upper bound):
 
-- `runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research` row 17: ['heptanoyl pyrophosphate (HepPP)'] vs gold ['R1']
 
 Old lenient matcher vs strict v2 matcher on the SAME rows (old credits / v2 refuses; v2 credits / old refuses): canonical: 0 / 7; fallback: 2 / 0; T-107:canonical: 0 / 0; T-107:fallback: 0 / 0; T-108:canonical: 0 / 0; T-108:fallback: 1 / 0
 
@@ -58,10 +56,10 @@ Per retrieved chunk: provenance_present=True: 144, valid_source_reference=True: 
 
 | population | legs | already in Stage 1 | A not retrieved | B retrieved, not used | C proposed, rejected | admitted | accepted candidates | D accepted unsupported | accepted external biology |
 |---|---|---|---|---|---|---|---|---|---|
-| untruncated | 34 | 137 | 5 | 2 | 8 | 2 | 14 | 0 | 2 |
-| truncated | 28 | 114 | 0 | 2 | 4 | 0 | 67 | 0 | 23 |
+| untruncated | 32 | 131 | 5 | 2 | 8 | 2 | 7 | 0 | 0 |
+| truncated | 18 | 84 | 0 | 2 | 4 | 0 | 12 | 0 | 12 |
 
-Per persisted candidate chunk: untruncated: provenance_present=True 3066, valid_source_reference=True 3066, validate_provenance_ok=True 3066; truncated: provenance_present=True 5667, valid_source_reference=True 5667, validate_provenance_ok=True 5667
+Per persisted candidate chunk: untruncated: provenance_present=True 2795, valid_source_reference=True 2795, validate_provenance_ok=True 2795; truncated: provenance_present=True 3612, valid_source_reference=True 3612, validate_provenance_ok=True 3612
 
 ## 6. Un-gated RAG influence audit (report only)
 
