@@ -13,7 +13,7 @@ crawl is both expensive and useless.
 | Max rounds | 8 | `MAX_ROUNDS` | `--max-rounds` |
 | Max papers discovered | 150 | `MAX_PAPERS_DISCOVERED` | `--max-papers-discovered` |
 | Max papers fully processed | 40 | `MAX_PAPERS_PROCESSED` | `--max-papers-processed` |
-| Max new reactions per round | 25 | `MAX_NEW_REACTIONS_PER_ROUND` | — |
+| Max reactions newly admitted per round | 25 | `MAX_NEW_REACTIONS_PER_ROUND` | — |
 | Max passages per paper | 20 | `MAX_PASSAGES_PER_PAPER` | — |
 | Max passages per extraction call | 5 | `MAX_PASSAGES_PER_CALL` | — |
 | Max primary-graph reactions | 200 | `MAX_PRIMARY_REACTIONS` | — |
@@ -119,7 +119,7 @@ request came back empty on `finish_reason=length`. The output budget (`PATHWAY_M
 | `max_primary_reactions_reached` | primary graph full |
 | `max_candidate_reactions_reached` | candidate quarantine full |
 | `max_candidate_components_reached` | too many components |
-| `max_new_reactions_per_round_reached` | the last round added at least that many reactions new to the graph (admitted or quarantined). That round is complete and kept; the next one does not start |
+| `max_new_reactions_per_round_reached` | the last round newly admitted at least that many reactions to the target graph (`GraphDelta.added_reaction_ids`: decisions `accepted` / `conflicting`). Quarantined candidates and leads do not count. That round is complete and kept; the next one does not start |
 | `max_llm_calls_reached` | call budget spent |
 | `max_input_tokens_reached` / `max_output_tokens_reached` | token budget spent |
 | `max_estimated_cost_reached` | estimated cost budget spent |
@@ -134,6 +134,17 @@ request came back empty on `finish_reason=length`. The output budget (`PATHWAY_M
 The **first** limit reached is the one recorded; a later one does not overwrite
 it.
 
+### What the per-round cap counts
+
+`max_new_reactions_per_round` counts only reactions newly **admitted** to the target
+graph in the last round. A quarantined candidate (wrong species, inferred only, in vitro,
+hypothesis, incomplete) is kept, placed and shown, but it does not count. In pilot-003 one
+bryophyte review gave 23 of round 1's 35 quarantined candidates, not one of them
+admissible, and the old count (admitted plus quarantined, 35 >= 25) ended the run after
+round 1 with nothing admitted. Quarantined growth is still bounded: by
+`max_candidate_reactions`, `max_candidate_components`, and the discovery, processing, call,
+token, cost and wall-clock caps.
+
 ### What "useful" means
 
 `GraphDelta.useful` is true when a round added a reaction, added a candidate
@@ -145,7 +156,7 @@ useful round resets the streak.
 ## Where limits are checked
 
 * `check_before_round` — rounds, wall clock, calls, tokens, cost, papers
-  processed, graph sizes, new reactions added by the last round, cancellation,
+  processed, graph sizes, reactions newly admitted by the last round, cancellation,
   convergence.
 * `check_before_call` — calls, tokens, cost, wall clock, cancellation. Checked
   before **every** attempt, so a run that has exhausted its token allowance stops

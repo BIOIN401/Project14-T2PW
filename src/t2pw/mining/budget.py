@@ -95,7 +95,9 @@ class Usage:
     claims_extracted: int = 0
     elapsed_seconds: float = 0.0
     unproductive_streak: int = 0
-    #: Reactions new to the graph (admitted or quarantined) in the last round.
+    #: Reactions newly ADMITTED to the target graph in the last round. Quarantined
+    #: candidates and leads do not count (ORCH-745 B1): in pilot-003 one off-species
+    #: review gave 23 of 35 never-admissible candidates and ended the run after round 1.
     last_round_new_reactions: int = 0
 
     def to_dict(self) -> Dict[str, Any]:
@@ -218,7 +220,7 @@ class BudgetLedger:
                 STOP_MAX_NEW_REACTIONS_PER_ROUND,
                 self.usage.last_round_new_reactions,
                 b.max_new_reactions_per_round,
-                f"new reactions in round {self.usage.rounds}",
+                f"newly admitted reactions in round {self.usage.rounds}",
             ),
         ):
             if reason:
