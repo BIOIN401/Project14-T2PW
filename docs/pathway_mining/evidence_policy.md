@@ -269,7 +269,9 @@ of span as not the paper's own prose:
   from the paper record. A record with no abstract of its own takes the front
   matter's "Abstract ..." passage instead (`retrieval.front_matter_abstract`: from
   the heading to the keyword, funding or flag block after it, cut back to its last
-  full stop). GH3.10 supplied as a bare PMCID would otherwise lose "In flowers and
+  full stop, and only when that reads as an abstract: at least 200 characters with
+  at least one sentence; PMC12864622's 117-character supplementary-material note
+  is not one). GH3.10 supplied as a bare PMCID would otherwise lose "In flowers and
   wounded leaves of gh3.10 jar1 knockout lines JA-Ile was below the detection
   limit.", which appears nowhere else in its text.
 * **`publisher_note`**: the publisher disclaimers seen so far ("Publisher's Note:
@@ -277,9 +279,15 @@ of span as not the paper's own prose:
   endorsed by the publisher.").
 * **`reference_list`**: a `References` / `REFERENCES` / `Literature Cited` /
   `Bibliography` heading followed by citation-dense text, to the end of its run of
-  citation marks, then to the next figure or table **label** ("Figure 1 In
-  silico", "Table 2.", "FIG. 3", "Fig 4:"; not a mention such as "(Supplemental
-  Table S3) ,"), or to the end of the text. A citation mark is a DOI, a PMCID, a
+  citation marks, then to the next figure or table label or mention ("Figure 1
+  In silico", "FIG. 3", "Fig 4", "(Table 1 )"), or to the end of the text. A
+  mention can end a list early (the pepper paper's at "(Supplemental Table S3) ,",
+  leaving a data-availability sentence outside it) but never late: repair 1's
+  label-only rule let a false list, a table's "References" column with
+  author-year cells, run past the table's own mentions to the end of the text and
+  drop the body prose after it (PMC8510960, PMC12925505), and lost legends that
+  open "(A)", "|", a dash, "jar1", "13-LOX" or "Δ"; repair 2 restored the
+  6ceef736 rule, keeping only the added "Fig" / "FIG" forms. A citation mark is a DOI, a PMCID, a
   bare 6-8 digit PMID, a `( 2019 )` or `2020;298` year, or a `14 , 171 – 178`
   volume and page range; citation-dense means at least 5 marks per 1,000
   characters. When no heading is found (EuropePMC prints none for ACS and some
@@ -295,7 +303,10 @@ of span as not the paper's own prose:
   corporate author ("World Health Organization"). PMC12624714 (ACS):
   without it, the chunk running from the Abbreviations into the bibliography
   carried "Andrade F. F. ... 10.3390/microorganisms8111716 ... PMC7692639" as a
-  passage.
+  passage. Because a mention ends a list, the search starts again after each
+  headingless list it finds: PMC13418202's first run opens at its Supporting
+  Information DOI and ends at "(Table S1, PDF)"; its bibliography follows with no
+  heading and is the second run.
 
 `PassageIndex.add_paper` lets rag chunk the full text as it is, so an untouched
 chunk keeps its id and text. Each chunk then loses what falls inside one of those
@@ -343,8 +354,9 @@ signal wins (`acquisition.grade_evidence_type`):
    as a word: "reviewed-preprint" and "Peer Review" are not review types;
 2. the **JATS subject heading** EuropePMC prints just before the record title in
    the full text's front matter, read before the front matter is stripped:
-   "Review", "Reviews", "Review Article", "Mini-Review", "Minireview",
-   "Systematic Review", "JBC Reviews" ("... 779 1 Review Update of the
+   "Review", "Reviews", "Review Article", "REVIEW ARTICLE", "Review Essay"
+   (BioEssays), "Mini-Review", "Minireview", "Minireviews", "Systematic Review",
+   "JBC Reviews" ("... 779 1 Review Update of the
    sideroflexin ...", PMC12180156; "... 1 JBC Reviews The regulation of lipid A
    biosynthesis", PMC12444477: neither says it anywhere else). It is anchored to
    the words right before the title and case-sensitive, so a CRediT "Writing -
@@ -382,7 +394,8 @@ text is known (`Acquirer._settle_included`): first one EuropePMC `core` search
 by PMID or PMCID through the source seam (`PaperSource.paper_metadata`; an
 offline run never asks), which adds the declared publication types and fills an
 empty DOI, journal, abstract (stored as plain text: EuropePMC serves
-`<h4>`, `<i>`, `<sup>`), PMID or PMCID (A14: the DOI was empty on every pilot
+`<h4>`, `<i>`, `<sup>`; only tag-shaped markup, "<" then a letter, is stripped, so
+"P < 0.05" and ">2-fold" stay verbatim), PMID or PMCID (A14: the DOI was empty on every pilot
 paper); then the grade is taken on the full text. A failed lookup is asked once
 more; failing twice it is a note on the paper, never an exception, the grade rests
 on the text rules, and the record says so in machine-readable form:
