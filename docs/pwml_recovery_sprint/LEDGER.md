@@ -10704,3 +10704,21 @@ Full record: [`ORCH-743-RESULT.md`](ORCH-743-RESULT.md). **Nothing merged. Nothi
 - `experiment/pathway-mining` @ `f9556288`: mining suite 281, SMOKE 508, every change inside `src/t2pw/mining/`, and every iteration approved by an independent code review and bio-audit.
 - Pilots 001, 002 and 003 (bio verdicts NOT_PLAUSIBLE, PLAUSIBLE_BUT_THIN, NOT_PLAUSIBLE) confirmed each in-scope fix live: 0 uncited drops, 0 wrong NCBI ids, 16/16 extraction calls ok, and the best candidate layer yet (8 correct A. thaliana-tied candidates).
 - The target graph is still empty because of the species gate (`species.py`, out of scope), the per-round cap semantics, the frontier cap and provider routing (`llm/`). Five product-owner decisions are listed in the result. Iterations stopped at the pre-registered maximum of two.
+
+---
+
+## `ORCH-744` — merge eval-v2 and the reaction-evidence UI (D-103) · 2026-10-06 · DISPATCHED
+
+Integration of two approved lanes into `sprint/pwml-recovery`, in this order:
+
+1. **`eval/reaction-rag-metrics`.** First, a narrow patch on the lane branch: PMC12657337 `supported_reactions_complete` set to
+   `false`, the sample report regenerated, the eval tests' "4 complete cases" pins moved deliberately (merge rule 4,
+   documented delta), and the `TEST_MATRIX` census-pin note. The patch gets an independent review, then a `--no-ff` merge.
+2. **`feature/reaction-evidence-ui` @ `e328961e`**, `--no-ff`.
+   - The product owner's uncommitted `streamlit_app.py` edit is set aside from its byte-exact saved patch and
+     re-applied after the merge.
+   - Pre-merge baseline: `C:/t/protected/merge-2026-10-06/` (status, hashes of all 10 dirty files, a full copy of the
+     protected file, the patch).
+
+Verification on a clean worktree of the merged tip: SMOKE, Chunk D, reaction-evidence 19/9/1, eval_v2, gold-readers.
+Not merged: pathway mining, the pilot records, the `candidate/*` branches. `main` is untouched.

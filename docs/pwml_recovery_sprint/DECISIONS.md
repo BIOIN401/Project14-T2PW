@@ -7002,3 +7002,29 @@ points at a blank line, so the sweep must **re-prove** that claim rather than re
 offset would silently "fix" them into new wrong places. **Registered, not chartered.**
 
 **Production re-freezes here. No further production change is authorized.**
+
+---
+
+## D-103 — eval-v2 and the reaction-evidence UI are AUTHORIZED for merge; the protected `streamlit_app.py` may take one 8-line hook · 2026-10-06 · LOCKED
+
+**Decided by the product owner** (2026-10-06, in session, after reading `ORCH-742-RESULT.md` and `ORCH-743-RESULT.md`).
+Recorded by the Lead Orchestrator.
+
+1. **`eval/reaction-rag-metrics` @ `a51e9609` is approved for merge into `sprint/pwml-recovery`**, with two changes first:
+   - `PMC12657337.supported_reactions_complete` is set to **`false`**. The independent bio-audit did not certify it as
+     complete (D-087 clause 3): the lumped FPP + IPP + DHNA → MK-7 conversion in Results 3.2 is unbooked. Three
+     complete cases remain: PMC12096016, PMC12312563 and PMC12421875.
+   - A `TEST_MATRIX.md` note registers `tests/test_eval_v2_report.py` as a **repo-wide census pin**. Its committed
+     report fixture is expected to change whenever committed run results (or the three ID reference tables) change,
+     and it is regenerated deliberately at that point. It is not a regression.
+2. **`feature/reaction-evidence-ui` @ `e328961e` is approved for merge**: the reaction-by-reaction evidence display,
+   the reaction breakdown and the deterministic `.txt` export.
+   - **The frozen and PROTECTED `src/t2pw/app/streamlit_app.py` (D-090 / D-097 § 4 / D-102) may take exactly the
+     branch's 8-line end-of-file hook.** No other change to that file is authorized.
+   - The product owner's **uncommitted** edit to that file stays uncommitted and is preserved, then re-applied after
+     the merge. The protected-file fingerprint therefore moves from `47e4fafa…`; the new value is recorded at merge.
+3. **Not authorized:** merging `experiment/pathway-mining`, any pilot-record branch or either `candidate/*` branch;
+   any change to `main`; re-running T-107/T-108/T-109; any other production change. Pathway-mining development
+   moves to a separate agent.
+4. Merge gates as usual: an independent review of the actual diff (the eval patch included), then integration SMOKE,
+   Chunk D, each lane's focused suite and gold-readers, run on the merged tip.
