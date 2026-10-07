@@ -11,13 +11,19 @@ end contains a round loop.
 `--enable-pathway-mining` goes **before** the subcommand and enables the feature
 for that invocation only.
 
+`run`, `resume` and `preflight` load the project `.env` first
+(`t2pw.config.ensure_dotenv_loaded`), before the feature flag, the configuration or the
+preflight read the environment. A variable already set in the environment wins over
+`.env`. Before ORCH-745 the CLI loaded `.env` only when no flag was passed, so with
+`--enable-pathway-mining` a live preflight said `LLM_PROVIDER` was unset and every pilot
+needed an outside launcher.
+
 ## Commands
 
 ### `run` — start a mining run
 
 ```bash
-python -m t2pw.mining run \
-  --enable-pathway-mining \
+python -m t2pw.mining --enable-pathway-mining run \
   --species "Arabidopsis thaliana" \
   --topic "jasmonate biosynthesis" \
   --seed-metabolite "12-OPDA" \
@@ -106,7 +112,7 @@ re-run. Works on a cancelled run.
 ### `preflight` — check services without running anything
 
 ```bash
-python -m t2pw.mining preflight --enable-pathway-mining \
+python -m t2pw.mining --enable-pathway-mining preflight \
   --species "Arabidopsis thaliana" --topic "jasmonate biosynthesis" [--no-probe] [--json]
 ```
 

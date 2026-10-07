@@ -442,3 +442,59 @@ def test_new_acceptance_745c_b2_a_failed_re_ask_keeps_the_first_thin_answer():
     assert outcome.record.answer_quality == "thin_after_retry"
     assert outcome.record.response_hash == "sha256:1"
     assert outcome.record.response_chars == len(thin["raw_text"])
+
+
+# ---------------------------------------------------------------------------
+# F9: the mining CLI loads the project .env before anything reads the environment
+# ---------------------------------------------------------------------------
+def _spy_dotenv(monkeypatch, events):
+    monkeypatch.setattr("t2pw.config.ensure_dotenv_loaded", lambda: events.append("dotenv"))
+
+
+def test_g9_745c_f9_preflight_loads_dotenv_before_it_reads_the_environment(tmp_path, monkeypatch):
+    """With --enable-pathway-mining, mining_enabled() never loads .env, so a live
+    preflight said LLM_PROVIDER was unset. At f9556288 ensure_dotenv_loaded is never
+    called on this path (events == ["preflight"])."""
+    from t2pw.mining.cli import main
+
+    events = []
+    _spy_dotenv(monkeypatch, events)
+
+    def fake_preflight(config, **kwargs):  # noqa: ARG001
+        events.append("preflight")
+        return SimpleNamespace(ok=True, render=lambda: "", to_dict=lambda: {})
+
+    monkeypatch.setattr("t2pw.mining.preflight.run_preflight", fake_preflight)
+    code = main(["--enable-pathway-mining", "preflight", "--species", H.TARGET_SPECIES,
+                 "--runs-dir", str(tmp_path / "runs"), "--no-probe"])
+    assert code == 0
+    assert events == ["dotenv", "preflight"]
+
+
+def test_new_acceptance_745c_f9_run_and_resume_load_dotenv_before_their_configuration(
+    tmp_path, monkeypatch
+):
+    import pytest
+
+    from t2pw.mining import cli
+    from t2pw.mining.controller import MiningController
+
+    events = []
+    _spy_dotenv(monkeypatch, events)
+
+    def stop(*_a, **_k):
+        events.append("configured")
+        raise SystemExit("stop here")
+
+    monkeypatch.setattr(cli, "_make_config", stop)
+    monkeypatch.setattr(MiningController, "resume", classmethod(lambda cls, *a, **k: stop()))
+    with pytest.raises(SystemExit):
+        cli.main(["--enable-pathway-mining", "run", "--species", H.TARGET_SPECIES,
+                  "--runs-dir", str(tmp_path / "runs")])
+    with pytest.raises(SystemExit):
+        cli.main(["--enable-pathway-mining", "resume", str(tmp_path / "runs" / "r")])
+    assert events == ["dotenv", "configured", "dotenv", "configured"]
+    # status, report and list read only files: no .env.
+    events.clear()
+    cli.main(["list", "--runs-dir", str(tmp_path / "none")])
+    assert events == []
