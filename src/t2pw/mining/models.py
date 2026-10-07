@@ -152,6 +152,10 @@ class PaperRecord:
     #: The rule that decided ``evidence_type``, quoting what it matched, so an
     #: auditor can see why a paper is a review. "" when nothing decided it.
     evidence_type_basis: str = ""
+    #: Was the declared type checked against EuropePMC's record? ``True`` when the
+    #: metadata lookup answered with one, ``False`` when it failed twice (a gate may then
+    #: fail closed), ``None`` when no lookup was made or EuropePMC has no record.
+    evidence_type_verified: Optional[bool] = None
     discovered_round: int = 0
     processed_round: int = -1
     abstract: str = ""
