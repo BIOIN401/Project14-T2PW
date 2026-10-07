@@ -474,9 +474,9 @@ def test_g9_745c_f9_preflight_loads_dotenv_before_it_reads_the_environment(tmp_p
     assert events == ["dotenv", "preflight"]
 
 
-def test_new_acceptance_745c_f9_run_and_resume_load_dotenv_before_their_configuration(
-    tmp_path, monkeypatch
-):
+def test_g9_745c_f9_run_and_resume_load_dotenv_before_their_configuration(tmp_path, monkeypatch):
+    """The same defect on the run and resume paths. At f9556288 neither loads .env
+    when the flag is passed (events == ["configured", "configured"])."""
     import pytest
 
     from t2pw.mining import cli
