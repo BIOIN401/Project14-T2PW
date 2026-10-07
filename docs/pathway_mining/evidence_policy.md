@@ -464,12 +464,21 @@ and "the model returned nothing" are never confused.
 
 ### A thin answer is re-asked once, and stays marked
 
-A payload can parse and validate and still be empty of reading. Pilot-003's calls
-`_0001`, `_0003` and `_0014` answered in 150-210 output tokens and 4-8 s, where every
-other call spent hundreds to thousands: alphabetical keys, no enzyme or species field,
-no participant `evidence_ids`, and schema placeholders as values (`"stoichiometry":
-"has_stoichiometry"`, `"products_evidence_ids_placeholder"`). Most likely a provider route
-that did no reasoning; the shared client neither pins nor reports the provider.
+A payload can parse and validate and still be empty of reading. Seven of pilot-003's 16
+extraction answers (`_0001`, `_0002`, `_0003`, `_0007`, `_0008`, `_0013`, `_0014`) had no
+enzyme or species field and no citation for any field: no participant `evidence_ids`, no
+`*_evidence_ids`. Two also wrote schema placeholders as values (`"stoichiometry":
+"has_stoichiometry"`, `"products_evidence_ids_placeholder"`). Three of the seven answered in
+150-210 output tokens and 4-8 s; four spent 5k-24k output tokens. All seven share one
+alphabetically sorted key set (`evidence_ids`, `hypothesis`, `products`, `substrates`,
+`tissue`), which no other answer has. The shape follows the provider route, not how much the
+model reasoned; the shared client neither pins nor reports the provider.
+
+The rule is therefore **structural only**, with no token threshold. Token counts could not
+carry one anyway: when the client reports no usage, mining estimates it from the visible text
+(about 4 characters per token), so estimated usage equals visible size by construction, and the
+structural rule decides alone. A future token rule would need an explicit per-attempt
+`usage_reported` flag, so that it never reads an estimate as a measurement.
 
 `modelclient.thin_answer` names two shapes: any value that echoes a schema placeholder
 (`has_*`, `*_placeholder`, `...`, `ev_...`), or records (`claims`) of which not one cites
@@ -477,8 +486,14 @@ evidence for a single field (no participant `evidence_ids`, no non-empty `*_evid
 the claim-level list does not count). `{"claims": []}` is a legitimate answer and is never
 thin. `MiningModelClient.call_json` re-asks a thin answer **once**, with the same passage and
 schema: a fresh request, which on this stack can reach another provider, and a counted call.
+That costs at most one extra call per thin answer (seven of sixteen calls in pilot-003).
 A re-ask that is not thin is used. Otherwise the thin answer is kept and marked: the record's
 `answer_quality` is `thin_after_retry` (or `thin_not_retried` when the call budget forbade the
 re-ask). A thin answer is never upgraded silently. It is not dropped either: its claims go
-through the same citation check and admission gates as any other, which is what keeps an
-uncited participant out of the graph.
+through the same citation check and admission gates as any other, which keeps it out of the
+target graph: with no species citation it can never be `target_species_supported`, so at most
+it is held as a quarantined lead.
+
+The predicate assumes an evidence-cited record payload, which is what extraction asks for. A
+new purpose whose payload has another shape must pass its own predicate to `call_json`
+(`answer_check=...`), or `None` to check nothing.

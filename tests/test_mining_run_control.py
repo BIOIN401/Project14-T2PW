@@ -2,8 +2,10 @@
 
 The pilot-003 audit's run-control defects: the per-round cap stopped the run on
 quarantined junk (B1 / F-7), a round started after the discovery budget was spent
-(A5), the frontier cap cut every target-species search (F-3), thin reasoning-free
-answers passed as ``ok`` (B2), and the CLI never loaded ``.env`` (F9).
+(A5), the frontier cap cut every target-species search (F-3), thin answers (no
+field cited; a structural rule) passed as ``ok`` (B2), and the CLI never loaded
+``.env`` (F9). Repair round 1 adds F3-ORDER and B2-RECORD nodes
+(``test_repair1_745c_*``: they fail at the first tip, d01e0825).
 
 Every ``test_g9_745c_*`` node fails behaviourally at base ``f9556288`` (a wrong
 value or a failed assertion, never an ImportError) and imports only what the base
@@ -227,8 +229,9 @@ def test_g9_745c_f3_the_cut_is_recorded_in_the_round_artifacts(tmp_path):
 
 
 def test_new_acceptance_745c_f3_cap_frontier_orders_the_reserve_by_relevance():
-    """The reserved slots go to the most on-route species items, each in every
-    fourth place; everything else keeps the priority order; the cut is returned."""
+    """The reserved slots go to the most on-route species items, each moved up to
+    every fourth place behind higher-priority items; everything else keeps the
+    priority order; the cut is returned."""
     from t2pw.mining.frontier import cap_frontier
     from t2pw.mining.models import FrontierItem
 
@@ -250,6 +253,54 @@ def test_new_acceptance_745c_f3_cap_frontier_orders_the_reserve_by_relevance():
     kept, cut = cap_frontier(list(reversed(others)), 4)
     assert [i.frontier_item_id for i in kept] == ["fr_00", "fr_01", "fr_02", "fr_03"]
     assert len(cut) == 6
+
+
+def test_repair1_745c_f3order_an_under_cap_frontier_keeps_the_priority_order():
+    """F3-ORDER (review of d01e0825): a reserved species item takes the EARLIER of its
+    priority position and the next fourth place. Under the cap, species items (6.0)
+    that outrank branch (5.0), enzyme (4.5) and cofactor (1.0) items keep the base
+    priority order. Passes at f9556288; at d01e0825 the species items were pushed to
+    the 4th place and the end, behind the enzyme and cofactor items."""
+    from t2pw.mining import frontier
+    from t2pw.mining.models import FrontierItem
+
+    items = [
+        FrontierItem(frontier_item_id=f"fr_{n}", kind=kind, target=f"t{n}", priority=priority)
+        for n, (kind, priority) in enumerate([
+            ("cofactor_investigation", 1.0), ("enzyme_reactions", 4.5),
+            ("missing_species_evidence", 6.0), ("branch_reaction", 5.0),
+            ("downstream_expansion", 7.0), ("missing_species_evidence", 6.0),
+            ("downstream_expansion", 7.0),
+        ])
+    ]
+    merged = frontier.merge_frontier([], items, cap=60)
+    assert [i.kind for i in merged] == [
+        "downstream_expansion", "downstream_expansion", "missing_species_evidence",
+        "missing_species_evidence", "branch_reaction", "enzyme_reactions",
+        "cofactor_investigation"]
+    assert [i.frontier_item_id for i in merged] == [
+        "fr_4", "fr_6", "fr_2", "fr_5", "fr_3", "fr_1", "fr_0"]
+
+
+def test_new_acceptance_745c_f3order_a_reserved_item_takes_the_earlier_place():
+    """Cap 8 reserves 2 slots, and the more on-route item (fr_09) goes first. Behind
+    five downstream items it moves up to the 4th place; the other (fr_08) outranks
+    the branch items and keeps its priority place, ahead of them."""
+    from t2pw.mining.frontier import cap_frontier
+    from t2pw.mining.models import FrontierItem
+
+    def item(n, kind, priority, relevance=0):
+        return FrontierItem(frontier_item_id=f"fr_{n:02d}", kind=kind, target=f"t{n:02d}",
+                            priority=priority, relevance=relevance)
+
+    downs = [item(n, "downstream_expansion", 7.0) for n in range(5)]
+    branches = [item(5 + n, "branch_reaction", 5.0) for n in range(3)]
+    species = [item(8, "missing_species_evidence", 6.0, relevance=0),
+               item(9, "missing_species_evidence", 6.0, relevance=2)]
+    kept, cut = cap_frontier(branches + species + downs, 8)
+    assert [i.frontier_item_id for i in kept] == [
+        "fr_00", "fr_01", "fr_02", "fr_09", "fr_03", "fr_04", "fr_08", "fr_05"]
+    assert [i.frontier_item_id for i in cut] == ["fr_06", "fr_07"]
 
 
 def test_new_acceptance_745c_f3_on_route_relevance_is_scored_per_lead(tmp_path):
@@ -298,7 +349,7 @@ def test_new_acceptance_745c_f3_on_route_relevance_is_scored_per_lead(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# B2: a thin, reasoning-free answer is re-asked once and marked; provider recorded
+# B2: a thin answer (structural) is re-asked once and marked; provider recorded
 # ---------------------------------------------------------------------------
 THIN_FIXTURE = ROOT / "tests" / "fixtures" / "mining" / "pilot003_thin_answers.json"
 
@@ -445,6 +496,57 @@ def test_new_acceptance_745c_b2_a_failed_re_ask_keeps_the_first_thin_answer():
     assert outcome.record.answer_quality == "thin_after_retry"
     assert outcome.record.response_hash == "sha256:1"
     assert outcome.record.response_chars == len(thin["raw_text"])
+
+
+def _routed_chat(answers, calls):
+    """Like _scripted_chat, but each answer comes from its own provider route."""
+
+    def chat(messages, **kwargs):
+        calls.append(kwargs)
+        text, provider = answers[min(len(calls), len(answers)) - 1]
+        return SimpleNamespace(text=text, diagnostics=SimpleNamespace(
+            finish_reason="stop", attempts=1, model="deepseek/deepseek-v4-flash",
+            request_hash="", response_hash=f"sha256:{len(calls)}", attempt_log=[],
+            provider=provider))
+
+    return chat
+
+
+def test_repair1_745c_b2record_a_failed_re_ask_leaves_the_record_describing_the_kept_answer():
+    """B2-RECORD (review of d01e0825): when the re-ask fails and the first thin answer
+    is kept, the record must not carry the re-ask's parse / schema error or its
+    provider. At d01e0825 parse_error / schema_error held the re-ask's error and
+    provider was "RouteB"; at f9556288 there was no re-ask at all."""
+    thin = _pilot003_answers()["0003"]
+    for failed, field in (("not json at all", "parse_error"), ('{"claims": "x"}', "schema_error")):
+        calls = []
+        client, _ = _client(_routed_chat([(thin["raw_text"], "RouteA"), (failed, "RouteB")], calls))
+        outcome = _call(client, thin["evidence_ids"])
+        assert len(calls) == 2
+        assert outcome.ok and outcome.payload == json.loads(thin["raw_text"])
+        record = outcome.record.to_dict()
+        assert record["answer_quality"] == "thin_after_retry"
+        assert (record["status"], record["parse_error"], record["schema_error"]) == ("ok", "", "")
+        assert record["provider"] == "RouteA"
+        # The failed re-ask is still on its own lineage row.
+        assert outcome.raw_attempts[1]["parse_outcome"] == field
+        assert outcome.raw_attempts[1]["provider"] == "RouteB"
+
+
+def test_new_acceptance_745c_b2scope_answer_check_is_per_call():
+    """thin_answer assumes evidence-cited records; another payload shape passes its
+    own predicate, or None to check nothing."""
+    thin = _pilot003_answers()["0001"]
+    calls = []
+    client, _ = _client(_scripted_chat([thin["raw_text"]], calls))
+    from t2pw.mining.extraction import CLAIM_SCHEMA
+
+    outcome = client.call_json(purpose="other", system="s", user="u", schema=CLAIM_SCHEMA,
+                               answer_check=None)
+    assert len(calls) == 1 and outcome.record.answer_quality == "ok"
+    outcome = client.call_json(purpose="other", system="s", user="u", schema=CLAIM_SCHEMA,
+                               answer_check=lambda payload: "always thin")
+    assert len(calls) == 3 and outcome.record.answer_quality == "thin_after_retry"
 
 
 # ---------------------------------------------------------------------------

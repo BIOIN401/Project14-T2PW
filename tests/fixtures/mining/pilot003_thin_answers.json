@@ -1,6 +1,6 @@
 {
   "source": "experiment/pathway-mining-pilot-003 @ b7e26d8d: docs/pathway_mining/pilot/003/run/rounds/round_001/model_raw.jsonl (raw_text) and docs/pathway_mining/pilot/003/run/model_calls.jsonl (tokens, latency); audit/PILOT-003-AUDIT.md section 5",
-  "note": "Three extraction answers that parsed and validated as ok but did no reasoning: 150-210 output tokens in 4-8 s, alphabetical keys, no participant evidence_ids, no *_evidence_ids, and schema placeholders as stoichiometry values in _0003 and _0014. Plus one well-formed answer (_0010) for contrast.",
+  "note": "Three of pilot-003's 7 thin extraction answers (_0001, _0003, _0014: 150-210 output tokens in 4-8 s; the other four, _0002, _0007, _0008, _0013, spent 5k-24k), plus one well-formed answer (_0010) for contrast. All 7 parsed and validated as ok and share one alphabetically sorted key set (evidence_ids, hypothesis, products, substrates, tissue), with no participant evidence_ids and no *_evidence_ids; _0003 and _0014 also write schema placeholders as stoichiometry values. The shape follows the provider route, not reasoning, so the thin rule is structural.",
   "thin": [
     {
       "call_id": "mc_001_extract_claims_0001",

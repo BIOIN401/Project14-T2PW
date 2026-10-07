@@ -22,15 +22,16 @@ A partial parse is kept **only** as a diagnostic, labelled
 
 A thin answer
 -------------
-A payload can parse and validate and still be nothing: pilot-003's calls
-``_0001``, ``_0003`` and ``_0014`` answered in 150-210 output tokens and 4-8 s with
-no participant citation, no per-field citation, and schema placeholders as values
-(``"stoichiometry": "has_stoichiometry"``). Most likely a provider route that did
-no reasoning; the shared client neither pins the provider nor reports it.
-:func:`thin_answer` names that shape, and :meth:`MiningModelClient.call_json`
-re-asks a thin answer once -- a fresh, counted request, which on this stack can
-reach another provider -- and marks the record's ``answer_quality``. A thin
-answer is never upgraded silently.
+A payload can parse and validate and still be nothing: 7 of pilot-003's 16
+extraction answers carried no participant citation and no per-field citation, and
+two wrote schema placeholders as values (``"stoichiometry": "has_stoichiometry"``).
+All 7 share one alphabetically sorted key set, three in 150-210 output tokens and
+four in 5k-24k, so the shape follows the provider route, not the amount of
+reasoning; the shared client neither pins the provider nor reports it. The check
+is therefore structural, with no token rule. :func:`thin_answer` names that
+shape, and :meth:`MiningModelClient.call_json` re-asks a thin answer once -- a
+fresh, counted request, which on this stack can reach another provider -- and
+marks the record's ``answer_quality``. A thin answer is never upgraded silently.
 
 The underlying LLM client is imported lazily inside the call, so importing
 ``t2pw.mining`` never constructs a provider client or reads an API key.
@@ -198,7 +199,9 @@ def thin_answer(payload: Any) -> str:
 
     An empty list (``{"claims": []}``) is a legitimate answer and is never thin.
     The check is structural: whether the cited ids were shown, and whether a value
-    is supported, is still decided by extraction and admission.
+    is supported, is still decided by extraction and admission. It assumes an
+    evidence-cited record payload; a payload of another shape needs its own
+    predicate (``call_json(answer_check=...)``) or none.
     """
     echo = next((v for v in _strings(payload) if _PLACEHOLDER.match(v.strip())), "")
     if echo:
@@ -314,14 +317,18 @@ class MiningModelClient:
         paper_id: str = "",
         evidence_ids: Sequence[str] = (),
         max_tokens: Optional[int] = None,
+        answer_check: Optional[Callable[[Any], str]] = thin_answer,
     ) -> ModelCallOutcome:
         """One logical call, with the shrink-and-retry ladder applied.
 
         Returns an outcome whose ``status`` says exactly what happened. The
         budget is consulted before every attempt, so a run that has exhausted its
-        token allowance stops here rather than inside the provider. A
-        :func:`thin_answer` is re-asked once, as a counted request; the record's
-        ``answer_quality`` says what was kept.
+        token allowance stops here rather than inside the provider. An answer that
+        ``answer_check`` calls thin is re-asked once, as a counted request; the
+        record's ``answer_quality`` says what was kept. The default,
+        :func:`thin_answer`, assumes evidence-cited record payloads (extraction's
+        claims); a new purpose whose payload has another shape must pass its own
+        predicate, or ``None`` to check nothing.
         """
         self._ordinal += 1
         cid = make_call_id(round_index, purpose or "call", self._ordinal)
@@ -365,7 +372,8 @@ class MiningModelClient:
                 shrink_fraction=fraction,
                 schema_label=schema_label,
             )
-            attempt["thin"] = thin_answer(attempt["payload"]) if attempt["status"] == EXTRACTION_OK else ""
+            attempt["thin"] = (answer_check(attempt["payload"])
+                               if answer_check and attempt["status"] == EXTRACTION_OK else "")
             if attempt["thin"]:
                 attempt["log"]["classification"] = "thin_answer"
                 attempt["log"]["thin_reason"] = attempt["thin"]
@@ -420,6 +428,7 @@ class MiningModelClient:
                         # One fresh request, not a ladder rung: the same passage and
                         # schema again. Kept only if it is not thin; otherwise the
                         # last thin answer stays, marked.
+                        errors = (record.parse_error, record.schema_error)
                         retry = rung(*args, thin_retry=True)
                         if retry["status"] == EXTRACTION_OK and not retry["thin"]:
                             record.answer_quality = ANSWER_RETRIED_AFTER_THIN
@@ -428,11 +437,16 @@ class MiningModelClient:
                             record.answer_quality = ANSWER_THIN_AFTER_RETRY
                             if retry["status"] == EXTRACTION_OK:
                                 attempt = retry
+                            else:
+                                # The earlier thin answer is kept: the failed re-ask's
+                                # error stays on its model_raw row, not on the record.
+                                record.parse_error, record.schema_error = errors
                     # The record describes the answer kept, which after a failed
                     # re-ask is not the last one received.
                     record.finish_reason = attempt["log"].get("finish_reason") or record.finish_reason
                     record.response_hash = attempt["log"].get("response_hash") or record.response_hash
                     record.response_chars = len(attempt["raw"])
+                    record.provider = attempt["log"].get("provider") or record.provider
                     outcome.payload = attempt["payload"]
                     outcome.status = EXTRACTION_OK
                     outcome.raw_text = attempt["raw"]
