@@ -68,7 +68,9 @@ _SECRETISH = re.compile(r"sk-[A-Za-z0-9_.\-]*")
 
 #: A value that echoes the prompt's schema instead of reading a passage:
 #: ``has_stoichiometry``, ``products_evidence_ids_placeholder``, ``...``, ``ev_...``.
-_PLACEHOLDER = re.compile(r"^(?:has_\w+|\w+_placeholder|\.\.\.|ev_\.\.\.)$", re.IGNORECASE)
+#: Case-sensitive: the template echoes lowercase, and a gene symbol such as
+#: ``HAS_1`` is not an echo.
+_PLACEHOLDER = re.compile(r"^(?:has_\w+|\w+_placeholder|\.\.\.|ev_\.\.\.)$")
 
 #: ``ModelCallRecord.provider`` when the shared LLM client reports none. It
 #: reports none today: ``CompletionDiagnostics`` has no provider field.

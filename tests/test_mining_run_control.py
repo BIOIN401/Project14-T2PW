@@ -421,6 +421,9 @@ def test_new_acceptance_745c_b2_thin_answer_names_the_pilot_shapes():
                                     "species_evidence_ids": ["ev_1"], "evidence_ids": ["ev_1"]}]}) == ""
     assert thin_answer({"claims": [{"substrates": [{"name": "x", "evidence_ids": ["ev_..."]}],
                                     "products": [], "evidence_ids": ["ev_1"]}]})
+    assert thin_answer({"claims": [{"substrates": [{"name": "x", "evidence_ids": ["ev_1"]}],
+                                    "products": [], "gene": "HAS_1", "gene_evidence_ids": ["ev_1"],
+                                    "evidence_ids": ["ev_1"]}]}) == "", "a gene symbol is not an echo"
 
 
 def test_new_acceptance_745c_b2_no_budget_for_the_re_ask_keeps_the_thin_answer_marked():
