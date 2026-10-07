@@ -488,14 +488,34 @@ claim as independent support, and a later lead relabelled an admitted node
    `non_supporting_claims` (claim id, paper, species state), with a
    `non_supporting_claim` history event. When a quarantined reaction is admitted on a
    later target-species claim, its support becomes the target-species claims only
-   (a `support_replaced` event). The earlier leads move to `non_supporting_claims`.
+   (a `support_replaced` event). The earlier leads move to `non_supporting_claims`,
+   and every displayed attribute (`gene`, `tissue`, `conditions`, `species_text`,
+   `hypothesis`, the substrate and product names) becomes the support's, never the
+   lead's. Each `non_supporting_claims` row carries that claim's own paper and species
+   state (built from the claim store's siblings).
 4. **A later non-admissible sibling never downgrades an admitted reaction.** The
    identity's decision stays admitted, and the claim's own verdict is kept in the
    decision's `detail` (`claim_verdict`, `claim_reason`, `claim_species_state`,
    `supported_by`). The round's `rejections` list it with that verdict. The node
-   keeps its admitted status, so `summary.json` and `report.md` never count an
-   admitted reaction as a candidate. The controller also never writes a non-admitted
-   decision's status onto an admitted node.
+   keeps its admitted status, so `summary.json` and `report.md` agree that it is
+   admitted. The controller also never writes a non-admitted decision's status onto
+   an admitted node.
+
+   The **same-paper** edge is closed (CS-B repair 2, R1-N1): the controller registers
+   every extraction batch of a paper before it judges any of that paper's claims, so
+   the F-6 union is complete when a claim is judged, and a later batch of the same
+   paper can never leave an admitted node behind a non-admitted latest decision.
+
+   One edge remains, the **starting graph**. A node adopted from a starting graph is
+   admitted with no decision history. A mined claim of the same identity that is not
+   support gets a non-admitted latest decision (there is no admitted decision to keep),
+   while the graph, which cannot un-admit, keeps the node admitted and lists the claim
+   in `non_supporting_claims` (its `decision_status` stays `starting_graph`). For that
+   identity `summary.claims.by_latest_status` counts a `candidate` while the graph
+   counts in `summary.json` and `report.md` include the admitted starting-graph node.
+   Whether a starting-graph node should ever be re-decided by mined evidence is a
+   product question; it is recorded in
+   [`known_limitations.md`](known_limitations.md).
 
 A quarantined (lead) reaction still shows every sibling's paper and spans: all of
 them are leads.

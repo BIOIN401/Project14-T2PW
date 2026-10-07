@@ -35,14 +35,64 @@ may not. It is not a taxonomy service and never pretends to be.
 
 `species.grade_sentences` reads each supporting sentence against word lists (see
 [`species_policy.md`](species_policy.md)). They are documented ceilings, and their
-misses run in both directions:
+misses run in both directions.
 
-* **Recall cost, accepted.** A preparation of an organ is cell-free evidence, so an
-  in-planta metabolite measurement made in an extract ("JA-Ile was absent from leaf
+**The remaining risk class is lexical, and the design now fails closed (CS-B repair
+2).** Three review rounds showed that open word lists do not converge: each round
+closed the quoted sentences and the next paraphrase of a negation, hedge, applied
+compound, cell-free preparation or host got through. Repair 2 therefore narrowed the
+shape of positive credit instead of adding words. A paraphrase that slips past a veto
+can now only cost a lead, unless the same sentence ALSO forms a complete
+loss-of-function statement about the claim's own gene. What positive credit requires:
+
+* **primary paper (`in_planta`)**, all in ONE clause: a plant loss-of-function
+  genotype (`mutant`, `knockout`, `knockdown`, `loss-of-function`, `null allele`,
+  `T-DNA`, `SALK_`, `RNAi`, `amiRNA`, `CRISPR`; never a protein or site-directed
+  mutant), the claim's own enzyme or gene named strictly (never a foreign-prefixed
+  symbol), its substrate or product named strictly, and a whitelisted effect phrase
+  (an absence form, or a change form with no negation before it). The sentence must
+  carry no no-effect phrase, hedge or modality stem, application, comparison (bare
+  `as` / `like` included), in-vitro / host / inference / homology marker, citation,
+  procedure, purpose clause, other organism or foreign gene, and must not sit in a
+  methods, introduction, background, discussion or conclusion passage;
+* **review (`review`, `review_article_only`, never primary)**: the target named
+  (comparison mentions removed) and no other organism or foreign gene, and either
+  substrate and product LINKED by a conversion verb ("X ... to / into Y", "Y ... from
+  X", "respectively"), or one participant plus the claim's enzyme with a strict
+  conversion verb; no hedge, negation, comparison, homology, application or procedure.
+
+The lexical residue that remains: a hedge, negation or comparison phrased with a stem
+outside the sets, inside a sentence that otherwise meets the loss-of-function rule
+(for example a knockout sentence qualified by an unlisted modal), would still earn
+credit. The positive whitelist keeps that class small: the sentence must already
+report a loss-of-function effect on the claim's own participant.
+
+* **Recall cost of removing rule 5(a), accepted.** These now earn nothing, and such a
+  reaction stays a `species_ambiguous` lead for a `missing_species_evidence` query:
+  - a plain stated conversion in an organ or genotype context in a primary paper
+    ("In Arabidopsis leaves, OPDA is converted to OPC-8:0 by OPR3.", "Jasmonic acid
+    is converted to JA-Ile in wild-type but not in jar1 mutant leaves.", "In
+    wild-type leaves, OPDA was converted to OPC-8:0, but not in opr3 mutants.");
+  - complementation that "restored" a conversion (native genes included);
+  - a knockout result phrased outside the effect whitelist: "The aos mutant did not
+    accumulate 12-OPDA after wounding." (a negated verb, not an absence form),
+    "accumulated to only 10% of wild-type levels" ("wild-type levels" is a no-effect
+    phrase);
+  - any otherwise-qualifying sentence with a bare `as` or `like` ("as described",
+    "like JAR1"), `both`, or a broad modality stem (`indicate`, `remain`, `expected`,
+    `should`, ...);
+  - a gene-symbol prefix false positive: a word that starts with a listed two-letter
+    prefix and continues in capitals or in lower case with a digit ("CaMV 35S",
+    "StAR", a glued "Table1") reads as a foreign gene and vetoes the sentence;
+  - the pilot-003 fixture corpus and the test abstracts were rewritten to state their
+    results by loss-of-function genetics (`tests/helpers_mining.py`); a live corpus
+    whose primary papers report conversions only as stated conversions will admit
+    less until the product owner revisits rule 5(a).
+* **Recall cost, accepted earlier.** A preparation of an organ is cell-free evidence, so
+  an in-planta metabolite measurement made in an extract ("JA-Ile was absent from leaf
   extracts of jar1") earns no credit. So do hedged, discussion, conclusion,
   introduction and methods statements, native complementation phrased with a host
-  word, and any sentence near an ortholog / homology / "equivalent" mention. Such a
-  reaction stays a lead for a `missing_species_evidence` query.
+  word, and any sentence near an ortholog / homology / "equivalent" mention.
 * **What no sentence rule can see.** A sentence naming no organism is credited on the
   paper-level organism screen; a screen that misses the paper's own organism admits
   the wrong species (species policy, ceiling N4). An organism or gene-symbol prefix
@@ -62,15 +112,14 @@ misses run in both directions:
 
 An admitted reaction's support and evidence level count only its
 `target_species_supported` claims, and a later lead never relabels it (evidence
-policy, ORCH-745 A3). Three edges remain:
+policy, ORCH-745 A3). The same-paper edge is closed (CS-B repair 2, R1-N1: a paper's
+batches are all registered before any is judged). Two edges remain:
 
-* The graph cannot un-admit a reaction. If a same-paper merge turns the ONLY
-  supporting claim into a non-admissible one (a second batch adds an ortholog
-  sentence), the decision history records the new verdict, but the node stays
-  admitted with its earlier status.
 * A reaction from a read-only starting graph has no decision history, so a mined lead
   of the same identity is recorded as a `candidate` decision. The node keeps
-  `starting_graph`, and the lead is listed in `non_supporting_claims`.
+  `starting_graph`, stays admitted (the graph cannot un-admit), and the lead is listed
+  in `non_supporting_claims`. `summary.claims.by_latest_status` then counts a
+  candidate for an identity the graph shows admitted.
 * Conflict detection still compares every sibling, a lead's enzyme included. A
   disagreement with an in-vitro claim clears the attribute on the admitted node,
   which overstates the disagreement and never the support.
