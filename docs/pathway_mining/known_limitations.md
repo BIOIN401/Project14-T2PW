@@ -118,7 +118,8 @@ reasoning setting, and hash every response.
 Twelve frontier kinds with hand-set priorities. They have been exercised against
 a synthetic fixture, not tuned against real corpora. Expect the bridge and
 conflict kinds to be the most valuable and the cofactor kind to be mostly noise.
-The species reserve (a quarter of the slots, every fourth place) and the 0-3
+The species reserve (a quarter of the slots, each at the earlier of its priority
+position or the next fourth place) and the 0-3
 on-route relevance score are equally hand-set: lexical name matching, no taxonomy,
 and a carried item keeps the score it was generated with.
 

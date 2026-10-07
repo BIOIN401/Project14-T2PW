@@ -382,11 +382,12 @@ def cap_frontier(
 
     ``ceil(SPECIES_RESERVE x cap)`` slots go to ``missing_species_evidence`` items,
     the most on-route first (``FrontierItem.relevance``), whenever that many exist;
-    the rest are filled in the priority order. A reserved item takes every fourth
-    place, because the order is the order a round asks in, and a round whose
-    discovery or processing budget runs out after a few items would otherwise never
-    reach one. With no species item this is the plain priority order and cut.
-    ``cap`` 0 means no cap.
+    the rest are filled in the priority order. A reserved item takes the EARLIER of
+    its priority-order place and the next fourth place (4th, 8th, ...): the order is
+    the order a round asks in, and a round whose discovery or processing budget runs
+    out after a few items would otherwise never reach one, while an item that already
+    outranks the items after it must never be pushed behind them. With no species
+    item this is the plain priority order and cut. ``cap`` 0 means no cap.
     """
     ordered = sorted(items, key=_rank)
     cap = max(1, int(cap or len(ordered) or 1))
@@ -398,7 +399,7 @@ def cap_frontier(
     stride = round(1 / SPECIES_RESERVE)
     kept: List[FrontierItem] = []
     for item in rest:
-        if reserved and len(kept) % stride == stride - 1:
+        while reserved and (len(kept) % stride == stride - 1 or _rank(reserved[0]) <= _rank(item)):
             kept.append(reserved.pop(0))
         kept.append(item)
     kept.extend(reserved)

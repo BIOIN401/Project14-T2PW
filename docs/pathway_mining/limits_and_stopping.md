@@ -116,7 +116,10 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
   A carried item keeps the relevance it was generated with.
 * **The order.** The frontier's order is the order a round asks in, and a round usually
   stops on its discovery or processing budget after a few items. A reserved item therefore
-  takes every fourth place (4th, 8th, ...); appended at the end, it would never be asked.
+  takes the earlier of its priority position or the next fourth place (4th, 8th, ...). Behind
+  many higher-priority items it moves up to every fourth place; appended at the end, it would
+  never be asked. Ahead of lower-priority items (branch, enzyme, cofactor) it keeps its
+  priority position, so it is never pushed behind them.
 * **The cut is recorded.** Every item the cap drops that is not on the new frontier anyway
   is written to `rounds/round_NNN/frontier_cut.jsonl` (id, kind, target, priority,
   relevance), and `metrics.frontier_cut` holds its `count` and `by_kind`. A cut item is not

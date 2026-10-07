@@ -227,8 +227,9 @@ def test_g9_745c_f3_the_cut_is_recorded_in_the_round_artifacts(tmp_path):
 
 
 def test_new_acceptance_745c_f3_cap_frontier_orders_the_reserve_by_relevance():
-    """The reserved slots go to the most on-route species items, each in every
-    fourth place; everything else keeps the priority order; the cut is returned."""
+    """The reserved slots go to the most on-route species items, each moved up to
+    every fourth place behind higher-priority items; everything else keeps the
+    priority order; the cut is returned."""
     from t2pw.mining.frontier import cap_frontier
     from t2pw.mining.models import FrontierItem
 
@@ -250,6 +251,54 @@ def test_new_acceptance_745c_f3_cap_frontier_orders_the_reserve_by_relevance():
     kept, cut = cap_frontier(list(reversed(others)), 4)
     assert [i.frontier_item_id for i in kept] == ["fr_00", "fr_01", "fr_02", "fr_03"]
     assert len(cut) == 6
+
+
+def test_repair1_745c_f3order_an_under_cap_frontier_keeps_the_priority_order():
+    """F3-ORDER (review of d01e0825): a reserved species item takes the EARLIER of its
+    priority position and the next fourth place. Under the cap, species items (6.0)
+    that outrank branch (5.0), enzyme (4.5) and cofactor (1.0) items keep the base
+    priority order. Passes at f9556288; at d01e0825 the species items were pushed to
+    the 4th place and the end, behind the enzyme and cofactor items."""
+    from t2pw.mining import frontier
+    from t2pw.mining.models import FrontierItem
+
+    items = [
+        FrontierItem(frontier_item_id=f"fr_{n}", kind=kind, target=f"t{n}", priority=priority)
+        for n, (kind, priority) in enumerate([
+            ("cofactor_investigation", 1.0), ("enzyme_reactions", 4.5),
+            ("missing_species_evidence", 6.0), ("branch_reaction", 5.0),
+            ("downstream_expansion", 7.0), ("missing_species_evidence", 6.0),
+            ("downstream_expansion", 7.0),
+        ])
+    ]
+    merged = frontier.merge_frontier([], items, cap=60)
+    assert [i.kind for i in merged] == [
+        "downstream_expansion", "downstream_expansion", "missing_species_evidence",
+        "missing_species_evidence", "branch_reaction", "enzyme_reactions",
+        "cofactor_investigation"]
+    assert [i.frontier_item_id for i in merged] == [
+        "fr_4", "fr_6", "fr_2", "fr_5", "fr_3", "fr_1", "fr_0"]
+
+
+def test_new_acceptance_745c_f3order_a_reserved_item_takes_the_earlier_place():
+    """Cap 8 reserves 2 slots, and the more on-route item (fr_09) goes first. Behind
+    five downstream items it moves up to the 4th place; the other (fr_08) outranks
+    the branch items and keeps its priority place, ahead of them."""
+    from t2pw.mining.frontier import cap_frontier
+    from t2pw.mining.models import FrontierItem
+
+    def item(n, kind, priority, relevance=0):
+        return FrontierItem(frontier_item_id=f"fr_{n:02d}", kind=kind, target=f"t{n:02d}",
+                            priority=priority, relevance=relevance)
+
+    downs = [item(n, "downstream_expansion", 7.0) for n in range(5)]
+    branches = [item(5 + n, "branch_reaction", 5.0) for n in range(3)]
+    species = [item(8, "missing_species_evidence", 6.0, relevance=0),
+               item(9, "missing_species_evidence", 6.0, relevance=2)]
+    kept, cut = cap_frontier(branches + species + downs, 8)
+    assert [i.frontier_item_id for i in kept] == [
+        "fr_00", "fr_01", "fr_02", "fr_09", "fr_03", "fr_04", "fr_08", "fr_05"]
+    assert [i.frontier_item_id for i in cut] == ["fr_06", "fr_07"]
 
 
 def test_new_acceptance_745c_f3_on_route_relevance_is_scored_per_lead(tmp_path):
