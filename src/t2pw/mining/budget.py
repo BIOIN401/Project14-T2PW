@@ -199,11 +199,18 @@ class BudgetLedger:
         candidate_reactions: int = 0,
         candidate_components: int = 0,
     ) -> Optional[str]:
-        """The stop reason that forbids starting another round, or ``None``."""
+        """The stop reason that forbids starting another round, or ``None``.
+
+        A stop already recorded mid-round (the discovery budget, the call budget)
+        forbids the next round too: pilot-002 started a round 3 that could not
+        search (ORCH-745 A5).
+        """
         self.refresh()
         if self._cancelled:
             self.stop(STOP_CANCELLED, "cancellation requested")
             return STOP_CANCELLED
+        if self.stop_reason:
+            return self.stop_reason
         b = self.budgets
         for reason in (
             self._limit(STOP_MAX_ROUNDS, self.usage.rounds, b.max_rounds, "rounds"),
@@ -212,6 +219,7 @@ class BudgetLedger:
             self._limit(STOP_MAX_INPUT_TOKENS, self.usage.input_tokens, b.max_input_tokens, "input tokens"),
             self._limit(STOP_MAX_OUTPUT_TOKENS, self.usage.output_tokens, b.max_output_tokens, "output tokens"),
             self._limit(STOP_MAX_COST, self.usage.estimated_cost_usd, b.max_cost_usd, "estimated usd"),
+            self._limit(STOP_MAX_PAPERS_DISCOVERED, self.usage.papers_discovered, b.max_papers_discovered, "papers discovered"),
             self._limit(STOP_MAX_PAPERS_PROCESSED, self.usage.papers_processed, b.max_papers_processed, "papers processed"),
             self._limit(STOP_MAX_PRIMARY_REACTIONS, primary_reactions, b.max_primary_reactions, "primary reactions"),
             self._limit(STOP_MAX_CANDIDATE_REACTIONS, candidate_reactions, b.max_candidate_reactions, "candidate reactions"),

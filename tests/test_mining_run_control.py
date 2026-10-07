@@ -94,3 +94,43 @@ def test_745c_b1_a_round_admitting_the_cap_still_stops_the_run(tmp_path):
     assert outcome.stop_reason == "max_new_reactions_per_round_reached"
     assert outcome.manifest.rounds_completed == 1
     assert "newly admitted reactions in round 1: 2 >= limit 2" in outcome.manifest.stop_detail
+
+
+# ---------------------------------------------------------------------------
+# A5: no phantom round after the discovery budget is spent
+# ---------------------------------------------------------------------------
+def test_g9_745c_a5_a_spent_discovery_budget_starts_no_further_round(tmp_path):
+    """The seed's query takes the whole 4-paper discovery budget in round 1, and the
+    topic item records max_papers_discovered_reached mid-round. At f9556288 a
+    round 2 still started; it could not search, and a round 3 followed."""
+    mined = H.run_fixture(tmp_path, budgets={"max_papers_discovered": 4})
+    outcome = mined.outcome
+    assert outcome.ledger.usage.papers_discovered == 4
+    assert outcome.stop_reason == "max_papers_discovered_reached"
+    assert outcome.ledger.usage.rounds == 1
+    assert outcome.manifest.rounds_completed == 1
+    assert outcome.run_dir.completed_rounds() == [1]
+    assert not outcome.run_dir.path("rounds", "round_002").exists()
+
+
+def test_g9_745c_a5_check_before_round_stops_on_the_discovery_budget():
+    """The budget can be spent exactly by a round's last query, so no mid-round check
+    records it. At f9556288 check_before_round did not look at it (returned None)."""
+    from t2pw.mining.budget import BudgetLedger
+    from t2pw.mining.config import MiningBudgets
+
+    ledger = BudgetLedger(MiningBudgets(max_papers_discovered=3))
+    ledger.record_papers_discovered(3)
+    assert ledger.check_before_round() == "max_papers_discovered_reached"
+    assert ledger.stop_detail == "papers discovered: 3 >= limit 3"
+
+
+def test_g9_745c_a5_a_stop_recorded_mid_round_forbids_the_next_round():
+    """A stop recorded mid-round is final. At f9556288 check_before_round ignored it
+    (returned None) whenever the counters it re-checks were under their caps."""
+    from t2pw.mining.budget import BudgetLedger
+    from t2pw.mining.config import MiningBudgets
+
+    ledger = BudgetLedger(MiningBudgets())
+    ledger.stop("max_papers_discovered_reached", "recorded mid-round")
+    assert ledger.check_before_round() == "max_papers_discovered_reached"

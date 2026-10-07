@@ -88,8 +88,8 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
   budget cannot fund it. In pilot-002, 21 of 25 exhausted items had only been asked through
   1-result windows. Once `max_papers_discovered` is reached, the round issues no further
   query (`check_papers_discovered`, before each item and each further attempt). The stop
-  reason `max_papers_discovered_reached` is recorded, and the items left unasked or cut stay
-  open on the frontier.
+  reason `max_papers_discovered_reached` is recorded, the items left unasked or cut stay
+  open on the frontier, and no further round starts.
 
 ## Extraction in passage batches
 
@@ -155,9 +155,11 @@ useful round resets the streak.
 
 ## Where limits are checked
 
-* `check_before_round` — rounds, wall clock, calls, tokens, cost, papers
+* `check_before_round` — a stop reason already recorded (mid-round, by any check
+  below), then rounds, wall clock, calls, tokens, cost, papers discovered, papers
   processed, graph sizes, reactions newly admitted by the last round, cancellation,
-  convergence.
+  convergence. A stop recorded inside a round is final: pilot-002 spent its discovery
+  budget in round 2 and still started a round 3 that could not search (ORCH-745 A5).
 * `check_before_call` — calls, tokens, cost, wall clock, cancellation. Checked
   before **every** attempt, so a run that has exhausted its token allowance stops
   in `MiningModelClient` rather than inside the provider.
