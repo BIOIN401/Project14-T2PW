@@ -236,6 +236,10 @@ class ReactionParticipant:
     declared_type: str = ""
     stoichiometry: str = ""
     evidence_ids: List[str] = field(default_factory=list)
+    #: How the participant got its evidence: ``model_citation`` (the model cited a
+    #: span it was shown) or ``verbatim_cited_span`` (the name occurs verbatim in a
+    #: span the claim cites). An unsupported participant is not kept at all.
+    attribution: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -282,9 +286,13 @@ class ExtractedClaim:
     field_evidence: Dict[str, List[str]] = field(default_factory=dict)
     #: field name -> how its evidence was attached: ``model_citation`` (the model
     #: cited the span) or ``verbatim_cited_span`` (the value occurs verbatim in
-    #: one of this claim's own cited participant spans).
+    #: one of this claim's own cited participant spans; for ``tissue``, in any span
+    #: the claim cites).
     field_attribution: Dict[str, str] = field(default_factory=dict)
     evidence_ids: List[str] = field(default_factory=list)
+    #: Participants the model asserted that no evidence supports (no valid citation
+    #: and not verbatim in a cited span): ``{"side", "name", "reason"}``.
+    unsupported_participants: List[Dict[str, str]] = field(default_factory=list)
 
     model: str = ""
     actual_model: str = ""
@@ -338,6 +346,7 @@ class ExtractedClaim:
             ("direction", self.direction if self.direction != DIRECTION_UNSPECIFIED else ""),
             ("reversible", "" if self.reversible is None else str(self.reversible)),
             ("species", self.species_text),
+            ("tissue", self.tissue),
         ):
             if _clean(value) and not self.evidence_for(name):
                 offenders.append(name)

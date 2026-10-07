@@ -1,0 +1,533 @@
+{
+ "about": "ORCH-745 change set B. Pilot-003's 16 recorded extraction calls (experiment/pathway-mining-pilot-003, docs/pathway_mining/pilot/003/run/: model_calls.jsonl for the evidence ids each call was shown, rounds/round_001/model_raw.jsonl for the raw_text the model returned), the pwml-bio-auditor's F-1 adjudication table (C:/t/bt/orch745/F1_BIO_ADJUDICATION.md section 2: number, claim id, the call and payload row that produced it, the required species state, admit), and pilot-002's 13-LOX claim cl_9ac4b6db39b411c0 (experiment/pathway-mining-pilot-002, run/: the paper record, its two shown spans and call mc_001_extract_claims_0001's raw_text). Span texts for pilot-003 come from orch745a_pilot_texts.json (change set A's fixture).",
+ "pilot003": {
+  "evidence_types": {
+   "PMC:PMC13364333": "review",
+   "PMC:PMC12096059": "primary",
+   "PMC:PMC8508710": "primary",
+   "PMC:PMC12787732": "primary"
+  },
+  "calls": [
+   {
+    "call_id": "mc_001_extract_claims_0001",
+    "paper_id": "PMC:PMC8508710",
+    "shown": [
+     "ev_5863efff93736770",
+     "ev_06e5eb88be1f278b",
+     "ev_f7be767145f0939c",
+     "ev_266669dec451a47b",
+     "ev_3cf7b6708353069c"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"evidence_ids\": [\"ev_5863efff93736770\", \"ev_06e5eb88be1f278b\"],\n      \"hypothesis\": false,\n      \"products\": [\n        {\n          \"name\": \"13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT)\",\n          \"stoichiometry\":  \"1\"\n        }\n      ],\n      \"substrates\": [\n        {\n          \"name\": \"α-linolenic acid (LeA)\",\n          \"stoichiometry\":  \"1\"\n        }\n      ],\n      \"tissue\": \"plastids\"\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0002",
+    "paper_id": "PMC:PMC8508710",
+    "shown": [
+     "ev_4dcc372e77b84976",
+     "ev_564d922a7e09ebae",
+     "ev_d0a63371734346ce",
+     "ev_bdc3296114db3865",
+     "ev_baf1514923696f5c"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"evidence_ids\": [\n        \"ev_4dcc372e77b84976\",\n        \"ev_d0a63371734346ce\",\n        \"ev_bdc3296114db3865\",\n        \"ev_baf1514923696f5c\"\n      ],\n      \"hypothesis\": false,\n      \"products\": [\n        {\n          \"name\": \"13-HPOT\",\n          \"stoichiometry\":  \"1\"\n        }\n      ],\n      \"substrates\": [\n        {\n          \"name\": \"LeA\",\n          \"stoichiometry\":  \"1\"\n        }\n      ],\n      \"tissue\": \"leaf, root, inflorescence, wounded leaf\"\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0003",
+    "paper_id": "PMC:PMC8508710",
+    "shown": [
+     "ev_cf8ecf735af5bcfd",
+     "ev_6915f534ca2dfd74",
+     "ev_bb4c9802d1637278",
+     "ev_bc70738e576cedef",
+     "ev_3d6841a8a4a89075"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"evidence_ids\": [\n        \"ev_6915f534ca2dfd74\",\n        \"ev_bb4c9802d1637278\"\n      ],\n      \"hypothesis\": false,\n      \"products\": [\n        {\n          \"name\": \"13(S)-hydroperoxy-9(Z),11(E),15(Z)-octadecatrienoic acid (13-HPOT)\",\n          \"stoichiometry\":  \"has_stoichiometry\"  },\n        {\n          \"name\": \"12-oxo-phytodienoic acid (12-OPDA)\",\n          \"stoichiometry\":  \"has_stoichiometry\"  }\n      ],\n      \"substrates\": [\n        {\n          \"name\": \"α-linolenic acid (LeA)\",\n          \"stoichiometry\":  \"has_stoichiometry\"  }\n      ],\n      \"tissue\": \"chloroplast\"\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0004",
+    "paper_id": "PMC:PMC8508710",
+    "shown": [
+     "ev_ca56c1ce6daab795",
+     "ev_f0fa0c492a8eb7e8",
+     "ev_adcf12eaedb6185c",
+     "ev_33d79a5f7287dc6d",
+     "ev_e5fc113b0b5d5c17"
+    ],
+    "raw_text": "{\"claims\":[]}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0005",
+    "paper_id": "PMC:PMC13364333",
+    "shown": [
+     "ev_b585c188b3cdd16b",
+     "ev_4419e25d9c411f56",
+     "ev_20a7facf5fd73dd9",
+     "ev_a82b0ad4450a0bd2",
+     "ev_98c3197eb40f9f1e"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"substrates\": [{\"name\": \"16:0\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"16:1n9\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpFAD5\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp3g10660\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"chloroplast\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"16:1(n9)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"16:2(n6)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpFAD6\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp4g24020\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"chloroplast\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": true,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"HDA (16:2n6)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"HTA (16:3n3)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpFAD7\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp5g20700\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"chloroplast\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"LA (18:2n6)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"ALA (18:3n3)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpFAD7\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp5g20700\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"chloroplast\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"ARA (20:4n6)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"EPA (20:5n3)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpFAD3\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp3g17690\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"ER\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"LA (18:2n6)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"GLA (18:3n6)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpDES6\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp6g17330\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"ER\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"ALA (18:3n3)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"SDA (18:4n3)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpDES6\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp6g17330\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"ER\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"GLA (18:3n6)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"DGLA (20:3n6)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpELO1\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp6g02350\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"ER\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"SDA (18:4n3)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"ETA (20:4n3)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpELO1\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp6g02350\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"ER\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"DGLA (20:3n6)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"ARA (20:4n6)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpDES5\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp3g13250\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"ER\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"ETA (20:4n3)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"products\": [{\"name\": \"EPA (20:5n3)\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]}],\n      \"enzyme\": \"MpDES5\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"gene\": \"Mp3g13250\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"ER\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"allene oxide\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\", \"ev_a82b0ad4450a0bd2\"]}],\n      \"products\": [{\"name\": \"(9S,13S)-OPDA\", \"evidence_ids\": [\"ev_20a7facf5fd73dd9\", \"ev_a82b0ad4450a0bd2\"]}],\n      \"enzyme\": \"MpAOC\",\n      \"enzyme_evidence_ids\": [\"ev_20a7facf5fd73dd9\", \"ev_a82b0ad4450a0bd2\"],\n      \"gene\": \"Mp7g06220\",\n      \"gene_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_20a7facf5fd73dd9\", \"ev_a82b0ad4450a0bd2\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_20a7facf5fd73dd9\"],\n      \"compartment\": \"chloroplast\",\n      \"compartment_evidence_ids\": [\"ev_20a7facf5fd73dd9\", \"ev_a82b0ad4450a0bd2\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_20a7facf5fd73dd9\", \"ev_a82b0ad4450a0bd2\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"C18-allene oxide\", \"evidence_ids\": [\"ev_a82b0ad4450a0bd2\"]}],\n      \"products\": [{\"name\": \"cis-OPDA\", \"evidence_ids\": [\"ev_a82b0ad4450a0bd2\"]}],\n      \"enzyme\": \"PpAOC1\",\n      \"enzyme_evidence_ids\": [\"ev_a82b0ad4450a0bd2\"],\n      \"species\": \"Physcomitrium patens\",\n      \"species_evidence_ids\": [\"ev_a82b0ad4450a0bd2\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_a82b0ad4450a0bd2\"],\n      \"compartment\": \"chloroplast\",\n      \"compartment_evidence_ids\": [\"ev_a82b0ad4450a0bd2\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_a82b0ad4450a0bd2\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"C20-allene oxide derived from 12-HPETE\", \"evidence_ids\": [\"ev_a82b0ad4450a0bd2\"]}],\n      \"products\": [{\"name\": \"11-oxo-prostatrienoic acid (11-OPTA)\", \"evidence_ids\": [\"ev_a82b0ad4450a0bd2\"]}],\n      \"enzyme\": \"PpAOC2\",\n      \"enzyme_evidence_ids\": [\"ev_a82b0ad4450a0bd2\"],\n      \"species\": \"Physcomitrium patens\",\n      \"species_evidence_ids\": [\"ev_a82b0ad4450a0bd2\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_a82b0ad4450a0bd2\"],\n      \"compartment\": \"chloroplast\",\n      \"compartment_evidence_ids\": [\"ev_a82b0ad4450a0bd2\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_a82b0ad4450a0bd2\"]\n    },\n    {\n      \"substrates\": [{\"name\": \"dn-cis-OPDA\", \"evidence_ids\": [\"ev_a82b0ad4450a0bd2\", \"ev_98c3197eb40f9f1e\"]}],\n      \"products\": [{\"name\": \"dn-iso-OPDA\", \"evidence_ids\": [\"ev_a82b0ad4450a0bd2\", \"ev_98c3197eb40f9f1e\"]}],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_a82b0ad4450a0bd2\", \"ev_98c3197eb40f9f1e\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_a82b0ad4450a0bd2\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_a82b0ad4450a0bd2\", \"ev_98c3197eb40f9f1e\"]\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0006",
+    "paper_id": "PMC:PMC13364333",
+    "shown": [
+     "ev_1507d8084844aa5c",
+     "ev_125f47940820aced",
+     "ev_c98d84c7d84855c1",
+     "ev_3b1f8607f4b8b229",
+     "ev_47b9cde252a0621f"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"substrates\": [\n        {\n          \"name\": \"OPDA\",\n          \"evidence_ids\": [\"ev_c98d84c7d84855c1\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"OPC-8:0\",\n          \"evidence_ids\": [\"ev_c98d84c7d84855c1\"]\n        }\n      ],\n      \"enzyme\": \"OPR3\",\n      \"enzyme_evidence_ids\": [\"ev_c98d84c7d84855c1\"],\n      \"species\": \"Arabidopsis thaliana\",\n      \"species_evidence_ids\": [\"ev_c98d84c7d84855c1\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_c98d84c7d84855c1\"],\n      \"compartment\": \"peroxisome\",\n      \"compartment_evidence_ids\": [\"ev_c98d84c7d84855c1\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_c98d84c7d84855c1\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"dn-cis-OPDA\",\n          \"evidence_ids\": [\"ev_c98d84c7d84855c1\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"OPC-6:0\",\n          \"evidence_ids\": [\"ev_c98d84c7d84855c1\"]\n        }\n      ],\n      \"enzyme\": \"OPR3\",\n      \"enzyme_evidence_ids\": [\"ev_c98d84c7d84855c1\"],\n      \"species\": \"Arabidopsis thaliana\",\n      \"species_evidence_ids\": [\"ev_c98d84c7d84855c1\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_c98d84c7d84855c1\"],\n      \"compartment\": \"peroxisome\",\n      \"compartment_evidence_ids\": [\"ev_c98d84c7d84855c1\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_c98d84c7d84855c1\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"allene oxide\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"(9S,13S)-dn-cis-OPDA\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n        }\n      ],\n      \"enzyme\": \"MpAOC\",\n      \"enzyme_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"compartment\": \"chloroplast\",\n      \"compartment_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"allene oxide\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"OPDA\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n        }\n      ],\n      \"enzyme\": \"MpAOC\",\n      \"enzyme_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"compartment\": \"chloroplast\",\n      \"compartment_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"dn-cis-OPDA\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\", \"ev_c98d84c7d84855c1\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"dn-iso-OPDA\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\", \"ev_c98d84c7d84855c1\"]\n        }\n      ],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_3b1f8607f4b8b229\", \"ev_c98d84c7d84855c1\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_3b1f8607f4b8b229\", \"ev_c98d84c7d84855c1\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_3b1f8607f4b8b229\", \"ev_c98d84c7d84855c1\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"Δ4-dn-cis-OPDA\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"Δ4-dn-iso-OPDA\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n        }\n      ],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"dn-iso-OPDA\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"dn-OPDA-Glu\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n        },\n        {\n          \"name\": \"dn-OPDA-Gln\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n        },\n        {\n          \"name\": \"dn-OPDA-His\",\n          \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n        }\n      ],\n      \"enzyme\": \"MpGH3A\",\n      \"enzyme_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"species\": \"Marchantia polymorpha\",\n      \"species_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_3b1f8607f4b8b229\"],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_3b1f8607f4b8b229\"]\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0007",
+    "paper_id": "PMC:PMC13364333",
+    "shown": [
+     "ev_e5825ef7b7833975",
+     "ev_d6a16a3c6577cf56",
+     "ev_f42c0ce97d79b1e7",
+     "ev_ba1b08899518f20e",
+     "ev_921f8caa291e6e2c"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"evidence_ids\": [\"ev_ba1b08899518f20e\"],\n      \"hypothesis\": false,\n      \"products\": [{\"name\": \"HTA (16:3n3)\", \"stoichiometry\":  \"1\"}],\n      \"substrates\": [{\"name\": \"HDA (16:2n6)\", \"stoichiometry\":  \"1\"}],\n      \"tissue\": \"leaf\"\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0008",
+    "paper_id": "PMC:PMC13364333",
+    "shown": [
+     "ev_6f4dc3ffa5db1e0c",
+     "ev_089f6733d93f6ac7",
+     "ev_488098050cb15807",
+     "ev_74d8b3d259ca310a",
+     "ev_8fb9b658835414af"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"evidence_ids\": [\"ev_6f4dc3ffa5db1e0c\", \"ev_74d8b3d259ca310a\"],\n      \"hypothesis\": false,\n      \"products\": [{\"name\": \"13-HPOT\", \"stoichiometry\":  \"1\"}],\n      \"substrates\": [{\"name\": \"ALA (18:3n3)\", \"stoichiometry\": \"1\"}],\n      \"tissue\": \"chloroplast\"\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0009",
+    "paper_id": "PMC:PMC12096059",
+    "shown": [
+     "ev_3d83d105fb156829",
+     "ev_7d2787cbb14b4905",
+     "ev_8fe6dbfd0a0a1c2a",
+     "ev_af12d6f302acb59e",
+     "ev_43efbc138027f970"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"substrates\": [\n        {\n          \"name\": \"jasmonic acid\",\n          \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"jasmonoyl-isoleucine (JA-Ile)\",\n          \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n        }\n      ],\n      \"enzyme\": \"GH3.10\",\n      \"enzyme_evidence_ids\": [\"ev_7d2787cbb14b4905\"],\n      \"gene\": \"GH3.10\",\n      \"gene_evidence_ids\": [\"ev_7d2787cbb14b4905\"],\n      \"species\": \"Arabidopsis thaliana\",\n      \"species_evidence_ids\": [\"ev_7d2787cbb14b4905\"],\n      \"species_inferred\": false,\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"12-hydroxy-JA\",\n          \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"12-hydroxy-JA conjugate\",\n          \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n        }\n      ],\n      \"enzyme\": \"GH3.10\",\n      \"enzyme_evidence_ids\": [\"ev_7d2787cbb14b4905\"],\n      \"gene\": \"GH3.10\",\n      \"gene_evidence_ids\": [\"ev_7d2787cbb14b4905\"],\n      \"species\": \"Arabidopsis thaliana\",\n      \"species_evidence_ids\": [\"ev_7d2787cbb14b4905\"],\n      \"species_inferred\": false,\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"jasmonic acid\",\n          \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"JA-Gln\",\n          \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n        }\n      ],\n      \"species\": \"Arabidopsis thaliana\",\n      \"species_evidence_ids\": [\"ev_7d2787cbb14b4905\"],\n      \"species_inferred\": false,\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"jasmonic acid\",\n          \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"JA-Asn\",\n          \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n        }\n      ],\n      \"species\": \"Arabidopsis thaliana\",\n      \"species_evidence_ids\": [\"ev_7d2787cbb14b4905\"],\n      \"species_inferred\": false,\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"jasmonic acid\",\n          \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"JA-Glu\",\n          \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n        }\n      ],\n      \"species\": \"Arabidopsis thaliana\",\n      \"species_evidence_ids\": [\"ev_7d2787cbb14b4905\"],\n      \"species_inferred\": false,\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_7d2787cbb14b4905\"]\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0010",
+    "paper_id": "PMC:PMC12096059",
+    "shown": [
+     "ev_63ff7e40627bb63e",
+     "ev_50fe83be4e4544a8",
+     "ev_1f2c624a181ba5ef",
+     "ev_8d7685e98100893f",
+     "ev_d216d8e2a43cb218"
+    ],
+    "raw_text": "{\"claims\": [{\n    \"substrates\": [{\"name\": \"12-hydroxy jasmonate\", \"evidence_ids\": [\"ev_1f2c624a181ba5ef\", \"ev_d216d8e2a43cb218\"]}],\n    \"products\": [{\"name\": \"12-hydroxy jasmonoyl-isoleucine\", \"evidence_ids\": [\"ev_1f2c624a181ba5ef\"]}],\n    \"enzyme\": \"GH3.10\",\n    \"enzyme_evidence_ids\": [\"ev_1f2c624a181ba5ef\", \"ev_d216d8e2a43cb218\"],\n    \"species\": \"Arabidopsis thaliana\",\n    \"species_evidence_ids\": [\"ev_1f2c624a181ba5ef\"],\n    \"species_inferred\": false,\n    \"hypothesis\": false,\n    \"evidence_ids\": [\"ev_1f2c624a181ba5ef\", \"ev_d216d8e2a43cb218\"]\n  }]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0011",
+    "paper_id": "PMC:PMC12096059",
+    "shown": [
+     "ev_ae0d92db16547d2c",
+     "ev_c7a1b8c0ccdfe997",
+     "ev_6893aa984a651e1f",
+     "ev_00885b6d262b0c3c",
+     "ev_e0a035eec4eb94c6"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"substrates\": [\n        {\n          \"name\": \"JA\",\n          \"evidence_ids\": [\"ev_6893aa984a651e1f\", \"ev_c7a1b8c0ccdfe997\"]\n        },\n        {\n          \"name\": \"Ile\",\n          \"evidence_ids\": [\"ev_6893aa984a651e1f\", \"ev_c7a1b8c0ccdfe997\"]\n        },\n        {\n          \"name\": \"ATP\",\n          \"evidence_ids\": [\"ev_6893aa984a651e1f\", \"ev_c7a1b8c0ccdfe997\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"JA-Ile\",\n          \"evidence_ids\": [\"ev_6893aa984a651e1f\"]\n        }\n      ],\n      \"enzyme\": \"GH3.10\",\n      \"enzyme_evidence_ids\": [\"ev_ae0d92db16547d2c\", \"ev_6893aa984a651e1f\", \"ev_c7a1b8c0ccdfe997\"],\n      \"species\": \"Arabidopsis thaliana\",\n      \"species_evidence_ids\": [\"ev_ae0d92db16547d2c\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_6893aa984a651e1f\"],\n      \"reversible\": null,\n      \"reversible_evidence_ids\": [],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_ae0d92db16547d2c\", \"ev_c7a1b8c0ccdfe997\", \"ev_6893aa984a651e1f\"]\n    },\n    {\n      \"substrates\": [\n        {\n          \"name\": \"12-OH-JA\",\n          \"evidence_ids\": [\"ev_6893aa984a651e1f\", \"ev_c7a1b8c0ccdfe997\"]\n        },\n        {\n          \"name\": \"Ile\",\n          \"evidence_ids\": [\"ev_6893aa984a651e1f\", \"ev_c7a1b8c0ccdfe997\"]\n        },\n        {\n          \"name\": \"ATP\",\n          \"evidence_ids\": [\"ev_6893aa984a651e1f\", \"ev_c7a1b8c0ccdfe997\"]\n        }\n      ],\n      \"products\": [\n        {\n          \"name\": \"12-OH-JA-Ile\",\n          \"evidence_ids\": [\"ev_6893aa984a651e1f\"]\n        }\n      ],\n      \"enzyme\": \"GH3.10\",\n      \"enzyme_evidence_ids\": [\"ev_ae0d92db16547d2c\", \"ev_6893aa984a651e1f\", \"ev_c7a1b8c0ccdfe997\"],\n      \"species\": \"Arabidopsis thaliana\",\n      \"species_evidence_ids\": [\"ev_ae0d92db16547d2c\"],\n      \"species_inferred\": false,\n      \"direction\": \"forward\",\n      \"direction_evidence_ids\": [\"ev_6893aa984a651e1f\"],\n      \"reversible\": null,\n      \"reversible_evidence_ids\": [],\n      \"hypothesis\": false,\n      \"evidence_ids\": [\"ev_ae0d92db16547d2c\", \"ev_c7a1b8c0ccdfe997\", \"ev_6893aa984a651e1f\"]\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0012",
+    "paper_id": "PMC:PMC12096059",
+    "shown": [
+     "ev_622e1ef3396c9fc7"
+    ],
+    "raw_text": "{\"claims\": []}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0013",
+    "paper_id": "PMC:PMC12787732",
+    "shown": [
+     "ev_f7c56801adf6792d",
+     "ev_1cc90e17686958bc",
+     "ev_cd926d24b993f02c",
+     "ev_6217d75981599618",
+     "ev_d56713597b017d75"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"evidence_ids\": [\"ev_f7c56801adf6792d\"],\n      \"hypothesis\": false,\n      \"products\": [{\"name\": \"α-linolenic acid\", \"stoichiometry\":  \"1\"}],\n      \"substrates\": [{\"name\": \"galactolipids\", \"stoichiometry\":  \"1\"}],\n      \"tissue\": \"leaf\"\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0014",
+    "paper_id": "PMC:PMC12787732",
+    "shown": [
+     "ev_3d626d50fbac33db",
+     "ev_b91fc021966a2713",
+     "ev_b48f934b61eb21a4",
+     "ev_505b5baaefb3a76e",
+     "ev_edfd3bb38363baa3"
+    ],
+    "raw_text": "{\n  \"claims\": [\n    {\n      \"evidence_ids\": [\"ev_b48f934b61eb21a4\"],\n      \"hypothesis\": false,\n      \"products\": [{\"name\": \"JA\", \"stoichiometry\":  \"products_evidence_ids_placeholder\"}],\n      \"substrates\": [],\n      \"tissue\": \"leaf\"\n    },\n    {\n      \"evidence_ids\": [\"ev_b48f934b61eb21a4\"],\n      \"hypothesis\": false,\n      \"products\": [{\"name\": \"JA-Ile\", \"stoichiometry\":  \"products_evidence_ids_placeholder\"}],\n      \"substrates\": [],\n      \"tissue\": \"leaf\"\n    }\n  ]\n}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0015",
+    "paper_id": "PMC:PMC12787732",
+    "shown": [
+     "ev_1683bd64f290f91f",
+     "ev_5a1688b6775c5340",
+     "ev_7cb8e4b9d86f0dd2",
+     "ev_60589174e96bfe66",
+     "ev_6fcf386586e6599b"
+    ],
+    "raw_text": "{\"claims\": []}"
+   },
+   {
+    "call_id": "mc_001_extract_claims_0016",
+    "paper_id": "PMC:PMC12787732",
+    "shown": [
+     "ev_a1c56a38806e30ee",
+     "ev_0359ade9d08cf8ce"
+    ],
+    "raw_text": "{\"claims\":[]}"
+   }
+  ],
+  "adjudication": [
+   {
+    "n": "1",
+    "claim_id": "cl_e78ca4abb54a3fc8",
+    "call": "mc_001_extract_claims_0005",
+    "row": 1,
+    "required_state": "inferred_only",
+    "admit": false
+   },
+   {
+    "n": "2",
+    "claim_id": "cl_f42d3135f85ff21e",
+    "call": "mc_001_extract_claims_0006",
+    "row": 6,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "3",
+    "claim_id": "cl_5338b4fc07a47cea",
+    "call": "mc_001_extract_claims_0006",
+    "row": 1,
+    "required_state": "target_species_supported",
+    "admit": true
+   },
+   {
+    "n": "4",
+    "claim_id": "cl_832888dad708cf8e",
+    "call": "mc_001_extract_claims_0006",
+    "row": 4,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "5",
+    "claim_id": "cl_381c10905474b7bf",
+    "call": "mc_001_extract_claims_0006",
+    "row": 5,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "6",
+    "claim_id": "cl_87cb48915297c615",
+    "call": "mc_001_extract_claims_0006",
+    "row": 3,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "7",
+    "claim_id": "cl_8ee4bd53fcfb1b9c",
+    "call": "mc_001_extract_claims_0006",
+    "row": 2,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "8",
+    "claim_id": "cl_2865e3d8c80b6688",
+    "call": "mc_001_extract_claims_0005",
+    "row": 11,
+    "required_state": "in_vitro_or_cell_free",
+    "admit": false
+   },
+   {
+    "n": "9",
+    "claim_id": "cl_1ac4d9ef538231c7",
+    "call": "mc_001_extract_claims_0005",
+    "row": 12,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "10",
+    "claim_id": "cl_c230261f1437d392",
+    "call": "mc_001_extract_claims_0008",
+    "row": 0,
+    "required_state": "species_not_stated",
+    "admit": false
+   },
+   {
+    "n": "11",
+    "claim_id": "cl_7a9937b3db2c395f",
+    "call": "mc_001_extract_claims_0002",
+    "row": 0,
+    "required_state": "in_vitro_or_cell_free",
+    "admit": false
+   },
+   {
+    "n": "12",
+    "claim_id": "cl_5fc57dcfa32aaf35",
+    "call": "mc_001_extract_claims_0009",
+    "row": 2,
+    "required_state": "species_ambiguous",
+    "admit": false
+   },
+   {
+    "n": "13",
+    "claim_id": "cl_2d06a621ba1c2fac",
+    "call": "mc_001_extract_claims_0009",
+    "row": 3,
+    "required_state": "species_ambiguous",
+    "admit": false
+   },
+   {
+    "n": "14",
+    "claim_id": "cl_b89be46f92d4c4e1",
+    "call": "mc_001_extract_claims_0009",
+    "row": 0,
+    "required_state": "target_species_supported",
+    "admit": true
+   },
+   {
+    "n": "15",
+    "claim_id": "cl_9ba999bda7a136f3",
+    "call": "mc_001_extract_claims_0009",
+    "row": 4,
+    "required_state": "species_ambiguous",
+    "admit": false
+   },
+   {
+    "n": "16",
+    "claim_id": "cl_9fa8df5b9e2bb0a4",
+    "call": "mc_001_extract_claims_0005",
+    "row": 5,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "17",
+    "claim_id": "cl_7c0b9007ba1f8ec8",
+    "call": "mc_001_extract_claims_0005",
+    "row": 6,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "18",
+    "claim_id": "cl_559992a1bf688e15",
+    "call": "mc_001_extract_claims_0005",
+    "row": 3,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "19",
+    "claim_id": "cl_28107dbbe1153e90",
+    "call": "mc_001_extract_claims_0005",
+    "row": 9,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "20",
+    "claim_id": "cl_06de0d61ec6ebd01",
+    "call": "mc_001_extract_claims_0005",
+    "row": 8,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "21",
+    "claim_id": "cl_183ebc7ca093105f",
+    "call": "mc_001_extract_claims_0005",
+    "row": 7,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "22",
+    "claim_id": "cl_a453942d6bd35571",
+    "call": "mc_001_extract_claims_0005",
+    "row": 10,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "23",
+    "claim_id": "cl_b5e2f8082d97ede6",
+    "call": "mc_001_extract_claims_0005",
+    "row": 4,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "24",
+    "claim_id": "cl_fcc1f538bbd36817",
+    "call": "mc_001_extract_claims_0003",
+    "row": 0,
+    "required_state": "in_vitro_or_cell_free",
+    "admit": false
+   },
+   {
+    "n": "25",
+    "claim_id": "cl_a32b77c9538b6f39",
+    "call": "mc_001_extract_claims_0001",
+    "row": 0,
+    "required_state": "in_vitro_or_cell_free",
+    "admit": false
+   },
+   {
+    "n": "26",
+    "claim_id": "cl_70223dd072f56b56",
+    "call": "mc_001_extract_claims_0013",
+    "row": 0,
+    "required_state": "species_not_stated",
+    "admit": false
+   },
+   {
+    "n": "27",
+    "claim_id": "cl_31a6adf4b22136d2",
+    "call": "mc_001_extract_claims_0009",
+    "row": 1,
+    "required_state": "in_vitro_or_cell_free",
+    "admit": false
+   },
+   {
+    "n": "28",
+    "claim_id": "cl_0e664d8a3907d58b",
+    "call": "mc_001_extract_claims_0005",
+    "row": 13,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "29",
+    "claim_id": "cl_5c72ac211f2bf29a",
+    "call": "mc_001_extract_claims_0005",
+    "row": 0,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "30",
+    "claim_id": "cl_dee44fedcb6c01eb",
+    "call": "mc_001_extract_claims_0010",
+    "row": 0,
+    "required_state": "in_vitro_or_cell_free",
+    "admit": false
+   },
+   {
+    "n": "31",
+    "claim_id": "cl_150891597632f0c5",
+    "call": "mc_001_extract_claims_0011",
+    "row": 0,
+    "required_state": "in_vitro_or_cell_free",
+    "admit": false
+   },
+   {
+    "n": "32",
+    "claim_id": "cl_061c152eb99e1656",
+    "call": "mc_001_extract_claims_0011",
+    "row": 1,
+    "required_state": "in_vitro_or_cell_free",
+    "admit": false
+   },
+   {
+    "n": "33",
+    "claim_id": "cl_5592a5f6c48d97b2",
+    "call": "mc_001_extract_claims_0005",
+    "row": 2,
+    "required_state": "non_target_species",
+    "admit": false
+   },
+   {
+    "n": "34",
+    "claim_id": "cl_0bc93d248b7f31db",
+    "call": "mc_001_extract_claims_0006",
+    "row": 0,
+    "required_state": "target_species_supported",
+    "admit": true
+   },
+   {
+    "n": "35",
+    "claim_id": "cl_bbe6e30f3c568977",
+    "call": "mc_001_extract_claims_0007",
+    "row": 0,
+    "required_state": "species_not_stated",
+    "admit": false
+   },
+   {
+    "n": "inc-JA",
+    "claim_id": "cl_3acaf053a4653cf7",
+    "call": "mc_001_extract_claims_0014",
+    "row": 0,
+    "required_state": "species_not_stated",
+    "admit": false
+   },
+   {
+    "n": "inc-JA-Ile",
+    "claim_id": "cl_1311193317769ac2",
+    "call": "mc_001_extract_claims_0014",
+    "row": 1,
+    "required_state": "species_not_stated",
+    "admit": false
+   }
+  ]
+ },
+ "pilot002": {
+  "claim_id": "cl_9ac4b6db39b411c0",
+  "paper": {
+   "paper_id": "PMC:PMC411572",
+   "pmcid": "PMC411572",
+   "title": "Biochemical Characterization of 13-Lipoxygenases of Arabidopsis thaliana.",
+   "observed_organisms": [
+    "Arabidopsis thaliana",
+    "Homo sapiens"
+   ],
+   "evidence_type": "unknown"
+  },
+  "spans": [
+   {
+    "evidence_id": "ev_b58e2cb64e2f1d87",
+    "paper_id": "PMC:PMC411572",
+    "locator": "abstract#0",
+    "section": "abstract",
+    "text": "13-lipoxygenases (13-LOX) catalyze the dioxygenation of various polyunsaturated fatty acids (PUFAs), of which α-linolenic acid (LeA) is converted to 13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT), the precursor for the prostaglandin-like plant hormones cis-(+)-12-oxophytodienoic acid (12-OPDA) and methyl jasmonate (MJ). This study aimed for characterizing the four annotated A. thaliana 13-LOX enzymes (LOX2, LOX3, LOX4, and LOX6) focusing on synthesis of 12-OPDA and 4Z,7Z,10Z)-12-[[-(1S,5S)-4-oxo-5-(2Z)-pent-2-en-1yl] cyclopent-2-en-1yl] dodeca-4,7,10-trienoic acid (OCPD). In addition, we performed interaction studies of 13-LOXs with ions and molecules to advance our understanding of 13-LOX. Cell imaging indicated plastid targeting of fluorescent proteins fused to 13-LOXs-N-terminal extensions, supporting the prediction of 13-LOX localization to plastids. The apparent maximal velocity (Vmax&nbsp;app) values for LOX-catalyzed LeA oxidation were highest for LOX4 (128 nmol·s-1·mg protein-1), with a Km value of 5.8 µM. A. thaliana 13-LOXs, in cascade with 12-OPDA pathway enzymes, synthesized 12-OPDA and OCPD from LeA and docosahexaenoic acid, previously shown only for LOX6. The activities of the four isoforms were differently affected by physiologically relevant chemicals, such as Mg2+, Ca2+, Cu2+ and Cd2+, and by 12-OPDA and MJ. As demonstrated for LOX4, 12-OPDA inhibited enzymatic LeA hydroperoxidation, with half-maximal enzyme inhibition at 48 µM. Biochemical interactions, such as the sensitivity of LOX toward thiol-reactive agents belonging to cyclopentenone prostaglandins, are suggested to occur in human LOX homologs. Furthermore, we conclude that 13-LOXs are isoforms with rather specific functional and regulatory enzymatic features."
+   },
+   {
+    "evidence_id": "ev_ba6fb9f5cdb8ce58",
+    "paper_id": "PMC:PMC411572",
+    "locator": "body#0",
+    "section": "body",
+    "text": "13-lipoxygenases (13-LOX) catalyze the dioxygenation of various polyunsaturated fatty acids (PUFAs), of which α-linolenic acid (LeA) is converted to 13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT), the precursor for the prostaglandin-like plant hormones cis-(+)-12-oxophytodienoic acid (12-OPDA) and methyl jasmonate (MJ). This study aimed for characterizing the four annotated A. thaliana 13-LOX enzymes (LOX2, LOX3, LOX4, and LOX6) focusing on synthesis of 12-OPDA and 4Z,7Z,10Z)-12-[[-(1S,5S)-4-oxo-5-(2Z)-pent-2-en-1yl] cyclopent-2-en-1yl] dodeca-4,7,10-trienoic acid (OCPD). In addition, we performed interaction studies of 13-LOXs with ions and molecules to advance our understanding of 13-LOX. Cell imaging indicated plastid targeting of fluorescent proteins fused to 13-LOXs-N-terminal extensions, supporting the prediction of 13-LOX localization to plastids. The apparent maximal velocity (Vmax&nbsp;app) values for LOX-catalyzed LeA oxidation were highest for LOX4 (128 nmol·s-1·mg protein-1), with a Km value of 5.8 µM. A. thaliana 13-LOXs, in cascade with 12-OPDA pathway enzymes, synthesized 12-OPDA and OCPD from LeA and docosahexaenoic acid, previously shown only for LOX6. The activities of the four isoforms were differently affected by physiologically relevant chemicals, such as Mg2+, Ca2+, Cu2+ and Cd2+, and by 12-OPDA and MJ. As demonstrated for LOX4, 12-OPDA inhibited enzymatic LeA hydroperoxidation, with half-maximal enzyme inhibition at 48 µM. Biochemical interactions, such as the sensitivity of LOX toward thiol-reactive agents belonging to cyclopentenone prostaglandins, are suggested to occur in human LOX homologs. Furthermore, we conclude that 13-LOXs are isoforms with rather specific functional and regulatory enzymatic features."
+   }
+  ],
+  "call": {
+   "call_id": "mc_001_extract_claims_0001",
+   "shown": [
+    "ev_b58e2cb64e2f1d87",
+    "ev_ba6fb9f5cdb8ce58"
+   ],
+   "raw_text": "{\n  \"claims\": [\n    {\n      \"enzyme\": \"13-lipoxygenase (13-LOX)\",\n      \"enzyme_evidence_ids\": [\"ev_b58e2cb64e2f1d87\", \"ev_ba6fb9f5cdb8ce58\"],\n      \"evidence_ids\": [\"ev_b58e2cb64e2f1d87\", \"ev_ba6fb9f5cdb8ce58\"],\n      \"gene\": \"LOX2, LOX3, LOX4, LOX6\",\n      \"gene_evidence_ids\": [\"ev_b58e2cb64e2f1d87\", \"ev_ba6fb9f5cdb8ce58\"],\n      \"products\": [\n        {\n          \"name\": \"13-S-hydroperoxyoctadeca-9,11,15-trienoic acid (13-HPOT)\",\n          \"stoichiometry\": \"1\"\n        }\n      ],\n      \"species\": \"Arabidopsis thaliana\",\n      \"species_evidence_ids\": [\"ev_b58e2cb64e2f1d87\", \"ev_ba6fb9f5cdb8ce58\"],\n      \"species_inferred\": false,\n      \"substrates\": [\n        {\n          \"name\": \"α-linolenic acid (LeA)\",\n          \"stoichiometry\": \"1\"\n        }\n      ]\n    }\n  ]\n}"
+  }
+ }
+}

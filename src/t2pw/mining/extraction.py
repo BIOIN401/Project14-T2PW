@@ -35,7 +35,7 @@ from t2pw.mining.models import (
     reaction_identity,
 )
 from t2pw.mining.modelclient import MiningModelClient, ModelCallOutcome
-from t2pw.mining.species import classify_species
+from t2pw.mining.species import classify_species, fold_text
 
 SYSTEM_PROMPT = """You are a biochemical literature analyst building a research graph.
 
@@ -206,6 +206,10 @@ def _valid_ids(raw: Any, allowed: Mapping[str, EvidenceSpan]) -> List[str]:
 ATTRIBUTION_MODEL_CITATION = "model_citation"
 ATTRIBUTION_VERBATIM_CITED_SPAN = "verbatim_cited_span"
 
+#: The identity namespace of a claim none of whose participants is supported
+#: (ORCH-745 F-5): kept as a lead, never merged into a supported identity.
+UNSUPPORTED_PARTICIPANTS_NAMESPACE = "unsupported-participants"
+
 #: Fields the verbatim fallback may recover. Only names: a value that is a
 #: name can be checked against a passage; a direction or a boolean cannot. A
 #: recovered species is kept as the observed value but is never species evidence
@@ -234,26 +238,99 @@ def _verbatim_span(value: str, span_ids: Sequence[str], allowed: Mapping[str, Ev
     return ""
 
 
-def _participants(rows: Any, allowed: Mapping[str, EvidenceSpan]) -> List[ReactionParticipant]:
+#: A value that echoes the prompt's template instead of reading a passage
+#: (pilot-003's thin answers stored ``"stoichiometry": "has_stoichiometry"`` and
+#: ``"products_evidence_ids_placeholder"``), or an empty JSON-ish string. The
+#: ``has_`` / ``_placeholder`` forms are case-sensitive, as in
+#: ``modelclient.thin_answer``: a gene symbol such as ``HAS_1`` is not an echo.
+_PLACEHOLDER = re.compile(
+    r"^(?:has_\w+|\w+_placeholder|\.\.\.|\u2026|ev_\.\.\.|\[\s*\]|\{\s*\}|null|None|\"\"|'')$"
+)
+#: A stoichiometric coefficient: a number, a fraction, or n (2n, n+1).
+_COEFFICIENT = re.compile(r"^(?:\d+(?:\.\d+)?|\d+/\d+|\d*n(?:\s*[+-]\s*\d+)?)$")
+
+
+def _value(raw: Any, label: str, dropped: List[str]) -> str:
+    """``raw`` as a clean string, or "" (recorded in ``dropped``) for a placeholder echo."""
+    text = str(raw if raw is not None else "").strip()
+    if text and _PLACEHOLDER.match(text):
+        dropped.append(f"{label}={text!r} (placeholder echoed from the prompt template)")
+        return ""
+    return text
+
+
+def _verbatim_in(value: str, span_ids: Sequence[str], allowed: Mapping[str, EvidenceSpan]) -> str:
+    """The first of ``span_ids`` whose text contains ``value`` verbatim as a whole
+    token: case, whitespace, Unicode hyphens and Greek letters folded, and a hyphen
+    is part of the token ("JA" does not occur in "JA-Ile")."""
+    needle = fold_text(value)
+    if not needle:
+        return ""
+    pattern = re.compile(r"(?<![\w-])" + re.escape(needle) + r"(?![\w-])")
+    for eid in span_ids:
+        if eid in allowed and pattern.search(fold_text(allowed[eid].text)):
+            return eid
+    return ""
+
+
+def _participants(rows: Any, allowed: Mapping[str, EvidenceSpan], *, label: str,
+                  dropped: List[str]) -> List[ReactionParticipant]:
+    """Every participant the model asserted, its own citation checked. Placeholder
+    names are dropped here; :func:`_support_participants` decides the rest."""
     out: List[ReactionParticipant] = []
     seen = set()
-    for row in rows or []:
+    for index, row in enumerate(rows or []):
         if not isinstance(row, Mapping):
-            name = str(row or "").strip()
-            row = {"name": name}
-        name = str(row.get("name") or "").strip()
+            row = {"name": str(row or "").strip()}
+        name = _value(row.get("name"), f"{label}[{index}].name", dropped)
         if not name or name.lower() in seen:
             continue
         seen.add(name.lower())
+        stoichiometry = _value(row.get("stoichiometry"), f"{label}[{index}].stoichiometry", dropped)
+        if stoichiometry and not _COEFFICIENT.match(stoichiometry):
+            dropped.append(f"{label}[{index}].stoichiometry={stoichiometry!r} (not a coefficient)")
+            stoichiometry = ""
         out.append(
             ReactionParticipant(
                 name=name,
-                declared_type=str(row.get("entity_type") or "").strip(),
-                stoichiometry=str(row.get("stoichiometry") or "").strip(),
+                declared_type=_value(row.get("entity_type"), f"{label}[{index}].entity_type", dropped),
+                stoichiometry=stoichiometry,
                 evidence_ids=_valid_ids(row.get("evidence_ids"), allowed),
             )
         )
     return out
+
+
+def _support_participants(
+    participants: Sequence[ReactionParticipant],
+    cited: Sequence[str],
+    allowed: Mapping[str, EvidenceSpan],
+    *,
+    side: str,
+    label: str,
+    dropped: List[str],
+    unsupported: List[Dict[str, str]],
+) -> List[ReactionParticipant]:
+    """Keep a participant only on evidence (ORCH-745 F-5): a citation to a span the
+    model was shown, or its name verbatim in a span the claim cites (any field's or
+    the claim-level list). Pilot-003's thin answers cited nothing for any
+    participant, and base kept every one."""
+    kept: List[ReactionParticipant] = []
+    for participant in participants:
+        if participant.evidence_ids:
+            participant.attribution = ATTRIBUTION_MODEL_CITATION
+            kept.append(participant)
+            continue
+        span = _verbatim_in(participant.name, cited, allowed)
+        if span:
+            participant.evidence_ids = [span]
+            participant.attribution = ATTRIBUTION_VERBATIM_CITED_SPAN
+            kept.append(participant)
+            continue
+        reason = "no valid citation and not verbatim in a cited passage"
+        dropped.append(f"{label}.{side}={participant.name!r} ({reason})")
+        unsupported.append({"side": side, "name": participant.name, "reason": reason})
+    return kept
 
 
 @dataclass
@@ -295,8 +372,9 @@ def build_claims(
 ) -> Tuple[List[ExtractedClaim], List[str]]:
     """Turn a validated model payload into claims. Returns ``(claims, dropped)``.
 
-    ``dropped`` names every field discarded for lack of a valid citation, so the
-    round artifact can show what the model asserted and could not support.
+    ``dropped`` names every field and participant discarded for lack of a valid
+    citation (or as a placeholder echo), so the round artifact can show what the
+    model asserted and could not support.
     """
     allowed = {s.evidence_id: s for s in spans}
     claims: List[ExtractedClaim] = []
@@ -306,13 +384,14 @@ def build_claims(
     for index, row in enumerate(rows or []):
         if not isinstance(row, Mapping):
             continue
-        substrates = _participants(row.get("substrates"), allowed)
-        products = _participants(row.get("products"), allowed)
-        if not substrates and not products:
+        label = f"claim[{index}]"
+        asserted_subs = _participants(row.get("substrates"), allowed, label=f"{label}.substrates", dropped=dropped)
+        asserted_prods = _participants(row.get("products"), allowed, label=f"{label}.products", dropped=dropped)
+        if not asserted_subs and not asserted_prods:
             continue
 
         claim_evidence = _valid_ids(row.get("evidence_ids"), allowed)
-        for participant in (*substrates, *products):
+        for participant in (*asserted_subs, *asserted_prods):
             for eid in participant.evidence_ids:
                 if eid not in claim_evidence:
                     claim_evidence.append(eid)
@@ -335,6 +414,12 @@ def build_claims(
         compartment_ids = cited("compartment_evidence_ids", "compartment")
         species_ids = cited("species_evidence_ids", "species")
 
+        unsupported: List[Dict[str, str]] = []
+        substrates = _support_participants(asserted_subs, claim_evidence, allowed, side="substrates",
+                                           label=label, dropped=dropped, unsupported=unsupported)
+        products = _support_participants(asserted_prods, claim_evidence, allowed, side="products",
+                                         label=label, dropped=dropped, unsupported=unsupported)
+
         if substrates:
             sub_ids = [e for p in substrates for e in p.evidence_ids]
             if sub_ids:
@@ -346,27 +431,31 @@ def build_claims(
 
         # Every kept field names how it got its evidence.
         attribution: Dict[str, str] = {}
-        participant_ids = list(dict.fromkeys(e for p in (*substrates, *products) for e in p.evidence_ids))
+        # The field fallback reads only spans the model cited for a participant; a
+        # participant kept by its own verbatim match does not widen it.
+        participant_ids = list(dict.fromkeys(
+            e for p in (*substrates, *products) if p.attribution == ATTRIBUTION_MODEL_CITATION
+            for e in p.evidence_ids))
 
-        def keep(value: Any, ids: List[str], label: str) -> Tuple[str, List[str]]:
-            text = str(value or "").strip()
+        def keep(value: Any, ids: List[str], name: str) -> Tuple[str, List[str]]:
+            text = _value(value, f"{label}.{name}", dropped)
             if not text:
                 return "", ids
             if ids:
-                attribution[label] = ATTRIBUTION_MODEL_CITATION
+                attribution[name] = ATTRIBUTION_MODEL_CITATION
                 return text, ids
             # The model wrote no citation list for this field at all (pilot-001's
             # failure). A name that occurs verbatim in one of THIS claim's own
             # cited participant spans is attributed to that span. An explicit
             # empty list, or one citing only unshown ids, is the model declining
             # to cite and is respected. Anything else is still dropped.
-            recoverable = label in _VERBATIM_RECOVERABLE and row.get(f"{label}_evidence_ids") is None
+            recoverable = name in _VERBATIM_RECOVERABLE and row.get(f"{name}_evidence_ids") is None
             span = _verbatim_span(text, participant_ids, allowed) if recoverable else ""
             if span:
-                field_evidence[label] = [span]
-                attribution[label] = ATTRIBUTION_VERBATIM_CITED_SPAN
+                field_evidence[name] = [span]
+                attribution[name] = ATTRIBUTION_VERBATIM_CITED_SPAN
                 return text, [span]
-            dropped.append(f"claim[{index}].{label}={text!r} (no valid citation)")
+            dropped.append(f"{label}.{name}={text!r} (no valid citation)")
             return "", ids
 
         enzyme, enzyme_ids = keep(row.get("enzyme"), enzyme_ids, "enzyme")
@@ -374,16 +463,29 @@ def build_claims(
         compartment, compartment_ids = keep(row.get("compartment"), compartment_ids, "compartment")
         species_text, species_ids = keep(row.get("species"), species_ids, "species")
 
-        direction = str(row.get("direction") or DIRECTION_UNSPECIFIED).strip() or DIRECTION_UNSPECIFIED
+        # Tissue has no citation list of its own: it is kept only where a passage the
+        # claim cites says it (F-5). Pilot-003 stored "leaf, root, inflorescence,
+        # wounded leaf" from passages that say nothing of the kind.
+        tissue = _value(row.get("tissue"), f"{label}.tissue", dropped)
+        if tissue:
+            span = _verbatim_in(tissue, claim_evidence, allowed)
+            if span:
+                field_evidence["tissue"] = [span]
+                attribution["tissue"] = ATTRIBUTION_VERBATIM_CITED_SPAN
+            else:
+                dropped.append(f"{label}.tissue={tissue!r} (not verbatim in a cited passage)")
+                tissue = ""
+
+        direction = _value(row.get("direction"), f"{label}.direction", dropped) or DIRECTION_UNSPECIFIED
         if direction != DIRECTION_UNSPECIFIED and not direction_ids:
-            dropped.append(f"claim[{index}].direction={direction!r} (no valid citation)")
+            dropped.append(f"{label}.direction={direction!r} (no valid citation)")
             direction = DIRECTION_UNSPECIFIED
         elif direction != DIRECTION_UNSPECIFIED:
             attribution["direction"] = ATTRIBUTION_MODEL_CITATION
 
         reversible = row.get("reversible")
         if reversible is not None and not reversible_ids:
-            dropped.append(f"claim[{index}].reversible={reversible!r} (no valid citation)")
+            dropped.append(f"{label}.reversible={reversible!r} (no valid citation)")
             reversible = None
         if reversible is not None:
             reversible = bool(reversible)
@@ -422,25 +524,32 @@ def build_claims(
         # shares the target's identity on purpose: that is what lets a later
         # round with real species evidence RECONSIDER it instead of creating a
         # second, disconnected copy. A claim with no species at all gets its own
-        # namespace so it can never silently merge into the target graph.
-        if verdict.admissible:
+        # namespace so it can never silently merge into the target graph, and so
+        # does a claim none of whose participants is supported (F-5): it is a lead
+        # for the frontier, never a reaction, and must not reach a supported identity.
+        no_participants = not substrates and not products
+        if no_participants:
+            identity_species = UNSUPPORTED_PARTICIPANTS_NAMESPACE
+        elif verdict.admissible:
             identity_species = target_species_normalized
         elif verdict.observed_normalized:
             identity_species = verdict.observed_normalized[0]
         else:
             identity_species = f"unspecified:{verdict.state}"
+        named_subs = asserted_subs if no_participants else substrates
+        named_prods = asserted_prods if no_participants else products
         identity = reaction_identity(
-            [p.name for p in substrates],
-            [p.name for p in products],
+            [p.name for p in named_subs],
+            [p.name for p in named_prods],
             species=identity_species,
         )
         claim = ExtractedClaim(
             claim_id=make_claim_id(identity, paper_id, round_index),
             claim_identity=identity,
             paper_id=paper_id,
-            subject=" + ".join(p.name for p in substrates),
+            subject=" + ".join(p.name for p in named_subs),
             relationship="converted_to",
-            object=" + ".join(p.name for p in products),
+            object=" + ".join(p.name for p in named_prods),
             species_text=species_text,
             species_state=verdict.state,
             species_reason=verdict.reason,
@@ -451,12 +560,14 @@ def build_claims(
             direction=direction,
             reversible=reversible,
             compartment=compartment,
-            conditions=str(row.get("conditions") or "").strip(),
-            tissue=str(row.get("tissue") or "").strip(),
-            pathway_names=[str(p).strip() for p in row.get("pathway_names") or [] if str(p).strip()],
+            conditions=_value(row.get("conditions"), f"{label}.conditions", dropped),
+            tissue=tissue,
+            pathway_names=[v for v in (_value(p, f"{label}.pathway_names", dropped)
+                                       for p in row.get("pathway_names") or []) if v],
             field_evidence=field_evidence,
             field_attribution=attribution,
             evidence_ids=claim_evidence,
+            unsupported_participants=unsupported,
             model=model,
             actual_model=actual_model or model,
             prompt_version=prompt_version,
@@ -465,7 +576,7 @@ def build_claims(
             hypothesis=bool(row.get("hypothesis")),
             first_seen_round=int(round_index),
             last_updated_round=int(round_index),
-            confidence=str(row.get("confidence") or "").strip(),
+            confidence=_value(row.get("confidence"), f"{label}.confidence", dropped),
         )
         claims.append(claim)
     return claims, dropped
@@ -539,7 +650,8 @@ def extract_claims(
     )
     notes = []
     if dropped:
-        notes.append(f"{len(dropped)} asserted field(s) dropped for lack of a valid citation")
+        notes.append(f"{len(dropped)} asserted field(s) or participant(s) dropped: no valid citation, "
+                     "or a placeholder echoed from the prompt")
     recovered = sum(
         1 for c in claims for how in c.field_attribution.values()
         if how == ATTRIBUTION_VERBATIM_CITED_SPAN
@@ -547,7 +659,16 @@ def extract_claims(
     if recovered:
         notes.append(
             f"{recovered} uncited field(s) kept: the value occurs verbatim in one of the claim's "
-            f"own cited participant spans ({ATTRIBUTION_VERBATIM_CITED_SPAN})"
+            f"own cited spans ({ATTRIBUTION_VERBATIM_CITED_SPAN})"
+        )
+    participants = sum(
+        1 for c in claims for p in (*c.substrates, *c.products)
+        if p.attribution == ATTRIBUTION_VERBATIM_CITED_SPAN
+    )
+    if participants:
+        notes.append(
+            f"{participants} uncited participant(s) kept: the name occurs verbatim in a span the "
+            f"claim cites ({ATTRIBUTION_VERBATIM_CITED_SPAN})"
         )
     return ExtractionResult(claims=claims, outcome=outcome, dropped_fields=dropped, notes=notes)
 

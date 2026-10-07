@@ -26,6 +26,8 @@ import re
 from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional, Sequence
 
+from t2pw.mining.normalize import _DASHES, _GREEK
+
 # ---------------------------------------------------------------------------
 # The species states. Exhaustive and explicit -- there is no "probably fine".
 # ---------------------------------------------------------------------------
@@ -319,7 +321,25 @@ def classify_species(
     )
 
 
+_NBSP = re.compile(r"&nbsp;|\u00a0")
+_HYPHEN_GAP = re.compile(r"\s*-\s*")
+_DIGIT_COMMA = re.compile(r"(?<=\d),\s+(?=\d)")
+
+
+def fold_text(text: Any) -> str:
+    """Matching form of passage text and names: lowercase; Unicode hyphens and
+    Greek letters as in :func:`t2pw.mining.normalize.normalize_name`; the italic
+    gaps around hyphens closed ("dn- cis -OPDA" -> "dn-cis-opda"); "9, 11, 15" ->
+    "9,11,15"; whitespace collapsed."""
+    folded = _NBSP.sub(" ", str(text or "")).lower().translate(_DASHES)
+    for greek, latin in _GREEK.items():
+        folded = folded.replace(greek, latin)
+    folded = _DIGIT_COMMA.sub(",", _HYPHEN_GAP.sub("-", folded))
+    return _WS.sub(" ", folded).strip()
+
+
 __all__ = [
+    "fold_text",
     "SPECIES_STATES",
     "SPECIES_TARGET_SUPPORTED",
     "SPECIES_NON_TARGET",

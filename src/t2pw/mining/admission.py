@@ -73,7 +73,9 @@ EVIDENCE_LEVEL_NONE = "no_paper_evidence"
 
 #: Material fields that may be stripped when unsupported, rather than rejecting
 #: the whole claim. Substrates/products are NOT here -- they are the reaction.
-STRIPPABLE_FIELDS = ("enzyme", "protein", "gene", "compartment", "direction", "reversible")
+#: ``tissue`` has no citation list of its own; extraction attaches a span only when
+#: the value occurs verbatim in one the claim cites (ORCH-745 F-5).
+STRIPPABLE_FIELDS = ("enzyme", "protein", "gene", "compartment", "direction", "reversible", "tissue")
 
 
 @dataclass
