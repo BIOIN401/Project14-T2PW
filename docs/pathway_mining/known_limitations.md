@@ -62,6 +62,31 @@ A paper with no open full text contributes its abstract only, which is recorded
 (`full_text_chars`) but sharply limits what can be extracted. DOI-only and
 URL-only references frequently resolve to an abstract.
 
+## Index hygiene knows the pilots' layouts
+
+What indexing keeps out ([`evidence_policy.md`](evidence_policy.md) § what text can be
+evidence) is fit on the seven EuropePMC full texts pilots 002 and 003 fetched. Front matter
+is recognised by EuropePMC's processing flags only: a PDF upload's title page, or a source
+without those flags, keeps its front matter. Publisher notes are recognised by three endings:
+the two MDPI notes in the pilot texts and Frontiers' standard note. A reference list needs a
+`References` / `Literature Cited` / `Bibliography` heading to be cut as a region; without one,
+only a chunk that is citation-dense
+as a whole is dropped, and a chunk that is only partly bibliography can keep that part. The
+density bar (5 marks per 1,000 characters) separates every reference chunk (13 or more) from
+every body window (1.6 at most) in those texts; it has not been tried on other publishers.
+The front matter can hold an abstract, a significance statement or highlights; only the
+record's abstract survives as `abstract#0` (the metadata lookup fills an empty one), so a
+PNAS significance statement is not indexed.
+
+## A review must say it is one
+
+Without a declared review type (NCBI, or EuropePMC's metadata lookup, which an offline run
+never makes), a review is recognised only by a title marker or a self-referential sentence
+("this review", "here we review", ...). A review that never describes itself in those words
+stays `unknown`, and its reactions are graded `single_paper`. Two reviews, or a review and a
+primary paper, supporting one reaction still grade `multiple_independent_papers`:
+`admission.evidence_level` counts papers, not their types.
+
 ## Uploaded PDFs
 
 Text extraction goes through the existing `t2pw.extraction.pdf_parser`. A

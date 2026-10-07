@@ -127,8 +127,30 @@ class _CapturingClient:
         return resp
 
 
-_REVIEW_MARKERS = ("review", "overview", "perspectives on", "a survey of", "current concepts")
+#: A title that calls the paper a review. Word-bounded: "preview" and "reviewed" do not count.
+_REVIEW_TITLE = re.compile(
+    r"\b(?:mini-?)?(?:review|overview)s?\b|\bperspectives? on\b|\ba survey of\b|\bcurrent concepts\b"
+    r"|\brecent (?:advances|progress)\b", re.IGNORECASE)
+#: A paper saying it is a review: "this review", "the present mini-review", "here we review",
+#: "this article reviews", "we provide an overview". Only self-reference counts, so a primary
+#: paper citing someone else's review ("reviewed in [3]", "for a review, see", "(reviewed by
+#: ...)", "recently reviewed") never matches; neither do "Writing - review & editing",
+#: "Institutional Review Board", "Reviewed by:" (the peer reviewer) or a cited review's title.
+#: A bare "review article" is not a rule: in body text it is almost always a citation of
+#: someone else's; "this review article" is caught by the first branch.
+#: ponytail: a phrase list fit on pilot-001's three reviews (two the old title/abstract
+#: markers missed), pilot-003's bryophyte review (no marker until its introduction says
+#: "this review makes four specific contributions") and all eleven pilot-002/003 primaries.
+#: A review that never says so in these words is still graded by its declared type only.
+_SELF_REVIEW = re.compile(
+    r"\b(?:this|the present|the current) (?:\w+[ -])?(?:review|overview)\b"
+    r"|\bwe (?:\w+ )?(?:review|overview)\b"
+    r"|\bthis (?:article|paper|chapter) (?:\w+ )?reviews\b"
+    r"|\bwe (?:provide|present|give|offer) an? (?:\w+ ){0,2}(?:review|overview)\b",
+    re.IGNORECASE)
 _PREPRINT_MARKERS = ("biorxiv", "medrxiv", "chemrxiv", "preprint", "research square")
+_PRIMARY_TYPES = frozenset({"journal article", "research-article", "article", "research article",
+                            "research paper"})
 
 
 def _utcnow() -> str:
@@ -193,29 +215,59 @@ def make_paper_starting_input(raw: Any) -> StartingInput:
     return StartingInput(kind="paper", raw=str(raw), value=value, id_type=id_type)
 
 
+def _plain(text: str) -> str:
+    """Tags stripped, entities decoded (EuropePMC titles arrive double-escaped), spaces folded."""
+    return " ".join(re.sub(r"<[^>]+>", " ", html.unescape(html.unescape(str(text or "")))).split())
+
+
+def grade_evidence_type(*, title: str = "", abstract: str = "", article_type: str = "",
+                        source: str = "", url: str = "", full_text: str = "") -> Tuple[str, str]:
+    """``(evidence_type, basis)``: the primary / review / preprint label and the rule that decided it.
+
+    A review mislabelled primary is the policy violation (its statements would grade as
+    primary evidence); a primary mislabelled review only downgrades its grade. So any
+    review signal wins: a declared type naming a review ("Review", "Systematic Review",
+    "review-article"), then a title that calls the paper a review, then the abstract or
+    the paper's own ``full_text`` saying so (:data:`_SELF_REVIEW`). Pilot-003's bryophyte
+    review (PMC13364333) declares nothing the search returned and says it only in its
+    introduction. ``full_text`` is expected with its front matter and reference list
+    already removed (``retrieval.body_text``): a cited review's title is not this paper.
+    After that: preprint (declared, or by source / URL), primary (declared), else honestly
+    ``unknown``. ``article_type`` may list several declared types joined by ``;``.
+    """
+    declared = [t.strip() for t in str(article_type or "").split(";") if t.strip()]
+    hit = next((t for t in declared if "review" in t.lower()), "")
+    if hit:
+        return EVIDENCE_REVIEW, f"declared article type {hit!r}"
+    for where, text, rule in (("title", title, _REVIEW_TITLE), ("abstract", abstract, _SELF_REVIEW),
+                              ("full text", full_text, _SELF_REVIEW)):
+        text = _plain(text)
+        match = rule.search(text)
+        if match:
+            quote = text[max(0, match.start() - 40):match.end() + 40]
+            return EVIDENCE_REVIEW, f"{where} says {match.group(0)!r}: ...{quote}..."
+    hit = next((t for t in declared if "preprint" in t.lower()), "")
+    if hit:
+        return EVIDENCE_PREPRINT, f"declared article type {hit!r}"
+    hit = next((m for m in _PREPRINT_MARKERS if m in f"{source} {url}".lower()), "")
+    if hit:
+        return EVIDENCE_PREPRINT, f"source or URL names {hit!r}"
+    hit = next((t for t in declared if t.lower() in _PRIMARY_TYPES), "")
+    if hit:
+        return EVIDENCE_PRIMARY, f"declared article type {hit!r}"
+    return EVIDENCE_UNKNOWN, ""
+
+
 def classify_evidence_type(*, title: str = "", abstract: str = "", article_type: str = "",
-                           source: str = "", url: str = "") -> str:
+                           source: str = "", url: str = "", full_text: str = "") -> str:
     """Best-effort primary / review / preprint label. ``unknown`` when unclear.
 
     Labelled where it can be determined and honestly ``unknown`` where it cannot
     -- a review is still useful evidence, but a reader must be able to see that
-    it is one.
+    it is one. The rules, and why a review signal wins: :func:`grade_evidence_type`.
     """
-    declared = str(article_type or "").strip().lower()
-    if declared:
-        if "review" in declared:
-            return EVIDENCE_REVIEW
-        if "preprint" in declared:
-            return EVIDENCE_PREPRINT
-        if declared in {"journal article", "research-article", "article", "research article"}:
-            return EVIDENCE_PRIMARY
-    haystack = f"{source} {url}".lower()
-    if any(m in haystack for m in _PREPRINT_MARKERS):
-        return EVIDENCE_PREPRINT
-    head = f"{title} {abstract[:400]}".lower()
-    if any(m in head for m in _REVIEW_MARKERS):
-        return EVIDENCE_REVIEW
-    return EVIDENCE_UNKNOWN
+    return grade_evidence_type(title=title, abstract=abstract, article_type=article_type,
+                               source=source, url=url, full_text=full_text)[0]
 
 
 @dataclass
@@ -324,22 +376,64 @@ class PaperSource:
                 paper.id = pmid
                 paper.source_uri = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
                 paper.requested_organism = organism
+                # The record's own declared types ("Journal Article; Review"): F-2.
+                paper.article_type = "; ".join(
+                    (t.text or "").strip()
+                    for t in node.findall("./MedlineCitation/Article/PublicationTypeList/PublicationType")
+                    if (t.text or "").strip())
                 out.append(paper)
         out = out[:cap]
         for paper in out:
             paper.id = self._pmcid_for(paper.pmid, capture.inner) or paper.pmid
         return out
 
-    def _pmcid_for(self, pmid: str, http: Any) -> str:
-        """The article's own PMCID from EuropePMC, by PMID. ``""`` when it has none."""
+    def _europepmc_item(self, http: Any, query: str) -> Optional[Dict[str, Any]]:
+        """EuropePMC's ``core`` record for ``query``, cached for the run.
+
+        ``{}`` when EuropePMC answered with no record (cached: asking again changes
+        nothing); ``None`` when the lookup itself failed -- an exception, a non-200
+        or an unreadable body. A failure is NOT cached, so the next call asks again.
+        rag's ``_resolve_europepmc_item`` returns the same empty item for both, which
+        is how a failed lookup used to stand as "no PMCID" for the whole run (IT2-N3)
+        and one article was counted as a ``PMID:`` and a ``PMC:`` paper.
+        """
         from t2pw.rag import acquire as ra
 
-        cache: Dict[str, str] = self.__dict__.setdefault("_pmcid_by_pmid", {})
-        if pmid not in cache:
-            item = ra._resolve_europepmc_item(http, ra.CandidatePaper(id=pmid, source="ncbi"))
-            pmcid = str(item.get("pmcid") or "").strip()
-            cache[pmid] = (pmcid if pmcid.upper().startswith("PMC") else f"PMC{pmcid}") if pmcid else ""
-        return cache[pmid]
+        cache: Dict[str, Dict[str, Any]] = self.__dict__.setdefault("_europepmc_items", {})
+        if query in cache:
+            return cache[query]
+        params = {"query": query, "format": "json", "pageSize": 1, "resultType": "core"}
+        try:
+            resp = http.get(ra._EUROPEPMC_SEARCH, params=params)
+            if getattr(resp, "status_code", 0) != 200:
+                return None
+            results = ra._safe_list(ra._safe_dict(ra._safe_dict(resp.json()).get("resultList")).get("result"))
+        except Exception:  # noqa: BLE001 - a failed lookup is reported as None, never raised
+            return None
+        cache[query] = dict(results[0]) if results and isinstance(results[0], dict) else {}
+        return cache[query]
+
+    def _pmcid_for(self, pmid: str, http: Any) -> str:
+        """The article's own PMCID from EuropePMC, by PMID. ``""`` when it has none or the lookup failed."""
+        pmcid = str((self._europepmc_item(http, f"EXT_ID:{pmid} AND SRC:MED") or {}).get("pmcid") or "")
+        return _as_pmcid(pmcid)
+
+    def paper_metadata(self, record: PaperRecord) -> Optional[Dict[str, Any]]:
+        """EuropePMC's core record for an INCLUDED paper: publication types, DOI, journal.
+
+        One search by PMID (the query ``_pmcid_for`` already made for an NCBI record,
+        so it is a cache hit) or by PMCID. ``{}`` when the paper has neither or
+        EuropePMC has no record; ``None`` when the lookup failed.
+        """
+        from t2pw.rag import acquire as ra
+
+        if record.pmid:
+            query = f"EXT_ID:{record.pmid} AND SRC:MED"
+        elif record.pmcid:
+            query = f"PMCID:{record.pmcid}"
+        else:
+            return {}
+        return self._europepmc_item(ra.HttpClient(), query)
 
     def full_text(self, candidate: Any) -> str:
         from t2pw.rag.acquire import fetch_full_text
@@ -363,6 +457,32 @@ class OfflinePaperSource(PaperSource):
     def full_text(self, candidate: Any) -> str:
         return str(getattr(candidate, "full_text", "") or "")
 
+    def paper_metadata(self, record: PaperRecord) -> Optional[Dict[str, Any]]:  # noqa: ARG002
+        """Offline: no metadata service, and nothing failed."""
+        return {}
+
+
+def _as_pmcid(value: Any) -> str:
+    text = str(value or "").strip().upper()
+    return (text if text.startswith("PMC") else f"PMC{text}") if text else ""
+
+
+def _publication_types(item: Mapping[str, Any]) -> List[str]:
+    """EuropePMC's ``pubTypeList.pubType``: a list, or a single string."""
+    listed = item.get("pubTypeList")
+    listed = listed.get("pubType") if isinstance(listed, Mapping) else None
+    if isinstance(listed, str):
+        listed = [listed]
+    return [str(t).strip() for t in listed or [] if str(t).strip()]
+
+
+def _journal_title(item: Mapping[str, Any]) -> str:
+    """``journalTitle`` (the lite shape) or ``journalInfo.journal.title`` (the core shape)."""
+    info = item.get("journalInfo")
+    journal = info.get("journal") if isinstance(info, Mapping) else None
+    nested = journal.get("title") if isinstance(journal, Mapping) else ""
+    return str(item.get("journalTitle") or nested or "").strip()
+
 
 def record_from_candidate(
     candidate: Any,
@@ -384,6 +504,10 @@ def record_from_candidate(
     title = str(getattr(candidate, "title", "") or "")
     abstract = str(getattr(candidate, "abstract", "") or "")
     source = str(getattr(candidate, "source", "") or "")
+    article_type = str(getattr(candidate, "article_type", "") or "")
+    # Discovery time: no full text yet. Acquirer._settle_included grades again once it is known.
+    evidence_type, basis = grade_evidence_type(title=title, abstract=abstract,
+                                               article_type=article_type, source=source, url=url)
 
     return PaperRecord(
         paper_id=make_paper_id(pmid=pmid, pmcid=pmcid, doi=doi, url=url, title=title),
@@ -393,17 +517,13 @@ def record_from_candidate(
         title=title,
         journal=str(getattr(candidate, "journal", "") or ""),
         year=str(getattr(candidate, "year", "") or ""),
+        article_type=article_type,
         url=url,
         acquisition_source=source,
         retrieved_at=_utcnow(),
         abstract=abstract,
-        evidence_type=classify_evidence_type(
-            title=title,
-            abstract=abstract,
-            article_type=str(getattr(candidate, "article_type", "") or ""),
-            source=source,
-            url=url,
-        ),
+        evidence_type=evidence_type,
+        evidence_type_basis=basis,
         discovered_round=int(round_index),
         observed_organisms=[str(o) for o in getattr(candidate, "observed_organisms", []) or []],
         observed_pathways=[str(p) for p in getattr(candidate, "observed_pathways", []) or []],
@@ -444,6 +564,9 @@ def record_from_upload(
                 body = ""
                 notes.append("uploaded bytes could not be decoded as text")
 
+    from t2pw.mining.retrieval import body_text  # retrieval imports this module
+
+    evidence_type, basis = grade_evidence_type(title=title, full_text=body_text(body))
     record = PaperRecord(
         paper_id=f"FILE:{digest[:16]}",
         title=str(title or Path(file_name).stem),
@@ -451,7 +574,8 @@ def record_from_upload(
         file_name=str(file_name),
         acquisition_source="upload",
         retrieved_at=_utcnow(),
-        evidence_type=classify_evidence_type(title=title),
+        evidence_type=evidence_type,
+        evidence_type_basis=basis,
         discovered_round=int(round_index),
         full_text_chars=len(body),
         notes=notes,
@@ -626,6 +750,45 @@ class Acquirer:
                 return f"names {named!r} and {term!r} in one sentence"
         return ""
 
+    # -- an included paper ---------------------------------------------------
+    def _settle_included(self, record: PaperRecord, text: str) -> None:
+        """Complete an INCLUDED paper's metadata, then grade it on its own text.
+
+        Discovery-time grading sees a title and an abstract and, for EuropePMC, no
+        declared type at all (rag's search drops ``pubTypeList``). So each included
+        paper -- not every discovered one -- gets one metadata lookup through the
+        source seam (:meth:`PaperSource.paper_metadata`; an offline run never asks,
+        and offline sources answer ``{}``): its publication types, and an empty DOI,
+        journal or abstract filled (A14: the DOI was empty on every pilot paper; the
+        abstract because indexing drops the front matter that may hold the only
+        copy). A PMCID it reveals for a ``PMID:`` paper is remembered, so the same
+        article found later under its PMCID is the same paper (IT2-N3). A failed
+        lookup is a note, not an error, and the grade then rests on the text rules.
+        Then the paper is graded again, on its full text minus its front matter and
+        reference list (``retrieval.body_text``).
+        """
+        lookup = None if self.config.offline else getattr(self.source, "paper_metadata", None)
+        meta = lookup(record) if lookup is not None else {}
+        if meta is None:
+            record.notes.append("EuropePMC metadata lookup failed: the declared article type "
+                                "is unknown, so the evidence type rests on the text rules")
+        elif meta:
+            declared = [t.strip() for t in record.article_type.split(";") if t.strip()]
+            record.article_type = "; ".join(dict.fromkeys([*declared, *_publication_types(meta)]))
+            record.doi = record.doi or str(meta.get("doi") or "").strip()
+            record.journal = record.journal or _journal_title(meta)
+            record.abstract = record.abstract or str(meta.get("abstractText") or "").strip()
+            pmcid = _as_pmcid(meta.get("pmcid"))
+            if pmcid and not record.pmcid:
+                record.pmcid = pmcid
+                self.seen_paper_ids.add(make_paper_id(pmcid=pmcid))
+
+        from t2pw.mining.retrieval import body_text  # retrieval imports this module
+
+        record.evidence_type, record.evidence_type_basis = grade_evidence_type(
+            title=record.title, abstract=record.abstract, article_type=record.article_type,
+            source=record.acquisition_source, url=record.url, full_text=body_text(text))
+
     # -- acquisition --------------------------------------------------------
     def acquire(
         self,
@@ -710,6 +873,7 @@ class Acquirer:
                 result.excluded.append(record)
                 continue
 
+            self._settle_included(record, body)
             record.full_text_chars = len(body)
             record.cache_ref = f"{self.source.name}:{getattr(candidate, 'id', '')}"
             self.seen_paper_ids.add(record.paper_id)
@@ -748,6 +912,7 @@ class Acquirer:
             record.full_text_chars = len(body)
             if record.paper_id in self.seen_paper_ids:
                 continue
+            self._settle_included(record, body)
             self.seen_paper_ids.add(record.paper_id)
             loaded.append(LoadedPaper(record=record, text=body))
         return loaded, errors
@@ -769,6 +934,7 @@ __all__ = [
     "parse_paper_reference",
     "make_paper_starting_input",
     "classify_evidence_type",
+    "grade_evidence_type",
     "LoadedPaper",
     "AcquisitionResult",
     "PaperSource",

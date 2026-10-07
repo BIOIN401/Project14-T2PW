@@ -76,7 +76,9 @@ paper -> evidence span -> claim -> reaction
 * the retrieval query and mining round that surfaced each span
 * conflicting papers and claims
 * primary vs review evidence where known (`evidence_type`, honestly `unknown`
-  otherwise)
+  otherwise; `evidence_type_basis` on the paper node says which rule decided it), and on
+  every reaction node its `evidence_level` (`review_article_only` when only a review
+  supports it)
 * papers that support candidate subgraphs (`supports_candidate_subgraph`)
 * papers involved in discovering a bridge (`is_bridge_paper`)
 * papers retrieved but **excluded**, with their exclusion reasons — available
