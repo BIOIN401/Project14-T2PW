@@ -549,6 +549,10 @@ class FrontierItem:
     claim_identity: str = ""
     exhausted: bool = False
     attempts: int = 0
+    #: On-route relevance of a ``missing_species_evidence`` item (0-3), which orders
+    #: the frontier slots reserved for that kind. 0 for every other kind. See
+    #: :func:`t2pw.mining.frontier.cap_frontier`.
+    relevance: int = 0
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)

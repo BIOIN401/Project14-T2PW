@@ -95,6 +95,9 @@ says so in `costs.json`, in `report.md` and in the CLI status output.
 Twelve frontier kinds with hand-set priorities. They have been exercised against
 a synthetic fixture, not tuned against real corpora. Expect the bridge and
 conflict kinds to be the most valuable and the cofactor kind to be mostly noise.
+The species reserve (a quarter of the slots, every fourth place) and the 0-3
+on-route relevance score are equally hand-set: lexical name matching, no taxonomy,
+and a carried item keeps the score it was generated with.
 
 ## No live evaluation
 

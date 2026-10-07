@@ -293,6 +293,7 @@ class RunDirectory:
             "rejections",
             "graph_delta",
             "new_frontier",
+            "frontier_cut",
             "metrics",
             "errors",
             "model_raw",

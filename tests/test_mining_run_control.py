@@ -134,3 +134,164 @@ def test_g9_745c_a5_a_stop_recorded_mid_round_forbids_the_next_round():
     ledger = BudgetLedger(MiningBudgets())
     ledger.stop("max_papers_discovered_reached", "recorded mid-round")
     assert ledger.check_before_round() == "max_papers_discovered_reached"
+
+
+# ---------------------------------------------------------------------------
+# F-3: the frontier cap keeps a quarter of its slots for species evidence
+# ---------------------------------------------------------------------------
+def _crowded_state(tmp_path, *, admitted=35, leads=20, cap=60):
+    """A graph whose next frontier holds far more than ``cap`` items: ``admitted``
+    disconnected target-species reactions (a bridge, a downstream and an upstream
+    item each, all priority >= 6.5) and ``leads`` quarantined Zea mays leads (one
+    missing_species_evidence item each, priority 6.0, so they sort last). Built
+    directly, with no admission policy involved."""
+    from t2pw.mining.claims import ClaimStore
+    from t2pw.mining.graph import ResearchGraph, ResearchReaction
+    from t2pw.mining.models import ClaimDecision, ExtractedClaim, GraphDelta, ReactionParticipant
+
+    config = H.make_config(tmp_path, budgets={"max_frontier_size": cap})
+    graph = ResearchGraph(topic=config.topic)
+    store = ClaimStore()
+    delta = GraphDelta(round_index=1)
+
+    def place(identity, substrate, product, *, admitted_, species):
+        sub = graph.registry.upsert(substrate, declared_type="metabolite")
+        prod = graph.registry.upsert(product, declared_type="metabolite")
+        reaction = graph.add_reaction(
+            ResearchReaction(
+                reaction_id="", claim_identity=identity,
+                substrate_ids=[sub.entity_id], product_ids=[prod.entity_id],
+                substrate_names=[substrate], product_names=[product],
+                direction="forward", compartment="chloroplast",
+                species_text=species, admitted=admitted_,
+                species_state="target_species_supported" if admitted_ else "non_target_species",
+                quarantine_reason="" if admitted_ else "non_target_species",
+            ),
+            round_index=1,
+        )
+        (delta.added_reaction_ids if admitted_ else delta.added_candidate_reaction_ids).append(
+            reaction.reaction_id)
+
+    for k in range(admitted):
+        place(f"arabidopsis thaliana::a{k}|b{k}", f"precursor a{k}", f"product b{k}",
+              admitted_=True, species=H.TARGET_SPECIES)
+    for k in range(leads):
+        identity = f"zea mays::lead x{k}|lead y{k}"
+        claim = ExtractedClaim(
+            claim_id=f"cl_lead_{k:02d}", claim_identity=identity, paper_id="PMC9",
+            subject=f"lead x{k}", object=f"lead y{k}", species_text="Zea mays",
+            species_state="non_target_species",
+            substrates=[ReactionParticipant(name=f"lead x{k}")],
+            products=[ReactionParticipant(name=f"lead y{k}")],
+        )
+        store.register(claim)
+        store.record_decision(ClaimDecision.build(
+            claim=claim, status="candidate", reason="non-target species", round_index=1))
+    return SimpleNamespace(graph=graph, store=store, delta=delta, config=config)
+
+
+def _generate(state, **kwargs):
+    from t2pw.mining import frontier
+
+    return frontier.generate(graph=state.graph, store=state.store, delta=state.delta,
+                             config=state.config, round_index=1, **kwargs)
+
+
+def test_g9_745c_f3_the_cap_keeps_a_quarter_of_its_slots_for_species_items(tmp_path):
+    """Pilot-003: the cap kept everything at priority >= 6.5 and cut all 33
+    missing_species_evidence items. At f9556288 this keeps 0 species items."""
+    state = _crowded_state(tmp_path)
+    items = _generate(state)
+    species = [i for i in items if i.kind == "missing_species_evidence"]
+    assert len(items) == 60
+    assert len(species) >= 15
+
+
+def test_g9_745c_f3_the_cut_is_recorded_in_the_round_artifacts(tmp_path):
+    """The fixture round 1 frontier holds 17 items; with the cap at 8 the cut is
+    written to frontier_cut.jsonl and counted in metrics. At f9556288 the cap cut
+    silently and neither exists."""
+    mined = H.run_fixture(tmp_path, budgets={"max_frontier_size": 8, "max_rounds": 1})
+    round_dir = mined.outcome.run_dir.path("rounds", "round_001")
+    assert (round_dir / "frontier_cut.jsonl").is_file()
+    rows = [json.loads(line) for line in
+            (round_dir / "frontier_cut.jsonl").read_text(encoding="utf-8").splitlines() if line]
+    metrics = json.loads((round_dir / "metrics.json").read_text(encoding="utf-8"))
+    assert rows and metrics["frontier_cut"]["count"] == len(rows)
+    assert sum(metrics["frontier_cut"]["by_kind"].values()) == len(rows)
+    kept = {i.frontier_item_id for i in mined.outcome.state.frontier}
+    assert len(kept) == 8
+    for row in rows:
+        assert {"frontier_item_id", "kind", "target"} <= set(row)
+        assert row["frontier_item_id"] not in kept
+
+
+def test_new_acceptance_745c_f3_cap_frontier_orders_the_reserve_by_relevance():
+    """The reserved slots go to the most on-route species items, each in every
+    fourth place; everything else keeps the priority order; the cut is returned."""
+    from t2pw.mining.frontier import cap_frontier
+    from t2pw.mining.models import FrontierItem
+
+    def item(n, kind, priority, relevance=0):
+        return FrontierItem(frontier_item_id=f"fr_{n:02d}", kind=kind, target=f"t{n:02d}",
+                            priority=priority, relevance=relevance)
+
+    others = [item(n, "downstream_expansion", 7.0) for n in range(10)]
+    species = [item(10 + n, "missing_species_evidence", 6.0, relevance=n % 3) for n in range(6)]
+    kept, cut = cap_frontier(others + species, 8)
+    assert [i.frontier_item_id for i in kept] == [
+        "fr_00", "fr_01", "fr_02", "fr_12", "fr_03", "fr_04", "fr_05", "fr_15"]
+    assert {i.frontier_item_id for i in cut} == {
+        "fr_06", "fr_07", "fr_08", "fr_09", "fr_10", "fr_11", "fr_13", "fr_14"}
+    # Fewer species items than the reserve: all of them are kept.
+    kept, _ = cap_frontier(others + species[:1], 8)
+    assert [i.kind for i in kept].count("missing_species_evidence") == 1
+    # No species item: the plain priority order.
+    kept, cut = cap_frontier(list(reversed(others)), 4)
+    assert [i.frontier_item_id for i in kept] == ["fr_00", "fr_01", "fr_02", "fr_03"]
+    assert len(cut) == 6
+
+
+def test_new_acceptance_745c_f3_on_route_relevance_is_scored_per_lead(tmp_path):
+    """One point each for naming the target species, sharing a name with a seed or a
+    target-supported reaction, and a component touching the primary graph."""
+    from t2pw.mining.graph import ResearchReaction
+    from t2pw.mining.models import ClaimDecision, ExtractedClaim, ReactionParticipant
+
+    state = _crowded_state(tmp_path, admitted=2, leads=0)
+    state.graph.select_primary_component(round_index=1, topic=state.config.topic)
+    primary = state.graph.primary_reactions[0]
+
+    def lead(k, substrate, product, species):
+        claim = ExtractedClaim(
+            claim_id=f"cl_rel_{k}", claim_identity=f"x::{substrate}|{product}", paper_id="PMC9",
+            subject=substrate, object=product, species_text=species,
+            substrates=[ReactionParticipant(name=substrate)],
+            products=[ReactionParticipant(name=product)],
+        )
+        state.store.register(claim)
+        state.store.record_decision(ClaimDecision.build(
+            claim=claim, status="candidate", reason="lead", round_index=1))
+        return claim.claim_identity
+
+    lead(0, "unrelated m", "unrelated n", "Zea mays")
+    lead(1, "unrelated p", "unrelated q", "Arabidopsis thaliana")
+    # alpha-linolenic acid is the fixture config seed.
+    lead(2, "alpha-linolenic acid", "unrelated r", "Arabidopsis thaliana")
+    items = {i.target: i.relevance for i in _generate(state)
+             if i.kind == "missing_species_evidence"}
+    assert items == {"unrelated m -> unrelated n": 0, "unrelated p -> unrelated q": 1,
+                     "alpha-linolenic acid -> unrelated r": 2}
+
+    # A lead in a quarantine component that touches the primary graph scores the third point.
+    sub = state.graph.registry.get(primary.product_ids[0])
+    other = state.graph.registry.upsert("unrelated s", declared_type="metabolite")
+    identity = lead(3, sub.name, "unrelated s", "Arabidopsis thaliana")
+    state.graph.add_reaction(ResearchReaction(
+        reaction_id="", claim_identity=identity, substrate_ids=[sub.entity_id],
+        product_ids=[other.entity_id], substrate_names=[sub.name], product_names=["unrelated s"],
+        admitted=False, quarantine_reason="inferred_only", species_state="inferred_only"),
+        round_index=1)
+    items = {i.target: i.relevance for i in _generate(state)
+             if i.kind == "missing_species_evidence"}
+    assert items[f"{sub.name} -> unrelated s"] == 3

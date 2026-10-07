@@ -31,6 +31,7 @@ caches, the vector store or the budget ledger.
 from __future__ import annotations
 
 import traceback
+from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence
 
@@ -555,6 +556,7 @@ class MiningController:
         self.ledger.record_round(useful=delta.useful, new_reactions=len(delta.added_reaction_ids))
         self.state.errors.extend(round_errors)
 
+        cut: List[FrontierItem] = []
         next_frontier = frontier_mod.generate(
             graph=self.state.graph,
             store=self.state.store,
@@ -563,12 +565,24 @@ class MiningController:
             round_index=index,
             previous=self.state.frontier,
             exhausted_ids=set(self.state.exhausted_frontier),
+            cut=cut,
         )
         self.state.frontier = frontier_mod.merge_frontier(
             [i for i in self.state.frontier if not i.exhausted],
             next_frontier,
             cap=self.config.budgets.max_frontier_size,
+            cut=cut,
         )
+        # Every item the cap dropped, once, unless it survived anyway (an item cut
+        # from the new list can be the same question carried forward). Pilot-003's
+        # cap silently dropped 137 items (ORCH-745 F-3).
+        kept_ids = {i.frontier_item_id for i in self.state.frontier}
+        frontier_cut = [
+            {"frontier_item_id": i.frontier_item_id, "kind": i.kind, "target": i.target,
+             "priority": i.priority, "relevance": i.relevance}
+            for i in {c.frontier_item_id: c for c in cut}.values()
+            if i.frontier_item_id not in kept_ids
+        ]
 
         record = {
             "round": index,
@@ -584,6 +598,7 @@ class MiningController:
             "rejections": round_rejections,
             "graph_delta": delta.to_dict(),
             "new_frontier": [i.to_dict() for i in self.state.frontier],
+            "frontier_cut": frontier_cut,
             "metrics": {
                 "queries": len(round_queries),
                 "papers_discovered": len(set(round_papers)),
@@ -599,6 +614,10 @@ class MiningController:
                 "primary_reactions": len(self.state.graph.primary_reactions),
                 "candidate_reactions": len(self.state.graph.candidate_reactions),
                 "candidate_components": len(self.state.graph.candidate_components),
+                "frontier_cut": {
+                    "count": len(frontier_cut),
+                    "by_kind": dict(sorted(Counter(c["kind"] for c in frontier_cut).items())),
+                },
             },
             "errors": round_errors,
             "model_raw": round_raw,

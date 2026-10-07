@@ -91,6 +91,37 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
   reason `max_papers_discovered_reached` is recorded, the items left unasked or cut stay
   open on the frontier, and no further round starts.
 
+## The frontier cap and the species reserve
+
+`max_frontier_size` (60) caps the frontier twice per round: the newly generated items
+(`frontier.generate`), then the merge with the items carried forward
+(`frontier.merge_frontier`). Both go through one helper, `frontier.cap_frontier`.
+
+* **The reserve.** `ceil(0.25 × cap)` slots (15 of 60) go to `missing_species_evidence`
+  items whenever that many exist; with fewer, all of them are kept. They are the only items
+  that ask for direct target-species evidence for a held lead. In pilot-003 the cap kept
+  everything at priority 6.5 or higher and cut 137 of 194 items, all 33 species items among
+  them, so no target-species search was ever asked (ORCH-745 F-3). The other slots are filled
+  in the priority order, as before.
+* **Which species items.** The reserved slots go to the most on-route leads first, by
+  `FrontierItem.relevance` (0-3), one point each when:
+  1. a claim behind the lead names the run's target species (its `species_text` contains
+     the target species or its normalized form, after `comparison_key`);
+  2. a substrate, product or enzyme of the lead is a seed or a participant or enzyme of a
+     `target_species_supported` reaction (`queries.rescue_terms`, the same vocabulary the
+     screen rescue uses; cofactors are left out);
+  3. the lead's quarantine component shares a non-cofactor chemical with the primary graph.
+
+  Ties keep the priority order (priority, kind, target, id), so the choice is deterministic.
+  A carried item keeps the relevance it was generated with.
+* **The order.** The frontier's order is the order a round asks in, and a round usually
+  stops on its discovery or processing budget after a few items. A reserved item therefore
+  takes every fourth place (4th, 8th, ...); appended at the end, it would never be asked.
+* **The cut is recorded.** Every item the cap drops that is not on the new frontier anyway
+  is written to `rounds/round_NNN/frontier_cut.jsonl` (id, kind, target, priority,
+  relevance), and `metrics.frontier_cut` holds its `count` and `by_kind`. A cut item is not
+  exhausted; it can be generated again in a later round.
+
 ## Extraction in passage batches
 
 A paper's retrieved passages (up to `max_passages_per_paper`) are extracted in consecutive

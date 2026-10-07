@@ -20,8 +20,8 @@ runs_mining/<run_id>/
         round_001/ round.json checkpoint.json input_frontier.jsonl queries.jsonl
                    papers_considered.jsonl passages_retrieved.jsonl
                    claims_extracted.jsonl decisions.jsonl rejections.jsonl
-                   new_frontier.jsonl graph_delta.json metrics.json errors.jsonl
-                   model_raw.jsonl
+                   new_frontier.jsonl frontier_cut.jsonl graph_delta.json
+                   metrics.json errors.jsonl model_raw.jsonl
         round_002/ ...
 ```
 
@@ -88,7 +88,7 @@ One JSON object per line; safe to stream.
 |---|---|---|
 | `papers.jsonl` | paper (included **and** excluded) | ids, metadata, screening outcome (`mining_rescue` when the rescue re-admitted it; the production reason is then in `notes`), inclusion/exclusion reasons, evidence type, discovery round + query |
 | `queries.jsonl` | literature query | query text, frontier item + kind, round, attempt (formulation 1 or 2), sources, source terms, result count, new paper ids, cache hit, error |
-| `frontier.jsonl` | open frontier item | kind, target, reason, priority, origin round, attempts, exhausted |
+| `frontier.jsonl` | open frontier item | kind, target, reason, priority, origin round, attempts, exhausted, `relevance` (the on-route score, 0-3, of a `missing_species_evidence` item; 0 otherwise) |
 | `evidence_spans.jsonl` | quoted passage | exact text, section, page, paragraph, locator, chunk, offsets, round, query, frontier item, score |
 | `claims.jsonl` | extracted claim | everything in [`evidence_policy.md`](evidence_policy.md) § claims, including `field_evidence` |
 | `decisions.jsonl` | admission decision | status, reason, round, target, evidence level, species state, `supersedes` |
@@ -140,11 +140,17 @@ Two payloads, one table, two Graphviz sources. See
 split into per-concern files for convenience. Each round records: input
 frontier, generated queries, papers considered, passages retrieved, claims
 extracted, admission decisions, rejections with reasons, graph delta (with
-before/after graph hashes), the newly generated frontier, round metrics, errors
-and retries, and the checkpoint.
+before/after graph hashes), the newly generated frontier, the items the frontier
+cap cut, round metrics, errors and retries, and the checkpoint.
 
 `metrics` carries counts plus the cumulative `usage` snapshot and the primary /
-candidate / component sizes at the end of that round.
+candidate / component sizes at the end of that round, and `frontier_cut`: the
+`count` of items the cap cut and their `by_kind` counts.
+
+`frontier_cut.jsonl` has one row per item the frontier cap dropped in that round
+(`frontier_item_id`, `kind`, `target`, `priority`, `relevance`), and is empty when
+nothing was cut. See [`limits_and_stopping.md`](limits_and_stopping.md) § The
+frontier cap and the species reserve.
 
 ### `model_raw.jsonl` — raw completion lineage
 
