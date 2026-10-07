@@ -250,15 +250,15 @@ def test_b1_c3_a_contrast_mention_does_not_make_a_target_species_reaction():
     assert other.species_state == "non_target_species"
 
 
-def test_a_model_cited_target_species_is_still_supported():
+def test_a_model_cited_host_span_is_ambiguous_and_a_cited_in_planta_span_supported():
     """A species the model cites is species evidence; a recovered one never is.
 
     ORCH-745 F-1, a deliberate move: base read this transgenic-host span as
     ``target_species_supported`` once the model cited it. The span's only sentence
     naming the target is "expression of bryophyte LCPUFA genes in transgenic
-    Arabidopsis" (W7: a host system never performs its own reaction), so the
-    claim is now ``species_ambiguous`` with grade ``host``. A cited in-planta
-    sentence is still supported."""
+    Arabidopsis", so the W13 species-span rule finds no plain statement of the target
+    and the claim is ``species_ambiguous`` (grade ``none``). A model-cited span that shows
+    the reaction in planta is still supported."""
     claim, _ = _uncited_species_claim("ev_f42c0ce97d79b1e7", PILOT_TRANSGENE_SPAN,
                                       "DGLA (20:3n6)", "ARA (20:4n6)", "Arabidopsis",
                                       species_evidence_ids=["ev_f42c0ce97d79b1e7"])
@@ -266,4 +266,4 @@ def test_a_model_cited_target_species_is_still_supported():
     assert claim.field_attribution["species"] == "model_citation"
     claims, _ = _build(_pilot_shaped(species_evidence_ids=["ev_one"]))
     assert claims[0].species_state == "target_species_supported"
-    assert claim.field_attribution["species"] == "model_citation"
+    assert claims[0].field_attribution["species"] == "model_citation"

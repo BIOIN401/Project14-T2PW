@@ -101,13 +101,13 @@ def test_3_wrong_species_evidence_never_enters_the_target_species_graph(mined):
     assert wrong.paper_ids and wrong.evidence_ids
 
 
-def test_3b_an_ambiguous_species_claim_is_also_held_back(mined):
+def test_3b_a_claim_without_species_evidence_is_also_held_back(mined):
     graph = mined.outcome.state.graph
     ambiguous = reaction_named(graph, "12-OPDA")
     candidates = [
         r for r in graph.candidate_reactions if "OPC-8:0" in r.product_names
     ]
-    assert candidates, "the ambiguous-species claim must be retained as a labelled lead"
+    assert candidates, "the claim without species evidence must be retained as a labelled lead"
     held = candidates[0]
     # ORCH-745 B3, a deliberate move: P6's claim names the target but cites nothing
     # for it, so its species is dropped. Base then used the paper's screen organism
