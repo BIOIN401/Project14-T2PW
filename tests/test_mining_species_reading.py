@@ -456,14 +456,15 @@ def test_new_acceptance_745b_f1_t11_an_introduction_only_mutant_tool_earns_nothi
     assert _graded(claim, "ev_d216d8e2a43cb218", "We introduce the aos gh3.10 jar1 mutant") == ["none"]
 
 
-def test_new_acceptance_745b_f1_33_a_marchantia_table_row_is_non_target_not_an_inference():
-    """Recommended #33 (call 0005 row 2, HDA (16:2n6) -> HTA (16:3n3), MpFAD7): its row of the
-    summary table, ev_20a7 [10], has no ortholog marker; the claim is ``non_target_species``.
-    The neighbouring row's "Inferred by pathway logic" ([9]) is about 16:2(n6) (HDA) as a
-    product of MpFAD6 and does not name this claim's "HDA (16:2n6)" (a name keeps its note)."""
+def test_new_acceptance_745b_f1_33_a_marchantia_table_row_is_not_admitted():
+    """Recommended #33 (call 0005 row 2, HDA (16:2n6) -> HTA (16:3n3), MpFAD7), its row of the
+    summary table ev_20a7 [10]. The adjudication recommended ``non_target_species``; since
+    repair round 1 (BIO-745B-1) bare "HDA" names the neighbouring row's "Inferred by pathway
+    logic" ([9]) for the negative markers, so the claim is ``inferred_only``, which the
+    bio-auditor accepted (both non-admissible)."""
     call = _call(5)
     claims, _ = _build(_payload(call, [2]), _shown(call), BRYOPHYTE, **_typed(BRYOPHYTE))
-    assert claims[0].species_state == "non_target_species"
+    assert claims[0].species_state == "inferred_only"
 
 
 def test_g9_745b_b3_the_papers_screen_organisms_are_never_the_claims_species():
@@ -501,7 +502,9 @@ def _replay():
 
 
 #: Where this implementation's state differs from the adjudication table (section 2). Every
-#: one is a non-admissible state either way; none is a T-row.
+#: one is a non-admissible state either way; none is a T-row. The bio-auditor's conformance
+#: review of 467a9faa accepted #2, #4, #6, #29, #30 as adjudicated (BIO-745B-4) and asked for
+#: #10, #19, #22, #23, #33 to move (BIO-745B-1).
 TABLE_DELTAS = {
     # ev_3b1f [6] is one "sentence" of the summary table: the cis-to-iso isomerase row
     # ("Enzymatic activity in crude extracts", a W7 in-vitro marker) glued to the MpGH3A row.
@@ -513,6 +516,13 @@ TABLE_DELTAS = {
     # mints: the product is unsupported (claim incomplete) and the species uncited. The
     # table: "IVO (species_ambiguous if ev_1f2c fully excluded)".
     "30": "species_not_stated",
+    # BIO-745B-1: bare X of "X (Y)" now names a sentence for the negative markers. #10's
+    # "Recombinant enzyme assays ... ALA and LA" and #19's "recombinant enzyme assays" rows
+    # ("... on EPA/ARA") are in vitro; #22's and #23's bare "EPA" reaches ev_20a7 [5]
+    # ("... distinguished from the angiosperm equivalent"), a homology marker since repair
+    # B4 (the auditor predicted in vitro; inferred_only outranks it); #33's bare "HDA" reaches
+    # [9] "Inferred by pathway logic".
+    "10": IVO, "19": IVO, "22": "inferred_only", "23": "inferred_only", "33": "inferred_only",
 }
 
 
