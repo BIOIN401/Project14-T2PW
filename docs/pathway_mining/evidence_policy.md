@@ -81,7 +81,12 @@ way to the *question that found it*.
 
 `claim_id` · `claim_identity` · `claim_type` · structured `subject` /
 `relationship` / `object` · `species_text` and `species_state` ·
-`substrates` and `products` (each participant with its own evidence ids) ·
+`species_support` (the sentence-level species reading: grade and graded
+sentences, see [`species_policy.md`](species_policy.md)) ·
+`substrates` and `products` (each participant with its own evidence ids and its
+`attribution`: `model_citation` or `verbatim_cited_span`) ·
+`unsupported_participants` (side, name and reason of each participant the model
+asserted and no evidence supports) ·
 `enzyme` / `protein` / `gene` · `direction` · `reversible` · `compartment` ·
 `conditions` · `tissue` · `pathway_names` · **`field_evidence`** (field name ->
 the evidence ids supporting *that field*) · `field_attribution` (field name ->
@@ -138,7 +143,7 @@ cited passage does not show that the passage ties that species to this
 reaction. Pilot-001's own spans name *Arabidopsis* only as a transgenic host
 ("expression of bryophyte LCPUFA genes in transgenic Arabidopsis") or as a
 comparison ("equivalent to Arabidopsis AtFAD3"). So a species kept **only** by
-the fallback goes to `species.classify_species` as the observed value, but with
+the fallback goes to `species.aggregate_species` as the observed value, but with
 no species evidence ids:
 
 * the target species -> `species_ambiguous`. The claim is kept as a lead, and the
@@ -148,14 +153,46 @@ no species evidence ids:
   which quarantines the claim as before.
 
 Only a species the model cited itself (`model_citation`) can make a claim
-`target_species_supported`. `species.py` is unchanged. Enzyme and gene recovery
-are unchanged too.
+`target_species_supported`, and then only on a supporting sentence that shows the
+organism performing the reaction ([`species_policy.md`](species_policy.md)).
+Enzyme and gene recovery read only spans the model cited for a participant: a
+participant kept by its own verbatim match (below) never widens them.
+
+**Participants need evidence too (ORCH-745 F-5).** Pilot-003's thin answers cited
+nothing for any participant, and base kept every one, so a reaction could be
+admitted with no evidence for its substrates or products. A participant is now
+kept only if it cites a span the model was shown (`model_citation`), or its name
+occurs verbatim — case, whitespace, Unicode hyphens and Greek letters folded, and a
+hyphen part of the token, so "JA" is not found in "JA-Ile" — in a span the claim
+cites for any field or at claim level (`verbatim_cited_span`, attributed to that
+span). Anything else is dropped and recorded in the round's `errors`:
+
+```
+claim[0].substrates='α-linolenic acid (LeA)' (no valid citation and not verbatim in a cited passage)
+```
+
+A claim with one side unsupported is `incomplete` at admission (gate 4). A claim
+none of whose participants is supported is kept as an `incomplete` lead too, in its
+own identity namespace (`unsupported-participants::...`) so it never merges into a
+supported reaction; its asserted names stay in `subject` / `object` and
+`unsupported_participants`, and the frontier asks for the missing participants.
+
+**Tissue** has no citation list of its own. It is kept only when the value occurs
+verbatim in a span the claim cites (`field_attribution.tissue =
+verbatim_cited_span`), else dropped like any uncited field. Pilot-003 stored
+"leaf, root, inflorescence, wounded leaf" from passages that say nothing of it.
+
+**Placeholder echoes are never values.** A value that echoes the prompt's template
+(`has_stoichiometry`, `products_evidence_ids_placeholder`, `...`, `ev_...`) or is an
+empty JSON-ish string (`[]`, `{}`, `null`) is dropped and recorded, in any field
+including a participant's name. A stoichiometry is kept only if it is a
+coefficient: a number, a fraction, or `n` (`2n`, `n+1`).
 
 **2. At admission.** `admission._strip_unsupported` re-checks the material fields
-(`enzyme`, `protein`, `gene`, `compartment`, `direction`, `reversible`) and blanks
-any that still carry a value with no evidence, recording the strip on the
-decision. Substrates and products are *not* strippable — they are the reaction;
-a claim missing either is `incomplete`.
+(`enzyme`, `protein`, `gene`, `compartment`, `direction`, `reversible`, `tissue`)
+and blanks any that still carry a value with no evidence, recording the strip on
+the decision. Substrates and products are *not* strippable — they are the
+reaction; a claim missing either is `incomplete`.
 
 ### The worked cases from the brief
 

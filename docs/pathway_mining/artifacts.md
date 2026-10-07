@@ -39,12 +39,21 @@ runs_mining/<run_id>/
 
 | Constant | Value | Bumped when |
 |---|---|---|
-| `ARTIFACT_SCHEMA_VERSION` | `t2pw.mining/1.1.0` | a persisted field changes meaning |
-| `PROMPT_VERSION` | `mining-extract/1.1.0` | an extraction prompt changes in a way that could change a claim |
+| `ARTIFACT_SCHEMA_VERSION` | `t2pw.mining/1.2.0` | a persisted field changes meaning |
+| `PROMPT_VERSION` | `mining-extract/1.2.0` | an extraction prompt changes in a way that could change a claim |
 | `VIEW_SCHEMA_VERSION` | `t2pw.mining.view/1.0.0` | a view payload's shape changes |
 
 The manifest carries the first two; every claim carries both; every checkpoint
 and both view payloads carry their own.
+
+`t2pw.mining/1.2.0` (ORCH-745 B): `species_state` is decided on the claim's own
+supporting sentences ([`species_policy.md`](species_policy.md)); new are
+`ExtractedClaim.species_support` and `.unsupported_participants`,
+`ReactionParticipant.attribution`, `ClaimDecision.species_grade` and
+`ResearchReaction.species_grade`; `tissue` is kept only with a cited span.
+`mining-extract/1.2.0` (N-5): the prompt's JSON example no longer pre-fills
+`"species_inferred": false` and `"hypothesis": false`, which a model could copy;
+the rules ask for both, true or false, on every claim.
 
 ---
 
@@ -53,8 +62,8 @@ and both view payloads carry their own.
 ```json
 {
   "run_id": "2026-09-17_142233_9f1b2c3d",
-  "schema_version": "t2pw.mining/1.1.0",
-  "prompt_version": "mining-extract/1.1.0",
+  "schema_version": "t2pw.mining/1.2.0",
+  "prompt_version": "mining-extract/1.2.0",
   "started_at": "...Z", "updated_at": "...Z", "finished_at": "...Z",
   "completion_state": "stopped_at_limit",
   "completed_normally": false,
@@ -90,8 +99,8 @@ One JSON object per line; safe to stream.
 | `queries.jsonl` | literature query | query text, frontier item + kind, round, attempt (formulation 1 or 2), sources, source terms, result count, new paper ids, cache hit, error |
 | `frontier.jsonl` | open frontier item | kind, target, reason, priority, origin round, attempts, exhausted, `relevance` (the on-route score, 0-3, of a `missing_species_evidence` item; 0 otherwise) |
 | `evidence_spans.jsonl` | quoted passage | exact text, section, page, paragraph, locator, chunk, offsets, round, query, frontier item, score |
-| `claims.jsonl` | extracted claim | everything in [`evidence_policy.md`](evidence_policy.md) § claims, including `field_evidence` |
-| `decisions.jsonl` | admission decision | status, reason, round, target, evidence level, species state, `supersedes` |
+| `claims.jsonl` | extracted claim | everything in [`evidence_policy.md`](evidence_policy.md) § claims, including `field_evidence`, each participant's `attribution`, `unsupported_participants` and `species_support` (the species grade and every graded supporting sentence) |
+| `decisions.jsonl` | admission decision | status, reason, round, target, evidence level, species state, species grade, `supersedes` |
 | `model_calls.jsonl` | model call | requested vs **actual** model, provider (`not_reported_by_llm_client` when the shared client says nothing, which it does today; `""` only for a call that made no request), prompt/schema version, reasoning, input/output/cached tokens, estimated cost, latency, retries, finish reason, parse and schema errors, fallback used + reason, request/response hashes, attempt log (every provider request of every rung, each tagged with its `rung` and `shrink_fraction`), `answer_quality` (`ok`, `retried_after_thin`, `thin_after_retry`, `thin_not_retried`; `""` when no answer was accepted; see [`evidence_policy.md`](evidence_policy.md) § A thin answer) |
 
 ## `costs.json`

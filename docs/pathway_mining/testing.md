@@ -48,13 +48,17 @@ which looks exactly like a large regression.
 | `test_mining_iteration2.py` | ORCH-743 iteration 2 (G9 at ecf6b9a0), the pilot-002 audit's five defects: extraction in passage batches with an output budget that fits one (IT2-1); NCBI identity taken from the PMID only, cross-source dedupe and the full-text title check (IT2-2); no exhaustion on a budget-cut result window (IT2-3); the grape host (IT2-4); every ladder rung in `model_raw.jsonl` (IT2-5) |
 | `test_mining_evidence_hygiene.py` | ORCH-745 change set A (G9 at f9556288), on pilot-003's four included papers as the run held them and pilot-002's abstract-only records (`tests/fixtures/mining/orch745a_pilot_texts.json`): a review is graded a review from its declared NCBI type, its title, its abstract or its own full text, never from a citation of someone else's review, and a reaction only it supports is `review_article_only` on the decision, the reaction node, the view and the summary (F-2); reference lists, front matter and publisher notes never become spans and never take a passage slot, while every other pilot-003 passage stays retrievable (F-4); one passage, one span (A4); per-paper retrieval ranks the paper's own chunks (A7); a failed EuropePMC lookup is asked again (IT2-N3) |
 | `test_mining_run_control.py` | ORCH-745 change set C (G9 at f9556288), the pilot-003 audit's run-control defects: `max_new_reactions_per_round` counts newly admitted reactions only, so 26 quarantined leads do not stop a run (B1 / F-7); no round starts after a recorded stop or a spent discovery budget (A5); the frontier cap keeps a quarter of its slots for `missing_species_evidence` items, the most on-route first, and records the cut in `frontier_cut.jsonl` (F-3); a thin, reasoning-free answer (pilot-003's raw texts in `tests/fixtures/mining/pilot003_thin_answers.json`) is re-asked once and marked, and the provider is never an empty string (B2); the CLI loads `.env` before `run` / `resume` / `preflight` (F9) |
+| `test_mining_species_reading.py` | ORCH-745 change set B (G9 at f9556288), replaying pilot-003's 16 recorded extraction answers and pilot-002's 13-LOX claim (`tests/fixtures/mining/orch745b_pilot_payloads.json`, span texts from `orch745a_pilot_texts.json`): a participant needs a citation or its name verbatim in a cited span, a placeholder echo is no value, tissue needs a cited span (F-5); the species state is read on the claim's own supporting sentences, so GH3.10's knockout evidence admits jasmonic acid -> JA-Ile `in_planta` and the bryophyte review's OPR3 steps are `review`, while every guard row of the bio-auditor's adjudication (T1b, T4-T11, #33) stays out and the full replay admits exactly those three (F-1); the paper's screen organisms are never the claim's species (B3); a same-paper merge decides on the combined evidence, in either batch order (F-6); the prompt pre-fills no boolean (N-5) |
 | `test_mining_integration.py` | the eight required behaviours, end to end |
 
 ## The integration fixture
 
 `tests/helpers_mining.py` holds a **synthetic**, jasmonate-flavoured corpus of
 nine papers, built to exercise the policy rather than to be biochemically
-authoritative. It deliberately contains:
+authoritative. Since ORCH-745 F-1 each paper meant to support a target-species
+reaction says so in planta ("In Arabidopsis thaliana leaves, ... converts ..."): a
+sentence that only names the species is not species support. It deliberately
+contains:
 
 | | |
 |---|---|
@@ -62,7 +66,7 @@ authoritative. It deliberately contains:
 | P3 | a relevant but **disconnected** reaction (`JA-Ile → 12OH-JA-Ile`) |
 | P4 | a later paper (round 3) supplying a legitimate biochemical **bridge** |
 | P5 | a **wrong-species** reaction (*Zea mays*) |
-| P6 | an **ambiguous-species** claim: the target is named in the paper, nothing ties it to the reaction |
+| P6 | a claim that names the target but cites nothing for it: held back (since ORCH-745 B3 `species_not_stated`, the paper's screen organism is no longer the claim's species) |
 | P7 | a paper **conflicting** with P2 about the enzyme |
 | P8 | **independent support** for P1's reaction from a second laboratory |
 | P9 | a paper the model **cannot finish reading** (truncated completion) |
@@ -78,7 +82,7 @@ are actually present in the prompt, so the citation check in
 1. connected reactions enter the primary graph, via the shared metabolite;
 2. the disconnected reaction starts in a candidate subgraph;
 3. wrong-species evidence is retained but never enters the target-species graph
-   — and the ambiguous-species claim is held back too;
+   — and the claim with no species evidence (P6) is held back too;
 4. the conflict is visible, both positions kept, the disputed attribute cleared
    on the node;
 5. the round-3 bridge promotes the component, and the original discovery round
