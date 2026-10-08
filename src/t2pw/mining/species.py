@@ -528,7 +528,41 @@ _NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
                   r"\balike\b",
                   # RT-E2-4: a concessive clause ("Despite high OPC-8:0 levels in opr3 mutants, JA was
                   # reduced", "Even though jar1 mutants accumulated JA-Ile, ...")
-                  r"\b(?:although|though|despite|in spite of)\b")
+                  r"\b(?:although|though|despite|in spite of)\b",
+                  # ORCH-746 CS-E repair 2 closes the delay and no-difference classes by SHAPE, the union
+                  # of the round-1 prototypes (rev746e_r1_fix, rt746r1_veto, bio746r1_veto).
+                  # A time course (RT-R1-1, CSE-R1-C3, BIO-E746R1-2): a sentence naming two time or stage
+                  # points ("not detected at 15 min but accumulated at 2 h", "absent at stage 12 but
+                  # present at stage 13"), a later presence after "but" or a semicolon, an early window,
+                  # a later time ("for the first hour", "at early time points", "became detectable only
+                  # at 2 h", "reached ... by 2 h", "delayed", "at 15 min only")
+                  r"\b(?:\d+(?:\.\d+)?\s*(?:min|minutes?|h|hrs?|hours?)\b|\d+(?:\.\d+)?\s+(?:d|days?|weeks?)\b|stage\s+\d+\b)"
+                  r"[^;]*?\b(?:\d+(?:\.\d+)?\s*(?:min|minutes?|h|hrs?|hours?)\b|\d+(?:\.\d+)?\s+(?:d|days?|weeks?)\b|"
+                  r"stage\s+\d+\b)",
+                  r"\b(?:but|;)[^.;]*?\b(?:present|detected|detectable|appeared|accumulated)\b",
+                  r"\btill\b", r"\bearlier than\b", r"\b(?:for|during|within|in) the first\b", r"\bearly time points?\b",
+                  r"\b(?:later|thereafter|subsequently|afterwards|onwards?)\b", r"\bonly (?:after|at|from|by|when|once)\b",
+                  r"\bbecame (?:detectable|measurable|apparent|visible)\b",
+                  r"\bby \d+(?:\.\d+)?\s*(?:min|minutes?|h|hrs?|hours?|d|days?)\b", r"\bdelay\w*", r"\blag\b",
+                  r"\bbefore (?:the |one |two |three |four |five |six )",
+                  r"\bat \d+(?:\.\d+)?\s*(?:min|minutes?|h|hrs?|hours?)\b[^;]*\bbut\b",
+                  r"\b(?:first|earliest|early|initial)\b[^.;]{0,15}?\b(?:min|minutes|h|hours?|time points?)\b",
+                  r"\b\d+(?:\.\d+)?\s*(?:min|minutes?|h|hrs?|hours?)\s+only\b",
+                  # Non-significance (RT-R1-2 (i), CSE-R1-C1, BIO-E746R1-1): any statement of significance,
+                  # a trend or variability except the adverb "significantly" ("did not reach statistical
+                  # significance", "no statistically significant difference", "a trend towards lower",
+                  # "(ns)", "with a P value of 0.12", "within the range of biological variation")
+                  r"\bstatistical\b", r"\bsignificant\b", r"\bsignificance\b",
+                  r"\btrend(?:s|ed)?\b", r"\btendenc", r"\(\s*ns\s*\)", r"\bn\.\s?s\b",
+                  r"\bp[- ]?values?\s*(?:of|=|>|\u2265|above|greater than)", r"\bwithin the (?:normal )?range\b",
+                  r"\bbiological variation\b", r"\bwithin (?:the )?range of\b", r"\bvariab\w*", r"\binconsistent\w*",
+                  r"\bin (?:only )?(?:one|two|some) of (?:the )?[^.;]{0,40}?\b(?:experiments?|replicates?|repeats?)\b",
+                  # A result shared with a control or with every genotype (RT-R1-2 (ii), CSE-R1-C2,
+                  # BIO-E746R1-1): a wild-type or control genotype in a sentence without "than" ("in jar1
+                  # mutants and control plants", "of wild-type and jar1 mutant plants"), "all genotypes"
+                  r"^(?!.*\bthan\b).*\b(?:wild[- ]?type|col(?:-0)?|wt|ws|ler|controls?|parental|parent)\b",
+                  r"\b(?:any|all|each|either) (?:of the )?(?:genotypes?|lines)\b", r"\ball (?:the )?genotypes\b",
+                  r"\bthe same was true\b", r"\bnor\b")
 #: The effect's subject is a protein or transcript measure, not a metabolite (CS-D D2).
 _MEASURE = _any(r"\bproteins?\b", r"\babundance\b", r"\btranscripts?\b", r"\bmrnas?\b",
                 r"\bexpression\b", r"\bexpressed\b", r"\bactivit(?:y|ies)\b")
