@@ -562,7 +562,15 @@ _NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
                   # mutants and control plants", "of wild-type and jar1 mutant plants"), "all genotypes"
                   r"^(?!.*\bthan\b).*\b(?:wild[- ]?type|col(?:-0)?|wt|ws|ler|controls?|parental|parent)\b",
                   r"\b(?:any|all|each|either) (?:of the )?(?:genotypes?|lines)\b", r"\ball (?:the )?genotypes\b",
-                  r"\bthe same was true\b", r"\bnor\b")
+                  r"\bthe same was true\b", r"\bnor\b",
+                  # Concessive (RT-R1-3, CSE-R1-C5): a sentence-initial "While", "whilst", "even if",
+                  # "notwithstanding", "regardless of", "albeit"
+                  r"^(?:while|whilst)\b", r"\bwhilst\b", r"\beven if\b", r"\bnotwithstanding\b", r"\bregardless of\b",
+                  r"\balbeit\b",
+                  # "nowhere near lower / reduced" (CSE-R1-C4); a position, not a change: "the lower
+                  # rosette leaves", "the lower epidermis" (RT-R1-4)
+                  r"\bnowhere near\b",
+                  r"\blower (?:rosette |cauline )?(?:leaf|leaves|part|parts|epidermis|stem|stems|side|surface|half)\b")
 #: The effect's subject is a protein or transcript measure, not a metabolite (CS-D D2).
 _MEASURE = _any(r"\bproteins?\b", r"\babundance\b", r"\btranscripts?\b", r"\bmrnas?\b",
                 r"\bexpression\b", r"\bexpressed\b", r"\bactivit(?:y|ies)\b")
