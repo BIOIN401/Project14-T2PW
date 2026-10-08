@@ -498,9 +498,12 @@ _NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
                   r"deficient|lacking)\b",
                   # CS-D repair 1 (R1): a negated comparison or delay is not an absence
                   # ("did not accumulate significantly less JA-Ile than", "did not accumulate
-                  # until 6 h", "accumulated no more JA-Ile than")
+                  # until 6 h", "accumulated no more JA-Ile than"). The window runs to a
+                  # semicolon or the sentence end (ORCH-746 CS-E, BIO-D-R2-2): the text is one
+                  # split sentence already, so "(Fig. 3A)", "ca." or "i.e." inside it must not
+                  # hide the "until" / "than"; a wider veto window only refuses more.
                   r"\bno (?:more|less|greater|fewer|higher|lower|lesser)\b",
-                  r"\b(?:(?:did|does|do) not|fail(?:ed|s)? to)\b(?:[^.;:]|[.:](?=\d)){0,60}?"
+                  r"\b(?:(?:did|does|do) not|fail(?:ed|s)? to)\b[^;]{0,60}?"
                   r"\b(?:more|less|lesser|lower|higher|"
                   r"fewer|greater|further|again|than|until|significantly)\b",
                   # a negation after the effect (CS-D review N4 / BIO-D-4)
