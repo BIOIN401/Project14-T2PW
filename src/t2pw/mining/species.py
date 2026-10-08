@@ -453,8 +453,10 @@ _EFFECT_FORMS = (
           r"\bno longer (?:\w+ )?(?:detect\w*|accumulat\w*|form\w*)",
           r"\bno\b(?:\s+[\w:()+-]+){1,4}?\s+(?:was|were)\s+(?:detected|found|formed)\b",
           r"\b(?:reduced|decreased|lower|diminished|impaired|compromised)\b",
-          # CS-D repair 1 (R2): "aos mutants accumulated less 12-OPDA" is a decrease
-          r"\baccumulated (?:(?!(?:not|no|hardly|scarcely|barely|never)\b)\w+ ){0,2}?"
+          # CS-D repair 1 (R2): "aos mutants accumulated less 12-OPDA" is a decrease; a
+          # participant inside the gap earns nothing (:func:`_effect_under`, ORCH-746 CS-E
+          # repair 1, RT-E2-3), nor does "nowhere near less" (CSE-R0-N5)
+          r"\baccumulated (?:(?!(?:not|no|hardly|scarcely|barely|never|nowhere)\b)\w+ ){0,2}?"
           r"(?:less|lower|reduced|decreased)\b"), "product", False),
     # forward; repair 1 (R1) dropped the unbriefed "produced / formed / contained no"
     (_any(r"\black(?:ed|ing)\b", r"\bdeficient in\b", r"\baccumulated no\b"), "product", True),
@@ -977,6 +979,10 @@ def _effect_under(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
             if _CHANGE_NEGATION.search(clause[:form.start()]):
                 continue
             inside = [h for h in hits if form.start() <= h[0] < form.end()]
+            if inside and form.group(0).startswith("accumulated "):
+                # ORCH-746 CS-E repair 1 (RT-E2-3): a participant inside the "accumulated ...
+                # less" gap is not the decreased one ("accumulated OPDA with lower OPC-8:0")
+                continue
             before = [] if forward else [h for h in hits if h[1] <= form.start()
                                          and not excluded(clause, h, form.start())]
             after = [h for h in hits if h[0] >= form.end()
