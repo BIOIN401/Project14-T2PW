@@ -77,42 +77,63 @@ the claim's gene beside the gene that explains the result ("the aos jar1 double 
 ... 12-OPDA undetectable" for a JAR1 claim), which is a mis-extraction the sentence rule
 cannot see. The effect's subject is chosen by position, not grammar (species policy,
 rule 5(b) item 4): a sentence whose real subject is something else and which names the
-participant before the effect with no comma-led clause opener (", which", ", with", ...)
-between them is still read as the participant's effect. That covers plain words, a comma
-that opens no clause ("Despite high OPC-8:0 levels in opr3 mutants, JA was reduced."
-credits OPDA -> OPC-8:0), and an opener written without its comma ("In cyp94b3 mutants,
-JA-Ile accumulated after wounding with reduced 12-OH-JA-Ile." credits the reversed
-12-OH-JA-Ile -> JA-Ile; "In opr3 mutants, OPC-8:0 levels were elevated with decreased
-OPDA." credits the contrary OPDA -> OPC-8:0). At 686ae134 a comma inside a clause fooled
-it too: a figure callout ("(Fig. 3A, B)"), a stereo descriptor ("(3R,7S)"), a statistics
-note ("(P < 0.01, Student t-test)"), an inner comma pair (", which, in turn, ...", ", with,
-after wounding, ...", ", with OPDA, however, ...") or a second comma-led clause made an
-open clause read as closed, so the participant before it took the effect inside it and
-reversed and contrary reactions were credited (BIO-D-R2-1, RT-D-R2-1, CSD-R2-N1). Since
-ORCH-746 CS-E an effect counts only when three readings of the clause agree (species
-policy), and every such probe of the three CS-D reviews is refused.
+participant before the effect with no clause opener between them is still read as the
+participant's effect. That covers plain words and a conjunction that opens no clause ("In
+jar1 mutants, JA-Ile was formed, yet 12-OH-JA-Ile was reduced." credits jasmonic acid ->
+JA-Ile, reading "reduced" as said of JA-Ile).
+
+What the gate now refuses of that residue (ORCH-746 CS-E and its repair 1; each class was
+credited at 686ae134, the last six still at 5eca087b):
+- a comma inside a clause: a figure callout ("(Fig. 3A, B)"), a stereo descriptor
+  ("(3R,7S)"), a statistics note ("(P < 0.01, Student t-test)"), an inner comma pair (",
+  which, in turn, ...", ", with, after wounding, ...", ", with OPDA, however, ...") or a
+  second comma-led clause made an open clause read as closed at 686ae134, so the
+  participant before it took the effect inside it and reversed and contrary reactions were
+  credited (BIO-D-R2-1, RT-D-R2-1, CSD-R2-N1). CS-E credits an effect only when the
+  readings of the clause agree (species policy), and every such probe of the CS-D reviews
+  is refused;
+- the same pairs right after the participant, which the three CS-E readings still read as
+  a closed clause (CSE-R0-1): "Leaves of cyp94b3 mutants hyperaccumulated JA-Ile, with
+  12-OH-JA-Ile, the major catabolite, reduced by 90%." credited the reversed 12-OH-JA-Ile
+  -> JA-Ile at 5eca087b. The fourth reading refuses two or more ", " after the opener;
+- an opener written without its comma (CSE-R0-N1): "In cyp94b3 mutants, JA-Ile
+  accumulated after wounding with reduced 12-OH-JA-Ile." (the reversed 12-OH-JA-Ile ->
+  JA-Ile) and "In opr3 mutants, OPC-8:0 levels were elevated with decreased OPDA." (the
+  contrary OPDA -> OPC-8:0). The fifth reading reads a bare "with" as an opener; a bare
+  "whereas", "while" or "but" already splits the clause;
+- a concessive clause (RT-E2-4): "Despite high OPC-8:0 levels in opr3 mutants, JA was
+  reduced.", "Although OPC-8:0 accumulated in opr3 mutants, JA levels were strongly
+  reduced.", "Even though jar1 mutants accumulated JA-Ile, JA-responsive gene induction
+  was reduced." (a no-effect veto on `although / though / despite / in spite of`);
+- a participant inside the "accumulated ... less" gap (RT-E2-3): "opr3 mutants
+  accumulated OPDA with lower OPC-8:0 levels." credited only the reversed OPC-8:0 -> OPDA;
+- "jar1 mutants accumulated nowhere near less JA-Ile after wounding." (CSE-R0-N5);
+- a regulator's or an upstream gene's mutant (BIO-D-R2-3, RT-D-R2-3): "Mutants lacking a
+  regulator of AOS accumulated no 12-OPDA.", "Mutants with defects upstream of JAR1
+  accumulated no JA-Ile." and "Mutants for regulators of JAR1 accumulated no JA-Ile."
+  bound the claim's gene; the marker tail's gap words may no longer name another gene's
+  role (species policy, rule 5(b) item 2). A gap word outside that list ("Mutants lacking
+  a modulator of AOS") still binds.
 
 A participant that only MODIFIES a non-participant head, standing right before a closed
 relative clause that names the true subject, is still read as the subject (RT-D-R2-2):
 "In jar1 mutants, the precursor of JA-Ile, which is jasmonic acid, accumulated after
 wounding." credits the reversed JA-Ile -> jasmonic acid (JAR1), and so do "the pool of
 jasmonic acid, that is conjugated to JA-Ile, was reduced" and "the hydroxylation product
-of JA-Ile, which is 12-OH-JA-Ile, was undetectable" for their reversed claims. CS-E does
-not close this: all three readings keep the head next to the opener and cut off the
-participant inside the closed clause. It is refused only when other words stand between
-the participant and the opener ("the OPDA reduction product, which is OPC-8:0, was
-undetectable"). Real text more often writes the appositive "JA, the precursor of JA-Ile,
-accumulated", which names both sides and earns nothing.
+of JA-Ile, which is 12-OH-JA-Ile, was undetectable" for their reversed claims. CS-E and
+its repair 1 do not close this: all five readings keep the head next to the opener (one
+", " follows it) and cut off the participant inside the closed clause. It is refused only
+when other words stand between the participant and the opener ("the OPDA reduction
+product, which is OPC-8:0, was undetectable"). Real text more often writes the appositive
+"JA, the precursor of JA-Ile, accumulated", which names both sides and earns nothing.
 
-A regulator's or an upstream gene's mutant still binds as the claim's gene when the words
-between the marker and *of* are up to three and none is itself *of* or *in* (BIO-D-R2-3,
-RT-D-R2-3): "Mutants lacking a regulator of AOS accumulated no 12-OPDA.", "Mutants with
-defects upstream of JAR1 accumulated no JA-Ile." and "Mutants for regulators of JAR1
-accumulated no JA-Ile." are credited; only the *of* / *in* variants ("Mutants in a
-regulator of JAR1", "Mutants in genes upstream of JAR1") are refused. The admitted
-reaction is the named gene's own reaction: overstated support, not false biology.
+Weak decreases are credited as decreases, a product-owner policy item (CSE-R0-N6,
+RT-E2-5): "jar1 mutants accumulated only marginally / slightly / somewhat less JA-Ile"
+earns `in_planta` exactly as "slightly lower" does; a marginal decrease in one mutant (a
+gh3.10 single mutant, which JAR1 compensates) is weak evidence of catalysis. If the
+sentence also calls the change non-significant, the no-effect vetoes refuse it.
 
-The same holds when extraction names a regulator AS the claim's enzyme:
+Extraction can still name a regulator AS the claim's enzyme:
 "Knockdown of MYC2 reduced wound-induced JA-Ile in leaves." is a complete rule-5(b)
 statement for a MYC2-catalysed claim (RT-D-5); requiring the claim's own gene closes
 the regulator-mutant family only against OTHER genes' mutants, never against a
@@ -133,8 +154,12 @@ sugars and elevated endogenous SA."), credited only because extraction made a to
 that clause the claim's product. At 6454ef98 the screen-empty credits were 29, 2 of them
 correct; the correct one lost since is "CWH8 null mutants produced no farnesol."
 (PMC12505894), which CS-D repair 1 gave up with the "produced / formed / contained no"
-forms: the measured recall cost. These figures were not re-measured for ORCH-746 CS-E,
-which can only remove credit. Screen coverage is the dominant control on species correctness; a
+forms: the measured recall cost. The red team re-measured the figures at 5eca087b (ORCH-746
+CS-E): 30 / 22 (1 correct) / 20 / 2 (1 correct), identical to 686ae134 (RT-E2-6). Its
+prototype of CS-E repair 1's no-effect vetoes left them at 30 / 22 / 20 / 2, and with the
+concessive veto at 29 / 21 / 19 / 2: the one credit it drops ("Although no InDels were
+detected ...", PMC11946230) was wrong. Repair 1 as shipped was not re-measured; it can only
+remove credit. Screen coverage is the dominant control on species correctness; a
 per-paper principal organism decided at inclusion (ceiling N4) is the only thing that
 moves it.
 
@@ -187,8 +212,22 @@ moves it.
     "... (ca. 40 pmol/g) to lower levels than Col-0" and "... JA-Ile (i.e. the bioactive
     conjugate) until 6 h" were credited at 686ae134 (BIO-D-R2-2, CSD-R2-N2). Since ORCH-746
     CS-E the window runs to the end of the sentence or a semicolon, 60 characters at most,
-    so it crosses abbreviation full stops ("Fig.", "ca.", "i.e.", "e.g."). A comparison or
-    delay word more than 60 characters after the negated verb is still not seen;
+    so it crosses abbreviation full stops ("Fig.", "ca.", "i.e.", "e.g."). Since CS-E
+    repair 1 a delay refuses credit anywhere in the sentence, after any absence form:
+    `until`, and `before` / `prior to` followed by a number ("In wounded leaves of jar1
+    mutants, JA-Ile was not detected until 30 min after wounding.", "In gh3.10 mutant
+    flowers, JA-Ile was absent until stage 13."; RT-E2-1), and so do a non-significant
+    change ("the difference was not statistically significant", "n.s.", "P > 0.05",
+    "P = 0.08", "tended to") and the genotype joined to the wild type ("below the detection
+    limit in jar1 mutant and wild-type plants", "in opr3 mutants or in the wild type",
+    "alike"; RT-E2-2). Still not seen: a comparison word more than 60 characters after the
+    negated verb (CW1: "JA-Ile did not accumulate in wounded rosette leaves of gh3.10
+    single mutant plants to significantly lower levels than in Col-0."); a comparison word
+    after a semicolon inside a figure or table reference, which still ends the window
+    ("gh3.10 mutants did not accumulate JA-Ile (Figure 2B; Table 1) to significantly lower
+    levels than Col-0."; BIO-E746-5); a comparison word outside the list ("did not
+    accumulate JA-Ile to levels different from those of Col-0", "below"); and a
+    non-significance phrased outside the list ("reduced, but within experimental error");
   - CS-D repair 1 (R2): a clause naming both a substrate and a product before its effect
     ("In opr3 mutant leaves, OPC-8:0 formed from OPDA was reduced.", "JA-Ile formation
     from JA was abolished", "13-HPOT formed from alpha-linolenic acid was undetectable")
@@ -201,13 +240,14 @@ moves it.
     any comma after the opener read as the clause closing, so a figure callout ("(Fig.
     3A, B)"), a stereo descriptor ("(3R,7S)"), a statistics note or an inner comma pair
     (", which, in turn, ...") made an open clause look closed: an admission route, not
-    only a recall cost (BIO-D-R2-1, RT-D-R2-1). Since ORCH-746 CS-E a form needs all three
-    readings of the species policy: a parenthetical's commas close nothing in the
-    bio-auditor's reading, the last opener decides, and a head is kept across a closed
-    clause only when the clause opens right after it. A relative clause written without
-    commas, an opener without its comma ("... after wounding with reduced X"), or a
-    participant that modifies another head ("the precursor of JA-Ile, which is jasmonic
-    acid, ...") is still read by position (see the residue above);
+    only a recall cost (BIO-D-R2-1, RT-D-R2-1). Since ORCH-746 CS-E a form needs every
+    reading of the species policy: a parenthetical's commas close nothing in the
+    bio-auditor's reading, the last opener decides, a head is kept across a closed clause
+    only when the clause opens right after it, two or more ", " after the opener do not
+    close it (repair 1), and a bare "with" opens a clause (repair 1). A relative clause
+    written without commas, or a participant that modifies another head ("the precursor
+    of JA-Ile, which is jasmonic acid, ...") is still read by position (see the residue
+    above);
     a clause naming a whole-plant phenotype (growth, fertility, yield, ...) earns
     nothing even when a metabolite is the real measurement; a participant name followed
     by an "-ase" noun is read as an enzyme; "produced / formed / contained no X" no
@@ -231,10 +271,35 @@ moves it.
     claim, and the ", which, in turn, ..." sentences T2c-T5c ("In cyp94b3 mutants, JA-Ile
     accumulated after wounding, which, in turn, resulted in reduced 12-OH-JA-Ile
     levels.") and A4c ("In opr3 mutants, OPDA accumulated to high levels, which, in turn,
-    reduced OPC-8:0 formation."). One correct row that 686ae134 credited is lost: a
-    relative clause whose closing comma is replaced by a callout ("In opr3 mutants,
-    OPC-8:0, which is formed from OPDA (Fig. 2A, B) was undetectable.") is open to the
-    form in the bio-auditor's reading.
+    reduced OPC-8:0 formation."). Correct rows that 686ae134 credited are lost (BIO-E746-6):
+    a relative clause whose closing comma is replaced by a callout ("In opr3 mutants,
+    OPC-8:0, which is formed from OPDA (Fig. 2A, B) was undetectable."), which the
+    bio-auditor's reading takes as open to the form; and a participant followed by a noun
+    such as "levels", "content" or "accumulation" before a comma-led relative clause, which
+    both reviewers' readings cut off: "In opr3 mutants, OPC-8:0 levels, which peak 1 h
+    after wounding, were strongly reduced.", "In jar1 mutants, JA-Ile content, which is
+    the main bioactive form, was strongly reduced.", "In aos mutants, 12-OPDA
+    accumulation, which is wound-inducible in Col-0, was abolished.", "In aos mutants,
+    12-OPDA levels, which were high in wounded Col-0 leaves, were reduced to trace
+    amounts.", "In opr3 mutants, OPDA levels, which were low before wounding, increased
+    strongly.";
+  - ORCH-746 CS-E repair 1 removes more credit, measured on 410 probes against 5eca087b
+    (`C:/t/bt/m746-e/probe_matrix_r1.txt`): 93 rows lose `target_species_supported`. All
+    but two are the reversed, contrary, non-significant, shared-with-the-wild-type, delay,
+    "nowhere near less" and regulator-mutant rows the repair targets. The two
+    correct-biology rows lost are "In wounded leaves, although in
+    opr3 mutants OPDA accumulated, OPC-8:0 was undetectable." (the concessive veto: any
+    sentence holding `although`, `though`, `despite` or `in spite of` earns nothing) and
+    "JA-Ile was undetectable in jar1 mutants at every time point until 4 h after
+    wounding." (the delay veto: any absence in a sentence holding `until`, or `before` /
+    `prior to` a number, earns nothing). The same vetoes refuse a correct result that
+    shares its sentence with a non-significant one ("OPC-8:0 was undetectable in opr3
+    mutants, and the decrease in JA was not significant."), with "tended to", or with the
+    mutant and the wild type joined by *and* / *or*; the fourth reading refuses a correct
+    head whose relative clause holds an inner pair ("In opr3 mutants, OPC-8:0, which,
+    after wounding, rises in Col-0, was undetectable."); the bare-"with" reading refuses a
+    participant before a bare "with" with no comma after it (the correct claim on "JA-Ile
+    accumulated after wounding with reduced 12-OH-JA-Ile" earned nothing before either).
 * **Recall cost of the review route (BIO-R2-5, R3-N4c), accepted.** Verb-first review
   prose with a verb outside the strict set earns nothing: "In Arabidopsis, OPR3 reduces
   OPDA to OPC-8:0.", "JAR1 conjugates jasmonic acid with isoleucine to form JA-Ile.",

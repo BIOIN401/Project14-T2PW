@@ -121,11 +121,15 @@ elsewhere mentions orthologs). The rule now:
         sits at most three tokens before the marker, with no comma between ("gh3.10
         jar1 knockout lines", "the jar1 gh3.10 double mutant", "lox2 (At3g45140)
         knockout lines", "opr3 mutant leaves"), or after it as `_MARKER_OF` reads it: at
-        most three tokens, none of them itself *of* or *in* (CS-D repair 2), then *of* /
-        *in*, then an optional *the* ("knockout of GH3.10", "T-DNA insertion lines of
-        AOS", "Mutants deficient in GH3.10", "The SALK_034543 insertion line of GH3.10";
-        not "Mutants in genes upstream of JAR1", "Knockouts of transcriptional targets of
-        JAR1", "Mutants in a regulator of JAR1"). A gene followed by `pathway`,
+        most three tokens, none of them itself *of* or *in* (CS-D repair 2) or a word
+        naming another gene's role: `regulat...`, `upstream`, `downstream`, `gene(s)`,
+        `factor(s)`, `activator(s)`, `repressor(s)`, `defect(s)`, `target(s)` (ORCH-746
+        CS-E repair 1), then *of* / *in*, then an optional *the* ("knockout of GH3.10",
+        "T-DNA insertion lines of AOS", "Mutants deficient in GH3.10", "The SALK_034543
+        insertion line of GH3.10"; not "Mutants in genes upstream of JAR1", "Knockouts of
+        transcriptional targets of JAR1", "Mutants in a regulator of JAR1", "Mutants
+        lacking a regulator of AOS", "Mutants with defects upstream of JAR1", "Mutants for
+        regulators of JAR1"). A gene followed by `pathway`,
         `background`, `cluster`, `family`, `signalling` or `network` is not the
         genotype ("Mutants in the JAR1 pathway", "the myc2 mutant in the JAR1
         background", "JAR1 pathway mutants"; CS-D repair 1). A different gene's mutant
@@ -143,10 +147,10 @@ elsewhere mentions orthologs). The rule now:
         form ("no JA-Ile was detected"); else every participant before it in the clause
         that a comma-led relative or adverbial clause (", which", ", that", ", who", ",
         whose", ", with", ", whereas", ", while", ", although", ", though", ", but", ",
-        and", or a ";") does not cut off. Since ORCH-746 CS-E the cut-off is read three
-        ways, and a form earns its effect only when ALL THREE readings credit it
-        (`species._effect` over `species._READINGS`; the reason recorded is the first
-        reading's):
+        and", or a ";") does not cut off. Since ORCH-746 CS-E the cut-off is read several
+        ways, and a form earns its effect only when ALL the readings of
+        `species._READINGS` credit it (`species._effect`; the reason recorded is the first
+        reading's). Five readings ship (three since CS-E, two appended in repair 1):
         - the 686ae134 reading (`species._excluded`, CS-D repair 2, unchanged): a
           participant is cut off when the clause that follows it is still OPEN at the
           form (no comma at all between the first opener and the form: "JA-Gln
@@ -166,7 +170,24 @@ elsewhere mentions orthologs). The rule now:
           except that a head is kept across a closed clause only when the clause opens
           right after it ("JA-Ile, which ..., accumulated"); a clause that opens after
           other words ("JA-Ile accumulated after wounding, which, in turn, ...", "OPC-8:0
-          levels, which ...") cuts the head off whatever commas it holds.
+          levels, which ...") cuts the head off whatever commas it holds;
+        - the code reviewer's reading (`species._excluded_unambiguous_close`, repair 1,
+          CSE-R0-1): the 686ae134 reading, plus, with parentheticals blanked, a
+          participant is cut off when TWO or more ", " follow the opener before the form.
+          One ", " closes a relative clause that modifies the head ("JA-Ile, which is the
+          substrate of CYP94B3, accumulated"); two make the close ambiguous, so it refuses
+          an appositive pair or an inner pair inside a clause still open at the form
+          ("Leaves of cyp94b3 mutants hyperaccumulated JA-Ile, with 12-OH-JA-Ile, the
+          major catabolite, reduced by 90%.", "..., which, in turn, resulted in reduced
+          12-OH-JA-Ile levels."), where the first three readings all kept the head;
+        - the bare-"with" reading (`species._excluded_bare_with`, repair 1, CSE-R0-N1):
+          the 686ae134 reading in which "with" written without its comma also opens a
+          clause, and a participant is also cut off when a bare "with" in its gap has no
+          comma after it. It refuses "In cyp94b3 mutants, JA-Ile accumulated after wounding
+          with reduced 12-OH-JA-Ile." (the reversed 12-OH-JA-Ile -> JA-Ile), "In opr3
+          mutants, OPC-8:0 levels were elevated with decreased OPDA." (contrary) and the
+          same shape after a closed relative clause ("JA-Ile, which is the substrate of
+          CYP94B3 (Fig. 3A, B), accumulated after wounding with reduced 12-OH-JA-Ile").
 
         Each prototype misreads a shape the other reads correctly: the red team's keeps
         the head in "JA-Ile, which is the substrate of CYP94B3, accumulated after
@@ -174,12 +195,12 @@ elsewhere mentions orthologs). The rule now:
         bio-auditor's reads "OPC-8:0, which is formed from OPDA (Fig. 2A, B) was
         undetectable", whose closing comma is missing, as open to the form, and credits
         correct-direction rows the 686ae134 reading refuses. Agreement is the fail-closed
-        choice, and because the 686ae134 reading is one of the three, nothing earns credit
-        that 686ae134 did not credit (the price is in
-        [`known_limitations.md`](known_limitations.md)). All three cut OPDA off in "In
-        opr3 mutants, OPC-8:0, which is formed from OPDA, was undetectable" and credit the
-        head OPC-8:0; all three keep OPDA as the subject of "OPDA, which is the precursor
-        of OPC-8:0, was reduced", a substrate going down, nothing.
+        choice, and because the 686ae134 reading is one of them, nothing earns credit that
+        686ae134 did not credit; a reading appended to the tuple can only remove credit
+        (the price is in [`known_limitations.md`](known_limitations.md)). All five cut
+        OPDA off in "In opr3 mutants, OPC-8:0, which is formed from OPDA, was undetectable"
+        and credit the head OPC-8:0; all five keep OPDA as the subject of "OPDA, which is
+        the precursor of OPC-8:0, was reduced", a substrate going down, nothing.
         An appositive ("JA-Ile, the bioactive form, was absent") keeps its subject. Else
         the participants right after the form, at most three tokens
         away with no comma (two for a forward form). A forward form takes only the
@@ -205,8 +226,11 @@ elsewhere mentions orthologs). The rule now:
           `lower`, `diminished`, `impaired`, `compromised`, and `accumulated (up to two
           words) less / lower / reduced / decreased` ("aos mutants accumulated less
           12-OPDA", "accumulated much less"), where neither gap word is `not`, `no`,
-          `hardly`, `scarcely`, `barely` or `never` (CS-D repair 2: "accumulated hardly
-          less", "accumulated not less" earn nothing);
+          `hardly`, `scarcely`, `barely`, `never` or `nowhere` (CS-D repair 2: "accumulated
+          hardly less", "accumulated not less" earn nothing; ORCH-746 CS-E repair 1:
+          "accumulated nowhere near less" neither), and where no claim participant starts
+          inside the gap (repair 1, RT-E2-3: "opr3 mutants accumulated OPDA with lower
+          OPC-8:0 levels." does not read OPDA as the decreased one, and earns nothing);
         - an accumulation or increase of a **substrate**: `accumulated`, `increased`,
           `elevated`, `higher` ("In opr3 mutants, OPDA accumulated in wounded leaves."
           supports OPDA -> OPC-8:0), and only in a clause with no decrease or absence
@@ -242,7 +266,24 @@ elsewhere mentions orthologs). The rule now:
        significantly` ("did not accumulate significantly less JA-Ile than the wild
        type", "did not accumulate until 6 h", "failed to accumulate more JA-Ile",
        "accumulated no more JA-Ile than"); a negation after the effect (`neither ... nor`,
-       `none of`). The negated-verb forms CS-D added are therefore NOT immune to no-effect
+       `none of`); and since ORCH-746 CS-E repair 1:
+       - a delay written with any absence form (RT-E2-1): `until` anywhere in the sentence,
+         and `before` / `prior to` followed by a number ("JA-Ile was not detected until 30
+         min after wounding", "was absent until stage 13", "did not accumulate JA-Ile
+         before 1 h");
+       - a non-significant change (RT-E2-2): `not (statistically) significant`,
+         `not statistically`, `non-significant`, `nonsignificant`, `insignificant`,
+         `n.s.`, `P >` or `P ≥` a decimal, `P =` 0.05 to 0.99, `tend(s / ed) to`;
+       - the genotype joined to the wild type (RT-E2-2): `mutant(s)`, `line(s)`,
+         `knockout(s)` or `plant(s)` followed by *and* / *or*, an optional *also*, *in*
+         and *the*, then `wild type`, `wild-type`, `Col-0` or `WT` ("below the detection
+         limit in jar1 mutant and wild-type plants", "not detected in opr3 mutants or in
+         the wild type"), and `alike`;
+       - a concessive (RT-E2-4): `although`, `though`, `despite`, `in spite of` ("Despite
+         high OPC-8:0 levels in opr3 mutants, JA was reduced.", "Even though jar1 mutants
+         accumulated JA-Ile, JA-responsive gene induction was reduced.").
+
+       The negated-verb forms CS-D added are therefore NOT immune to no-effect
        prose by construction (the CS-D brief said they were): they are guarded by these
        entries. A bare `than` is not a veto ("JA-Ile was 20-fold lower in jar1 mutants
        than in wild-type leaves." keeps its credit);
