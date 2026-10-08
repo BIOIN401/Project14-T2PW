@@ -371,7 +371,7 @@ def test_cs_e_r1_746_2_d21_negated_delay_node_is_not_admitted():
     ("rt-N14", "Basal JA-Ile levels were below the detection limit in jar1 mutants and Col-0.", JAR),
     ("rt-N15", "Under mock conditions, OPC-8:0 was not detected in opr3 mutants or in the wild type.", OPR),
     # hunt1.py, every S / N row accepted at 5eca087b that the vetoes reach (S10 "within experimental
-    # error" is not reached: a documented residual)
+    # error" is not reached by these vetoes; repair 1 item 10 refuses it, test_cs_e_r1_746_10_*)
     ("rt-S1", "JA-Ile levels were reduced by 20% in jar1 mutants, but the difference was not statistically "
               "significant.", JAR),
     ("rt-S2", "JA-Ile was slightly reduced in jar1 mutants, although the difference was not significant.", JAR),
@@ -516,3 +516,259 @@ def test_cs_e_r1_746_10_a_change_within_experimental_error_is_no_effect():
     """The red team's hunt1 S10."""
     claim = probe("In jar1 mutants, JA-Ile was reduced, but within experimental error.", **JAR)
     assert claim.species_state != TSS
+
+
+# ###########################################################################
+# ORCH-746 CS-E repair round 2 (G9 at 01d436cf): the delay and no-difference classes closed by
+# SHAPE, the union of the three round-1 prototypes, plus the round-1 non-blocking residuals.
+# Every ``test_cs_e_r2_746_*`` row is accepted at 01d436cf and fails there with an
+# AssertionError; every ``test_new_acceptance_cs_e_r2_746_*`` row holds at both ends.
+# ###########################################################################
+DL11 = "In gh3.10 mutant flowers, JA-Ile was absent at stage 12 but present at stage 13."
+NS1 = ("In the gh3.10 single mutant, JA-Ile levels were slightly lower than in Col-0, but the difference did not "
+       "reach statistical significance.")
+WT3 = "In unwounded leaves, JA-Ile was not detected in jar1 mutants and control plants."
+
+
+# ---------------------------------------------------------------------------
+# 1. A time course (RT-R1-1, CSE-R1-C3, BIO-E746R1-2)
+# ---------------------------------------------------------------------------
+@_rows(
+    # the code reviewer's probes_r1.py
+    ("code-DL1", "In jar1 mutants, JA-Ile was not detected during the first hour after wounding.", JAR),
+    ("code-DL2", "In wounded jar1 mutant leaves, JA-Ile was not detected at early time points.", JAR),
+    ("code-DL3", "In jar1 mutants, JA-Ile was not detected at 15 min but accumulated at 2 h after wounding.", JAR),
+    ("code-DL4", "In opr3 mutants, OPC-8:0 was undetectable within the first 30 min after wounding.", OPR),
+    ("code-DL7-rt-DL3", "In jar1 mutants, JA-Ile was not detected till 2 h after wounding.", JAR),
+    ("code-DL8", "In jar1 mutants, JA-Ile was not detected at 30 min, but was detected at 2 h after wounding.", JAR),
+    # the red team's hunt3.py
+    ("rt-DL1", "In jar1 mutants, JA-Ile was not detected at 5 min after wounding but accumulated at later time "
+               "points.", JAR),
+    ("rt-DL2", "In wounded jar1 mutant leaves, JA-Ile was below the detection limit for the first hour.", JAR),
+    ("rt-DL4", "JA-Ile was not detected in jar1 mutants before the 2-h time point.", JAR),
+    ("rt-DL5", "JA-Ile was not detectable in jar1 mutants earlier than 2 h after wounding.", JAR),
+    ("rt-DL7", "In jar1 mutants, JA-Ile was undetectable within the first 30 min and was detected only after 2 h.",
+     JAR),
+    ("rt-DL8", "In opr3 mutants, OPC-8:0 was not detected 30 min after wounding; it was detected at 6 h.", OPR),
+    ("rt-DL9", "In jar1 mutants, JA-Ile was not detected before one hour after wounding.", JAR),
+    ("rt-DL10", "JA-Ile accumulation was delayed in jar1 mutants, in which it was undetectable at 15 min.", JAR),
+    ("rt-DL11", DL11, GH3),
+    ("rt-DL12", "In jar1 mutant leaves, JA-Ile was undetectable during a lag of about 1 h after wounding.", JAR),
+    # the bio-auditor's bat.py (Z) and bat3.py (Y)
+    ("bio-Z9", "In jar1 mutants, JA-Ile was not detected 15 min after wounding but accumulated at later time points.",
+     JAR),
+    ("bio-Z10", "JA-Ile was undetectable in jar1 mutants 15 min after wounding, but reached 50 percent of the Col-0 "
+                "level by 2 h.", JAR),
+    ("bio-Z11", "JA-Ile was below the detection limit in jar1 mutants at 30 min and became detectable only at 2 h "
+                "after wounding.", JAR),
+    ("bio-Z12", "In jar1 mutants, JA-Ile accumulation was reduced at early time points and delayed.", JAR),
+    ("bio-Z13", "In lox2 mutants, 13-HPOT was not detected at the earliest time points after wounding.", LOX),
+    ("bio-Z14", "In wounded leaves of jar1 mutants, JA-Ile was not detected during the first 30 min.", JAR),
+    ("bio-Y9", "OPDA was undetectable in aoc2 mutants at 15 min, and recovered to Col-0 levels at 1 h.", AOC2),
+    ("bio-Y11", "OPDA was reduced in aoc2 mutants at 15 min only.", AOC2),
+    ("bio-Y12", "OPDA was undetectable in aoc2 mutants at 15 min but not at 1 h after wounding.", AOC2),
+)
+def test_cs_e_r2_746_1_a_time_course_is_not_an_absence(text, kw):
+    assert probe(text, **kw).species_state != TSS
+
+
+def test_cs_e_r2_746_1_dl11_stage_time_course_node_is_not_admitted():
+    """End to end: at 01d436cf "absent at stage 12 but present at stage 13" admitted jasmonic acid -> JA-Ile."""
+    claim, decision = admitted(DL11, **GH3)
+    assert claim.species_state != TSS
+    assert decision.status not in ADMITTED_STATUSES
+
+
+# ---------------------------------------------------------------------------
+# 2. Any statement of significance, a trend or variability (RT-R1-2 (i), CSE-R1-C1, BIO-E746R1-1)
+# ---------------------------------------------------------------------------
+@_rows(
+    ("code-NS1", NS1, GH3),
+    ("code-NS2", "JA-Ile levels were reduced in jar1 mutants, but there was no statistically significant difference.",
+     JAR),
+    ("code-NS3", "In aoc2 mutants, OPDA levels were reduced, but this failed to reach significance.", AOC2),
+    ("code-NS6", "In gh3.10 single mutants, JA-Ile levels were marginally reduced and the reduction lacked "
+                 "statistical support.", GH3),
+    ("rt-NS1", "JA-Ile levels were reduced in gh3.10 single mutants after wounding, but the reduction did not reach "
+               "statistical significance.", GH3),
+    ("rt-NS3", "JA-Ile levels were lower in gh3.10 mutants, but the difference lacked statistical significance.", GH3),
+    ("rt-NS4", "The gh3.10 single mutant showed a trend towards lower JA-Ile levels after wounding.", GH3),
+    ("rt-NS5", "cyp94b1 mutants showed a tendency towards reduced 12-OH-JA-Ile levels.", B1),
+    ("rt-NS6", "In aoc2 mutants, OPDA levels were slightly reduced (ns).", AOC2),
+    ("rt-NS7", "OPDA levels were reduced in aoc2 mutants (p-value > 0.05).", AOC2),
+    ("rt-NS8", "JA-Ile was reduced in gh3.10 mutant flowers, with a P value of 0.12.", GH3),
+    ("rt-NS10", "In lox2 mutant roots, 13-HPOT levels were reduced (n.s).", LOX),
+    ("rt-NS11", "JA-Ile levels were reduced in gh3.10 mutants, with no statistically significant difference from "
+                "Col-0.", GH3),
+    ("rt-NS14", "JA-Ile levels were lower in gh3.10 mutants but stayed within the range of Col-0.", GH3),
+    ("bio-Z1", "In gh3.10 single mutants, JA-Ile levels were reduced by 30 percent, but the difference did not reach "
+               "statistical significance.", GH3),
+    ("bio-Z2", "JA-Ile levels were lower in jar1 mutant leaves after wounding, but this did not reach significance.",
+     JAR),
+    ("bio-Z3", "JA-Ile was reduced in gh3.10 single mutants, but not to a statistically significant extent.", GH3),
+    ("bio-Z4", "JA-Ile levels were reduced in gh3.10 single mutants without reaching statistical significance.", GH3),
+    ("bio-Z5", "JA-Ile levels were slightly lower in the gh3.10 single mutant, but the differences were within the "
+               "range of biological variation.", GH3),
+    ("bio-Y1", "JA-Ile levels showed a trend towards lower values in gh3.10 single mutants after wounding.", GH3),
+    ("bio-Y2", "JA-Ile was reduced in gh3.10 single mutants in one of three independent experiments.", GH3),
+    ("bio-Y3", "In gh3.10 single mutants, JA-Ile was reduced, but the effect was weak and variable.", GH3),
+    ("bio-Y4", "OPDA levels were lower in aoc2 mutants, but there was no statistically significant difference.", AOC2),
+    ("bio-Y5", "OPDA levels were reduced in aoc2 mutants but failed to reach statistical significance.", AOC2),
+)
+def test_cs_e_r2_746_2_any_statement_of_significance_or_trend_earns_nothing(text, kw):
+    assert probe(text, **kw).species_state != TSS
+
+
+def test_cs_e_r2_746_2_ns1_non_significant_node_is_not_admitted():
+    """End to end: at 01d436cf "did not reach statistical significance" admitted jasmonic acid -> JA-Ile [GH3.10]."""
+    claim, decision = admitted(NS1, **GH3)
+    assert claim.species_state != TSS
+    assert decision.status not in ADMITTED_STATUSES
+
+
+# ---------------------------------------------------------------------------
+# 3. A result shared with a control or with every genotype (RT-R1-2 (ii), CSE-R1-C2, BIO-E746R1-1)
+# ---------------------------------------------------------------------------
+@_rows(
+    ("code-WT3", "In unwounded leaves, JA-Ile was below the detection limit in jar1 mutant leaves and in wild-type "
+                 "leaves.", JAR),
+    ("code-WT5", "OPC-8:0 was not detected in unwounded opr3 mutant seedlings or Col-0 seedlings.", OPR),
+    ("code-WT8", "In unwounded leaves of Col-0 and jar1 mutants, JA-Ile was below the detection limit.", JAR),
+    ("code-WT9", "In unwounded leaves of wild-type and jar1 mutant plants, JA-Ile was below the detection limit.", JAR),
+    ("rt-WT1", "In unwounded leaves, JA-Ile was below the detection limit in jar1 mutants and their wild-type "
+               "siblings.", JAR),
+    ("rt-WT2", "Before wounding, OPC-8:0 was undetectable in the opr3 mutant and its wild type.", OPR),
+    ("rt-WT3", WT3, JAR),
+    ("rt-WT4", "In unwounded leaves, OPC-8:0 was below the detection limit in opr3 mutant and Ws plants.", OPR),
+    ("rt-WT5", "Before wounding, JA-Ile was undetectable in jar1 mutants, and also in Col-0.", JAR),
+    ("rt-WT6", "In unwounded leaves, JA-Ile was not detected in jar1 mutant, wild-type and complemented plants.", JAR),
+    ("rt-WT7", "JA-Ile was not detected in unwounded leaves of any genotype, including jar1 mutants.", JAR),
+    ("rt-WT8", "JA-Ile was not detected in unwounded leaves of jar1 mutants, nor in Col-0.", JAR),
+    ("rt-WT9", "JA-Ile was below the detection limit in unwounded jar1 mutant leaves; the same was true for Col-0.",
+     JAR),
+    ("rt-WT10", "In unwounded leaves, JA-Ile was undetectable in jar1 mutants, matching Col-0.", JAR),
+    ("rt-WT11", "Basal 12-OPDA was undetectable in aos mutants and the parental line.", AOS),
+    ("rt-WT12", "Before wounding, 12-OPDA was undetectable in aos mutant and Col plants.", AOS),
+    ("rt-WT13", "Basal JA-Ile was undetectable in jar1 mutants and the corresponding wild type.", JAR),
+    ("bio-Z15", "JA-Ile was undetectable in unwounded leaves of all genotypes, including jar1 mutants.", JAR),
+    # the bio-auditor's no-effect rows with an unlisted comparison word, refused here because the
+    # comparator is a control genotype and the sentence has no "than"
+    ("bio-U4c", "gh3.10 mutants did not accumulate JA-Ile to levels different from those of Col-0.", GH3),
+    ("bio-U4d", "gh3.10 single mutants did not accumulate JA-Ile to levels below those of Col-0.", GH3),
+)
+def test_cs_e_r2_746_3_a_result_shared_with_a_control_earns_nothing(text, kw):
+    assert probe(text, **kw).species_state != TSS
+
+
+def test_cs_e_r2_746_3_wt3_shared_absence_node_is_not_admitted():
+    """End to end: at 01d436cf "not detected in jar1 mutants and control plants" admitted jasmonic acid -> JA-Ile."""
+    claim, decision = admitted(WT3, **JAR)
+    assert claim.species_state != TSS
+    assert decision.status not in ADMITTED_STATUSES
+
+
+# ---------------------------------------------------------------------------
+# 4-8. The round-1 non-blocking residuals
+# ---------------------------------------------------------------------------
+@_rows(
+    ("code-CO1-rt-CC7", "Notwithstanding high OPC-8:0 levels in opr3 mutants, JA was reduced.", OPR),
+    ("code-CO2", "OPC-8:0 accumulated in opr3 mutants, albeit JA was reduced.", OPR),
+    ("code-CO3", "While OPC-8:0 accumulated in opr3 mutants, JA was reduced.", OPR),
+    ("code-CO4", "Even if OPC-8:0 accumulated in opr3 mutants, JA levels were reduced.", OPR),
+    ("rt-CC1", "While OPC-8:0 accumulated in opr3 mutants, JA levels were strongly reduced.", OPR),
+    ("rt-CC2", "Whilst OPC-8:0 accumulated in opr3 mutants, JA levels were strongly reduced.", OPR),
+    ("rt-CC3", "While jar1 mutants accumulated JA-Ile, JA-responsive gene induction was reduced.", JAR),
+    ("rt-CC6", "Even if JA-Ile accumulated in jar1 mutants, JA-dependent defence was reduced.", JAR),
+    ("rt-CC8", "Regardless of high OPC-8:0 levels in opr3 mutants, JA was reduced after infection.", OPR),
+    ("rt-CC10", "While opr3 mutants produced OPC-8:0 after Botrytis infection, JA levels were reduced.", OPR),
+)
+def test_cs_e_r2_746_4_a_concessive_clause_earns_nothing(text, kw):
+    assert probe(text, **kw).species_state != TSS
+
+
+@_rows(
+    ("code-N7a", "jar1 mutants accumulated nowhere near lower JA-Ile levels after wounding.", JAR),
+    ("code-N7b", "jar1 mutants accumulated nowhere near reduced JA-Ile after wounding.", JAR),
+)
+def test_cs_e_r2_746_5_nowhere_near_is_not_a_decrease(text, kw):
+    assert probe(text, **kw).species_state != TSS
+
+
+@_rows(
+    ("rt-BG1", "jar1 mutants are known to contain reduced JA-Ile levels.", JAR),
+    ("rt-BG2", "jar1 mutants were shown previously to contain reduced JA-Ile levels.", JAR),
+    ("rt-BG4", "That JA-Ile is reduced in jar1 mutants is well documented.", JAR),
+)
+def test_cs_e_r2_746_6_background_in_a_results_sentence_earns_nothing(text, kw):
+    assert probe(text, **kw).species_state != TSS
+
+
+@_rows(
+    ("rt-PO1", "In jar1 mutant plants, JA-Ile was detected mainly in the lower rosette leaves after wounding.", JAR),
+    ("rt-PO3", "In opr3 mutants, OPC-8:0 accumulated in the lower epidermis.", OPR),
+    ("rt-PO6", "Wounded jar1 mutant leaves accumulated JA-Ile in their lower part.", JAR),
+)
+def test_cs_e_r2_746_7_a_position_is_not_a_change(text, kw):
+    assert probe(text, **kw).species_state != TSS
+
+
+@_rows(
+    ("rt-RG1", "Mutants lacking a suppressor of AOS accumulated no 12-OPDA.", AOS),
+    ("rt-RG2-code-RG1", "Mutants lacking an inducer of AOS accumulated no 12-OPDA.", AOS),
+    ("code-RG2", "Mutants lacking a co-activator of AOS accumulated no 12-OPDA.", AOS),
+    ("bio-U3-code-SU3", "Mutants lacking a modulator of AOS accumulated no 12-OPDA.", AOS),
+    ("rt-RG4", "In the jar1 suppressor mutant, JA-Ile was reduced.", JAR),
+    ("rt-RG5", "In jar1 enhancer mutants, JA-Ile was undetectable.", JAR),
+    ("rt-RG7", "Knockout of the AOS activator abolished 12-OPDA.", AOS),
+)
+def test_cs_e_r2_746_8_a_regulators_mutant_is_not_the_claims_genotype(text, kw):
+    assert probe(text, **kw).species_state != TSS
+
+
+# ---------------------------------------------------------------------------
+# 9. The true subject after the effect word (BIO-E746R1-4 (i))
+# ---------------------------------------------------------------------------
+@_rows(
+    ("bio-U1-code-SU1", "In cyp94b3 mutants, JA-Ile accumulated after wounding at the expense of reduced "
+                        "12-OH-JA-Ile.", CYP_REV),
+    ("bio-U1b", "In cyp94b3 mutants, JA-Ile accumulated after wounding alongside reduced 12-OH-JA-Ile.", CYP_REV),
+    ("bio-U1c", "In cyp94b3 mutants, JA-Ile accumulated after wounding plus reduced 12-OH-JA-Ile.", CYP_REV),
+    ("bio-U1g", "opr3 mutants accumulated OPDA alongside strongly reduced OPC-8:0 levels after wounding.", OPR_REV),
+    ("code-SU2", "In cyp94b3 mutants, JA-Ile accumulated after wounding, alongside reduced 12-OH-JA-Ile.", CYP_REV),
+    ("m746e-comma-plus", "In cyp94b3 mutants, JA-Ile accumulated after wounding, plus reduced 12-OH-JA-Ile.", CYP_REV),
+)
+def test_cs_e_r2_746_9_an_attributive_participant_after_the_effect_is_a_candidate(text, kw):
+    assert probe(text, **kw).species_state != TSS
+
+
+# ---------------------------------------------------------------------------
+# Controls: hold at 01d436cf and here
+# ---------------------------------------------------------------------------
+@_rows(
+    ("T1", T1, GH3),
+    ("bio-W3-up-to", "In aos mutants, 12-OPDA was not detected at any time point up to 2 h after wounding.", AOS),
+    ("bio-W4-throughout", "OPC-8:0 was undetectable in opr3 mutants throughout the time course (0.5 to 4 h after "
+                          "wounding).", OPR),
+    ("bio-W5-at-1-h", "At 1 h after wounding, JA-Ile was below the detection limit in gh3.10 jar1 knockout lines.", GH3),
+    ("bio-W8-up-to-6-h", "In opr3 mutants, OPC-8:0 was not detected at any time point examined (up to 6 h).", OPR),
+    ("bio-W9-all-time-points", "Wound-induced 12-OPDA accumulation was abolished in aos mutants at all time points "
+                               "tested.", AOS),
+    ("rt-RC3", "No JA-Ile was detected in jar1 mutants 1 h after wounding.", JAR),
+    ("significantly-reduced", "JA-Ile was significantly reduced in jar1 mutants after wounding.", JAR),
+    ("reduced-by-90%", "JA-Ile was reduced by 90% in jar1 mutants after wounding.", JAR),
+    # the red team's RC4 survives: "significantly" is the adverb, and "P < 0.01" names no non-significance
+    ("rt-RC4", "JA-Ile levels were significantly reduced in jar1 mutants (P < 0.01).", JAR),
+    ("K2-20-fold-lower-than", "JA-Ile was 20-fold lower in jar1 mutants than in wild-type leaves.", JAR),
+    ("rt-RC6", "Wound-induced JA-Ile was 90% lower in jar1 mutants than in Col-0 at 1 h.", JAR),
+    ("no-JA-Ile-was-detected", "No JA-Ile was detected in gh3.10 jar1 knockout lines.", GH3),
+    ("opr3-did-not-accumulate", "opr3 mutants did not accumulate OPC-8:0.", OPR),
+    ("aos-accumulated-no", "aos mutants accumulated no 12-OPDA.", AOS),
+    ("SALK-insertion-line-of", "The SALK_034543 insertion line of GH3.10 accumulated no JA-Ile.", GH3),
+    ("T-DNA-insertion-lines-of-AOS", "T-DNA insertion lines of AOS were deficient in 12-OPDA.", AOS),
+    ("deficient-in-GH3.10", "Mutants deficient in GH3.10 accumulated no JA-Ile in flowers.", dict(enzyme="GH3.10")),
+    ("knockout-of-GH3.10", "Knockout of GH3.10 abolished JA-Ile accumulation in flowers.", GH3),
+)
+def test_new_acceptance_cs_e_r2_746_controls_keep_in_planta_credit(text, kw):
+    claim, decision = admitted(text, **kw)
+    assert (claim.species_state, claim.species_support["grade"]) == (TSS, "in_planta")
+    assert decision.status in ADMITTED_STATUSES
