@@ -883,6 +883,30 @@ def _excluded_unambiguous_close(clause: str, hit: Tuple[int, int, str], form_sta
     return bool(opened and len(_CLAUSE_CLOSE.findall(gap[opened.end():])) > 1)
 
 
+#: "with" written without its comma (CSE-R0-N1), and the 686ae134 clause openers plus it.
+_BARE_WITH = re.compile(r"(?<!,)\swith\b")
+_NEW_SUBJECT_BARE_WITH = re.compile(_NEW_SUBJECT.pattern + "|" + _BARE_WITH.pattern)
+
+
+def _excluded_bare_with(clause: str, hit: Tuple[int, int, str], form_start: int) -> bool:
+    """The 686ae134 reading (:func:`_excluded`, the same lines) in which a bare " with " also
+    opens a clause (ORCH-746 CS-E repair 1, CSE-R0-N1): "JA-Ile accumulated after wounding with
+    reduced 12-OH-JA-Ile" cuts JA-Ile off from "reduced", as ", with reduced" already did. The
+    686ae134 lines decide on the FIRST opener only, so a bare " with " after a closed relative
+    clause ("JA-Ile, which is the substrate of CYP94B3 (Fig. 3A, B), accumulated after wounding
+    with reduced 12-OH-JA-Ile") also cuts the participant off when no comma follows it."""
+    gap = clause[hit[1]:form_start]
+    if any("," not in gap[bare.end():] for bare in _BARE_WITH.finditer(gap)):
+        return True
+    opened = _NEW_SUBJECT_BARE_WITH.search(gap)
+    if opened and "," not in gap[opened.end():]:
+        return True
+    opener = None
+    for opener in _NEW_SUBJECT_BARE_WITH.finditer(clause[:hit[0]]):
+        pass
+    return bool(opener and "," not in clause[opener.end():hit[0]] and "," in gap)
+
+
 #: The readings of which participants a comma-led clause cuts off (ORCH-746 CS-E); an effect
 #: counts only when ALL of them credit it. The first three (CS-E): each reviewer prototype
 #: misreads a shape the other reads right: the red team's keeps the head across a closed
@@ -891,10 +915,10 @@ def _excluded_unambiguous_close(clause: str, hit: Tuple[int, int, str], form_sta
 #: reversed reaction), and takes a callout's comma for a close; the bio-auditor's reads a
 #: relative clause whose closing comma is missing as open to the form, and credits
 #: correct-direction rows that the 686ae134 reading refuses, a recall gain that round forbade.
-#: Repair 1 appends an ambiguous close (two or more ", " after the opener). Agreement is the
-#: fail-closed choice, and keeping the 686ae134 reading among them means a reading can only
-#: remove credit, never add it; appending one removes credit only.
-_READINGS = (_excluded, _excluded_blanked, _excluded_adjacent, _excluded_unambiguous_close)
+#: Repair 1 appends two: an ambiguous close (two or more ", " after the opener) and a bare
+#: " with ". Agreement is the fail-closed choice, and keeping the 686ae134 reading among them
+#: means a reading can only remove credit, never add it; appending one removes credit only.
+_READINGS = (_excluded, _excluded_blanked, _excluded_adjacent, _excluded_unambiguous_close, _excluded_bare_with)
 
 
 def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
