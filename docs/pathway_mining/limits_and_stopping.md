@@ -57,10 +57,23 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
   full texts that way. `rag/` is frozen, so mining keeps rag's own NCBI fetch (`_fetch_ncbi`) and
   its title, abstract and year. It re-reads the returned XML for each article's own
   `MedlineCitation/PMID` and never uses the parsed PMCID, DOI or URL. The PMCID is then asked of
-  EuropePMC by PMID (rag's `_resolve_europepmc_item`, one lookup per new PMID per run); without
-  an answer the PMID is the id, and the URL is the PubMed page. The same article found through
+  EuropePMC by PMID (`PaperSource._europepmc_item`, one `core` search per PMID per run); without
+  a PMCID the PMID is the id, and the URL is the PubMed page. The same article found through
   EuropePMC and through NCBI therefore gets one `paper_id`, and is one paper. This path does not
-  use rag's search cache for NCBI.
+  use rag's search cache for NCBI. The record's own `PublicationTypeList` is kept as its declared
+  `article_type` (see [`evidence_policy.md`](evidence_policy.md) § evidence type).
+* **A failed lookup is not "no PMCID" (IT2-N3).** EuropePMC answering with no record, or with
+  no PMCID, is cached for the run. A lookup that failed (an exception, a non-200, an unreadable
+  body) is not: the next search asks again. rag's `_resolve_europepmc_item` returns the same
+  empty item for both, so one failure used to make an article a `PMID:` paper for the whole run,
+  and the same article from EuropePMC a second, `PMC:` paper, two "independent" papers for
+  `multiple_independent_papers`. An included paper's metadata lookup asks the same query again
+  and fills an empty PMID or PMCID. Every id of every included paper (`PMC:`, `PMID:`, `DOI:`)
+  is marked seen, so a later record of the same article under another id is skipped like any
+  seen paper. When the other order happens (EuropePMC's copy included first, then a `PMID:`
+  record whose discovery lookup failed and whose inclusion lookup only now names the PMCID),
+  the second record is excluded with "same article as PMC:..., already included". A resumed
+  run marks the ids of every restored included paper the same way.
 * **Full-text check.** A fetched full text must open with the record's title: at least 70 % of
   the title's words (3+ letters, HTML unescaped) in its first 3,000 characters. Otherwise it is
   another article, it is refused, the abstract is used, and the paper's `notes` say so. Fixture
@@ -92,6 +105,14 @@ matches. For example: `"12-OPDA" AND "Arabidopsis thaliana"`. An item with no us
   open on the frontier.
 
 ## Extraction in passage batches
+
+A paper's passages are its own chunks, ranked against the frontier item's retrieval text
+(A7). Retrieval for one paper filters the store to that paper before ranking; a store-wide top
+`3 x k` filtered afterwards gave pilot-002's PMC5104190 "no passages retrieved" because other
+papers' chunks outranked it. A paper is indexed with at most `max_passages_per_paper` chunks,
+counted after its front matter, reference list, publisher notes and duplicate chunks are
+removed ([`evidence_policy.md`](evidence_policy.md) § what text can be evidence); the chunks
+past the cap are recorded as `over_passage_cap`.
 
 A paper's retrieved passages (up to `max_passages_per_paper`) are extracted in consecutive
 batches of `max_passages_per_call` (default 5). Each batch is its own logical model call, with

@@ -86,7 +86,7 @@ One JSON object per line; safe to stream.
 
 | File | One row per | Key fields |
 |---|---|---|
-| `papers.jsonl` | paper (included **and** excluded) | ids, metadata, screening outcome (`mining_rescue` when the rescue re-admitted it; the production reason is then in `notes`), inclusion/exclusion reasons, evidence type, discovery round + query |
+| `papers.jsonl` | paper (included **and** excluded) | ids, metadata, screening outcome (`mining_rescue` when the rescue re-admitted it; the production reason is then in `notes`), inclusion/exclusion reasons, evidence type and the rule that decided it (`evidence_type_basis`), whether the declared type was checked against EuropePMC (`evidence_type_verified`), declared `article_type`, discovery round + query; `notes` say what indexing kept out of the paper (front matter, reference list, ...) |
 | `queries.jsonl` | literature query | query text, frontier item + kind, round, attempt (formulation 1 or 2), sources, source terms, result count, new paper ids, cache hit, error |
 | `frontier.jsonl` | open frontier item | kind, target, reason, priority, origin round, attempts, exhausted |
 | `evidence_spans.jsonl` | quoted passage | exact text, section, page, paragraph, locator, chunk, offsets, round, query, frontier item, score |
@@ -188,8 +188,10 @@ without a second round of charges.
 discovered / screened / included / excluded / processed and by evidence type;
 passages; claims extracted, distinct identities, latest status counts, rejections
 by reason; graph sizes, connections, multi-paper reactions, species-state census,
-promoted components; conflicts; additions by round; usage and costs; model-call
-statuses and failures; retrieval stats including the **embedding mode**; the
+evidence-level census (`graph.evidence_levels`), promoted components; conflicts;
+additions by round; usage and costs; model-call statuses and failures; retrieval stats including the **embedding mode** and what
+indexing kept out (`excluded`, `excluded_by_paper`: front matter, reference lists,
+publisher notes, duplicate and over-cap chunks, each with a count and characters); the
 preflight report; warnings; errors; and provenance problems.
 
 `report.md` renders that for a human, leading with a banner when the run did not

@@ -120,7 +120,9 @@ def test_a_paper_with_no_resolvable_identifier_fails_the_provenance_requirement(
         ({"title": "A review of jasmonate signalling"}, EVIDENCE_REVIEW),
         ({"source": "biorxiv"}, EVIDENCE_PREPRINT),
         ({"url": "https://www.biorxiv.org/content/1"}, EVIDENCE_PREPRINT),
-        ({"article_type": "journal article"}, "primary"),
+        ({"article_type": "research-article"}, "primary"),
+        # ORCH-745 CS-A repair 1 (A1): PubMed gives reviews "Journal Article" too.
+        ({"article_type": "journal article"}, "unknown"),
         ({"title": "LOX2 converts alpha-linolenic acid"}, "unknown"),
     ],
 )
