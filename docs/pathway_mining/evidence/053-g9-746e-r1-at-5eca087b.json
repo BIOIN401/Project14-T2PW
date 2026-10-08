@@ -1,0 +1,84 @@
+{
+  "label": "g9-746e-r1-at-5eca087b",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/053-g9-746e-r1-at-5eca087b.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=line",
+    "--basetemp=C:/t/bt/orch746/g9/053/bt",
+    "tests/test_mining_species_cs_e.py",
+    "-k",
+    "test_cs_e_r1_746"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-10-08T19:20:13+00:00",
+  "finished_at": "2026-10-08T19:20:14+00:00",
+  "duration_seconds": 0.8415132000000085,
+  "timeout_seconds": 300.0,
+  "root_pid": 116268,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 115868,
+      "name": "python.exe",
+      "ppid": 116268
+    }
+  ],
+  "descendants_terminated": [
+    115868
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 87556,
+      "name": "python.exe"
+    },
+    {
+      "pid": 106340,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116200,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/053-g9-746e-r1-at-5eca087b.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "5eca087b90586938a0371abea50e16e75ef400e5",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
