@@ -78,9 +78,14 @@ the claim's gene beside the gene that explains the result ("the aos jar1 double 
 cannot see. The effect's subject is chosen by position, not grammar (species policy,
 rule 5(b) item 4): a sentence whose real subject is something else and which names the
 participant before the effect with no clause opener between them is still read as the
-participant's effect. That covers plain words and a conjunction that opens no clause ("In
+participant's effect. That covers plain words, a conjunction that opens no clause ("In
 jar1 mutants, JA-Ile was formed, yet 12-OH-JA-Ile was reduced." credits jasmonic acid ->
-JA-Ile, reading "reduced" as said of JA-Ile).
+JA-Ile, reading "reduced" as said of JA-Ile), and a participle clause, which no reading
+takes as an opener: "In cyp94b3 mutants, JA-Ile accumulated after wounding, resulting in
+reduced 12-OH-JA-Ile levels." credits the reversed 12-OH-JA-Ile -> JA-Ile, and so do ",
+leading to strongly reduced OPC-8:0 levels" (OPC-8:0 -> OPDA) and ", accompanied by
+reduced 12-OH-JA-Ile levels" (measured at the CS-E repair-1 tip; a wrong admission also
+needs a direction-reversed extraction).
 
 What the gate now refuses of that residue (ORCH-746 CS-E and its repair 1; each class was
 credited at 686ae134, the last six still at 5eca087b):
