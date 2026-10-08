@@ -287,3 +287,23 @@ and the live EuropePMC `core` response shape the orchestrator checked on 2026-10
 D (`orch745/b-species-reading` @ `686ae134`) are **not merged**: their final review left two blocking findings
 (RT-D-R2-1 / BIO-D-R2-1 and BIO-D-R2-2, `reviews/csd_r2_final_full.txt`) after the repair-round cap. See
 `docs/pwml_recovery_sprint/ORCH-745-RESULT.md` on `sprint/pwml-recovery`.
+
+## ORCH-746 (species-gate fix round E, pilot-004, change set F)
+
+Change set E closes the two blockers ORCH-745's final species-gate review left open (RT-D-R2-1 / BIO-D-R2-1, an
+inner comma fooling `species._excluded`; BIO-D-R2-2, the negated-comparison window stopping at an abbreviation full
+stop) and nothing else. An effect now counts only when the `686ae134` reading and both reviewers' prototype readings
+agree, so E can only remove credit. Implemented by a `general-purpose` agent on `orch745/b-species-reading`
+(`686ae134..5eca087b`), reviewed on the actual diff by `pwml-reviewer`, `pwml-bio-auditor` and a red-team
+`pwml-bio-auditor`.
+
+The G9 base arm was run by the orchestrator, pinned (`--expect-tree C:/t/mining-rep-base`), in `C:/t/mining-rep-base`
+detached at `686ae134`; the test file was copied in and removed afterwards, and the base tree's status was empty
+again. Exit reason `nonzero`, every failure an `AssertionError`, **FINAL SURVIVING COUNT 0**, pin `violations: []`.
+
+| File | Base SHA | What | Result |
+|---|---|---|---|
+| `052-g9-746e-at-686ae134` | `686ae134` | CS-E: the 6 `test_cs_e_746_*` test functions of `test_mining_species_cs_e.py` (44 rows: BIO-D-R2-1, RT-D-R2-1, CSD-R2-N1, BIO-D-R2-2, CSD-R2-N2, two through `ClaimStore` + `admission.judge`) | **44 failed** |
+
+`orch746/` holds the change-set briefs (`briefs/`), the implementer's G9 manifest and, as they come, every review's
+findings as returned (`reviews/`).
