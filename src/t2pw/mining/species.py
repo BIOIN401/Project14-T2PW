@@ -521,7 +521,10 @@ _NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
                   # plants", "in opr3 mutants or in the wild type", "and Col-0 alike")
                   r"\b(?:mutants?|lines?|knock-?outs?|plants?)\s+(?:and|or)\s+(?:also\s+)?(?:in\s+)?(?:the\s+)?"
                   r"(?:wild[- ]?type|col-0|wt)\b",
-                  r"\balike\b")
+                  r"\balike\b",
+                  # RT-E2-4: a concessive clause ("Despite high OPC-8:0 levels in opr3 mutants, JA was
+                  # reduced", "Even though jar1 mutants accumulated JA-Ile, ...")
+                  r"\b(?:although|though|despite|in spite of)\b")
 #: The effect's subject is a protein or transcript measure, not a metabolite (CS-D D2).
 _MEASURE = _any(r"\bproteins?\b", r"\babundance\b", r"\btranscripts?\b", r"\bmrnas?\b",
                 r"\bexpression\b", r"\bexpressed\b", r"\bactivit(?:y|ies)\b")
