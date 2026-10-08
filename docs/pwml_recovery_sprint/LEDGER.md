@@ -10786,3 +10786,19 @@ Work resumed at 13:30. **Nothing merged into `experiment/pathway-mining` yet. No
   pilot-003's 16 recorded answers admits exactly GH3.10 JA → JA-Ile (in planta) and the two OPR3 steps (review grade).
 - G9 base arms run by the orchestrator: `036` (C, 12/12 fail at `f9556288`), `037` (A, 12 nodes / 16 cases), `038` (B, 8/8),
   `039`/`040` (C repair, at `d01e0825` / `f9556288`), `041` (A repair, 13 nodes / 21 cases at `6ceef736`); 0 survivors everywhere.
+
+### `ORCH-745` close — BLOCKED: species gate not approved within the repair cap; no pilot run · 2026-10-07
+
+Full record: [`ORCH-745-RESULT.md`](ORCH-745-RESULT.md). **Nothing merged into `sprint/pwml-recovery` or `main`. Nothing
+pushed. No live model call ($0).** The session was suspended for about 12 h overnight, so the morning deadline was missed.
+
+| | |
+|---|---|
+| merged into `experiment/pathway-mining` (`82fc69a7`; code `3ce64f28`) | change set A evidence hygiene (F-2, F-4, A4, A7, IT2-N3; 2 repair rounds) and C run control (B1/F-7, A5, F-3, B2, F9; 1 repair round), both approved by `pwml-reviewer` and `pwml-bio-auditor`. Mining suite **377**, SMOKE **508** with mining off (evidence `048`, `049`) |
+| not merged | species gate on `orch745/b-species-reading` @ `686ae134`: change sets B (F-1, F-5, F-6, B3, N-5) and D (loss-of-function polarity, binding, extracts). Each used both repair rounds. Mining suite 856, SMOKE 508 (`050`, `051`). The offline replay of pilot-003 admits exactly GH3.10 JA → JA-Ile (in planta) and the two OPR3 review steps |
+| final species-gate review | code APPROVE_WITH_FINDINGS (fit for pilot); red team UNSOUND (fit for pilot under audit); bio-auditor UNSOUND (not fit). Two blocking findings remain (RT-D-R2-1 / BIO-D-R2-1, BIO-D-R2-2), each with a reviewer prototype committed as a record |
+| G9 | `036`–`047`, all run by the orchestrator in `C:/t/mining-rep-base`, pinned; every node an `AssertionError` at its base; 0 survivors everywhere |
+| pilots | none: no approved SHA contains the species gate, so pilot-004 was never pre-registered or run |
+
+Decisions for the product owner are listed in the result. The first is whether to authorise one more narrow round for the
+two prototyped fixes, or to pilot `686ae134` under audit.
