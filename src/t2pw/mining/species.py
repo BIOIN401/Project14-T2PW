@@ -867,17 +867,34 @@ def _excluded_adjacent(clause: str, hit: Tuple[int, int, str], form_start: int) 
     return bool(opener and "," not in clause[opener.end():hit[0]] and "," in gap)
 
 
-#: Three readings of which participants a comma-led clause cuts off (ORCH-746 CS-E). Each
-#: reviewer prototype misreads a shape the other reads right: the red team's keeps the head
-#: across a closed relative clause while a SECOND comma-led clause is open at the form
-#: ("JA-Ile, which is the substrate of CYP94B3, accumulated after wounding, with reduced
-#: 12-OH-JA-Ile" credits the reversed reaction), and takes a callout's comma for a close;
-#: the bio-auditor's reads a relative clause whose closing comma is missing as open to the
-#: form, and credits correct-direction rows that the 686ae134 reading refuses, a recall gain
-#: this round forbids. An effect counts only when all three agree: agreement is the
-#: fail-closed choice, and keeping the 686ae134 reading among them means the change can only
-#: remove credit, never add it.
-_READINGS = (_excluded, _excluded_blanked, _excluded_adjacent)
+def _excluded_unambiguous_close(clause: str, hit: Tuple[int, int, str], form_start: int) -> bool:
+    """The code reviewer's reading (ORCH-746 CS-E repair 1, CSE-R0-1; rev746e2_r4.py): the
+    686ae134 reading, plus, with parentheticals blanked, a participant is cut off when two or
+    more ", " follow the opener before the form. One ", " closes a relative clause that modifies
+    the head ("JA-Ile, which is the substrate of CYP94B3, accumulated"); two or more make the
+    close ambiguous, as an appositive pair (", with 12-OH-JA-Ile, the major catabolite, reduced")
+    or an inner pair (", which, in turn, resulted in reduced ...") inside a clause that is still
+    open at the form, where the three readings above all kept the head."""
+    if _excluded(clause, hit, form_start):
+        return True
+    text = _PARENTHETICAL.sub(lambda m: " " * len(m.group(0)), clause)
+    gap = text[hit[1]:form_start]
+    opened = _NEW_SUBJECT.search(gap)
+    return bool(opened and len(_CLAUSE_CLOSE.findall(gap[opened.end():])) > 1)
+
+
+#: The readings of which participants a comma-led clause cuts off (ORCH-746 CS-E); an effect
+#: counts only when ALL of them credit it. The first three (CS-E): each reviewer prototype
+#: misreads a shape the other reads right: the red team's keeps the head across a closed
+#: relative clause while a SECOND comma-led clause is open at the form ("JA-Ile, which is the
+#: substrate of CYP94B3, accumulated after wounding, with reduced 12-OH-JA-Ile" credits the
+#: reversed reaction), and takes a callout's comma for a close; the bio-auditor's reads a
+#: relative clause whose closing comma is missing as open to the form, and credits
+#: correct-direction rows that the 686ae134 reading refuses, a recall gain that round forbade.
+#: Repair 1 appends an ambiguous close (two or more ", " after the opener). Agreement is the
+#: fail-closed choice, and keeping the 686ae134 reading among them means a reading can only
+#: remove credit, never add it; appending one removes credit only.
+_READINGS = (_excluded, _excluded_blanked, _excluded_adjacent, _excluded_unambiguous_close)
 
 
 def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
