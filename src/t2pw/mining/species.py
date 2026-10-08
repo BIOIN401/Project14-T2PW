@@ -419,7 +419,11 @@ _IN_VITRO = _any(r"in[- ]vitro", r"cell-?free", r"cell free", r"recombinant", r"
                  r"\bhis-?tag", r"strep-?tag", r"\bgst-?tag", r"\bflag-?tag", r"\b6x\s?his", r"\bmbp-",
                  r"produced in (?:e\. ?coli|escherichia|bacteria|yeast|pichia|insect cells?|sf9|baculovirus)",
                  r"insect[-\s]cell", r"baculovirus", r"\bassays? with",
-                 r"cell (?:suspension|culture)s?", r"suspension cultures?", r"\bcall(?:us|i)\b")
+                 r"cell (?:suspension|culture)s?", r"suspension cultures?", r"\bcall(?:us|i)\b",
+                 # CS-D D3 (the R1-B3 family): any extract or enzyme preparation is cell-free
+                 r"\bextracts?\b", r"\benzyme preparations?\b", r"\bcrude enzyme\b",
+                 r"\b(?:enzyme|crude|protein|cell|leaf|tissue)\s+(?:[\w-]+\s+)?(?:extracts?|preparations?|"
+                 r"fractions?|homogenates?)")
 
 # Positive credit (ORCH-745 CS-B repair 2, an orchestrator decision the product owner may
 # revisit): in a primary paper ONLY loss-of-function genetics earns in_planta. The old
@@ -434,22 +438,47 @@ _LOSS_OF_FUNCTION = _any(r"\bmutants?\b", r"knock-?outs?", r"knock-?downs?", r"l
 _PROTEIN_MUTANT = _any(r"mutant (?:proteins?|enzymes?|variants?|forms?)", r"\bvariants?\b",
                        r"site-directed", r"wild-?type (?:enzymes?|proteins?)", r"\b(?:in)?active\b")
 _SUBSTITUTION = re.compile(r"\b[A-Z]\d{2,4}[A-Z]\b")
-#: The effect a loss of function must show. Absence forms count as they stand;
-#: a change form counts only when no negation precedes it in the clause ("were not
-#: reduced" fails, "No JA-Ile was detected" is an absence form and passes).
-_EFFECT_ABSENCE = _any(r"\bnot detect(?:ed|able)\b", r"\bno detectable\b", r"\bundetectable\b",
-                       r"\bbelow (?:the )?(?:detection|quantification) limit", r"\babsent\b",
-                       r"\babolish\w*", r"\babrogat\w*", r"\beliminat\w*", r"\black(?:ed|ing)\b",
-                       r"\bdeficient\b", r"\bdepleted\b",
-                       r"\bno\b(?:\s+[\w:()+-]+){1,4}?\s+(?:was|were)\s+(?:detected|found|formed)\b")
-_EFFECT_CHANGE = re.compile(r"\b(?:reduced|decreased|lower|diminished|impaired|compromised|accumulated|"
-                            r"increased|elevated|higher)\b")
+#: The effect a loss of function must show, on the RIGHT participant (CS-D D1): a
+#: product that is absent or decreased, or a substrate that accumulates. Each form is
+#: (pattern, side it must apply to, forward). A forward form names its participant right
+#: after it ("lacked JA-Ile", "deficient in JA-Ile", "accumulated no JA-Ile"), never the
+#: genotype ("mutants lacking GH3.10"); any other form applies to the first participant
+#: before it in the clause (its subject), or failing that the first one after it.
+_EFFECT_FORMS = (
+    (_any(r"\bnot detect(?:ed|able)\b", r"\bno detectable\b", r"\bundetectable\b",
+          r"\bbelow (?:the )?(?:detection|quantification) limit", r"\babsent\b", r"\babolish\w*",
+          r"\babrogat\w*", r"\beliminat\w*", r"\bdepleted\b",
+          r"\b(?:did|does|do) not (?:accumulate|form|produce)\b",
+          r"\bfail(?:ed|s)? to (?:accumulate|form|produce)\b",
+          r"\bno longer (?:\w+ )?(?:detect\w*|accumulat\w*|form\w*)",
+          r"\bno\b(?:\s+[\w:()+-]+){1,4}?\s+(?:was|were)\s+(?:detected|found|formed)\b",
+          r"\b(?:reduced|decreased|lower|diminished|impaired|compromised)\b"), "product", False),
+    (_any(r"\black(?:ed|ing)\b", r"\bdeficient in\b", r"\b(?:accumulated|produced|formed|contained) no\b"),
+     "product", True),
+    (re.compile(r"\b(?:accumulated|increased|elevated|higher)\b"), "substrate", False),
+)
+#: A negation before an effect form in the clause refuses it ("was not abolished",
+#: "never abolished", "were not reduced"); the forms that START at their negation ("not
+#: detected", "no detectable", "no JA-Ile was detected", "did not accumulate") are the
+#: absence statement itself.
 _CHANGE_NEGATION = re.compile(r"\b(?:not|no|never|neither|nor|without|none)\b|n't")
 _NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
                   r"\bnot\s+(?:significantly\s+)?(?:affected|changed|altered|different)\b",
                   r"\bnot significantly\b", r"\bno significant", r"\bdid not (?:differ|change)\b",
                   r"(?:similar|comparable) to (?:the )?wild-?type", r"\bwild-?type levels\b",
-                  r"\bnormal levels\b", r"\bno (?:change|difference|effect)s?\b")
+                  r"\bnormal levels\b", r"\bno (?:change|difference|effect)s?\b",
+                  # CS-D D1: the adjudicated bare "comparable to" (repair 2 had narrowed it)
+                  r"\bcomparable to\b", r"\bindistinguishable\b", r"\bnormally\b", r"\bresidual\b",
+                  r"\bsimilar\b",
+                  r"\bstill (?:present|accumulat\w*|detect\w*|formed|produced|increased|elevated)\b",
+                  r"\bnot (?:fully |completely |entirely )?(?:abolished|absent|eliminated|abrogated|depleted|"
+                  r"deficient|lacking)\b")
+#: The effect's subject is a protein or transcript measure, not a metabolite (CS-D D2).
+_MEASURE = _any(r"\bproteins?\b", r"\babundance\b", r"\btranscripts?\b", r"\bmrnas?\b",
+                r"\bexpression\b", r"\bexpressed\b", r"\bactivit(?:y|ies)\b")
+#: A loss-of-function marker followed by the gene it is of: "knockout of GH3.10",
+#: "T-DNA insertion lines of AOS", "mutants in JAR1".
+_MARKER_OF = re.compile(r"\s+(?:[\w-]+\s+){0,2}?(?:of|in)\s+(?:the\s+)?")
 #: The participant + enzyme branch of the review route (rule 7) keeps the strict set.
 _CONVERSION = _any(r"\bconvert", r"\bconversion\b", r"formed from", r"metaboli[sz]ed to",
                    r"produced from", r"synthesi[sz]ed from")
@@ -524,7 +553,12 @@ _ORGANISM_WORDS = re.compile(
     r"\b(?:arabidopsis|thale cress|marchantia|physcomitrium|physcomitrella|selaginella|"
     r"klebsormidium|chlamydomonas|anthoceros|pisum|pea|nicotiana|benthamiana|tobacco|capsicum|"
     r"pepper|solanum|tomato|potato|oryza|rice|zea mays|maize|corn|triticum|wheat|hordeum|barley|"
-    r"soybean|vitis|grapes?|grapevine|brassica|medicago|populus|escherichia coli|e\. ?coli|yeast|"
+    r"soybean|vitis|grapes?|grapevine|brassica|medicago|populus|"
+    # CS-D D4: plant genera a jasmonate / oxylipin corpus hits ("glycine" only as the
+    # binomial: the bare word is the amino acid)
+    r"brachypodium|camelina|setaria|lotus|gossypium|petunia|catharanthus|salvia|mentha|artemisia|"
+    r"panicum|sorghum|glycine max|"
+    r"escherichia coli|e\. ?coli|yeast|"
     r"saccharomyces|pichia|human|humans|homo sapiens|mouse|mice|murine|rats?|drosophila|"
     r"zebrafish|liverworts?|moss|mosses|hornworts?|bryophytes?|algae|alga)\b"
 )
@@ -535,7 +569,7 @@ _ORGANISM_WORDS = re.compile(
 #: the organism words: an unlisted prefix is not seen, and a word such as "Table1" can be
 #: read as one (fail closed).
 _FOREIGN_GENE = re.compile(
-    r"\b(?:Mp|Pp|Os|Sl|Zm|Ta|Hv|Gm|Nt|Nb|Bn|Ca|Vv|Md|St|Le|Cs|Sb|Br|Mt|Pt|Lj|Ph|Ps|Sm|Gh)"
+    r"\b(?:Mp|Pp|Os|Sl|Zm|Ta|Hv|Gm|Nt|Nb|Bn|Ca|Vv|Md|St|Le|Cs|Sb|Br|Mt|Pt|Lj|Ph|Ps|Sm|Gh|Bd|Sv|Ptr|Mtr)"
     r"(?:[A-Z]{2,}[0-9A-Za-z.]*|[\s-]?[a-z]{2,}\d[0-9a-z]*|[\s-][A-Z]{2,}\d?[0-9A-Za-z.]*)\b")
 _ABBREVIATED_BINOMIAL = re.compile(r"\b[A-Z]\. ?[a-z]{4,}\b")
 #: Arabidopsis-only shorthands: an accession and an AGI locus name the plant.
@@ -704,15 +738,56 @@ def species_span_names_target(spans: Iterable[Any], target_species_normalized: s
     return False
 
 
-def _effect(clause: str) -> str:
-    """The positive effect phrase of a loss-of-function clause, or "": an absence form,
-    or a change form with no negation before it in the clause."""
-    absence = _EFFECT_ABSENCE.search(clause)
-    if absence:
-        return absence.group(0)
-    for change in _EFFECT_CHANGE.finditer(clause):
-        if not _CHANGE_NEGATION.search(clause[:change.start()]):
-            return change.group(0)
+def _hits(text: str, matchers: Sequence[Sequence["re.Pattern[str]"]]) -> List[Tuple[int, int]]:
+    return [(m.start(), m.end()) for variants in matchers for p in variants for m in p.finditer(text)]
+
+
+def _blank(text: str, matchers: Sequence[Sequence["re.Pattern[str]"]]) -> str:
+    """``text`` with every match blanked to spaces (positions kept)."""
+    for start, end in _hits(text, matchers):
+        text = text[:start] + " " * (end - start) + text[end:]
+    return text
+
+
+def _bound(clause: str, cats: Sequence[Sequence["re.Pattern[str]"]]) -> bool:
+    """Is a loss-of-function marker in ``clause`` OF the claim's own enzyme or gene (CS-D
+    D2)? The symbol sits at most three tokens before the marker ("gh3.10 jar1 knockout
+    lines", "the jar1 gh3.10 double mutant", "lox2 (At3g45140) knockout lines"), or right
+    after it with "of" / "in" ("knockout of GH3.10", "T-DNA insertion lines of AOS").
+    "arc mutants ... allene oxide cyclase" and "the myc2 mutant ... by JAR1" are not."""
+    cat_hits = _hits(clause, cats)
+    for marker in _LOSS_OF_FUNCTION.finditer(clause):
+        for start, end in cat_hits:
+            if end <= marker.start():
+                between = clause[end:marker.start()]
+                if len(between.split()) <= 3 and not re.search(r"[,;]", between):
+                    return True
+            elif start >= marker.end() and _MARKER_OF.fullmatch(clause[marker.end():start]):
+                return True
+    return False
+
+
+def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
+            prods: Sequence[Sequence["re.Pattern[str]"]]) -> str:
+    """The effect of a loss-of-function clause on the right participant, or "" (CS-D D1):
+    an absence or decrease form whose participant is a PRODUCT, or an accumulation or
+    increase form whose participant is a SUBSTRATE. ``clause`` has the claim's catalyst
+    names blanked (D2), so an enzyme named after its substrate supplies no participant.
+    A negation before the form in the clause refuses it."""
+    hits = sorted([(a, b, "product") for a, b in _hits(clause, prods)]
+                  + [(a, b, "substrate") for a, b in _hits(clause, subs)])
+    for pattern, side, forward in _EFFECT_FORMS:
+        for form in pattern.finditer(clause):
+            if _CHANGE_NEGATION.search(clause[:form.start()]):
+                continue
+            inside = [h for h in hits if form.start() <= h[0] < form.end()]
+            before = [] if forward else [h for h in hits if h[1] <= form.start()]
+            after = [h for h in hits if h[0] >= form.end()
+                     and (not forward or (len(clause[form.end():h[0]].split()) <= 2
+                                          and not re.search(r"[,;]", clause[form.end():h[0]])))]
+            subject = (inside or before or after or [None])[0]
+            if subject is not None and subject[2] == side:
+                return f"{form.group(0)!r} on a {side}"
     return ""
 
 
@@ -756,10 +831,12 @@ def grade_sentences(
     extraction could not support, so their negative markers still count). Each
     supporting sentence gets one grade, tested in this order: ``inference``,
     ``host``, ``in_vitro``, then -- only in a primary paper -- ``in_planta`` from
-    loss-of-function genetics alone (repair 2: a loss-of-function genotype, the claim's
-    own enzyme or gene and a participant in one clause, a whitelisted effect phrase,
-    and no hedge, modality, no-effect phrase, application, comparison, procedure,
-    protein mutant, citation, other organism or no-credit section), or -- only in a
+    loss-of-function genetics alone (repair 2 and CS-D: a loss-of-function genotype OF the
+    claim's own enzyme or gene, and in the same clause an absent or decreased product or
+    an accumulated substrate, named apart from the catalyst's own name, with no negation
+    before the effect; and no hedge, modality, no-effect phrase, application, comparison,
+    procedure, protein mutant, protein or transcript measure, citation, other organism or
+    no-credit section), or -- only in a
     review -- ``review`` under a strict rule 7 (a conversion LINKING substrate and
     product, or the claim's enzyme with a strict conversion verb, and no negation,
     hedge, comparison, homology, application or other organism). Positive credit
@@ -775,6 +852,7 @@ def grade_sentences(
     prods = _matchers([n for n in products if _creditable(n)], strict=True)
     # The claim's OWN enzyme or gene: a foreign-prefixed symbol never earns credit.
     cats = _matchers([c for c in catalysts if not _FOREIGN_GENE.search(c)], strict=True)
+    every_catalyst = _matchers(catalysts, strict=True)
     paper_other = any(normalize_species(o) not in ("", target) for o in paper_observed_organisms)
 
     def in_planta(sentence: str, folded: str, span: Any, span_other: bool) -> Tuple[str, str]:
@@ -782,7 +860,8 @@ def grade_sentences(
         for pattern, why in ((_HEDGE, "hedged or modal"), (_NO_EFFECT, "no effect reported"),
                              (_APPLICATION, "an applied compound"), (_COMPARISON_ANY, "a comparison"),
                              (_PROCEDURAL, "a procedure, not a result"), (_PURPOSE, "a purpose clause"),
-                             (_PROTEIN_MUTANT, "a protein mutant, not a plant genotype")):
+                             (_PROTEIN_MUTANT, "a protein mutant, not a plant genotype"),
+                             (_MEASURE, "a protein or transcript measure, not a metabolite")):
             if pattern.search(folded):
                 return GRADE_NONE, f"no positive credit: {why} ({_found(pattern, folded)!r})"
         if _SUBSTITUTION.search(sentence):
@@ -800,15 +879,15 @@ def grade_sentences(
             return GRADE_NONE, ("no positive credit: the passage or the paper names another organism "
                                 "and this sentence does not name the target")
         for clause in _CLAUSE.split(folded):
-            if not (_LOSS_OF_FUNCTION.search(clause) and _names(clause, cats)
-                    and (_names(clause, subs) or _names(clause, prods))):
+            if not _bound(clause, cats):
                 continue
-            effect = _effect(clause)
+            effect = _effect(_blank(clause, every_catalyst), subs, prods)
             if effect:
                 return GRADE_IN_PLANTA, (f"in planta: loss of function of the claim's enzyme or gene "
-                                         f"({_found(_LOSS_OF_FUNCTION, clause)!r}) {effect!r} a participant")
-        return GRADE_NONE, ("no positive credit: no loss-of-function genotype of the claim's enzyme or gene "
-                            "with an effect on a participant in one clause")
+                                         f"({_found(_LOSS_OF_FUNCTION, clause)!r}): {effect}")
+        return GRADE_NONE, ("no positive credit: no loss-of-function genotype of the claim's own enzyme or "
+                            "gene with an absent or decreased product, or an accumulated substrate, in one "
+                            "clause")
 
     def review_route(sentence: str, folded: str) -> Tuple[str, str]:
         for pattern, why in ((_HEDGE, "hedged or modal"), (_NEGATION, "a negation"),
