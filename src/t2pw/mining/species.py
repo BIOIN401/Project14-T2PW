@@ -40,7 +40,7 @@ from __future__ import annotations
 import re
 import unicodedata
 from dataclasses import asdict, dataclass, field
-from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 from t2pw.mining.normalize import _DASHES, _GREEK, is_cofactor
 
@@ -475,7 +475,7 @@ _ENZYME_HEAD = re.compile(r"\s+(?![a-z-]*(?:creases?|phases?|cases?|bases?|lease
 _PHENOTYPE = re.compile(r"\b(?:growth|fertility|fertile|resistance|susceptibility|tolerance|senescence|yield|"
                         r"biomass|germination|flowering|development|phenotypes?)\b")
 #: The opener of a comma-led relative or adverbial clause (CS-D repair 1, review N3; how a
-#: participant is cut off by one is :func:`_excluded`, CS-D repair 2).
+#: participant is cut off by one is :data:`_READINGS`, CS-D repair 2 and ORCH-746 CS-E).
 _NEW_SUBJECT = re.compile(r";|,\s*(?:which|that|who|whose|with|whereas|while|although|though|but|and)\b")
 #: The noun after the gene says the marker is not OF the gene: "mutants in the JAR1
 #: pathway", "the myc2 mutant in the JAR1 background" (CS-D repair 1, RT-D-4).
@@ -805,7 +805,10 @@ def _excluded(clause: str, hit: Tuple[int, int, str], form_start: int) -> bool:
     adverbial clause (CS-D repair 2)? Either the clause that follows the participant is
     still OPEN at the form ("JA-Gln accumulated ..., which had reduced JA-Ile"), or the
     participant sits INSIDE such a clause that closes before the form ("OPC-8:0, which is
-    formed from OPDA, was undetectable": OPDA is excluded, the head OPC-8:0 stays)."""
+    formed from OPDA, was undetectable": OPDA is excluded, the head OPC-8:0 stays).
+
+    The 686ae134 reading, kept verbatim as the first of :data:`_READINGS`: any comma after
+    the first opener reads as the clause closing, so it is fooled by an inner comma."""
     gap = clause[hit[1]:form_start]
     opened = _NEW_SUBJECT.search(gap)
     if opened and "," not in gap[opened.end():]:
@@ -816,9 +819,79 @@ def _excluded(clause: str, hit: Tuple[int, int, str], form_start: int) -> bool:
     return bool(opener and "," not in clause[opener.end():hit[0]] and "," in gap)
 
 
+#: A parenthetical ("(Fig. 3A, B)", "(3r,7s)", "(p < 0.01, t-test)"): the bio-auditor's
+#: reading blanks it, so its commas close no clause.
+_PARENTHETICAL = re.compile(r"\([^()]*\)")
+#: In the bio-auditor's reading only a comma followed by whitespace closes a clause.
+_CLAUSE_CLOSE = re.compile(r",\s")
+
+
+def _excluded_blanked(clause: str, hit: Tuple[int, int, str], form_start: int) -> bool:
+    """The bio-auditor's reading of :func:`_excluded` (ORCH-746 CS-E, BIO-D-R2-1;
+    rev745d_r2_proto.py). Parentheticals are blanked and only ", " closes a clause; the
+    LAST opener in the gap decides whether a clause is still open at the form ("JA-Ile,
+    which ..., accumulated after wounding, with reduced 12-OH-JA-Ile": the ", with" clause
+    is open, JA-Ile is cut off); a head is kept across a closed clause only in the shape
+    "X, <opener> ..., <form>" with one opener right after X. Any other gap holding an
+    opener cuts the participant off (fail closed)."""
+    text = _PARENTHETICAL.sub(lambda m: " " * len(m.group(0)), clause)
+    gap = text[hit[1]:form_start]
+    openers = list(_NEW_SUBJECT.finditer(gap))
+    if openers:
+        if not _CLAUSE_CLOSE.search(gap[openers[-1].end():]):
+            return True
+        if len(openers) > 1 or gap[:openers[0].start()].strip():
+            return True
+    opener = None
+    for opener in _NEW_SUBJECT.finditer(text[:hit[0]]):
+        pass
+    return bool(opener and not _CLAUSE_CLOSE.search(text[opener.end():hit[0]]) and _CLAUSE_CLOSE.search(gap))
+
+
+def _excluded_adjacent(clause: str, hit: Tuple[int, int, str], form_start: int) -> bool:
+    """The red team's reading of :func:`_excluded` (ORCH-746 CS-E, RT-D-R2-1; rt745dr2_fix.py):
+    a head is kept across a closed clause only when the clause opens right after it, so that
+    it modifies the head itself ("JA-Ile, which ..., accumulated"). A clause that opens after
+    other words ("JA-Ile accumulated after wounding, which, in turn, ...", "OPC-8:0 levels,
+    which ...") cuts the head off whatever commas it holds."""
+    gap = clause[hit[1]:form_start]
+    opened = _NEW_SUBJECT.search(gap)
+    if opened and ("," not in gap[opened.end():] or gap[:opened.start()].strip()):
+        return True
+    opener = None
+    for opener in _NEW_SUBJECT.finditer(clause[:hit[0]]):
+        pass
+    return bool(opener and "," not in clause[opener.end():hit[0]] and "," in gap)
+
+
+#: Three readings of which participants a comma-led clause cuts off (ORCH-746 CS-E). Each
+#: reviewer prototype misreads a shape the other reads right: the red team's keeps the head
+#: across a closed relative clause while a SECOND comma-led clause is open at the form
+#: ("JA-Ile, which is the substrate of CYP94B3, accumulated after wounding, with reduced
+#: 12-OH-JA-Ile" credits the reversed reaction), and takes a callout's comma for a close;
+#: the bio-auditor's reads a relative clause whose closing comma is missing as open to the
+#: form, and credits correct-direction rows that the 686ae134 reading refuses, a recall gain
+#: this round forbids. An effect counts only when all three agree: agreement is the
+#: fail-closed choice, and keeping the 686ae134 reading among them means the change can only
+#: remove credit, never add it.
+_READINGS = (_excluded, _excluded_blanked, _excluded_adjacent)
+
+
 def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
             prods: Sequence[Sequence["re.Pattern[str]"]]) -> str:
-    """The effect of a loss-of-function clause on the right participant, or "" (CS-D D1):
+    """The effect of a loss-of-function clause on the right participant, or "": the
+    686ae134 reading's reason when every reading of :data:`_READINGS` finds an effect
+    (:func:`_effect_under`), else "" (ORCH-746 CS-E). Credit here is credit under each
+    reading, so nothing is credited that 686ae134 did not credit."""
+    reasons = [_effect_under(clause, subs, prods, excluded) for excluded in _READINGS]
+    return reasons[0] if all(reasons) else ""
+
+
+def _effect_under(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
+                  prods: Sequence[Sequence["re.Pattern[str]"]],
+                  excluded: Callable[[str, Tuple[int, int, str], int], bool]) -> str:
+    """The effect of a loss-of-function clause on the right participant under one reading
+    of the cut-off rule (``excluded``), or "" (CS-D D1):
     an absence or decrease form whose participant is a PRODUCT, or an accumulation or
     increase form whose participant is a SUBSTRATE. ``clause`` has the claim's catalyst
     names blanked (D2), so an enzyme named after its substrate supplies no participant.
@@ -826,7 +899,7 @@ def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
 
     The form's subject (CS-D repair 1): the participants inside the form ("no JA-Ile was
     detected"); else every participant before it in the clause that a comma-led relative
-    or adverbial clause does not cut off (:func:`_excluded`; none for a forward form);
+    or adverbial clause does not cut off (``excluded``; none for a forward form);
     else the participants right after it, at most three tokens away (two for a forward
     form) with no comma between. If those candidates name BOTH a substrate and a product
     the subject is ambiguous and the form earns nothing ("the OPDA metabolite OPC-8:0
@@ -844,7 +917,7 @@ def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
                 continue
             inside = [h for h in hits if form.start() <= h[0] < form.end()]
             before = [] if forward else [h for h in hits if h[1] <= form.start()
-                                         and not _excluded(clause, h, form.start())]
+                                         and not excluded(clause, h, form.start())]
             after = [h for h in hits if h[0] >= form.end()
                      and len(clause[form.end():h[0]].split()) <= (2 if forward else 3)
                      and not re.search(r"[,;]", clause[form.end():h[0]])]
