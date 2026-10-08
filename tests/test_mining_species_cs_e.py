@@ -482,3 +482,37 @@ def test_new_acceptance_cs_e_r1_746_controls_keep_in_planta_credit(text, kw):
     claim, decision = admitted(text, **kw)
     assert (claim.species_state, claim.species_support["grade"]) == (TSS, "in_planta")
     assert decision.status in ADMITTED_STATUSES
+
+
+# ---------------------------------------------------------------------------
+# 9. (addendum) a participle or consequence clause opens a clause (the sixth reading)
+# ---------------------------------------------------------------------------
+RESULTING = "In cyp94b3 mutants, JA-Ile accumulated after wounding, resulting in reduced 12-OH-JA-Ile levels."
+
+
+@_rows(
+    # the implementer's runs/suspect_r1 rows, reversed claims, and the contrary "yet" row
+    ("m746e-resulting-in", RESULTING, CYP_REV),
+    ("m746e-leading-to", "In opr3 mutants, OPDA accumulated, leading to strongly reduced OPC-8:0 levels.", OPR_REV),
+    ("m746e-accompanied-by", "In cyp94b3 mutants, JA-Ile accumulated after wounding, accompanied by reduced "
+                             "12-OH-JA-Ile levels.", CYP_REV),
+    ("m746e-yet-contrary", "In jar1 mutants, JA-Ile was formed, yet 12-OH-JA-Ile was reduced.", JAR),
+)
+def test_cs_e_r1_746_9_a_participle_or_consequence_clause_opens_a_clause(text, kw):
+    assert probe(text, **kw).species_state != TSS
+
+
+def test_cs_e_r1_746_9_resulting_in_reversed_node_is_not_admitted():
+    """End to end: at 5eca087b the reversed 12-OH-JA-Ile -> JA-Ile node was accepted on ', resulting in'."""
+    claim, decision = admitted(RESULTING, **CYP_REV)
+    assert claim.species_state != TSS
+    assert decision.status not in ADMITTED_STATUSES
+
+
+# ---------------------------------------------------------------------------
+# 10. (addendum) "within experimental error" is no effect
+# ---------------------------------------------------------------------------
+def test_cs_e_r1_746_10_a_change_within_experimental_error_is_no_effect():
+    """The red team's hunt1 S10."""
+    claim = probe("In jar1 mutants, JA-Ile was reduced, but within experimental error.", **JAR)
+    assert claim.species_state != TSS
