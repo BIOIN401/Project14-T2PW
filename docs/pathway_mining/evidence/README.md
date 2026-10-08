@@ -305,6 +305,7 @@ again. Exit reason `nonzero`, every failure an `AssertionError`, **FINAL SURVIVI
 |---|---|---|---|
 | `052-g9-746e-at-686ae134` | `686ae134` | CS-E: the 6 `test_cs_e_746_*` test functions of `test_mining_species_cs_e.py` (44 rows: BIO-D-R2-1, RT-D-R2-1, CSD-R2-N1, BIO-D-R2-2, CSD-R2-N2, two through `ClaimStore` + `admission.judge`) | **44 failed** |
 | `053-g9-746e-r1-at-5eca087b` | `5eca087b` | CS-E repair 1 (+ addendum items 9-10): the 82 `test_cs_e_r1_746_*` rows of `test_mining_species_cs_e.py` at `01d436cf` (`-k test_cs_e_r1_746`; the file exists at `5eca087b`, so it was overwritten for the run and restored with `git checkout --`) | **82 failed** |
+| `054-g9-746e-r2-at-01d436cf` | `01d436cf` | CS-E repair 2 (the last round): the 103 `test_cs_e_r2_746_*` rows of `test_mining_species_cs_e.py` at `f3df072f` (`-k test_cs_e_r2_746`; overwritten for the run and restored with `git checkout --`) | **103 failed** |
 
 `orch746/` holds the change-set briefs (`briefs/`), the implementer's G9 manifest and, as they come, every review's
 findings as returned (`reviews/`).
