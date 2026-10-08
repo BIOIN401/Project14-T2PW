@@ -10862,3 +10862,34 @@ Repair 2 closes the delay and no-difference classes by SHAPE (two time points in
 a control genotype in a sentence without "than"; any significance or trend statement except the adverb), as the union of
 all three reviewers' measured prototypes. Records: `experiment/pathway-mining` @ `ac9209bc`
 (`docs/pathway_mining/evidence/orch746/`).
+
+### `ORCH-746` close — BLOCKED: change set E's last repair round left one blocking finding; no pilot run · 2026-10-08
+
+Full record: [`ORCH-746-RESULT.md`](ORCH-746-RESULT.md). **Nothing merged into `sprint/pwml-recovery` or `main`; only records
+committed to `experiment/pathway-mining`; nothing pushed. No live model call ($0).** The machine slept about 12 h and then
+crashed once; the review was relaunched after verifying 0 survivors and clean worktrees.
+
+| | |
+|---|---|
+| change set E | `orch745/b-species-reading` @ `f3df072f`, **not merged**. Round 0 + 2 repair rounds; suites 915 → 1005 → 1127. Both ORCH-745 blockers closed; every round subtract-only (credit at each tip ⊆ previous tip ⊆ `686ae134`, by construction and measured) |
+| final review | `pwml-bio-auditor` SOUND_WITH_FINDINGS (fit YES); red team SOUND_WITH_FINDINGS (fit YES); `pwml-reviewer` REQUEST_CHANGES, **CSE-R2-C1 blocking** (a temporary absence, "initially undetectable but increased after 1 h", credited as an absence: the class rounds 0 and 1 ruled blocking, outside the documented residual). Upheld; the product owner's rule says STOP at the cap |
+| G9 | `052` (44/44 at `686ae134`), `053` (82/82 at `5eca087b`), `054` (103/103 at `01d436cf`); orchestrator, pinned, 0 survivors |
+| pilot-004 | not pre-registered, not run (no approved, merged gate) |
+| change set F | not started (follows pilot-004 and tightens the merged gate); read-only design scout recorded |
+| mining tip | `experiment/pathway-mining` @ `4c2aa0b0` (records only; code at `3ce64f28`) |
+
+**Production follow-up cards registered (docs only, D-102; not dispatched; text in `C:/t/mining-handoff/cards/` and
+`docs/pathway_mining/evidence/orch746/cards/` on the mining branch):**
+
+| card | defect |
+|---|---|
+| `PF-746-01` | `rag/eligibility.py` organism lexicon: 2 plants among 45 entries; the paper screen cannot see most plant hosts |
+| `PF-746-02` | `llm/client.py`: provider routing unpinned / unreported; reasoning setting never sent; `response_hash` partial; usage cumulative only |
+| `PF-746-03` | `rag/acquire.py:536-543`: the PubMed parser takes a cited reference's PMCID / DOI |
+| `PF-746-04` | `rag/embed`: lexical-fallback vectors cached under the real model key |
+| `PF-746-05` | `rag/ingest._split_sections`: first-occurrence headers and the `body` fallback mislabel sections |
+
+Open for the product owner (detail in the result): unblock E with the code reviewer's measured zero-cost fix as one more
+micro-round, or rule CSE-R2-C1 non-blocking and pilot `f3df072f` under audit, or change the review standard for a lexical
+gate; the recall cost E bought; allele-numbered genotypes. Two idle `python.exe -` processes (PIDs 260020, 260044) left by a
+reviewer's slip are reported for the product owner to end; the orchestrator did not kill them.
