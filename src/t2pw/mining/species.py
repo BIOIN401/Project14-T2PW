@@ -480,8 +480,11 @@ _PHENOTYPE = re.compile(r"\b(?:growth|fertility|fertile|resistance|susceptibilit
 #: participant is cut off by one is :data:`_READINGS`, CS-D repair 2 and ORCH-746 CS-E).
 _NEW_SUBJECT = re.compile(r";|,\s*(?:which|that|who|whose|with|whereas|while|although|though|but|and)\b")
 #: The noun after the gene says the marker is not OF the gene: "mutants in the JAR1
-#: pathway", "the myc2 mutant in the JAR1 background" (CS-D repair 1, RT-D-4).
-_CONTAINER = re.compile(r"\s*(?:pathway|background|cluster|family|signall?ing|network)s?\b")
+#: pathway", "the myc2 mutant in the JAR1 background" (CS-D repair 1, RT-D-4); nor is it
+#: when the noun names another gene's role: "the jar1 suppressor mutant", "Knockout of the
+#: AOS activator" (ORCH-746 CS-E repair 2, RT-R1-5).
+_CONTAINER = re.compile(r"\s*(?:(?:pathway|background|cluster|family|signall?ing|network)s?|activators?|suppressors?|"
+                        r"enhancers?|regulators?|inducers?|modifiers?|targets?)\b")
 #: A negation before an effect form in the clause refuses it ("was not abolished",
 #: "never abolished", "were not reduced"); the forms that START at their negation ("not
 #: detected", "no detectable", "no JA-Ile was detected", "did not accumulate") are the
@@ -578,9 +581,11 @@ _MEASURE = _any(r"\bproteins?\b", r"\babundance\b", r"\btranscripts?\b", r"\bmrn
 #: "T-DNA insertion lines of AOS", "mutants in JAR1", "The SALK_034543 insertion line of
 #: GH3.10" (at most three tokens, then "of" / "in", then an optional "the"). No gap token is
 #: itself "of" / "in" (CS-D repair 2) or names another gene's role (ORCH-746 CS-E repair 1,
-#: BIO-D-R2-3 / RT-D-R2-3: "Mutants lacking a regulator of AOS", "with defects upstream of JAR1").
+#: BIO-D-R2-3 / RT-D-R2-3: "Mutants lacking a regulator of AOS", "with defects upstream of JAR1";
+#: repair 2, RT-R1-5 / CSE-R1-C5: "a suppressor of", "an inducer of", "a co-activator of").
 _MARKER_OF = re.compile(r"\s*(?:(?!(?:of|in|regulat\w*|upstream|downstream|genes?|factors?|activators?|repressors?|"
-                        r"defects?|targets?)\b)[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?")
+                        r"defects?|targets?|suppress\w*|enhanc\w*|inducers?|co-?activators?|modulat\w*|mediators?|"
+                        r"modifiers?)\b)[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?")
 #: The participant + enzyme branch of the review route (rule 7) keeps the strict set.
 _CONVERSION = _any(r"\bconvert", r"\bconversion\b", r"formed from", r"metaboli[sz]ed to",
                    r"produced from", r"synthesi[sz]ed from")
