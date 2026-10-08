@@ -10847,3 +10847,18 @@ process survived (only VS Code's isort language servers, started after the reboo
 (`a9ed963b`), `C:/t/m745-b` (`5eca087b`) and `C:/t/mining-rep-base` (`686ae134`) were clean, the primary checkout's status was
 unchanged, and LM Studio served `text-embedding-nomic-embed-text-v1.5`. The review was relaunched unchanged except for fresh
 scratch directories (`C:/t/bt/rev746e2-*`); the crashed attempt's partial files are not evidence.
+
+### `ORCH-746` progress — change set E: round 0 and repair 1 reviewed, repair 2 (last) running · 2026-10-08 13:53
+
+| round | tip | review | blocking | fit for pilot |
+|---|---|---|---|---|
+| 0 | `5eca087b` (suite 915) | code REQUEST_CHANGES, bio SOUND_WITH_FINDINGS, red team UNSOUND | CSE-R0-1 (appositive comma pair), RT-E2-1 (delay with other absence forms), RT-E2-2 (no-difference) | code YES under audit, bio YES, red team YES after its vetoes |
+| repair 1 | `01d436cf` (suite 1005; G9 `053`: 82/82 rows fail at `5eca087b`) | code REQUEST_CHANGES, red team UNSOUND, bio UNSOUND | the same two classes in other ordinary words (time points, "did not reach statistical significance", "and control plants") | all three YES once their measured vetoes are in |
+| repair 2 (last) | running | | | |
+
+Every reviewer confirmed the subset property at every round (credit at each tip is a subset of the previous tip and of
+`686ae134`, by construction and on up to 70,000 fuzzed sentences), the G9 design, the replay (#3, #14, #34) and the T-rows.
+Repair 2 closes the delay and no-difference classes by SHAPE (two time points in a sentence; a later presence after "but";
+a control genotype in a sentence without "than"; any significance or trend statement except the adverb), as the union of
+all three reviewers' measured prototypes. Records: `experiment/pathway-mining` @ `ac9209bc`
+(`docs/pathway_mining/evidence/orch746/`).
