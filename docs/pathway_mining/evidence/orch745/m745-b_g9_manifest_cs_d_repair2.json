@@ -1,0 +1,266 @@
+{
+ "base_sha": "fd7ea63a",
+ "base_tree": "C:/t/bt/m745-b/basearm8 (git archive fd7ea63a) + the new test file",
+ "base_run": "C:/t/bt/m745-b/runs/csdr2-g9-fd7ea63a/out.txt",
+ "base_result": "25 failed, 21 passed: every test_cs_d_r2_745_* row failed (AssertionError), every test_new_acceptance_cs_d_r2_745_* control passed; FINAL SURVIVING COUNT 0",
+ "other_bases": {
+  "6454ef98": {
+   "run": "C:/t/bt/m745-b/runs/csdr2-g9-6454ef98/out.txt",
+   "result": "12 failed, 34 passed"
+  },
+  "fd7c737c": {
+   "run": "C:/t/bt/m745-b/runs/csdr2-g9-fd7c737c/out.txt",
+   "result": "29 failed, 17 passed"
+  }
+ },
+ "also_fail_at_6454ef98": 7,
+ "also_fail_at_fd7c737c": 16,
+ "new_acceptance_controls": [
+  "test_new_acceptance_cs_d_r2_745_an_open_clause_still_cuts_its_subject_off[X19]",
+  "test_new_acceptance_cs_d_r2_745_an_open_clause_still_cuts_its_subject_off[X20]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[20-fold-lower-than]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B1]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B2]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B3]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B4]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B5]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B6]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[H4-much-less]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[Nc1]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[Nc2]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[Pc2]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[SALK-insertion-line-of]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[T-DNA-insertion-lines-of]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[aos-accumulated-less]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[appositive]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[deficient-in]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[flowers-did-not-accumulate]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[gh3.10-jar1-did-not-accumulate]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[opr3-did-not-accumulate]"
+ ],
+ "controls_failing_at_6454ef98": [
+  "test_new_acceptance_cs_d_r2_745_an_open_clause_still_cuts_its_subject_off[X19]",
+  "test_new_acceptance_cs_d_r2_745_an_open_clause_still_cuts_its_subject_off[X20]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[H4-much-less]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[SALK-insertion-line-of]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[aos-accumulated-less]"
+ ],
+ "controls_failing_at_fd7c737c": [
+  "test_new_acceptance_cs_d_r2_745_an_open_clause_still_cuts_its_subject_off[X19]",
+  "test_new_acceptance_cs_d_r2_745_an_open_clause_still_cuts_its_subject_off[X20]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B1]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B2]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B3]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B4]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B5]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[B6]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[Nc1]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[Nc2]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[flowers-did-not-accumulate]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[gh3.10-jar1-did-not-accumulate]",
+  "test_new_acceptance_cs_d_r2_745_controls_keep_in_planta_credit[opr3-did-not-accumulate]"
+ ],
+ "nodes": [
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_a_participant_inside_a_closed_relative_clause_is_not_the_subject[rt-R2-cyp94b3-reversed]",
+   "item": "1 relative-clause subject (regression guard vs 6454ef98)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_a_participant_inside_a_closed_relative_clause_is_not_the_subject[rt-R3-gh3.10-product-up]",
+   "item": "1 relative-clause subject (regression guard vs 6454ef98)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_a_participant_inside_a_closed_relative_clause_is_not_the_subject[rt-R4-jar1-substrate-down]",
+   "item": "1 relative-clause subject (regression guard vs 6454ef98)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_a_participant_inside_a_closed_relative_clause_is_not_the_subject[rt-R6-opr3-substrate-down]",
+   "item": "1 relative-clause subject (regression guard vs 6454ef98)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_a_participant_inside_a_closed_relative_clause_is_not_the_subject[bio-W6-reversed]",
+   "item": "1 relative-clause subject (regression guard vs 6454ef98)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_a_participant_inside_a_closed_relative_clause_is_not_the_subject[bio-W7-reversed]",
+   "item": "1 relative-clause subject (regression guard vs 6454ef98)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_a_participant_inside_a_closed_relative_clause_is_not_the_subject[bio-W2-product-up]",
+   "item": "1 relative-clause subject (regression guard vs 6454ef98)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_a_participant_inside_a_closed_relative_clause_is_not_the_subject[bio-W12-product-up]",
+   "item": "1 relative-clause subject (regression guard vs 6454ef98)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_a_participant_inside_a_closed_relative_clause_is_not_the_subject[bio-W10-reversed-undetectable]",
+   "item": "1 relative-clause subject (regression guard vs 6454ef98)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_the_head_before_a_closed_relative_clause_keeps_its_credit[rt-R1-cyp94b3-correct-direction]",
+   "item": "1 relative-clause subject: the head keeps credit (recall)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert ('species_ambiguous', 'none') == ('target_spec..., 'in_planta')",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_the_head_before_a_closed_relative_clause_keeps_its_credit[rt-R5-which-is-formed-from]",
+   "item": "1 relative-clause subject: the head keeps credit (recall)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert ('species_ambiguous', 'none') == ('target_spec..., 'in_planta')",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_the_head_before_a_closed_relative_clause_keeps_its_credit[rt-R7-which-is-the-bioactive-form]",
+   "item": "1 relative-clause subject: the head keeps credit (recall)",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert ('species_ambiguous', 'none') == ('target_spec..., 'in_planta')",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_2_a_negator_inside_the_accumulated_less_gap_earns_no_credit[H1-hardly-less]",
+   "item": "2 negator inside the accumulated-less gap",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_2_a_negator_inside_the_accumulated_less_gap_earns_no_credit[H2-barely-less]",
+   "item": "2 negator inside the accumulated-less gap",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_2_a_negator_inside_the_accumulated_less_gap_earns_no_credit[H3-scarcely-lower]",
+   "item": "2 negator inside the accumulated-less gap",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": true,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_2_a_negator_inside_the_accumulated_less_gap_earns_no_credit[F1-not-less]",
+   "item": "2 negator inside the accumulated-less gap",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_3_a_marker_of_another_genes_mutant_is_not_of_the_claims_gene[genes-upstream-of]",
+   "item": "3 marker tail through of / in",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_3_a_marker_of_another_genes_mutant_is_not_of_the_claims_gene[targets-of]",
+   "item": "3 marker tail through of / in",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_3_a_marker_of_another_genes_mutant_is_not_of_the_claims_gene[a-regulator-of]",
+   "item": "3 marker tail through of / in",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": false,
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_4_a_negated_comparison_past_a_dotted_name_earns_no_credit[CL1-until]",
+   "item": "4 comparative window past a dotted name",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": true,
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_4_a_negated_comparison_past_a_dotted_name_earns_no_credit[CL2-lower-than]",
+   "item": "4 comparative window past a dotted name",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": true,
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_4_a_negated_comparison_past_a_dotted_name_earns_no_credit[CL3-gh3.10-lower-than]",
+   "item": "4 comparative window past a dotted name",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": true,
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_4_a_negated_comparison_past_a_dotted_name_earns_no_credit[CL4-gh3.10-until]",
+   "item": "4 comparative window past a dotted name",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": true,
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_4_a_negated_comparison_past_a_dotted_name_earns_no_credit[CL5-further]",
+   "item": "4 comparative window past a dotted name",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": true,
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_4_a_negated_comparison_past_a_dotted_name_earns_no_credit[NX3-any-later-than]",
+   "item": "4 comparative window past a dotted name",
+   "fails_at_fd7ea63a": true,
+   "failure_at_fd7ea63a": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_6454ef98": true,
+   "also_fails_at_fd7c737c": false
+  }
+ ],
+ "deliberately_moved_existing_tests": []
+}

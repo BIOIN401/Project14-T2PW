@@ -1,0 +1,153 @@
+{
+  "label": "g9-745b-r1-at-4f8d33a3",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/042-g9-745b-r1-at-4f8d33a3.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=line",
+    "--basetemp=C:/t/bt/orch745/g9/042/bt",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_a1r1_an_unverified_paper_is_never_an_independent_primary",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_a1r1_an_unverified_paper_never_earns_in_planta",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_a3_a_later_ambiguous_sibling_never_downgrades_an_admitted_reaction",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_a3_a_lifted_reaction_is_supported_by_its_target_species_claims_only",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_a3_a_review_beside_one_primary_corroborates_but_is_not_independent",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_a3_an_in_vitro_sibling_is_not_independent_support",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_a3_two_reviews_are_review_article_only",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_b1_a_cell_free_preparation_is_not_in_planta",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_b2_a_negated_conversion_is_not_in_planta",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_b3_a_hedged_conversion_is_not_in_planta",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_b4_a_homology_transfer_is_an_inference",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_b5_a_transgenic_host_is_not_in_planta",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_b6_a_supplied_precursor_is_not_in_planta",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_b7_the_review_route_needs_a_plain_stated_conversion",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_b8_a_foreign_gene_prefix_names_another_organism",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_b9_n3_background_and_interpretation_earn_nothing",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_bio1_a_bare_name_still_carries_its_in_vitro_veto",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_f5_a_single_capital_before_a_sentence_ends_it",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_f5_a_spaced_dash_does_not_glue_tokens",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_f6_three_batches_give_one_state_in_any_order",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_n1_a_colon_inside_a_name_does_not_split_the_clause",
+    "tests/test_mining_species_repair1.py::test_repair1_745b_n2_a_comparison_species_span_is_not_species_evidence"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-10-07T20:29:17+00:00",
+  "finished_at": "2026-10-07T20:29:21+00:00",
+  "duration_seconds": 3.9927108000265434,
+  "timeout_seconds": 300.0,
+  "root_pid": 642088,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 646608,
+      "name": "python.exe",
+      "ppid": 642088
+    },
+    {
+      "pid": 646680,
+      "name": "git.exe",
+      "ppid": 646608
+    },
+    {
+      "pid": 645816,
+      "name": "git.exe",
+      "ppid": 646608
+    },
+    {
+      "pid": 592616,
+      "name": "git.exe",
+      "ppid": 646608
+    },
+    {
+      "pid": 645616,
+      "name": "git.exe",
+      "ppid": 646608
+    },
+    {
+      "pid": 645152,
+      "name": "git.exe",
+      "ppid": 646608
+    },
+    {
+      "pid": 592660,
+      "name": "git.exe",
+      "ppid": 646608
+    },
+    {
+      "pid": 592744,
+      "name": "git.exe",
+      "ppid": 646608
+    }
+  ],
+  "descendants_terminated": [
+    592616,
+    592660,
+    592744,
+    645152,
+    645616,
+    645816,
+    646608,
+    646680
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 531780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 538868,
+      "name": "python.exe"
+    },
+    {
+      "pid": 596240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 596364,
+      "name": "python.exe"
+    },
+    {
+      "pid": 646192,
+      "name": "python.exe"
+    },
+    {
+      "pid": 646728,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/042-g9-745b-r1-at-4f8d33a3.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "4f8d33a306599ec41277ccd8a2d90c0c9266dd31",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

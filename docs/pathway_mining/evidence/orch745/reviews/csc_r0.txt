@@ -1,0 +1,159 @@
+=== VERDICT REQUEST_CHANGES
+VERDICT: REQUEST_CHANGES. Four of the five fixes are correct, the boundary is clean and G9 holds. One blocking problem remains: the F-3 species reserve pushes species searches later than they run at base whenever the frontier cap is not binding. On ORCH-1 I recommend keeping the structural thin-answer rule (finding ORCH-1, non-blocking).
+
+BOUNDARY CHECK: pass. All 19 changed paths are under src/t2pw/mining/, tests/test_mining_*.py, tests/fixtures/mining/ or docs/pathway_mining/. A regex check of `git diff --name-only f9556288..d01e0825` found 0 paths outside the allowed set. extraction.py, species.py, claims.py, admission.py, acquisition.py and retrieval.py are untouched (the optional extract_claims keyword was not used). tests/helpers_mining.py is unchanged. All 8 commits carry the required trailer. The worktree was clean at d01e0825.
+
+TESTS I RAN (bounded wrapper, fresh basetemp each run):
+- Tip, all 18 tests/test_mining_*.py files: "299 passed in 9.91s", FINAL SURVIVING COUNT 0. That is the 281 base tests plus the 18 new ones.
+- Base f9556288 (git archive export in C:/t/bt/rev745c-reviewer/base_f9556288), mining suite without the new file: "281 passed in 8.25s", survivors 0. This confirms the baseline.
+
+REGRESSION PROOF: I copied the tip's tests/test_mining_run_control.py and pilot003_thin_answers.json into the base export and ran `-k test_g9_745c`. Result: "12 failed, 6 deselected", survivors 0. Every failure is an AssertionError on a value; none is an ImportError or AttributeError.
+- b1 quarantined: `'max_new_reactions_per_round_reached' != 'max_new_reactions_per_round_reached'` (:76)
+- b1 fixture: same (:86)
+- a5 spent budget: `assert 3 == 1` (:110)
+- a5 check_before_round: `None == 'max_papers_discovered_reached'` (:124)
+- a5 recorded stop: `None == 'max_papers_discovered_reached'` (:136)
+- f3 reserve: `assert 0 >= 15`
+- f3 cut: `assert False` (frontier_cut.jsonl missing) (:216)
+- b2 re-ask: `1 == 2` (:366)
+- b2 twice: `1 == 2` (:387)
+- b2 provider: `'' == 'not_reported_by_llm_client'` (:400)
+- f9 preflight: `['preflight'] == ['dotenv','preflight']` (:474)
+- f9 run/resume: `['configured','configured'] == ['dotenv',...]` (:499)
+
+The ImportError and AttributeError failures at base appear only in the test_new_acceptance_* nodes, which are correctly labelled as new. The manifest's expected base failures match what I observed.
+
+INVARIANTS:
+- **B1/F-7:** controller.py:556 now calls `record_round(..., new_reactions=len(delta.added_reaction_ids))`, so quarantined candidates no longer count. The cap is still a stop condition (budget.py:227-231, only the detail text changed), and test_745c_b1_a_round_admitting_the_cap_still_stops_the_run passes. Candidates are still placed and quarantined; admission is unchanged.
+- **A5:** budget.py:213-214 returns a stop reason already recorded, and :222 adds the papers-discovered limit. I found no spurious blocking:
+  - Resume builds a fresh BudgetLedger (controller.py `cls(config, ...)`), and `restore()` (budget.py:313-333) never restores stop_reason.
+  - continue_run is only called on freshly resumed controllers (cli.py:282-288, ui/page.py:909-913).
+  - Every other mid-round stop source (the check_before_call caps, check_papers_processed) was already rechecked by check_before_round. Cancellation is checked first.
+  - A phantom round at base broke on check_papers_discovered before doing any work, so stopping earlier loses nothing.
+- **F-3:** both generate (frontier.py:303-306) and merge_frontier (:365-368) go through cap_frontier. The cut is assembled in controller.py and written as record["frontier_cut"], metrics.frontier_cut {count, by_kind}, and frontier_cut.jsonl via the write_round key list (artifacts.py). Relevance is an integer with a stable sort and an id tie-break, so it is deterministic. FrontierItem.from_dict and ModelCallRecord.from_dict filter unknown keys, so pre-1.1.0 state files still load. The ordering is wrong; see F3-ORDER.
+- **B2:**
+  - The thin check runs only on EXTRACTION_OK (modelclient.py:368).
+  - There is exactly one re-ask, guarded by check_before_call (:417-430), and it is counted through _attempt's ledger.record_call (:545).
+  - answer_quality is set at :416-428 and appears in lineage rows (:244).
+  - provider is recorded at :527-530. CompletionDiagnostics has no provider field (llm/client.py:361-370), so live calls will record not_reported_by_llm_client.
+  - thin_answer has one caller, extraction.py:505. No gate is weakened: the answer that is kept still goes through build_claims and admission.
+- **F9:** cli.py calls ensure_dotenv_loaded for run/resume/preflight before mining_enabled, _make_config and preflight. It loads with override=False (t2pw/config.py:60). The existing CLI tests set `_ENV_LOADED=True` (tests/test_mining_cli.py:34), so they never load a real .env.
+
+ORCH-1 ADJUDICATION: do not add a token gate. Keep the structural predicate for both the re-ask and the marking. I ran thin_answer over every first-attempt pilot-003 answer:
+- It flags 7 of 16 calls (0001, 0002, 0003, 0007, 0008, 0013, 0014), not the 8 the implementer reported.
+- All 7 have the identical alphabetically sorted key set ['evidence_ids','hypothesis','products','substrates','tissue'], with output tokens ranging from 154 to 24122.
+- All 5 answers that cite evidence use the prompt's key order.
+- The cited answer _0009 has an output/visible token ratio of 1.3, the same as the no-reasoning thin ones.
+
+So the defect follows the provider route or decoder, not whether the model reasoned. The brief's reason for the re-ask (a re-send can reach a different provider) applies equally to the high-token answers, and a token gate would leave 4 of the 7 defective answers without a retry.
+- **Cost:** re-asking all 7 adds about 687 s of model latency to a round whose total was 1081 s. check_before_call before the re-ask bounds this, so the calls, tokens, cost and wall-clock caps can be exceeded by at most one call, as with any call.
+- **When usage is not reported:** apply the structural rule unchanged. That is the safe default, because the re-ask is bounded by the budget and never relaxes a gate. Any future token rule needs an explicit usage_reported flag, because _attempt fills unreported usage with len(raw)//4, which by construction equals the visible size.
+
+DECISION COMPLIANCE: The brief's two locked decisions, B1 (count only admitted reactions) and F-3 (reserve ceil(0.25 × cap) slots ordered by relevance, record the cut), are both implemented. F-3's slot selection complies, but its asking order regresses (F3-ORDER). I found no D-xxx specific to mining and no open item resolved on the implementer's own authority. The ARTIFACT_SCHEMA_VERSION bump to 1.1.0 follows the documented rule for when a persisted field changes meaning.
+
+WHAT I COULD NOT VERIFY:
+- Live behaviour: whether a real re-ask actually reaches a different provider route, and live preflight with a real .env. I made no network or LLM calls.
+- Tests in the main checkout, where .env exists; I ran in the worktree, which has none.
+- The SMOKE suite (the orchestrator runs it).
+- Merge interaction with the parallel change sets A and B: they may also bump ARTIFACT_SCHEMA_VERSION or touch controller.py or modelclient.py.
+- UI rendering of the new fields.
+- The implementer's 8-of-16 count (I measured 7).
+- F3-ORDER blocking | C:/t/m745-c/src/t2pw/mining/frontier.py cap_frontier, lines 398-404 (interleave loop: `if reserved and len(kept) % stride == stride - 1` then `kept.extend(reserved)`); docs C:/t/m745-c/docs/pathway_mining/architecture.md:131, limits_and_stopping.md:119, known_limitations.md:121
+   PROBLEM: Every reserved species item is forced into the 4th, 8th, ... place, and any left over are appended at the end, even when its own priority (6.0) is higher than the items placed ahead of it. This also happens when the cap does not bind at all. In small or mixed frontiers, species searches end up behind enzyme (4.5) and cofactor (1.0) items, the reverse of the PRIORITY table and of what F-3 is meant to protect. Rounds ask in frontier order and stop when their processing or discovery budget runs out, so this makes target-species searches less likely than at base. No test pins the under-cap order.
+   EVIDENCE: merge_frontier([], 5 bridge(9.0) + 10 species(6.0) + 15 enzyme(4.5), cap=60), the cap not binding: base f9556288 puts species at positions [5..14] (5 of the first 10 items asked); tip d01e0825 puts them at [3, 7, 11, 15, 19, 23, 26, 27, 28, 29] (2 of the first 10), with 4 species items after all 15 enzyme items. cap_frontier([enzyme 4.5, cofactor 1.0, species x3], 60) at tip gives E, C, S, S, S; base order is S, S, S, E, C. Probes: C:/t/bt/rev745c-reviewer/probe/merge_order_probe.py and order_probe.py, both run under the wrapper with 0 survivors.
+   FIX: A reserved item should take the earlier of its priority-order position and its every-fourth slot, e.g. `for item in rest: while reserved and (len(kept) % stride == stride - 1 or _rank(reserved[0]) <= _rank(item)): kept.append(reserved.pop(0)); kept.append(item)`. Add a test showing that an under-cap frontier containing species items plus lower-priority kinds keeps the base priority order: it should pass at f9556288, fail at d01e0825 and pass after the fix. The existing G9 and acceptance tests must still pass. Change architecture.md:131 and limits_and_stopping.md:119 to describe the 'earlier of priority position or every fourth place' rule; the current text says every fourth place, but leftover reserved items are actually appended at the end.
+- ORCH-1 non_blocking | C:/t/m745-c/src/t2pw/mining/modelclient.py thin_answer (lines ~189-211), call_json re-ask (lines 416-430); docs evidence_policy.md:275, known_limitations.md:100, testing.md:49, fixture note in tests/fixtures/mining/pilot003_thin_answers.json
+   PROBLEM: The orchestrator asked whether the re-ask should also require evidence of no reasoning. My recommendation: no. The implementation matches CS-C.md B2.1, which defines thin structurally. Pilot-003 shows the thin shape follows the provider route, not reasoning. However, the docs still describe thin answers as 'reasoning-free' answers of 150-210 tokens and never say that 4 of the 7 pilot-003 answers the predicate flags had 5k-24k output tokens, or what the re-asks cost.
+   EVIDENCE: thin_answer flags 7 of 16 pilot-003 first-attempt answers: 0001 (156 output tokens), 0002 (5471), 0003 (209), 0007 (10136), 0008 (24122), 0013 (5879), 0014 (154). All 7 have the identical alphabetically sorted key set ['evidence_ids','hypothesis','products','substrates','tissue']. All 5 answers that cite evidence (0005, 0006, 0009, 0010, 0011) use the prompt's key order. The cited answer 0009 has an output/visible token ratio of 1.3, like the no-reasoning ones (1.3-1.4), so tokens separate neither group. Re-asking the flagged calls adds about 687 s to a 1081 s round-1 model total. check_before_call before the re-ask (modelclient.py:417) bounds it by the call, token, cost and wall-clock caps. Probe: C:/t/bt/rev745c-reviewer/probe/thin_probe.py.
+   FIX: Keep the structural rule for both the re-ask and the marking. If usage is not reported, keep the structural rule; do not infer reasoning from the len(raw)//4 estimate, which equals the visible size by construction. Any future token-based refinement must first record an explicit per-attempt usage_reported flag. Update evidence_policy.md:275, known_limitations.md:100, testing.md:49 and the fixture note to say that the predicate is structural, that pilot-003 had 7 such answers (4 of them with 5k-24k output tokens) sharing one sorted-key shape that points to the route rather than to reasoning, and that re-asks cost up to about one extra call per thin answer. Correct the '8 of 16' figure to 7.
+- B2-RECORD non_blocking | C:/t/m745-c/src/t2pw/mining/modelclient.py call_json lines 423-438 together with _attempt lines 527-530 and 587-590
+   PROBLEM: After a failed re-ask the record says status 'ok' and answer_quality 'thin_after_retry', but record.parse_error (or schema_error) still holds the error from the re-ask. Also, record.provider is the last provider reported in any attempt, which may not be the attempt whose answer was kept. A consumer that counts records with a non-empty parse_error as failures would count these wrongly.
+   EVIDENCE: test_new_acceptance_745c_b2_a_failed_re_ask_keeps_the_first_thin_answer: the re-ask returns 'not json at all', so _attempt sets record.parse_error, and the call then returns ok with the first thin payload.
+   FIX: Either clear parse_error and schema_error when the kept answer is the earlier thin one, or document in artifacts.md that on a thin_after_retry record these fields describe the failed re-ask. Similarly, take record.provider from the kept attempt's log['provider']. One-line fixes; this can be bundled with the F3-ORDER correction.
+- B2-SCOPE non_blocking | C:/t/m745-c/src/t2pw/mining/modelclient.py call_json line 368: thin_answer is applied to every purpose
+   PROBLEM: thin_answer runs on every call_json payload, not just the claims schema. Today the only caller is extraction.extract_claims (extraction.py:505), so behaviour is correct. A future purpose whose payload is a list of objects with no *_evidence_ids would be re-asked on every call, doubling its cost.
+   EVIDENCE: grep finds call_json called only from extraction.py:505.
+   FIX: No change needed now. Add one docstring line on thin_answer/call_json saying that it assumes evidence-cited record payloads, and that a new purpose should pass a predicate (or None) when that shape does not apply.
+- SCHEMA-BUMP non_blocking | C:/t/m745-c/src/t2pw/mining/config.py line 29 ARTIFACT_SCHEMA_VERSION = "t2pw.mining/1.1.0"
+   PROBLEM: The version bump is correct by the documented rule, but change sets A and B run in parallel and may also bump this constant or edit controller.py and modelclient.py. That risks a merge conflict, or two different meanings recorded under the same 1.1.0.
+   EVIDENCE: config.py comment lists the meaning changes in change set C only.
+   FIX: Orchestrator: at integration, settle on one version string and one comment covering every change set's persisted-field changes, and keep the artifacts.md table in step.
+=== VERDICT SOUND_WITH_FINDINGS
+Biology audit of ORCH-745 change set C, f9556288..d01e0825 on orch745/c-run-control. I read the actual diff and all 8 commits. The only biology evidence used is committed pilot-003 artifacts on experiment/pathway-mining-pilot-003 @ b7e26d8d. I wrote only to C:/t/bt/rev745c-bio/. One stray file, C:/t/bt/rev745c-bio-scratch-calls.jsonl, was created by mistake and removed with a single non-recursive rm.
+
+Gold citation: no gold case covers pathway mining. PRODUCT_CONTRACT.md has no mining clause, and D-103 §3 keeps mining off the sprint. So these findings are judged against three things instead: the hard rule in COMMON_RULES.md ('Never weaken a biological gate ... ortholog never transfers species, uncited values stay dropped, fail closed'), the decisions CS-C.md says were already made (B1, F-3), and docs/pathway_mining/evidence_policy.md.
+
+No change in C weakens a biological gate. Every gate module has an empty diff: species.py, extraction.py, admission.py, claims.py, acquisition.py, retrieval.py and queries.py.
+
+(a) B1, the per-round cap now counts only admitted reactions. This is sound. The cap was only ever checked between rounds (check_before_round), so it never limited growth inside a round, even at base. Quarantined material is still bounded:
+- before each round, by max_candidate_reactions (300), max_candidate_components (40) and max_rounds (8);
+- by max_papers_discovered (150) and max_papers_processed (40, per run and per round);
+- before every model call, by max_llm_calls (200), tokens, cost and wall clock (3600 s).
+Quarantined reactions never enter the target graph. The cap still stops the run when admitted reactions reach it (test_745c_b1_a_round_admitting_the_cap_still_stops_the_run). A5 loses no papers: in a phantom round the search loop breaks on check_papers_discovered before any paper is processed, so a phantom round never processed anything.
+
+(b) F-3, the species reserve and its relevance score. This is sound. FrontierItem.relevance is read in exactly two places: cap_frontier (as a sort key) and the frontier_cut record. The score's vocabulary comes from queries.rescue_terms, which is unchanged and only read here; data flows from rescue_terms into the score, never back. controller.py:379 still builds run_terms from rescue_terms alone. A missing_species_evidence item only adds a search; its names never create a connection. A lead found through it still has to pass classify_species, which requires species_evidence_ids and rejects inference markers and in-vitro evidence. So a quarantined or off-species lead cannot make a non-target reaction look target-supported. It also cannot feed the screen rescue.
+
+(c) B2, the thin-answer re-ask. This is sound. The re-ask sends the same passage and schema, so the model sees the same evidence ids. Its payload goes through the unchanged extract_claims → build_claims → admission path. It is checked against the call budget before it is sent, and counted in the ledger. A thin answer kept as thin_after_retry is handled exactly as base handled every thin answer, but now it is marked. The re-ask can only replace uncited content; it can never add unchecked content.
+
+From committed artifacts, I ran the tip's thin_answer over all 16 raw_text entries in model_raw.jsonl and joined the results to claims_extracted.jsonl and decisions.jsonl. 7 of 16 calls are thin, not 8 as the orchestrator stated: _0001, _0002, _0003, _0007, _0008, _0013, _0014. All 7 produced only candidate or incomplete decisions; none was admitted. That is guaranteed: with no species_evidence_ids, classify_species can never return target_species_supported.
+
+ORCH-1 (should the re-ask also require evidence that the model did no reasoning?): keep the structural predicate with no token condition.
+- CS-C.md §B2.1 itself defines thin structurally. The token wording is only in the handoff, so the implementation follows its written brief.
+- The committed audit §5 contradicts the premise. _0008's 24,122 output tokens include two empty finish_reason=length requests (2 × 12,000). The request that actually answered spent about 122 tokens, and the audit marks it '~0 reasoning: yes'. Mining's counters measure tokens per attempt, which can span several provider requests (artifacts.md at the tip says so). A token condition would therefore excuse _0008 from the re-ask, the exact case the brief targets.
+- The biological value of an answer depends on its citations, not on how much the model reasoned. In a jasmonate-biosynthesis run in Arabidopsis thaliana, the uncited 13-LOX entry step (ALA/LeA → 13-HPOT) appears in 4 of the 7 thin answers. Without citations it can never be more than a held lead.
+- When usage is not reported, the predicate alone must decide: re-ask. Estimated or missing usage must never excuse an answer. Note that _attempt already falls back to len(raw)//4, which is the visible answer size by construction.
+- The wall-clock cost is a run-control choice, not a biology one. A budget-based skip (thin_not_retried) is biology-neutral.
+
+Non-blocking findings:
+- A sentence in evidence_policy.md is inaccurate.
+- answer_quality is only a marker: extraction does not read it (pre-existing, outside C's file boundary).
+- rescue_terms filters on species_state, so it includes target-species hypothesis_only reactions (pre-existing, outside C). C reads it only to order frontier items.
+- A run that only adds quarantined material never reaches the unproductive-round stop. It is still bounded by max_rounds and the other caps.
+
+Proof levels:
+- Static inspection proves the data flow for (b) and (c).
+- My reproduction over committed artifacts proves the 7-of-16 count and the zero-admission yield.
+- I did not run pytest; the reviewer and test-runner own that.
+- How fast a re-ask returns a cited answer, and its latency, remain hypothesis until a pilot-004 run reports answer_quality counts.
+- ORCH-1 non_blocking | C:/t/m745-c/src/t2pw/mining/modelclient.py thin_answer(); MiningModelClient.call_json re-ask branch; _attempt token fallback (_estimate_tokens)
+   PROBLEM: CLASS: policy_disagreement. The handoff wording ('very low output tokens, every per-field list missing') conflicts with the written brief, CS-C.md §B2.1, which defines thin purely structurally. It is not a product_contract_violation: the implementation matches CS-C.md exactly. GOLD CITATION: no gold case covers mining; the standard applied is COMMON_RULES ('uncited values stay dropped ... fail closed'). Biology answer: an answer that reasoned but cited nothing is worth re-asking. Its admissible yield is zero either way: species.classify_species returns target_species_supported only with species_evidence_ids, and build_claims drops uncited enzyme, gene, species, direction and compartment values. A token condition would add no biological safety. It would key on a quantity mining cannot attribute to the answer it keeps.
+   EVIDENCE: From committed pilot-003 @ b7e26d8d:
+- run/rounds/round_001/model_raw.jsonl raw_text scored by the tip's thin_answer: thin = _0001, _0002, _0003, _0007, _0008, _0013, _0014. That is 7 of 16, not 8.
+- claims_extracted.jsonl joined to decisions.jsonl: those 7 calls gave 8 claims, every one candidate or incomplete, 0 admitted.
+- audit/PILOT-003-AUDIT.md §5: _0008 = 'length/0ch, length/0ch, stop/294ch', 24,122 output tokens, 'answer out' 122, est. reasoning 38, '~0 reasoning: yes'. Its 24k tokens were two empty 12k completions, so the premise that _0008 'DID reason' is false. The calls that did reason but cited nothing are _0002 (5,471), _0007 (10,136) and _0013 (5,879).
+- Those answers use the same stripped template as the non-reasoning ones: alphabetical keys, required fields plus hypothesis and tissue, the same '"stoichiometry":  "1"'. Thinness is a matter of shape, not reasoning depth.
+- The uncited content is core pathway biology: ALA/LeA → 13-HPOT (the 13-LOX entry step) appears in _0001, _0002, _0003 and _0008; galactolipids → α-linolenic acid in _0013 (topic 'jasmonate biosynthesis', Arabidopsis thaliana, run/config.json).
+- At the tip, docs/pathway_mining/artifacts.md says per-attempt tokens 'cannot split one attempt's re-sent empty replies'. When usage is unreported, _attempt sets output_tokens = len(raw)//4, which is the visible answer size by construction.
+   FIX: No code change is warranted on biological grounds. Keep the structural predicate. Do not add a token condition.
+
+Safe rule when usage is not reported: the structural predicate decides alone and the answer is re-asked. Missing or estimated usage must never excuse an answer from the re-ask. If the product owner still wants a token condition for cost, it may only excuse an answer on measured usage for the single request that answered. The record must then say whether the count was measured or estimated.
+
+If the 3600 s wall clock is the real worry, control it with a budget instead: skip the re-ask (thin_not_retried, still marked) when the remaining wall clock is below the first attempt's latency. That is a run-control decision for the orchestrator, not a biology one.
+
+REGRESSION FIXTURE (pins the rule against a future token condition): a scripted chat_fn whose first answer is pilot-003 _0008's raw_text and whose token_stats delta is 24,122 output tokens, then a cited answer. Assert 2 requests and answer_quality == 'retried_after_thin'. Repeat with _0002's raw_text and 5,471 tokens.
+
+CONFIDENCE: high for the biology yield and for the _0008 token attribution; both come from committed artifacts. What would change my mind: a mining client that reports per-request usage and provider, combined with a committed pilot showing that answers which reasoned but cited nothing almost never come back cited on a re-ask (retried_after_thin rate near 0 while thin_after_retry dominates).
+- BIO-1 non_blocking | C:/t/m745-c/docs/pathway_mining/evidence_policy.md § 'A thin answer is re-asked once, and stays marked', last sentence (~lines 290-292)
+   PROBLEM: CLASS: documentation accuracy. No pipeline output is wrong; none of the three benchmark classes applies. GOLD CITATION: none (no mining gold case). The doc says a thin answer's claims go through the normal gates, 'which is what keeps an uncited participant out of the graph'. That overstates it. Uncited participants of a thin answer do enter the research graph as quarantined candidate reactions. What keeps them out of the target graph is the species gate: with no species_evidence_ids, a claim is never target_species_supported. Separately, in a claim that does cite something, an uncited participant can be admitted through admission.build_reaction's fallback to the claim-level evidence ids (`p.evidence_ids or evidence_ids`). COMMON_RULES requires policy docs to describe the behaviour actually shipped.
+   EVIDENCE: - extraction._participants keeps participants that have no evidence_ids.
+- admission gate 6 builds a quarantined reaction for any species state other than target_species_supported; the controller then adds it to the graph.
+- pilot-003 @ b7e26d8d: 6 of the 7 thin calls produced candidate reactions (decisions.jsonl status 'candidate'). _0014 was 'incomplete'.
+   FIX: Replace 'out of the graph' with wording such as: 'which keeps it out of the target graph: with no species citation it can never be target_species_supported, so at most it is held as a quarantined lead'. Docs only; no code. REGRESSION FIXTURE: none needed (documentation). CONFIDENCE: high. What would change my mind: evidence that candidate reactions are not part of 'the graph' in this doc's vocabulary. Elsewhere the doc uses 'target graph' for the admitted graph.
+- BIO-2 non_blocking | C:/t/m745-c/src/t2pw/mining/extraction.py build_claims / _participants (pre-existing; outside C's file boundary)
+   PROBLEM: CLASS: pre-existing gap. C did not introduce it and C does not weaken anything; C is a strict improvement here. GOLD CITATION: none (no mining gold case). answer_quality is only a marker: extraction never reads it. Two consequences:
+- A thin_after_retry answer whose thinness is a placeholder echo, but which also cites fields, passes the normal gates with the placeholder strings in it.
+- Today the echoed values sit in participant.stoichiometry. They reach claims.jsonl (audit §5: 'nothing validates a stoichiometry value') but not reactions, because build_reaction uses only name, declared_type and evidence_ids.
+If a placeholder were ever echoed as a participant name in an otherwise cited claim, it would be registered as an entity.
+   EVIDENCE: pilot-003 @ b7e26d8d, audit/PILOT-003-AUDIT.md §5: '"has_stoichiometry" on all 3 participants of _0003; "products_evidence_ids_placeholder" on both products of _0014 ... All 5 are stored as is in claims.jsonl'. At the tip, extraction.extract_claims passes outcome.payload to build_claims whatever answer_quality says.
+   FIX: Not for change set C, whose boundary forbids editing extraction.py. Route it to the extraction change set: build_claims should drop any participant name or value matching modelclient's placeholder pattern, recorded in dropped_fields. REGRESSION FIXTURE: pilot-003 _0003's raw_text with one participant renamed 'substrate_placeholder' and species_evidence_ids added. Assert that no claim carries that participant name. CONFIDENCE: medium. The name-echo case has not been observed live. What would change my mind: a committed run in which no placeholder ever appears outside stoichiometry over many calls.
+- BIO-3 non_blocking | C:/t/m745-c/src/t2pw/mining/queries.py rescue_terms() filter on species_state (pre-existing; unchanged by C)
+   PROBLEM: CLASS: pre-existing observation for the rescue/queries owner. C did not introduce it and C does not change it. GOLD CITATION: none (no mining gold case). Answer to the question 'must rescue_terms stay seeds + target_species_supported only': it does, and C leaves it untouched. C's on_route score only reads it, to order frontier items. But 'target_species_supported' in rescue_terms is a species state, not an admission status. Admission gate 5 (hypothesis) runs before gate 6 (species), and build_reaction copies claim.species_state onto the quarantined reaction. So the names of a target-species hypothesis_only reaction feed the screen rescue, and C's relevance criterion 2.
+   EVIDENCE: - Static inspection at the tip: admission.py gate 5 returns a reaction with status hypothesis_only before the species check at line ~388.
+- admission.build_reaction sets species_state=claim.species_state (line 215).
+- queries.rescue_terms keeps reactions where species_state == SPECIES_TARGET_SUPPORTED.
+- The diff for queries.py and admission.py over f9556288..d01e0825 is empty.
+   FIX: None for C. Optionally the rescue owner decides whether rescue_terms should also require `admitted` (or exclude hypothesis_only). That is a policy choice, not a defect here. REGRESSION FIXTURE (if the owner decides to exclude them): a graph with one hypothesis_only reaction, species_state target_species_supported, names 'X'/'Y'. Assert 'X' not in rescue_terms(config, graph.reactions.values()). CONFIDENCE: high for the data flow, from static inspection. Low on whether it matters biologically: a target-species proposal is on-topic vocabulary, unlike pilot-001's quarantined off-species names.
+- BIO-4 non_blocking | C:/t/m745-c/src/t2pw/mining/controller.py _run_round: ledger.record_round(useful=delta.useful, new_reactions=len(delta.added_reaction_ids))
+   PROBLEM: CLASS: none. An informational note on (a); no gate is affected. GOLD CITATION: none (no mining gold case). After B1, a round that adds only quarantined material never trips the per-round cap. GraphDelta.useful still counts added_candidate_reaction_ids, so such a run also never reaches the unproductive-round stop (stop_after_unproductive_rounds). A run that keeps finding only quarantined leads therefore continues until max_rounds or another cap. That is a cost and coverage effect, not a biology one: nothing quarantined reaches the target graph, and every cap listed in limits_and_stopping.md still applies.
+   EVIDENCE: models.GraphDelta.useful includes added_candidate_reaction_ids. Pilot-003 run/config.json budgets: max_rounds 8, max_candidate_reactions 300, max_candidate_components 40, max_papers_discovered 150, max_papers_processed 40, max_llm_calls 200, max_wall_clock_seconds 3600. Pilot-003 round 1 had 35 quarantined and 0 admitted (audit §7).
+   FIX: No fix required for this change set. If the product owner wants quarantine-only runs to stop earlier, that is a separate run-control decision: for example, count a round as unproductive when it admits nothing. Record it as a D-xxx before anyone implements it. REGRESSION FIXTURE (only if decided): reuse test_g9_745c_b1's off-species chat_fn with max_rounds 8 and assert the stop reason. CONFIDENCE: high, from static inspection.

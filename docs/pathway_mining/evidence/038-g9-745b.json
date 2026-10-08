@@ -1,0 +1,95 @@
+{
+  "label": "g9-745b",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/038-g9-745b.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=line",
+    "--basetemp=C:/t/bt/orch745/g9/038/bt",
+    "tests/test_mining_species_reading.py::test_g9_745b_f5_uncited_participants_absent_from_the_cited_spans_are_not_kept",
+    "tests/test_mining_species_reading.py::test_g9_745b_f5_a_placeholder_echo_is_never_stored_as_a_value",
+    "tests/test_mining_species_reading.py::test_g9_745b_f5_an_uncited_tissue_is_dropped",
+    "tests/test_mining_species_reading.py::test_g9_745b_f1_t1_gh3_10_jasmonic_acid_to_ja_ile_is_admitted_on_its_knockout_evidence",
+    "tests/test_mining_species_reading.py::test_g9_745b_f1_t2_t3_opr3_steps_of_the_bryophyte_review_are_review_grade",
+    "tests/test_mining_species_reading.py::test_g9_745b_b3_the_papers_screen_organisms_are_never_the_claims_species",
+    "tests/test_mining_species_reading.py::test_g9_745b_f6_a_same_paper_merge_does_not_depend_on_batch_order",
+    "tests/test_mining_species_reading.py::test_g9_745b_f6_a_merged_field_keeps_model_citation_if_either_batch_cited_it"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-10-07T19:32:16+00:00",
+  "finished_at": "2026-10-07T19:32:20+00:00",
+  "duration_seconds": 3.0196009000064805,
+  "timeout_seconds": 300.0,
+  "root_pid": 539824,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 540220,
+      "name": "python.exe",
+      "ppid": 539824
+    },
+    {
+      "pid": 540364,
+      "name": "git.exe",
+      "ppid": 540220
+    }
+  ],
+  "descendants_terminated": [
+    540220,
+    540364
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 531780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 536780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 538868,
+      "name": "python.exe"
+    },
+    {
+      "pid": 540356,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/038-g9-745b.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "f9556288065e630260a9ff1106d0266787d04b9c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

@@ -1,0 +1,86 @@
+{
+  "label": "g9-745d-r2-at-fd7ea63a",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/047-g9-745d-r2-at-fd7ea63a.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=line",
+    "--basetemp=C:/t/bt/orch745/g9/047/bt",
+    "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_a_participant_inside_a_closed_relative_clause_is_not_the_subject",
+    "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_1_the_head_before_a_closed_relative_clause_keeps_its_credit",
+    "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_2_a_negator_inside_the_accumulated_less_gap_earns_no_credit",
+    "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_3_a_marker_of_another_genes_mutant_is_not_of_the_claims_gene",
+    "tests/test_mining_species_cs_d_repair2.py::test_cs_d_r2_745_4_a_negated_comparison_past_a_dotted_name_earns_no_credit"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-10-08T03:18:57+00:00",
+  "finished_at": "2026-10-08T03:18:59+00:00",
+  "duration_seconds": 2.1521620999556035,
+  "timeout_seconds": 300.0,
+  "root_pid": 958272,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 933136,
+      "name": "python.exe",
+      "ppid": 958272
+    }
+  ],
+  "descendants_terminated": [
+    933136
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 922404,
+      "name": "python.exe"
+    },
+    {
+      "pid": 934640,
+      "name": "python.exe"
+    },
+    {
+      "pid": 957884,
+      "name": "python.exe"
+    },
+    {
+      "pid": 958140,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/047-g9-745d-r2-at-fd7ea63a.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "fd7ea63aca8d6f8574ec1f9017c8bc494b014d1a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

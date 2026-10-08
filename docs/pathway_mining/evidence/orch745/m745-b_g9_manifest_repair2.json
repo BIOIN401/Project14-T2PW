@@ -1,0 +1,911 @@
+{
+ "base_sha": "fd53a301",
+ "base_tree": "C:/t/bt/m745-b/basearm5 (git archive fd53a301 src tests docs/pwml_recovery_sprint/evidence pyproject.toml) + tests/test_mining_species_repair2.py copied in",
+ "base_run": "C:/t/bt/m745-b/runs/g9r3b-basearm5/out.txt",
+ "base_result": "118 failed, 30 passed (every test_repair2_745b_* failed with AssertionError; every test_new_acceptance_745b_r2_* passed); FINAL SURVIVING COUNT 0",
+ "corrections": 111,
+ "deliberate_policy_moves": 7,
+ "new_acceptance_controls_passing_at_base": [
+  "test_new_acceptance_745b_r2_loss_of_function_keeps_in_planta_credit[T1/bio-r-9]",
+  "test_new_acceptance_745b_r2_loss_of_function_keeps_in_planta_credit[absent-no-JA-Ile-detected]",
+  "test_new_acceptance_745b_r2_loss_of_function_keeps_in_planta_credit[bio-r-1]",
+  "test_new_acceptance_745b_r2_loss_of_function_keeps_in_planta_credit[bio-r-4]",
+  "test_new_acceptance_745b_r2_loss_of_function_keeps_in_planta_credit[bio-r-11]",
+  "test_new_acceptance_745b_r2_loss_of_function_keeps_in_planta_credit[bio-r-13]",
+  "test_new_acceptance_745b_r2_loss_of_function_keeps_in_planta_credit[n1-r1]",
+  "test_new_acceptance_745b_r2_a_linked_review_conversion_keeps_review_credit[bio-rv-1]",
+  "test_new_acceptance_745b_r2_a_linked_review_conversion_keeps_review_credit[code-rev-T2T3]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[rt-neg9]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[rt-neg10]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[rt-h10]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[rt-iv11]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[rt-gp1]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[bio-n-o]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[bio-n-p]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[bio-n-r]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[bio-h-e]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[bio-v-j]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[bio-rv-5]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[bio-rv-6]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[bio-rv-7]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[code-neg-not-observed]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[code-app-floated]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[code-host-transformed-moss]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[code-host-bearing]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[code-cite-reported-by]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[code-iv-desalted-leaf-extract]",
+  "test_new_acceptance_745b_r2_held_back_controls_stay_held_back[code-rev-co-occur-form]",
+  "test_new_acceptance_745b_r2_n1_the_other_batch_order_gives_the_same_result"
+ ],
+ "nodes": [
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[rt-neg1]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[rt-neg2]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[rt-neg3]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[rt-neg4]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[rt-neg5]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[rt-neg6]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[rt-neg7]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[rt-neg8]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[bio-n-b]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[bio-n-h]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[bio-n-l]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[bio-n-s]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[code-neg-does-not-take-place]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[code-neg-neither-nor]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[code-neg-absence-of-conversion]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit[code-neg-rather-than]",
+   "kind": "correction",
+   "finding": "red team R2-B1, bio BIO-R1-1, code R1-B2: a negated statement earned in_planta under rule 5(a)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[rt-h1]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[rt-h2]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[rt-h3]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[rt-h4]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[rt-h5]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[rt-h6]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[rt-h7]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[rt-h8]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[rt-h9]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[bio-h-a]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[bio-h-c]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[bio-h-d]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit[code-hedge-indicate]",
+   "kind": "correction",
+   "finding": "red team R2-B2, bio BIO-R1-3, code R1-B5: the hedge list was open",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[rt-ap1]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[rt-ap2]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[rt-ap3]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[rt-ap4]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[rt-ap5]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[rt-ap6]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[rt-ap7]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[rt-ap8]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[rt-ap9]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[bio-f-a]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[bio-f-b]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[bio-f-c]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[bio-f-f]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit[code-app-provided]",
+   "kind": "correction",
+   "finding": "red team R2-B3, bio F block, code R1-B5: an applied / supplied compound earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv1]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv2]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv3]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv4]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv5]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv6]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv7]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv8]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv9]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv10]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv12]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv13]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[rt-iv14]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[bio-v-a]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[bio-v-b]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[bio-v-d]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[bio-v-e]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[bio-v-f]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[bio-v-h]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[bio-v-i]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[code-iv-crude-enzyme]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[code-iv-crude-enzyme-extract]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[code-iv-enzyme-extract]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit[code-iv-leaf-slices]",
+   "kind": "correction",
+   "finding": "red team R2-B4 / N-1b, bio BIO-R1-2, code R1-B3: cell-free, recombinant or protein-mutant evidence earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-ho1]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-ho2]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-ho3]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-ho4]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[bio-t-a]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[bio-t-b]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[bio-t-d]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[bio-t-e]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-cmp1]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-cmp2]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-cmp3]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-cmp4]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-gp2]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-gp3]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-gp4]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit[rt-gp5]",
+   "kind": "correction",
+   "finding": "red team R2-B5..B7 / N-1a, bio BIO-R1-4: a transgenic host, a comparison mention of the target or a foreign allele symbol earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_cited_statement_earns_no_credit[bio-c-a]",
+   "kind": "correction",
+   "finding": "bio C block, code R1-N3: a cited / background statement earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_cited_statement_earns_no_credit[bio-c-b]",
+   "kind": "correction",
+   "finding": "bio C block, code R1-N3: a cited / background statement earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_cited_statement_earns_no_credit[bio-c-c]",
+   "kind": "correction",
+   "finding": "bio C block, code R1-N3: a cited / background statement earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_cited_statement_earns_no_credit[bio-c-d]",
+   "kind": "correction",
+   "finding": "bio C block, code R1-N3: a cited / background statement earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_cited_statement_earns_no_credit[code-cite-ref]",
+   "kind": "correction",
+   "finding": "bio C block, code R1-N3: a cited / background statement earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_cited_statement_earns_no_credit[code-cite-known]",
+   "kind": "correction",
+   "finding": "bio C block, code R1-N3: a cited / background statement earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_no_effect_loss_of_function_earns_no_credit[code-lof-not-affected]",
+   "kind": "correction",
+   "finding": "code R1-B4: a loss-of-function sentence reporting no effect earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_no_effect_loss_of_function_earns_no_credit[code-lof-did-not-differ]",
+   "kind": "correction",
+   "finding": "code R1-B4: a loss-of-function sentence reporting no effect earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_no_effect_loss_of_function_earns_no_credit[code-lof-not-reduced]",
+   "kind": "correction",
+   "finding": "code R1-B4: a loss-of-function sentence reporting no effect earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_a_no_effect_loss_of_function_earns_no_credit[code-lof-wt-levels]",
+   "kind": "correction",
+   "finding": "code R1-B4: a loss-of-function sentence reporting no effect earned in_planta",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[code-rev-required-production]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[code-rev-reduced-levels]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[code-rev-formation-requires]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[code-rev-catalyzes-step]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[code-rev-co-occur-produced]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[code-rev-levels-reduced]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[code-rev-yet-to-be]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[code-rev-yet-to-be-JA]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[code-rev-unknown]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[code-rev-debated]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[bio-rv-2]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[bio-rv-3]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[bio-rv-4]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion[bio-rv-8]",
+   "kind": "correction",
+   "finding": "code R1-B1 (gate weakened in repair 1), R1-N2, R1-B5, bio RV block: the review route admitted co-occurrence, generic verbs with one participant, hedges, open questions and applications",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_5a_removed_a_stated_conversion_no_longer_earns_credit[code-pos-plain]",
+   "kind": "deliberate_policy_move",
+   "finding": "orchestrator repair-2 decision: rule 5(a) removed; these sentences were credited by 5(a) (or by 5(b) outside the new effect whitelist) at fd53a301 and now earn nothing (recall cost, known_limitations.md); merge rule 4",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_5a_removed_a_stated_conversion_no_longer_earns_credit[code-pos-wt-but-not-mutant]",
+   "kind": "deliberate_policy_move",
+   "finding": "orchestrator repair-2 decision: rule 5(a) removed; these sentences were credited by 5(a) (or by 5(b) outside the new effect whitelist) at fd53a301 and now earn nothing (recall cost, known_limitations.md); merge rule 4",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_5a_removed_a_stated_conversion_no_longer_earns_credit[rt-neg11]",
+   "kind": "deliberate_policy_move",
+   "finding": "orchestrator repair-2 decision: rule 5(a) removed; these sentences were credited by 5(a) (or by 5(b) outside the new effect whitelist) at fd53a301 and now earn nothing (recall cost, known_limitations.md); merge rule 4",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_5a_removed_a_stated_conversion_no_longer_earns_credit[n1-r4]",
+   "kind": "deliberate_policy_move",
+   "finding": "orchestrator repair-2 decision: rule 5(a) removed; these sentences were credited by 5(a) (or by 5(b) outside the new effect whitelist) at fd53a301 and now earn nothing (recall cost, known_limitations.md); merge rule 4",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_5a_removed_a_stated_conversion_no_longer_earns_credit[bio-r-7]",
+   "kind": "deliberate_policy_move",
+   "finding": "orchestrator repair-2 decision: rule 5(a) removed; these sentences were credited by 5(a) (or by 5(b) outside the new effect whitelist) at fd53a301 and now earn nothing (recall cost, known_limitations.md); merge rule 4",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_5a_removed_a_stated_conversion_no_longer_earns_credit[bio-r-2]",
+   "kind": "deliberate_policy_move",
+   "finding": "orchestrator repair-2 decision: rule 5(a) removed; these sentences were credited by 5(a) (or by 5(b) outside the new effect whitelist) at fd53a301 and now earn nothing (recall cost, known_limitations.md); merge rule 4",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_5a_removed_a_stated_conversion_no_longer_earns_credit[code-host-native-complement]",
+   "kind": "deliberate_policy_move",
+   "finding": "orchestrator repair-2 decision: rule 5(a) removed; these sentences were credited by 5(a) (or by 5(b) outside the new effect whitelist) at fd53a301 and now earn nothing (recall cost, known_limitations.md); merge rule 4",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'target_species_supported' != 'target_species_supported'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_n1_ligatures_and_prefixed_alleles_are_normalised",
+   "kind": "correction",
+   "finding": "red team N-1: no NFKC in fold_text; the allele notations Mpgh3a / Mp-aos1 / LjAOS were not foreign",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert 'puri\\ufb01ed' == 'purified'"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_r1b6_a_lifted_node_shows_its_supporting_claims_attributes",
+   "kind": "correction",
+   "finding": "code R1-B6: a lifted node kept the lead's gene / tissue / conditions / species_text",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert ('MpGH3A', 'f...a polymorpha') == ('GH3.10', 'w...sis thaliana')"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_r1n5b_non_supporting_rows_carry_each_claims_own_paper_and_state",
+   "kind": "correction",
+   "finding": "code R1-N5b: non-supporting rows joined every sibling's paper and took the current claim's species state",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert {'cl_MCP1_ev_...s_ambiguous')} == {'cl_MCP1_ev_...s_ambiguous')}"
+  },
+  {
+   "node": "tests/test_mining_species_repair2.py::test_repair2_745b_r1n1_a_later_batch_of_the_same_paper_never_leaves_a_stale_admission",
+   "kind": "correction",
+   "finding": "code R1-N1: a later batch of the same paper left an admitted node behind a candidate latest decision (summary / report disagreed)",
+   "fails_at_fd53a301": true,
+   "failure_at_fd53a301": "AssertionError: assert True is False"
+  }
+ ],
+ "deliberately_moved_existing_tests": [
+  {
+   "test": "tests/test_mining_species_repair1.py::test_new_acceptance_745b_r1_b2_controls_keep_their_credit",
+   "now": "tests/test_mining_species_repair1.py::test_new_acceptance_745b_r1_b2_controls_loss_of_function_keeps_its_credit",
+   "delta": "renamed; the old P7 sentence \"We report that in Arabidopsis thaliana leaves allene oxide cyclase, not allene oxide synthase, converts 13-HPOT to 12-OPDA.\" moves from (target_species_supported, in_planta) to species_ambiguous; a new P7 sentence \"We report that in Arabidopsis thaliana allene oxide cyclase knockout lines, 12-OPDA was undetectable in wounded leaves.\" asserts (target_species_supported, in_planta); the T1 and \"No JA-Ile was detected\" assertions are unchanged",
+   "why": "rule 5(a) removed"
+  },
+  {
+   "test": "tests/test_mining_species_repair1.py::test_new_acceptance_745b_r1_b9_controls",
+   "delta": "the body-section control sentence \"In Arabidopsis thaliana leaves, 13-HPOT is converted to 12-OPDA.\" (enzyme \"\") becomes \"In Arabidopsis thaliana aos knockout lines, 12-OPDA was undetectable in wounded leaves.\" (gene AOS); the assertion (target_species_supported) is unchanged",
+   "why": "rule 5(a) removed; the control still proves a body section keeps credit"
+  },
+  {
+   "test": "tests/test_mining_species_repair1.py::test_repair1_745b_n1_a_colon_inside_a_name_does_not_split_the_clause",
+   "delta": "row r4-converted-to-OPC-8:0 (\"In Arabidopsis leaves, OPDA is converted to OPC-8:0 by OPR3.\", expected target_species_supported) removed; ids now [r1-opr3-knockout, r3-fad5-16:1n9]; r4 is now tests/test_mining_species_repair2.py::test_repair2_745b_5a_removed_a_stated_conversion_no_longer_earns_credit[n1-r4] asserting species_ambiguous",
+   "why": "rule 5(a) removed; the brief: \"r4 (a 5(a) sentence) now correctly gets none\""
+  },
+  {
+   "test": "tests/test_mining_species_repair1.py::test_new_acceptance_745b_r1_a1r1_an_unknown_grade_without_a_failed_lookup_keeps_primary_credit",
+   "delta": "parameter rows: \"In Arabidopsis leaves, 13-HPOT is converted to 12-OPDA by AOS.\" -> \"In Arabidopsis aos knockout lines, 12-OPDA was undetectable in wounded leaves.\"; \"In Arabidopsis leaves, OPDA is converted to OPC-8:0 by OPR3.\" -> \"In the opr3 knockout line, OPC-8:0 was undetectable in leaves.\"; ids and assertions (in_planta, single_paper) unchanged",
+   "why": "rule 5(a) removed; the control still proves an unknown-but-verified paper keeps primary credit"
+  },
+  {
+   "test": "tests/test_mining_citation_recovery.py (SHOWN ev_one)",
+   "delta": "ev_one text \"In Arabidopsis   thaliana leaves, LOX2 (At3g45140) converts alpha-linolenic acid to 13-HPOT.\" -> \"In Arabidopsis   thaliana lox2 (At3g45140) knockout lines, 13-HPOT formed from alpha-linolenic acid was undetectable.\"; every assertion unchanged",
+   "why": "the fixture span must still earn in_planta for the citation-recovery tests that need an admitted claim"
+  },
+  {
+   "test": "tests/test_mining_extraction.py (ev_one)",
+   "delta": "ev_one text \"LOX2 converts alpha-linolenic acid to 13-HPOT in Arabidopsis thaliana leaves.\" -> \"In Arabidopsis thaliana lox2 knockout lines, 13-HPOT formed from alpha-linolenic acid was undetectable in wounded leaves.\"; every assertion unchanged",
+   "why": "as above"
+  },
+  {
+   "test": "tests/helpers_mining.py (integration corpus)",
+   "delta": "P1, P2, P3, P4, P7, P8 abstracts and full texts rewritten from stated conversions to loss-of-function results (lox2 / allene oxide synthase / cyp94b3 / opr3 + jar1 / allene oxide cyclase / lox2 knockout lines, product undetectable in wounded leaves); scripted claims for P4 (12-OPDA -> jasmonic acid) gain enzyme OPR3 and for P8 (alpha-linolenic acid -> 13-HPOT) enzyme LOX2; integration test assertions unchanged",
+   "why": "rule 5(a) removed; the corpus keeps the same eight behaviours"
+  },
+  {
+   "test": "tests/test_mining_species_reading.py::_replay (harness)",
+   "delta": "registers every call of a paper before judging, as the controller now does (R1-N1), and counts a claim admitted only without claim_verdict in decision.detail (R1-N5a); the replay still admits exactly #3, #14, #34; TABLE_DELTAS unchanged",
+   "why": "R1-N1, R1-N5a"
+  }
+ ]
+}

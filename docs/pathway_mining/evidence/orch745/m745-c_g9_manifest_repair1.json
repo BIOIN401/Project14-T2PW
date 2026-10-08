@@ -1,0 +1,48 @@
+{
+  "round": "ORCH-745 CS-C repair round 1",
+  "first_tip": "d01e0825",
+  "base": "f9556288",
+  "repair1_nodes": [
+    {
+      "node": "tests/test_mining_run_control.py::test_repair1_745c_f3order_an_under_cap_frontier_keeps_the_priority_order",
+      "defect": "F3-ORDER (blocking): reserved species items forced into every fourth place and the end, behind lower-priority items",
+      "fails_at_d01e0825": true,
+      "expected_d01e0825_failure": "merge_frontier(cap=60) orders kinds downstream, downstream, branch_reaction, missing_species_evidence, enzyme_reactions, cofactor_investigation, missing_species_evidence; the assertion expects the priority order (both species items right after the downstream items)",
+      "fails_at_f9556288": false,
+      "note_f9556288": "passes: base sorts by priority, which is the order required (a preservation proof)",
+      "fixtures": []
+    },
+    {
+      "node": "tests/test_mining_run_control.py::test_new_acceptance_745c_f3order_a_reserved_item_takes_the_earlier_place",
+      "defect": "F3-ORDER: the earlier of priority place and every fourth place, over the cap",
+      "fails_at_d01e0825": true,
+      "expected_d01e0825_failure": "kept == [fr_00, fr_01, fr_02, fr_09, fr_03, fr_04, fr_05, fr_08] (fr_08 appended at the end behind branch fr_05); expected [..., fr_04, fr_08, fr_05]",
+      "fails_at_f9556288": true,
+      "note_f9556288": "ImportError (cap_frontier is new): labelled new acceptance, not a G9 proof",
+      "fixtures": []
+    },
+    {
+      "node": "tests/test_mining_run_control.py::test_repair1_745c_b2record_a_failed_re_ask_leaves_the_record_describing_the_kept_answer",
+      "defect": "B2-RECORD: after a failed re-ask the record carried the re-ask's parse/schema error and provider",
+      "fails_at_d01e0825": true,
+      "expected_d01e0825_failure": "(status, parse_error, schema_error) == ('ok', <the re-ask's JSON parse error>, '') instead of ('ok', '', ''); provider would be 'RouteB'",
+      "fails_at_f9556288": true,
+      "note_f9556288": "behavioural: no re-ask at base, so `assert len(calls) == 2` fails with 1",
+      "fixtures": [
+        "tests/fixtures/mining/pilot003_thin_answers.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_run_control.py::test_new_acceptance_745c_b2scope_answer_check_is_per_call",
+      "defect": "B2-SCOPE: call_json(answer_check=...) for payloads of another shape",
+      "fails_at_d01e0825": true,
+      "expected_d01e0825_failure": "TypeError: unexpected keyword argument 'answer_check' (new parameter; labelled new acceptance)",
+      "fails_at_f9556288": true,
+      "note_f9556288": "same TypeError; new capability, not a G9 proof",
+      "fixtures": [
+        "tests/fixtures/mining/pilot003_thin_answers.json"
+      ]
+    }
+  ],
+  "unchanged_nodes": "All 12 nodes of g9_manifest.json still pass at the new tip and none of them was edited; this round changed only the module docstring, one section comment and the docstring of test_new_acceptance_745c_f3_cap_frontier_orders_the_reserve_by_relevance (assertions unchanged)."
+}

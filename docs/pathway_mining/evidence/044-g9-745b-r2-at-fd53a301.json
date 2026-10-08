@@ -1,0 +1,118 @@
+{
+  "label": "g9-745b-r2-at-fd53a301",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/044-g9-745b-r2-at-fd53a301.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=line",
+    "--basetemp=C:/t/bt/orch745/g9/044/bt",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_5a_removed_a_stated_conversion_no_longer_earns_credit",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_a_cited_statement_earns_no_credit",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_a_hedged_statement_earns_no_credit",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_a_host_comparison_or_foreign_gene_earns_no_credit",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_a_negated_statement_earns_no_credit",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_a_no_effect_loss_of_function_earns_no_credit",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_an_applied_compound_earns_no_credit",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_cell_free_or_protein_evidence_earns_no_credit",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_n1_ligatures_and_prefixed_alleles_are_normalised",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_r1b6_a_lifted_node_shows_its_supporting_claims_attributes",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_r1n1_a_later_batch_of_the_same_paper_never_leaves_a_stale_admission",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_r1n5b_non_supporting_rows_carry_each_claims_own_paper_and_state",
+    "tests/test_mining_species_repair2.py::test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-10-07T23:40:19+00:00",
+  "finished_at": "2026-10-07T23:40:24+00:00",
+  "duration_seconds": 4.115681600058451,
+  "timeout_seconds": 300.0,
+  "root_pid": 772296,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 772300,
+      "name": "python.exe",
+      "ppid": 772296
+    },
+    {
+      "pid": 772288,
+      "name": "git.exe",
+      "ppid": 772300
+    },
+    {
+      "pid": 772508,
+      "name": "git.exe",
+      "ppid": 772300
+    },
+    {
+      "pid": 642832,
+      "name": "git.exe",
+      "ppid": 772300
+    },
+    {
+      "pid": 772380,
+      "name": "git.exe",
+      "ppid": 772300
+    }
+  ],
+  "descendants_terminated": [
+    642832,
+    772288,
+    772300,
+    772380,
+    772508
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 654436,
+      "name": "python.exe"
+    },
+    {
+      "pid": 654824,
+      "name": "python.exe"
+    },
+    {
+      "pid": 770512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 773108,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/044-g9-745b-r2-at-fd53a301.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "fd53a3017a001b8d7dbd9043eccba8a039c9c2bf",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

@@ -1,0 +1,118 @@
+{
+  "label": "g9-745c",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/036-g9-745c.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/orch745/g9/036/bt",
+    "tests/test_mining_run_control.py::test_g9_745c_b1_quarantined_candidates_do_not_stop_the_run",
+    "tests/test_mining_run_control.py::test_g9_745c_b1_the_fixture_round_counts_its_admitted_reactions_only",
+    "tests/test_mining_run_control.py::test_g9_745c_a5_a_spent_discovery_budget_starts_no_further_round",
+    "tests/test_mining_run_control.py::test_g9_745c_a5_check_before_round_stops_on_the_discovery_budget",
+    "tests/test_mining_run_control.py::test_g9_745c_a5_a_stop_recorded_mid_round_forbids_the_next_round",
+    "tests/test_mining_run_control.py::test_g9_745c_f3_the_cap_keeps_a_quarter_of_its_slots_for_species_items",
+    "tests/test_mining_run_control.py::test_g9_745c_f3_the_cut_is_recorded_in_the_round_artifacts",
+    "tests/test_mining_run_control.py::test_g9_745c_b2_a_thin_answer_is_re_asked_and_the_cited_answer_is_used",
+    "tests/test_mining_run_control.py::test_g9_745c_b2_a_thin_answer_twice_is_kept_and_marked",
+    "tests/test_mining_run_control.py::test_g9_745c_b2_the_provider_is_recorded_or_said_to_be_unreported",
+    "tests/test_mining_run_control.py::test_g9_745c_f9_preflight_loads_dotenv_before_it_reads_the_environment",
+    "tests/test_mining_run_control.py::test_g9_745c_f9_run_and_resume_load_dotenv_before_their_configuration"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-10-07T05:27:32+00:00",
+  "finished_at": "2026-10-07T05:27:36+00:00",
+  "duration_seconds": 3.2861059999559075,
+  "timeout_seconds": 300.0,
+  "root_pid": 273080,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 273096,
+      "name": "python.exe",
+      "ppid": 273080
+    },
+    {
+      "pid": 273048,
+      "name": "git.exe",
+      "ppid": 273096
+    },
+    {
+      "pid": 272552,
+      "name": "git.exe",
+      "ppid": 273096
+    },
+    {
+      "pid": 272608,
+      "name": "git.exe",
+      "ppid": 273096
+    }
+  ],
+  "descendants_terminated": [
+    272552,
+    272608,
+    273048,
+    273096
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 138916,
+      "name": "python.exe"
+    },
+    {
+      "pid": 209432,
+      "name": "python.exe"
+    },
+    {
+      "pid": 216864,
+      "name": "python.exe"
+    },
+    {
+      "pid": 235772,
+      "name": "python.exe"
+    },
+    {
+      "pid": 272424,
+      "name": "python.exe"
+    },
+    {
+      "pid": 272544,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/036-g9-745c.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "f9556288065e630260a9ff1106d0266787d04b9c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

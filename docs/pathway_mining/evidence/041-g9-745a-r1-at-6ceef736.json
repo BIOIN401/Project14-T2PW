@@ -1,0 +1,120 @@
+{
+  "label": "g9-745a-r1-at-6ceef736",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/041-g9-745a-r1-at-6ceef736.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=line",
+    "--basetemp=C:/t/bt/orch745/g9/041/bt",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a1_a_review_named_only_in_its_subject_heading_is_a_review",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a1_a_journal_article_record_with_a_failed_lookup_is_not_primary",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a1_a_failed_lookup_is_asked_once_more",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a2_a_reference_list_with_no_heading_never_becomes_a_span",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a2_a_mentioned_table_does_not_end_a_reference_list",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a7_a_fig_label_after_a_reference_list_is_a_legend",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a4_the_pmc_copy_first_then_its_pmid_record_is_one_paper",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a4_a_resumed_run_remembers_an_included_papers_pmcid",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a5_an_abstractless_paper_keeps_its_front_matter_abstract",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_r4_the_europepmc_abstract_is_stored_as_plain_text",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a6_the_admitted_reactions_table_shows_the_evidence_level",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_r1_more_ways_a_review_says_it_is_one",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_r5_reviewed_and_peer_review_are_not_review_types"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-10-07T20:00:07+00:00",
+  "finished_at": "2026-10-07T20:00:11+00:00",
+  "duration_seconds": 3.5635630999458954,
+  "timeout_seconds": 300.0,
+  "root_pid": 592176,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 591012,
+      "name": "python.exe",
+      "ppid": 592176
+    },
+    {
+      "pid": 592448,
+      "name": "git.exe",
+      "ppid": 591012
+    },
+    {
+      "pid": 533704,
+      "name": "git.exe",
+      "ppid": 591012
+    },
+    {
+      "pid": 592164,
+      "name": "git.exe",
+      "ppid": 591012
+    }
+  ],
+  "descendants_terminated": [
+    533704,
+    591012,
+    592164,
+    592448
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 531780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 538868,
+      "name": "python.exe"
+    },
+    {
+      "pid": 539732,
+      "name": "python.exe"
+    },
+    {
+      "pid": 542592,
+      "name": "python.exe"
+    },
+    {
+      "pid": 591892,
+      "name": "python.exe"
+    },
+    {
+      "pid": 591920,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/041-g9-745a-r1-at-6ceef736.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "6ceef73690be7630d62d6753afc1200f403b078a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

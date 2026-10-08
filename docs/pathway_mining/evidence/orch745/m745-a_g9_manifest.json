@@ -1,0 +1,337 @@
+{
+  "change_set": "ORCH-745 CS-A (evidence hygiene)",
+  "branch": "orch745/a-evidence-hygiene",
+  "base_sha": "f9556288",
+  "test_file": "tests/test_mining_evidence_hygiene.py",
+  "note": "The test module reads tests/fixtures/mining/orch745a_pilot_texts.json (new) and tests/fixtures/mining/pubmed_pmid34638573.xml (already at base) at import, and imports only symbols that exist at f9556288 at module level; tests/helpers_mining.py is unchanged. Base values below were observed by calling each test body against `git archive f9556288 src` in C:/t/bt/m745-a/base_tree1 (a sanity check, not the base arm).",
+  "nodes": [
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_the_bryophyte_review_is_a_review_once_its_full_text_is_read",
+      "defect": "F-2",
+      "expected_base_failure": "assert record.evidence_type == 'review' fails: Acquirer.acquire (OfflinePaperSource, pilot-003 PMC13364333 with its full text) grades it 'unknown'",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_an_explicit_pmcid_review_is_graded_on_its_full_text",
+      "defect": "F-2",
+      "expected_base_failure": "assert loaded[0].record.evidence_type == 'review' fails: Acquirer.load_explicit('PMC13364333') grades it 'unknown'",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_an_uploaded_review_is_graded_on_its_text",
+      "defect": "F-2",
+      "expected_base_failure": "assert loaded.record.evidence_type == 'review' fails: record_from_upload grades from the title only, 'unknown'",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_an_ncbi_publication_type_review_gives_a_review_record",
+      "defect": "F-2",
+      "expected_base_failure": "assert record.evidence_type == 'review' fails: PaperSource._ncbi drops <PublicationType>Review</PublicationType>; record_from_candidate gives 'unknown' (paper_id PMC:PMC13364333)",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_pilot001_reviews_the_old_markers_missed",
+      "defect": "F-2",
+      "expected_base_failure": "set equality fails: classify_evidence_type grades only {'PMC:PMC13490264'} a review; PMC12865809 and PMC13493544 (bio-audit 'general oxylipin review') are 'unknown'",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/pilot001_screened_papers.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_citing_someone_elses_review_is_not_being_one",
+      "defect": "F-2",
+      "expected_base_failure": "all 5 parametrized cases fail: classify_evidence_type(abstract=...) returns 'review' for 'as reviewed in [3]', 'for a review, see', '(reviewed by ...)', 'recently reviewed', 'extensively reviewed elsewhere'",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_a_reaction_only_a_review_supports_is_review_article_only",
+      "defect": "F-2",
+      "expected_base_failure": "set equality fails: MiningController run on the bryophyte review gives decision evidence_level {'single_paper'}, not {'review_article_only'}",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_f4_pilot003_bibliography_front_matter_and_disclaimers_never_become_spans",
+      "defect": "F-4",
+      "expected_base_failure": "assert [...] == [] fails: PassageIndex.add_paper/retrieve on pilot-003's four papers yields all 12 listed ids (7 GH3.10 reference-list chunks, 4 front-matter body#0 chunks, ev_8fb9b658835414af); base reproduces all 73 pilot-003 evidence ids",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_f4_front_matter_no_longer_takes_the_results_passage_slot",
+      "defect": "F-4",
+      "expected_base_failure": "assert any(text.startswith('RESULTS In Arabidopsis')) fails: with max_passages_per_paper 6 the cap keeps abstract, front matter, introduction and three methods chunks; the results passage is never indexed",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_a4_an_abstract_only_paper_is_one_span",
+      "defect": "A4",
+      "expected_base_failure": "list equality fails: retrieve returns ['ev_220364b31b76704e', 'ev_5015a845c75ff216'] (abstract#0 and body#0, pilot-002's own ids) instead of ['ev_220364b31b76704e']",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_a7_a_paper_whose_chunks_rank_low_still_gets_its_passages",
+      "defect": "A7",
+      "expected_base_failure": "assert len(spans) == min(2, chunk count) fails: spans_for_paper('PMC:PMC5104190', top_k=2) returns 0 passages (the paper has 2 chunks at base) beside pilot-003's four indexed papers",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_it2n3_a_failed_pmcid_lookup_is_asked_again",
+      "defect": "IT2-N3",
+      "expected_base_failure": "assert second[0].id == 'PMC8508710' fails: the second PaperSource.search returns '34638573' because the first, failed EuropePMC lookup was cached as no PMCID",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    }
+  ],
+  "repair1_note": "Repair round 1 nodes are run at 6ceef736: copy in the tip tests/test_mining_evidence_hygiene.py (every symbol it imports at module level exists at 6ceef736) and the three fixtures listed (the module reads all three at import). tests/helpers_mining.py is unchanged. Base values were observed by calling each test body against `git archive 6ceef736 src` in C:/t/bt/m745-a/base_tree2 (a sanity check, not the base arm). Several also fail at f9556288, but 6ceef736 is the base they correct.",
+  "repair1_nodes": [
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a1_a_review_named_only_in_its_subject_heading_is_a_review",
+      "defect": "A1",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "both cases (PMC12180156, PMC12444477): Acquirer.acquire on a bare EuropePMC candidate grades evidence_type 'unknown', not 'review'",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a1_a_journal_article_record_with_a_failed_lookup_is_not_primary",
+      "defect": "A1",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "record.evidence_type == 'review' fails: the JBC review as an NCBI record listing only 'Journal Article', all lookups failing, is graded 'primary' (basis \"declared article type 'Journal Article'\")",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a1_a_failed_lookup_is_asked_once_more",
+      "defect": "A1",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "asked == [two PMCID:PMC12096059 queries] fails: 6ceef736 asks once; article_type stays '' and doi ''",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a2_a_reference_list_with_no_heading_never_becomes_a_span",
+      "defect": "A2",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "a kept span contains '10.3390/microorganisms8111716' (also 'Tambadou'/'PMC7692639' and the ACS 'production-flag-' block): PMC12624714 has no reference_list region at 6ceef736",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a2_a_mentioned_table_does_not_end_a_reference_list",
+      "defect": "R745A-6",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "the pepper paper's reference_list region ends at '(Supplemental Table S3) ,' (offset 57877 of 88532) instead of at the end of the text",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a7_a_fig_label_after_a_reference_list_is_a_legend",
+      "defect": "A7",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "with 'FIG. 1' (and 'Fig 1') as PMC8508710's first legend label, the reference_list region runs to the end of the text instead of ending at that label",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a4_the_pmc_copy_first_then_its_pmid_record_is_one_paper",
+      "defect": "A4 / R745A-2",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "both cases: two papers included, ['PMC:PMC8508710', 'PMID:34638573']",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a4_a_resumed_run_remembers_an_included_papers_pmcid",
+      "defect": "A4 / R745A-2",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "'PMC:PMC8508710' not in resumed.acquirer.seen_paper_ids: resume restores only paper ids",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a5_an_abstractless_paper_keeps_its_front_matter_abstract",
+      "defect": "A5",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "no span contains 'wounded leaves of gh3.10 jar1 knockout lines': the explicit PMC12096059 has no abstract and its front matter is stripped",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_r4_the_europepmc_abstract_is_stored_as_plain_text",
+      "defect": "R745A-4",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "record.abstract keeps '<h4>Main conclusion</h4>...<i>metabolism</i>...'",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a6_the_admitted_reactions_table_shows_the_evidence_level",
+      "defect": "A6",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "report.md has no '| reaction | status | evidence level | ...' header",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_r1_more_ways_a_review_says_it_is_one",
+      "defect": "R745A-1",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "all 6 cases: classify_evidence_type returns 'unknown' for the phrase (in full_text and in abstract)",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_r5_reviewed_and_peer_review_are_not_review_types",
+      "defect": "R745A-5",
+      "fails_at": "6ceef736",
+      "expected_base_failure": "both cases: classify_evidence_type returns 'review' for 'reviewed-preprint' and for 'Peer Review; research-article'",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    }
+  ],
+  "repair1_changed_existing_tests": [
+    {
+      "node": "tests/test_mining_starting_inputs.py::test_evidence_type_is_labelled_where_determinable_and_honest_otherwise",
+      "change": "the case {'article_type': 'journal article'} -> 'primary' now expects 'unknown' (A1); a new case {'article_type': 'research-article'} -> 'primary'. Deliberate pinned-behaviour change."
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_new_acceptance_745a_f2_one_metadata_lookup_per_included_paper",
+      "change": "the fake EuropePMC now serves the live core records (LIVE_EPMC); the old fake gave two papers the same DOI, which the A4 same-article check reads as one article."
+    }
+  ],
+  "repair2_note": "Repair round 2 nodes are run at 92ab5be9: copy in the tip tests/test_mining_evidence_hygiene.py (every symbol it imports at module level exists at 92ab5be9) and the four fixtures listed (the module reads all of them at import). Base values were observed by calling each test body against `git archive 92ab5be9 src` in C:/t/bt/m745-a/base_tree3 (a sanity check, not the base arm).",
+  "repair2_nodes": [
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r2_b1_a_table_references_column_does_not_swallow_the_body",
+      "defect": "B1",
+      "fails_at": "92ab5be9",
+      "expected_base_failure": "both cases: the body probe is not retrievable -- PMC8510960 'expression of both upstream ( TDC and STR ) ...', PMC12925505 '4-hydroxybenzoate production increased up to 4.35' (the false list runs past the table's mention to the end of the excerpt)",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/orch745a_repair2_excerpts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r2_b1_a_legend_after_a_headingless_list_is_retrievable",
+      "defect": "B1",
+      "fails_at": "92ab5be9",
+      "expected_base_failure": "all 5 cases ('(A)', '| Galleria', 'clcB', '13-LOX', 'ΔclcB'): the appended legend sentence is not retrievable (no label-form match, so PMC12624714's headingless list runs over it)",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/orch745a_repair2_excerpts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r2_b2_a_comparison_in_an_abstract_is_kept_verbatim",
+      "defect": "B2",
+      "fails_at": "92ab5be9",
+      "expected_base_failure": "record.abstract is 'Main conclusion JA-Ile was reduced (P 2-fold in jar1 flowers.'",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/orch745a_repair2_excerpts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r2_n2_more_review_subject_headings",
+      "defect": "N2",
+      "fails_at": "92ab5be9",
+      "expected_base_failure": "all 3 cases ('Review Essay Review Essay', 'REVIEW ARTICLE', 'Minireviews'): evidence_type 'unknown'",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/orch745a_repair2_excerpts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    },
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r2_n4_a_short_front_matter_passage_is_not_an_abstract",
+      "defect": "N4",
+      "fails_at": "92ab5be9",
+      "expected_base_failure": "front_matter_abstract returns the 117-character supplementary-material note instead of ''",
+      "fixtures": [
+        "tests/fixtures/mining/orch745a_pilot_texts.json",
+        "tests/fixtures/mining/orch745a_repair1_texts.json",
+        "tests/fixtures/mining/orch745a_repair2_excerpts.json",
+        "tests/fixtures/mining/pubmed_pmid34638573.xml"
+      ]
+    }
+  ],
+  "repair2_acceptance_nodes": [
+    "tests/test_mining_evidence_hygiene.py::test_new_acceptance_745a_r2_a_mention_still_ends_a_reference_list (also fails at 92ab5be9: the pepper list runs to the end there)",
+    "tests/test_mining_evidence_hygiene.py::test_new_acceptance_745a_r2_n1_an_explicit_pmcid_then_its_pmid_is_one_paper (passes at 92ab5be9: N1 asked for a test of existing behaviour)",
+    "tests/test_mining_evidence_hygiene.py::test_new_acceptance_745a_r2_b1_a_headingless_list_after_a_short_false_one_is_still_found (passes at 92ab5be9, whose list ran to the end; guards the B1 revert: without the restart loop 'De Vreese R.' and '10.1016/j.ejmech.2017.04.013' leak)"
+  ],
+  "repair2_removed_tests": [
+    {
+      "node": "tests/test_mining_evidence_hygiene.py::test_g9_745a_r1_a2_a_mentioned_table_does_not_end_a_reference_list",
+      "why": "pinned repair 1's label-only reference-list end (R745A-6), which repair 2 reverts by decision; replaced by test_new_acceptance_745a_r2_a_mention_still_ends_a_reference_list. Drop it from repair1_nodes."
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "label": "g9-745c-r1-at-d01e0825",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/039-g9-745c-r1-at-d01e0825.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=line",
+    "--basetemp=C:/t/bt/orch745/g9/039/bt",
+    "tests/test_mining_run_control.py::test_repair1_745c_f3order_an_under_cap_frontier_keeps_the_priority_order",
+    "tests/test_mining_run_control.py::test_repair1_745c_b2record_a_failed_re_ask_leaves_the_record_describing_the_kept_answer"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-10-07T19:49:09+00:00",
+  "finished_at": "2026-10-07T19:49:10+00:00",
+  "duration_seconds": 1.1224091000622138,
+  "timeout_seconds": 300.0,
+  "root_pid": 574408,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 574416,
+      "name": "python.exe",
+      "ppid": 574408
+    }
+  ],
+  "descendants_terminated": [
+    574416
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 531780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 538868,
+      "name": "python.exe"
+    },
+    {
+      "pid": 539732,
+      "name": "python.exe"
+    },
+    {
+      "pid": 542592,
+      "name": "python.exe"
+    },
+    {
+      "pid": 573884,
+      "name": "python.exe"
+    },
+    {
+      "pid": 573892,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/039-g9-745c-r1-at-d01e0825.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "d01e0825804cea441035c2d2625dba4ecf5709d0",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

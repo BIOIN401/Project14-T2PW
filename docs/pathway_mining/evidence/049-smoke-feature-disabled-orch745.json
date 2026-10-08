@@ -1,0 +1,159 @@
+{
+  "label": "049-smoke-feature-disabled-orch745",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/049-smoke-feature-disabled-orch745.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/orch745/g049/bt",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\mining",
+  "started_at": "2026-10-08T03:49:20+00:00",
+  "finished_at": "2026-10-08T03:50:28+00:00",
+  "duration_seconds": 67.27746289991774,
+  "timeout_seconds": 540.0,
+  "root_pid": 1008992,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1009008,
+      "name": "python.exe",
+      "ppid": 1008992
+    },
+    {
+      "pid": 1007432,
+      "name": "python.exe",
+      "ppid": 1009184
+    },
+    {
+      "pid": 1009184,
+      "name": "python.exe",
+      "ppid": 1009008
+    },
+    {
+      "pid": 1009268,
+      "name": "python.exe",
+      "ppid": 1009296
+    },
+    {
+      "pid": 1009296,
+      "name": "python.exe",
+      "ppid": 1009008
+    },
+    {
+      "pid": 1009360,
+      "name": "python.exe",
+      "ppid": 1009392
+    },
+    {
+      "pid": 1009392,
+      "name": "python.exe",
+      "ppid": 1009008
+    },
+    {
+      "pid": 1010276,
+      "name": "git.exe",
+      "ppid": 1009008
+    },
+    {
+      "pid": 1010516,
+      "name": "git.exe",
+      "ppid": 1009008
+    }
+  ],
+  "descendants_terminated": [
+    1007432,
+    1009008,
+    1009184,
+    1009268,
+    1009296,
+    1009360,
+    1009392,
+    1010276,
+    1010516
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 965308,
+      "name": "python.exe"
+    },
+    {
+      "pid": 965520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1007364,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1008644,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/049-smoke-feature-disabled-orch745.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining",
+    "repo_head": "3ce64f28a08496753e0dc58651ea98f8222b8a05",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-745",
+    "token": "ORCH-745:1008644:ec93493632867798",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

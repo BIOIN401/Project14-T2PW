@@ -1,0 +1,58 @@
+[
+  {
+    "node": "tests/test_mining_species_reading.py::test_g9_745b_f5_uncited_participants_absent_from_the_cited_spans_are_not_kept",
+    "defect": "F-5 (IT2-N1): uncited participants absent from the claim's cited spans are kept",
+    "expected_base_failure": "line 138 `assert claim.substrates == [] and claim.products == []`: at f9556288 pilot-003 #24 (call 0003) keeps substrates [ReactionParticipant(name='α-linolenic acid (LeA)', stoichiometry='has_stoichiometry', evidence_ids=[])] (and two products); the claim would be judged candidate, not incomplete",
+    "fails_at_11032e8d": true,
+    "fixtures": ["tests/fixtures/mining/orch745a_pilot_texts.json", "tests/fixtures/mining/orch745b_pilot_payloads.json"]
+  },
+  {
+    "node": "tests/test_mining_species_reading.py::test_g9_745b_f5_a_placeholder_echo_is_never_stored_as_a_value",
+    "defect": "F-5 (IT2-N1): placeholder echoes stored as values",
+    "expected_base_failure": "line 150 `assert [p.stoichiometry ...] == ['', '']`: at f9556288 call 0014's two products keep stoichiometry 'products_evidence_ids_placeholder'",
+    "fails_at_11032e8d": true,
+    "fixtures": ["tests/fixtures/mining/orch745a_pilot_texts.json", "tests/fixtures/mining/orch745b_pilot_payloads.json"]
+  },
+  {
+    "node": "tests/test_mining_species_reading.py::test_g9_745b_f5_an_uncited_tissue_is_dropped",
+    "defect": "F-5 (IT2-N1): tissue is never gated",
+    "expected_base_failure": "line 166 `assert claims[0].tissue == ''`: at f9556288 pilot-003 #11 (call 0002) keeps tissue 'leaf, root, inflorescence, wounded leaf'",
+    "fails_at_11032e8d": true,
+    "fixtures": ["tests/fixtures/mining/orch745a_pilot_texts.json", "tests/fixtures/mining/orch745b_pilot_payloads.json"]
+  },
+  {
+    "node": "tests/test_mining_species_reading.py::test_g9_745b_f1_t1_gh3_10_jasmonic_acid_to_ja_ile_is_admitted_on_its_knockout_evidence",
+    "defect": "F-1 T1: whole-span species markers; GH3.10 JA -> JA-Ile held back as in vitro",
+    "expected_base_failure": "line 238 `assert claim.species_state == TSS`: at f9556288 build_claims returns 'in_vitro_or_cell_free' for pilot-003 #14 (call 0009 row 0; 'in vitro' in ev_7d27 [5])",
+    "fails_at_11032e8d": true,
+    "fixtures": ["tests/fixtures/mining/orch745a_pilot_texts.json", "tests/fixtures/mining/orch745b_pilot_payloads.json"]
+  },
+  {
+    "node": "tests/test_mining_species_reading.py::test_g9_745b_f1_t2_t3_opr3_steps_of_the_bryophyte_review_are_review_grade",
+    "defect": "F-1 T2/T3: the bryophyte review's OPR3 steps stored inferred_only (whole-span 'ortholog'); a review must be read by the review rule",
+    "expected_base_failure": "line 278 `assert claim.species_state == TSS` (first claim, cl_0bc93d248b7f31db, #34): through MiningController at f9556288 the stored state is 'inferred_only' ('orthologs' / 'orthologous' elsewhere in ev_c98d); at 11032e8d the paper is graded review by change set A but the species path is unchanged: 'inferred_only'",
+    "fails_at_11032e8d": true,
+    "fixtures": ["tests/fixtures/mining/orch745a_pilot_texts.json", "tests/fixtures/mining/orch745b_pilot_payloads.json"]
+  },
+  {
+    "node": "tests/test_mining_species_reading.py::test_g9_745b_b3_the_papers_screen_organisms_are_never_the_claims_species",
+    "defect": "B3: paper-level screen organisms used as the claim's species",
+    "expected_base_failure": "line 477 `assert claim.species_state == IVO`: at f9556288 pilot-003 #25 (call 0001, no species given) is 'multiple_species' (the paper's observed organisms Arabidopsis thaliana + Homo sapiens fed in as the claim's species)",
+    "fails_at_11032e8d": true,
+    "fixtures": ["tests/fixtures/mining/orch745a_pilot_texts.json", "tests/fixtures/mining/orch745b_pilot_payloads.json"]
+  },
+  {
+    "node": "tests/test_mining_species_reading.py::test_g9_745b_f6_a_same_paper_merge_does_not_depend_on_batch_order",
+    "defect": "F-6 (IT2-N2): same-paper merge is last-writer-wins",
+    "expected_base_failure": "line 574 `assert results[('A','B')] == results[('B','A')]`: at f9556288 A then B gives ('in_vitro_or_cell_free', 'candidate'), B then A ('target_species_supported', 'accepted')",
+    "fails_at_11032e8d": true,
+    "fixtures": ["tests/fixtures/mining/orch745a_pilot_texts.json", "tests/fixtures/mining/orch745b_pilot_payloads.json"]
+  },
+  {
+    "node": "tests/test_mining_species_reading.py::test_g9_745b_f6_a_merged_field_keeps_model_citation_if_either_batch_cited_it",
+    "defect": "F-6 (IT2 N3/N4): field_attribution merge keeps the first label while evidence ids are unioned",
+    "expected_base_failure": "line 592 `assert stored.field_attribution['gene'] == 'model_citation'`: at f9556288 registering the verbatim-recovered gene first keeps 'verbatim_cited_span'",
+    "fails_at_11032e8d": true,
+    "fixtures": ["tests/fixtures/mining/orch745a_pilot_texts.json", "tests/fixtures/mining/orch745b_pilot_payloads.json"]
+  }
+]

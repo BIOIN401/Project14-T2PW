@@ -1,0 +1,467 @@
+{
+ "base_sha": "fd7c737c",
+ "base_tree": "C:/t/bt/m745-b/basearm6 (git archive fd7c737c src tests docs/pwml_recovery_sprint/evidence pyproject.toml) + tests/test_mining_species_cs_d.py copied in",
+ "base_run": "C:/t/bt/m745-b/runs/csd-g9-fd7c737c/out.txt",
+ "base_result": "51 failed, 23 passed: every test_cs_d_745_* row failed (AssertionError), every test_new_acceptance_cs_d_745_* control passed; FINAL SURVIVING COUNT 0",
+ "second_base": {
+  "sha": "fd53a301",
+  "tree": "C:/t/bt/m745-b/basearm5",
+  "run": "C:/t/bt/m745-b/runs/csd-g9-fd53a301/out.txt",
+  "result": "46 failed, 28 passed",
+  "test_cs_d_rows_passing_there": [
+   "test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO1-N1]",
+   "test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO1-N3]",
+   "test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO1-N4]",
+   "test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO1-N5]",
+   "test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO1-N6]",
+   "test_cs_d_745_d1_negated_verb_absence_forms_earn_credit[BIO4-B1-did-not-accumulate]",
+   "test_cs_d_745_d1_negated_verb_absence_forms_earn_credit[BIO4-B2-failed-to-accumulate]",
+   "test_cs_d_745_d1_negated_verb_absence_forms_earn_credit[no-longer-detected]"
+  ]
+ },
+ "corrections": 48,
+ "recall_gains": 3,
+ "new_acceptance_controls": [
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[A10]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[A1]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[A2]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[A3]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[A4]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[A5]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[A6]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[A7]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[A8]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[A9]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[BIO2-P1-substrate-up]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[T1]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[bio-r-1]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[n1-r1]",
+  "test_new_acceptance_cs_d_745_loss_of_function_on_the_right_participant_keeps_credit[no-JA-Ile-was-detected]",
+  "test_new_acceptance_cs_d_745_vetoes_hold_on_the_loss_of_function_route[reduced-but-not-abolished]",
+  "test_new_acceptance_cs_d_745_vetoes_hold_on_the_loss_of_function_route[veto-application]",
+  "test_new_acceptance_cs_d_745_vetoes_hold_on_the_loss_of_function_route[veto-citation]",
+  "test_new_acceptance_cs_d_745_vetoes_hold_on_the_loss_of_function_route[veto-comparison]",
+  "test_new_acceptance_cs_d_745_vetoes_hold_on_the_loss_of_function_route[veto-hedge]",
+  "test_new_acceptance_cs_d_745_vetoes_hold_on_the_loss_of_function_route[veto-no-effect]",
+  "test_new_acceptance_cs_d_745_vetoes_hold_on_the_loss_of_function_route[veto-other-organism]",
+  "test_new_acceptance_cs_d_745_vetoes_hold_on_the_loss_of_function_route[veto-protein-mutant]"
+ ],
+ "nodes": [
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-JA-Gln-still-accumulated]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-JA-Gln-increased]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-jar1-still-accumulated]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-occurrence]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-normally]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-indistinguishable]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-higher-than-Col-0]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-lacking-the-gene]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-still-increased]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-wild-type-extent]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-similar-levels]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-deficient-in-the-enzyme]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-in-vitro-only-normally]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[B1-in-vitro-only-accumulated]",
+   "kind": "correction",
+   "finding": "code B-1: the effect was not tied to the participant or its direction (product still forms / rises, no-effect phrased with accumulated, lacking / deficient describing the genotype, an in-vitro-only claim outranked)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3B1-not-abolished]",
+   "kind": "correction",
+   "finding": "red team R3-B1: an absence form under a negation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3B1-not-abolished-ko]",
+   "kind": "correction",
+   "finding": "red team R3-B1: an absence form under a negation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3B1-not-absent]",
+   "kind": "correction",
+   "finding": "red team R3-B1: an absence form under a negation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3B1-not-eliminated]",
+   "kind": "correction",
+   "finding": "red team R3-B1: an absence form under a negation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3B1-not-depleted]",
+   "kind": "correction",
+   "finding": "red team R3-B1: an absence form under a negation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3B1-not-deficient]",
+   "kind": "correction",
+   "finding": "red team R3-B1: an absence form under a negation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3B1-never-abolished]",
+   "kind": "correction",
+   "finding": "red team R3-B1: an absence form under a negation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3B1-not-completely-abolished]",
+   "kind": "correction",
+   "finding": "red team R3-B1: an absence form under a negation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3N1-product-higher]",
+   "kind": "correction",
+   "finding": "red team R3-N1: direction-blind effect (a product rising in its own synthase knockout; an unrelated metabolite)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3N1-product-accumulated]",
+   "kind": "correction",
+   "finding": "red team R3-N1: direction-blind effect (a product rising in its own synthase knockout; an unrelated metabolite)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[R3N1-unrelated-metabolite]",
+   "kind": "correction",
+   "finding": "red team R3-N1: direction-blind effect (a product rising in its own synthase knockout; an unrelated metabolite)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO1-N1]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-1: repair 2 narrowed the adjudicated \"comparable to\" no-effect veto (a weakening); these rows PASS at fd53a301 (regression guard)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO1-N3]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-1: repair 2 narrowed the adjudicated \"comparable to\" no-effect veto (a weakening); these rows PASS at fd53a301 (regression guard)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO1-N4]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-1: repair 2 narrowed the adjudicated \"comparable to\" no-effect veto (a weakening); these rows PASS at fd53a301 (regression guard)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO1-N5]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-1: repair 2 narrowed the adjudicated \"comparable to\" no-effect veto (a weakening); these rows PASS at fd53a301 (regression guard)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO1-N6]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-1: repair 2 narrowed the adjudicated \"comparable to\" no-effect veto (a weakening); these rows PASS at fd53a301 (regression guard)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO2-P2-product-up]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-2: the contrary combinations (product up, substrate down) were credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO2-P3-product-elevated]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-2: the contrary combinations (product up, substrate down) were credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO2-P4-substrate-down]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-2: the contrary combinations (product up, substrate down) were credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_an_effect_on_the_wrong_participant_or_negated_earns_no_credit[BIO2-P5-no-wild-type]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-2: the contrary combinations (product up, substrate down) were credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_negated_verb_absence_forms_earn_credit[BIO4-B1-did-not-accumulate]",
+   "kind": "recall_gain",
+   "finding": "bio BIO-R2-4 / brief D1: negated-verb absence forms earned nothing (recall gain; bio-r-2 moved here)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert ('species_ambiguous', 'none') == ('target_spec..., 'in_planta')",
+   "passes_at_fd53a301": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_negated_verb_absence_forms_earn_credit[BIO4-B2-failed-to-accumulate]",
+   "kind": "recall_gain",
+   "finding": "bio BIO-R2-4 / brief D1: negated-verb absence forms earned nothing (recall gain; bio-r-2 moved here)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert ('species_ambiguous', 'none') == ('target_spec..., 'in_planta')",
+   "passes_at_fd53a301": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_negated_verb_absence_forms_earn_credit[no-longer-detected]",
+   "kind": "recall_gain",
+   "finding": "brief D1: \"no longer detected\" earned nothing (recall gain)",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert ('species_ambiguous', 'none') == ('target_spec..., 'in_planta')",
+   "passes_at_fd53a301": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d2_the_verbatim_arc_sentence_earns_no_credit",
+   "kind": "correction",
+   "finding": "red team R3-B2: the verbatim PMC13358708 arc / allene oxide cyclase sentence was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d2_a_participant_or_genotype_that_is_not_the_claims_own_earns_no_credit[R3B2-aoc-protein-own-mutant]",
+   "kind": "correction",
+   "finding": "red team R3-B2: a participant named only inside the enzyme name, an untied genotype, a protein / transcript measure",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d2_a_participant_or_genotype_that_is_not_the_claims_own_earns_no_credit[R3B2-aoc-protein-arc]",
+   "kind": "correction",
+   "finding": "red team R3-B2: a participant named only inside the enzyme name, an untied genotype, a protein / transcript measure",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d2_a_participant_or_genotype_that_is_not_the_claims_own_earns_no_credit[R3B2-opr3-protein]",
+   "kind": "correction",
+   "finding": "red team R3-B2: a participant named only inside the enzyme name, an untied genotype, a protein / transcript measure",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d2_a_participant_or_genotype_that_is_not_the_claims_own_earns_no_credit[R3B2-smt-transcript]",
+   "kind": "correction",
+   "finding": "red team R3-B2: a participant named only inside the enzyme name, an untied genotype, a protein / transcript measure",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d2_a_participant_or_genotype_that_is_not_the_claims_own_earns_no_credit[R3B2-other-gene-by-phrase]",
+   "kind": "correction",
+   "finding": "red team R3-B2: a participant named only inside the enzyme name, an untied genotype, a protein / transcript measure",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d2_a_participant_or_genotype_that_is_not_the_claims_own_earns_no_credit[R3B2-other-gene-still-expressed]",
+   "kind": "correction",
+   "finding": "red team R3-B2: a participant named only inside the enzyme name, an untied genotype, a protein / transcript measure",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d2_a_participant_or_genotype_that_is_not_the_claims_own_earns_no_credit[R3-other-gene-assay]",
+   "kind": "correction",
+   "finding": "red team p3lof D: another gene's mutant with the claim's enzyme named for another reason",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d3_a_loss_of_function_measured_in_an_extract_is_cell_free[B2-IV1-extracts-of-mutant]",
+   "kind": "correction",
+   "finding": "code B-2: a loss of function measured in an extract / crude enzyme preparation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d3_a_loss_of_function_measured_in_an_extract_is_cell_free[B2-IV2-crude-enzyme-extracts]",
+   "kind": "correction",
+   "finding": "code B-2: a loss of function measured in an extract / crude enzyme preparation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d3_a_loss_of_function_measured_in_an_extract_is_cell_free[B2-IV3-extracts-from]",
+   "kind": "correction",
+   "finding": "code B-2: a loss of function measured in an extract / crude enzyme preparation was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d4_another_plant_genus_earns_no_credit[BIO3-F1-Brachypodium]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-3: a plant genus or allele prefix outside the organism lists was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d4_another_plant_genus_earns_no_credit[BIO3-F5-Camelina]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-3: a plant genus or allele prefix outside the organism lists was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d.py::test_cs_d_745_d4_another_plant_genus_earns_no_credit[BIO3-Bd-prefix]",
+   "kind": "correction",
+   "finding": "bio BIO-R2-3: a plant genus or allele prefix outside the organism lists was credited",
+   "fails_at_fd7c737c": true,
+   "failure_at_fd7c737c": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "passes_at_fd53a301": false
+  }
+ ],
+ "deliberately_moved_existing_tests": [
+  {
+   "test": "tests/test_mining_species_repair2.py::test_repair2_745b_5a_removed_a_stated_conversion_no_longer_earns_credit[bio-r-2]",
+   "now": "tests/test_mining_species_cs_d.py::test_cs_d_745_d1_negated_verb_absence_forms_earn_credit[BIO4-B1-did-not-accumulate]",
+   "delta": "row removed from the 5a_removed parametrisation (was: \"The aos mutant did not accumulate 12-OPDA after wounding.\" asserted species_ambiguous); the same sentence and claim (13-HPOT -> 12-OPDA, AOS) is now asserted (target_species_supported, in_planta), with the bio-auditor's screen organism; 5a_removed goes from 7 rows to 6",
+   "why": "CS-D D1: \"did not accumulate\" is a negated-verb absence form on the product (the brief: move bio-r-2 out of the 5a_removed list)"
+  }
+ ]
+}

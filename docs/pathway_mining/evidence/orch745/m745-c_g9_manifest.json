@@ -1,0 +1,74 @@
+[
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_b1_quarantined_candidates_do_not_stop_the_run",
+    "defect": "B1/F-7 max_new_reactions_per_round counted quarantined candidates",
+    "expected_base_failure": "round 1 adds 0 admitted + 26 quarantined Zea mays reactions; base counts 26 >= 25 and stops after round 1, so `assert outcome.stop_reason != \"max_new_reactions_per_round_reached\"` fails (stop_reason == \"max_new_reactions_per_round_reached\", rounds_completed == 1)",
+    "fixtures": []
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_b1_the_fixture_round_counts_its_admitted_reactions_only",
+    "defect": "B1/F-7 max_new_reactions_per_round counted quarantined candidates",
+    "expected_base_failure": "fixture round 1 = 2 admitted + 1 quarantined; base counts 3 >= cap 3 and stops after round 1, so `assert mined.outcome.stop_reason != \"max_new_reactions_per_round_reached\"` fails",
+    "fixtures": []
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_a5_a_spent_discovery_budget_starts_no_further_round",
+    "defect": "A5 phantom round after the discovery budget is spent",
+    "expected_base_failure": "round 1 spends the 4-paper budget and records max_papers_discovered_reached mid-round, but base still starts rounds 2 and 3 (nothing searchable; converged after 2 unproductive rounds), so `assert outcome.ledger.usage.rounds == 1` fails with 3 (stop_reason stays max_papers_discovered_reached: the first reason wins)",
+    "fixtures": []
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_a5_check_before_round_stops_on_the_discovery_budget",
+    "defect": "A5 check_before_round ignored the papers-discovered budget",
+    "expected_base_failure": "`assert ledger.check_before_round() == \"max_papers_discovered_reached\"` fails: base returns None with papers_discovered 3 >= max 3",
+    "fixtures": []
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_a5_a_stop_recorded_mid_round_forbids_the_next_round",
+    "defect": "A5 check_before_round ignored a stop reason already recorded",
+    "expected_base_failure": "`assert ledger.check_before_round() == \"max_papers_discovered_reached\"` fails: base returns None (no counter it re-checks is at its cap)",
+    "fixtures": []
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_f3_the_cap_keeps_a_quarter_of_its_slots_for_species_items",
+    "defect": "F-3 the frontier cap cut every missing_species_evidence item",
+    "expected_base_failure": "frontier.generate over 35 bridge + 35 downstream + 35 upstream items and 20 species items, cap 60: base keeps the 60 highest-priority items, so `assert len(species) >= 15` fails with 0",
+    "fixtures": []
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_f3_the_cut_is_recorded_in_the_round_artifacts",
+    "defect": "F-3 the frontier cap cut silently",
+    "expected_base_failure": "`assert (round_dir / \"frontier_cut.jsonl\").is_file()` fails (False): base writes no cut record (and metrics has no frontier_cut)",
+    "fixtures": []
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_b2_a_thin_answer_is_re_asked_and_the_cited_answer_is_used",
+    "defect": "B2 thin reasoning-free answers accepted as ok",
+    "expected_base_failure": "pilot-003 _0003 raw text parses and validates; base returns it after 1 request, so `assert len(calls) == 2` fails with 1 (and the payload is the thin one)",
+    "fixtures": ["tests/fixtures/mining/pilot003_thin_answers.json"]
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_b2_a_thin_answer_twice_is_kept_and_marked",
+    "defect": "B2 thin reasoning-free answers accepted as ok, unmarked",
+    "expected_base_failure": "pilot-003 _0014 raw text; base returns it after 1 request, so `assert len(calls) == 2` fails with 1 (answer_quality absent: to_dict().get() is None)",
+    "fixtures": ["tests/fixtures/mining/pilot003_thin_answers.json"]
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_b2_the_provider_is_recorded_or_said_to_be_unreported",
+    "defect": "B2 ModelCallRecord.provider always empty",
+    "expected_base_failure": "`assert outcome.record.provider == \"not_reported_by_llm_client\"` fails: base leaves provider == \"\"",
+    "fixtures": ["tests/fixtures/mining/pilot003_thin_answers.json"]
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_f9_preflight_loads_dotenv_before_it_reads_the_environment",
+    "defect": "F9 the mining CLI never loads .env (with --enable-pathway-mining)",
+    "expected_base_failure": "`assert events == [\"dotenv\", \"preflight\"]` fails with events == [\"preflight\"]: mining_enabled(True) never calls ensure_dotenv_loaded and the CLI does not either",
+    "fixtures": []
+  },
+  {
+    "node": "tests/test_mining_run_control.py::test_g9_745c_f9_run_and_resume_load_dotenv_before_their_configuration",
+    "defect": "F9 the mining CLI never loads .env (run / resume with --enable-pathway-mining)",
+    "expected_base_failure": "`assert events == [\"dotenv\", \"configured\", \"dotenv\", \"configured\"]` fails with events == [\"configured\", \"configured\"]",
+    "fixtures": []
+  }
+]

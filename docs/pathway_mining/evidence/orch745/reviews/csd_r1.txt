@@ -1,0 +1,323 @@
+=== VERDICT REQUEST_CHANGES
+VERDICT: REQUEST_CHANGES. Repair 1 closes what it was opened for. R1 is fixed: Y1-Y7 and X1-X9 are now refused end to end. All of R2's required probes are refused, and RT-D-4 and the docs items are done. The 6454ef98 G9 arm reproduces, the full mining suite gives 810, and the replay holds at exactly #3/#14/#34.
+
+Two changes in this delta re-open routes that were closed at 6454ef98. I showed both end to end with modelled prose: accepted, single_paper, node admitted.
+- B1: the unbriefed `_NEW_SUBJECT` filter. It is not tightening-only, and it was not on the orchestrator's beyond-brief list (the implementer mapped it to round-0 N3). It makes "X, which ... Y ..., <effect>" credit Y. This admits the relative-clause twins of the brief's own required probes: a product rising, or a substrate falling, in the enzyme's own knockout.
+- B2: the new "accumulated <w> less" recall form. A negating adverb inside the form gets past the negation check, so "accumulated hardly/barely/not less ... than" is admitted.
+
+Both are one-line fixes inside the boundary. A scratch prototype (C:/t/bt/rev745d-r1-code/plugins/proto_fix.py) closes both, plus N1, and keeps the suite at 810 passed and the round-0 probe
+- CSD-R1-B1 blocking | C:/t/m745-b/src/t2pw/mining/species.py _NEW_SUBJECT 476-478; _effect before-list 830-831; docs species_policy.md:142 and :179, known_limitations.md:148
+   PROBLEM: The unbriefed `_NEW_SUBJECT` filter removes from the subject candidates any participant separated from the effect by ', which / , that / , with ...'. In a non-restrictive relative clause inside the subject noun phrase ('X, which ... Y ..., <effect>'), this throws away the real subject X and credits Y. That is the BIO-D-2 contrary combination: a product rising, or a substrate falling, in the claim's own knockout.
+
+The probes are the relative-clause twins of the brief's own required refusals (bio-S1, bio-S2, rt-A2/S3). Their appositive twin W9 is correctly refused. The same rule refuses the correct twin W8 'JA-Ile, which is formed from JA, was reduced', which 6454ef98 credited, so the heuristic inverts the reading in both directions.
+
+This is a gate weakened relative to 6454ef98, severity (a). It is also demonstrated end to end with ordinary prose, severity (c). It was not in the brief: R2(ii) says to refuse when the candidates include both sides. It was not in the orchestrator's beyond-brief list (the implementer attributes it to round-0 N3), and it is not tightening-only. The shipped docs now state behaviour the code contradicts: 'the contrary combinations ... earn nothing'.
+   EVIDENCE: End to end (build_claims -> ClaimStore -> admission.judge and MiningController._admit), C:/t/bt/rev745d-r1-code/runs/tip_pm_r1/out.txt against runs/b6454_pm_r1/out.txt (6454ef98 tree; module path printed). At fd7ea63a each row below is 'state=target_species_supported grade=in_planta judge=accepted level=single_paper node.admitted=True'; at 6454ef98 each is 'species_ambiguous ... candidate ... node.admitted=False':
+- W1 'In the jar1 mutant, JA, which is the precursor of JA-Ile, was reduced after wounding.' (JA (substrate) -> JA-Ile, JAR1)
+- W2 'In gh3.10 mutants, JA-Ile, which is the JA conjugate, accumulated after wounding.' (GH3.10)
+- W3 'In gh3.10 single mutants, JA-Ile, which is synthesized from JA, accumulated after wounding.' (the real GH3.10 single-mutant no-phenotype class, BIO-D-1 N1)
+- W4 'In opr3 mutants, OPC-8:0, which is formed from OPDA, accumulated in wounded leaves.'
+- W5 'In opr3 mutants, OPDA, which is the precursor of OPC-8:0, was decreased after wounding.'
+- W7 'In aos mutants, 12-OPDA, which derives from 13-HPOT, accumulated after wounding.'
+
+W8 moves the other way: credited at 6454ef98, refused at the tip. All wrapper reports show final_surviving_count 0.
+   FIX: Do not drop a separated participant from the candidates. Either keep it for the both-sides check, or refuse the form when any participant before it is cut off by a _NEW_SUBJECT separator and none sits inside the form (fail closed). In _effect after line 830:
+`if not inside and any(_NEW_SUBJECT.search(clause[h[1]:form.start()]) for h in before): continue`
+and drop the filter from the list comprehension.
+
+The scratch prototype C:/t/bt/rev745d-r1-code/plugins/proto_fix.py does exactly this:
+- the full mining suite stays at 810 passed (runs/proto_suite);
+- W1-W5 and W7 are refused, X19/X20 stay refused, and every round-0 probe outcome is unchanged (runs/proto_pm_*).
+
+Add W1-W5 and W7 as test_cs_d_r1_745_* rows asserting not TSS. Their G9 base is fd7ea63a, where each fails; they pass at 6454ef98, so they are regression guards. Correct species_policy.md:142/:179 and known_limitations.md:148, and list W8-type recall (', which' inside the subject) as a cost.
+- CSD-R1-B2 blocking | C:/t/m745-b/src/t2pw/mining/species.py _EFFECT_FORMS group 0, new form at 457 `\baccumulated (?:\w+ ){0,2}?(?:less|lower|reduced|decreased)\b`; negation check at 827 inspects only clause[:form.start()]
+   PROBLEM: The optional recall form lets up to two words sit between 'accumulated' and the decrease word. A negating adverb there is inside the match, so the negation check never sees it. This has two effects:
+- A near-no-effect comparative is credited. That is the R1 class this round was opened to close.
+- The implementer's own hardly/scarcely/barely gate (bio-D8/D11/M1) is bypassed whenever the verb is 'accumulated'. The 'lower' form alone is refused at the tip, then the new form re-credits the same sentence.
+
+The rows were refused at 6454ef98, so this is a weakening relative to the named base, severity (a). It is outside the documented residual, which says hardly/scarcely/barely refuse. This rating follows the round-0 precedent, where R1 was blocking although it had zero corpus hits. Realism is lower than B1, and the orchestrator may downgrade.
+   EVIDENCE: C:/t/bt/rev745d-r1-code/runs/tip_pm_r1/out.txt against runs/b6454_pm_r1/out.txt, end to end:
+- H1 'jar1 mutants accumulated hardly less JA-Ile than wild-type plants after wounding.'
+- H2 'The jar1 mutant accumulated barely less JA-Ile than the wild type.'
+- F1 'The jar1 mutant accumulated not less JA-Ile than the wild type.'
+These three are accepted / single_paper / node.admitted=True at fd7ea63a and species_ambiguous / candidate at 6454ef98.
+
+H3 'gh3.10 mutants accumulated scarcely lower JA-Ile levels after wounding.' is accepted at both ends. At the tip, though, it is credited only through the new form, because the 'lower' form is refused by 'scarcely'. Control H4 'accumulated much less' is correctly credited at the tip.
+   FIX: Keep negators out of the gap words:
+`\baccumulated (?:(?!(?:not|no|hardly|scarcely|barely|never)\b)\w+ ){0,2}?(?:less|lower|reduced|decreased)\b`
+Alternatively, also test _CHANGE_NEGATION against form.group(0).
+
+The prototype (proto_fix.py) keeps the suite at 810 and refuses H1-H3 and F1, while H4, Pc2 and 'aos mutants accumulated less 12-OPDA' stay credited. Add H1, H2, H3 and F1 as not-TSS rows; their G9 base is fd7ea63a.
+- CSD-R1-N1 non_blocking | C:/t/m745-b/src/t2pw/mining/species.py _MARKER_OF 512 `\s*(?:[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?`
+   PROBLEM: The brief asked for a three-token gap between the marker and 'of' so the SALK line credits again. The chosen regex also allows 'of' or 'in' among those three tokens, so the marker binds through a second 'of' to another gene's relative. Both rows below are refused at 6454ef98 and admitted at the tip. This weakening was directed by the brief, and the admitted reaction is true biology (overstated support, the BIO-D-3 class), so it is non_blocking. It is the orchestrator's call.
+   EVIDENCE: Both rows below are accepted / single_paper / node.admitted=True at the tip (runs/tip_pm_r1) and species_ambiguous at 6454ef98 (runs/b6454_pm_r1):
+- M1 'Mutants of genes upstream of JAR1 accumulated no JA-Ile.'
+- M2 'Mutants of a regulator of JAR1 accumulated no JA-Ile.'
+The red team's four-token neighbour M4 is still refused.
+   FIX: Forbid of/in among the gap tokens:
+`\s*(?:(?!(?:of|in)\b)[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?`
+The prototype keeps M3 (SALK), 'T-DNA insertion lines of GH3.10' and 'Mutants deficient in GH3.10' credited, refuses M1/M2, and the suite stays at 810. Pin M1/M2.
+- CSD-R1-N2 non_blocking | C:/t/m745-b/src/t2pw/mining/species.py _ENZYME_HEAD 470-471 exclusion `rases?`; docs species_policy.md:137, known_limitations.md:151
+   PROBLEM: The non-enzyme exclusion `rases?` was evidently meant for 'phrases', given the ponytail comment. It also exempts every '-rase' enzyme: methyltransferase, transferase, isomerase, polymerase, epimerase. For those, a participant named before the enzyme noun is still read as the participant, which is the X18 class, so the docs' claim that a name followed by an '-ase' noun is read as an enzyme is too broad. This is not a weakening: the row was credited at 6454ef98 too.
+
+Separately, the '-ase' removal is not strictly tightening. E2 'In opr3 mutants, the OPDA reductase product OPC-8:0 was undetectable.' was refused at 6454ef98 and is credited at the tip. That credit is correct biology, so it is harmless.
+   EVIDENCE: E1 'In jmt mutants, JA methyltransferase levels were elevated.' (JA -> MeJA, JMT) is accepted / single_paper / node.admitted=True at the tip and at 6454ef98 (runs/tip_pm_r1, runs/b6454_pm_r1). E2 is accepted at the tip and species_ambiguous at 6454ef98.
+   FIX: Replace `rases?` with `phrases?` in the lookahead and add E1 as a not-TSS row. Otherwise narrow the docs' wording.
+- CSD-R1-N3 non_blocking | C:/t/m745-b/src/t2pw/mining/species.py _EFFECT_FORMS comment 441-446
+   PROBLEM: The comment still says 'any other form applies to the first participant before it in the clause (its subject), or failing that the first one after it'. This contradicts the rewritten _effect: all participants before the form, the ambiguity refusal, the three-token after-cap, and the separator rule.
+   EVIDENCE: Compare species.py:445-446 with the _effect docstring at 809-818 and the code at 829-836.
+   FIX: Update the comment to point at the _effect docstring and species_policy rule 5(b) item 4.
+- CSD-R1-N4 non_blocking | C:/t/m745-b/src/t2pw/mining/species.py _effect 819-821 (candidates from the strict sets only); _matchers strict=True excludes the bare long name X of 'X (Y)'
+   PROBLEM: Pre-existing, not a weakening. The both-sides ambiguity check sees only strict names. When the claim gives 'jasmonic acid (JA)', a sentence naming the substrate by its bare long name has an invisible substrate. A substrate-down sentence then credits the product as the only candidate.
+   EVIDENCE: W6 'In the jar1 mutant, jasmonic acid, which JAR1 conjugates to JA-Ile, was reduced after wounding.' (sub 'jasmonic acid (JA)') is accepted / node.admitted=True at the tip, at 6454ef98 and at fd7c737c (runs/tip_pm_r1, b6454_pm_r1, bfd7c_pm_r1). It stays accepted under the B1 prototype.
+   FIX: Optional: for the other-side test only, use the loose name set (bare X counts), which refuses more and so fails closed. Otherwise document it next to the position-not-grammar residual in known_limitations.md.
+- CSD-R1-N5 non_blocking | C:/t/m745-b/docs/pathway_mining/known_limitations.md lexical-residue paragraph 71-86; species.py _bound before-path 790-795
+   PROBLEM: Round-0 CSD-N2 / BIO-D-3 is still open and still undocumented. These are reordered or prepositional shapes where the claim's gene sits next to another gene's mutant ('accumulation by JAR1 in the myc2 mutant', 'mutants of the JAR1 paralogue GH3.10'). It was not in the repair brief, so it is not chargeable to this delta; it is flagged so it is not lost.
+   EVIDENCE: Re-run of the round-0 probes at fd7ea63a, all accepted / single_paper / node.admitted=True: X13-X15 (runs/tip_pm_adv/out.txt) and Y8-Y10 (runs/tip_pm_adv2/out.txt). This is the same as at 6454ef98.
+   FIX: Orchestrator's call. Either add the preposition/article/verb guard to _bound's before-path that round 0 proposed, or list the class in the known_limitations lexical residue.
+=== VERDICT UNSOUND
+Verdict: UNSOUND. The repair closes everything it was opened for, but one new rule reverses the polarity check that BIO-D-2 was meant to restore.
+
+What holds at fd7ea63a. Every run below went through bounded_run with exit_reason completed and FINAL SURVIVING COUNT 0. Scratch is C:/t/bt/rev745d-r1-redteam/.
+- Predecessor probes, all re-run (part1, p3b, p3c, p3lof, p3d, p3d2, p3d3, e2e, e2e_d, e2e_d2, grepb, and ab at three trees): every RT-D-1 comparative/delay row and every RT-D-2 P-row is refused. L1/L3 are refused, E4 (the SALK line) is credited again, and A4/A7 moved to species_ambiguous (the documented both-sides recall cost). Every control is still credited: K1-K4, B5, B6, N6, N7, L4, L5, D2, D4, CTRL-metabolite, and end to end the T1 and did-not-accumulate rows.
+- part1's older-round probes have identical states; only reason strings changed.
+- The pilot-003 replay on the controller path admits exactly #3, #14 and #34. #14 is in_planta on ev_7d27[7]; #3 and #34 are review on ev_c98d[12]. Output is byte-identical to the predecessor's (runs/replay.out).
+- Mining suite: 810 passed (runs/suite.out).
+
+Corpus precision (same corpus as the predecessor; my run-text copies are byte-ide
+- RT-D-R1-1 blocking | C:/t/m745-b/src/t2pw/mining/species.py _NEW_SUBJECT (new, ~line 478) consumed in _effect() 'before' list (~lines 829-830); docs/pathway_mining/species_policy.md rule 5(b) item 4 (~lines 140-147) and known_limitations.md ~line 148
+   PROBLEM: CLASS product_contract_violation. The rule drops a 'before' participant whenever ', which|that|with|although|...' appears between it and the effect form. It never checks whether that relative clause has CLOSED before the form. In 'X, which ... Y ..., <effect>', X is the main-clause subject, yet X is dropped and Y (named only inside the relative clause) becomes the subject. Polarity therefore inverts exactly where BIO-D-2 required it to be right. At 6454ef98 the first-before rule took X and was correct on every row below. The tip is wrong on every row: (a) contrary combinations (product up, substrate down) are admitted; (b) a direction-mis-extracted REVERSED reaction is admitted while the correct direction is refused. This weakens the polarity gate against 6454ef98 (severity a) and is shown end to end on realistic prose (severity c). It is the class the last round ruled blocking (BIO-D-2). The shipped doc says only an appositive keeps its subject; it does not disclose that a closed relative clause loses it.
+   EVIDENCE: GOLD CITATION: C:/t/bt/orch745/F1_BIO_ADJUDICATION.md line 4 ('require POSITIVE evidence the organism performed' the reaction); section 1c line 90 ('positive credit only shrinks') and rule 5(b) line 109 (the participant with no no-effect phrase); C:/t/bt/orch745/CS-D.md line 26 ('The contrary combinations (product up; substrate down) earn nothing'); BIO-D-2 expected correction in C:/t/bt/orch745/reviews/csd_r0.txt. ARTIFACT EVIDENCE: C:/t/bt/rev745d-r1-redteam/runs/e2er1_tip.out vs e2er1_6454.out, end to end through MiningController._admit. At the tip: 'R2 reversed (wrong) target_species_supported decision=accepted level=single_paper node_admitted=True [12-OH-JA-Ile -> JA-Ile]' and 'R1 correct direction species_ambiguous decision=candidate [JA-Ile -> 12-OH-JA-Ile]'; R3 (gh3.10, product JA-Ile up), R4 (jar1, substrate JA down) and R6 (opr3, substrate OPDA down) are all accepted / node admitted. At 6454ef98 each of these is reversed: R2/R3/R4/R6 candidate, R1 accepted. Probe-level A/B on three trees: runs/nr_fd7c.out, nr_6454.out, nr_tip.out, block R (R5 'OPC-8:0, which is formed from OPDA, was undetectable', R7 'JA-Ile, which is the bioactive form, was undetectable' and R8 'although' are also lost as correct credits). Realism: runs/greprel.out shows 7 of 3197 real loss-of-function sentences with a comma-led relative clause closing before the effect (e.g. PMC12505894 'the cwh8 ... mutant, which cannot produce farnesol (Fig. 6F), showed reduced ...'). None has a metabolite as the head noun, so the R sentences are modelled prose, not verbatim. Honest counterweight: the reversed-reaction admission (R2) also needs a direction mis-extraction, but R3/R4/R6 need none. All wrapper reports exit completed, FINAL SURVIVING COUNT 0.
+   FIX: AFFECTED FILES: src/t2pw/mining/species.py (_effect only), tests/test_mining_species_cs_d_repair1.py (or a repair-2 test file), docs/pathway_mining/species_policy.md, docs/pathway_mining/known_limitations.md. EXPECTED CORRECTION: exclude a 'before' participant only while the comma-led clause after it is still OPEN at the form (no comma between the clause opener and the form). Instead, exclude any participant that sits INSIDE a relative clause which closes before the form. Prototype: C:/t/bt/rev745d-r1-redteam/plugin/rt745dr1_fix.py `_excluded()` (scratch only). With it active, R1/R5/R7/R8 are credited, R2/R3/R4/R6 are refused, X19/X20 stay refused, and the mining suite is 810 passed (runs/nr_fix2.out, runs/protosuite.out). REGRESSION FIXTURE (probe() of test_mining_species_cs_d_repair1.py, observed=('Arabidopsis thaliana',)), assert != TSS: probe('In cyp94b3 mutants, JA-Ile, which is hydroxylated to 12-OH-JA-Ile by CYP94B3, accumulated after wounding.', sub='12-OH-JA-Ile', prod='JA-Ile', enzyme='', gene='CYP94B3'); probe('In gh3.10 mutants, JA-Ile, which is formed from jasmonic acid, accumulated after wounding.', enzyme='', gene='GH3.10'); probe('In the jar1 mutant, jasmonic acid, which is conjugated to JA-Ile, was strongly reduced after wounding.', enzyme='JAR1'); probe('In opr3 mutants, OPDA, which is the precursor of OPC-8:0, was reduced.', sub='OPDA', prod='OPC-8:0', enzyme='OPR3'). Paired recall rows, assert TSS/in_planta: the cyp94b3 sentence with sub='JA-Ile', prod='12-OH-JA-Ile'; 'In opr3 mutants, OPC-8:0, which is formed from OPDA, was undetectable.'; 'In jar1 mutants, JA-Ile, which is the bioactive form, was undetectable.'. G9: every row fails at fd7ea63a and passes at 6454ef98, so these are regression guards. CONFIDENCE: high on behaviour (three trees plus controller path); medium on realism (modelled, not verbatim). WHAT WOULD CHANGE MY MIND: a product-owner record that a participant named inside a non-restrictive relative clause may be read as the main clause's subject. Nothing in DECISIONS.md, F1_BIO_ADJUDICATION.md or CS-D.md says so.
+- RT-D-R1-2 blocking | C:/t/m745-b/src/t2pw/mining/species.py _MARKER_OF (~line 510: r"\s*(?:[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?"), consumed by _bound()
+   PROBLEM: CLASS product_contract_violation. The brief's three-token allowance (needed to restore the SALK_034543 line) is implemented with any token allowed, including 'in' and 'of' themselves. The tail now reads 'mutants in <noun phrase> of JAR1' as a JAR1 genotype. A regulator's, an upstream gene's or a target gene's mutant therefore credits the claim's catalyst: the 'a different gene's mutant earns nothing' guarantee of CS-D D2 fails for this shape. These rows were refused by _bound at 6454ef98 and are accepted end to end at the tip, so the binding gate is weaker than at 6454ef98 (severity a). Counterweight: all were credited at fd7c737c; the admitted reaction is true biology with overstated support (the BIO-D-3 class, rated non_blocking as pre-existing last round); and the brief ordered three tokens. Over-binding through 'in'/'of' tokens was the implementer's choice, not the brief's. If the orchestrator reads clause (a) as fd7c737c-only, downgrade this to non_blocking. The fix is one lookahead either way.
+   EVIDENCE: GOLD CITATION: C:/t/bt/orch745/F1_BIO_ADJUDICATION.md section 1c rule 5(b) (loss-of-function marker plus the claim's enzyme or gene); C:/t/bt/orch745/CS-D.md D2 ('a different gene's mutant ... earns nothing'); C:/t/bt/orch745/CS-D-repair1.md RT-D-4 ('Allow up to 3 tokens between the marker and of'). ARTIFACT EVIDENCE: C:/t/bt/rev745d-r1-redteam/runs/e2er1_tip.out: 'M4 genes upstream of target_species_supported decision=accepted level=single_paper node_admitted=True' and 'M7 targets of ... accepted ... node_admitted=True'. Both are candidate / not admitted at 6454ef98 (runs/e2er1_6454.out). Probe A/B in runs/nr_fd7c.out, nr_6454.out, nr_tip.out, block M: M1 'Mutants in regulators of JAR1 accumulated less JA-Ile', M2 'in a regulator of', M3 'in upstream regulators of', M4 and M7 are TSS at the tip and species_ambiguous at 6454ef98. M1-M3 also depend on the new 'accumulated less' form. M5 (SALK) is TSS at the tip, as the brief intended.
+   FIX: AFFECTED FILES: src/t2pw/mining/species.py (_MARKER_OF), the repair test file, species_policy.md rule 5(b) item 2. EXPECTED CORRECTION: the up-to-three tokens may not themselves be 'of'/'in': r"\s*(?:(?!(?:of|in)\b)[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?". In the prototype (plugin/rt745dr1_fix.py) this refuses M1-M4 and M7 and keeps 'The SALK_034543 insertion line of GH3.10', 'T-DNA insertion lines of GH3.10' and 'Mutants deficient in GH3.10' credited; suite 810 passed (runs/nr_fix2.out, runs/protosuite.out). REGRESSION FIXTURE, assert != TSS: probe('Mutants in genes upstream of JAR1 accumulated no JA-Ile.', enzyme='JAR1', observed=AT); probe('Knockouts of transcriptional targets of JAR1 accumulated no JA-Ile.', enzyme='JAR1', observed=AT); probe('Mutants in a regulator of JAR1 accumulated less JA-Ile after wounding.', enzyme='JAR1', observed=AT). Controls stay TSS/in_planta: the SALK row, T-DNA-insertion-lines-of and deficient-in. G9: the !=TSS rows fail at fd7ea63a and pass at 6454ef98 (regression guards). CONFIDENCE: high on behaviour; medium on severity. WHAT WOULD CHANGE MY MIND: an orchestrator ruling that the brief's three-token instruction accepted this over-binding, or that clause (a) is measured against fd7c737c only.
+- RT-D-R1-3 non_blocking | C:/t/m745-b/src/t2pw/mining/species.py _EFFECT_FORMS group 0, new alternative r"\baccumulated (?:\w+ ){0,2}?(?:less|lower|reduced|decreased)\b"; _effect negation check clause[:form.start()]
+   PROBLEM: CLASS product_contract_violation (narrow lexical). The new product-side form puts up to two free tokens INSIDE its own match. A negating word there ('accumulated barely/hardly/not less') is never checked, because the negation guard reads only the text BEFORE the form. This defeats the hardly/scarcely/barely negations this round added, for this form only. Near-no-effect sentences are credited and admitted. 'accumulated scarcely lower levels' was credited at all three trees (pre-existing through the bare 'lower' form). It is now credited through the new form even though 'scarcely' is in the negation set. The prose is contrived and inside the documented 'negation phrased outside the sets' residual, so non_blocking. It belongs in the same fix round.
+   EVIDENCE: GOLD CITATION: F1_BIO_ADJUDICATION.md section 1c rule 5(b) (no no-effect phrase); CS-D-repair1.md R1. ARTIFACT EVIDENCE: C:/t/bt/rev745d-r1-redteam/runs/e2er1_tip.out 'A1 barely less target_species_supported decision=accepted level=single_paper node_admitted=True' (candidate at 6454ef98, runs/e2er1_6454.out); runs/nr_tip.out block A: A1 'accumulated barely less', A3 'hardly less' and A4 'not less' are TSS at the tip and species_ambiguous at 6454ef98; A2 'scarcely lower levels' is TSS at all three trees; control A5 'accumulated less JA-Ile' is TSS at the tip (the brief's recall gain).
+   FIX: EXPECTED CORRECTION: refuse the 'accumulated ... less' form when its own matched text contains a negating word (not|no|never|hardly|scarcely|barely). Alternatively, exclude those words from the free-token slots. Prototype in plugin/rt745dr1_fix.py (NEG_INSIDE, applied only to group 0) refuses A1-A4, keeps A5 credited, suite 810 passed. REGRESSION FIXTURE: probe('jar1 mutants accumulated barely less JA-Ile than the wild type.', enzyme='JAR1', observed=AT) != TSS, plus the hardly and not variants; control 'jar1 mutants accumulated less JA-Ile after wounding.' stays TSS/in_planta. CONFIDENCE: high. WHAT WOULD CHANGE MY MIND: nothing on the behaviour; only the priority is arguable.
+- RT-D-R1-4 non_blocking | C:/t/m745-b/docs/pathway_mining/known_limitations.md 'Precision rests on the paper-level organism screen' paragraph (~lines 87-100); recall-cost bullet (~lines 144-152)
+   PROBLEM: CLASS policy_disagreement (fail-closed recall, brief-ordered) plus a stale measurement in the docs. Re-measured at fd7ea63a with the predecessor's exact method:
+- Stage-1 unique surviving sentences fell from 31 to 30.
+- Credited with the screen empty fell from 29 to 22; adjudicated correct fell from 2/29 to 1/22.
+- Held by the screen fell from 27 to 20; credited with the screen stayed at 2 (T1 correct, dapat wrong, so 1/2).
+The seven credits removed:
+- five wrong phenotype readings (growth, resistance, higher OD, PF resistance), closed by _PHENOTYPE;
+- one correct-shape sentence naming no gene (camptothecin, refused via 'yield');
+- the only verbatim correct catalyst-loss-of-function sentence in the corpus besides T1: 'CWH8 null mutants produced no farnesol.' (PMC12505894). Removing 'produced no', as the brief ordered, lost it.
+Now that the \bno (?:more|less|...)\b veto exists, 'produced no' could be restored without readmitting B2/X5 ('produced no less'). That is an orchestrator call, because the brief dropped it explicitly. The docs still quote the 6454ef98 numbers as current.
+   EVIDENCE: GOLD CITATION: F1_BIO_ADJUDICATION.md section 1c ('positive credit only shrinks'; recall costs are acceptable) and section 2 #14 (T1 is the in_planta credit that must hold). ARTIFACT EVIDENCE: C:/t/bt/rev745d-r1-redteam/runs/part2d.out at the tip: TOTALS {any_pair_no_screen 22, plausible_pair_no_screen 8, held_by_screen 20, in_planta_with_screen 2}, unique surviving 30. The predecessor's 6454ef98 run, reproduced exactly at my 6454ef98 export, gives 31/29/27/2 (runs/cab_b6454.out). Per-sentence tip vs base pairs are in runs/cab_tip.data.json, cab_b6454.data.json and cabshow.out (row #16 is CWH8: base pairs cwh8|farnesol 'produced no' on a product; tip stage1=no_lof_effect_clause). Corpus run texts were re-materialised from git -C C:/t/mining show f9556288 and are byte-identical to the predecessor's copies.
+   FIX: Docs: replace the 6454ef98 figures with the fd7ea63a figures (30 surviving, 22 credited with the screen empty, 20 held by the screen, 2 credited with it), and list the CWH8 'produced no' sentence as the measured recall cost of R1. Optional, needs an orchestrator decision: restore r"\bproduced no\b" as a forward form. It now sits behind the no-comparative veto, and the fixtures would be the CWH8 sentence (TSS for a CWH8 -> farnesol claim with the screen empty) and rt-B2 / X5 (stay != TSS). CONFIDENCE: high. WHAT WOULD CHANGE MY MIND: nothing on the numbers.
+- RT-D-R1-5 non_blocking | C:/t/m745-b/src/t2pw/mining/species.py _CONTAINER, _ORGANISM_WORDS, _bound, _DECREASE_WORD (standing residuals)
+   PROBLEM: CLASS policy_disagreement (documented residuals, re-measured, unchanged from 6454ef98). Still credited and still admitted end to end where tested:
+- double-mutant and regulator-as-enzyme rows (C1, C2, C3, and C4 'Knockdown of MYC2 reduced wound-induced JA-Ile'; RT-D-5);
+- 10/10 unlisted plant genera (J rows; RT-D-3);
+- 'ostensibly' / 'given' / 'upon addition of' (I1-I3);
+- a decrease phrased outside the word set ('OPDA accumulated to only half the amount found in Col-0', 'to a fraction of wild-type amounts');
+- container nouns outside the new list ('the JAR1 branch', 'the JAR1 module', 'the JAR1 gene family').
+None is chargeable to this delta.
+   EVIDENCE: GOLD CITATION: F1_BIO_ADJUDICATION.md section 1c rule 4 ('The organism list is a documented ceiling, like _EXTRA_HOSTS') and rule 5(b). ARTIFACT EVIDENCE: C:/t/bt/rev745d-r1-redteam/runs/p3d.out (C1-C4, I1-I4, J x10 TSS); runs/e2e_d.out (C1, C4 and J-Citrus accepted / node admitted); runs/nr_fd7c.out, nr_6454.out and nr_tip.out blocks C and D (C2, C3, M6, D1, D3 TSS at all three trees); runs/ab_fd7c.out, ab_6454.out and ab_tip.out (C1, C4 and J-Citrus credited at all three).
+   FIX: No code change required. Optionally add branch|module|gene family to _CONTAINER (one alternation; the prototype run shows the list is test-neutral). Keep the RT-D-3 and RT-D-5 escalations where they are: only a per-paper principal organism, and participant-to-span verification, move them. CONFIDENCE: high. WHAT WOULD CHANGE MY MIND: a product-owner decision on BIO-745B-2 or on the principal-organism instrumentation.
+=== VERDICT UNSOUND
+Biology re-check of the ORCH-745 CS-D repair-1 delta (6454ef98..fd7ea63a in C:/t/m745-b). I ran every check below myself through bounded_run, and every report shows FINAL SURVIVING COUNT 0. My scratch is C:/t/bt/rev745d-r1-bio/. Base trees: base6454 is a git archive of 6454ef98; fd7c737c is the predecessor's read-only archive. Each probe run printed which tree's species.py it loaded.
+
+WHAT HOLDS
+1. Full mining suite at fd7ea63a: 810 passed (runs/s1/out.txt).
+2. T-rows (T1, T1b, T2-T11) and the full-replay test: 16 passed (runs/s2/out.txt).
+3. Full pilot-003 replay on the MiningController path (runs/rtip/out.txt):
+   - It admits exactly #3, #14 and #34.
+   - #14 is in_planta / single_paper, credited from ev_7d2787cbb14b4905[7].
+   - #3 and #34 are review / review_article_only, credited from ev_c98d84c7d84855c1[12].
+   - runs/rtip/grades.json is byte-identical to the predecessor's 6454ef98 run (C:/t/bt/rev745d-bio/runs/r_tip/grades.json).
+4. The canonical phrasings A1-A10 all give TSS / in_planta / accepted / single_paper (runs/p1tip/out.txt; A1 also on the controller path, runs/c1_tip).
+5. Every BIO-D-1 probe is refused: N1-N8, Bn8, Bn11, Y6, Y7, RT-B1/B8/N8, plus further / again / 
+- BIO-D-R1-1 blocking | C:/t/m745-b/src/t2pw/mining/species.py _NEW_SUBJECT (new, after _PHENOTYPE) and _effect() 'before' list: [h for h in hits if h[1] <= form.start() and not _NEW_SUBJECT.search(clause[h[1]:form.start()])]; docs/pathway_mining/species_policy.m
+   PROBLEM: CLASS: product_contract_violation. This is a gate weakened relative to 6454ef98 (severity a), and the admission is demonstrated end to end (severity c). It reopens the BIO-D-2 polarity class in a new sentence shape.
+
+What the code does. _NEW_SUBJECT drops every participant before the effect form whose gap to the form contains ', which / that / whose / with / ...'. That is right for a TRAILING clause, where the effect form sits inside the comma-led clause (X19: '..., which had reduced JA-Ile'). It is wrong for an EMBEDDED relative clause that closes before the form: 'X, which ... Y ..., <effect>'. There X is the grammatical subject. The filter drops X and leaves Y, the OTHER participant named inside the relative clause, as the only candidate. For this shape the polarity rule is therefore exactly inverted: the true combination is refused and the contrary combination credited.
+
+Admitted at fd7ea63a, all species_ambiguous / candidate at 6454ef98:
+(i) Contrary evidence, correct claim direction (the B-1 occurrence class: a product rising in its own synthase or reductase knockout):
+- W2 'In the jar1 mutant, JA-Ile, which is formed from JA, accumulated after wounding.' -> admits JA -> JA-Ile by JAR1 as "'accumulated' on a substrate".
+- W12 'In opr3 mutants, OPC-8:0, which is the reduction product of OPDA, accumulated after wounding.' -> admits OPDA -> OPC-8:0 by OPR3.
+- W1, W3, W4, W5 are the same class (substrate down or product up).
+(ii) A true-biology sentence admits the REVERSED reaction:
+- W6 'In cyp94b3 mutants, 12-OH-JA-Ile, which is formed from JA-Ile, was strongly reduced after wounding.' -> admits 12-OH-JA-Ile -> JA-Ile by CYP94B3. This is the same false node the brief's own must-not-TSS probe (L1r) was written to stop.
+- W7 'In jar1 mutants, JA-Ile, which is synthesized from JA, was strongly reduced after wounding.' -> admits JA-Ile -> JA by JAR1.
+- W9 and W10 ('12-OH-JA-Ile, which is the hydroxylated form of JA-Ile, was undetectable') are the same.
+(iii) The correct-direction claims on the same sentences (W6c, W7c, W10c) were admitted at 6454ef98 and are now refused.
+
+The shipped docs are falsified:
+- species_policy.md still says 'The contrary combinations (a product that rises, a substrate that falls) earn nothing'.
+- It also describes the comma-led-clause rule with no embedded-clause caveat.
+
+Honest counterweight:
+- The real-corpus grep finds the shape ('mutant ... , which ..., <effect>') in 4 of 2918 loss-of-function sentences across 510 mostly non-plant documents. None of them names two pathway participants.
+- Route (i) needs contrary biology. Route (ii) needs a reversed claim from extraction, the same precondition BIO-D-2 was ruled blocking on last round.
+- Under severity (a), realism does not lower the rating.
+   EVIDENCE: GOLD CITATION:
+- F1_BIO_ADJUDICATION.md line 4: 'require POSITIVE evidence the organism performed the reaction'.
+- Section 1a W3: 'occurrence / absence counted as conversion'.
+- Section 1c rule 5(b), with section 1c's heading 'positive credit only shrinks'.
+- CS-D.md line 26: 'The contrary combinations (product up; substrate down) earn nothing.'
+- CS-D-repair1.md R2: polarity attribution; the reversed-reaction probe 'cyp94b3 ... (12-OH-JA-Ile -> JA-Ile, CYP94B3, i.e. the reversed reaction)' must not be TSS.
+
+ARTIFACT EVIDENCE:
+- MiningController path (_register then _judge):
+  - C:/t/bt/rev745d-r1-bio/runs/c1_tip/out.txt: W2, W6, W7, W10, W12 give target_species_supported, grade=in_planta, status=accepted, level=single_paper. Admitted nodes: 'jasmonic acid (JA) -> jasmonoyl-isoleucine (JA-Ile)', '12-OH-JA-Ile -> JA-Ile', 'jasmonoyl-isoleucine (JA-Ile) -> jasmonic acid (JA)', '12-OH-JA-Ile -> JA-Ile', 'OPDA -> OPC-8:0'. W6c and W7c are candidate with no node.
+  - runs/c1_6454/out.txt: the inverse. W2/W6/W7/W10/W12 are candidate; W6c and W7c are accepted.
+  - runs/c1_fd7c/out.txt: all are admitted (direction-blind).
+- Probe harness (build_claims -> ClaimStore -> admission.judge): runs/p2tip/out.txt W1-W7, W9, W10 TSS; runs/r2_6454/out.txt the same rows species_ambiguous; runs/r2_fd7c/out.txt TSS.
+- Corpus: runs/scan2/out.txt.
+- Prototype fix: runs/q_r2_proto/out.txt (W1-W7, W9, W10 flip to species_ambiguous) and runs/s1proto/out.txt (810 passed with the plugin active).
+   FIX: AFFECTED FILES: src/t2pw/mining/species.py (_effect only), tests/test_mining_species_cs_d_repair1.py, docs/pathway_mining/species_policy.md, docs/pathway_mining/known_limitations.md.
+
+EXPECTED CORRECTION (fail-closed, inside _effect):
+- When a before-candidate's gap to the form contains a _NEW_SUBJECT marker AND a further comma after that marker, the comma-led clause closed before the form. That clause is embedded, so the form must earn nothing: refuse it (continue), unless the form has 'inside' participants.
+- When there is no closing comma (the form lies inside the comma-led clause, as in X19 / X20), keep today's exclusion.
+- A more precise alternative that also restores W6c/W7c/W10c recall: exclude the participants INSIDE the closed clause and keep the one before it. Either is acceptable; the refusal is the proven one.
+- Prototype: C:/t/bt/rev745d-r1-bio/plugin/rev745d_r1_proto.py, function _effect, the 'embedded' flag. With it the mining suite gives 810 passed, and X19, X20, A1-A10, the T-rows and the replay are unchanged.
+- Docs: correct the contrary-combination sentence, and describe the embedded-clause case.
+
+REGRESSION FIXTURE (the probe() helper of tests/test_mining_species_cs_d_repair1.py). Each row asserts species_state != TSS. G9: each fails at fd7ea63a and passes at 6454ef98, so they are regression guards against 6454ef98.
+- probe('In cyp94b3 mutants, 12-OH-JA-Ile, which is formed from JA-Ile, was strongly reduced after wounding.', sub='12-OH-JA-Ile', prod='JA-Ile', gene='CYP94B3')
+- probe('In jar1 mutants, JA-Ile, which is synthesized from JA, was strongly reduced after wounding.', sub='jasmonoyl-isoleucine (JA-Ile)', prod='jasmonic acid (JA)', enzyme='JAR1')
+- probe('In the jar1 mutant, JA-Ile, which is formed from JA, accumulated after wounding.', sub='jasmonic acid (JA)', prod='jasmonoyl-isoleucine (JA-Ile)', enzyme='JAR1')
+- probe('In opr3 mutants, OPC-8:0, which is the reduction product of OPDA, accumulated after wounding.', sub='OPDA', prod='OPC-8:0', enzyme='OPR3')
+- probe('In cyp94b3 mutants, 12-OH-JA-Ile, which is the hydroxylated form of JA-Ile, was undetectable.', sub='12-OH-JA-Ile', prod='JA-Ile', gene='CYP94B3')
+
+Controls:
+- X19 and X20 stay not TSS.
+- T1, A1-A10, C1, Pc1, Pc2 and the appositive 'In jar1 mutants, JA-Ile, the bioactive form, was absent after wounding.' stay TSS / in_planta.
+- The replay still admits exactly #3/#14/#34.
+
+CONFIDENCE: high on the behaviour, which was executed at all three trees and on the controller path; medium on corpus frequency.
+
+WHAT WOULD CHANGE MY MIND: a product-owner record that a reversed or contrary-direction admission through a relative clause is acceptable. That would contradict CS-D D1's stated purpose.
+- BIO-D-R1-2 blocking | C:/t/m745-b/src/t2pw/mining/species.py _NO_EFFECT, the R1 entry r"\b(?:(?:did|does|do) not|fail(?:ed|s)? to)\b[^.;:]{0,60}?\b(?:more|less|...|until|significantly)\b"; docs/pathway_mining/known_limitations.md ('added the negated-comparison 
+   PROBLEM: CLASS: product_contract_violation. The original BIO-D-1 / RT-D-1 / CSD-B1 class (a gate weakened relative to fd7c737c, severity a) is not closed for participant or gene names that contain a colon or a full stop. The window [^.;:]{0,60}? stops at the ':' in OPC-8:0 / OPC-6:0 and at the '.' in gh3.10. In jasmonate biology these are the OPR3 product (the reaction #3/#34 adjudicate) and the T1 / #14 gene.
+
+Admitted end to end at fd7ea63a AND at 6454ef98; refused (candidate) at fd7c737c:
+- CL1 'The opr3 mutant did not accumulate OPC-8:0 until 6 h after wounding.' (delay)
+- CL2 'opr3 mutants did not accumulate OPC-8:0 to lower levels than the wild type.' (no-effect comparison)
+- CL3 'JA-Ile did not accumulate in gh3.10 single mutants to lower levels than in Col-0.' This is the real GH3.10 single-mutant phenotype (JAR1 compensates; PMC12096059, the T1 paper), i.e. a statement that GH3.10 loss has NO effect, and it admits jasmonic acid -> JA-Ile by GH3.10 as primary in-planta evidence.
+- CL4 'JA-Ile did not accumulate in gh3.10 mutants until 6 h after wounding.'
+- CL5 'The acx1 mutant failed to accumulate OPC-6:0 further after wounding.'
+- NX3 'The opr3 mutant did not form OPC-8:0 any later than Col-0.'
+
+The regex is the brief's own prescribed pattern, implemented verbatim. The defect is in the brief, not an implementer deviation. The shipped docs nonetheless claim the class is closed.
+
+Counterweight: 0 verbatim corpus hits (runs/scan2/out.txt, pattern negverb_window_with_digit_colon_or_dot). That is the same standing as the round-0 blockers, which also had 0 hits and were ruled blocking under (a).
+   EVIDENCE: GOLD CITATION:
+- F1_BIO_ADJUDICATION.md section 1c rule 5(b): '... with no no-effect phrase (unchanged, unaffected, not altered, no significant, similar to wild type, comparable to)'.
+- Section 1c heading: 'positive credit only shrinks'.
+- Line 4: 'require POSITIVE evidence'.
+- CS-D.md: the negated-verb forms are 'a whitelist recall gain that cannot admit a no-effect, hedged or negated sentence'.
+- CS-D-repair1.md R1: these phrasings 'are credited today' and must be closed.
+
+ARTIFACT EVIDENCE:
+- MiningController path, CL1-CL4 (runs/c1_tip/out.txt): accepted / single_paper / in_planta. Nodes 'OPDA -> OPC-8:0' (CL1, CL2) and 'jasmonic acid -> JA-Ile' (CL3, CL4).
+- runs/c1_6454/out.txt: the same rows are accepted.
+- runs/c1_fd7c/out.txt: the same rows are candidate, with no node.
+- Probe harness: runs/q_r3_tip/out.txt (CL1-CL5 TSS) and runs/p1tip/out.txt (NX3 TSS, reason "'did not form' on a product"); runs/r1_fd7c/out.txt (NX3 species_ambiguous).
+- Prototype window '(?:[^.;:]|[.:](?=\d)){0,60}?':
+  - runs/q_r3_proto/out.txt: CL1-CL5 flip to species_ambiguous; controls CLc1-CLc3 stay TSS.
+  - runs/q_r1_proto/out.txt: only NX3 moves.
+  - runs/s1proto/out.txt: 810 passed.
+   FIX: AFFECTED FILES: src/t2pw/mining/species.py (the one _NO_EFFECT entry), tests/test_mining_species_cs_d_repair1.py, docs/pathway_mining/species_policy.md, docs/pathway_mining/known_limitations.md.
+
+EXPECTED CORRECTION:
+- In the R1 _NO_EFFECT entry, replace [^.;:]{0,60}? with (?:[^.;:]|[.:](?=\d)){0,60}?. A colon or full stop followed by a digit is inside a name; this is the same exception _CLAUSE already makes with ':(?![0-9])'. Do NOT add a bare 'than' veto.
+- Correct the known_limitations.md 'close that class' sentence, and describe the window in species_policy.md.
+
+REGRESSION FIXTURE (probe() helper). Each row asserts != TSS. G9: each fails at fd7ea63a AND at 6454ef98 and passes at fd7c737c, so they are regression guards against fd7c737c.
+- probe('The opr3 mutant did not accumulate OPC-8:0 until 6 h after wounding.', sub='OPDA', prod='OPC-8:0', enzyme='OPR3')
+- probe('opr3 mutants did not accumulate OPC-8:0 to lower levels than the wild type.', sub='OPDA', prod='OPC-8:0', enzyme='OPR3')
+- probe('JA-Ile did not accumulate in gh3.10 single mutants to lower levels than in Col-0.', sub='jasmonic acid', prod='JA-Ile', gene='GH3.10')
+- probe('JA-Ile did not accumulate in gh3.10 mutants until 6 h after wounding.', sub='jasmonic acid', prod='JA-Ile', gene='GH3.10')
+- probe('The acx1 mutant failed to accumulate OPC-6:0 further after wounding.', sub='OPC-8:0', prod='OPC-6:0', enzyme='ACX1')
+
+Paired controls that must stay TSS / in_planta:
+- 'The opr3 mutant did not accumulate OPC-8:0 after wounding.'
+- 'JA-Ile did not accumulate in gh3.10 jar1 double mutants after wounding.'
+- 'In flowers of gh3.10 jar1 knockout lines, JA-Ile did not accumulate.'
+- B1-B6, Nc1, Nc2, and '20-fold lower ... than'.
+
+CONFIDENCE: high; executed at all three trees and on the controller path.
+
+WHAT WOULD CHANGE MY MIND: a product-owner record that the fd7c737c refusal of these rows was itself unwanted. Nothing in DECISIONS.md or F1_BIO_ADJUDICATION.md says so.
+- BIO-D-R1-3 non_blocking | C:/t/m745-b/src/t2pw/mining/species.py _MARKER_OF = r"\s*(?:[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?" consumed by _bound()'s after-marker branch
+   PROBLEM: CLASS: product_contract_violation (narrow; brief-induced).
+
+The change: the brief ordered 'up to 3 tokens between the marker and of' to restore the SALK row. The implementer widened the generic gap from {0,2} to {0,3} and changed the leading \s+ to \s*.
+
+The consequence: a regulator's or another gene's mutant now binds as the claim's own gene whenever the noun phrase fits three tokens.
+- K8 'Mutants lacking a regulator of AOS accumulated no 12-OPDA.' -> accepted / single_paper.
+- K1 'Mutants in genes upstream of JAR1 accumulated no JA-Ile.' -> accepted / single_paper / node 'jasmonic acid -> JA-Ile' on the controller path.
+- K2 ('Mutants of regulators upstream of AOS') and K9 ('Mutants with defects upstream of JAR1') are also accepted.
+- All of these are refused at 6454ef98 and accepted at fd7c737c, where no binding existed.
+
+This meets the letter of severity (a) relative to 6454ef98. I rate it non_blocking for four reasons:
+- the brief explicitly authorised a three-token gap;
+- the admitted reaction is the named gene's true reaction (overstated support, not false biology);
+- the prose is modelled, not verbatim;
+- RT-D-4 rated the sibling 'in the JAR1 pathway' bind non-blocking.
+
+The \s* change also adds a correct recall gain: K7 'T-DNA-tagged lines of AOS'.
+   EVIDENCE: GOLD CITATION:
+- F1_BIO_ADJUDICATION.md section 1c rule 5(b): 'a loss-of-function marker ... + the claim's enzyme or gene'.
+- CS-D.md line 47: 'a different gene's mutant ("arc mutants", "the myc2 mutant ... by JAR1") earns nothing'.
+- CS-D-repair1.md RT-D-4 (the three-token instruction).
+
+ARTIFACT EVIDENCE:
+- C:/t/bt/rev745d-r1-bio/runs/r4_tip/out.txt: K8, K9 and K11 TSS / accepted. runs/r4_6454/out.txt: the same rows species_ambiguous.
+- runs/p2tip/out.txt: K1, K2 TSS. runs/r2_6454/out.txt: species_ambiguous. runs/r2_fd7c/out.txt: TSS.
+- Controller path: runs/c1_tip/out.txt K1 accepted with node admitted; runs/c1_6454/out.txt K1 candidate.
+   FIX: AFFECTED FILES: src/t2pw/mining/species.py (_LOSS_OF_FUNCTION / _MARKER_OF), tests/test_mining_species_cs_d_repair1.py, docs/pathway_mining/species_policy.md.
+
+EXPECTED CORRECTION (optional this round; cheap to fold into the next repair):
+- Restore the SALK row by making the accession part of the marker, e.g. salk_\w+ (and sail_ / gabi_ if desired). Return the generic gap to {0,2} and keep \s*.
+- 'The SALK_034543 insertion line of GH3.10' and 'T-DNA-tagged lines of AOS' still bind; 'Mutants lacking a regulator of AOS' does not.
+- Alternatively, refuse a three-token gap containing regulat\w*|upstream|downstream|genes?|factors?|activators?|repressors?.
+- If left as is, list the class in known_limitations.md beside RT-D-4.
+
+REGRESSION FIXTURE (each != TSS):
+- probe('Mutants lacking a regulator of AOS accumulated no 12-OPDA.', sub='13-HPOT', prod='12-OPDA', enzyme='AOS')
+- probe('Mutants in genes upstream of JAR1 accumulated no JA-Ile.', sub='jasmonic acid', prod='JA-Ile', enzyme='JAR1')
+Controls that stay TSS: the SALK_034543 row, 'T-DNA insertion lines of GH3.10 accumulated no JA-Ile.', 'Mutants deficient in GH3.10 accumulated no JA-Ile in flowers.', and A10.
+
+CONFIDENCE: high on the behaviour.
+
+WHAT WOULD CHANGE MY MIND: an orchestrator record that the three-token gap was meant generically, not only for accessions. In that case document it as a residual.
+- BIO-D-R1-4 non_blocking | C:/t/m745-b/docs/pathway_mining/known_limitations.md recall-cost list (CS-D repair 1 R2 bullet); tests/test_mining_species_cs_d_repair1.py test_cs_d_r1_745_both_sides_before_the_effect_is_ambiguous
+   PROBLEM: CLASS: policy_disagreement (a fail-closed recall trade, accepted). This is a DoD-realism note, not a defect.
+
+The in-planta route remains functional on canonical A. thaliana jasmonate-genetics prose:
+- A1-A10 admit.
+- The replay is unchanged.
+- The repair adds real recall: 'aos mutants accumulated less 12-OPDA', 'cyp94b3 mutants accumulated less 12-OH-JA-Ile' (correct direction), 'accumulated far / much less', the SALK line, and T-DNA-tagged lines.
+
+It also accumulates recall costs on correct biology:
+- Both sides named before the effect is now refused: 'In opr3 mutant leaves, OPC-8:0 formed from OPDA was reduced.' (RT-D-2's former control) and the old fixture sentence '13-HPOT formed from alpha-linolenic acid was undetectable'. Both are documented and honestly pinned as a recall cost.
+- Correct-direction relative-clause sentences (W6c, W7c, W10c) lost credit versus 6454ef98.
+- 'OPDA accumulated only weakly' is refused.
+- Any clause naming growth / development / flowering is refused.
+- The pre-existing hyphenated-allele gap (jar1-1) is unchanged.
+
+None of these admits anything wrong.
+   EVIDENCE: GOLD CITATION: F1_BIO_ADJUDICATION.md section 1b ('Fail-closed; keep'); section 2: #14 admit in_planta on [7], OPR3 rows at review grade only.
+
+ARTIFACT EVIDENCE:
+- runs/rtip/out.txt: ADMITTED rows exactly ['3','14','34']; credit sentences ev_7d2787cbb14b4905[7] and ev_c98d84c7d84855c1[12].
+- runs/rtip/grades.json is identical to C:/t/bt/rev745d-bio/runs/r_tip/grades.json.
+- runs/p1tip/out.txt: A1-A10 and L1c-L12c TSS.
+- runs/p2tip/out.txt: FX0, OPCf, W6c, W7c, W10c species_ambiguous; FX1 and FX1g (the new fixture sentence) TSS; FXr (reversed) refused.
+- runs/s1/out.txt: 810 passed.
+   FIX: No code change required.
+- Add the relative-clause correct-direction loss (W6c / W7c) to the known_limitations.md recall list once BIO-D-R1-1 is fixed, if the refusal variant is chosen.
+- If a live pilot comes back thin, the cheapest safe recall gains are: an allele suffix in the _bound-only gene matcher ('jar1(?:-\d+)?'), and a head-noun reading of 'Y formed from X' (Y is the subject).
+
+CONFIDENCE: high.
+
+WHAT WOULD CHANGE MY MIND: a live pilot that admits nothing through the in-planta route, which would make recall a DoD blocker.

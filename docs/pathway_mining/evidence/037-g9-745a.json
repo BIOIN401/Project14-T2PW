@@ -1,0 +1,99 @@
+{
+  "label": "g9-745a",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/mining-rep-base",
+    "--pin-verdict",
+    "C:/t/mining/docs/pathway_mining/evidence/037-g9-745a.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=line",
+    "--basetemp=C:/t/bt/orch745/g9/037/bt",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_the_bryophyte_review_is_a_review_once_its_full_text_is_read",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_an_explicit_pmcid_review_is_graded_on_its_full_text",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_an_uploaded_review_is_graded_on_its_text",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_an_ncbi_publication_type_review_gives_a_review_record",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_pilot001_reviews_the_old_markers_missed",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_citing_someone_elses_review_is_not_being_one",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_f2_a_reaction_only_a_review_supports_is_review_article_only",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_f4_pilot003_bibliography_front_matter_and_disclaimers_never_become_spans",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_f4_front_matter_no_longer_takes_the_results_passage_slot",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_a4_an_abstract_only_paper_is_one_span",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_a7_a_paper_whose_chunks_rank_low_still_gets_its_passages",
+    "tests/test_mining_evidence_hygiene.py::test_g9_745a_it2n3_a_failed_pmcid_lookup_is_asked_again"
+  ],
+  "cwd": "C:\\t\\mining-rep-base",
+  "started_at": "2026-10-07T18:15:16+00:00",
+  "finished_at": "2026-10-07T18:15:18+00:00",
+  "duration_seconds": 2.6690989999333397,
+  "timeout_seconds": 300.0,
+  "root_pid": 469864,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 469080,
+      "name": "python.exe",
+      "ppid": 469864
+    },
+    {
+      "pid": 469260,
+      "name": "git.exe",
+      "ppid": 469080
+    }
+  ],
+  "descendants_terminated": [
+    469080,
+    469260
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 209432,
+      "name": "python.exe"
+    },
+    {
+      "pid": 216864,
+      "name": "python.exe"
+    },
+    {
+      "pid": 469400,
+      "name": "python.exe"
+    },
+    {
+      "pid": 469560,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/mining/docs/pathway_mining/evidence/037-g9-745a.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\mining-rep-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\mining-rep-base",
+    "repo_head": "f9556288065e630260a9ff1106d0266787d04b9c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

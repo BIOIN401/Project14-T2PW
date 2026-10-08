@@ -1,0 +1,637 @@
+{
+ "base_sha": "6454ef98",
+ "base_tree": "C:/t/bt/m745-b/basearm7 (git archive 6454ef98 src tests docs/pwml_recovery_sprint/evidence pyproject.toml) + the new test file",
+ "base_run": "C:/t/bt/m745-b/runs/csdr1-g9-6454ef98/out.txt",
+ "base_result": "75 failed, 21 passed: every test_cs_d_r1_745_* row failed (AssertionError), every test_new_acceptance_cs_d_r1_745_* control passed; FINAL SURVIVING COUNT 0",
+ "second_base": {
+  "sha": "fd7c737c",
+  "tree": "C:/t/bt/m745-b/basearm6",
+  "run": "C:/t/bt/m745-b/runs/csdr1-g9-fd7c737c/out.txt",
+  "result": "49 failed, 47 passed",
+  "test_cs_d_r1_rows_passing_there": [
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[X4]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[X5]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[X7]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[X8]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[X9]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y1]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y2]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y3]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y4]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y5]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y6]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y7]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-Bn11]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-Bn5]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-Bn6]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-Bn7-delay]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-Bn8]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N1]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N2]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N3]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N4-delay]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N5]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N8]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-B2]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-B3]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-B4]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-B8]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-N4-failed-further]",
+   "test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-N5-no-fewer]",
+   "test_cs_d_r1_745_recall_earns_credit[SALK-insertion-line-of]",
+   "test_cs_d_r1_745_recall_earns_credit[aos-accumulated-less-12-OPDA]",
+   "test_cs_d_r1_745_recall_earns_credit[bio-Rc2-correct-direction]"
+  ],
+  "controls_failing_there": [
+   "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[B1-did-not-accumulate]",
+   "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[B2-failed-to-accumulate]",
+   "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[N6-did-not-detectable]",
+   "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[Nc1-double-mutant-did-not]",
+   "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[Nc2-failed-to-in-flowers]",
+   "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[no-longer-detected]"
+  ]
+ },
+ "rows": 75,
+ "also_fail_at_fd7c737c": 43,
+ "new_acceptance_controls": [
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[20-fold-lower-than]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[A7]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[B1-did-not-accumulate]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[B2-failed-to-accumulate]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[N6-did-not-detectable]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[Nc1-double-mutant-did-not]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[Nc2-failed-to-in-flowers]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[P1-substrate-accumulated]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[Pc1-higher-OPDA-than-Col-0]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[Pc2-lower-JA-Ile]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[T-DNA-insertion-lines-of]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[T1]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[bio-C2]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[bio-C3-substrate-elevated]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[bio-C4-while]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[bio-r-1]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[deficient-in]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[n1-r1]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[no-JA-Ile-was-detected]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[no-detectable]",
+  "test_new_acceptance_cs_d_r1_745_controls_keep_in_planta_credit[no-longer-detected]"
+ ],
+ "nodes": [
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y1]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y2]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y3]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y4]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y5]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y6]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[Y7]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[X4]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[X5]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[X7]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[X8]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[X9]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N1]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N2]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N3]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N4-delay]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N5]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-N8]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-Bn5]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-Bn6]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-Bn7-delay]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-Bn8]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[bio-Bn11]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-B2]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-B3]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-B4]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-B8]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-N4-failed-further]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-B1-no-more]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-B10-no-greater]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-N5-no-fewer]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r1_a_negated_comparison_or_delay_earns_no_credit[rt-N8-substrate-no-more]",
+   "kind": "correction (R1)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-R1-reversed-reaction]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-R2-reversed-lower]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-P1-less-JA]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-P2-lower-JA]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-P3]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-Cn4]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-Cn5]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-Cn6]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-Cn7]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-Cn10]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-Cn11-weakly]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-Cn12]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-S1-conjugate-appositive]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-S2-precursor-appositive]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-S3-product-appositive]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-Cn8]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-Cn9]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[rt-A2-metabolite-appositive]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[X19-product-up-other-down]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[X20-product-up-substrate-down]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[rt-P1-growth]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[rt-P2-fertility]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[rt-P4-resistance]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[rt-P5-senescence]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[rt-P6-yield]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-L1-still-fertile]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-L2-root-growth]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[X17-other-cyclases]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[X18-reductase-levels]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[X11-in-none-of]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[X12-neither-nor]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-D8-hardly]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-D11-barely]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-M1-scarcely]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_r2_an_effect_on_the_wrong_or_an_ambiguous_participant_earns_no_credit[bio-M2-neither-nor]",
+   "kind": "correction (R2 / review non-blocking)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_rtd4_a_marker_of_a_pathway_or_background_is_not_of_the_gene[rt-L1-pathway]",
+   "kind": "correction (RT-D-4)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_rtd4_a_marker_of_a_pathway_or_background_is_not_of_the_gene[rt-L3-background]",
+   "kind": "correction (RT-D-4)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_rtd4_a_marker_of_a_pathway_or_background_is_not_of_the_gene[JAR1-pathway-mutants]",
+   "kind": "correction (RT-D-4)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' != 'target_species_supported'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_recall_earns_credit[SALK-insertion-line-of]",
+   "kind": "recall (SALK line restored; \"accumulated less <product>\")",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert ('species_ambiguous', 'none') == ('target_spec..., 'in_planta')",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_recall_earns_credit[bio-Rc2-correct-direction]",
+   "kind": "recall (SALK line restored; \"accumulated less <product>\")",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert ('species_ambiguous', 'none') == ('target_spec..., 'in_planta')",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_recall_earns_credit[aos-accumulated-less-12-OPDA]",
+   "kind": "recall (SALK line restored; \"accumulated less <product>\")",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert ('species_ambiguous', 'none') == ('target_spec..., 'in_planta')",
+   "also_fails_at_fd7c737c": false
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_both_sides_before_the_effect_is_ambiguous[rt-control-formed-from]",
+   "kind": "deliberate_policy_move (R2 ii recall cost)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' == 'species_ambiguous'",
+   "also_fails_at_fd7c737c": true
+  },
+  {
+   "node": "tests/test_mining_species_cs_d_repair1.py::test_cs_d_r1_745_both_sides_before_the_effect_is_ambiguous[bio-S5-formation-from]",
+   "kind": "deliberate_policy_move (R2 ii recall cost)",
+   "fails_at_6454ef98": true,
+   "failure_at_6454ef98": "AssertionError: assert 'target_species_supported' == 'species_ambiguous'",
+   "also_fails_at_fd7c737c": true
+  }
+ ],
+ "deliberately_moved_existing_tests": [
+  {
+   "test": "tests/helpers_mining.py PAPERS P1 / P8 (integration corpus)",
+   "delta": "P1 abstract \"In Arabidopsis thaliana lox2 knockout lines, 13-hydroperoxyoctadecatrienoic acid (13-HPOT) formed from alpha-linolenic acid was undetectable in wounded leaves.\" -> \"In Arabidopsis thaliana lox2 knockout lines, wound-induced 13-hydroperoxyoctadecatrienoic acid (13-HPOT) was strongly reduced in leaves.\"; P1 full text and P8 abstract / full text \"13-HPOT was / is undetectable in wounded leaves\" -> \"wound-induced 13-HPOT was / is strongly reduced in leaves\"; no assertion changed",
+   "why": "R2 (ii): a clause naming both sides before its effect is ambiguous; BIO-R2-7: a lox2 single knockout reduces, not abolishes, 13-HPOT"
+  },
+  {
+   "test": "tests/test_mining_citation_recovery.py SHOWN ev_one",
+   "delta": "\"In Arabidopsis   thaliana lox2 (At3g45140) knockout lines, 13-HPOT formed from alpha-linolenic acid was undetectable.\" -> \"In Arabidopsis   thaliana lox2 (At3g45140) knockout lines, wound-induced 13-HPOT was strongly reduced.\"; no assertion changed",
+   "why": "R2 (ii)"
+  },
+  {
+   "test": "tests/test_mining_extraction.py ev_one",
+   "delta": "\"In Arabidopsis thaliana lox2 knockout lines, 13-HPOT formed from alpha-linolenic acid was undetectable in wounded leaves.\" -> \"In Arabidopsis thaliana lox2 knockout lines, wound-induced 13-HPOT was strongly reduced in leaves.\"; no assertion changed",
+   "why": "R2 (ii)"
+  }
+ ],
+ "moved_reviewer_controls": [
+  {
+   "control": "red team RT-D-2 control \"In opr3 mutant leaves, OPC-8:0 formed from OPDA was reduced.\" (OPDA -> OPC-8:0, OPR3)",
+   "was": "target_species_supported / in_planta at 6454ef98",
+   "now": "species_ambiguous (pinned: test_cs_d_r1_745_both_sides_before_the_effect_is_ambiguous[rt-control-formed-from])",
+   "why": "R2 (ii): both sides among the subject candidates; the bio-auditor named this S5 class as the accepted cost"
+  },
+  {
+   "control": "red team RT-D-1 \"jar1 mutants did not accumulate detectable JA-Ile.\" (N6)",
+   "was": "TSS",
+   "now": "TSS (unchanged; pinned as a control)",
+   "why": "no comparative follows the negated verb"
+  }
+ ]
+}

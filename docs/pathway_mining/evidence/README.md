@@ -243,3 +243,47 @@ orchestrator's, at `ecf6b9a0`. The nodes are in `C:/t/mining-iter/g9_manifest.js
 | `035-g9-it2` | `C:/t/mining-rep-base` @ `ecf6b9a0` (the pilot-002 code) | the 7 `test_g9_it2_*` nodes of `test_mining_iteration2.py` (plus `pubmed_pmid34638573.xml`, `pilot002_grape_host.json`) | **7 failed**: `[12] == [5, 5, 2]`; the reference PMCID PMC411572 is kept; the same article is 2 papers; the foreign full text is used; a budget-cut window exhausts the item; the grape paper is rescued; rung fractions are `[None, None, None]` |
 
 FINAL SURVIVING COUNT 0, pin `violations: []`; the base tree status is empty afterwards.
+
+## ORCH-745 (make pathway mining work)
+
+Four change sets, each implemented by a `general-purpose` agent in its own worktree and reviewed on its actual diff
+by `pwml-reviewer` and `pwml-bio-auditor` (change sets B and D also by a red-team `pwml-bio-auditor`):
+- A evidence hygiene: F-2, F-4, A4, A7, IT2-N3; repair 1 (A1, A2 …); repair 2 (B1, B2 …);
+- C run control: B1/F-7, A5, F-3, B2, F9; repair 1 (F3-ORDER …);
+- B species reading: F-5, F-1, F-6, B3, N-5; repair 1 (red-team B1–B9 …); repair 2 (rule 5(a) removed);
+- D loss-of-function polarity/binding/extracts; repair 1 (comparative no-effect, polarity attribution).
+
+Every G9 base arm was run by the orchestrator, pinned (`--expect-tree C:/t/mining-rep-base`), in
+`C:/t/mining-rep-base` detached at the arm's base SHA; the test file (and any new fixture) was copied in and removed
+afterwards, and the base tree's status was empty again after every arm. Every arm: exit reason `nonzero`, every
+failure an `AssertionError` (no import/attribute/name errors), **FINAL SURVIVING COUNT 0**, pin `violations: []`.
+
+| File | Base SHA | What | Result |
+|---|---|---|---|
+| `036-g9-745c` | `f9556288` | CS-C: 12 `test_g9_745c_*` nodes of `test_mining_run_control.py` (+ `pilot003_thin_answers.json`) | **12 failed** |
+| `037-g9-745a` | `f9556288` | CS-A: 12 `test_g9_745a_*` nodes (16 cases) of `test_mining_evidence_hygiene.py` (+ `orch745a_pilot_texts.json`) | **16 failed** |
+| `038-g9-745b` | `f9556288` | CS-B: 8 `test_g9_745b_*` nodes of `test_mining_species_reading.py` (+ two fixtures) | **8 failed** |
+| `039-g9-745c-r1-at-d01e0825` | `d01e0825` | CS-C repair 1: F3-ORDER and B2-RECORD nodes | **2 failed** |
+| `040-g9-745c-r1-at-f9556288` | `f9556288` | the same two nodes at the original base | F3-ORDER **passed** (base priority order preserved), B2-RECORD **failed** |
+| `041-g9-745a-r1-at-6ceef736` | `6ceef736` | CS-A repair 1: 13 nodes (21 cases) | **21 failed** |
+| `042-g9-745b-r1-at-4f8d33a3` | `4f8d33a3` | CS-B repair 1: 71 `test_repair1_745b_*` nodes of `test_mining_species_repair1.py` | **71 failed** |
+| `043-g9-745a-r2-at-92ab5be9` | `92ab5be9` | CS-A repair 2: 5 nodes (12 cases) | **12 failed** |
+| `044-g9-745b-r2-at-fd53a301` | `fd53a301` | CS-B repair 2: 118 `test_repair2_745b_*` rows of `test_mining_species_repair2.py` | **118 failed** |
+| `045-g9-745d-at-fd7c737c` | `fd7c737c` | CS-D: 51 `test_cs_d_745_*` rows of `test_mining_species_cs_d.py` | **51 failed** |
+| `046-g9-745d-r1-at-6454ef98` | `6454ef98` | CS-D repair 1: 75 `test_cs_d_r1_745_*` rows of `test_mining_species_cs_d_repair1.py` | **75 failed** |
+
+**Gate runs (committed), both trees pinned, `wrapper vs HEAD: clean`, exit reason `completed`, FINAL SURVIVING COUNT 0.**
+
+| File | Tree / SHA | What | Result |
+|---|---|---|---|
+| `048-mining-suite-orch745` | `C:/t/mining` @ `3ce64f28` (`experiment/pathway-mining`: change sets A + C merged) | `tests/test_mining_*.py` (19 files) | **377 passed** in 20.39 s (281 before ORCH-745) |
+| `049-smoke-feature-disabled-orch745` | `C:/t/mining` @ `3ce64f28` | production SMOKE (22 files), `T2PW_PATHWAY_MINING_ENABLED` unset, heavy lock `ORCH-745` | **508 passed** in 65.30 s |
+| `050-mining-suite-orch745-species-branch` | `C:/t/m745-b` @ `686ae134` (`orch745/b-species-reading`: A + C + B + D, **not merged**) | `tests/test_mining_*.py` (25 files) | **856 passed** in 24.40 s |
+| `051-smoke-feature-disabled-orch745-species-branch` | `C:/t/m745-b` @ `686ae134` | production SMOKE (22 files), mining off, heavy lock `ORCH-745` | **508 passed** in 43.61 s |
+
+`orch745/` holds the change-set briefs and repair briefs (`briefs/`), the binding F-1 bio adjudication
+(`briefs/F1_BIO_ADJUDICATION.md`), every review's findings as returned (`reviews/`), each implementer's G9 manifest,
+and the live EuropePMC `core` response shape the orchestrator checked on 2026-10-07 (no LLM call). Change sets B and
+D (`orch745/b-species-reading` @ `686ae134`) are **not merged**: their final review left two blocking findings
+(RT-D-R2-1 / BIO-D-R2-1 and BIO-D-R2-2, `reviews/csd_r2_final_full.txt`) after the repair-round cap. See
+`docs/pwml_recovery_sprint/ORCH-745-RESULT.md` on `sprint/pwml-recovery`.
