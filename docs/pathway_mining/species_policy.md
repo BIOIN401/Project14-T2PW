@@ -143,14 +143,43 @@ elsewhere mentions orthologs). The rule now:
         form ("no JA-Ile was detected"); else every participant before it in the clause
         that a comma-led relative or adverbial clause (", which", ", that", ", who", ",
         whose", ", with", ", whereas", ", while", ", although", ", though", ", but", ",
-        and", or a ";") does not cut off (`species._excluded`, CS-D repair 2). A
-        participant is cut off when the clause that follows it is still OPEN at the form
-        (no comma between the clause opener and the form: "JA-Gln accumulated ..., which
-        had reduced JA-Ile", "OPC-8:0 levels were elevated, with decreased OPDA"), or when
-        it sits INSIDE such a clause that CLOSES before the form ("In opr3 mutants,
-        OPC-8:0, which is formed from OPDA, was undetectable": OPDA is cut off, the head
-        OPC-8:0 stays the subject and earns credit; "OPDA, which is the precursor of
-        OPC-8:0, was reduced": OPDA stays the subject, a substrate going down, nothing).
+        and", or a ";") does not cut off. Since ORCH-746 CS-E the cut-off is read three
+        ways, and a form earns its effect only when ALL THREE readings credit it
+        (`species._effect` over `species._READINGS`; the reason recorded is the first
+        reading's):
+        - the 686ae134 reading (`species._excluded`, CS-D repair 2, unchanged): a
+          participant is cut off when the clause that follows it is still OPEN at the
+          form (no comma at all between the first opener and the form: "JA-Gln
+          accumulated ..., which had reduced JA-Ile", "OPC-8:0 levels were elevated,
+          with decreased OPDA"), or when it sits INSIDE such a clause that closes before
+          the form; any comma after the opener reads as the close, so "(Fig. 3A, B)",
+          "(3R,7S)", ", which, after wounding, ..." or a second comma-led clause makes an
+          open clause look closed;
+        - the bio-auditor's reading (`species._excluded_blanked`): parentheticals are
+          blanked first, so a parenthetical's commas ("(Fig. 3A, B)", "(3R,7S)", "(P <
+          0.01, t-test)") never close a clause, and only a comma followed by a space
+          closes one; the LAST opener in the gap decides whether a clause is still open
+          at the form; a head is kept across a closed clause only in the shape "X,
+          <opener> ..., <form>", with one opener right after X, and any other gap that
+          holds an opener cuts the participant off;
+        - the red team's reading (`species._excluded_adjacent`): the 686ae134 reading,
+          except that a head is kept across a closed clause only when the clause opens
+          right after it ("JA-Ile, which ..., accumulated"); a clause that opens after
+          other words ("JA-Ile accumulated after wounding, which, in turn, ...", "OPC-8:0
+          levels, which ...") cuts the head off whatever commas it holds.
+
+        Each prototype misreads a shape the other reads correctly: the red team's keeps
+        the head in "JA-Ile, which is the substrate of CYP94B3, accumulated after
+        wounding, with reduced 12-OH-JA-Ile" (a second clause is open at the form); the
+        bio-auditor's reads "OPC-8:0, which is formed from OPDA (Fig. 2A, B) was
+        undetectable", whose closing comma is missing, as open to the form, and credits
+        correct-direction rows the 686ae134 reading refuses. Agreement is the fail-closed
+        choice, and because the 686ae134 reading is one of the three, nothing earns credit
+        that 686ae134 did not credit (the price is in
+        [`known_limitations.md`](known_limitations.md)). All three cut OPDA off in "In
+        opr3 mutants, OPC-8:0, which is formed from OPDA, was undetectable" and credit the
+        head OPC-8:0; all three keep OPDA as the subject of "OPDA, which is the precursor
+        of OPC-8:0, was reduced", a substrate going down, nothing.
         An appositive ("JA-Ile, the bioactive form, was absent") keeps its subject. Else
         the participants right after the form, at most three tokens
         away with no comma (two for a forward form). A forward form takes only the
@@ -206,9 +235,9 @@ elsewhere mentions orthologs). The rule now:
        `not (fully / completely / entirely) abolished / absent / eliminated / abrogated
        / depleted / deficient / lacking`; and since CS-D repair 1 a negated comparison or
        delay: `no more / less / greater / fewer / higher / lower / lesser`, and `did /
-       does / do not` or `failed / fails to` followed within 60 characters (a full
-       stop or colon followed by a digit does not end the window, so it reads past
-       "OPC-8:0" and "gh3.10"; CS-D repair 2) by `more /
+       does / do not` or `failed / fails to` followed (the window runs to the end of the
+       sentence or a semicolon, 60 characters at most: it reads past "OPC-8:0",
+       "gh3.10", "(Fig. 3A)", "ca." and "i.e."; ORCH-746 CS-E) by `more /
        less / lesser / lower / higher / fewer / greater / further / again / than / until /
        significantly` ("did not accumulate significantly less JA-Ile than the wild
        type", "did not accumulate until 6 h", "failed to accumulate more JA-Ile",
