@@ -1,0 +1,68 @@
+{
+  "source": "experiment/pathway-mining-pilot-003 @ b7e26d8d: docs/pathway_mining/pilot/003/run/rounds/round_001/model_raw.jsonl (raw_text) and docs/pathway_mining/pilot/003/run/model_calls.jsonl (tokens, latency); audit/PILOT-003-AUDIT.md section 5",
+  "note": "Three of pilot-003's 7 thin extraction answers (_0001, _0003, _0014: 150-210 output tokens in 4-8 s; the other four, _0002, _0007, _0008, _0013, spent 5k-24k), plus one well-formed answer (_0010) for contrast. All 7 parsed and validated as ok and share one alphabetically sorted key set (evidence_ids, hypothesis, products, substrates, tissue), with no participant evidence_ids and no *_evidence_ids; _0003 and _0014 also write schema placeholders as stoichiometry values. The shape follows the provider route, not reasoning, so the thin rule is structural.",
+  "thin": [
+    {
+      "call_id": "mc_001_extract_claims_0001",
+      "paper_id": "PMC:PMC8508710",
+      "evidence_ids": [
+        "ev_5863efff93736770",
+        "ev_06e5eb88be1f278b",
+        "ev_f7be767145f0939c",
+        "ev_266669dec451a47b",
+        "ev_3cf7b6708353069c"
+      ],
+      "output_tokens": 156,
+      "latency_ms": 8335,
+      "provider": "",
+      "raw_text": "{\n  \"claims\": [\n    {\n      \"evidence_ids\": [\"ev_5863efff93736770\", \"ev_06e5eb88be1f278b\"],\n      \"hypothesis\": false,\n      \"products\": [\n        {\n          \"name\": \"13-S-hydroperoxyoctadeca-9, 11, 15-trienoic acid (13-HPOT)\",\n          \"stoichiometry\":  \"1\"\n        }\n      ],\n      \"substrates\": [\n        {\n          \"name\": \"α-linolenic acid (LeA)\",\n          \"stoichiometry\":  \"1\"\n        }\n      ],\n      \"tissue\": \"plastids\"\n    }\n  ]\n}"
+    },
+    {
+      "call_id": "mc_001_extract_claims_0003",
+      "paper_id": "PMC:PMC8508710",
+      "evidence_ids": [
+        "ev_cf8ecf735af5bcfd",
+        "ev_6915f534ca2dfd74",
+        "ev_bb4c9802d1637278",
+        "ev_bc70738e576cedef",
+        "ev_3d6841a8a4a89075"
+      ],
+      "output_tokens": 209,
+      "latency_ms": 4764,
+      "provider": "",
+      "raw_text": "{\n  \"claims\": [\n    {\n      \"evidence_ids\": [\n        \"ev_6915f534ca2dfd74\",\n        \"ev_bb4c9802d1637278\"\n      ],\n      \"hypothesis\": false,\n      \"products\": [\n        {\n          \"name\": \"13(S)-hydroperoxy-9(Z),11(E),15(Z)-octadecatrienoic acid (13-HPOT)\",\n          \"stoichiometry\":  \"has_stoichiometry\"  },\n        {\n          \"name\": \"12-oxo-phytodienoic acid (12-OPDA)\",\n          \"stoichiometry\":  \"has_stoichiometry\"  }\n      ],\n      \"substrates\": [\n        {\n          \"name\": \"α-linolenic acid (LeA)\",\n          \"stoichiometry\":  \"has_stoichiometry\"  }\n      ],\n      \"tissue\": \"chloroplast\"\n    }\n  ]\n}"
+    },
+    {
+      "call_id": "mc_001_extract_claims_0014",
+      "paper_id": "PMC:PMC12787732",
+      "evidence_ids": [
+        "ev_3d626d50fbac33db",
+        "ev_b91fc021966a2713",
+        "ev_b48f934b61eb21a4",
+        "ev_505b5baaefb3a76e",
+        "ev_edfd3bb38363baa3"
+      ],
+      "output_tokens": 154,
+      "latency_ms": 4498,
+      "provider": "",
+      "raw_text": "{\n  \"claims\": [\n    {\n      \"evidence_ids\": [\"ev_b48f934b61eb21a4\"],\n      \"hypothesis\": false,\n      \"products\": [{\"name\": \"JA\", \"stoichiometry\":  \"products_evidence_ids_placeholder\"}],\n      \"substrates\": [],\n      \"tissue\": \"leaf\"\n    },\n    {\n      \"evidence_ids\": [\"ev_b48f934b61eb21a4\"],\n      \"hypothesis\": false,\n      \"products\": [{\"name\": \"JA-Ile\", \"stoichiometry\":  \"products_evidence_ids_placeholder\"}],\n      \"substrates\": [],\n      \"tissue\": \"leaf\"\n    }\n  ]\n}"
+    }
+  ],
+  "cited": [
+    {
+      "call_id": "mc_001_extract_claims_0010",
+      "paper_id": "PMC:PMC12096059",
+      "evidence_ids": [
+        "ev_63ff7e40627bb63e",
+        "ev_50fe83be4e4544a8",
+        "ev_1f2c624a181ba5ef",
+        "ev_8d7685e98100893f",
+        "ev_d216d8e2a43cb218"
+      ],
+      "output_tokens": 4247,
+      "latency_ms": 68496,
+      "provider": "",
+      "raw_text": "{\"claims\": [{\n    \"substrates\": [{\"name\": \"12-hydroxy jasmonate\", \"evidence_ids\": [\"ev_1f2c624a181ba5ef\", \"ev_d216d8e2a43cb218\"]}],\n    \"products\": [{\"name\": \"12-hydroxy jasmonoyl-isoleucine\", \"evidence_ids\": [\"ev_1f2c624a181ba5ef\"]}],\n    \"enzyme\": \"GH3.10\",\n    \"enzyme_evidence_ids\": [\"ev_1f2c624a181ba5ef\", \"ev_d216d8e2a43cb218\"],\n    \"species\": \"Arabidopsis thaliana\",\n    \"species_evidence_ids\": [\"ev_1f2c624a181ba5ef\"],\n    \"species_inferred\": false,\n    \"hypothesis\": false,\n    \"evidence_ids\": [\"ev_1f2c624a181ba5ef\", \"ev_d216d8e2a43cb218\"]\n  }]\n}"
+    }
+  ]
+}

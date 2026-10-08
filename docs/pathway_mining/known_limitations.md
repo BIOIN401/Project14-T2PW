@@ -145,11 +145,42 @@ Priced from configured per-million-token rates, before any bill exists. It does
 not reflect provider discounts, cached-token pricing or minimum charges, and it
 says so in `costs.json`, in `report.md` and in the CLI status output.
 
+## The provider is unpinned and unreported (production follow-up)
+
+`t2pw.llm.client` is shared with production and frozen for this work, so mining can only
+mitigate what it does:
+
+* **Provider routing is unpinned.** `chat_detailed` sends no OpenRouter `provider`
+  preference, so identical requests can be served by different providers. Pilot-003 had 7
+  thin answers of 16 (no field cited; two with schema placeholders as values). Three took
+  150-210 output tokens, four took 5k-24k, and all seven share one alphabetically sorted key
+  set: the shape follows the provider route, not the amount of reasoning. Mining therefore
+  detects it structurally, re-asks a thin answer once (at most one extra call per thin answer)
+  and marks what it kept (`answer_quality`); it cannot choose the route. With no usage
+  reported, the token counts are estimates from the visible text, so the structural rule
+  decides alone; a future token rule needs an explicit per-attempt `usage_reported` flag.
+* **The provider is never reported.** `CompletionDiagnostics` has no provider field, so
+  `ModelCallRecord.provider` reads `not_reported_by_llm_client` on every live call.
+* **The reasoning setting is never sent.** `MiningModelConfig.reasoning` is recorded but
+  `chat_detailed` takes no reasoning parameter, so the provider default applies.
+* **`response_hash` is partial.** It is set only for a reply with text, as the hash of the
+  last request of a call; an empty or content-filtered reply, and every re-sent request in
+  the diagnostics `attempt_log`, carries none.
+* **Usage is cumulative.** Token counts come from a process-wide counter, so mining can
+  measure each attempt but not each provider request inside it.
+
+The fix belongs in `llm/client.py`: pin (or at least report) the provider, pass the
+reasoning setting, and hash every response.
+
 ## Frontier heuristics are untuned
 
 Twelve frontier kinds with hand-set priorities. They have been exercised against
 a synthetic fixture, not tuned against real corpora. Expect the bridge and
 conflict kinds to be the most valuable and the cofactor kind to be mostly noise.
+The species reserve (a quarter of the slots, each at the earlier of its priority
+position or the next fourth place) and the 0-3
+on-route relevance score are equally hand-set: lexical name matching, no taxonomy,
+and a carried item keeps the score it was generated with.
 
 ## No live evaluation
 

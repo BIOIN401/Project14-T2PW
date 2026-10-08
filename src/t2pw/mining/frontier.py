@@ -9,6 +9,11 @@ round just discovered, so the network grows outward instead of being filled in.
 Frontier kinds are exploration strategies, not evidence rules. Freeing the
 exploration is the point; the evidence requirements downstream are unchanged.
 
+The frontier is capped (``max_frontier_size``), and a quarter of its slots are kept
+for ``missing_species_evidence`` items: in pilot-003 the cap cut 137 of 194 items,
+every species item among them, so target-species evidence was never searched for.
+:func:`cap_frontier` applies the cap and the reservation wherever the cap applies.
+
 One rule constrains generation: a frontier item may use enzyme names, gene
 symbols, pathway names, synonyms and paper terminology *to find papers*. Those
 shared terms never create a biochemical connection -- only
@@ -17,7 +22,8 @@ shared terms never create a biochemical connection -- only
 
 from __future__ import annotations
 
-from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set
+import math
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
 
 from t2pw.mining.claims import ClaimStore
 from t2pw.mining.config import MiningConfig, StartingInput
@@ -41,7 +47,8 @@ from t2pw.mining.models import (
     STATUS_CANDIDATE,
     STATUS_INCOMPLETE,
 )
-from t2pw.mining.normalize import CHEMICAL_TYPES, is_cofactor
+from t2pw.mining.normalize import CHEMICAL_TYPES, comparison_key, is_cofactor
+from t2pw.mining.queries import rescue_terms
 
 #: Default priorities. Higher runs first. A bridge query can turn a quarantined
 #: component into pathway, and a conflict query can settle a visible
@@ -60,6 +67,11 @@ PRIORITY = {
     FRONTIER_COMPARTMENT: 2.5,
     FRONTIER_COFACTOR: 1.0,
 }
+
+#: The share of the frontier's slots kept for ``missing_species_evidence`` items
+#: whenever that many exist (ORCH-745 F-3). Those items are the only ones that ask
+#: for target-species evidence for a held lead.
+SPECIES_RESERVE = 0.25
 
 
 def seed_frontier(config: MiningConfig) -> List[FrontierItem]:
@@ -119,12 +131,13 @@ def generate(
     round_index: int,
     previous: Optional[Sequence[FrontierItem]] = None,
     exhausted_ids: Optional[Set[str]] = None,
+    cut: Optional[List[FrontierItem]] = None,
 ) -> List[FrontierItem]:
     """Derive the next round's frontier from what this round discovered.
 
-    Returns a deduplicated, priority-sorted list capped at
-    ``budgets.max_frontier_size``. Items already tried and exhausted are not
-    regenerated.
+    Returns a deduplicated list ordered and capped at ``budgets.max_frontier_size``
+    by :func:`cap_frontier`; the items the cap drops are appended to ``cut``. Items
+    already tried and exhausted are not regenerated.
     """
     spent = set(exhausted_ids or set())
     for item in previous or []:
@@ -142,6 +155,7 @@ def generate(
         component_id: str = "",
         claim_identity: str = "",
         priority_bonus: float = 0.0,
+        relevance: int = 0,
     ) -> None:
         text = str(target or "").strip()
         if not text:
@@ -159,6 +173,7 @@ def generate(
             component_id=component_id,
             entity_ids=list(entity_ids or []),
             claim_identity=claim_identity,
+            relevance=relevance,
         )
 
     touched_ids = set(delta.added_reaction_ids) | set(delta.updated_reaction_ids) | set(
@@ -301,6 +316,26 @@ def generate(
             )
 
     # -- 7. claims held back for species or completeness reasons ------------
+    target_keys = {comparison_key(config.target_species),
+                   comparison_key(config.target_species_normalized)} - {""}
+    run_keys = {comparison_key(t) for t in rescue_terms(config, graph.reactions.values())}
+
+    def on_route(identity: str, claims: Sequence[Any]) -> int:
+        """One point each: a sibling claim names the target species; a participant or
+        enzyme is a seed or a participant of a target-supported reaction; the lead's
+        component shares a non-cofactor chemical with the primary graph."""
+        score = int(any(k in comparison_key(c.species_text) for c in claims for k in target_keys))
+        names = {comparison_key(n) for c in claims
+                 for n in (*c.substrate_names, *c.product_names, c.enzyme)} - {""}
+        score += int(bool(names & run_keys))
+        reaction = graph.by_identity(identity)
+        if reaction is not None:
+            component = graph.components.get(reaction.component_id)
+            rids = component.reaction_ids if component else [reaction.reaction_id]
+            score += int(any(graph.reactions[r].chemical_ids() & primary_chem
+                             for r in rids if r in graph.reactions))
+        return score
+
     for identity, history in store.histories.items():
         current = history.current
         if current is None or current.status not in {STATUS_CANDIDATE, STATUS_INCOMPLETE}:
@@ -320,6 +355,7 @@ def generate(
                     "(an ortholog never transfers a reaction between species)"
                 ),
                 claim_identity=identity,
+                relevance=on_route(identity, siblings),
             )
         else:
             add(
@@ -329,11 +365,46 @@ def generate(
                 claim_identity=identity,
             )
 
-    ordered = sorted(
-        out.values(), key=lambda i: (-i.priority, i.kind, i.target.lower(), i.frontier_item_id)
-    )
-    cap = max(1, int(config.budgets.max_frontier_size or len(ordered) or 1))
-    return ordered[:cap]
+    kept, dropped = cap_frontier(out.values(), config.budgets.max_frontier_size)
+    if cut is not None:
+        cut.extend(dropped)
+    return kept
+
+
+def _rank(item: FrontierItem) -> Tuple[Any, ...]:
+    return (-item.priority, item.kind, item.target.lower(), item.frontier_item_id)
+
+
+def cap_frontier(
+    items: Iterable[FrontierItem], cap: int
+) -> Tuple[List[FrontierItem], List[FrontierItem]]:
+    """Order ``items`` and keep at most ``cap`` of them. Returns ``(kept, cut)``.
+
+    ``ceil(SPECIES_RESERVE x cap)`` slots go to ``missing_species_evidence`` items,
+    the most on-route first (``FrontierItem.relevance``), whenever that many exist;
+    the rest are filled in the priority order. A reserved item takes the EARLIER of
+    its priority-order place and the next fourth place (4th, 8th, ...): the order is
+    the order a round asks in, and a round whose discovery or processing budget runs
+    out after a few items would otherwise never reach one, while an item that already
+    outranks the items after it must never be pushed behind them. With no species
+    item this is the plain priority order and cut. ``cap`` 0 means no cap.
+    """
+    ordered = sorted(items, key=_rank)
+    cap = max(1, int(cap or len(ordered) or 1))
+    species = sorted((i for i in ordered if i.kind == FRONTIER_SPECIES),
+                     key=lambda i: (-i.relevance, *_rank(i)))
+    reserved = species[: math.ceil(SPECIES_RESERVE * cap)]
+    taken = {i.frontier_item_id for i in reserved}
+    rest = [i for i in ordered if i.frontier_item_id not in taken][: cap - len(reserved)]
+    stride = round(1 / SPECIES_RESERVE)
+    kept: List[FrontierItem] = []
+    for item in rest:
+        while reserved and (len(kept) % stride == stride - 1 or _rank(reserved[0]) <= _rank(item)):
+            kept.append(reserved.pop(0))
+        kept.append(item)
+    kept.extend(reserved)
+    kept_ids = {i.frontier_item_id for i in kept}
+    return kept, [i for i in ordered if i.frontier_item_id not in kept_ids]
 
 
 def merge_frontier(
@@ -341,8 +412,10 @@ def merge_frontier(
     generated: Sequence[FrontierItem],
     *,
     cap: int,
+    cut: Optional[List[FrontierItem]] = None,
 ) -> List[FrontierItem]:
-    """Carry unexhausted items forward and fold in the new ones."""
+    """Carry unexhausted items forward and fold in the new ones, capped by
+    :func:`cap_frontier`. The items the cap drops are appended to ``cut``."""
     merged: Dict[str, FrontierItem] = {}
     for item in list(current) + list(generated):
         if item.exhausted:
@@ -350,10 +423,11 @@ def merge_frontier(
         existing = merged.get(item.frontier_item_id)
         if existing is None or item.priority > existing.priority:
             merged[item.frontier_item_id] = item
-    ordered = sorted(
-        merged.values(), key=lambda i: (-i.priority, i.kind, i.target.lower(), i.frontier_item_id)
-    )
-    return ordered[: max(1, int(cap or len(ordered) or 1))]
+    kept, dropped = cap_frontier(merged.values(), cap)
+    if cut is not None:
+        cut.extend(dropped)
+    return kept
 
 
-__all__ = ["PRIORITY", "seed_frontier", "generate", "merge_frontier"]
+__all__ = ["PRIORITY", "SPECIES_RESERVE", "seed_frontier", "generate", "cap_frontier",
+           "merge_frontier"]

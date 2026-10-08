@@ -403,6 +403,16 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         mining_enabled,
     )
 
+    if args.command in {"run", "resume", "preflight"}:
+        # The project .env, before the flag, the config or the preflight read
+        # os.getenv. mining_enabled() loads it only when no flag is passed, so with
+        # --enable-pathway-mining live preflight said LLM_PROVIDER was unset and every
+        # pilot needed an outside launcher (ORCH-745 F9). Never overrides a variable
+        # already in the environment.
+        from t2pw.config import ensure_dotenv_loaded
+
+        ensure_dotenv_loaded()
+
     override = True if args.enable_pathway_mining else None
     if args.command in {"run", "resume", "preflight"} and not mining_enabled(override):
         print(

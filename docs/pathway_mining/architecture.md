@@ -128,7 +128,7 @@ material field must cite the passage that supports it.
 
 | # | Step | Module |
 |---|---|---|
-| 1 | select frontier items (priority-ordered, unexhausted) | `frontier` |
+| 1 | select frontier items (unexhausted, in frontier order: priority order, with each reserved `missing_species_evidence` item at the earlier of its priority position or the next fourth place) | `frontier` |
 | 2 | build one traceable query per item: its own terms AND the species; a second formulation (+ topic) if the first finds no new paper, or, when the topic is already one of its terms and the first query filled its window, the same query over a doubled window | `queries` |
 | 3 | acquire, screen (plus the mining rescue), cache; record inclusions and exclusions | `acquisition` |
 | 4 | index new papers; retrieve passages as evidence spans | `retrieval` |
@@ -138,7 +138,7 @@ material field must cite the passage that supports it.
 | 8 | judge: accepted / candidate / conflicting / incomplete / rejected / hypothesis | `admission` |
 | 9 | place admitted reactions **by chemistry**; quarantine the rest | `graph` |
 | 10 | record the graph delta | `models.GraphDelta` |
-| 11 | generate the next frontier from the delta | `frontier` |
+| 11 | generate the next frontier from the delta; cap it at `max_frontier_size` with a quarter of the slots kept for `missing_species_evidence` items (the most on-route leads first), and record the cut | `frontier` |
 | 12 | write the round dir, the checkpoint and the state; flush artifacts | `artifacts` |
 
 Steps 8 and 9 are deliberately separate: **admission decides whether the biology

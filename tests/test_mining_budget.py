@@ -139,7 +139,7 @@ def test_new_reactions_per_round_cap_is_checked_before_the_next_round():
     assert led.check_before_round() is None
     led.record_round(useful=True, new_reactions=3)
     assert led.check_before_round() == STOP_MAX_NEW_REACTIONS_PER_ROUND
-    assert "new reactions in round 2: 3 >= limit 3" in led.stop_detail
+    assert "newly admitted reactions in round 2: 3 >= limit 3" in led.stop_detail
 
 
 def test_paper_limits_are_tracked_separately():

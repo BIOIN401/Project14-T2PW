@@ -84,16 +84,18 @@ def test_max_new_reactions_per_round_stops_the_run_and_keeps_the_round(tmp_path)
     mined = H.run_fixture(tmp_path, budgets={"max_new_reactions_per_round": 1})
     outcome = mined.outcome
 
+    # ORCH-745 B1: the cap counts newly ADMITTED reactions only; round 1's
+    # quarantined Zea mays candidate is kept but does not count.
     first = outcome.state.deltas[0]
-    new_ids = list(first.added_reaction_ids) + list(first.added_candidate_reaction_ids)
-    assert new_ids, "fixture round 1 must add a reaction for this test to mean anything"
+    new_ids = list(first.added_reaction_ids)
+    assert new_ids, "fixture round 1 must admit a reaction for this test to mean anything"
 
     assert outcome.stop_reason == "max_new_reactions_per_round_reached"
     assert outcome.manifest.completion_state == STATE_STOPPED
     assert outcome.manifest.rounds_completed == 1
     assert len(outcome.state.deltas) == 1
     # The capped round is complete: nothing it found is dropped or deferred.
-    assert set(new_ids) <= set(outcome.state.graph.reactions)
+    assert set(new_ids) | set(first.added_candidate_reaction_ids) <= set(outcome.state.graph.reactions)
     assert outcome.run_dir.path("rounds", "round_001", "checkpoint.json").is_file()
 
     on_disk = json.loads(outcome.run_dir.path("run_manifest.json").read_text(encoding="utf-8"))
