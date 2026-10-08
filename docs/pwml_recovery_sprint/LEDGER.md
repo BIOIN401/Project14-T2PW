@@ -10802,3 +10802,29 @@ pushed. No live model call ($0).** The session was suspended for about 12 h over
 
 Decisions for the product owner are listed in the result. The first is whether to authorise one more narrow round for the
 two prototyped fixes, or to pilot `686ae134` under audit.
+
+## `ORCH-746` — species-gate fix round E, pilot-004, change set F, production cards · 2026-10-07 · DISPATCHED
+
+Brief: `C:/t/mining-handoff/ORCH-746-HANDOFF.md` (follow-up to [`ORCH-745-RESULT.md`](ORCH-745-RESULT.md)). Lead agent
+only coordinates; implementation goes through `general-purpose` subagents; every change set is reviewed on the actual
+diff by `pwml-reviewer`, `pwml-bio-auditor` and a red-team `pwml-bio-auditor`, at most 2 repair rounds, repairs
+subtract credit only. **Nothing is merged into `sprint/pwml-recovery` or `main`. Nothing is pushed.**
+
+**Product-owner decisions (2026-10-07, relayed by the ORCH-745 orchestrator in the handoff § 1; not `DECISIONS.md` entries):**
+
+| # | decision |
+|---|---|
+| 1 | Unblock with ONE narrow fix round (change set E: the two open blockers RT-D-R2-1 / BIO-D-R2-1 and BIO-D-R2-2 only), then pilot-004 |
+| 2 | Keep all four fail-closed choices as shipped: in-planta credit only from loss-of-function genetics (rule 5(a) stays removed); no credit from discussion or conclusion; the effect-polarity rule; reviews never count toward independence. A thin pilot is a finding, not a reason to relax |
+| 3 | Fed-precursor and occurrence evidence (the JA-conjugate hinge) stays held back |
+| 4 | Follow-ups: (a) participant citations verified against their spans; (b) every `unknown`-type paper reads as a review in the species gate; (c) a per-paper principal organism — together change set F, after pilot-004; (d) production follow-up cards, docs only |
+
+| item | value |
+|---|---|
+| start | `experiment/pathway-mining` @ `82fc69a7` (`C:/t/mining`, clean; suite 377, SMOKE 508); species gate `orch745/b-species-reading` @ `686ae134` (`C:/t/m745-b`, clean, unmerged; suite 856, SMOKE 508) |
+| change set E | `species.py` `_excluded` / `_effect` and the `_NO_EFFECT` delay window only, plus `tests/test_mining_species_cs_e.py` and `species_policy.md` / `known_limitations.md` / `testing.md`. Every probe the final CS-D review demonstrated becomes a `test_cs_e_746_*` row that must fail at `686ae134` |
+| E design (orchestrator) | The two reviewer prototypes each refuse something the other admits (bio-auditor: E1r refused, red team admits it; red team: the "(Fig. 3A, B)" correct direction refused, bio credits it), and the brief forbids any recall gain in E. So a sentence earns the effect only when the `686ae134` reading, the bio-auditor's reading and the red team's reading ALL credit it: the credited set at E is a subset of each, by construction |
+| G9 | base arms run by the orchestrator in `C:/t/mining-rep-base` at `686ae134`, pinned; evidence continues at `052` |
+| pilots | frozen config of 001–003 (`--species "Arabidopsis thaliana" --topic "jasmonate biosynthesis" --seed-metabolite 12-OPDA --seed-enzyme AOS`, no `--paper`, branch-default budgets, `PATHWAY_MINING_REQUIRE_EMBEDDINGS=true`); each pre-registered here before any model call; one run per code version; ≤ $2 estimated in total |
+| definition of done | unchanged from ORCH-745: suite and SMOKE 508 green; a pre-registered pilot admits ≥ 1 target reaction rated `CORRECT_TARGET_SPECIES` on in-planta or properly graded evidence and 0 against policy; bio verdict PLAUSIBLE or PLAUSIBLE_BUT_THIN with no blocking finding. Otherwise **BLOCKED** |
+| services | LM Studio `text-embedding-nomic-embed-text-v1.5` at `127.0.0.1:1234` up at dispatch; heavy lock free |
