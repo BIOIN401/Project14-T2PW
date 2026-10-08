@@ -1022,10 +1022,12 @@ _READINGS = (_excluded, _excluded_blanked, _excluded_adjacent, _excluded_unambig
 
 def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
             prods: Sequence[Sequence["re.Pattern[str]"]]) -> str:
-    """The effect of a loss-of-function clause on the right participant, or "": the
-    686ae134 reading's reason when every reading of :data:`_READINGS` finds an effect
+    """The effect of a loss-of-function clause on the right participant, or "": the first
+    reading's reason when every reading of :data:`_READINGS` finds an effect
     (:func:`_effect_under`), else "" (ORCH-746 CS-E). Credit here is credit under each
-    reading, so nothing is credited that 686ae134 did not credit."""
+    reading, so nothing is credited that 686ae134 did not credit. The first reading is the
+    686ae134 cut-off rule, but since CS-E repair 1 its reason string can differ from the one
+    686ae134 recorded (the gap skip and "nowhere"); credit cannot."""
     reasons = [_effect_under(clause, subs, prods, excluded) for excluded in _READINGS]
     return reasons[0] if all(reasons) else ""
 
@@ -1068,6 +1070,12 @@ def _effect_under(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
             after = [h for h in hits if h[0] >= form.end()
                      and len(clause[form.end():h[0]].split()) <= (2 if forward else 3)
                      and not re.search(r"[,;]", clause[form.end():h[0]])]
+            if before and not inside:
+                # ORCH-746 CS-E repair 2 (BIO-E746R1-4): a participant right after the form, an
+                # attributive "reduced 12-OH-JA-Ile" (at most two tokens away, no comma), is a
+                # candidate too, so "JA-Ile accumulated ... alongside reduced 12-OH-JA-Ile" names
+                # both sides and earns nothing. Adding candidates can only remove credit.
+                before += [h for h in after if len(clause[form.end():h[0]].split()) <= 2]
             sides = {h[2] for h in (inside or before or after)}
             if sides == {side}:
                 return f"{form.group(0)!r} on a {side}"
