@@ -150,7 +150,7 @@ elsewhere mentions orthologs). The rule now:
         and", or a ";") does not cut off. Since ORCH-746 CS-E the cut-off is read several
         ways, and a form earns its effect only when ALL the readings of
         `species._READINGS` credit it (`species._effect`; the reason recorded is the first
-        reading's). Five readings ship (three since CS-E, two appended in repair 1):
+        reading's). Six readings ship (three since CS-E, three appended in repair 1):
         - the 686ae134 reading (`species._excluded`, CS-D repair 2, unchanged): a
           participant is cut off when the clause that follows it is still OPEN at the
           form (no comma at all between the first opener and the form: "JA-Gln
@@ -187,7 +187,16 @@ elsewhere mentions orthologs). The rule now:
           with reduced 12-OH-JA-Ile." (the reversed 12-OH-JA-Ile -> JA-Ile), "In opr3
           mutants, OPC-8:0 levels were elevated with decreased OPDA." (contrary) and the
           same shape after a closed relative clause ("JA-Ile, which is the substrate of
-          CYP94B3 (Fig. 3A, B), accumulated after wounding with reduced 12-OH-JA-Ile").
+          CYP94B3 (Fig. 3A, B), accumulated after wounding with reduced 12-OH-JA-Ile");
+        - the consequence reading (`species._excluded_consequence`, repair 1 item 9): the
+          686ae134 reading in which a comma before a participle or consequence word also
+          opens a clause: `, <any word ending in -ing>`, `, accompanied`, `, followed`,
+          `, coupled`, `, paralleled`, `, associated`, `, yet`, `, thus`, `, thereby`,
+          `, hence`, `, so`. It refuses "In cyp94b3 mutants, JA-Ile accumulated after
+          wounding, resulting in reduced 12-OH-JA-Ile levels." (the reversed 12-OH-JA-Ile
+          -> JA-Ile), ", leading to strongly reduced OPC-8:0 levels", ", accompanied by
+          reduced 12-OH-JA-Ile levels" and "In jar1 mutants, JA-Ile was formed, yet
+          12-OH-JA-Ile was reduced." (contrary).
 
         Each prototype misreads a shape the other reads correctly: the red team's keeps
         the head in "JA-Ile, which is the substrate of CYP94B3, accumulated after
@@ -197,9 +206,9 @@ elsewhere mentions orthologs). The rule now:
         correct-direction rows the 686ae134 reading refuses. Agreement is the fail-closed
         choice, and because the 686ae134 reading is one of them, nothing earns credit that
         686ae134 did not credit; a reading appended to the tuple can only remove credit
-        (the price is in [`known_limitations.md`](known_limitations.md)). All five cut
+        (the price is in [`known_limitations.md`](known_limitations.md)). All six cut
         OPDA off in "In opr3 mutants, OPC-8:0, which is formed from OPDA, was undetectable"
-        and credit the head OPC-8:0; all five keep OPDA as the subject of "OPDA, which is
+        and credit the head OPC-8:0; all six keep OPDA as the subject of "OPDA, which is
         the precursor of OPC-8:0, was reduced", a substrate going down, nothing.
         An appositive ("JA-Ile, the bioactive form, was absent") keeps its subject. Else
         the participants right after the form, at most three tokens
@@ -273,7 +282,9 @@ elsewhere mentions orthologs). The rule now:
          before 1 h");
        - a non-significant change (RT-E2-2): `not (statistically) significant`,
          `not statistically`, `non-significant`, `nonsignificant`, `insignificant`,
-         `n.s.`, `P >` or `P ≥` a decimal, `P =` 0.05 to 0.99, `tend(s / ed) to`;
+         `n.s.`, `P >` or `P ≥` a decimal, `P =` 0.05 to 0.99, `tend(s / ed) to`, and
+         `within (the) (experimental / measurement / technical) error / variation`
+         ("reduced, but within experimental error"; repair 1 item 10);
        - the genotype joined to the wild type (RT-E2-2): `mutant(s)`, `line(s)`,
          `knockout(s)` or `plant(s)` followed by *and* / *or*, an optional *also*, *in*
          and *the*, then `wild type`, `wild-type`, `Col-0` or `WT` ("below the detection
