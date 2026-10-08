@@ -10828,3 +10828,13 @@ subtract credit only. **Nothing is merged into `sprint/pwml-recovery` or `main`.
 | pilots | frozen config of 001–003 (`--species "Arabidopsis thaliana" --topic "jasmonate biosynthesis" --seed-metabolite 12-OPDA --seed-enzyme AOS`, no `--paper`, branch-default budgets, `PATHWAY_MINING_REQUIRE_EMBEDDINGS=true`); each pre-registered here before any model call; one run per code version; ≤ $2 estimated in total |
 | definition of done | unchanged from ORCH-745: suite and SMOKE 508 green; a pre-registered pilot admits ≥ 1 target reaction rated `CORRECT_TARGET_SPECIES` on in-planta or properly graded evidence and 0 against policy; bio verdict PLAUSIBLE or PLAUSIBLE_BUT_THIN with no blocking finding. Otherwise **BLOCKED** |
 | services | LM Studio `text-embedding-nomic-embed-text-v1.5` at `127.0.0.1:1234` up at dispatch; heavy lock free |
+
+### `ORCH-746` progress — change set E implemented, G9 green, round-0 review running · 2026-10-08 00:50
+
+| item | state |
+|---|---|
+| change set E | `orch745/b-species-reading` @ `5eca087b` (4 commits on `686ae134`: E1 three-reading `_effect`, E2 window `[^;]{0,60}?`, tests, docs). 5 files, all in scope. Mining suite **915** (856 + 59), 0 survivors (implementer). Probe matrix over 223 probes × 4 trees: 0 rows credited at the tip that `686ae134`, the bio prototype or the red-team prototype refuses |
+| G9 | `052` (orchestrator, `C:/t/mining-rep-base` @ `686ae134`, pinned): **44 / 44** `test_cs_e_746_*` rows fail with `AssertionError`; 0 survivors; committed on `experiment/pathway-mining` @ `a9ed963b` with the CS-E brief |
+| review | round 0 running: `pwml-reviewer` + `pwml-bio-auditor` + red team, severity standard of the handoff § 3, real-corpus precision run at `686ae134` and `5eca087b` |
+| production cards | five drafted and adversarially checked against `b4bb0b74`, in `C:/t/mining-handoff/cards/` (`PF-746-01` eligibility lexicon, `-02` llm client, `-03` acquire PMCID/DOI, `-04` embed fallback cache, `-05` ingest sections); docs only, registered at close |
+| next | if E is approved: `--no-ff` merge into `experiment/pathway-mining`, gates, pilot-004 pre-registration |
