@@ -519,6 +519,8 @@ _NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
                   r"\bnot (?:statistically )?significant\b", r"\bnot statistically\b",
                   r"\b(?:non-?|in)significant", r"\bn\.\s?s\.", r"\bp\s*(?:>|\u2265)\s*0?\.\d",
                   r"\bp\s*=\s*0?\.(?:0[5-9]|[1-9])", r"\btend(?:ed|s)? to\b",
+                  # (repair 1 item 10: "reduced, but within experimental error")
+                  r"\bwithin (?:the )?(?:experimental |measurement |technical )?(?:error|variation)\b",
                   # ... and the genotype joined to the wild type ("in jar1 mutant and wild-type
                   # plants", "in opr3 mutants or in the wild type", "and Col-0 alike")
                   r"\b(?:mutants?|lines?|knock-?outs?|plants?)\s+(?:and|or)\s+(?:also\s+)?(?:in\s+)?(?:the\s+)?"
