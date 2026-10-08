@@ -507,7 +507,21 @@ _NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
                   r"\b(?:more|less|lesser|lower|higher|"
                   r"fewer|greater|further|again|than|until|significantly)\b",
                   # a negation after the effect (CS-D review N4 / BIO-D-4)
-                  r"\bneither\b[^;:]*\bnor\b", r"\bnone of\b")
+                  r"\bneither\b[^;:]*\bnor\b", r"\bnone of\b",
+                  # ORCH-746 CS-E repair 1, RT-E2-1: a delay written with ANY absence form ("was
+                  # not detected until 30 min", "absent until stage 13", "did not accumulate
+                  # before 1 h") is not an absence
+                  r"\buntil\b", r"\b(?:before|prior to)\s+\d",
+                  # RT-E2-2: a non-significant change ("not statistically significant", "n.s.",
+                  # "P > 0.05", "P = 0.08", "tended to") ...
+                  r"\bnot (?:statistically )?significant\b", r"\bnot statistically\b",
+                  r"\b(?:non-?|in)significant", r"\bn\.\s?s\.", r"\bp\s*(?:>|\u2265)\s*0?\.\d",
+                  r"\bp\s*=\s*0?\.(?:0[5-9]|[1-9])", r"\btend(?:ed|s)? to\b",
+                  # ... and the genotype joined to the wild type ("in jar1 mutant and wild-type
+                  # plants", "in opr3 mutants or in the wild type", "and Col-0 alike")
+                  r"\b(?:mutants?|lines?|knock-?outs?|plants?)\s+(?:and|or)\s+(?:also\s+)?(?:in\s+)?(?:the\s+)?"
+                  r"(?:wild[- ]?type|col-0|wt)\b",
+                  r"\balike\b")
 #: The effect's subject is a protein or transcript measure, not a metabolite (CS-D D2).
 _MEASURE = _any(r"\bproteins?\b", r"\babundance\b", r"\btranscripts?\b", r"\bmrnas?\b",
                 r"\bexpression\b", r"\bexpressed\b", r"\bactivit(?:y|ies)\b")
