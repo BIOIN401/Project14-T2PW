@@ -454,7 +454,8 @@ _EFFECT_FORMS = (
           r"\bno\b(?:\s+[\w:()+-]+){1,4}?\s+(?:was|were)\s+(?:detected|found|formed)\b",
           r"\b(?:reduced|decreased|lower|diminished|impaired|compromised)\b",
           # CS-D repair 1 (R2): "aos mutants accumulated less 12-OPDA" is a decrease
-          r"\baccumulated (?:\w+ ){0,2}?(?:less|lower|reduced|decreased)\b"), "product", False),
+          r"\baccumulated (?:(?!(?:not|no|hardly|scarcely|barely|never)\b)\w+ ){0,2}?"
+          r"(?:less|lower|reduced|decreased)\b"), "product", False),
     # forward; repair 1 (R1) dropped the unbriefed "produced / formed / contained no"
     (_any(r"\black(?:ed|ing)\b", r"\bdeficient in\b", r"\baccumulated no\b"), "product", True),
     (re.compile(r"\b(?:accumulated|increased|elevated|higher)\b"), "substrate", False),
@@ -473,8 +474,8 @@ _ENZYME_HEAD = re.compile(r"\s+(?![a-z-]*(?:creases?|phases?|cases?|bases?|lease
 #: "Root growth of the jar1 mutant was reduced on medium containing JA-Ile."
 _PHENOTYPE = re.compile(r"\b(?:growth|fertility|fertile|resistance|susceptibility|tolerance|senescence|yield|"
                         r"biomass|germination|flowering|development|phenotypes?)\b")
-#: A comma-led relative or adverbial clause starts a new subject: a participant before it
-#: is not the subject of an effect after it (CS-D repair 1, review N3).
+#: The opener of a comma-led relative or adverbial clause (CS-D repair 1, review N3; how a
+#: participant is cut off by one is :func:`_excluded`, CS-D repair 2).
 _NEW_SUBJECT = re.compile(r";|,\s*(?:which|that|who|whose|with|whereas|while|although|though|but|and)\b")
 #: The noun after the gene says the marker is not OF the gene: "mutants in the JAR1
 #: pathway", "the myc2 mutant in the JAR1 background" (CS-D repair 1, RT-D-4).
@@ -499,7 +500,8 @@ _NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
                   # ("did not accumulate significantly less JA-Ile than", "did not accumulate
                   # until 6 h", "accumulated no more JA-Ile than")
                   r"\bno (?:more|less|greater|fewer|higher|lower|lesser)\b",
-                  r"\b(?:(?:did|does|do) not|fail(?:ed|s)? to)\b[^.;:]{0,60}?\b(?:more|less|lesser|lower|higher|"
+                  r"\b(?:(?:did|does|do) not|fail(?:ed|s)? to)\b(?:[^.;:]|[.:](?=\d)){0,60}?"
+                  r"\b(?:more|less|lesser|lower|higher|"
                   r"fewer|greater|further|again|than|until|significantly)\b",
                   # a negation after the effect (CS-D review N4 / BIO-D-4)
                   r"\bneither\b[^;:]*\bnor\b", r"\bnone of\b")
@@ -509,7 +511,7 @@ _MEASURE = _any(r"\bproteins?\b", r"\babundance\b", r"\btranscripts?\b", r"\bmrn
 #: A loss-of-function marker followed by the gene it is of: "knockout of GH3.10",
 #: "T-DNA insertion lines of AOS", "mutants in JAR1", "The SALK_034543 insertion line of
 #: GH3.10" (at most three tokens, then "of" / "in", then an optional "the").
-_MARKER_OF = re.compile(r"\s*(?:[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?")
+_MARKER_OF = re.compile(r"\s*(?:(?!(?:of|in)\b)[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?")
 #: The participant + enzyme branch of the review route (rule 7) keeps the strict set.
 _CONVERSION = _any(r"\bconvert", r"\bconversion\b", r"formed from", r"metaboli[sz]ed to",
                    r"produced from", r"synthesi[sz]ed from")
@@ -798,6 +800,22 @@ def _bound(clause: str, cats: Sequence[Sequence["re.Pattern[str]"]]) -> bool:
     return False
 
 
+def _excluded(clause: str, hit: Tuple[int, int, str], form_start: int) -> bool:
+    """Is a participant before an effect form cut off from it by a comma-led relative or
+    adverbial clause (CS-D repair 2)? Either the clause that follows the participant is
+    still OPEN at the form ("JA-Gln accumulated ..., which had reduced JA-Ile"), or the
+    participant sits INSIDE such a clause that closes before the form ("OPC-8:0, which is
+    formed from OPDA, was undetectable": OPDA is excluded, the head OPC-8:0 stays)."""
+    gap = clause[hit[1]:form_start]
+    opened = _NEW_SUBJECT.search(gap)
+    if opened and "," not in gap[opened.end():]:
+        return True
+    opener = None
+    for opener in _NEW_SUBJECT.finditer(clause[:hit[0]]):
+        pass
+    return bool(opener and "," not in clause[opener.end():hit[0]] and "," in gap)
+
+
 def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
             prods: Sequence[Sequence["re.Pattern[str]"]]) -> str:
     """The effect of a loss-of-function clause on the right participant, or "" (CS-D D1):
@@ -807,10 +825,8 @@ def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
     A negation before the form in the clause refuses it.
 
     The form's subject (CS-D repair 1): the participants inside the form ("no JA-Ile was
-    detected"); else every participant before it in the clause that no relative or
-    adverbial clause separates from it ("JA-Gln accumulated ..., which had reduced JA-Ile",
-    "OPC-8:0 levels were elevated, with decreased OPDA"; an appositive "JA-Ile, the
-    bioactive form, was absent" keeps its subject; none for a forward form);
+    detected"); else every participant before it in the clause that a comma-led relative
+    or adverbial clause does not cut off (:func:`_excluded`; none for a forward form);
     else the participants right after it, at most three tokens away (two for a forward
     form) with no comma between. If those candidates name BOTH a substrate and a product
     the subject is ambiguous and the form earns nothing ("the OPDA metabolite OPC-8:0
@@ -828,7 +844,7 @@ def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
                 continue
             inside = [h for h in hits if form.start() <= h[0] < form.end()]
             before = [] if forward else [h for h in hits if h[1] <= form.start()
-                                         and not _NEW_SUBJECT.search(clause[h[1]:form.start()])]
+                                         and not _excluded(clause, h, form.start())]
             after = [h for h in hits if h[0] >= form.end()
                      and len(clause[form.end():h[0]].split()) <= (2 if forward else 3)
                      and not re.search(r"[,;]", clause[form.end():h[0]])]
