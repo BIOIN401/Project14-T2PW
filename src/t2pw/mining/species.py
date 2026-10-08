@@ -619,7 +619,9 @@ _CITATION = re.compile(
     r"|previously (?:reported|shown|described|demonstrated)|as (?:shown|reported|described) (?:by|in)"
     r"|(?:prior|earlier) (?:work|studies|reports)|(?:has|had|have) been (?:shown|reported|described|demonstrated)"
     r"|co-?workers|\(\s*refs?\.?\s*\d|well[- ]known|it is (?:well )?established that"
-    r"|as (?:we )?reported|is known to",
+    r"|as (?:we )?reported|is known to"
+    # ORCH-746 CS-E repair 2 (RT-R1-6): background stated in a results sentence
+    r"|(?:are|was|were) known to|shown previously|well[- ]documented|well[- ]established|it is known",
     re.IGNORECASE)
 _COMPARISON = _any(r"\bunlike\b", r"in contrast", r"by contrast", r"\bwhereas\b",
                    r"compared (?:with|to)", r"relative to", r"equivalent to", r"\bversus\b",
