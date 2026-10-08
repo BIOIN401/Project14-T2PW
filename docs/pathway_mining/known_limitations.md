@@ -75,16 +75,29 @@ outside the sets ("ostensibly abolished"), or an application phrased outside the
 loss-of-function rule, would still earn credit. So would a double mutant that carries
 the claim's gene beside the gene that explains the result ("the aos jar1 double mutant
 ... 12-OPDA undetectable" for a JAR1 claim), which is a mis-extraction the sentence rule
-cannot see.
+cannot see. The effect's subject is chosen by position, not grammar (species policy,
+rule 5(b) item 4): a sentence whose real subject is something else and which names the
+participant before the effect with nothing but plain words between them is still read as
+the participant's effect. The same holds when extraction names a regulator AS the claim's enzyme:
+"Knockdown of MYC2 reduced wound-induced JA-Ile in leaves." is a complete rule-5(b)
+statement for a MYC2-catalysed claim (RT-D-5); requiring the claim's own gene closes
+the regulator-mutant family only against OTHER genes' mutants, never against a
+mis-assigned catalyst.
 
-**Precision rests on the paper-level organism screen (R3-N3, measured).** On the red
-team's 358-document real corpus, 37 unique loss-of-function sentences survive every
-claim-independent veto in a credit-bearing section; 34 of them are held back only
-because the paper-level screen supplies the organisms the document names (E. coli,
-Listeria, Pseudomonas, Fusarium, mouse and zebrafish results such as "Delta bioE mutants
-showed markedly lower bacterial loads"), not by any sentence rule. Screen coverage is the
-dominant control on species correctness; a per-paper principal organism decided at
-inclusion (ceiling N4) is the only thing that moves it.
+**Precision rests on the paper-level organism screen (R3-N3, RT-D-5, measured).** On
+the red team's 358-document real corpus at fd7c737c, 37 unique loss-of-function
+sentences survived every claim-independent veto in a credit-bearing section, and 34 of
+them were held back only because the paper-level screen supplies the organisms the
+document names (E. coli, Listeria, Pseudomonas, Fusarium, mouse and zebrafish results
+such as "Delta bioE mutants showed markedly lower bacterial loads"). Re-measured at
+6454ef98 (CS-D): 31 unique surviving sentences, 29 credited with the screen empty, 27 held
+by the screen, 2 credited with it: T1-class (correct) and a dapat pleiotropy sentence
+("Before heat stress, dapat mutant presented a distinct metabolic state, marked by
+amino-acid accumulation, altered organic-acid profiles, reduced soluble sugars and
+elevated endogenous SA."), credited only because extraction made a token of that clause
+the claim's product. Screen coverage is the dominant control on species correctness; a
+per-paper principal organism decided at inclusion (ceiling N4) is the only thing that
+moves it.
 
 * **Recall cost of removing rule 5(a), accepted.** These now earn nothing, and such a
   reaction stays a `species_ambiguous` lead for a `missing_species_evidence` query:
@@ -124,7 +137,19 @@ inclusion (ceiling N4) is the only thing that moves it.
     `expressed`, `activity` or `similar`, and "equivalent" or "the corresponding gene"
     (homology markers, BIO-R1-7);
   - D1 recovered the commonest knockout phrasing: "did not / failed to accumulate",
-    "no longer detected" now earn credit.
+    "no longer detected" now earn credit. They are NOT immune to no-effect prose: "did
+    not accumulate significantly less JA-Ile than the wild type" was credited at
+    6454ef98, and CS-D repair 1 added the negated-comparison and delay vetoes (species
+    policy) that close that class;
+  - CS-D repair 1 (R2): a clause naming both a substrate and a product before its effect
+    ("In opr3 mutant leaves, OPC-8:0 formed from OPDA was reduced.", "JA-Ile formation
+    from JA was abolished", "13-HPOT formed from alpha-linolenic acid was undetectable")
+    is ambiguous and earns nothing; a participant separated from the effect by a
+    comma-led relative or adverbial clause (", which", ", with", ...) is not its subject;
+    a clause naming a whole-plant phenotype (growth, fertility, yield, ...) earns
+    nothing even when a metabolite is the real measurement; a participant name followed
+    by an "-ase" noun is read as an enzyme; "produced / formed / contained no X" no
+    longer earns credit (only "accumulated no X").
 * **Recall cost of the review route (BIO-R2-5, R3-N4c), accepted.** Verb-first review
   prose with a verb outside the strict set earns nothing: "In Arabidopsis, OPR3 reduces
   OPDA to OPC-8:0.", "JAR1 conjugates jasmonic acid with isoleucine to form JA-Ile.",
@@ -142,7 +167,13 @@ inclusion (ceiling N4) is the only thing that moves it.
   paper-level organism screen; a screen that misses the paper's own organism admits
   the wrong species (species policy, ceiling N4, measured above). An organism or
   gene-symbol prefix missing from `species._ORGANISM_WORDS` / `species._FOREIGN_GENE`
-  is not seen. An uncited background statement about the target in an abstract or a
+  is not seen, and the magnitude is large: after CS-D's D4 additions the red team found
+  10 of 10 unlisted plant binomials credited on an otherwise complete loss-of-function
+  sentence (Citrus sinensis, Hevea brasiliensis, Chrysanthemum morifolium, Cucumis
+  sativus, Fragaria vesca, Helianthus annuus, Spinacia oleracea, Malus domestica,
+  Hibiscus cannabinus, Nelumbo nucifera; RT-D-3). No finite genus list closes this;
+  only instrumentation does: a per-paper principal organism decided at inclusion, or
+  `paper_observed_organisms` filled from a taxonomy-backed source (EuropePMC / MeSH). An uncited background statement about the target in an abstract or a
   span labelled `body` ("In Arabidopsis, aos knockout lines lacked 12-OPDA." in a
   Marchantia paper) earns primary `in_planta`: true biology, credited to the wrong
   paper (R3-N2). Closing it needs the principal-organism field plus a span-level
