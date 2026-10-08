@@ -532,8 +532,11 @@ _MEASURE = _any(r"\bproteins?\b", r"\babundance\b", r"\btranscripts?\b", r"\bmrn
                 r"\bexpression\b", r"\bexpressed\b", r"\bactivit(?:y|ies)\b")
 #: A loss-of-function marker followed by the gene it is of: "knockout of GH3.10",
 #: "T-DNA insertion lines of AOS", "mutants in JAR1", "The SALK_034543 insertion line of
-#: GH3.10" (at most three tokens, then "of" / "in", then an optional "the").
-_MARKER_OF = re.compile(r"\s*(?:(?!(?:of|in)\b)[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?")
+#: GH3.10" (at most three tokens, then "of" / "in", then an optional "the"). No gap token is
+#: itself "of" / "in" (CS-D repair 2) or names another gene's role (ORCH-746 CS-E repair 1,
+#: BIO-D-R2-3 / RT-D-R2-3: "Mutants lacking a regulator of AOS", "with defects upstream of JAR1").
+_MARKER_OF = re.compile(r"\s*(?:(?!(?:of|in|regulat\w*|upstream|downstream|genes?|factors?|activators?|repressors?|"
+                        r"defects?|targets?)\b)[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?")
 #: The participant + enzyme branch of the review route (rule 7) keeps the strict set.
 _CONVERSION = _any(r"\bconvert", r"\bconversion\b", r"formed from", r"metaboli[sz]ed to",
                    r"produced from", r"synthesi[sz]ed from")
