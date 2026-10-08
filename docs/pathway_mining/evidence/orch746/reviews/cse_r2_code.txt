@@ -1,0 +1,103 @@
+VERDICT: REQUEST_CHANGES
+
+FIT_FOR_PILOT: NO as shipped. It becomes YES once three subtract-only `_NO_EFFECT` entries are added (F1, F2, F5 below). I measured them at zero cost: suite 1127 passed, 0 of 721 matrix rows change, every canonical control keeps its credit.
+- Why NO: an absence that is only temporary still earns credit and is admitted end to end, in ordinary wording. "In jar1 mutants, JA-Ile was initially undetectable but increased after 1 h." is one example (CSE-R2-C1). The pilot's definition of done allows zero admissions against policy.
+- If the pilot runs at f3df072f anyway, the auditor should check every in_planta deciding sentence for:
+  1. a temporary absence: "initially", "at first", "<n> <unit> after wounding, but increased / rose / reached", "at early times";
+  2. a control word in a sentence that also has an unrelated "than" ("lower than the detection limit", "less than 1 ng");
+  3. a spelled-out wild-type accession (Columbia, Wassilewskija, Landsberg);
+  4. a basal or mock absence with no control word named ("undetectable before wounding", "under mock conditions");
+  5. "no statistically meaningful / supported difference";
+  6. a reversed claim direction, and regulator words outside the lists ("partner of", "interactor of").
+- Expect a thin result: allele-numbered genotypes (jar1-1, opr3-1, dde2-2) still earn nothing.
+
+SUMMARY: I reviewed the diff 01d436cf..f3df072f (7 commits) hunk by hunk. All runs went through bounded_run with PYTHONDONTWRITEBYTECODE=1. Run directories are under C:/t/bt/rev746e-r2-code/runs/; 31 runs, every one FINAL SURVIVING COUNT 0. The worktree is still clean at f3df072f (`git status`: 0 lines).
+
+What holds:
+1. **Boundary.** Exactly the 5 allowed files change. The test-file change is an append plus one comment-only edit at tests/test_mining_species_cs_e.py:374; no assertion changes. No cache files.
+2. **Every item only removes credit, by construction.** I checked every use of each changed object:
+   - The new `_NO_EFFECT` entries (species.py:542-576) are used only at :1151, where a match returns GRADE_NONE.
+   - The `_CITATION` additions (:629) are used only at :1161, which also returns GRADE_NONE.
+   - `_CONTAINER` (:486-487) only drops gene hits inside `_bound` (:867). `_bound`'s only caller is a `continue` (:1173).
+   - The `_MARKER_OF` additions (:586-588) only add exclusions inside a negative lookahead, so they can only stop a match (used only at :874).
+   - Item 9 (:1073-1078) runs only when `before` is non-empty and only adds candidates. Credit needs `sides == {side}`, so adding a candidate can never create credit.
+3. **Match to the brief and the three prototypes.** Every entry is the brief's item, verbatim or a superset of the prototype entry. There is one exception, the code prototype's `\bno statistically\b` (CSE-R2-C2).
+4. **Subset property, measured.**
+   - Fuzz: species.py from the four git archives loaded side by side, 60,000 random sentences. 0 violations of tip ⊆ 01d436cf ⊆ 5eca087b ⊆ 686ae134 at the grade level. Per clause, `_bound`, `_effect` and every `_effect_under` reading are also subsets of 01d436cf (runs/fuzz2).
+   - Matrix: the implementer's 721-probe matrix, re-run on real archives (scripts/matrix_arch.py). Credited rows: 686ae134 495, 5eca087b 419, 01d436cf 283, tip 163. 0 rows are credited at a later tree and refused at an earlier one, and every tip credit is accepted.
+   - States and statuses are row-for-row identical to the implementer's r2b_* runs. 120 rows lose credit; the 11 that are correct biology match known_limitations exactly (runs/mxcmp).
+5. **G9.** I ran the tip test file on an archive of 01d436cf: 103 failed, all of them `test_cs_e_r2_746_*` and all AssertionError; 168 passed, including all 19 r2 controls; pin violations [] (runs/g9_01d4b). This matches evidence 054. The test rows use only helpers that already exist at the base (probe, admitted, _rows, JAR/OPR/AOC2/LOX/B1/CYP_REV/OPR_REV/T1).
+6. **Suite, T-rows and replay.**
+   - Full 26-file mining suite: 1127 passed, pin violations [] (runs/suite_tip).
+   - T1, T1b, T2-T11, #33 and the full pilot-003 replay: 17 passed (runs/trows).
+7. **My predecessor's round-1 rows.** NS1-3 and NS6, WT3/5/8/9, DL1-4/7/8, CO1-4, RG1/2, N7a/b, SU1-3 and BW3/4/19/23 are all refused at the tip; all were credited at 01d436cf (runs/pr1_tip, pr1_e1). K1-K10 keep their credit. DL5 ("undetectable before wounding") is still credited, as it was at 01d436cf; it was not a blocking row.
+8. **Regex hygiene** (runs/hygiene).
+   - No catastrophic backtracking.
+   - The checks named in the brief: "(Fig. 2D)" does not match as a time; "Col" inside words, "WT" in gene names (WTH1), "COL1" and "lower-case" do not match.
+   - The other unintended matches I found only remove credit; see C5 and C6.
+9. **Docs.** species_policy rule 5(b) describes the shipped shapes accurately. known_limitations' recall-cost list and the RT-R1-7 / BIO-E746R1-3 / -5 figures match the source reviews. Exceptions are under C1 and C5.
+
+Decisions: subtract-only and fail-closed both hold. Fed-precursor, occurrence and "only marginally less" are untouched. No open D-xxx item was resolved. Item 8's `_bound` before-branch was implemented through `_CONTAINER`, as the brief's own alternative allows.
+
+Process slip, mine: one malformed heredoc command started `python.exe -` outside the wrapper. PIDs 260020 and 260044, started 14:16:08, are still alive, idle on stdin; they imported nothing and wrote nothing. My `taskkill /PID` was denied by the permission classifier. Please terminate those two PIDs yourself; no other cleanup is needed.
+
+Could not verify:
+- the MiningController._admit path (I used ClaimStore + admission.judge);
+- how often these shapes occur in jasmonate literature. The 184k-sentence corpus (corpus_d) has no plant time-course loss-of-function prose of any shape, including the shapes rounds 0-1 ruled blocking;
+- live pilot behaviour, SMOKE and the 508-test integration suite (not run).
+
+FINDINGS:
+- CSE-R2-C1 [blocking] (clause (c). This is the time-course class rounds 0 and 1 ruled blocking. It sits outside the residual as documented, which says a later presence written with "but" is caught. The prose is my own construction: the standard English idiom for a temporary absence, and a near-identical twin of round 1's blocking DL8 "not detected at 30 min, but was detected at 2 h". Honest limits: I have no corpus example, and exposure in real papers is reduced because jar1 is usually written jar1-1.) species.py:545, :551, :552; known_limitations.md:283-286
+  PROBLEM:
+  - The "but" closure works only when the time is written "at <n> <unit>" (:551).
+  - The later-presence shape (:545) is a word list: present / detected / detectable / appeared / accumulated.
+  - "initially" and "at first" are in no list.
+  - So an absence followed by "but increased / rose / reached" is credited as an absence. The known_limitations text says such a sentence must avoid "but" to slip past, so the product owner is told this route is narrower than it is.
+  EVIDENCE: Each of these is TSS / accepted / admitted=True at the tip, at 01d436cf and at 686ae134 (runs/pr2b_tip, pr2b_e1, pr2b_b686, pr2_tip, pr2_e1, pr2_b686). It is not a weakening.
+  - E5 "In jar1 mutants, JA-Ile was initially undetectable but increased after 1 h." (jasmonic acid -> JA-Ile [JAR1])
+  - E16 "...initially undetectable but increased steadily."
+  - E8 "...at first undetectable but increased after 2 h."
+  - E2 "In jar1 mutants, JA-Ile was not detected 15 min after wounding, but increased strongly."
+  - E12 "...undetectable 15 min after wounding but rose rapidly."
+  - BU7 "JA-Ile was below the detection limit in jar1 mutants 15 min after wounding, but increased strongly over the following hour."
+  - BU5 "...but reached high levels within an hour."
+  - E19 "In opr3 mutants, OPC-8:0 was initially below the detection limit but increased upon prolonged wounding." (OPDA -> OPC-8:0 [OPR3])
+  - E23 "In aos mutants, 12-OPDA was not detected initially but increased after 3 d." (AOS)
+  - E1 "...undetectable at early times after wounding but increased strongly."
+  - For contrast, BU1 ("at 15 min after wounding but increased") is refused by :551.
+  FIX: subtract-only `_NO_EFFECT` entries, prototyped in C:/t/bt/rev746e-r2-code/plugins/rev746e_r2_fix.py:
+  - F1 `\b\d+(?:\.\d+)?\s*(?:min|minutes?|h|hrs?|hours?)\b[^;]*\bbut\b`
+  - F2 `\b(?:but|;)[^.;]*?\b(?:increas\w*|rose|risen|rising|reach\w*|peak\w*|recover\w*)\b`
+  - F5 `\b(?:initially|at first)\b`
+  Measured with F1-F5 active: 721-row matrix, 163 credited rows, 0 state or status differences (runs/mx_fix2, mxcmp_fix2); suite 1127 passed, pin violations [] (runs/suite_fix2); every E and BU route refused; C1-C5, C7 and K1-K10 keep credit (runs/pr_fix2). Also correct known_limitations.md:283.
+
+- CSE-R2-C2 [non_blocking] (rare wording inside the documented "no significance word" residual: the corpus has 0 hits for "no statistically <non-significant word>" and 7 for "no statistically significant", which is refused) species.py:558
+  PROBLEM: The brief calls the code prototype's `\bno statistically\b` subsumed, but `\bstatistical\b` does not match "statistically". So the claim that the shipped set is the union of all three prototypes is false for this one entry.
+  EVIDENCE: NS1b "JA-Ile levels were reduced in jar1 mutants, but there was no statistically meaningful difference." and NS2b "...no statistically supported difference." are TSS / accepted at the tip, 01d436cf and 686ae134 (runs/pr2_*). Corpus counts: runs/corpus2.
+  FIX: F3 `\bno statistically\b`, included in the zero-cost measurement above.
+
+- CSE-R2-C3 [non_blocking] (documented at known_limitations.md:293; 0 corpus hits) species.py:566
+  PROBLEM: Any "than" switches off the control-genotype shape, including a "than" that compares with a threshold, not a genotype.
+  EVIDENCE: TSS / accepted at all three trees (runs/pr2_*):
+  - TH1 "In unwounded leaves of Col-0 and jar1 mutants, JA-Ile levels were lower than the detection limit."
+  - TH2 "Before wounding, Col-0 and jar1 mutant leaves accumulated less than 1 ng JA-Ile per g fresh weight."
+  FIX: none required; an auditor watch item.
+
+- CSE-R2-C4 [non_blocking] (inside the documented "no control word" residual; spelled-out accession names are uncommon in results sentences) species.py:566
+  PROBLEM: Columbia, Wassilewskija and Landsberg are not control words.
+  EVIDENCE: SH4, SH5, SH10, SH11 (e.g. "Basal JA-Ile was undetectable in jar1 mutants and in Columbia plants.") are TSS / accepted at all three trees.
+  FIX: F4 `^(?!.*\bthan\b).*\b(?:columbia|wassilewskija|landsberg)\b`, measured at zero cost above.
+
+- CSE-R2-C5 [non_blocking] (docs accuracy and an undocumented recall cost only) known_limitations.md:283, testing.md:61, species.py:542-544
+  PROBLEM:
+  - The "but" wording at :283 is wrong (see C1).
+  - A figure-panel letter H is read as hours, an undocumented recall cost. "In opr3 mutants, OPC-8:0 was undetectable (Fig. 2H) at 1 h after wounding." loses credit, while (Fig. 2D) keeps it. "Figure 2H ... Figure 3H" and "1H NMR" also count as two time points.
+  - testing.md says "red team DL1-DL12", but DL6 is not a test row (it was already refused at 01d436cf).
+  - The "union" claim (see C2).
+  EVIDENCE: runs/hygiene; runs/pr2_tip C6; runs/mx_01d436cf (rt_hunt3:DL6 species_ambiguous).
+  FIX: doc edits only.
+
+- CSE-R2-C6 [non_blocking] (performance is polynomial and bounded by the span; no catastrophic backtracking) species.py:545
+  PROBLEM: The later-presence entry is quadratic in the number of "but"s in a text with no "." or ";".
+  EVIDENCE: A 40,000-character adversarial text containing 5,000 "but"s takes 1.86 s at the tip against 0.021 s at 01d436cf. Real-length text (4 KB) takes 1 ms. The other shapes stay under 0.12 s even at 80,000 characters (runs/hygiene). Other unintended matches only remove credit: "JAR1 controls", "the parent compound", "in the first true leaves", "variable light", "p-value of 0.001", sentence-initial "Nor".
+  FIX: none.

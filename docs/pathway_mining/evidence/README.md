@@ -309,3 +309,11 @@ again. Exit reason `nonzero`, every failure an `AssertionError`, **FINAL SURVIVI
 
 `orch746/` holds the change-set briefs (`briefs/`), the implementer's G9 manifest and, as they come, every review's
 findings as returned (`reviews/`).
+
+**Outcome (ORCH-746).** Change set E went through round 0 and both repair rounds (`5eca087b`, `01d436cf`, `f3df072f`;
+suites 915, 1005, 1127). Its final review (`reviews/cse_r2_*.txt`) was split: `pwml-bio-auditor` SOUND_WITH_FINDINGS and the
+red team SOUND_WITH_FINDINGS, both fit for pilot; `pwml-reviewer` REQUEST_CHANGES on one blocking finding (CSE-R2-C1, a
+temporary absence credited as an absence: "initially undetectable but increased after 1 h"). No repair round remained, so
+`orch745/b-species-reading` @ `f3df072f` is **not merged** and pilot-004 was not run. `cards/` holds the five production
+follow-up cards (docs only, D-102); `cs_f_design_scout.json` is the read-only design map for change set F, which was not
+started. See `docs/pwml_recovery_sprint/ORCH-746-RESULT.md` on `sprint/pwml-recovery`.
