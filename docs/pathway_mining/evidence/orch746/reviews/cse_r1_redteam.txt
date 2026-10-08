@@ -1,0 +1,162 @@
+VERDICT: UNSOUND
+FIT_FOR_PILOT: NO at 01d436cf as it ships. YES at 01d436cf plus one more subtract-only veto set, prototyped and measured below (C:/t/bt/rev746e-r1-redteam/plugin/rt746r1_veto.py).
+
+Why NO: the repair closes every RT-E2-1 / RT-E2-2 row it was given, but it closed only the phrasings listed. The same two classes still give `accepted` / node admitted at the tip when the prose is ordinary jasmonate results prose:
+- a delay stated by time points: "In jar1 mutants, JA-Ile was not detected at 5 min after wounding but accumulated at later time points.";
+- non-significance in other words: "..., but the reduction did not reach statistical significance.", "showed a trend towards lower JA-Ile";
+- the mutant joined to a control: "in jar1 mutants and control plants", "in the opr3 mutant and its wild type".
+
+None of these needs a direction-reversed extraction. Each admits a true reaction on a sentence the policy says is not evidence. That is the same basis round 0 used to rule RT-E2-1 / RT-E2-2 blocking.
+
+If the orchestrator instead rules these pre-existing classes out of scope (all three trees admit them identically), the pilot can run as a measurement under audit. The auditor should then check every in_planta deciding sentence for:
+1. a later presence after the absence ("but accumulated / detected / present ... at", "; it was detected at"), or "for / within the first", "till", "earlier than", "delayed", "only after";
+2. "significance", "trend", "tendency", "(ns)", "(n.s)", "p-value";
+3. the mutant joined by and / or / nor / comma to "its / their / the corresponding wild type", "control plants", "parental", Ws, Ler or Col; or "any genotype", "the same was true";
+4. a sentence-initial "While / Whilst", "even if", "notwithstanding", "regardless of";
+5. "lower leaves / epidermis / part";
+6. "known to", "shown previously", "well documented";
+7. as before: the claim direction against the sentence, and a regulator named as the claim's gene.
+
+SUMMARY:
+Red team, ORCH-746 change set E, repair round 1. Diff 5eca087b..01d436cf in C:/t/m745-b.
+- Setup: scratch C:/t/bt/rev746e-r1-redteam/. Git archives of 686ae134 (t686), 5eca087b (t5ec) and 01d436cf (ttip) match committed species.py, ignoring line endings. Between t5ec and ttip only species.py differs in src.
+- Hygiene: every run went through bounded_run with final_surviving_count 0. The worktree is still clean (0 status lines). No network, no LLM, no SMOKE.
+
+(1) Predecessor batteries re-run (copied scripts, scratch paths repointed):
+- At 5eca087b and 686ae134 my hunt1/hunt2 probe lines are identical to the predecessor's (runs/hunt{1,2}_t5ec, _t686). So are e2e_r1, e2e_r2, e2e_r2b, r2probe, r2probe2, newrules, ab and replay at 5eca087b.
+- At the tip, on the controller path (build_claims -> MiningController._admit -> ClaimStore -> admission.judge), every RT-E2-1 row (D1-D14, D21-D26) and every RT-E2-2 row (S1-S17, N1-N15) is a candidate with no node admitted. So are the review's eight regression-fixture rows, C1-C8, R1/R2/R4, R11-R13, I1, I2, I4-I6 and G1 (runs/hunt1_ttip, hunt2_ttip).
+- Still accepted at the tip:
+  - correct rows: R3c, R5c, K1-K4;
+  - the documented RT-D-R2-2 H shape (R6 / I3 / e2e_r2 H1r);
+  - the documented weak-decrease policy rows (G2, G3, I7, I7b).
+- Controls hold: CTRL T1 is accepted in e2e_r1/r2/r2b, and the replay admits exactly #3 / #14 / #34 with grades review / in_planta / review (runs/replay_ttip).
+- Mining suite at the tip: 1005 passed, 0 survivors (runs/suite_tip).
+- Tip-vs-5eca087b differences outside hunt1/2:
+  - r2probe: O1c (correct) lost; G3 and M1-M3 refused.
+  - newrules: R8-although (correct) lost.
+
+(2) Breaking the gate:
+- New controller-path battery: 77 rows (scripts/hunt3.py; runs/hunt3_ttip, hunt3_t5ec, hunt3_t686). 59 accepted at the tip, 62 at 5eca087b, 62 at 686ae134.
+- No row is accepted at the tip and refused at 5eca087b. Every route below is identical at all three trees.
+- Subset property:
+  - fuzz: 48,000 sentence/claim pairs with this round's openers, participles, delays and non-significance tails (runs/fuzz5_a, fuzz5_b). Tip credited 443, 5eca087b 4,926; tip-not-5eca087b = 0;
+  - hunt1/2/3: 0;
+  - corpus cmp_ab5: 0.
+  - By construction it also holds: the three new readings are appended to an all-must-agree conjunction, the vetoes only veto, the accumulated-gap skip only skips a form, and the narrowed _MARKER_OF only shrinks the language it matches.
+
+(3) Real-corpus precision, same harness and corpus as the predecessor:
+- Corpus: 320 EuropePMC fulltexts, plus the 38 runs/2026-07-27_* source texts materialised by `git -C C:/t/mining show f9556288:` (identical to the predecessor's copy), plus fixtures.
+
+| Tree | Surviving | Credited, screen empty | Held by screen | Credited with screen |
+|---|---|---|---|---|
+| 5eca087b (runs/p2_t5ec) | 30 | 22 (1 correct: T1) | 20 | 2 (T1 correct, dapat wrong) |
+| 01d436cf (runs/p2_ttip) | 29 | 21 (1 correct: T1) | 19 | 2 (T1 correct, dapat wrong) |
+
+- 5eca087b reproduces the predecessor's figures exactly.
+- Adjudication of the tip's 21 screen-empty credits (runs/ab_ttip/data.json):
+  - T1 ("In flowers and wounded leaves of gh3.10 jar1 knockout lines JA-Ile was below the detection limit.") is correct;
+  - the other 20 are wrong: bacterial, fungal or mammalian results, or nonsense token pairs (Fusarium dFplaeA, E. coli MepS/tesA, Listeria/Tn-seq, SOD/zwf, htrB2, Srebf2 knockdown, LPL-recycling, HpCrtZ, oroP, VK2 engineering, dbioE, Suppressors/CymR). Of those, 19 are held by the screen and dapat is not ("Before heat stress, dapat mutant ...", credited only because a clause token became the claim's product).
+- The tip's credited set is a strict subset of 5eca087b's (runs/cmp_ab5: 0 violations).
+- The one row lost entirely is PMC11946230 "Although no InDels were detected ..." (wrong; concessive veto). PMC11970672, PMC12998950 and PMC13405594 lose nonsense token pairs only.
+- Correct credits the tip lost: none on the corpus. On probes: O1c "In wounded leaves, although in opr3 mutants OPDA accumulated, OPC-8:0 was undetectable." (documented) and newrules R8 "In jar1 mutants, JA-Ile, although present in flowers, was reduced in leaves." (covered by the docs' general statement that any sentence holding "although" earns nothing).
+- Realism check (runs/scan_r1): in 3,215 real loss-of-function sentences, the round-1 residual shapes have 0 verbatim creditable hits. The corpus has almost no jasmonate prose, the same realism basis as round 0. Sentence-initial "While" occurs in 6 real loss-of-function sentences with an effect form, for example PMC10952274 "While the control lines accumulated (S)-nicotine almost exclusively, the residual nicotine in the quintuple mutants was racemic". None is credited, because other vetoes fire.
+
+Prototype, scratch only (plugin/rt746r1_veto.py): it appends no-effect vetoes to `_NO_EFFECT`, so it only removes credit. Measured:
+- suite: 1005 passed, 0 survivors (runs/plug_suite);
+- replay: #3 / #14 / #34 (runs/plug_replay);
+- hunt1/hunt2: unchanged (runs/plugA_hunt1, plugA_hunt2);
+- hunt3: all 34 DL / NS / WT rows refused (runs/plugA_hunt3);
+- recall controls: 14 of 15 kept (runs/rc_ttip vs plugA_rc). Kept rows include T1, K2 "20-fold lower ... than in wild-type leaves", RC3 "No JA-Ile was detected in jar1 mutants 1 h after wounding.", RC4 "significantly reduced (P < 0.01)" and RC6 "90% lower ... than in Col-0". Lost: RC2 "JA-Ile was undetectable in jar1 mutants but abundant in Col-0.";
+- corpus: 25 / 18 (T1 correct) / 16 / 2 (runs/plug_p2). It drops 4 wrong bacterial survivors and keeps T1.
+- The RT_CC=1 variant (adds the concessive words) gives the same suite (runs/plugC_suite, 1005 passed), replay (runs/plugC_replay), corpus (runs/plugC_p2) and controls, and also refuses CC1-CC10.
+
+FINDINGS:
+- RT-R1-1 [blocking] (c: an admission against policy, shown end to end with realistic A. thaliana wound time-course prose. Not (a): 5eca087b and 686ae134 admit every row identically. Not a documented residual: known_limitations.md:233-241 documents the delay veto only as `until` and `before / prior to` + a number, and lists no other delay phrasing as unseen.) src/t2pw/mining/species.py `_NO_EFFECT` delay entries (l.513-516), applied by grade_sentences.in_planta (l.1094)
+  PROBLEM: CLASS product_contract_violation. A negated delay written with time points instead of "until" is still credited as an absence. Policy (species.py R1 comment; species_policy rule 5(b)): "a negated comparison or delay is not an absence"; BIO-D-R1-2 and BIO-D-R2-2 were blocking on this class. The `_CLAUSE` split at "but" or ";" removes the later-presence half, so the absence half is credited alone.
+  EVIDENCE: Gold citation: F1_BIO_ADJUDICATION.md l.4 "require POSITIVE evidence the organism performed the reaction"; section 1c "positive credit only shrinks"; csd_r2_final_full.txt BIO-D-R2-2. Every row below is target_species_supported / in_planta / decision=accepted / node_admitted=True at the tip (runs/hunt3_ttip/out.txt), and the same at hunt3_t5ec and hunt3_t686.
+  - Ordinary results prose:
+    - DL1 "In jar1 mutants, JA-Ile was not detected at 5 min after wounding but accumulated at later time points." [JA -> JA-Ile, JAR1]
+    - DL2 "In wounded jar1 mutant leaves, JA-Ile was below the detection limit for the first hour."
+    - DL7 "... undetectable within the first 30 min and was detected only after 2 h."
+    - DL8 "In opr3 mutants, OPC-8:0 was not detected 30 min after wounding; it was detected at 6 h." [OPR3]
+    - DL10 "JA-Ile accumulation was delayed in jar1 mutants, in which it was undetectable at 15 min."
+    - DL11 "In gh3.10 mutant flowers, JA-Ile was absent at stage 12 but present at stage 13." [GH3.10]
+  - Plausible: DL4 "before the 2-h time point", DL5 "earlier than 2 h".
+  - Constructed: DL3 "till", DL9 "before one hour", DL12 "lag".
+  - Controls refused: DL6 (the "appeared" hedge stem).
+  FIX: Subtract-only: add plugin group B to `_NO_EFFECT`: `\btill\b`, `\bearlier than\b`, `\b(?:for|during|within) the first\b`, `\blater\b`, `\bthereafter\b`, `\bonly (?:after|at|from|by)\b`, `\bdelay`, `\blag\b`, `\bbefore (?:the |one |...)`, and the later-presence shape `\b(?:but|;)[^.;]*?\b(?:present|detected|detectable|appeared|accumulated)\b`. Measured as above. Its recall cost is a correct sentence that contrasts with the wild type through "but".
+    Regression fixture: probe('In jar1 mutants, JA-Ile was not detected at 5 min after wounding but accumulated at later time points.', enzyme='JAR1') and probe('In gh3.10 mutant flowers, JA-Ile was absent at stage 12 but present at stage 13.', gene='GH3.10'), each != TSS. Both fail at 5eca087b. Controls: RC3, T1.
+    Confidence: high on the behaviour; medium on the frequency (0 verbatim corpus hits, jasmonate-poor corpus). What would change my mind: an orchestrator ruling that clause (c) does not reach a class that is unchanged since 686ae134, as RT-E2-1 was.
+
+- RT-R1-2 [blocking] (c: shown end to end with realistic prose. Not (a): identical at all three trees. The non-significance half is documented only generically (known_limitations.md:248, "a non-significance phrased outside the list"), and these rows are standard idioms, not contrived paraphrases. The genotype half is undocumented.) src/t2pw/mining/species.py `_NO_EFFECT` RT-E2-2 entries (l.517-528)
+  PROBLEM: CLASS product_contract_violation. No-difference results still earn in_planta through:
+  (i) non-significance outside the verbatim list;
+  (ii) a wild-type or control genotype joined in a shape the and/or + "wild-type / col-0 / wt" regex misses. The clause split at "and" then leaves the mutant's half reading as an absence.
+  EVIDENCE: Gold citation: F1 rule 5(b) "with no no-effect phrase (unchanged, unaffected, not altered, no significant, similar to wild type, comparable to)"; csd_r2_final_full.txt BIO-D-R2-2. All rows below are accepted with the node admitted at the tip (runs/hunt3_ttip), and identical at t5ec and t686.
+  - (i) Ordinary:
+    - NS1 "JA-Ile levels were reduced in gh3.10 single mutants after wounding, but the reduction did not reach statistical significance." [GH3.10]
+    - NS4 "The gh3.10 single mutant showed a trend towards lower JA-Ile levels after wounding."
+    - NS5 "cyp94b1 mutants showed a tendency towards reduced 12-OH-JA-Ile levels."
+    - NS11 "..., with no statistically significant difference from Col-0."
+    - NS7 "(p-value > 0.05)", NS8 "with a P value of 0.12", NS3 "lacked statistical significance".
+  - (i) Typographic: NS6 "(ns)", NS10 "(n.s)". Constructed: NS14 "within the range of Col-0".
+  - (ii) Ordinary:
+    - WT3 "In unwounded leaves, JA-Ile was not detected in jar1 mutants and control plants."
+    - WT2 "Before wounding, OPC-8:0 was undetectable in the opr3 mutant and its wild type."
+    - WT13 "... in jar1 mutants and the corresponding wild type."
+    - WT11 "Basal 12-OPDA was undetectable in aos mutants and the parental line."
+    - WT7 "... of any genotype, including jar1 mutants."
+    - WT9 "...; the same was true for Col-0."
+    - WT4 "opr3 mutant and Ws plants" (opr3 is a Ws-background line).
+  - (ii) Less common: WT1, WT5, WT6, WT8, WT10, WT12.
+  - Controls refused: NS2, NS9, NS13, NS15, WT14.
+  FIX: Subtract-only: plugin groups A and C.
+    - A: `\bsignificance\b`, `\btrend(?:s|ed)?\b`, `\btendenc`, `\(\s*ns\s*\)`, `\bn\.\s?s\b`, `\bp[- ]?values?\s*(?:of|=|>|\u2265|above|greater than)`, `\bno statistically\b`, `\bwithin the (?:normal )?range\b`.
+    - C, fail-closed on shape rather than phrase: a wild-type or control genotype word (wild-type, Col(-0), WT, Ws, Ler, control(s), parental, parent) in a sentence with no "than"; plus `any (of the) genotype(s)`, `all (the) genotypes`, `the same was true`, `\bnor\b`.
+    - Measured as above: 1005 passed, replay unchanged, K2 / RC6 ("than") kept, corpus T1 kept.
+    Regression fixture: probe('JA-Ile levels were reduced in gh3.10 single mutants after wounding, but the reduction did not reach statistical significance.', gene='GH3.10') and probe('In unwounded leaves, JA-Ile was not detected in jar1 mutants and control plants.', enzyme='JAR1'), each != TSS. Both fail at 5eca087b.
+    Confidence and what would change my mind: as RT-R1-1.
+    Note for routing: this is the third round of word lists on these two classes. Groups B and C are written as shapes ("a later presence", "a control genotype without than") so they generalise better than phrases, but they are still lexical. A non-converging lexical review is better closed by a scope ruling than by a fourth list.
+
+- RT-R1-3 [non_blocking] (Same class as round-0 RT-E2-4, ruled non_blocking: each instance needs contrary biology about the claim's own catalyst knockout, for example a leaky jar1 or opr3 under infection.) src/t2pw/mining/species.py `_NO_EFFECT` concessive entry (l.529-531); docs/pathway_mining/known_limitations.md:108-109
+  PROBLEM: The concessive veto lists only although / though / despite / in spite of. These still credit the correct-direction claim on contrary prose:
+  - CC1 "While OPC-8:0 accumulated in opr3 mutants, JA levels were strongly reduced." [OPR3]
+  - CC3 "While jar1 mutants accumulated JA-Ile, JA-responsive gene induction was reduced." [JAR1]
+  - CC10 "While opr3 mutants produced OPC-8:0 after Botrytis infection, JA levels were reduced."
+  - CC2 "Whilst ...", CC6 "Even if ...", CC7 "Notwithstanding ...", CC8 "Regardless of ...".
+  known_limitations.md:109 says a bare "while" already splits the clause. For a sentence-initial "While X, Y" the `_CLAUSE` split falls before X, so X and Y stay in one clause; the doc is inaccurate for that case.
+  EVIDENCE: runs/hunt3_ttip, accepted at all three trees. Six real loss-of-function sentences open with "While" (runs/scan_r1), none credited.
+  FIX: Optional, subtract-only: plugin RT_CC group (`^(?:while|whilst)\b`, `\bwhilst\b`, `\beven if\b`, `\bnotwithstanding\b`, `\bregardless of\b`). Measured free: 1005 passed (runs/plugC_suite), replay unchanged (runs/plugC_replay), same corpus (runs/plugC_p2) and controls. Docs: correct l.109.
+
+- RT-R1-4 [non_blocking] (A constructed paraphrase that also needs contrary prose about the catalyst's own mutant. Not documented.) species.py `_EFFECT_FORMS` "lower" / "reduced" (l.455)
+  PROBLEM: An effect word used as a position or adjective is read as a decrease:
+  - PO1 "In jar1 mutant plants, JA-Ile was detected mainly in the lower rosette leaves after wounding." [JAR1] accepted;
+  - PO3 "lower epidermis", PO6 "lower part", PO4 "JA-Ile showed reduced turnover" accepted;
+  - PO2 "reduced glutathione" is refused at the tip only (bare "with").
+  EVIDENCE: runs/hunt3_ttip, t5ec, t686; 0 corpus hits with an effect form (runs/scan_r1).
+  FIX: None required. Docs: name it. Optional: `\blower (?:rosette |cauline )?(?:leaf|leaves|part|parts|epidermis|stem)\b` as a veto.
+
+- RT-R1-5 [non_blocking] (RG1 / RG2 fall inside the documented "gap word outside the list" class, known_limitations.md:133-134. RG4 / RG5 / RG7 are constructed, or the biology is not wrong: a jar1-background modifier line still lacks JAR1.) species.py `_bound` / `_MARKER_OF` (l.540, 812-827)
+  PROBLEM: These bind the claim's gene and are accepted:
+  - RG1 "Mutants lacking a suppressor of AOS accumulated no 12-OPDA.";
+  - RG2 "an inducer of AOS";
+  - RG4 "In the jar1 suppressor mutant, JA-Ile was reduced.";
+  - RG5 "jar1 enhancer mutants";
+  - RG7 "Knockout of the AOS activator abolished 12-OPDA." (a role noun AFTER the gene, which `_CONTAINER` does not list).
+  EVIDENCE: runs/hunt3_ttip, identical at t5ec and t686. Refused: RG3, RG6, RG8, RG9, RG10.
+  FIX: None required. Docs: add the after-gene role noun and the gene + modifier + marker shapes beside the "modulator" example.
+
+- RT-R1-6 [non_blocking] (True biology. Real text almost always attaches a citation, which the citation veto refuses.) species.py `_CITATION` (l.573-581)
+  PROBLEM: Uncited background in a results passage earns in_planta:
+  - BG1 "jar1 mutants are known to contain reduced JA-Ile levels." (only "is known to" is listed);
+  - BG2 "were shown previously" (only "previously shown" is listed);
+  - BG4 "is well documented";
+  - BG5 "an established JA-Ile-deficient line with reduced JA-Ile levels".
+  known_limitations documents background only for abstracts and `body` spans (R3-N2).
+  EVIDENCE: runs/hunt3_ttip, identical at t5ec and t686.
+  FIX: None required. Docs: extend R3-N2 to results-labelled background. Optional subtract-only entries: `are known to`, `shown previously`, `well documented`.
+
+- RT-R1-7 [non_blocking] (Documentation accuracy only.) docs/pathway_mining/known_limitations.md:175-180
+  PROBLEM: The doc says "Repair 1 as shipped was not re-measured". It is now measured at 01d436cf: 29 / 21 (1 correct, T1) / 19 / 2 (T1 correct, dapat wrong). This is a strict subset of 5eca087b's 30 / 22 / 20 / 2, and the only row lost entirely is the wrong PMC11946230 InDels credit. The predecessor's concessive-variant prediction (29 / 21 / 19 / 2) is confirmed.
+  EVIDENCE: runs/p2_t5ec, p2_ttip, ab_t5ec, ab_ttip, cmp_ab5 (0 subset violations).
+  FIX: Replace the sentence with the measured figures.

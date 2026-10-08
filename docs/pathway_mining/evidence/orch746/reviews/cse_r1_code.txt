@@ -1,0 +1,131 @@
+VERDICT: REQUEST_CHANGES
+
+FIT_FOR_PILOT: NO as shipped. It becomes YES once one subtract-only `_NO_EFFECT` addition lands; I prototyped and measured it (see C1–C3).
+- Why NO: three kinds of realistic sentence in exactly the classes this round was opened to close are still admitted end to end (`accepted`, node admitted). They are routine in the pilot's literature: single mutants of redundant families (GH3.10/JAR1, AOC, LOX), basal levels, and wound time courses.
+  - "In the gh3.10 single mutant, JA-Ile levels were slightly lower than in Col-0, but the difference did not reach statistical significance."
+  - "In unwounded leaves of wild-type and jar1 mutant plants, JA-Ile was below the detection limit."
+  - "In jar1 mutants, JA-Ile was not detected at 15 min but accumulated at 2 h after wounding."
+- The pilot's definition of done allows zero admissions against policy.
+- If the orchestrator runs the pilot at 01d436cf anyway, the auditor should check every in_planta sentence for:
+  1. non-significance worded outside the list ("did not reach / failed to reach (statistical) significance", "no statistically significant", "lacked statistical support");
+  2. the wild type / Col-0 / WT named in the same sentence with no "than" (wild type named first; a noun after "mutant"; "as well as");
+  3. an absence at a time point or in a time window ("during the first hour", "at early time points", "at 15 min but ... at 2 h", "till");
+  4. a claim direction that does not match the sentence (reversed extraction, documented residual);
+  5. concessive words outside the list ("notwithstanding", "albeit", sentence-initial "While", "even if");
+  6. a regulator word in the marker gap that is outside the new list ("inducer", "co-activator", "modulator");
+  7. "accumulated nowhere near lower / reduced".
+
+SUMMARY:
+The diff is in bounds and does what each brief item asked. Every change only removes credit, both by construction and by measurement. My G9 run, the full suite and the matrix all reproduce. The verdict is REQUEST_CHANGES because the RT-E2-1 / RT-E2-2 closures are word lists that miss common wordings of the same two classes round 0 ruled blocking. The fix needs only more vetoes, inside the same boundary.
+
+Every run went through bounded_run with FINAL SURVIVING COUNT 0. Run directories are under C:/t/bt/rev746e-r1-code/runs/. Two runs exited nonzero on my own script bugs (`phrase/out.txt` encoding, `reasondiff/out.txt` NameError), with 0 survivors; both were re-run. The worktree C:/t/m745-b is clean at 01d436cf and I wrote nothing into it.
+
+1. **Boundary.** `git diff 5eca087b..01d436cf --name-status` lists exactly the five allowed files. The test file change is a pure append (hunk @@ -263,3 +263,256). No cache files. The species.py hunks are only:
+   - the `accumulated ... less` regex gains `nowhere` (:459);
+   - 13 `_NO_EFFECT` entries (:513-531);
+   - the `_MARKER_OF` exclusion list (:540-541);
+   - three new readings, appended to `_READINGS` (:894-971);
+   - the RT-E2-3 skip in `_effect_under` (:1013-1016);
+   - plus comments.
+2. **Each change against its brief item.**
+   - `_excluded_unambiguous_close` is character-identical to rev746e2_r4.py (minus the `S.` prefixes).
+   - The `_NO_EFFECT` entries are verbatim from rt746e_veto.py and rt746e_veto2.py.
+   - The `_MARKER_OF` list matches item 8 exactly.
+   - Items 9 and 10 match the brief's own description. I could not see the addendum text itself.
+   - The extra rule in `_excluded_bare_with` (a bare "with" with no comma after it cuts the participant off) is needed for the brief's own X5r row and is documented in species_policy.md.
+3. **Subtract-only by construction.**
+   - `_NO_EFFECT` is used only as a veto (species.py:1094), and `_MARKER_OF` only inside `_bound` (:825), whose only caller is a `continue` (:1116).
+   - `_effect` has one caller (:1118). It returns `reasons[0]` only when all six readings agree, and reading 0 is `_excluded`.
+   - In `_effect_under`, the only `return` inside the loop is on credit (:1023-1024). So the new `continue` (:1016) can only drop a credit point.
+   - The `nowhere` narrowing can only split one match into sub-matches covered by the same before/after participants. It cannot change the substrate-side skip, because each of less / lower / reduced / decreased is a `_DECREASE_WORD`.
+   - Per reading, credit at the tip therefore implies credit at 5eca087b.
+4. **Subset, measured.**
+   - Fuzz: 70,000 random sentences, with species.py from all three trees loaded side by side (only species.py differs under src/). 0 violations at three levels: grade_sentences (tip ⊆ 5eca087b ⊆ 686ae134), `_effect` per clause, and `_effect_under` per reading 0-2 (runs/fuzz1, runs/fuzz2).
+   - Reason strings: 487 clauses record a different reason with the same credit. All of them come from the "accumulated ..." forms (runs/reasondiff/out2.txt).
+5. **G9.**
+   - Tip test file on a git archive of 5eca087b (species.py identical to the blob modulo CR): **82 failed, 67 passed**. Every failure is a `test_cs_e_r1_746_*` row and every one is an AssertionError; 0 `new_acceptance` failures; pin violations [] (runs/g9_5eca).
+   - At 686ae134: 126 failed (82 + 44), 23 passed (runs/g9_686).
+   - Every row asserts `!= TSS` and uses only base-existing `build_claims` / `ClaimStore` / `judge`. Four rows (S8, D21, S11, resulting-in) also assert `decision.status not in ADMITTED_STATUSES`.
+   - Every hunt1/hunt2 D, S and N row that the red team showed accepted at 5eca087b is present.
+   - The 8 controls pass at both ends. This matches evidence 053.
+6. **Suite, T-rows and replay.**
+   - Full 26-file mining suite: **1005 passed**, pin violations [] (runs/suite_tip).
+   - T1, T1b, T2-T11, #33 and the full pilot-003 replay: 17 passed; the replay still admits exactly #3/#14/#34 (runs/trows).
+7. **adjacent.py.** S1-S8 are refused in both directions at the tip (species_ambiguous / candidate, admitted=False) (runs/adj_tip).
+8. **Implementer's matrix.**
+   - I re-ran a copy of matrix_r1.py on real git archives rather than the frozen-module swap (scripts/matrix_mine.py; runs/mx_tip.json, runs/mx_e0.json, runs/mx_base.json).
+   - TSS counts 265 / 189 / 88 (686ae134 / 5eca087b / tip). 0 rows are credited at the tip but not at 5eca087b or 686ae134. 101 rows lost; every tip TSS row is accepted.
+   - States are row-for-row identical to probe_matrix_r1.txt for those three trees.
+   - The only correct-biology losses are O1c and Q2, as documented.
+9. **Docs.** They describe what ships, with the exceptions listed under C3, C6 and C7.
+
+FINDINGS:
+- CSE-R1-C1 [blocking] (clause (c). The documented "non-significance phrased outside the list" carve-out covers contrived paraphrases; these are the most common real wordings) species.py:519-521 (`_NO_EFFECT`), known_limitations.md:246-248
+  PROBLEM: The RT-E2-2 (i) closure is a word list that misses the commonest non-significance wordings. All of these are accepted end to end:
+  - NS1: "In the gh3.10 single mutant, JA-Ile levels were slightly lower than in Col-0, but the difference did not reach statistical significance." (jasmonic acid -> JA-Ile [GH3.10])
+  - NS2: "... but there was no statistically significant difference." (JAR1)
+  - NS3: "... but this failed to reach significance." (AOC2)
+  Rule 5(b) requires "no no-effect phrase", and this is the same class round 0 ruled blocking.
+  EVIDENCE:
+  - Path: build_claims -> ClaimStore.register -> admission.judge = TSS / accepted / admitted=True (runs/pr_tip/out.txt). The same at 5eca087b and 686ae134 (runs/pr_e0, runs/pr_b686), so not (a).
+  - Realism (runs/phrase/out2.txt, 184,882 corpus sentences):
+    - "did not reach statistical significance" plus "no statistically significant" = 11 hits;
+    - the list's own additions ("not significant", non-/insignificant) = 36 hits;
+    - near-verbatim real sentences: PMC13438895 "although the difference did not reach statistical significance"; PMC12879462, a knockout-strain metabolite level that "showed no statistically significant difference".
+  FIX: Subtract-only: add `r"\bno statistically\b"` and `r"\bsignificance\b"` to `_NO_EFFECT`. Prototype: C:/t/bt/rev746e-r1-code/plugins/rev746e_r1_fix.py, which also carries the C2/C3 entries. With all of them active:
+  - suite 1005 passed, pin violations []; replay unchanged (runs/suite_fix);
+  - 423-probe matrix: same 88 TSS rows (runs/mx_fix.json);
+  - corpus: the plugin's entries newly veto 82 loss-of-function sentences; none of them passes the other vetoes with a credited pair (runs/fix_cost, runs/corpus_cost).
+  Add G9 rows NS1-NS3 (each fails at 5eca087b).
+
+- CSE-R1-C2 [blocking] (clause (c); undocumented: known_limitations presents "the genotype joined to the wild type" as refused) species.py:526-527
+  PROBLEM: The RT-E2-2 (ii) entry only matches mutant/line/knockout/plant immediately followed by and/or and then the wild type. The common order with the wild type named first, and a noun after "mutant", both still credit a shared absence.
+  - WT9: "In unwounded leaves of wild-type and jar1 mutant plants, JA-Ile was below the detection limit."
+  - WT8: "In unwounded leaves of Col-0 and jar1 mutants, JA-Ile was below the detection limit."
+  - WT3: "... in jar1 mutant leaves and in wild-type leaves."
+  - WT5: "... in unwounded opr3 mutant seedlings or Col-0 seedlings."
+  In each case the "and" clause split leaves a mutant clause that reads as an absence.
+  EVIDENCE: All four are TSS / accepted / admitted=True at the tip, 5eca087b and 686ae134 (runs/pr_tip, pr_e0, pr_b686).
+  FIX: Subtract-only, same plugin: a wild-type-first entry, a "mutant <noun> and/or (in) (the) wild type" entry, and "as well as (in) (the) wild type". All four rows are refused at 0 measured cost. A broader fail-closed alternative is to veto any sentence naming wild type / Col-0 / WT without "than / compared / relative to / versus"; I did not measure it.
+
+- CSE-R1-C3 [blocking] (clause (c); undocumented: known_limitations.md:234 says "a delay refuses credit anywhere in the sentence") species.py:516, known_limitations.md:234-235
+  PROBLEM: The RT-E2-1 closure only covers "until" and "before / prior to <number>". These are still credited as absences:
+  - DL1 "In jar1 mutants, JA-Ile was not detected during the first hour after wounding."
+  - DL2 "... not detected at early time points."
+  - DL3 "... not detected at 15 min but accumulated at 2 h after wounding." (the "but" split leaves an absence clause)
+  - DL4 "undetectable within the first 30 min"
+  - DL8 "... not detected at 30 min, but was detected at 2 h ..."
+  - DL7 "till 2 h"
+  EVIDENCE: All six are TSS / accepted / admitted=True at all three trees (runs/pr_*). 0 corpus hits (runs/phrase/out2.txt), which is the same realism basis on which RT-E2-1 (also 0 hits) was ruled blocking.
+  FIX: Subtract-only, same plugin: `\b(?:during|within|in) the first\b`, `\bearly time points?\b`, `\btill\b`, and `\bat \d+ (min|h...)\b[^;]*\bbut\b`. All six are refused at 0 measured cost. Also correct known_limitations.md:234 to name the words actually vetoed and to list remaining delay wordings as a residual.
+
+- CSE-R1-C4 [non_blocking] (contrived: CSE-R0-N5 was rated contrived; the admitted node is the gene's own true reaction) species.py:459
+  PROBLEM: Item 7 only stops the "accumulated ... less" form. "jar1 mutants accumulated nowhere near lower / reduced JA-Ile" is still credited through the standalone "lower" / "reduced" form; all six readings credit it (runs/readings/out.txt). The docs name only "nowhere near less".
+  EVIDENCE: N7a and N7b are TSS / accepted at all three trees (runs/pr_*).
+  FIX: Optional: add `r"\bnowhere near\b"` to `_NO_EFFECT`.
+
+- CSE-R1-C5 [non_blocking] (siblings of documented residuals that need false biology or a reversed extraction: RT-E2-4 contrary prose, the regulator gap word, the "true subject after the effect word" class)
+  PROBLEM / EVIDENCE: All of these are TSS / accepted at all three trees (runs/pr_*):
+  - CO1-CO4: "Notwithstanding", "albeit", sentence-initial "While", "Even if" with contrary opr3 biology;
+  - RG1/RG2: "an inducer of AOS", "a co-activator of AOS" (overstated support for a true reaction);
+  - BW3/BW4/BW19/BW23: comma-less "which resulted in" / "resulting in", ", an effect accompanied by", ", due to reduced X formation", all of which need a reversed extraction.
+  FIX: none required. Optionally fold "notwithstanding / albeit / even if" into the concessive entry.
+
+- CSE-R1-C6 [non_blocking] (docs accuracy only) known_limitations.md:92
+  PROBLEM: The text says "the last seven still at 5eca087b", but eight bullets follow the first (lines 101-129).
+  FIX: "eight".
+
+- CSE-R1-C7 [non_blocking] (comment / docstring only) tests/test_mining_species_cs_e.py:373-374; species.py:977
+  PROBLEM:
+  - The item-3 comment still says S10 "within experimental error" is "not reached: a documented residual", but item 10 now refuses it.
+  - The `_effect` docstring says it returns "the 686ae134 reading's reason". With the RT-E2-3 skip and the `nowhere` narrowing, that reason string can now differ from the one 686ae134 recorded (e.g. "'lower' on a product" instead of "'accumulated nowhere near lower' on a product"). Credit is unaffected (runs/reasondiff/out2.txt).
+  FIX: Update the comment, and say "the first reading's reason".
+
+WHAT I COULD NOT VERIFY:
+- The orchestrator's addendum text for items 9-10. I checked them against REVIEW-E-r1.md's description and the implementer's commit messages.
+- The bio/rt/e0proto columns of the implementer's matrix; I re-ran only base, e0 and tip.
+- The MiningController._admit path (I used admission.judge, as the tests do).
+- The red team's 30/22/20/2 precision figures at the tip.
+- Live pilot behaviour.
+- SMOKE, the 508-test integration suite, network and LLM runs were not run (forbidden or out of scope).
+- How often the C1-C3 shapes actually appear in jasmonate literature: the corpus is jasmonate-poor.

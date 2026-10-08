@@ -1,0 +1,161 @@
+VERDICT: UNSOUND
+FIT_FOR_PILOT: NO at 01d436cf as shipped. YES once the measured subtract-only vetoes in BIO-E746R1-1 and -2 are folded in (round 2).
+
+Why NO: the pilot's definition of done allows zero admissions against policy. Two required classes of this round, RT-E2-2 (non-significance) and RT-E2-1 (delay), are still admitted end to end for their commonest real phrasings:
+- "...but the difference did not reach statistical significance."
+- "...but there was no statistically significant difference."
+- "JA-Ile was below the detection limit in jar1 mutants at 30 min and became detectable only at 2 h after wounding."
+
+Why YES after the fix: my scratch prototype `C:/t/bt/rev746e-r1-bio/plugin/bio746r1_veto.py` refuses every one of those rows. With it active nothing else I measured changed:
+- mining suite 1005 passed;
+- replay still exactly #3/#14/#34 with the same grades;
+- A1-A10, every DoD-canonical K row, CSE-R0-1 S1-S8 and the red-team hunt rows unchanged;
+- real-text sweep unchanged;
+- corpus cost 0.
+
+What the pilot auditor must check in every in_planta deciding sentence:
+1. Any qualifier on significance, reproducibility or trend ("in one of three experiments", "weak and variable" still pass even with the prototype).
+2. A second time point, a later appearance or a recovery ("at 15 min only" still passes).
+3. A result shared with every genotype.
+4. Whether the claim's direction matches the sentence, especially "... accumulated X alongside / at the expense of / plus reduced Y".
+5. Regulator wording outside the new list ("a modulator of AOS").
+6. A collapsed `13-HPOT -> 12-OPDA [AOS]` node. AOS makes the allene oxide; AOC cyclizes it.
+7. "Slightly / marginally less" credits (a product-owner item).
+8. A comparison word more than 60 characters after "did not", or after a semicolon inside a figure reference.
+
+Expect a thin result. Allele-numbered genotypes (jar1-1, opr3-1, dde2-2, lox2-1) earn nothing. That limit is documented and pre-existing, and it is not a reason to loosen the gate.
+
+SUMMARY:
+Bio-auditor, ORCH-746 change set E, repair round 1, tip 01d436cf in `C:/t/m745-b`. The worktree is clean (git status shows 0 lines).
+
+Setup:
+- Comparison trees are git archives of 5eca087b and 686ae134 at `C:/t/bt/rev746e-r1-bio/t5eca` and `t686`. Their species.py matches the blobs.
+- Every run went through bounded_run (with PYTHONDONTWRITEBYTECODE=1) and reports FINAL SURVIVING COUNT 0. Runs are under `C:/t/bt/rev746e-r1-bio/runs/`.
+- Process slips: two trivial commands ran outside the wrapper. One was a one-line `python -c` to print a replay sentence; it failed on encoding and was redone in `runs/sent`. It imported from the worktree's src, so it may have left gitignored `.pyc` files there. The other was `python3 --version`. Both were foreground, finished, and left no processes.
+- No network, no LLM calls, no SMOKE.
+
+What holds:
+1. **T-rows and the full replay.**
+   - T1, T1b, T2-T11, #33 and the full-replay test: 17 passed (`runs/trows/r2`).
+   - Full mining suite: 1005 passed, pin not refused (`runs/suite_tip`).
+   - Controller-path replay (`runs/rtip`) admits exactly #3, #14 and #34:
+     - #14 is in_planta / single_paper on ev_7d2787cbb14b4905[7], "In flowers and wounded leaves of gh3.10 jar1 knockout lines JA-Ile was below the detection limit."
+     - #3 and #34 are review / review_article_only on ev_c98d84c7d84855c1[12].
+   - All 37 rows have the same state and per-sentence grade as the round-0 tip (`runs/gcmp`). The only differences are two reason strings on an already-refused methods sentence, ev_c7a1b8c0ccdfe997[23] ("sprayed ... until dripping wet"), whose reason changed from 'spray' to 'until'.
+2. **A1-A10** are all TSS / in_planta / accepted. The B, C and D rows are identical to 5eca087b (`runs/a_tip` vs `runs/a_5eca`).
+3. **Every round-0 blocking probe is refused through the admission path** (MiningController._admit, or ClaimStore + admission.judge). Each is accepted at both 5eca087b and 686ae134:
+   - CSE-R0-1 S1r-S8r: `runs/adj_tip` vs `adj_5eca` / `adj_686`.
+   - RT-E2-1 D1-D14 and D21-D26, plus the bio rows S5 and N8.
+   - RT-E2-2 S1-S17 and N1-N15 (`runs/h1_*`, `h2_*`, `cmp3`).
+   - Remaining tip admissions are the controls (T1, K2-K4, R3c, R5c), RT-D-R2-2 and "slightly / marginally less".
+4. **Subset property.** No row in my 208-row probe sets is admitted at the tip and refused at 5eca087b (`runs/sub`, `cmp3`, `cmp_bat`).
+5. **Real text.**
+   - Sweep of 17 jasmonate documents: 2 credits, both on the T1 sentence, identical at the tip and at 5eca087b (`runs/sw_tip`, `sw_5eca`).
+   - Corpus of 2458 loss-of-function sentences: only 12 earn any credit at 5eca087b. The repair costs 0 of them, and 0 residual phrasings appear (`runs/cscan2`). The corpus is too jasmonate-poor to show realism either way.
+6. **The implementer's 101 lost matrix rows** (`C:/t/bt/m746-e/probe_matrix_r1.txt`, rows marked LOST). I adjudicated each: 99 are correct refusals (reversed, contrary, no-effect, delay, regulator, "nowhere near less"). The 2 correct-biology losses are O1c and Q2, as documented.
+7. **DoD canonical prose is still credited at the tip**, identically at 5eca087b, 686ae134 and with the prototype (`runs/bat_*`, `b2_*`):
+   - the T1 sentence verbatim, for both the GH3.10 and the JAR1 claim;
+   - "opr3 mutants did not accumulate OPC-8:0" (bare, "+ after wounding", and with "(Fig. 3A)");
+   - "aos mutants accumulated no 12-OPDA" (bare, "+ after wounding", and gene-cited);
+   - "not detected", "undetectable", "absent from", "failed to accumulate", "No 12-OPDA was detected", "contained no detectable", "OPDA accumulated to high levels", and the aoc and lox2 forms.
+
+FINDINGS:
+- BIO-E746R1-1 [blocking] (clause (c). Realistic prose, admitted end to end. These are the canonical phrasings, not contrived paraphrases, so the documented-residual carve-out does not apply. Not (a): identical at 5eca087b and 686ae134.) `src/t2pw/mining/species.py:490-531` (`_NO_EFFECT`)
+  PROBLEM: CLASS product_contract_violation.
+  - Required item 3 (RT-E2-2) added only the red team's listed forms. These still earn in_planta credit as a decrease:
+    - non-significance written with the noun or with the negation set apart: "did not reach (statistical) significance", "failed to reach statistical significance", "there was no statistically significant difference", "without reaching statistical significance", "not to a statistically significant extent", "showed a trend towards lower";
+    - the shared result "undetectable in unwounded leaves of all genotypes, including jar1 mutants";
+    - "within the range of biological variation".
+  - Biology: gh3.10 single mutants (JAR1 compensates) and aoc2 single mutants (AOC1-4 are redundant) are the textbook no-phenotype cases. The admitted node is the gene's true reaction, but the credit comes from a no-effect sentence.
+  - GOLD CITATION:
+    - F1_BIO_ADJUDICATION.md l.107-110, rule 5(b): "with no no-effect phrase (unchanged, unaffected, not altered, no significant, similar to wild type, comparable to)";
+    - F1 l.4 (positive evidence) and l.90 ("positive credit only shrinks");
+    - cse_r0.txt RT-E2-2 (blocking); csd_r2_final_full.txt BIO-D-R2-2.
+  - known_limitations.md:241-249 lists this only generically, as "a non-significance phrased outside the list".
+  EVIDENCE: all of these are target_species_supported / in_planta / accepted / node_admitted=True at the tip:
+  - `runs/bat_tip`, rows Z1-Z5 and Z15, nodes jasmonic acid -> JA-Ile [GH3.10 / JAR1];
+  - `runs/b3_tip`, rows Y1, Y4 and Y5, node 12,13-EOT -> OPDA [AOC2].
+  The same rows are accepted at `bat_5eca` and `bat_686`.
+  FIX: subtract-only, new `_NO_EFFECT` entries:
+  - `\bsignificance\b`, `\btrends?\b`, `\btendenc`, `\b(?:not|no|without|never|nor)\b[^.;]{0,40}?\bsignificant\b`;
+  - `\b(?:all|each|either|any) (?:of the )?(?:genotypes?|lines)\b`, `\bbiological variation\b`, `\bwithin (?:the )?range of\b`.
+
+  Measured with `plugin/bio746r1_veto.py` (groups ABECD):
+  - all target rows refused, 0 gained (`runs/cmps`);
+  - 1005 passed (`runs/s_suite`);
+  - replay #3/#14/#34, state and grade identical (`s_replay`, `gcmp`);
+  - A1-A10 and S1-S8 identical (`s_a`, `s_adj`);
+  - hunts unchanged; sweep identical (`s_sweep`); corpus cost 0 (`s_cscan`).
+
+  Regression fixtures (each must not be TSS):
+  - `probe("In gh3.10 single mutants, JA-Ile levels were reduced by 30 percent, but the difference did not reach statistical significance.", gene="GH3.10")`;
+  - `probe("OPDA levels were lower in aoc2 mutants, but there was no statistically significant difference.", sub="12,13-EOT", prod="OPDA", enzyme="AOC2")`.
+
+  Controls that stay TSS: "JA-Ile was significantly reduced in jar1 mutants after wounding.", "JA-Ile was reduced by 90% in jar1 mutants after wounding.", T1, A1-A10.
+
+  Docs: document what still passes even with the prototype: "in one of three independent experiments" and "weak and variable".
+
+  Confidence: high on the behaviour, medium-high on realism. What would change my mind: an orchestrator ruling that a class documented generically is non_blocking whatever the phrasing.
+
+- BIO-E746R1-2 [blocking] (clause (c). Realistic prose, admitted end to end. Not documented: known_limitations.md:233-236 says "a delay refuses credit anywhere in the sentence, after any absence form", and the "Still not seen" list at :241-249 names no delay shape. Not (a).) `src/t2pw/mining/species.py:490-531`
+  PROBLEM: CLASS product_contract_violation.
+  - Required item 2 (RT-E2-1) closed only "until" and "before / prior to <number>".
+  - A delay or transient absence written as a later appearance or a second time point still earns credit as an absence. `_CLAUSE` splits at and / but, so the absence clause stands alone, and the sentence holds no veto word.
+  - The node is the gene's true reaction, but a delay is not an absence.
+  - GOLD CITATION: F1 rule 5(b) l.107-110 and l.90; CS-D R1 ("a negated comparison or delay is not an absence"); BIO-D-R1-2 and BIO-D-R2-2 (blocking); cse_r0 RT-E2-1 (blocking).
+  EVIDENCE: accepted / node_admitted=True at the tip, and identical at 5eca087b and 686ae134:
+  - `runs/bat_tip` Z9 "In jar1 mutants, JA-Ile was not detected 15 min after wounding but accumulated at later time points.";
+  - Z10 "...but reached 50 percent of the Col-0 level by 2 h.";
+  - Z11 "...at 30 min and became detectable only at 2 h after wounding.";
+  - `runs/b3_tip` Y9 "OPDA was undetectable in aoc2 mutants at 15 min, and recovered to Col-0 levels at 1 h.";
+  - Y12 "...at 15 min but not at 1 h after wounding.";
+  - early-window forms, implied delay only: Z13 and Z14.
+  FIX: subtract-only, new `_NO_EFFECT` entries:
+  - `\b(?:later|thereafter|subsequently|afterwards|onwards?)\b`, `\bonly (?:at|after|from|by|when|once)\b`, `\bbecame (?:detectable|measurable|apparent|visible)\b`;
+  - `\bby \d+(?:\.\d+)?\s*(?:min|minutes?|h|hrs?|hours?|d|days?)\b` (keep the unit: a bare "by \d" would refuse "reduced by 90%");
+  - `\bdelay\w*`;
+  - a two-time-points shape: `\b\d+(?:\.\d+)?\s*(?:min|minutes?|h|hrs?|hours?)\b[^;]*?\b\d+(?:\.\d+)?\s*(?:min|minutes?|h|hrs?|hours?)\b`;
+  - optional: `\b(?:first|earliest|early|initial)\b[^.;]{0,15}?\b(?:min|minutes|h|hours?|time points?)\b`. Its only measured cost is W10, "did not accumulate ... within the first 2 h", which is itself ambiguous.
+
+  Same measurement as BIO-E746R1-1. Correct the docs line at known_limitations.md:233-249 and document Y11 ("reduced ... at 15 min only"), which still passes.
+
+  Regression fixtures (each must not be TSS):
+  - `probe("JA-Ile was below the detection limit in jar1 mutants at 30 min and became detectable only at 2 h after wounding.", enzyme="JAR1")`;
+  - `probe("OPDA was undetectable in aoc2 mutants at 15 min but not at 1 h after wounding.", sub="12,13-EOT", prod="OPDA", enzyme="AOC2")`.
+
+  Controls that stay TSS:
+  - W5 "At 1 h after wounding, JA-Ile was below the detection limit in gh3.10 jar1 knockout lines.";
+  - W3 "up to 2 h", W4 "throughout the time course (0.5 to 4 h ...)", W8, W9, T1.
+
+- BIO-E746R1-3 [non_blocking] (fail-closed recall cost, so no admission route; documentation honesty only) `docs/pathway_mining/known_limitations.md:300-332`
+  PROBLEM: The recall cost is real. It is mostly, but not completely, documented. Every loss below is TSS at 5eca087b and 686ae134 and refused at the tip (`runs/bat_*`, `b4_*`). Ruling on each veto:
+  - **"until": proportionate.** "X was undetectable until 4 h" asserts a later appearance; only the range reading (Q2, W2 "from 5 min until 2 h") is an absence, and a pattern cannot tell them apart. The common range phrasings keep credit: "up to", "throughout", "at all time points", "during the entire ..." (W3-W6, W8, W9, W14).
+  - **"before / prior to N": proportionate.** "Undetectable prior to 30 min" is itself a delay. Only rare prose like W11 "before 1 h and after 4 h" is lost.
+  - **Participle reading: proportionate.** It closes the realistic reversed rows P1r-P5r. Undocumented cost: a participant inside a closed ", including X," is cut off. P1 "In aos mutants, oxylipins, including 12-OPDA, were undetectable after wounding." and P2 are lost.
+  - **Bare-"with" reading.** Undocumented cost on genotype-describing prose: BW1 "OPC-8:0 levels in opr3 plants with a T-DNA insertion in OPR3 were below the detection limit.", plus BW2 and BW4. The docs' only example implies there is no correct-biology loss.
+  - **Concessive veto: the least proportionate.** It refuses canonical correct prose: O1 "Although JA accumulated after wounding, JA-Ile was strongly reduced in jar1 mutants.", O8 "Although aos mutants are male sterile, their leaves accumulated no 12-OPDA after wounding.", and O7. In exchange it closes a contrary class that round 0 rated non_blocking because it needs false biology about the catalyst's own mutant. Concessive words are the commonest new veto word in real loss-of-function sentences (39 of 2458, against "until" 1 and non-significance 5), although none of those 39 was otherwise creditable. Still acceptable under F1 l.90 (positive credit only shrinks). The product owner should note it.
+  EVIDENCE: `runs/bat_tip` vs `bat_5eca` (W1, W2, W11, O1, O5, O7, O8, P1, P2, P8); `runs/b4_tip` vs `b4_5eca` (BW1, BW2, BW4); `runs/cscan2`; matrix LOST rows.
+  FIX: docs only. Add the ", including X," cost, the genotype-"with" cost and the concessive cost on canonical jar1 / aos prose to known_limitations.md.
+
+- BIO-E746R1-4 [non_blocking] (rulings on the implementer's suspected shapes; each is documented and identical at 5eca087b and 686ae134) `runs/bat_tip` rows U1-U5b
+  PROBLEM:
+  - **(i) True subject after the effect word**, "... accumulated after wounding at the expense of / alongside / plus reduced 12-OH-JA-Ile" and U1g "opr3 mutants accumulated OPDA alongside strongly reduced OPC-8:0 levels after wounding."
+    - The sentence is true biology. The admitted node (12-OH-JA-Ile -> JA-Ile, or OPC-8:0 -> OPDA) is reversed, so false. The correct direction is refused (U1d).
+    - It needs a direction-reversed extraction (0 of 37 in pilot-003) and is documented at known_limitations.md:80-90. Non_blocking, consistent with BIO-E746-1 / RT-E2-3.
+    - "Alongside reduced" is the natural member of the family.
+    - Optional future fix that closes the whole family rather than single words: in `_effect_under`, a participant directly after the form (an attributive "reduced X") makes the subject ambiguous.
+  - **(ii) RT-D-R2-2** "the precursor of JA-Ile, which is jasmonic acid": contrived wording that also needs a reversal. Non_blocking.
+  - **(iii) "a modulator of AOS"**: admits AOS's own true reaction, so the support is overstated, not false. Real papers name the regulator gene. Non_blocking.
+  - **(iv) CW1, a semicolon inside a reference, "different", "below"** (U4-U4d): no-effect gh3.10-single-mutant sentences credited as an absence. The node is true and the support overstated. Documented at :241-249. The wording is unidiomatic; the natural "did not differ" is vetoed. Non_blocking. Optional: add `different|below|above` to the comparison word list.
+  - **(v) "only marginally / slightly less"** (and Z7): CLASS policy_disagreement for the product owner. The polarity is correct. For jar1 this wording would be false biology; for a gh3.10 single mutant it is realistic.
+  EVIDENCE: `runs/bat_tip` U1, U1b, U1c, U1g, U2, U3, U4-U4d, U5, U5b: all accepted, and identical in `bat_5eca` / `bat_686`.
+  FIX: none required.
+
+- BIO-E746R1-5 [non_blocking] (DoD recall realism; pre-existing and documented at known_limitations.md:216-217) species name binding
+  PROBLEM: the canonical sentences the pilot literature is likely to contain are credited (see SUMMARY item 7). But the literature mostly names allele-numbered genotypes, and those never bind the claim's gene, so they earn nothing:
+  - L1 "JA-Ile was not detected in the jar1-1 mutant.";
+  - L3 opr3-1, L4 dde2-2 (an aos allele), L5 aos-1, L6, L8 cyp94b3-2, L9 lox2-1;
+  - K7 "...strongly reduced in jar1-1 mutants".
+  This, not E, is the main risk of a thin pilot.
+  EVIDENCE: `runs/b2_tip` and `b2_5eca` (identical), `runs/bat_tip` K7.
+  FIX: none in E. This is a recall item for the product owner. Do not loosen the gate during the pilot.
