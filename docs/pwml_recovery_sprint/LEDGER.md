@@ -10838,3 +10838,12 @@ subtract credit only. **Nothing is merged into `sprint/pwml-recovery` or `main`.
 | review | round 0 running: `pwml-reviewer` + `pwml-bio-auditor` + red team, severity standard of the handoff § 3, real-corpus precision run at `686ae134` and `5eca087b` |
 | production cards | five drafted and adversarially checked against `b4bb0b74`, in `C:/t/mining-handoff/cards/` (`PF-746-01` eligibility lexicon, `-02` llm client, `-03` acquire PMCID/DOI, `-04` embed fallback cache, `-05` ingest sections); docs only, registered at close |
 | next | if E is approved: `--no-ff` merge into `experiment/pathway-mining`, gates, pilot-004 pre-registration |
+
+### `ORCH-746` progress — machine crash, review restarted · 2026-10-08 12:25
+
+The machine slept from about 00:00 to 11:55 and then crashed at about 12:06, killing the round-0 review of change set E
+after ~5 minutes (no agent had finished). The previous entry's "00:50" should read about 12:00. After the restart: no sprint
+process survived (only VS Code's isort language servers, started after the reboot), the heavy lock was free, `C:/t/mining`
+(`a9ed963b`), `C:/t/m745-b` (`5eca087b`) and `C:/t/mining-rep-base` (`686ae134`) were clean, the primary checkout's status was
+unchanged, and LM Studio served `text-embedding-nomic-embed-text-v1.5`. The review was relaunched unchanged except for fresh
+scratch directories (`C:/t/bt/rev746e2-*`); the crashed attempt's partial files are not evidence.
