@@ -100,39 +100,72 @@ elsewhere mentions orthologs). The rule now:
      (protein) extract or fraction`, `isolated / intact chloroplasts / plastids /
      peroxisomes / mitochondria`, an affinity tag (His, Strep, GST, FLAG, 6xHis,
      MBP), `insect-cell`, and cell culture (`cell suspension`, `cell culture`,
-     `callus`). An in-planta metabolite measurement made in an extract ("JA-Ile in
-     leaf extracts of jar1") is held back too: a recall cost accepted to keep
+     `callus`), and since CS-D D3 any `extract(s)`, `enzyme preparation(s)` or `crude
+     enzyme` ("In crude enzyme extracts of jar1 mutant leaves ...", "abolished in extracts
+     of jar1 mutant leaves"). An in-planta metabolite measurement made in an extract
+     ("JA-Ile in leaf extracts of jar1") is held back too: a recall cost accepted to keep
      cell-free evidence out (see [`known_limitations.md`](known_limitations.md));
    * in a paper not graded a review, `in_planta` **only from loss-of-function
      genetics** (repair 2; rule 5(a), "a conversion stated in an organ or genotype
      context", is removed, see the decision below). Within ONE clause (split at `;`,
      at a colon not followed by a digit, so "OPC-8:0" and "16:1n9" stay whole, and at
-     the words *and / but / whereas / while / or*) all four must occur:
+     the words *and / but / whereas / while / or*) all of these must hold
+     (`species._bound`, `species._effect`, CS-D):
      1. a plant loss-of-function genotype: `mutant(s)`, `knockout`, `knock-out`,
         `knockdown`, `loss-of-function`, `null allele`, `T-DNA`, `SALK_`, `RNAi`,
         `amiRNA`, `CRISPR`; never a protein or site-directed mutant (anywhere in the
         sentence: `mutant protein / enzyme / variant / form`, `variant`,
         `site-directed`, `wild-type enzyme / protein`, `active` / `inactive`, or an
         amino-acid substitution such as "R117A", read on the unfolded text);
-     2. the claim's OWN enzyme or gene, named strictly; a symbol with another
-        species' prefix ("MpGH3A") never counts, even as the claim's own enzyme;
+     2. the genotype is OF the claim's own enzyme or gene, named strictly: the symbol
+        sits at most three tokens before the marker, with no comma between ("gh3.10
+        jar1 knockout lines", "the jar1 gh3.10 double mutant", "lox2 (At3g45140)
+        knockout lines", "opr3 mutant leaves"), or right after it with *of* / *in*
+        ("knockout of GH3.10", "T-DNA insertion lines of AOS"). A different gene's
+        mutant earns nothing ("arc mutants ... allene oxide cyclase", "the myc2 mutant
+        ... by JAR1"). A symbol with another species' prefix ("MpGH3A") never counts,
+        even as the claim's own enzyme;
      3. the claim's substrate or product, named strictly (never a cofactor or a free
-        amino acid);
-     4. a positive effect phrase from a whitelist. Absence forms: `not detected /
-        detectable`, `no detectable`, `undetectable`, `below the detection /
-        quantification limit`, `absent`, `abolished`, `abrogated`, `eliminated`,
-        `lacked / lacking`, `deficient`, `depleted`, and "no <participant> was / were
-        detected / found / formed". Change forms: `reduced`, `decreased`, `lower`,
-        `diminished`, `impaired`, `compromised`, `accumulated`, `increased`,
-        `elevated`, `higher`, each only when no `not / no / n't / never / neither /
-        nor / without / none` precedes it in the clause ("were not reduced" fails;
-        "No JA-Ile was detected" is an absence form and passes).
+        amino acid) AFTER the claim's own enzyme and gene names are blanked from the
+        clause, so an enzyme named after its substrate ("allene oxide cyclase", "OPDA
+        reductase 3", "sterol methyltransferase") never supplies the participant;
+     4. an effect on the RIGHT participant. Each effect form applies to the first
+        participant before it in the clause (its subject), or failing that the first
+        one after it; the forward forms below apply only to a participant right after
+        them (at most two tokens, no comma). The effect credits only:
+        - an absence or decrease of a **product**. Absence forms: `not detected /
+          detectable`, `no detectable`, `undetectable`, `below the detection /
+          quantification limit`, `absent`, `abolished`, `abrogated`, `eliminated`,
+          `depleted`, "no <product> was / were detected / found / formed", `did / does /
+          do not accumulate / form / produce`, `failed / fails to accumulate / form /
+          produce`, `no longer detected / accumulated / formed`; forward: `lacked /
+          lacking <product>`, `deficient in <product>`, `accumulated / produced / formed
+          / contained no <product>` (never the genotype: "mutants lacking GH3.10").
+          Decrease forms: `reduced`, `decreased`, `lower`, `diminished`, `impaired`,
+          `compromised`;
+        - an accumulation or increase of a **substrate**: `accumulated`, `increased`,
+          `elevated`, `higher` ("In opr3 mutants, OPDA accumulated in wounded leaves."
+          supports OPDA -> OPC-8:0).
+
+        The contrary combinations (a product that rises, a substrate that falls) earn
+        nothing. A negation (`not / no / n't / never / neither / nor / without / none`)
+        before an effect form in the clause refuses it ("was not abolished", "never
+        abolished", "not deficient in"); the forms that START at their negation ("not
+        detected", "no detectable", "No JA-Ile was detected", "did not accumulate") are
+        the absence statement itself.
 
      And the sentence carries NONE of the following, anywhere in it:
      - a no-effect phrase: `unchanged`, `unaffected`, `not (significantly) affected /
        changed / altered / different`, `not significantly`, `no significant`, `did not
-       differ / change`, `similar / comparable to wild type`, `wild-type levels`,
-       `normal levels`, `no change / difference / effect`;
+       differ / change`, `similar to wild type`, `wild-type levels`, `normal levels`,
+       `no change / difference / effect`, and since CS-D bare `comparable to` (the
+       adjudicated rule; repair 2 had narrowed it to "comparable to wild type", a
+       weakening), `indistinguishable`, `normally`, `residual`, `similar`, `still
+       present / accumulated / detected / formed / produced / increased / elevated`,
+       `not (fully / completely / entirely) abolished / absent / eliminated / abrogated
+       / depleted / deficient / lacking`;
+     - a protein or transcript measure (CS-D D2): `protein(s)`, `abundance`,
+       `transcript(s)`, `mRNA`, `expression`, `expressed`, `activity`;
      - a hedge or modality stem (a broad stem set, not a word list): `may`, `might`,
        `could`, `would`, `should`, `probabl`, `possibl`, `likely`, `unlikely`,
        `believ`, `thought`, `suggest`, `propos`, `postulat`, `hypothe`, `presum`,
@@ -159,7 +192,9 @@ elsewhere mentions orthologs). The rule now:
      - another organism, or ANY gene symbol carrying another species' prefix, whether
        or not the sentence also names the target (`species._FOREIGN_GENE`, a documented
        ceiling: `Mp Pp Os Sl Zm Ta Hv Gm Nt Nb Bn Ca Vv Md St Le Cs Sb Br Mt Pt Lj Ph
-       Ps Sm Gh` followed by "FAD5", " FAD5", "gh3a" / "fad5" with a digit, or "-aos1");
+       Ps Sm Gh Bd Sv Ptr Mtr` followed by "FAD5", " FAD5", "gh3a" / "fad5" with a
+       digit, or "-aos1"; `Pa` is left out: "Part1", "Panel3" and "PaCO2" would read as
+       genes);
      - and the passage is not a methods, materials, introduction or background
        section, nor a discussion or conclusion (the section label is searched, so "2.
        Materials and Methods" counts). Discussion and conclusion are interpretive.
@@ -179,8 +214,9 @@ elsewhere mentions orthologs). The rule now:
      unrecognised review, so it never earns `in_planta`. The claim's reason says
      "evidence type unverified: EuropePMC lookup failed", and the paper's own grade is
      not rewritten. If the review rule fails, the claim stays a lead. A paper graded
-     `unknown` without a failed lookup keeps primary-strength credit, a product-owner
-     decision recorded by change set A. The conditions (rule 7, strict, repair 2):
+     `unknown` without a failed lookup keeps primary-strength credit, an orchestrator
+     interim position recorded by change set A pending the product owner (no
+     DECISIONS.md entry exists). The conditions (rule 7, strict, repair 2):
      - the sentence names the target (comparison mentions removed) and no other
        organism, nor any other species' gene symbol;
      - EITHER the substrate and the product, named strictly, are LINKED by a
@@ -305,13 +341,19 @@ The rule is fail-closed and loses some correct evidence:
   with a whitelisted effect phrase: a plain stated conversion in an organ ("In
   Arabidopsis leaves, OPDA is converted to OPC-8:0 by OPR3."), a wild-type versus
   mutant contrast phrased as a conversion, a complementation that "restored" a
-  conversion, and a knockout result phrased outside the whitelist ("did not
-  accumulate", "accumulated to only 10% of wild-type levels").
+  conversion, and a knockout result phrased outside the whitelist ("accumulated to only
+  10% of wild-type levels"); since CS-D also a product that rises or a substrate that
+  falls in the knockout, an effect on a participant named only inside the enzyme's own
+  name, another gene's mutant, a protein or transcript measure, and "reduced but not
+  abolished" (the clause split leaves "reduced" without its genotype).
 
 Such a claim is a `species_ambiguous` (or in vitro) lead with a
 `missing_species_evidence` frontier item. The organism list (`species._ORGANISM_WORDS`,
-any abbreviated binomial such as "P. patens", and the gene-symbol prefixes) is a
-documented ceiling: an organism named only by a word missing from it is not seen.
+any abbreviated binomial such as "P. patens", and the gene-symbol prefixes; CS-D D4 added
+Brachypodium, Camelina, Setaria, Lotus, Gossypium, Petunia, Catharanthus, Salvia, Mentha,
+Artemisia, Panicum, Sorghum and "Glycine max", the bare word being the amino acid) is a
+documented ceiling: an organism named only by a word missing from it is not seen, and
+that miss costs an ADMISSION, not a lead.
 
 **Ceiling (N4).** A primary paper's in-planta sentence that names no organism at all
 ("The aos1 mutant accumulated no 12-OPDA in leaves.") is credited on the strength of

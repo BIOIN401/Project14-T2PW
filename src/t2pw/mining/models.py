@@ -102,7 +102,7 @@ _WS = re.compile(r"\s+")
 #: gate reads the paper by the review rule and the evidence level never counts it as an
 #: independent primary. The paper's own ``evidence_type`` is never rewritten. An
 #: ``unknown`` grade WITHOUT a failed lookup stays eligible for primary-strength credit
-#: (a product-owner decision recorded by change set A).
+#: (an orchestrator interim position recorded by change set A, pending the product owner).
 UNVERIFIED_EVIDENCE_TYPE_NOTE = "evidence type unverified: EuropePMC lookup failed"
 
 

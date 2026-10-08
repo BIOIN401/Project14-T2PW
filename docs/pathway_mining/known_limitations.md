@@ -37,24 +37,31 @@ may not. It is not a taxonomy service and never pretends to be.
 [`species_policy.md`](species_policy.md)). They are documented ceilings, and their
 misses run in both directions.
 
-**The remaining risk class is lexical, and the design now fails closed (CS-B repair
-2).** Three review rounds showed that open word lists do not converge: each round
+**The remaining risk class is lexical, and the design now fails closed (CS-B repair 2,
+CS-D).** Three review rounds showed that open word lists do not converge: each round
 closed the quoted sentences and the next paraphrase of a negation, hedge, applied
 compound, cell-free preparation or host got through. Repair 2 therefore narrowed the
-shape of positive credit instead of adding words. A paraphrase that slips past a veto
-can now only cost a lead, unless the same sentence ALSO forms a complete
-loss-of-function statement about the claim's own gene. What positive credit requires:
+shape of positive credit instead of adding words, and CS-D tied the remaining rule to
+its own genotype and participant. A paraphrase of a hedge, negation or comparison that
+slips past a veto can now only cost a lead, unless the same sentence ALSO forms a
+complete loss-of-function statement about the claim's own gene. **That is not true of
+an unrecognised organism name**: a plant genus missing from `species._ORGANISM_WORDS`
+(and a gene prefix missing from `species._FOREIGN_GENE`) costs an ADMISSION, because
+"In <unlisted genus> aos mutants, 12-OPDA was undetectable" is otherwise a complete
+loss-of-function sentence (BIO-R2-3; CS-D D4 added the jasmonate corpus's genera, the
+list stays a ceiling). What positive credit requires:
 
 * **primary paper (`in_planta`)**, all in ONE clause: a plant loss-of-function
   genotype (`mutant`, `knockout`, `knockdown`, `loss-of-function`, `null allele`,
   `T-DNA`, `SALK_`, `RNAi`, `amiRNA`, `CRISPR`; never a protein or site-directed
-  mutant), the claim's own enzyme or gene named strictly (never a foreign-prefixed
-  symbol), its substrate or product named strictly, and a whitelisted effect phrase
-  (an absence form, or a change form with no negation before it). The sentence must
-  carry no no-effect phrase, hedge or modality stem, application, comparison (bare
-  `as` / `like` included), in-vitro / host / inference / homology marker, citation,
-  procedure, purpose clause, other organism or foreign gene, and must not sit in a
-  methods, introduction, background, discussion or conclusion passage;
+  mutant) OF the claim's own enzyme or gene (the symbol beside the marker, never a
+  foreign-prefixed symbol); a product that is absent or decreased, or a substrate that
+  accumulates, named strictly and apart from the enzyme's own name; no negation before
+  the effect. The sentence must carry no no-effect phrase, hedge or modality stem,
+  application, comparison (bare `as` / `like` included), in-vitro / host / inference /
+  homology marker, protein or transcript measure, citation, procedure, purpose clause,
+  other organism or foreign gene, and must not sit in a methods, introduction,
+  background, discussion or conclusion passage;
 * **review (`review`, `review_article_only`, never primary)**: the target named
   (comparison mentions removed) and no other organism or foreign gene, and either
   substrate and product LINKED by a conversion verb ("X ... to / into Y", "Y ... from
@@ -62,10 +69,22 @@ loss-of-function statement about the claim's own gene. What positive credit requ
   conversion verb; no hedge, negation, comparison, homology, application or procedure.
 
 The lexical residue that remains: a hedge, negation or comparison phrased with a stem
-outside the sets, inside a sentence that otherwise meets the loss-of-function rule
-(for example a knockout sentence qualified by an unlisted modal), would still earn
-credit. The positive whitelist keeps that class small: the sentence must already
-report a loss-of-function effect on the claim's own participant.
+outside the sets ("ostensibly abolished"), or an application phrased outside the list
+("seedlings given jasmonic acid accumulated no JA-Ile", "upon addition of jasmonic acid
+..., no JA-Ile was formed": code review N-2, not in CS-D's scope), inside a sentence that otherwise meets the
+loss-of-function rule, would still earn credit. So would a double mutant that carries
+the claim's gene beside the gene that explains the result ("the aos jar1 double mutant
+... 12-OPDA undetectable" for a JAR1 claim), which is a mis-extraction the sentence rule
+cannot see.
+
+**Precision rests on the paper-level organism screen (R3-N3, measured).** On the red
+team's 358-document real corpus, 37 unique loss-of-function sentences survive every
+claim-independent veto in a credit-bearing section; 34 of them are held back only
+because the paper-level screen supplies the organisms the document names (E. coli,
+Listeria, Pseudomonas, Fusarium, mouse and zebrafish results such as "Delta bioE mutants
+showed markedly lower bacterial loads"), not by any sentence rule. Screen coverage is the
+dominant control on species correctness; a per-paper principal organism decided at
+inclusion (ceiling N4) is the only thing that moves it.
 
 * **Recall cost of removing rule 5(a), accepted.** These now earn nothing, and such a
   reaction stays a `species_ambiguous` lead for a `missing_species_evidence` query:
@@ -74,39 +93,78 @@ report a loss-of-function effect on the claim's own participant.
     is converted to JA-Ile in wild-type but not in jar1 mutant leaves.", "In
     wild-type leaves, OPDA was converted to OPC-8:0, but not in opr3 mutants.");
   - complementation that "restored" a conversion (native genes included);
-  - a knockout result phrased outside the effect whitelist: "The aos mutant did not
-    accumulate 12-OPDA after wounding." (a negated verb, not an absence form),
-    "accumulated to only 10% of wild-type levels" ("wild-type levels" is a no-effect
-    phrase);
   - any otherwise-qualifying sentence with a bare `as` or `like` ("as described",
     "like JAR1"), `both`, or a broad modality stem (`indicate`, `remain`, `expected`,
     `should`, ...);
-  - a gene-symbol prefix false positive: a word that starts with a listed two-letter
-    prefix and continues in capitals or in lower case with a digit ("CaMV 35S",
-    "StAR", a glued "Table1") reads as a foreign gene and vetoes the sentence;
+  - a gene-symbol prefix false positive: a word that starts with a listed prefix and
+    continues in capitals or in lower case with a digit ("CaMV 35S", "StAR", a glued
+    "Table1") reads as a foreign gene and vetoes the sentence;
   - the pilot-003 fixture corpus and the test abstracts were rewritten to state their
     results by loss-of-function genetics (`tests/helpers_mining.py`); a live corpus
     whose primary papers report conversions only as stated conversions will admit
     less until the product owner revisits rule 5(a).
-* **Recall cost, accepted earlier.** A preparation of an organ is cell-free evidence, so
-  an in-planta metabolite measurement made in an extract ("JA-Ile was absent from leaf
-  extracts of jar1") earns no credit. So do hedged, discussion, conclusion,
-  introduction and methods statements, native complementation phrased with a host
-  word, and any sentence near an ortholog / homology / "equivalent" mention.
+* **Recall cost of the effect rule (CS-D, BIO-R2-4, R3-N4), accepted.** Correct
+  knockout prose that earns nothing:
+  - E1 "JA-Ile remained undetectable in jar1 mutants." (the `remain` modality stem);
+  - E2 "In jar1 mutants JA-Ile was undetectable, as was 12-OH-JA-Ile." (bare `as`);
+  - E3 "The active jasmonate JA-Ile was undetectable in gh3.10 jar1 knockout lines."
+    (`active` reads as a protein mutant);
+  - E4 "In aos mutants and aoc mutants, 12-OPDA was undetectable." (the clause split
+    at *and* leaves the effect without its genotype);
+  - "JA-Ile accumulation was reduced but not abolished in the jar1 mutant." (the same
+    split, and "not abolished" is a no-effect phrase);
+  - nominalised or unlisted changes: "only 5% of that in wild-type leaves", "dropped
+    below 10% of wild type", "accumulated to only 10% of wild-type levels" ("wild-type
+    levels" is a no-effect phrase), bare `lack` ("aos knockout lines lack 12-OPDA");
+  - a substrate named before the product in a conversion that was abolished ("conversion
+    of OPDA to OPC-8:0 was abolished in opr3 mutants": the effect's subject is the
+    substrate), and an allele written with a hyphen ("jar1-1", "opr3-1"), which does not
+    strictly name JAR1 / OPR3;
+  - any sentence with `protein`, `abundance`, `transcript`, `mRNA`, `expression`,
+    `expressed`, `activity` or `similar`, and "equivalent" or "the corresponding gene"
+    (homology markers, BIO-R1-7);
+  - D1 recovered the commonest knockout phrasing: "did not / failed to accumulate",
+    "no longer detected" now earn credit.
+* **Recall cost of the review route (BIO-R2-5, R3-N4c), accepted.** Verb-first review
+  prose with a verb outside the strict set earns nothing: "In Arabidopsis, OPR3 reduces
+  OPDA to OPC-8:0.", "JAR1 conjugates jasmonic acid with isoleucine to form JA-Ile.",
+  "CYP94B1/B3 catalyzes the oxidation of JA-Ile to 12OH-JA-Ile" (the link needs a
+  conversion verb BETWEEN the participants, and "oxidation" is not "oxidise"), while
+  "OPDA is converted to OPC-8:0 by OPR3" is credited. The pilot's T2/T3 sentence passes
+  on its "reduced by OPR3 ... to produce ... respectively" word order.
+* **Recall cost, accepted earlier.** A preparation of an organ is cell-free evidence, and
+  since CS-D D3 so is any extract or enzyme preparation, so an in-planta metabolite
+  measurement made in an extract ("JA-Ile was absent from leaf extracts of jar1") earns
+  no credit. So do hedged, discussion, conclusion, introduction and methods statements,
+  native complementation phrased with a host word, and any sentence near an ortholog /
+  homology / "equivalent" mention.
 * **What no sentence rule can see.** A sentence naming no organism is credited on the
   paper-level organism screen; a screen that misses the paper's own organism admits
-  the wrong species (species policy, ceiling N4). An organism or gene-symbol prefix
-  missing from `species._ORGANISM_WORDS` / `species._FOREIGN_GENE` is not seen.
+  the wrong species (species policy, ceiling N4, measured above). An organism or
+  gene-symbol prefix missing from `species._ORGANISM_WORDS` / `species._FOREIGN_GENE`
+  is not seen. An uncited background statement about the target in an abstract or a
+  span labelled `body` ("In Arabidopsis, aos knockout lines lacked 12-OPDA." in a
+  Marchantia paper) earns primary `in_planta`: true biology, credited to the wrong
+  paper (R3-N2). Closing it needs the principal-organism field plus a span-level
+  background-versus-result signal that ingest does not emit.
 * **A participant's citation is not checked against its text (BIO-745B-2, an
   escalation to the product owner).** A participant kept by `model_citation` is not
   checked against the text of the span it cites. A loss-of-function sentence
   earns credit with ONE strictly-named participant, so the other side of an admitted
   reaction can rest on the model's citation alone (#14's "jasmonic acid", where the
-  abstract says "JA"). That is correct biology there; a hallucinated substrate with a
-  valid citation would pass the same way. The tightening proposed by the bio-auditor
-  (label such a participant `model_citation_unverified` and require every participant
-  to be verbatim in the claim's spans or named in the credited sentence) awaits a
-  decision.
+  abstract says "JA"; a wrong substrate on the T1 sentence is credited the same way,
+  code review N-3). That is correct biology there; a hallucinated substrate with a
+  valid citation would pass the same way, and on the review route a non-chemical token
+  ("Recently", "arabidopsis") can act as the linked participant (R3-N5), so the gate's
+  precision is bounded by extraction quality. The tightening proposed by the
+  bio-auditor (label such a participant `model_citation_unverified` and require every
+  participant to be verbatim in the claim's spans or named in the credited sentence)
+  awaits a decision.
+* **The increase direction is a narrowing of the adjudicated rule (R3-N1).** Rule 5(b)
+  as adjudicated credits any change of a named participant; CS-D credits an increase
+  only on a substrate and an absence or decrease only on a product. That is an
+  orchestrator decision the product owner may revisit (it needs a DECISIONS.md entry
+  to become product policy).
 
 ## Support across siblings
 
@@ -123,6 +181,14 @@ batches are all registered before any is judged). Two edges remain:
 * Conflict detection still compares every sibling, a lead's enzyme included. A
   disagreement with an in-vitro claim clears the attribute on the admitted node,
   which overstates the disagreement and never the support.
+
+**The same-paper union widens the inference veto (BIO-R2-6), accepted.** Because every
+batch of a paper is registered before any claim is judged, a claim is judged on the
+union of every batch's cited sentences, and ONE analogy or ortholog sentence anywhere in
+that union makes it `inferred_only`, even beside a clean knockout result in another
+batch. A live paper that cites the same reaction from two passages is more likely to
+carry one, so recall depends on retrieval's span selection. The adjudication keeps the
+veto at sentence level and per paper, deliberately.
 
 ## Conflict detection is attribute-level and literal
 
@@ -194,8 +260,8 @@ gets a new evidence id, and a figure snippet contained in a body chunk is dedupl
 
 ## A review must say it is one
 
-**Product-owner decision (A1-R1-UNKNOWN-WITHOUT-FAILED-LOOKUP, recorded per the ORCH-745 CS-A
-repair-2 brief).** A paper graded `unknown` WITHOUT a failed lookup remains eligible for
+**Orchestrator interim position pending the product owner (A1-R1-UNKNOWN-WITHOUT-FAILED-LOOKUP,
+recorded per the ORCH-745 CS-A repair-2 brief; no DECISIONS.md entry exists).** A paper graded `unknown` WITHOUT a failed lookup remains eligible for
 primary-strength credit: an offline run or an upload (no lookup is made), a paper EuropePMC has
 no record of (DOI- or URL-only), a bare PMCID with no title (the subject heading has nothing to
 anchor to), a PubMed record declaring only "Journal Article", and subject headings the rule does
@@ -206,9 +272,11 @@ Without a declared review type (NCBI, or EuropePMC's metadata lookup, which an o
 never makes), a review is recognised only by its JATS subject heading (which needs the record's
 title to anchor it, so a bare PMCID with no title has none), a title marker or a
 self-referential sentence ("this review", "here we review", ...). A review that never describes itself in those words
-stays `unknown`, and its reactions are graded `single_paper`. Two reviews, or a review and a
-primary paper, supporting one reaction still grade `multiple_independent_papers`:
-`admission.evidence_level` counts papers, not their types.
+stays `unknown`, and its reactions are graded `single_paper`. Two such unrecognised reviews,
+or one and a primary paper, supporting one reaction still grade
+`multiple_independent_papers`: `admission.evidence_level` counts them as primary papers. (A
+review recognised as one never counts toward independence since ORCH-745 A3; see
+[`evidence_policy.md`](evidence_policy.md).)
 
 ## Uploaded PDFs
 
