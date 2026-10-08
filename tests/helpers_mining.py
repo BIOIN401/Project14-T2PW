@@ -7,9 +7,13 @@ offline lexical mode with a temp-directory cache.
 The corpus is a *synthetic* jasmonate-flavoured scenario built to exercise the
 policy, not to be biochemically authoritative. Since ORCH-745 CS-B repair 2 a
 target-species reaction earns its species support only from loss-of-function
-genetics, so each paper meant to support one says so ("In Arabidopsis thaliana lox2
-knockout lines, 13-HPOT was undetectable in wounded leaves."), and every scripted
-claim it supports names that enzyme. It deliberately contains:
+genetics, so each paper meant to support one says so ("In Arabidopsis thaliana aos
+knockout lines, 12-OPDA was undetectable in wounded leaves."), and every scripted
+claim it supports names that enzyme. Since CS-D repair 1 the credited sentence names
+only the participant the effect applies to: "13-HPOT formed from alpha-linolenic acid
+was undetectable" names both sides and earns nothing. The lox2 papers (P1, P8) report
+a strong reduction, not an absence (LOX3 / LOX4 / LOX6 contribute; bio BIO-R2-7). It
+deliberately contains:
 
 * two paper-supported reactions that chemically connect (P1, P2);
 * a relevant but disconnected paper-supported reaction (P3);
@@ -74,12 +78,12 @@ PAPERS: Dict[str, FixturePaper] = {
         ident="PMC1000001",
         title="Lipoxygenase LOX2 oxygenates alpha-linolenic acid in Arabidopsis thaliana leaves",
         abstract=(
-            "In Arabidopsis thaliana lox2 knockout lines, 13-hydroperoxyoctadecatrienoic acid "
-            "(13-HPOT) formed from alpha-linolenic acid was undetectable in wounded leaves."
+            "In Arabidopsis thaliana lox2 knockout lines, wound-induced "
+            "13-hydroperoxyoctadecatrienoic acid (13-HPOT) was strongly reduced in leaves."
         ),
         full_text=(
-            "Results. In Arabidopsis thaliana lox2 knockout lines, 13-HPOT was undetectable in "
-            "wounded leaves. The reaction proceeds in the chloroplast."
+            "Results. In Arabidopsis thaliana lox2 knockout lines, wound-induced 13-HPOT was "
+            "strongly reduced in leaves. The reaction proceeds in the chloroplast."
         ),
     ),
     "P2": FixturePaper(
@@ -173,11 +177,11 @@ PAPERS: Dict[str, FixturePaper] = {
         title="Independent confirmation of alpha-linolenic acid oxygenation in Arabidopsis",
         abstract=(
             "An independent laboratory confirms that in Arabidopsis thaliana lox2 knockout "
-            "lines, 13-HPOT is undetectable in wounded leaves."
+            "lines, wound-induced 13-HPOT is strongly reduced in leaves."
         ),
         full_text=(
             "Results. In an independent set of Arabidopsis thaliana lox2 knockout lines, "
-            "13-HPOT was undetectable in wounded leaves."
+            "wound-induced 13-HPOT was strongly reduced in leaves."
         ),
     ),
     "P9": FixturePaper(

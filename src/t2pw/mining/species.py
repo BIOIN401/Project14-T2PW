@@ -452,16 +452,38 @@ _EFFECT_FORMS = (
           r"\bfail(?:ed|s)? to (?:accumulate|form|produce)\b",
           r"\bno longer (?:\w+ )?(?:detect\w*|accumulat\w*|form\w*)",
           r"\bno\b(?:\s+[\w:()+-]+){1,4}?\s+(?:was|were)\s+(?:detected|found|formed)\b",
-          r"\b(?:reduced|decreased|lower|diminished|impaired|compromised)\b"), "product", False),
-    (_any(r"\black(?:ed|ing)\b", r"\bdeficient in\b", r"\b(?:accumulated|produced|formed|contained) no\b"),
-     "product", True),
+          r"\b(?:reduced|decreased|lower|diminished|impaired|compromised)\b",
+          # CS-D repair 1 (R2): "aos mutants accumulated less 12-OPDA" is a decrease
+          r"\baccumulated (?:\w+ ){0,2}?(?:less|lower|reduced|decreased)\b"), "product", False),
+    # forward; repair 1 (R1) dropped the unbriefed "produced / formed / contained no"
+    (_any(r"\black(?:ed|ing)\b", r"\bdeficient in\b", r"\baccumulated no\b"), "product", True),
     (re.compile(r"\b(?:accumulated|increased|elevated|higher)\b"), "substrate", False),
 )
+#: A substrate-side increase form counts only in a clause that says nothing went down
+#: (CS-D repair 1, R2): "accumulated less JA", "accumulated to lower levels" is a decrease.
+_DECREASE_WORD = re.compile(r"\b(?:less|fewer|lesser|lower|reduced|decreased|diminished|no|weakly|slightly|"
+                            r"marginally)\b")
+#: A participant name followed by an enzyme noun is the enzyme, not the participant
+#: ("OPDA reductase levels", "the other allene oxide cyclases"; CS-D review N1 / N4).
+#: ponytail: "-ase" plus a short list of English "-ase" words; an unlisted one ("x
+#: phrases") only costs credit.
+_ENZYME_HEAD = re.compile(r"\s+(?![a-z-]*(?:creases?|phases?|cases?|bases?|leases?|chases?|rases?)\b)"
+                          r"[a-z-]+ases?\b")
+#: A whole-plant phenotype is the effect's subject, not the metabolite (CS-D repair 1, R2):
+#: "Root growth of the jar1 mutant was reduced on medium containing JA-Ile."
+_PHENOTYPE = re.compile(r"\b(?:growth|fertility|fertile|resistance|susceptibility|tolerance|senescence|yield|"
+                        r"biomass|germination|flowering|development|phenotypes?)\b")
+#: A comma-led relative or adverbial clause starts a new subject: a participant before it
+#: is not the subject of an effect after it (CS-D repair 1, review N3).
+_NEW_SUBJECT = re.compile(r";|,\s*(?:which|that|who|whose|with|whereas|while|although|though|but|and)\b")
+#: The noun after the gene says the marker is not OF the gene: "mutants in the JAR1
+#: pathway", "the myc2 mutant in the JAR1 background" (CS-D repair 1, RT-D-4).
+_CONTAINER = re.compile(r"\s*(?:pathway|background|cluster|family|signall?ing|network)s?\b")
 #: A negation before an effect form in the clause refuses it ("was not abolished",
 #: "never abolished", "were not reduced"); the forms that START at their negation ("not
 #: detected", "no detectable", "no JA-Ile was detected", "did not accumulate") are the
 #: absence statement itself.
-_CHANGE_NEGATION = re.compile(r"\b(?:not|no|never|neither|nor|without|none)\b|n't")
+_CHANGE_NEGATION = re.compile(r"\b(?:not|no|never|neither|nor|without|none|hardly|scarcely|barely)\b|n't")
 _NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
                   r"\bnot\s+(?:significantly\s+)?(?:affected|changed|altered|different)\b",
                   r"\bnot significantly\b", r"\bno significant", r"\bdid not (?:differ|change)\b",
@@ -472,13 +494,22 @@ _NO_EFFECT = _any(r"\bunchanged\b", r"\bunaffected\b",
                   r"\bsimilar\b",
                   r"\bstill (?:present|accumulat\w*|detect\w*|formed|produced|increased|elevated)\b",
                   r"\bnot (?:fully |completely |entirely )?(?:abolished|absent|eliminated|abrogated|depleted|"
-                  r"deficient|lacking)\b")
+                  r"deficient|lacking)\b",
+                  # CS-D repair 1 (R1): a negated comparison or delay is not an absence
+                  # ("did not accumulate significantly less JA-Ile than", "did not accumulate
+                  # until 6 h", "accumulated no more JA-Ile than")
+                  r"\bno (?:more|less|greater|fewer|higher|lower|lesser)\b",
+                  r"\b(?:(?:did|does|do) not|fail(?:ed|s)? to)\b[^.;:]{0,60}?\b(?:more|less|lesser|lower|higher|"
+                  r"fewer|greater|further|again|than|until|significantly)\b",
+                  # a negation after the effect (CS-D review N4 / BIO-D-4)
+                  r"\bneither\b[^;:]*\bnor\b", r"\bnone of\b")
 #: The effect's subject is a protein or transcript measure, not a metabolite (CS-D D2).
 _MEASURE = _any(r"\bproteins?\b", r"\babundance\b", r"\btranscripts?\b", r"\bmrnas?\b",
                 r"\bexpression\b", r"\bexpressed\b", r"\bactivit(?:y|ies)\b")
 #: A loss-of-function marker followed by the gene it is of: "knockout of GH3.10",
-#: "T-DNA insertion lines of AOS", "mutants in JAR1".
-_MARKER_OF = re.compile(r"\s+(?:[\w-]+\s+){0,2}?(?:of|in)\s+(?:the\s+)?")
+#: "T-DNA insertion lines of AOS", "mutants in JAR1", "The SALK_034543 insertion line of
+#: GH3.10" (at most three tokens, then "of" / "in", then an optional "the").
+_MARKER_OF = re.compile(r"\s*(?:[\w-]+\s+){0,3}?(?:of|in)\s+(?:the\s+)?")
 #: The participant + enzyme branch of the review route (rule 7) keeps the strict set.
 _CONVERSION = _any(r"\bconvert", r"\bconversion\b", r"formed from", r"metaboli[sz]ed to",
                    r"produced from", r"synthesi[sz]ed from")
@@ -755,7 +786,7 @@ def _bound(clause: str, cats: Sequence[Sequence["re.Pattern[str]"]]) -> bool:
     lines", "the jar1 gh3.10 double mutant", "lox2 (At3g45140) knockout lines"), or right
     after it with "of" / "in" ("knockout of GH3.10", "T-DNA insertion lines of AOS").
     "arc mutants ... allene oxide cyclase" and "the myc2 mutant ... by JAR1" are not."""
-    cat_hits = _hits(clause, cats)
+    cat_hits = [(a, b) for a, b in _hits(clause, cats) if not _CONTAINER.match(clause, b)]
     for marker in _LOSS_OF_FUNCTION.finditer(clause):
         for start, end in cat_hits:
             if end <= marker.start():
@@ -773,20 +804,36 @@ def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
     an absence or decrease form whose participant is a PRODUCT, or an accumulation or
     increase form whose participant is a SUBSTRATE. ``clause`` has the claim's catalyst
     names blanked (D2), so an enzyme named after its substrate supplies no participant.
-    A negation before the form in the clause refuses it."""
-    hits = sorted([(a, b, "product") for a, b in _hits(clause, prods)]
-                  + [(a, b, "substrate") for a, b in _hits(clause, subs)])
+    A negation before the form in the clause refuses it.
+
+    The form's subject (CS-D repair 1): the participants inside the form ("no JA-Ile was
+    detected"); else every participant before it in the clause that no relative or
+    adverbial clause separates from it ("JA-Gln accumulated ..., which had reduced JA-Ile",
+    "OPC-8:0 levels were elevated, with decreased OPDA"; an appositive "JA-Ile, the
+    bioactive form, was absent" keeps its subject; none for a forward form);
+    else the participants right after it, at most three tokens away (two for a forward
+    form) with no comma between. If those candidates name BOTH a substrate and a product
+    the subject is ambiguous and the form earns nothing ("the OPDA metabolite OPC-8:0
+    accumulated", "13-HPOT formed from alpha-linolenic acid was undetectable"). An
+    increase form never counts in a clause that also says something went down."""
+    hits = sorted(h for h in [(a, b, "product") for a, b in _hits(clause, prods)]
+                  + [(a, b, "substrate") for a, b in _hits(clause, subs)]
+                  if not _ENZYME_HEAD.match(clause, h[1]))
     for pattern, side, forward in _EFFECT_FORMS:
+        if side == "substrate" and (_DECREASE_WORD.search(clause) or _EFFECT_FORMS[0][0].search(clause)
+                                    or _EFFECT_FORMS[1][0].search(clause)):
+            continue
         for form in pattern.finditer(clause):
             if _CHANGE_NEGATION.search(clause[:form.start()]):
                 continue
             inside = [h for h in hits if form.start() <= h[0] < form.end()]
-            before = [] if forward else [h for h in hits if h[1] <= form.start()]
+            before = [] if forward else [h for h in hits if h[1] <= form.start()
+                                         and not _NEW_SUBJECT.search(clause[h[1]:form.start()])]
             after = [h for h in hits if h[0] >= form.end()
-                     and (not forward or (len(clause[form.end():h[0]].split()) <= 2
-                                          and not re.search(r"[,;]", clause[form.end():h[0]])))]
-            subject = (inside or before or after or [None])[0]
-            if subject is not None and subject[2] == side:
+                     and len(clause[form.end():h[0]].split()) <= (2 if forward else 3)
+                     and not re.search(r"[,;]", clause[form.end():h[0]])]
+            sides = {h[2] for h in (inside or before or after)}
+            if sides == {side}:
                 return f"{form.group(0)!r} on a {side}"
     return ""
 
@@ -879,7 +926,7 @@ def grade_sentences(
             return GRADE_NONE, ("no positive credit: the passage or the paper names another organism "
                                 "and this sentence does not name the target")
         for clause in _CLAUSE.split(folded):
-            if not _bound(clause, cats):
+            if not _bound(clause, cats) or _PHENOTYPE.search(clause):
                 continue
             effect = _effect(_blank(clause, every_catalyst), subs, prods)
             if effect:

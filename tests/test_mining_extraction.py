@@ -56,9 +56,11 @@ def spans():
             # genetics of the claim's enzyme (was "LOX2 converts alpha-linolenic acid to
             # 13-HPOT in Arabidopsis thaliana leaves.", and at base "... in Arabidopsis
             # thaliana."); otherwise the claim of test_each_field_keeps_its_own_evidence is
-            # species_ambiguous.
-            text=("In Arabidopsis thaliana lox2 knockout lines, 13-HPOT formed from "
-                  "alpha-linolenic acid was undetectable in wounded leaves."),
+            # species_ambiguous. CS-D repair 1: naming both sides before the effect is
+            # ambiguous (was "... knockout lines, 13-HPOT formed from alpha-linolenic acid
+            # was undetectable in wounded leaves.").
+            text=("In Arabidopsis thaliana lox2 knockout lines, wound-induced 13-HPOT was "
+                  "strongly reduced in leaves."),
             section="results",
             locator="results#0",
             chunk_id="c0",
