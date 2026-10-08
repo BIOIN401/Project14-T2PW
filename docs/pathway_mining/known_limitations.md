@@ -79,17 +79,19 @@ cannot see. The effect's subject is chosen by position, not grammar (species pol
 rule 5(b) item 4): a sentence whose real subject is something else and which names the
 participant before the effect with no clause opener between them is still read as the
 participant's effect. It bites when the true subject FOLLOWS the effect word, so that the
-participant before it is the only candidate; words that open no clause in any reading
-still let that happen: "In cyp94b3 mutants, JA-Ile accumulated after wounding at the
-expense of reduced 12-OH-JA-Ile.", "..., alongside reduced 12-OH-JA-Ile.", "..., plus
-reduced 12-OH-JA-Ile." credit the reversed 12-OH-JA-Ile -> JA-Ile (measured at the CS-E
-repair-1 tip, `C:/t/bt/m746-e/runs/suspect_r1c`; a wrong admission also needs a
-direction-reversed extraction). When the true subject stands before the effect word too
-("JA-Ile accumulated after wounding, when 12-OH-JA-Ile was strongly reduced") both sides
-are candidates and the form earns nothing.
+participant before it is the only candidate. Since ORCH-746 CS-E repair 2 a participant at
+most two tokens after the effect word joins the candidates (the attributive-participant
+rule), so the residue is a true subject further away: "In cyp94b3 mutants, JA-Ile
+accumulated after wounding at the expense of reduced levels of its product 12-OH-JA-Ile."
+still credits the reversed 12-OH-JA-Ile -> JA-Ile (measured, `C:/t/bt/m746-e/runs/docc2_tip`;
+a wrong admission also needs a direction-reversed extraction). When the true subject
+stands before the effect word too ("JA-Ile accumulated after wounding, when 12-OH-JA-Ile
+was strongly reduced") both sides are candidates and the form earns nothing.
 
-What the gate now refuses of that residue (ORCH-746 CS-E and its repair 1; each class was
-credited at 686ae134, the last seven still at 5eca087b):
+What the gate now refuses of that residue (ORCH-746 CS-E and its repairs 1 and 2; each
+class was credited at 686ae134 and all but the first still at 5eca087b; the last three, and
+the repair-2 parts of the concessive, "nowhere near" and regulator bullets, still at
+01d436cf):
 - a comma inside a clause: a figure callout ("(Fig. 3A, B)"), a stereo descriptor
   ("(3R,7S)"), a statistics note ("(P < 0.01, Student t-test)"), an inner comma pair (",
   which, in turn, ...", ", with, after wounding, ...", ", with OPDA, however, ...") or a
@@ -106,7 +108,9 @@ credited at 686ae134, the last seven still at 5eca087b):
   accumulated after wounding with reduced 12-OH-JA-Ile." (the reversed 12-OH-JA-Ile ->
   JA-Ile) and "In opr3 mutants, OPC-8:0 levels were elevated with decreased OPDA." (the
   contrary OPDA -> OPC-8:0). The fifth reading reads a bare "with" as an opener; a bare
-  "whereas", "while" or "but" already splits the clause;
+  "whereas", "while" or "but" mid-sentence already splits the clause (a sentence-initial
+  "While X, Y" keeps X and Y in one clause, and is refused by the concessive veto since
+  repair 2);
 - a participle or consequence clause (repair 1 item 9): "In cyp94b3 mutants, JA-Ile
   accumulated after wounding, resulting in reduced 12-OH-JA-Ile levels." (the reversed
   12-OH-JA-Ile -> JA-Ile), ", leading to strongly reduced OPC-8:0 levels" (OPC-8:0 ->
@@ -122,16 +126,39 @@ credited at 686ae134, the last seven still at 5eca087b):
 - a concessive clause (RT-E2-4): "Despite high OPC-8:0 levels in opr3 mutants, JA was
   reduced.", "Although OPC-8:0 accumulated in opr3 mutants, JA levels were strongly
   reduced.", "Even though jar1 mutants accumulated JA-Ile, JA-responsive gene induction
-  was reduced." (a no-effect veto on `although / though / despite / in spite of`);
+  was reduced." (a no-effect veto on `although / though / despite / in spite of`), and
+  since repair 2 (RT-R1-3, CSE-R1-C5) "While OPC-8:0 accumulated in opr3 mutants, JA
+  levels were strongly reduced." with a sentence-initial `while`, `whilst`, `even if`,
+  `notwithstanding`, `regardless of`, `albeit`. A concessive written another way
+  ("...; nevertheless, JA was reduced.") is not seen by the veto (that probe earns
+  nothing for other reasons);
 - a participant inside the "accumulated ... less" gap (RT-E2-3): "opr3 mutants
   accumulated OPDA with lower OPC-8:0 levels." credited only the reversed OPC-8:0 -> OPDA;
-- "jar1 mutants accumulated nowhere near less JA-Ile after wounding." (CSE-R0-N5);
+- "jar1 mutants accumulated nowhere near less JA-Ile after wounding." (CSE-R0-N5), and
+  since repair 2 `nowhere near` anywhere ("accumulated nowhere near lower / reduced
+  JA-Ile", CSE-R1-C4);
 - a regulator's or an upstream gene's mutant (BIO-D-R2-3, RT-D-R2-3): "Mutants lacking a
   regulator of AOS accumulated no 12-OPDA.", "Mutants with defects upstream of JAR1
   accumulated no JA-Ile." and "Mutants for regulators of JAR1 accumulated no JA-Ile."
   bound the claim's gene; the marker tail's gap words may no longer name another gene's
-  role (species policy, rule 5(b) item 2). A gap word outside that list ("Mutants lacking
-  a modulator of AOS") still binds.
+  role (species policy, rule 5(b) item 2), and since repair 2 (RT-R1-5, CSE-R1-C5) that
+  includes "a suppressor / an inducer / a co-activator / a modulator of AOS"; a role noun
+  right after the gene unbinds it too ("In the jar1 suppressor mutant", "In jar1 enhancer
+  mutants", "Knockout of the AOS activator"). A gap word outside both lists still binds:
+  "Mutants lacking a partner of AOS accumulated no 12-OPDA." is credited (measured);
+- an attributive participant after the effect word (repair 2, BIO-E746R1-4 (i)): "In
+  cyp94b3 mutants, JA-Ile accumulated after wounding at the expense of / alongside / plus
+  reduced 12-OH-JA-Ile." and "opr3 mutants accumulated OPDA alongside strongly reduced
+  OPC-8:0 levels after wounding." credited the reversed reaction; the participant after
+  the form now joins the candidates and the form is ambiguous;
+- background stated in a results sentence (repair 2, RT-R1-6): "jar1 mutants are known to
+  contain reduced JA-Ile levels.", "were shown previously to", "is well documented" (the
+  citation veto). Unlisted background wording is still credited: "The jar1 mutant is an
+  established JA-Ile-deficient line with reduced JA-Ile levels.";
+- a position, not a change (repair 2, RT-R1-4): "JA-Ile was detected mainly in the lower
+  rosette leaves", "OPC-8:0 accumulated in the lower epidermis", "in their lower part". An
+  effect word on a property of the participant is still read as a decrease: "In jar1
+  mutants, JA-Ile showed reduced turnover after wounding." is credited.
 
 A participant that only MODIFIES a non-participant head, standing right before a closed
 relative clause that names the true subject, is still read as the subject (RT-D-R2-2):
@@ -139,8 +166,10 @@ relative clause that names the true subject, is still read as the subject (RT-D-
 wounding." credits the reversed JA-Ile -> jasmonic acid (JAR1), and so do "the pool of
 jasmonic acid, that is conjugated to JA-Ile, was reduced" and "the hydroxylation product
 of JA-Ile, which is 12-OH-JA-Ile, was undetectable" for their reversed claims. CS-E and
-its repair 1 do not close this: all six readings keep the head next to the opener (one
-", " follows it) and cut off the participant inside the closed clause. It is refused only
+its repairs do not close this: all six readings keep the head next to the opener (one
+", " follows it) and cut off the participant inside the closed clause, and the
+attributive-participant rule does not apply (the true subject stands before the effect
+word, inside the clause). It is refused only
 when other words stand between the participant and the opener ("the OPDA reduction
 product, which is OPC-8:0, was undetectable"). Real text more often writes the appositive
 "JA, the precursor of JA-Ile, accumulated", which names both sides and earns nothing.
@@ -176,8 +205,12 @@ forms: the measured recall cost. The red team re-measured the figures at 5eca087
 CS-E): 30 / 22 (1 correct) / 20 / 2 (1 correct), identical to 686ae134 (RT-E2-6). Its
 prototype of CS-E repair 1's no-effect vetoes left them at 30 / 22 / 20 / 2, and with the
 concessive veto at 29 / 21 / 19 / 2: the one credit it drops ("Although no InDels were
-detected ...", PMC11946230) was wrong. Repair 1 as shipped was not re-measured; it can only
-remove credit. Screen coverage is the dominant control on species correctness; a
+detected ...", PMC11946230) was wrong. The red team measured repair 1 as shipped (01d436cf,
+RT-R1-7): 29 / 21 (1 correct, T1) / 19 / 2 (1 correct: T1 correct, dapat wrong), a strict
+subset of 5eca087b's; its round-1 prototype vetoes measured 25 / 18 (T1 correct) / 16 / 2,
+dropping four wrong bacterial survivors and keeping T1. Repair 2 as shipped, which holds
+those vetoes and more, was not re-measured; it can only remove credit. Screen coverage is
+the dominant control on species correctness; a
 per-paper principal organism decided at inclusion (ceiling N4) is the only thing that
 moves it.
 
@@ -235,19 +268,37 @@ moves it.
     `until`, and `before` / `prior to` followed by a number ("In wounded leaves of jar1
     mutants, JA-Ile was not detected until 30 min after wounding.", "In gh3.10 mutant
     flowers, JA-Ile was absent until stage 13."; RT-E2-1), and so do a non-significant
-    change ("the difference was not statistically significant", "n.s.", "P > 0.05",
-    "P = 0.08", "tended to") and the genotype joined to the wild type ("below the detection
-    limit in jar1 mutant and wild-type plants", "in opr3 mutants or in the wild type",
-    "alike"; RT-E2-2). Still not seen: a comparison word more than 60 characters after the
-    negated verb (CW1: "JA-Ile did not accumulate in wounded rosette leaves of gh3.10
-    single mutant plants to significantly lower levels than in Col-0."); a comparison word
-    after a semicolon inside a figure or table reference, which still ends the window
-    ("gh3.10 mutants did not accumulate JA-Ile (Figure 2B; Table 1) to significantly lower
-    levels than Col-0."; BIO-E746-5); a comparison word outside the list ("did not
-    accumulate JA-Ile to levels different from those of Col-0", "below"); and a
-    non-significance phrased outside the list (repair 1 item 10 adds "within
-    (experimental) error / variation": "reduced, but within experimental error" and "...,
-    but within the error bars" are refused);
+    change and the genotype joined to the wild type (RT-E2-2). Repair 1 closed only the
+    phrasings listed, so round 1 still found ordinary wordings credited (RT-R1-1, RT-R1-2,
+    CSE-R1-C1 to C3, BIO-E746R1-1 / -2): "In jar1 mutants, JA-Ile was not detected at 5
+    min after wounding but accumulated at later time points.", "..., but the difference
+    did not reach statistical significance.", "In unwounded leaves, JA-Ile was not
+    detected in jar1 mutants and control plants." Since repair 2 these classes are closed
+    by SHAPE (species policy): a sentence naming two time or stage points, a later presence
+    after "but" or a semicolon, an early window or a later time, any statement of
+    significance, a trend or variability except the adverb "significantly", and a control
+    genotype in a sentence without "than". What a sentence must avoid to slip past each
+    shape, the remaining residue (each measured credited at the repair-2 tip,
+    `C:/t/bt/m746-e/runs/docc2_tip`):
+    - a time course with ONE time point whose later presence is written without "but", a
+      semicolon or a listed word ("In jar1 mutants, JA-Ile was undetectable at 15 min, and
+      rose sharply by the next sampling point."), or a second time point after a semicolon
+      with an unlisted presence word ("JA-Ile was undetectable in jar1 mutants at 15 min; at
+      2 h it was abundant.");
+    - a no-difference stated with none of the significance, trend or variability words
+      ("JA-Ile was reduced in gh3.10 single mutants, but the reduction was small and not
+      reproducible.");
+    - a shared result named without a control word or "all / any genotypes" ("In
+      unwounded leaves, JA-Ile was not detected in jar1 mutants or in the complemented
+      line."), or with a control word in a sentence that also holds a "than";
+    - a comparison word more than 60 characters after the negated verb (CW1: "JA-Ile did
+      not accumulate in wounded rosette leaves of gh3.10 single mutant plants to
+      significantly lower levels than in Col-0."), or after a semicolon inside a figure or
+      table reference ("gh3.10 mutants did not accumulate JA-Ile (Figure 2B; Table 1) to
+      significantly lower levels than Col-0."; BIO-E746-5): the adverb "significantly" and
+      the "than" pass every shape. A comparison word outside the list ("different",
+      "below") is refused only when its comparator is a control genotype ("to levels
+      different from those of Col-0");
   - CS-D repair 1 (R2): a clause naming both a substrate and a product before its effect
     ("In opr3 mutant leaves, OPC-8:0 formed from OPDA was reduced.", "JA-Ile formation
     from JA was abolished", "13-HPOT formed from alpha-linolenic acid was undetectable")
@@ -264,7 +315,9 @@ moves it.
     reading of the species policy: a parenthetical's commas close nothing in the
     bio-auditor's reading, the last opener decides, a head is kept across a closed clause
     only when the clause opens right after it, two or more ", " after the opener do not
-    close it (repair 1), and a bare "with" opens a clause (repair 1). A relative clause
+    close it (repair 1), a bare "with" or a participle / consequence word opens a clause
+    (repair 1), and a participant right after the effect word joins the candidates
+    (repair 2). A relative clause
     written without commas, or a participant that modifies another head ("the precursor
     of JA-Ile, which is jasmonic acid, ...") is still read by position (see the residue
     above);
@@ -329,6 +382,45 @@ moves it.
     undetectable.", "In jar1 mutants, JA-Ile, including its methyl ester was undetectable
     after wounding."; measured, `C:/t/bt/m746-e/runs/recall_r1b_*`); any word ending in
     "-ing" after a comma counts, so ", including", ", during" open a clause too.
+    Round 1's bio-auditor measured three more repair-1 costs on correct prose
+    (BIO-E746R1-3): a participant inside a closed ", including X," is cut off ("In aos
+    mutants, oxylipins, including 12-OPDA, were undetectable after wounding."); the
+    bare-"with" reading refuses genotype-describing prose ("OPC-8:0 levels in opr3 plants
+    with a T-DNA insertion in OPR3 were below the detection limit."); and the concessive
+    veto refuses canonical correct prose ("Although JA accumulated after wounding, JA-Ile
+    was strongly reduced in jar1 mutants.", "Although aos mutants are male sterile, their
+    leaves accumulated no 12-OPDA after wounding."). Concessive words are the commonest new
+    veto word in real loss-of-function sentences (39 of 2458, none of them otherwise
+    creditable); the product owner should note this cost;
+  - ORCH-746 CS-E repair 2 removes more credit, measured on 721 probes against 01d436cf
+    (`C:/t/bt/m746-e/probe_matrix_r2.txt`, rows marked LOST): 120 rows lose
+    `target_species_supported`. All but eleven are the delay, non-significance,
+    shared-result, concessive, "nowhere near", background, position, regulator and
+    reversed attributive rows the repair targets. The correct-biology rows lost: "JA-Ile
+    was strongly reduced in jar1 mutants at 30 min and 1 h after wounding." and "JA-Ile was
+    undetectable in jar1 mutants at 1 h and 2 h after wounding." (two time points), "In aos
+    mutants grown for 14 d, 12-OPDA was undetectable after 2 h of wounding." (a growth age
+    counts as a time point), "JA-Ile did not accumulate in jar1 mutants within the first 2 h
+    after wounding." (an early window; ambiguous anyway), "In the opr3 mutant, OPDA
+    accumulated to high levels, but OPC-8:0 was not detected." (a later presence after
+    "but"), "JA-Ile was undetectable in jar1 mutants but abundant in Col-0.", "JA-Ile
+    levels were reduced to 10% of the wild-type level in jar1 mutants.", "In opr3 mutants,
+    OPC-8:0 levels, peaking at 1 h in Col-0, were below the detection limit.", "JA-Ile,
+    accumulating rapidly in wounded Col-0 leaves, was below the detection limit in gh3.10
+    jar1 knockout lines." and "In jar1 mutants, JA-Ile accumulation, increasing strongly in
+    Col-0, was abolished." (a control genotype without "than"), and "JA-Ile was reduced to
+    a significant extent in jar1 mutants after wounding." (a significance word). Every
+    canonical knockout control of the three reviewers keeps its credit (T1, "opr3 mutants
+    did not accumulate OPC-8:0", "aos mutants accumulated no 12-OPDA", "No JA-Ile was
+    detected in jar1 mutants 1 h after wounding.", "up to 2 h", "throughout the time
+    course (0.5 to 4 h ...)", "At 1 h after wounding, ...", "significantly reduced",
+    "significantly reduced ... (P < 0.01)", "reduced by 90%", "20-fold lower ... than in
+    wild-type leaves", "90% lower ... than in Col-0", A1-A10);
+  - allele-numbered genotypes earn nothing (BIO-E746R1-5, pre-existing): "JA-Ile was not
+    detected in the jar1-1 mutant.", "In opr3-1 mutants, OPC-8:0 was undetectable after
+    wounding.", dde2-2 (an aos allele), aos-1, cyp94b3-2, lox2-1: the hyphenated allele
+    number does not strictly name JAR1 / OPR3 / AOS. The pilot literature mostly names
+    alleles this way, so this, not CS-E, is the main recall limit for a live pilot.
 * **Recall cost of the review route (BIO-R2-5, R3-N4c), accepted.** Verb-first review
   prose with a verb outside the strict set earns nothing: "In Arabidopsis, OPR3 reduces
   OPDA to OPC-8:0.", "JAR1 conjugates jasmonic acid with isoleucine to form JA-Ile.",

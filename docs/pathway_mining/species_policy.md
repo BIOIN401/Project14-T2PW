@@ -124,15 +124,21 @@ elsewhere mentions orthologs). The rule now:
         most three tokens, none of them itself *of* or *in* (CS-D repair 2) or a word
         naming another gene's role: `regulat...`, `upstream`, `downstream`, `gene(s)`,
         `factor(s)`, `activator(s)`, `repressor(s)`, `defect(s)`, `target(s)` (ORCH-746
-        CS-E repair 1), then *of* / *in*, then an optional *the* ("knockout of GH3.10",
-        "T-DNA insertion lines of AOS", "Mutants deficient in GH3.10", "The SALK_034543
-        insertion line of GH3.10"; not "Mutants in genes upstream of JAR1", "Knockouts of
-        transcriptional targets of JAR1", "Mutants in a regulator of JAR1", "Mutants
-        lacking a regulator of AOS", "Mutants with defects upstream of JAR1", "Mutants for
-        regulators of JAR1"). A gene followed by `pathway`,
-        `background`, `cluster`, `family`, `signalling` or `network` is not the
+        CS-E repair 1), `suppress...`, `enhanc...`, `inducer(s)`, `co-activator(s)`,
+        `modulat...`, `mediator(s)`, `modifier(s)` (repair 2), then *of* / *in*, then an
+        optional *the* ("knockout of GH3.10", "T-DNA insertion lines of AOS", "Mutants
+        deficient in GH3.10", "The SALK_034543 insertion line of GH3.10"; not "Mutants in
+        genes upstream of JAR1", "Knockouts of transcriptional targets of JAR1", "Mutants
+        in a regulator of JAR1", "Mutants lacking a regulator of AOS", "Mutants with
+        defects upstream of JAR1", "Mutants for regulators of JAR1", "Mutants lacking a
+        suppressor / an inducer / a co-activator / a modulator of AOS"). A gene followed by
+        `pathway`, `background`, `cluster`, `family`, `signalling` or `network` is not the
         genotype ("Mutants in the JAR1 pathway", "the myc2 mutant in the JAR1
-        background", "JAR1 pathway mutants"; CS-D repair 1). A different gene's mutant
+        background", "JAR1 pathway mutants"; CS-D repair 1), nor is a gene followed by a
+        role noun, `activator(s)`, `suppressor(s)`, `enhancer(s)`, `regulator(s)`,
+        `inducer(s)`, `modifier(s)`, `target(s)`, before or after the marker ("In the jar1
+        suppressor mutant", "In jar1 enhancer mutants", "Knockout of the AOS activator";
+        `species._CONTAINER`, repair 2). A different gene's mutant
         earns nothing ("arc mutants ... allene oxide cyclase", "the myc2 mutant ... by
         JAR1"). A symbol with another species' prefix ("MpGH3A") never counts, even as
         the claim's own enzyme;
@@ -210,8 +216,13 @@ elsewhere mentions orthologs). The rule now:
         OPDA off in "In opr3 mutants, OPC-8:0, which is formed from OPDA, was undetectable"
         and credit the head OPC-8:0; all six keep OPDA as the subject of "OPDA, which is
         the precursor of OPC-8:0, was reduced", a substrate going down, nothing.
-        An appositive ("JA-Ile, the bioactive form, was absent") keeps its subject. Else
-        the participants right after the form, at most three tokens
+        An appositive ("JA-Ile, the bioactive form, was absent") keeps its subject. When
+        participants before the form are candidates, a participant right after it, an
+        attributive "reduced 12-OH-JA-Ile" at most two tokens away with no comma between,
+        joins them (ORCH-746 CS-E repair 2, the attributive-participant rule): "In
+        cyp94b3 mutants, JA-Ile accumulated after wounding at the expense of / alongside /
+        plus reduced 12-OH-JA-Ile." names both sides and earns nothing. Else the
+        participants right after the form, at most three tokens
         away with no comma (two for a forward form). A forward form takes only the
         participants after it. If the candidates name BOTH a substrate and a product the
         subject is ambiguous and the form earns nothing ("the JA conjugate JA-Ile
@@ -292,7 +303,48 @@ elsewhere mentions orthologs). The rule now:
          the wild type"), and `alike`;
        - a concessive (RT-E2-4): `although`, `though`, `despite`, `in spite of` ("Despite
          high OPC-8:0 levels in opr3 mutants, JA was reduced.", "Even though jar1 mutants
-         accumulated JA-Ile, JA-responsive gene induction was reduced.").
+         accumulated JA-Ile, JA-responsive gene induction was reduced."), and since repair
+         2 (RT-R1-3) a sentence-initial `while`, `whilst` anywhere, `even if`,
+         `notwithstanding`, `regardless of`, `albeit`;
+
+       and since ORCH-746 CS-E repair 2 the delay and no-difference classes are closed by
+       SHAPE (the union of the three round-1 reviewers' prototypes), so an ordinary
+       paraphrase falls inside a shape rather than beside a list:
+       - **a sentence naming two time or stage points** (a number with `min`, `minute(s)`,
+         `h`, `hr(s)`, `hour(s)`, or with a space before `d`, `day(s)`, `week(s)`, or
+         `stage <number>`, twice with no semicolon between): "not detected at 15 min but
+         accumulated at 2 h", "absent at stage 12 but present at stage 13", "strongly
+         reduced at 30 min and 1 h" (RT-R1-1, CSE-R1-C3, BIO-E746R1-2);
+       - **a later presence after "but" or a semicolon**: `but` or `;` followed, before a
+         full stop or semicolon, by `present`, `detected`, `detectable`, `appeared` or
+         `accumulated` ("..., but was detected at 2 h", "; it was detected at 6 h");
+       - **an early window or a later time**: `till`, `earlier than`, `(for / during /
+         within / in) the first`, `early time point(s)`, `later`, `thereafter`,
+         `subsequently`, `afterwards`, `onward(s)`, `only (after / at / from / by / when /
+         once)`, `became (detectable / measurable / apparent / visible)`, `by <number>
+         <time unit>` (the unit is required: "reduced by 90%" keeps its credit),
+         `delay...`, `lag`, `before (the / one / two / three / four / five / six)`, `at
+         <number> <time unit> ... but`, `first / earliest / early / initial` within 15
+         characters before a time unit or `time point(s)`, and `<number> <time unit> only`;
+       - **any statement of significance, a trend or variability except the adverb
+         "significantly"**: the words `statistical`, `significant`, `significance`
+         anywhere, `trend(s / ed)`, `tendenc...`, `(ns)`, `n.s`, `p-value(s)` or `P value`
+         followed by `of`, `=`, `>`, `≥`, `above` or `greater than`, `within the (normal)
+         range`, `within (the) range of`, `biological variation`, `variab...`,
+         `inconsistent...`, and `in (only) one / two / some of (the) ... experiments /
+         replicates / repeats` (RT-R1-2 (i), CSE-R1-C1, BIO-E746R1-1). "JA-Ile was
+         significantly reduced in jar1 mutants (P < 0.01)." keeps its credit;
+       - **a control genotype in a sentence without "than"**: `wild-type`, `wild type`,
+         `Col`, `Col-0`, `WT`, `Ws`, `Ler`, `control(s)`, `parental`, `parent` anywhere
+         in a sentence that does not contain "than" ("in jar1 mutants and control plants",
+         "in the opr3 mutant and its wild type", "of wild-type and jar1 mutant plants");
+         plus `any / all / each / either (of the) genotype(s) / lines`, `all (the)
+         genotypes`, `the same was true`, and a bare `nor` (RT-R1-2 (ii), CSE-R1-C2).
+         "JA-Ile was 20-fold lower in jar1 mutants than in wild-type leaves." keeps its
+         credit;
+       - `nowhere near` anywhere (CSE-R1-C4), and a position rather than a change: `lower
+         (rosette / cauline) leaf / leaves / part(s) / epidermis / stem(s) / side / surface
+         / half` (RT-R1-4).
 
        The negated-verb forms CS-D added are therefore NOT immune to no-effect
        prose by construction (the CS-D brief said they were): they are guarded by these
@@ -318,7 +370,10 @@ elsewhere mentions orthologs). The rule now:
      - a citation: `[n]`, `et al`, an author-year, `(12, 13)`, `(ref. 12)`, a
        flattened superscript, `previously reported / shown`, `as (we) reported`, `as
        shown / reported by`, `prior / earlier work`, `has been shown`, `co-workers`,
-       `well known`, `it is (well) established that`, `is known to`;
+       `well known`, `it is (well) established that`, `is known to`, and since ORCH-746
+       CS-E repair 2 background stated in a results sentence (RT-R1-6): `are / was /
+       were known to`, `shown previously`, `well documented`, `well established`, `it is
+       known` ("jar1 mutants are known to contain reduced JA-Ile levels.");
      - a procedure (`was/were grown, sown, harvested, sprayed, treated, extracted,
        analysed, quantified, measured, incubated, used, obtained, purchased, ...`,
        `we employed/used`, `plant material`, `growth conditions`) or a purpose clause
