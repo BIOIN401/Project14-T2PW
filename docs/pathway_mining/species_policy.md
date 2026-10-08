@@ -121,9 +121,11 @@ elsewhere mentions orthologs). The rule now:
         sits at most three tokens before the marker, with no comma between ("gh3.10
         jar1 knockout lines", "the jar1 gh3.10 double mutant", "lox2 (At3g45140)
         knockout lines", "opr3 mutant leaves"), or after it as `_MARKER_OF` reads it: at
-        most three tokens, then *of* / *in*, then an optional *the* ("knockout of
-        GH3.10", "T-DNA insertion lines of AOS", "Mutants deficient in GH3.10", "The
-        SALK_034543 insertion line of GH3.10"). A gene followed by `pathway`,
+        most three tokens, none of them itself *of* or *in* (CS-D repair 2), then *of* /
+        *in*, then an optional *the* ("knockout of GH3.10", "T-DNA insertion lines of
+        AOS", "Mutants deficient in GH3.10", "The SALK_034543 insertion line of GH3.10";
+        not "Mutants in genes upstream of JAR1", "Knockouts of transcriptional targets of
+        JAR1", "Mutants in a regulator of JAR1"). A gene followed by `pathway`,
         `background`, `cluster`, `family`, `signalling` or `network` is not the
         genotype ("Mutants in the JAR1 pathway", "the myc2 mutant in the JAR1
         background", "JAR1 pathway mutants"; CS-D repair 1). A different gene's mutant
@@ -139,12 +141,18 @@ elsewhere mentions orthologs). The rule now:
      4. an effect on the RIGHT participant (`species._effect`, CS-D repair 1). The
         effect form's subject candidates are, in this order: the participants inside the
         form ("no JA-Ile was detected"); else every participant before it in the clause
-        that no comma-led relative or adverbial clause (", which", ", that", ", with",
-        ", whereas", ", while", ", although", ", but", ", and") separates from it, so
-        "JA-Gln accumulated ..., which had reduced JA-Ile" and "OPC-8:0 levels were
-        elevated, with decreased OPDA" do not attribute the decrease to the first
-        metabolite, while an appositive ("JA-Ile, the bioactive form, was absent") keeps
-        its subject; else the participants right after the form, at most three tokens
+        that a comma-led relative or adverbial clause (", which", ", that", ", who", ",
+        whose", ", with", ", whereas", ", while", ", although", ", though", ", but", ",
+        and", or a ";") does not cut off (`species._excluded`, CS-D repair 2). A
+        participant is cut off when the clause that follows it is still OPEN at the form
+        (no comma between the clause opener and the form: "JA-Gln accumulated ..., which
+        had reduced JA-Ile", "OPC-8:0 levels were elevated, with decreased OPDA"), or when
+        it sits INSIDE such a clause that CLOSES before the form ("In opr3 mutants,
+        OPC-8:0, which is formed from OPDA, was undetectable": OPDA is cut off, the head
+        OPC-8:0 stays the subject and earns credit; "OPDA, which is the precursor of
+        OPC-8:0, was reduced": OPDA stays the subject, a substrate going down, nothing).
+        An appositive ("JA-Ile, the bioactive form, was absent") keeps its subject. Else
+        the participants right after the form, at most three tokens
         away with no comma (two for a forward form). A forward form takes only the
         participants after it. If the candidates name BOTH a substrate and a product the
         subject is ambiguous and the form earns nothing ("the JA conjugate JA-Ile
@@ -167,7 +175,9 @@ elsewhere mentions orthologs). The rule now:
           "produced / formed / contained no"). Decrease forms: `reduced`, `decreased`,
           `lower`, `diminished`, `impaired`, `compromised`, and `accumulated (up to two
           words) less / lower / reduced / decreased` ("aos mutants accumulated less
-          12-OPDA");
+          12-OPDA", "accumulated much less"), where neither gap word is `not`, `no`,
+          `hardly`, `scarcely`, `barely` or `never` (CS-D repair 2: "accumulated hardly
+          less", "accumulated not less" earn nothing);
         - an accumulation or increase of a **substrate**: `accumulated`, `increased`,
           `elevated`, `higher` ("In opr3 mutants, OPDA accumulated in wounded leaves."
           supports OPDA -> OPC-8:0), and only in a clause with no decrease or absence
@@ -177,7 +187,8 @@ elsewhere mentions orthologs). The rule now:
           substrate going DOWN.
 
         The contrary combinations (a product that rises, a substrate that falls) earn
-        nothing. A negation (`not / no / n't / never / neither / nor / without / none /
+        nothing, as far as the positional subject rule above identifies the participant
+        (it reads commas and word order, not grammar). A negation (`not / no / n't / never / neither / nor / without / none /
         hardly / scarcely / barely`) before an effect form in the clause refuses it ("was
         not abolished", "never abolished", "not deficient in", "hardly reduced"); the
         forms that START at their negation ("not detected", "no detectable", "No JA-Ile
@@ -195,7 +206,9 @@ elsewhere mentions orthologs). The rule now:
        `not (fully / completely / entirely) abolished / absent / eliminated / abrogated
        / depleted / deficient / lacking`; and since CS-D repair 1 a negated comparison or
        delay: `no more / less / greater / fewer / higher / lower / lesser`, and `did /
-       does / do not` or `failed / fails to` followed within 60 characters by `more /
+       does / do not` or `failed / fails to` followed within 60 characters (a full
+       stop or colon followed by a digit does not end the window, so it reads past
+       "OPC-8:0" and "gh3.10"; CS-D repair 2) by `more /
        less / lesser / lower / higher / fewer / greater / further / again / than / until /
        significantly` ("did not accumulate significantly less JA-Ile than the wild
        type", "did not accumulate until 6 h", "failed to accumulate more JA-Ile",

@@ -139,13 +139,23 @@ moves it.
   - D1 recovered the commonest knockout phrasing: "did not / failed to accumulate",
     "no longer detected" now earn credit. They are NOT immune to no-effect prose: "did
     not accumulate significantly less JA-Ile than the wild type" was credited at
-    6454ef98, and CS-D repair 1 added the negated-comparison and delay vetoes (species
-    policy) that close that class;
+    6454ef98. CS-D repair 1 added the negated-comparison and delay vetoes (species
+    policy), but their 60-character window stopped at the full stop in "gh3.10" and the
+    colon in "OPC-8:0", so "The opr3 mutant did not accumulate OPC-8:0 until 6 h after
+    wounding." was still credited at fd7ea63a; CS-D repair 2 lets the window read past a
+    full stop or colon followed by a digit, which closes the class for these names. A
+    comparison or delay word more than 60 characters after the negated verb is still not
+    seen;
   - CS-D repair 1 (R2): a clause naming both a substrate and a product before its effect
     ("In opr3 mutant leaves, OPC-8:0 formed from OPDA was reduced.", "JA-Ile formation
     from JA was abolished", "13-HPOT formed from alpha-linolenic acid was undetectable")
-    is ambiguous and earns nothing; a participant separated from the effect by a
-    comma-led relative or adverbial clause (", which", ", with", ...) is not its subject;
+    is ambiguous and earns nothing. A comma-led relative or adverbial clause (",
+    which", ", with", ...) cuts a participant off from the effect when the clause is
+    still open at the effect, or when the participant sits inside a clause that closes
+    before it (CS-D repair 2; repair 1 had cut off the HEAD before a closed clause and
+    credited the participant inside it, inverting polarity on "OPDA, which is the
+    precursor of OPC-8:0, was reduced"). The rule reads commas, not grammar: a relative
+    clause written without commas, or one that nests, is read by position;
     a clause naming a whole-plant phenotype (growth, fertility, yield, ...) earns
     nothing even when a metabolite is the real measurement; a participant name followed
     by an "-ase" noun is read as an enzyme; "produced / formed / contained no X" no
