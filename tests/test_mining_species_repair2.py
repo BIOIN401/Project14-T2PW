@@ -323,8 +323,8 @@ def test_repair2_745b_the_review_route_needs_a_linked_unhedged_conversion(text, 
     ("rt-neg11", "Jasmonic acid was converted to JA-Ile in wild-type leaves but not in roots.", {}),
     ("n1-r4", "In Arabidopsis leaves, OPDA is converted to OPC-8:0 by OPR3.", OPR),
     ("bio-r-7", "In wild-type leaves, OPDA was converted to OPC-8:0, but not in opr3 mutants.", OPR),
-    # A loss-of-function sentence whose effect phrase is not on the whitelist.
-    ("bio-r-2", "The aos mutant did not accumulate 12-OPDA after wounding.", HP),
+    # bio-r-2 ("The aos mutant did not accumulate 12-OPDA after wounding.") left this list
+    # under CS-D D1: a negated-verb absence form now earns credit (test_mining_species_cs_d.py).
     ("code-host-native-complement", "Complementation of the jar1 mutant with JAR1 restored conversion of jasmonic "
                                     "acid to JA-Ile in Arabidopsis leaves.", dict(enzyme="JAR1")),
 )
