@@ -929,6 +929,30 @@ def _excluded_bare_with(clause: str, hit: Tuple[int, int, str], form_start: int)
     return bool(opener and "," not in clause[opener.end():hit[0]] and "," in gap)
 
 
+#: The 686ae134 clause openers plus a comma before a participle or consequence word
+#: (ORCH-746 CS-E repair 1, item 9). ponytail: any "-ing" word counts, so ", including",
+#: ", during" open a clause too; that only cuts participants off (a reading can only refuse).
+_NEW_SUBJECT_CONSEQUENCE = re.compile(
+    _NEW_SUBJECT.pattern
+    + r"|,\s*(?:\w+ing|accompanied|followed|coupled|paralleled|associated|yet|thus|thereby|hence|so)\b")
+
+
+def _excluded_consequence(clause: str, hit: Tuple[int, int, str], form_start: int) -> bool:
+    """The 686ae134 reading (:func:`_excluded`, the same lines) in which a participle or
+    consequence clause also opens a clause (ORCH-746 CS-E repair 1, item 9): "JA-Ile
+    accumulated after wounding, resulting in reduced 12-OH-JA-Ile levels" cuts JA-Ile off from
+    "reduced", as ", which resulted in reduced" already did; so do ", leading to", ",
+    accompanied by" and ", yet"."""
+    gap = clause[hit[1]:form_start]
+    opened = _NEW_SUBJECT_CONSEQUENCE.search(gap)
+    if opened and "," not in gap[opened.end():]:
+        return True
+    opener = None
+    for opener in _NEW_SUBJECT_CONSEQUENCE.finditer(clause[:hit[0]]):
+        pass
+    return bool(opener and "," not in clause[opener.end():hit[0]] and "," in gap)
+
+
 #: The readings of which participants a comma-led clause cuts off (ORCH-746 CS-E); an effect
 #: counts only when ALL of them credit it. The first three (CS-E): each reviewer prototype
 #: misreads a shape the other reads right: the red team's keeps the head across a closed
@@ -937,10 +961,12 @@ def _excluded_bare_with(clause: str, hit: Tuple[int, int, str], form_start: int)
 #: reversed reaction), and takes a callout's comma for a close; the bio-auditor's reads a
 #: relative clause whose closing comma is missing as open to the form, and credits
 #: correct-direction rows that the 686ae134 reading refuses, a recall gain that round forbade.
-#: Repair 1 appends two: an ambiguous close (two or more ", " after the opener) and a bare
-#: " with ". Agreement is the fail-closed choice, and keeping the 686ae134 reading among them
-#: means a reading can only remove credit, never add it; appending one removes credit only.
-_READINGS = (_excluded, _excluded_blanked, _excluded_adjacent, _excluded_unambiguous_close, _excluded_bare_with)
+#: Repair 1 appends three: an ambiguous close (two or more ", " after the opener), a bare
+#: " with ", and a participle or consequence clause. Agreement is the fail-closed choice, and
+#: keeping the 686ae134 reading among them means a reading can only remove credit, never add
+#: it; appending one removes credit only.
+_READINGS = (_excluded, _excluded_blanked, _excluded_adjacent, _excluded_unambiguous_close, _excluded_bare_with,
+             _excluded_consequence)
 
 
 def _effect(clause: str, subs: Sequence[Sequence["re.Pattern[str]"]],
