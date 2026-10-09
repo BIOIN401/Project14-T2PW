@@ -10893,3 +10893,6 @@ Open for the product owner (detail in the result): unblock E with the code revie
 micro-round, or rule CSE-R2-C1 non-blocking and pilot `f3df072f` under audit, or change the review standard for a lexical
 gate; the recall cost E bought; allele-numbered genotypes. Two idle `python.exe -` processes (PIDs 260020, 260044) left by a
 reviewer's slip are reported for the product owner to end; the orchestrator did not kill them.
+
+`ORCH-746` addendum · 2026-10-08: on the product owner's instruction the orchestrator ended the two stray reviewer
+processes (PIDs 260020, 260044, `python.exe -`) by PID with `taskkill /PID ... /T /F`; 0 remain.
