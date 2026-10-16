@@ -10896,3 +10896,32 @@ reviewer's slip are reported for the product owner to end; the orchestrator did 
 
 `ORCH-746` addendum · 2026-10-08: on the product owner's instruction the orchestrator ended the two stray reviewer
 processes (PIDs 260020, 260044, `python.exe -`) by PID with `taskkill /PID ... /T /F`; 0 remain.
+
+## `ORCH-748` — pathway mining back to launch-ready: CS-E repair 3, one re-review under a new bar, merge, gates, pilot-004 staged (not run) · 2026-10-15 · DISPATCHED
+
+Follow-up to [`ORCH-746-RESULT.md`](ORCH-746-RESULT.md) (BLOCKED on CSE-R2-C1). The orchestrator only coordinates; the
+implementer, reviewers and test runner are subagents on Opus 5.5 at extra-high effort, as the product owner asked.
+**Nothing is merged into `sprint/pwml-recovery` or `main`. Nothing is pushed. No live model call: pilot-004 is staged and
+pre-registered for the product owner to launch.**
+
+**Product-owner decisions (2026-10-15, given to the orchestrator in session; not `DECISIONS.md` entries):**
+
+| # | decision |
+|---|---|
+| 1 | Unblock the species gate with ORCH-746's options (a) + (c): ONE subtract-only micro-round applying exactly the final code reviewer's measured fix (`evidence/orch746/prototypes/rev746e_r2_fix.py`, F1-F5: suite 1127, 0 of 721 probe rows changed), then ONE re-review. No repair round after it |
+| 2 | New review bar for that re-review. **Blocking** = (a) credit wider than `f3df072f` (or `686ae134`); (b) a contract violation; (c) a realistic route to an admission against policy, demonstrated end to end, in a class `known_limitations.md` does NOT document. **A new paraphrase of a documented class is a pilot-004 watch item, not a blocker.** A docs inaccuracy is non-blocking with a required docs-only correction before merge |
+| 3 | Execution: offline tests only (mining suite, G9 base arms, SMOKE), through the bounded wrapper, one job at a time, only in the `C:/t` worktrees. No live model call. Pilot-004 is pre-registered and staged but NOT run |
+| 4 | The product owner's own work (`ORCH-747`) is running in the primary checkout. ORCH-748 never touches that checkout except docs-only commits of `LEDGER.md` and `ORCH-748-RESULT.md` by pathspec, each after checking the file has no uncommitted edits and that `git status --porcelain` is unchanged afterwards |
+
+ORCH-746 handoff decisions 2 and 3 stand (all four fail-closed choices kept; fed-precursor and occurrence evidence held back).
+Change set F still follows pilot-004 and is not part of ORCH-748.
+
+| item | value |
+|---|---|
+| start | `experiment/pathway-mining` @ `4c2aa0b0` (`C:/t/mining`, clean; code at `3ce64f28`, suite 377, SMOKE 508). Species gate `orch745/b-species-reading` @ `f3df072f` (`C:/t/m745-b`, clean, unmerged; suite 1127) |
+| CS-E repair 3 | `species.py` `_NO_EFFECT`: the five entries F1-F5 verbatim (CSE-R2-C1 temporary absence ×3, -C2 "no statistically", -C4 spelled-out accessions), nothing else in code. G9 rows `test_g9_748e3_*` appended to `tests/test_mining_species_cs_e.py`, each failing at `f3df072f`. Docs: correct `known_limitations.md` on the "but" route (CSE-R2-C1) and BIO-E746R2-4. Brief: `C:/t/bt/orch748/briefs/CS-E-r3.md`, rules `COMMON_RULES.md` (base `f3df072f`, baseline 1127) |
+| G9 | base arm run by the orchestrator in `C:/t/mining-rep-base` at `f3df072f`, pinned; evidence continues at `055` |
+| re-review | `pwml-reviewer` (code, merge rule 5) + `pwml-bio-auditor` + red-team `pwml-bio-auditor`, in parallel, on the actual diff `f3df072f..tip`, under decision 2's bar, each answering fit-for-pilot |
+| merge + gates | if approved: `--no-ff` merge into `experiment/pathway-mining` in `C:/t/mining`; mining suite and SMOKE (mining off, `--heavy-lock ORCH-748`, exactly 508) at the merged tip, run by `pwml-test-runner` |
+| pilot-004 | pre-registered here before any model call; frozen config of 001-003; worktree `C:/t/mining-pilot4` at the merged SHA; exact preflight and run commands recorded; ≤ $2 estimated |
+| ready means | the gate approved and merged, gates green at the merged tip, pilot-004 pre-registered and one command from launch. Otherwise **BLOCKED** |
