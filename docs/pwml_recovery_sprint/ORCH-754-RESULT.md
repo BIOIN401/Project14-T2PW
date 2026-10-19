@@ -89,7 +89,11 @@ on its behalf. Surfaced to the product owner.
 
 ## 4. Gates
 
-To be filled at integration.
+| after | run | report | result |
+|---|---|---|---|
+| merge of `754c` (`ca852bb6`) | SMOKE, primary checkout (`.env` present, draws = 3) | `evidence/g11/ORCH-754/03-smoke-after-c.json`, pin `pin/ORCH-754/03-…`, log `evidence/orch754/03-smoke-after-c.log` | **508 passed** in 42.69 s, 0 survivors |
+
+Reports `01` and `02` were reserved and never written: `01` waited on the heavy lock, which `754b`'s SMOKE held, and `02` failed on a missing log directory. Their placeholders sit in the git-ignored `.staging/`; `g11_evidence.py check --task ORCH-754` exits 0.
 
 ## 5. Open for the product owner
 
