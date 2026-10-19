@@ -2,12 +2,17 @@
 
 **Status:** delivered on branch `orch754/c-prompt-v03`, base `f9892cdf`. Not merged, not
 pushed. Needs independent review of the diff.
-**Authority:** product-owner ruling 2026-10-19, to be recorded as **D-104** by the product
-owner (not appended here; `DECISIONS.md` is product-owner only).
+**Authority:** product-owner ruling 2026-10-19, recorded as **D-104** in `DECISIONS.md` on
+`sprint/pwml-recovery`, commit `6d584b3f` (`DECISIONS.md:7034`, "prompt v03 promoted").
+The curator-prompt revert (§ 8) is the D-104 amendment the orchestrator dispatched as an
+ORCH-754c follow-up.
+**Scope:** two prompt files. `pwml_system.txt` promoted to v03 (§§ 1–7); and
+`pathway_curator_system.txt` reverted to `c9265fb8` (§ 8).
 **No LLM call and no pipeline run** was made for this task (product owner forbade it).
 Every bounded child ran with `T2PW_OFFLINE_CURATOR=1`.
 
-**G9 label: DELIBERATE BEHAVIOUR CHANGE.** Not a correction, not new functionality.
+**G9 labels:** the `pwml_system.txt` promotion is a **DELIBERATE BEHAVIOUR CHANGE** (not a
+correction, not new functionality); the curator revert (§ 8) is a **CORRECTION**.
 
 ---
 
@@ -44,10 +49,13 @@ and `src/t2pw/extraction/extract.py:6` (the legacy `SYSTEM` constant, re-exporte
 
 `scripts/prompt_ab.py:213` records `prompt_sha256` over the prompt text it sends. Over the
 local run outputs under `C:/t/` (uncommitted; the docs that score them are committed), the
-production tip's LF hash `27f5e873…` appears in **41 draws**:
+production tip's LF hash `27f5e873…` appears in **42 recorded draws, 41 of which produced a
+payload** (corrected from 41: the independent reviewer found `pw701720`, and I then
+confirmed its one draw is a failure):
 
 | round | where recorded | draws with `27f5e873…` |
 |---|---|---|
+| round 1 at 16,000 output tokens (ORCH-747 § 3, `40-grid-16k.json`) | `C:/t/prompt-grid/pw701720/index.json` | 1, **failed**: `PipelineFailure … stop reason: identical_empty_response`, no payload. 9 of 10 variants failed this way; only v02 succeeded |
 | round 1 (ORCH-747 § 2) | `C:/t/prompt-grid/final/index.json` | 1 |
 | round 2 (§ 10) | `C:/t/prompt-grid/r2/` | 3 (one per paper) |
 | round 3 (§ 11) | `C:/t/prompt-grid/r3/` | 6 |
@@ -55,7 +63,10 @@ production tip's LF hash `27f5e873…` appears in **41 draws**:
 | ORCH-751 cohort | `C:/t/cohort/*/index.json` | 21 |
 
 So production now sends exactly the text those draws sent. The base production hash
-`2108aed0…` appears in exactly **one** recorded draw (round 1).
+`2108aed0…` appears in **two** recorded draws, both round 1: `final/` (64,000 tokens) and
+`pw701720/` (16,000 tokens, the one variant that did not come back empty). That single
+16,000-token success is n=1 and ORCH-747 § 3 attributes the failures to the budget, not to
+the prompt; it is recorded, not read as evidence that v02 tolerates a small budget better.
 
 ### 2.2 Scored results for this prompt (certified gold)
 
@@ -128,11 +139,12 @@ That is the whole of the direct v02-vs-v03 evidence. § 1 calls the margin "one 
 6. **Precision is not perfect.** ORCH-751 enterobactin: claimed 4, 5, 5, matched 4, 4, 4,
    so two draws each carried one unmatched row. § 11.3 recorded 2 of 36 round-3 draws
    (all variants) below precision 1.000.
-7. **Every measurement was at 64,000 output tokens, temperature 0.** ORCH-747 § 3 records
-   that the primary checkout's `.env` sets `OPENROUTER_EXTRACTION_MAX_TOKENS=16000` (not
-   re-read here; the worktree has no `.env`), at which round 1 failed
-   9 of 10 variants with empty bodies (§ 3, `D-open-1`). Nothing here says how v03 behaves
-   at 16,000. The prompt is 1,399 bytes longer, which costs input tokens, not output.
+7. **Every scored measurement was at 64,000 output tokens, temperature 0.** At 16,000,
+   round 1 failed 9 of 10 variants with empty bodies, v03 included (§ 2.1). **`D-open-1`
+   is closed:** the primary checkout's `.env` now sets
+   `OPENROUTER_EXTRACTION_MAX_TOKENS=64000` (`.env:36`, read by a single-key grep; the
+   worktree has no `.env`), so production runs at the budget v03 was measured at. The
+   prompt is 1,399 bytes longer, which costs input tokens, not output.
 
 ---
 
@@ -192,6 +204,11 @@ All runs through `bounded_run.py` → `pinned_pytest.py`, `--heavy-lock ORCH-754
 | 04 | proof | **tip** | `04-proof-tip.json` · `.pin.json` · `orch754c/04-proof-tip.log` | **2 passed**, 0 survivors |
 | 05 | prompt readers (3 files) | tip | `05-readers-tip.json` · `.pin.json` · `orch754c/05-readers-tip.log` | **51 passed**, 0 survivors — unchanged from base |
 | 06 | SMOKE, 22 files (`TEST_MATRIX.md` § Commands) | tip | `06-smoke-tip.json` · `.pin.json` · `orch754c/06-smoke-tip.log` | **508 passed** in 41.10 s, 0 survivors |
+| 07 | curator proof (§ 8) | **base** (curator sha `5e3c293f…` CRLF, `git diff --quiet f9892cdf` on the file) | `07-curator-proof-base.json` · `.pin.json` · `orch754c/07-curator-proof-base.log` | **2 failed** in 0.11 s, 0 survivors. `'/processes/interactions/-' in` the prompt; text hash `e6da963e…` ≠ `6462c35e…` |
+| 08 | curator tests (4 files) | base | `08-curator-tests-base.json` · `.pin.json` · `orch754c/08-curator-tests-base.log` | **101 passed**, 0 survivors |
+| 09 | both ORCH-754c proofs | **tip 2** | `09-proofs-tip2.json` · `.pin.json` · `orch754c/09-proofs-tip2.log` | **4 passed**, 0 survivors |
+| 10 | curator tests (4 files) | tip 2 | `10-curator-tests-tip.json` · `.pin.json` · `orch754c/10-curator-tests-tip.log` | **101 passed**, 0 survivors — unchanged from base |
+| 11 | SMOKE, 22 files | tip 2 | `11-smoke-tip2.json` · `.pin.json` · `orch754c/11-smoke-tip2.log` | **508 passed** in 40.10 s, 0 survivors |
 
 Prompt readers: `tests/test_scope_membership_filter_end_to_end.py`,
 `tests/test_stage_one_boundary_lineage.py`, `tests/test_stage_one_ensemble.py`.
@@ -201,9 +218,14 @@ test in its committed form (not edited after run 02), then the prompt was replac
 same test re-run. It fails behaviourally at base (byte mismatch and hash mismatch), not on
 a missing symbol.
 
-`g11_evidence.py check --task ORCH-754c`: 6 artifacts, 0 non-compliant; 6 of 6 invoke
-pytest directly with a committed pin verdict, 0 refused, 0 foreign src. Every report
-`final_surviving_count: 0`.
+The curator proof (07 → 09) followed the same order: test written in its committed form,
+run against the curator file at its `f9892cdf` content, then the file restored with
+`git checkout c9265fb8 -- <file>` and the test re-run. It fails at base on the
+instruction itself being present, not only on a hash.
+
+`g11_evidence.py check --task ORCH-754c`: **11 artifacts, 0 non-compliant**; 11 of 11 invoke
+pytest directly with a committed pin verdict, 0 refused, 0 violation codes, 0 foreign src,
+0 label mismatches. Every report `final_surviving_count: 0`.
 
 ---
 
@@ -211,10 +233,11 @@ pytest directly with a committed pin verdict, 0 refused, 0 foreign src. Every re
 
 1. **The dispatch's sha256 `bc716123…` is a CRLF working-tree hash that depends on
    `core.autocrlf`.** The clone-independent identity of the measured prompt is
-   `27f5e873…`, and it matches `prompt_sha256` in all 41 recorded draws. Future citations
+   `27f5e873…`, and it matches `prompt_sha256` in all 42 recorded draws. Future citations
    of a prompt identity should use the LF hash.
-2. **Base production `2108aed0…` has exactly one recorded draw** (round 1). Production has
-   been running a prompt that the scored evaluation essentially never exercised.
+2. **Base production `2108aed0…` has two recorded draws, both round 1 on the unscored araC
+   paper** (§ 2.1). Production has been running a prompt that the scored evaluation never
+   exercised.
 3. **Two line citations to this prompt were already wrong at base** (`:116`, `:291`); this
    change makes a third (`:401`) wrong. Line-number citations into a prompt rot on any
    insertion.
@@ -239,8 +262,113 @@ follow-up updating `:401`→`:419`, `:116`→`:121`, `:291`→`:331`; (c) replac
 with quoted anchors so the next insertion does not break them. Touches
 `stage_one_boundary.py` and two test files, outside this task's boundary.
 
-**Q4. `D-open-1` (extraction budget 16,000 in `.env` vs 64,000 measured) still stands** and
-now applies to the promoted prompt: its measured behaviour is a 64,000-token behaviour.
+**Q4. ~~`D-open-1`~~ — closed.** `.env` is now 64,000 (§ 3 item 7). Nothing to decide.
 
-**Q5. D-104 needs its `DECISIONS.md` entry** written by the product owner; this task did
-not append it.
+**Q5. ~~D-104 entry~~ — done.** Recorded by the product owner at `6d584b3f`. This task did
+not touch `DECISIONS.md`.
+
+**Q6. Did any run since `70d05e03` use the live curator with the § 5 prompt?** § 8. If so,
+its `audited_json` may hold curator-added interactions or nucleic_acids entities that no
+decision authorized and no evidence check covered. Not checked here: it needs a scan of run
+trees for curator patches at `/processes/interactions/-`, and runs with
+`T2PW_OFFLINE_CURATOR=1` (every deterministic gate) never called the curator. Options:
+(a) scan run trees from the window the § 5 text was live — committed in `70d05e03` at
+2026-10-19 13:39 -0600, but present in the primary checkout's working tree from ORCH-747
+(work dated 2026-10-15, `ORCH-747-RESULT.md` § 10) — and quarantine any
+leg with such a patch; (b) accept the exposure as nil if no live-curator app run happened in
+that window.
+
+**Q7. Is a curator interaction-add capability wanted at all?** The revert removes it; it
+does not decide against it. Doing it properly needs, at minimum: sending the curator the
+evidence strings it is told to quote (`pathway_curator.py` `user_payload` sends none today),
+an evidence-substring check on accepted adds, and actor-role protection for interactions
+(`_ACTOR_ROLE_PATH_RE`, `apply_audit_patch.py:1419`, does not match them). That would be a
+new card with its own D-xxx.
+
+---
+
+## 8. Follow-up: curator prompt reverted to `c9265fb8` (D-104 amendment)
+
+Dispatched by the orchestrator after an independent review of `70d05e03`; the product
+owner ruled **REVERT**, recorded as a D-104 amendment. **G9 label: CORRECTION** of
+pre-existing, unauthorized behaviour.
+
+### 8.1 The change
+
+`src/t2pw/llm/prompts/pathway_curator_system.txt` is the `c9265fb8` text again
+(`git checkout c9265fb8 -- <file>`; `git diff --quiet c9265fb8 -- <file>` holds). This undoes
+the whole `70d05e03` diff to the file, **35 insertions and 1 deletion**, and nothing else:
+
+- **§ 5 "Regulation stated in the payload but absent from interactions[]"**, which told
+  the curator to propose `op=add at /processes/interactions/-` with a full interaction
+  object, and to add a `nucleic_acids` entity first when a named element was missing;
+- its **"Removal:"** paragraph (self-loop / biological_state-pointing interactions →
+  warning instead of remove patch);
+- the clause **"Interactions are the one exception, under § 5, …"** appended to "Do not add
+  new reactions or transports." That rule is back to the bare sentence.
+
+| | `f9892cdf` (ORCH-747 text) | tip (`c9265fb8` text) |
+|---|---|---|
+| lines / blob bytes (LF) | 129 / 9,797 | 95 / 7,482 |
+| working-tree sha256 (CRLF) | `5e3c293f0caa2ef91d439dd6919bc3f9527a43a5b9a0f4f96431fd03350052ee` | `23b16b591be7f0d2153dc035a7b4e1fbcc7f1ef4c8ed2ea3294916da6d433298` |
+| LF text sha256 (= blob) | `e6da963e76e654ae23708636a3e06053e8884d996ff0b40d4d776a809dc16821` | `6462c35ed8131f557f9c5cc1af7c75d7f10911529897a744bb33b57e20896531` |
+
+Line endings handled as for `pwml_system.txt`: LF in the object store, CRLF on disk via
+`core.autocrlf` (`git ls-files --eol`: `i/lf w/crlf`; 95 CRLF pairs in 95 lines after the
+restore).
+
+### 8.2 Why, verified rather than relayed
+
+Two of the reviewer's points I checked directly in this tree:
+
+1. **The curator cannot quote evidence it is never sent.** `pathway_curator.py:286-297`
+   builds `user_payload` from `task`, `pathway_name`, `organism`, `entity_index`,
+   `reactions` (name, inputs, outputs only), `transports`, `reaction_order_exists` and an
+   optional `reaction_summary`. No evidence strings and no `interactions` list. § 5's
+   "`evidence` MUST be a verbatim quote copied from the payload" was unsatisfiable.
+2. **`_ACTOR_ROLE_PATH_RE`** is at `apply_audit_patch.py:1419` (the dispatch said 1420; it
+   is the `re.compile(` line) and is matched at `:2314`.
+
+The accept-at-0.75 policy and the pre-freeze landing in `audited_json` I took from the
+review and did not re-trace.
+
+### 8.3 Proof
+
+`tests/test_orch754c_curator_prompt_reverted.py`, two tests:
+
+- `test_curator_prompt_gives_no_instruction_to_add_interactions`: the prompt contains
+  neither `/processes/interactions/-` nor `Interactions are the one exception`. This is the
+  behavioural assertion: it fails on the instruction being there.
+- `test_curator_prompt_is_the_c9265fb8_text`: LF text sha256 == `6462c35e…`.
+
+At the `f9892cdf` content: **2 failed** (run 07). At tip: **2 passed** (run 09, together
+with the two § 1 proofs, 4 passed).
+
+### 8.4 What moves
+
+- **No pin, test or hash** references this prompt. Searched `tests/`, `src/` and the
+  evidence tree for `pathway_curator_system` and the three hashes above: the only
+  reference is the loader, `pathway_curator.py:118`.
+- **No test expects the curator to propose interactions.** `70d05e03` touched seven test
+  files (`test_draft_graph_entity_kinds`, `test_eval_v2_paper_gold`,
+  `test_eval_v2_pathbank_gold`, `test_pwml_interaction_export`,
+  `test_pwml_interaction_type_spellings`, `test_stage_one_ensemble` new; 9 lines added to
+  `test_research_mode_report`). None exercises `pathway_curator`: `grep -il curator` hits
+  only `test_eval_v2_paper_gold.py:129` and `test_eval_v2_pathbank_gold.py:55`, both about
+  PathBank's human curators, not the curator stage. The four files that mention
+  `pathway_curator` (`test_c105_actor_role_evidence`, `test_curation_patch_transaction`,
+  `test_curator_offline_mode`, `test_streamlit_stage2_orchestration`) never read the
+  prompt text: **101 passed before and after** (runs 08, 10). So nothing fails by design,
+  and no test outside the boundary needed listing.
+- **Runtime:** the prompt is read once per process into `_CURATOR_SYSTEM_PROMPT`, and only
+  when the live curator runs. With `T2PW_OFFLINE_CURATOR=1`, which every deterministic gate
+  sets, the curator issues no call, so these gates could never have observed § 5 either
+  way. The behavioural effect is on live app runs only.
+- The `_ACTOR_ROLE_PATH_RE` gap and the 0.75 add threshold are **unchanged**. Without the
+  § 5 instruction the curator has no prompt licence to add interactions, but nothing in
+  code stops it from proposing one. See § 7 Q7.
+
+### 8.5 Not settled
+
+§ 7 **Q6** (whether any live-curator run consumed the § 5 text) and **Q7** (whether a
+properly gated curator interaction-add is wanted).
