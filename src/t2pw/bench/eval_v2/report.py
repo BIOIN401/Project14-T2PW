@@ -129,11 +129,21 @@ def _micro(legs: List[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 
-def evaluate(repo: Path, live: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+def evaluate(repo: Path, live: Optional[Dict[str, Any]] = None,
+             supplement_path: Optional[Path] = None) -> Dict[str, Any]:
+    """Score the committed corpus against a gold supplement.
+
+    ``supplement_path`` (ORCH-747) names a DIFFERENT supplement file to score instead of
+    the pinned four-case one. It exists so a second gold set -- the PathBank/paper gold
+    for the ten lab pathways -- can be scored without editing
+    ``gold_v2_supported_reactions.json``, whose contents three tests pin. Omitted, every
+    number is produced exactly as before.
+    """
+
     rd = R.load_lineage(repo)
     paths = rd.committed_paths(repo)
     tracked = set(paths)
-    supplement = load_supplement()
+    supplement = load_supplement(supplement_path)
     pinned = {c.paper_id: c for c in load_gold_set(repo / "src/t2pw/bench/gold/pinned_v1.json").cases}
     adm_index = rd.admission_index(paths, repo, [])
 
@@ -380,10 +390,11 @@ def render_markdown(res: Mapping[str, Any], commit: str = "") -> str:
     return "\n".join(L)
 
 
-def run_live(repo: Path, cache: Path) -> Dict[str, Any]:
+def run_live(repo: Path, cache: Path,
+             supplement_path: Optional[Path] = None) -> Dict[str, Any]:
     rd = R.load_lineage(repo)
     paths = rd.committed_paths(repo)
-    supplement = {k: v for k, v in load_supplement().items() if v.complete}
+    supplement = {k: v for k, v in load_supplement(supplement_path).items() if v.complete}
     pinned = {c.paper_id: c for c in load_gold_set(repo / "src/t2pw/bench/gold/pinned_v1.json").cases}
     texts: Dict[str, str] = {}
     for pid in pinned:
@@ -406,24 +417,28 @@ def main(argv: List[str]) -> int:
     e.add_argument("--repo", default=".")
     e.add_argument("--out", required=True)
     e.add_argument("--live-json", default=None)
+    e.add_argument("--supplement", default=None,
+                   help="score a DIFFERENT gold supplement file instead of the pinned one "
+                        "(ORCH-747); omitted, nothing changes")
     lv = sub.add_parser("live-retrieval")
     lv.add_argument("--repo", default=".")
     lv.add_argument("--cache", required=True, help="embedding cache path OUTSIDE the repo")
     lv.add_argument("--out", required=True)
+    lv.add_argument("--supplement", default=None, help="as for 'evaluate'")
     a = ap.parse_args(argv)
     repo = Path(a.repo).resolve()
     if a.cmd == "live-retrieval":
         cache = Path(a.cache).resolve()
         if repo in cache.parents:
             raise SystemExit("refusing: the embedding cache must live outside the repository")
-        res = run_live(repo, cache)
+        res = run_live(repo, cache, Path(a.supplement) if a.supplement else None)
         Path(a.out).write_text(json.dumps(res, indent=1, ensure_ascii=False), encoding="utf-8")
         print(json.dumps({k: res[k] for k in ("embedding_mode", "embedding_model", "embedder_stats",
                                               "corpus_chunks", "metrics", "metrics_any_paper", "negative_queries",
                                               "negative_query_rejection_rate")}, indent=1))
         return 0
     live = _json(Path(a.live_json)) if a.live_json else None
-    res = evaluate(repo, live)
+    res = evaluate(repo, live, Path(a.supplement) if a.supplement else None)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     (out / "sample_report.json").write_text(json.dumps(res, indent=1, ensure_ascii=False), encoding="utf-8")

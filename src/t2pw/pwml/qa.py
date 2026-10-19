@@ -27,6 +27,7 @@ def run_pwml_qa(pwml_bytes: bytes) -> Dict[str, Any]:
         "proteins": 0,
         "reactions": 0,
         "transports": 0,
+        "interactions": 0,
         "enzymes_attached": 0,
         "reactions_no_enzyme": 0,
         "spontaneous_reactions": 0,
@@ -82,6 +83,38 @@ def run_pwml_qa(pwml_bytes: bytes) -> Dict[str, Any]:
             warnings.append(
                 f"Transport element has identical left/right biological-state-id '{left}'."
             )
+
+    # Check interactions (ORCH-747). PathWhiz imports an interaction only with
+    # exactly one left and one right element, a type it stores, and a
+    # visualization carrying a member on each side. Anything else is an error:
+    # an interaction that cannot import is not a warning.
+    _PWML_INTERACTION_TYPES = {"Activation", "Inhibition"}
+    viz_sides_by_interaction: Dict[str, set] = {}
+    for viz in root.iter("interaction-visualization"):
+        ref_el = viz.find("interaction-id")
+        ref = (ref_el.text or "").strip() if ref_el is not None else ""
+        viz_sides_by_interaction[ref] = {(side.text or "").strip() for side in viz.iter("side")}
+    for interaction in root.iter("interaction"):
+        stats["interactions"] += 1
+        id_el = interaction.find("id")
+        iid = (id_el.text or "").strip() if id_el is not None else ""
+        label = f"Interaction '{iid or '<no id>'}'"
+        type_el = interaction.find("interaction-type")
+        itype = (type_el.text or "").strip() if type_el is not None else ""
+        if itype not in _PWML_INTERACTION_TYPES:
+            errors.append(f"{label} has interaction-type '{itype}'; PathWhiz stores only Activation or Inhibition.")
+        if interaction.find("name") is not None:
+            errors.append(f"{label} carries a <name> child, which PathBank never writes on an interaction.")
+        for side_tag in ("interaction-left-elements", "interaction-right-elements"):
+            side_el = interaction.find(side_tag)
+            count = len(side_el) if side_el is not None else 0
+            if count != 1:
+                errors.append(f"{label} has {count} {side_tag.replace('-elements', '')} element(s); exactly one is required.")
+        sides = viz_sides_by_interaction.get(iid)
+        if sides is None:
+            errors.append(f"{label} has no interaction-visualization.")
+        elif sides != {"Left", "Right"}:
+            errors.append(f"{label} visualization has sides {sorted(sides)}; one Left and one Right member are required.")
 
     # Check stoichiometry values
     for stoich_el in root.iter("stoichiometry"):

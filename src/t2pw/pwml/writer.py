@@ -5,7 +5,7 @@ import json
 import math
 import re
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -99,6 +99,45 @@ def _add_end_arrow(edge: Dict[str, Any], x2: int, y2: int, cp2x: int, cp2y: int)
     if arrow_path is not None:
         opts["end_arrow_path"] = arrow_path
     edge["options"] = json.dumps(opts)
+
+
+def _compute_flat_arrow_path(tip_x: int, tip_y: int, from_x: int, from_y: int) -> Optional[str]:
+    """PathBank's inhibition T-bar: a bar through the tip, perpendicular to the edge."""
+    dx = from_x - tip_x
+    dy = from_y - tip_y
+    distance = math.sqrt(dx**2 + dy**2)
+    if distance == 0:
+        return None
+    px = -dy / distance * (ARROW_LENGTH / 2)
+    py = dx / distance * (ARROW_LENGTH / 2)
+    return (
+        f"M {_format_path_number(tip_x - px)} {_format_path_number(tip_y - py)} "
+        f"L {tip_x} {tip_y} "
+        f"L {_format_path_number(tip_x + px)} {_format_path_number(tip_y + py)}"
+    )
+
+
+def _add_interaction_arrow(edge: Dict[str, Any], interaction_type: str, x1: int, y1: int, cp1x: int, cp1y: int) -> None:
+    """Decorate an interaction's Right edge exactly as PathBank stores it.
+
+    Sampled 40 of each in the live ``edges`` table: Activation carries
+    ``start_arrow`` with its path, Inhibition the exact inverse with a
+    ``start_flat_arrow`` path. The sign lives only here, never in a column.
+    """
+    inhibition = interaction_type == "Inhibition"
+    path = (
+        _compute_flat_arrow_path(x1, y1, cp1x, cp1y)
+        if inhibition
+        else _compute_arrow_path(x1, y1, cp1x, cp1y)
+    )
+    edge["options"] = json.dumps(
+        {
+            "start_arrow": not inhibition,
+            "start_arrow_path": None if inhibition else path,
+            "start_flat_arrow": inhibition,
+            "start_flat_arrow_path": path if inhibition else None,
+        }
+    )
 
 
 def _add_no_arrow(edge: Dict[str, Any]) -> None:
@@ -376,6 +415,12 @@ def _singularize(tag: str) -> str:
         "protein_complex_protein_visualizations": "protein-complex-protein-visualization",
         "protein_complex_compound_visualizations": "protein-complex-compound-visualization",
         "sub_pathway_element_collection_visualizations": "sub-pathway-element-collection-visualization",
+        "interaction-left-elements": "interaction-left-element",
+        "interaction-right-elements": "interaction-right-element",
+        "interaction_compound_visualizations": "interaction-compound-visualization",
+        "interaction_protein_complex_visualizations": "interaction-protein-complex-visualization",
+        "interaction_nucleic_acid_visualizations": "interaction-nucleic-acid-visualization",
+        "interaction_element_collection_visualizations": "interaction-element-collection-visualization",
         "element-states": "element-state",
         "ec-numbers": "ec-number",
         "synonyms": "synonym",
@@ -686,6 +731,9 @@ class BuildResult:
     counts: Dict[str, int]
     geometry_generated: bool
     signature: StructureSignature
+    #: ORCH-747: interactions kept out of the PWML (untyped, or a bare-protein
+    #: endpoint PathWhiz cannot draw), with the reason for each.
+    withheld_interactions: List[Dict[str, Any]] = field(default_factory=list)
 
 
 class DeterministicPwmlBuilder:
@@ -712,6 +760,7 @@ class DeterministicPwmlBuilder:
         }
         self.layout_debug_stacks: List[Dict[str, Any]] = []
         self.layout_debug_shared_intermediates: List[Dict[str, Any]] = []
+        self.withheld_interactions: List[Dict[str, Any]] = []
 
         self.pathway_id_int = 1
         self.pathway_visualization_id_int = self.pathway_id_int
@@ -1407,16 +1456,53 @@ class DeterministicPwmlBuilder:
                 remember("processes", raw.get("key"), int(item["id"]))
 
         self.section_items["interactions"] = []
+        self.withheld_interactions = []
         for interaction in process_items.get("interactions", []) if isinstance(process_items.get("interactions"), list) else []:
             if not isinstance(interaction, dict):
                 continue
+            if interaction.get("export_status") == "withheld":
+                # ORCH-747: the IR ruled this row un-drawable (untyped, or a bare
+                # protein endpoint). It is listed in the side file the CLI export
+                # writes beside the PWML -- never silently dropped, never guessed.
+                withheld = interaction.get("withheld") if isinstance(interaction.get("withheld"), dict) else {}
+                self.withheld_interactions.append(
+                    {
+                        "key": interaction.get("key"),
+                        "name": interaction.get("name", ""),
+                        "interaction_type": interaction.get("interaction_type"),
+                        "biological_state_key": interaction.get("biological_state_key"),
+                        **withheld,
+                    }
+                )
+                continue
             iid = self.ids.next()
             remember("processes", interaction.get("key"), iid)
+            elements: Dict[str, List[Dict[str, Any]]] = {"left": [], "right": []}
+            for side_name in ("left", "right"):
+                side = interaction.get(side_name)
+                info = entity_info(side.get("entity_key")) if isinstance(side, dict) else None
+                if not info:
+                    continue
+                mid = self.ids.next()
+                member_ids[str(side.get("key"))] = {
+                    "id": mid,
+                    "entity_type": side.get("entity_type"),
+                    "process_key": interaction.get("key"),
+                    "entity_key": side.get("entity_key"),
+                }
+                # Child order of every PathBank interaction element:
+                # id, element-id, element-type, stoichiometry.
+                elements[side_name].append(
+                    {"id": mid, "element-id": int(info["id"]), "element-type": info["type"], "stoichiometry": 1}
+                )
+            # No <name>: PathBank never writes one on an interaction.
             self.section_items["interactions"].append(
                 {
                     "id": iid,
-                    "name": interaction.get("name", ""),
                     "interaction-type": interaction.get("interaction_type"),
+                    "pwi-id": f"PW_I{iid:06d}",
+                    "interaction-left-elements": elements["left"],
+                    "interaction-right-elements": elements["right"],
                 }
             )
 
@@ -2307,6 +2393,10 @@ class DeterministicPwmlBuilder:
         self.section_items["reaction-coupled-transport-visualizations"] = []
         self.section_items["interaction-visualizations"] = []
         self.section_items["sub-pathway-visualizations"] = []
+        interactions_by_key = {
+            str(row.get("key")): row for row in process_items.get("interactions", []) if isinstance(row, dict)
+        }
+        ir_loc_by_key = {str(loc.get("key")): loc for loc in ir.get("locations", []) if isinstance(loc, dict)}
 
         for viz in ir.get("process_visualizations", []) if isinstance(ir.get("process_visualizations"), list) else []:
             if not isinstance(viz, dict):
@@ -2418,6 +2508,75 @@ class DeterministicPwmlBuilder:
                             tv["protein-location-id"] = loc_id
                         item["transport_transporter_visualizations"].append(tv)
                 self.section_items["transport-visualizations"].append(item)
+            elif vtype == "interaction_visualization":
+                interaction = interactions_by_key.get(str(viz.get("process_key") or ""), {})
+                item = {
+                    "id": self.ids.next(),
+                    "interaction-id": process_id,
+                    "pathway-visualization-id": self.pathway_visualization_id_int,
+                    "biological-state-id": lookup("biological_states", viz.get("biological_state_key")),
+                    "interaction_compound_visualizations": [],
+                    "interaction_protein_complex_visualizations": [],
+                    "interaction_nucleic_acid_visualizations": [],
+                    "interaction_element_collection_visualizations": [],
+                }
+                # Each PathWhiz member table keys on a DIFFERENT column (live
+                # schema): a location for compound / nucleic acid / element
+                # collection, the complex VISUALIZATION for a protein complex.
+                containers = {
+                    "compound": ("interaction_compound_visualizations", "compound-location-id"),
+                    "nucleic_acid": ("interaction_nucleic_acid_visualizations", "nucleic-acid-location-id"),
+                    "element_collection": ("interaction_element_collection_visualizations", "element-collection-location-id"),
+                    "protein_complex": ("interaction_protein_complex_visualizations", "protein-complex-visualization-id"),
+                }
+                placed: Dict[str, Tuple[Dict[str, Any], Dict[str, Any]]] = {}
+                for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
+                    if not isinstance(member, dict):
+                        continue
+                    role = str(member.get("role") or "")
+                    minfo = member_ids.get(str(member.get("process_member_key")))
+                    edge_id = lookup("edges", member.get("edge_key"))
+                    edge = edge_by_id.get(edge_id) if edge_id is not None else None
+                    mtype = str(member.get("member_type") or (minfo or {}).get("entity_type") or "")
+                    container = containers.get(mtype)
+                    if not minfo or edge is None or container is None or role not in {"left", "right"}:
+                        continue
+                    rect: Optional[Dict[str, Any]]
+                    if mtype == "protein_complex":
+                        entity_key = str(minfo.get("entity_key"))
+                        ref_id = protein_complex_viz_by_entity_state.get((entity_key, str(viz.get("biological_state_key"))))
+                        if ref_id is None:
+                            ref_id = protein_complex_viz_by_entity.get(entity_key)
+                        ir_loc = ir_loc_by_key.get(str(member.get("location_key") or ""), {})
+                        rect = {"x": int(ir_loc.get("x") or 0), "y": int(ir_loc.get("y") or 0), "width": 150, "height": 70}
+                    else:
+                        ref_id = lookup("locations", member.get("location_key"))
+                        rect = loc_by_id.get(ref_id) if ref_id is not None else None
+                    if ref_id is None or rect is None:
+                        continue
+                    item[container[0]].append(
+                        {"id": self.ids.next(), container[1]: ref_id, "edge-id": edge_id, "side": "Left" if role == "left" else "Right"}
+                    )
+                    placed[role] = (rect, edge)
+                if "left" in placed and "right" in placed:
+                    left_rect, left_edge = placed["left"]
+                    right_rect, right_edge = placed["right"]
+                    lcx = int(left_rect["x"]) + int(left_rect["width"]) // 2
+                    lcy = int(left_rect["y"]) + int(left_rect["height"]) // 2
+                    rcx = int(right_rect["x"]) + int(right_rect["width"]) // 2
+                    rcy = int(right_rect["y"]) + int(right_rect["height"]) // 2
+                    lx, ly = get_rect_anchor_toward_target(left_rect, rcx, rcy)
+                    rx, ry = get_rect_anchor_toward_target(right_rect, lcx, lcy)
+                    # PathBank's shape: the Left edge runs left -> right undecorated
+                    # and hidden; the Right edge runs right -> left and carries the
+                    # Activation arrow or Inhibition T-bar at the right element.
+                    left_edge["path"], _c1x, _c1y, _c2x, _c2y = _curved_edge_path(lx, ly, rx, ry)
+                    left_edge["options"] = "{}"
+                    left_edge["hidden"] = True
+                    right_edge["path"], cp1x, cp1y, _c2x, _c2y = _curved_edge_path(rx, ry, lx, ly)
+                    right_edge["hidden"] = False
+                    _add_interaction_arrow(right_edge, str(interaction.get("interaction_type") or ""), rx, ry, cp1x, cp1y)
+                self.section_items["interaction-visualizations"].append(item)
 
         self.section_items["vacuous-compound-visualizations"] = []
         self.section_items["vacuous-edge-visualizations"] = []
@@ -2528,6 +2687,12 @@ class DeterministicPwmlBuilder:
         items = self.section_items.get(section_tag, [])
         section_sig = self.signature.sections.get(section_tag)
         item_tag = section_sig.item_tag if section_sig else _singularize(section_tag)
+        if section_sig is not None and not section_sig.required_fields:
+            # The reference template has no item in this section (interactions,
+            # interaction-visualizations, ...), so its signature knows no field
+            # types: fall back to the name rules every nested child already uses,
+            # or <id> and every *-id come out untyped where PathBank types them.
+            section_sig = None
         for item in items:
             item_node = etree.SubElement(section_node, item_tag)
             self._emit_item(item_node, item, section_sig)
@@ -2632,6 +2797,7 @@ class DeterministicPwmlBuilder:
             counts=counts,
             geometry_generated=geometry_generated,
             signature=self.signature,
+            withheld_interactions=list(self.withheld_interactions),
         )
 
 
@@ -2794,7 +2960,29 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
     _write_json(validation_report_path, validation_report)
     _write_json(qa_report_path, qa_report)
 
+    # ORCH-747: interactions the IR withheld are written next to the PWML, with
+    # the reason for each, so nothing is dropped silently and nothing is guessed.
+    withheld_path = out_dir / "pathway.withheld_interactions.json"
+    if build_result.withheld_interactions:
+        _write_json(
+            withheld_path,
+            {
+                "pwml_file": pwml_path.name,
+                "why": (
+                    "PathWhiz stores only Activation and Inhibition interactions between "
+                    "drawable elements (compound, protein complex, nucleic acid, element "
+                    "collection). Each row below was held back rather than guessed into an "
+                    "exportable shape; it is still in final.pwml_ir.json and its warning is "
+                    "in pwml_ir_report.json."
+                ),
+                "count": len(build_result.withheld_interactions),
+                "interactions": build_result.withheld_interactions,
+            },
+        )
+
     return {
+        "withheld_interactions": str(withheld_path) if build_result.withheld_interactions else None,
+        "withheld_interaction_count": len(build_result.withheld_interactions),
         "ok": bool(validation_report.get("ok")) and bool(qa_report.get("ok")),
         "pwml_ir": str(ir_path),
         "pwml_ir_report": str(ir_report_path),

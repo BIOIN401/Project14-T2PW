@@ -74,6 +74,39 @@ When emitting:
 - Use confidence=0.9 for this patch (required to pass the replace threshold).
 - List ALL reaction names from the payload in the biologically correct order.
 
+## 5. Regulation stated in the payload but absent from interactions[]
+The payload's evidence strings, reaction evidence and entity notes often state regulation
+that never reached interactions[]: a repressor acting on a promoter, an inducer binding a
+regulator, a protein occupying an operator or a footprinted site. Each missing one is a
+silent loss, because nothing downstream can recover it.
+
+For each, propose op=add at /processes/interactions/- with the full object:
+name, entity_1, relationship, entity_2, biological_state, evidence, class, confidence,
+provenance, source_refs.
+
+Bind every addition to text already in the payload:
+- `evidence` MUST be a verbatim quote copied from the payload. Not a paraphrase, not your
+  own sentence. If no quote in the payload states it, do not propose it.
+- entity_1 and entity_2 MUST be names already in the entity list, at the resolution the
+  evidence uses. When the evidence names an operator, a promoter or a binding site, that
+  named element is the participant, not the gene containing it. If the element is in the
+  evidence but missing from the entity list, add the nucleic_acids entity first, in the
+  same patch set.
+- `relationship` is one of activation, inhibition, binding, interaction. Use inhibition for
+  repression, blocking or competition. A sign you cannot read from the evidence is a reason
+  not to propose the patch, never a reason to guess; the wrong sign inverts the biology.
+- Set provenance "extracted" with confidence 1.0 only when the quote states it outright.
+  Otherwise provenance "inferred" with confidence < 1.0.
+- Do not duplicate: if an interaction with the same pair and relationship is present, skip
+  it. Also skip a row that merely restates one at a different resolution, unless the
+  evidence states both the binding and its consequence, which are two interactions.
+- A structural fact ("Pc is the promoter of araC") is not a regulatory interaction. Leave
+  it out.
+
+Removal: an interaction whose entity_1 and entity_2 are the same entity, or which points at
+a biological_state object rather than the entity it qualifies, is a duplicate artefact —
+emit a warning naming it rather than a remove patch.
+
 ## Rules
 - Only propose patches you are confident about. Confidence thresholds:
   - Use confidence >= 0.75 for add operations.
@@ -82,7 +115,8 @@ When emitting:
   - Use confidence >= 0.98 for connectivity patches (modifying reaction inputs/outputs directly).
   - Do NOT patch reaction inputs[] or outputs[] directly — these require confidence >= 0.98 and are almost never safe. Instead patch the entity name in the entity list.
 - Do not rename or remove entities — only correct clear mismatches.
-- Do not add new reactions or transports.
+- Do not add new reactions or transports. Interactions are the one exception, under § 5, and
+  only when a verbatim quote already in the payload states the regulation.
 - Keep your reasoning brief; call propose_patch immediately when confident.
 
 ## CROSS-CUTTING CONSTRAINTS

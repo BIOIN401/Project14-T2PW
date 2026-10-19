@@ -22,6 +22,52 @@ logger = logging.getLogger(__name__)
 # offline canonicalization, distinct from "not provided -> load the default".
 _NAME_INDEX_UNSET = object()
 
+#: The only interaction types PathWhiz stores (``interactions.interaction_type``
+#: holds 11085 Activation and 4998 Inhibition rows and nothing else), keyed by
+#: the spellings the pipeline really writes for them. ORCH-747 accepted the two
+#: nouns alone, and no committed interaction is spelled that way -- they are verb
+#: forms (``inhibits``, ``represses``, ``activates``, ...), so everything was
+#: withheld. ORCH-749 adds the verb forms whose SIGN IS IN THE WORD: ``inhibits``
+#: is Inhibition in verb form, not a guessed sign. A word that carries no sign
+#: (``binds``, ``interacts``, ``modifies``, ``SAME_AS``, ``promoter_of``) is not
+#: here and stays withheld: PathBank has no neutral interaction type, and reading
+#: a sign into such a word would be the exporter repairing biology after the
+#: freeze (merge rule 8). The lookup is an exact match on
+#: :func:`_interaction_type_key` -- no stemming, no fuzzy matching -- so what
+#: exports is always readable from this table. Census over the committed runs:
+#: ``docs/pwml_recovery_sprint/evidence/orch749_interaction_spelling_census.json``.
+PWML_INTERACTION_TYPES = {
+    "activation": "Activation",
+    "activates": "Activation",
+    "stimulates": "Activation",
+    "induces": "Activation",
+    "upregulates": "Activation",
+    "up-regulates": "Activation",
+    "enhances": "Activation",
+    "promotes": "Activation",
+    "inhibition": "Inhibition",
+    "inhibits": "Inhibition",
+    "represses": "Inhibition",
+    "repression": "Inhibition",
+    "blocks": "Inhibition",
+    "suppresses": "Inhibition",
+    "downregulates": "Inhibition",
+    "down-regulates": "Inhibition",
+    "antagonizes": "Inhibition",
+    "competes with": "Inhibition",
+    "competes_with": "Inhibition",  # the pipeline's own spelling of the row above
+    "prevents": "Inhibition",
+}
+
+
+def _interaction_type_key(raw_type: Any) -> str:
+    """The :data:`PWML_INTERACTION_TYPES` key for a relationship as written.
+
+    Casefolded, whitespace collapsed, surrounding quotes and a trailing period
+    dropped -- and nothing else. The lookup that follows is exact.
+    """
+    return re.sub(r"\s+", " ", str(raw_type or "")).casefold().strip(" \"'`“”‘’.")
+
 #: The field a compound row carries once compound resolution has ruled on it.
 #: Written on **every** row by the resolution machinery -- ``matched``,
 #: ``unmatched``, ``legacy_id_unverified``, ``identity_refused_review_required``
@@ -2284,23 +2330,101 @@ def build_pwml_ir(
         interaction_index += 1
         int_key = f"int_{interaction_index}"
         bs_key = resolve_state(raw.get("biological_state"), f"/processes/interactions/{iidx}/biological_state", required=True)
+        raw_type = _canonical(raw.get("interaction_type") or raw.get("relationship") or raw.get("class") or "interaction")
+        # Spelling only: "activation" / "activates" -> "Activation", "inhibits" ->
+        # "Inhibition". A word not in the table stays as written and is withheld
+        # below -- mapping "binds" or "modifies" onto a sign would be the exporter
+        # inventing biology after the freeze (merge rule 8).
+        interaction_type = PWML_INTERACTION_TYPES.get(_interaction_type_key(raw_type), raw_type)
         interaction = {
             "key": int_key,
             "type": "interaction",
             "name": _canonical(raw.get("name")) or f"Interaction {interaction_index}",
-            "interaction_type": _canonical(raw.get("interaction_type") or raw.get("relationship") or raw.get("class") or "interaction"),
+            "interaction_type": interaction_type,
             "biological_state_key": bs_key,
             "left": (
-                {"entity_type": left_entity["entity_type"], "entity_key": left_entity["key"]}
+                {"key": f"{int_key}_left", "entity_type": left_entity["entity_type"], "entity_key": left_entity["key"]}
                 if left_entity
                 else None
             ),
             "right": (
-                {"entity_type": right_entity["entity_type"], "entity_key": right_entity["key"]}
+                {"key": f"{int_key}_right", "entity_type": right_entity["entity_type"], "entity_key": right_entity["key"]}
                 if right_entity
                 else None
             ),
         }
+        # ORCH-747. PathWhiz imports exactly two interaction types and has no
+        # interaction member table for a bare protein (only compound, protein
+        # complex, nucleic acid, element collection and bound). Anything else is
+        # kept in the IR and reported, but withheld from the PWML: the writer
+        # lists every withheld row in a side file next to the export.
+        withheld_reason = ""
+        if interaction_type not in PWML_INTERACTION_TYPES.values():
+            withheld_reason = "untyped_interaction"
+        elif any(side and side["entity_type"] == "protein" for side in (left_entity, right_entity)):
+            withheld_reason = "bare_protein_endpoint"
+        if withheld_reason:
+            interaction["export_status"] = "withheld"
+            interaction["withheld"] = {
+                "reason": withheld_reason,
+                "pointer": f"/processes/interactions/{iidx}",
+                "raw_interaction_type": raw_type,
+                "left": left_name,
+                "right": right_name,
+            }
+            _add_issue(
+                report,
+                "warning",
+                "interaction_withheld_from_pwml",
+                f"Interaction {interaction['name']!r} ({left_name} -{raw_type}-> {right_name}) is withheld from the PWML: {withheld_reason}.",
+                pointer=f"/processes/interactions/{iidx}",
+                reason=withheld_reason,
+                raw_interaction_type=raw_type,
+            )
+        else:
+            interaction["export_status"] = "exportable"
+            ix, iy = process_xy(reaction_index + transport_index + interaction_index - 1)
+            members_for_viz = []
+            if left_entity and right_entity:
+                left_loc = ensure_location(left_entity["entity_type"], left_entity["key"], bs_key, x=ix - 145, y=iy)
+                right_loc = ensure_location(right_entity["entity_type"], right_entity["key"], bs_key, x=ix + 145, y=iy)
+                if left_loc and right_loc:
+                    lx, ly = int(left_loc["x"]) + 160, int(left_loc["y"]) + 30
+                    rx, ry = int(right_loc["x"]), int(right_loc["y"]) + 30
+                    # PathBank draws the pair as two edges spanning the same two
+                    # elements in opposite directions: the Right edge carries the
+                    # arrow (or T-bar) at the right element, the Left edge is its
+                    # reverse and is hidden so the line is not drawn twice.
+                    template_id = 148 if interaction_type == "Inhibition" else 149
+                    left_edge = add_edge(lx, ly, rx, ry)
+                    left_edge["hidden"] = True
+                    left_edge["visualization_template_id"] = template_id
+                    right_edge = add_edge(rx, ry, lx, ly)
+                    right_edge["visualization_template_id"] = template_id
+                    for role, side, loc, edge in (
+                        ("left", interaction["left"], left_loc, left_edge),
+                        ("right", interaction["right"], right_loc, right_edge),
+                    ):
+                        members_for_viz.append(
+                            {
+                                "process_member_key": side["key"],
+                                "role": role,
+                                "member_type": side["entity_type"],
+                                "location_key": loc["key"],
+                                "edge_key": edge["key"],
+                            }
+                        )
+            ir["process_visualizations"].append(
+                {
+                    "key": keys.next("iv"),
+                    "type": "interaction_visualization",
+                    "process_key": int_key,
+                    "biological_state_key": bs_key,
+                    "x": ix,
+                    "y": iy,
+                    "members": members_for_viz,
+                }
+            )
         ir["processes"]["interactions"].append(interaction)
         process_by_key[int_key] = interaction
         process_by_name[_norm(interaction["name"])] = interaction
@@ -3436,6 +3560,9 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
                         f"Interaction {side_name} references unresolved entity.",
                         f"/processes/interactions/{idx}/{side_name}",
                     )
+                if side.get("key"):
+                    process_member_keys.add(side["key"])
+                    process_members_by_key[side["key"]] = side
 
     for idx, subp in enumerate(_safe_list(processes.get("sub_pathways"))):
         if not isinstance(subp, dict):

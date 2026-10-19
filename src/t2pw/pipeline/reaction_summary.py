@@ -242,4 +242,40 @@ def generate_reaction_summary(draft_graph: Any, qa_report: Dict[str, Any]) -> st
         lines.append(f"  QA flags:  {'; '.join(tr_flags) if tr_flags else 'none'}")
         lines.append("")
 
+    # ------------------------------------------------------------------
+    # Interactions
+    # ------------------------------------------------------------------
+    # Regulation is not a conversion, so none of it appears in the blocks above. For a
+    # signaling, physiological or regulatory pathway that is most of the content: one
+    # measured run of a 1981 araC autoregulation paper produced 1 reaction and 12
+    # interactions, and this report showed only the reactions -- so it displayed a
+    # fraction of what the pipeline had extracted, and read as a recall failure that had
+    # not happened. ``build_draft_graph`` has always emitted these nodes.
+    interactions = [n for n in nodes if n.kind == "interaction"]
+    for i, inter in enumerate(interactions, 1):
+        lines.append(f"INTERACTION {i}: {inter.label}")
+        lines.append(f"  Relationship: {(inter.cls or '').strip() or 'interaction'}")
+
+        sources = [(n, conf) for n, role, conf in incoming.get(inter.id, [])
+                   if role == "participant"]
+        targets = [(n, conf) for n, role, conf in outgoing.get(inter.id, [])
+                   if role == "participant"]
+
+        src_strs = [_entity_str(n, confidence=conf) for n, conf in sources]
+        tgt_strs = [_entity_str(n, confidence=conf) for n, conf in targets]
+        lines.append(f"  Source: {', '.join(src_strs) if src_strs else 'MISSING'}")
+        lines.append(f"  Target: {', '.join(tgt_strs) if tgt_strs else 'MISSING'}")
+
+        inter_flags: List[str] = []
+        if not sources or not targets:
+            inter_flags.append("incomplete — an interaction needs both a source and a target")
+        if (getattr(inter, "provenance", "") or "") == "inferred":
+            inter_flags.append("inferred — not stated in the source text")
+        lines.append(f"  QA flags:  {'; '.join(inter_flags) if inter_flags else 'none'}")
+        lines.append("")
+
+    # A census, so a reader can never again mistake one block for the whole output.
+    lines.insert(2, f"Processes: {len(reactions)} reaction(s), {len(transports)} transport(s), "
+                    f"{len(interactions)} interaction(s)")
+
     return "\n".join(lines)

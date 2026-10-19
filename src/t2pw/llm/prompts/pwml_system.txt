@@ -112,6 +112,11 @@ COFACTOR RULE (MANDATORY — supersedes any conflicting rule above):
   protein: protein | transporter; protein_complex: protein_complex; nucleic_acid: nucleic_acid.
   Valid class values for processes — reactions: biochemical_reaction | transport_reaction | interaction | subpathway | activation | inhibition | binding;
   interactions: activation | inhibition | binding | interaction.
+- interactions[].relationship uses the same four words as its class: activation, inhibition,
+  binding, interaction. Do not write a verb form ("activates", "represses", "binds") and do
+  not invent a relationship ("promoter_of"): a structural fact such as "Pc is the promoter of
+  araC" is not a regulatory interaction. Sign matters and is a claim — use inhibition for
+  repression, and never activation for an event the text describes as blocking or competing.
 - confidence for extracted objects = 1.0; for inferred objects = LLM-judged value between 0.0 and 1.0.
 - provenance values: "extracted" (verbatim from text), "enriched" (from API lookup), "inferred" (LLM-reasoned).
 - source_refs is an array of strings — verbatim evidence quotes or external IDs when available.
@@ -201,6 +206,23 @@ You must produce:
 4) Processes:
    - reactions (compound -> compound conversions), transports (movement between locations),
      reaction_coupled_transports (reaction + movement), interactions (regulation/binding/etc.)
+
+   RESOLUTION: record every process at the resolution the text states, and no coarser.
+   When the text localises a regulatory event to a named element — an operator, a promoter,
+   a protein-binding site, a footprinted region, a base-pair interval — that named element
+   is the participant, not the gene or operon containing it. A paper that maps protein
+   contacts to an operator and shows that occupancy blocking a promoter states TWO things,
+   and both belong in interactions[]: the protein binding the operator, and that bound
+   state acting on the promoter. Collapsing them into "protein represses gene" discards
+   the paper's actual result.
+   Each such named element is its own nucleic_acids entity, named as the text names it
+   ("araO1", "the A site", "the high-affinity CAP site"), with any stated coordinates kept
+   in the name or evidence exactly as written.
+   This never licenses invention. Only a site, region, coordinate, conformer or occupancy
+   the text names may appear, each with its verbatim evidence quote. If the text states
+   regulation only at the gene or operon level, gene level IS the correct resolution and a
+   finer row must not be manufactured. Finer than stated is a fabrication; coarser than
+   stated is a loss. Record what is written.
 5) Visualizations + edges:
    Only output these if the text explicitly mentions diagram/figure/layout/color/edge/coordinates.
    Otherwise keep these arrays empty.

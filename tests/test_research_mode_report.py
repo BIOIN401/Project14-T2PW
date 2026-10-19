@@ -195,9 +195,18 @@ def test_json_round_trips_with_expected_top_level_keys():
     report = _build(_payload(reactions=[_sourced_reaction()]), _scored())
     data = json.loads(report.to_json())
 
+    # ORCH-747: "interactions" is a DELIBERATE addition to this pinned key set. Regulation
+    # is not a conversion, so the tiering layer never assigned it and every serialization
+    # omitted it; a measured araC autoregulation run carried 1 reaction and 12
+    # interactions and this report showed only the reaction. The rows are carried straight
+    # from the payload, untiered, which is why they are a sibling of "citations" rather
+    # than a member of it: they have no tier, no RAG confidence and no source list.
+    # Consumers are unaffected -- streamlit_app and batch/driver write this JSON to a file
+    # and read only summary.distinct_sources_cited from it.
     assert set(data) == {
         "citations",
         "format_gaps",
+        "interactions",
         "limitations",
         "pathway",
         "review_flags",

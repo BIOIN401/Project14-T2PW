@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field, asdict
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Mapping, Set
 
 
 # ---------------------------------------------------------------------------
@@ -112,19 +112,35 @@ def _resolve_actor_name(row: Any) -> str:
     return ""
 
 
-def _resolve_actor_kind(
-    name: str,
-    proteins: Set[str],
-    complexes: Set[str],
-    compounds: Set[str],
-) -> str:
+#: Entity registry key -> ``DraftNode.kind``. ONE source of truth, used both to create
+#: entity nodes and to resolve what kind a process row's participant refers to, so the
+#: two can never disagree. The order is the resolution precedence when the same name is
+#: registered twice, and keeps the pre-existing complex > protein > compound order.
+ENTITY_KIND_MAP = {
+    "protein_complexes": "protein_complex",
+    "proteins": "protein",
+    "compounds": "compound",
+    "nucleic_acids": "nucleic_acid",
+    "element_collections": "element_collection",
+}
+
+
+def _resolve_actor_kind(name: str, registry: Mapping[str, str]) -> str:
+    """The kind of entity ``name`` refers to, from the registries the payload declares.
+
+    ``registry`` must cover EVERY entity registry. It was built from proteins, complexes
+    and compounds only, so a participant naming a nucleic acid or an element collection
+    fell through to the ``compound`` default below and minted a second, mis-typed node:
+    the node id carries the kind, so the correctly typed node from the registry loop kept
+    its edges-free existence while every edge attached to the fake compound. Measured on
+    a run of an araC footprinting paper: all 8 DNA entities existed twice, the 8 real
+    nucleic-acid nodes were orphans, and the QA report flagged them as such.
+    """
+
     n = name.strip()
-    if n in complexes:
-        return "protein_complex"
-    if n in proteins:
-        return "protein"
-    if n in compounds:
-        return "compound"
+    kind = registry.get(n)
+    if kind:
+        return kind
     # heuristic: complex-style names contain "/" or ":"
     if "/" in n or ":" in n:
         return "protein_complex"
@@ -191,9 +207,19 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
     # Metadata
     # ------------------------------------------------------------------
     pathway_context = merged_json.get("pathway_context") or {}
+    organism = _safe_str(pathway_context.get("organism"))
+    if not organism:
+        # A measured run printed "Organism: Unknown Organism" although its own extraction
+        # had identified Escherichia coli: the app's organism field was blank and nothing
+        # fell back to the species the extraction found. The header was stating less than
+        # the payload knew.
+        for item in _safe_list((merged_json.get("entities") or {}).get("species", [])):
+            if isinstance(item, dict) and _safe_str(item.get("name")):
+                organism = item["name"].strip()
+                break
     graph.metadata = {
         "pathway_name": _safe_str(pathway_context.get("name")),
-        "organism": _safe_str(pathway_context.get("organism")),
+        "organism": organism,
         "node_count": 0,   # filled after building
         "edge_count": 0,
     }
@@ -204,19 +230,11 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
     # ------------------------------------------------------------------
     # Collect entity name sets for kind resolution
     # ------------------------------------------------------------------
-    proteins: Set[str] = set()
-    complexes: Set[str] = set()
-    compounds: Set[str] = set()
-
-    for item in _safe_list(entities_raw.get("proteins", [])):
-        if isinstance(item, dict) and _safe_str(item.get("name")):
-            proteins.add(item["name"].strip())
-    for item in _safe_list(entities_raw.get("protein_complexes", [])):
-        if isinstance(item, dict) and _safe_str(item.get("name")):
-            complexes.add(item["name"].strip())
-    for item in _safe_list(entities_raw.get("compounds", [])):
-        if isinstance(item, dict) and _safe_str(item.get("name")):
-            compounds.add(item["name"].strip())
+    registry_kind: Dict[str, str] = {}
+    for entities_key, kind in ENTITY_KIND_MAP.items():
+        for item in _safe_list(entities_raw.get(entities_key, [])):
+            if isinstance(item, dict) and _safe_str(item.get("name")):
+                registry_kind.setdefault(item["name"].strip(), kind)
 
     # ------------------------------------------------------------------
     # Compartment index
@@ -256,15 +274,7 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
     # ------------------------------------------------------------------
     # Entity nodes
     # ------------------------------------------------------------------
-    entity_kind_map = {
-        "compounds": "compound",
-        "proteins": "protein",
-        "protein_complexes": "protein_complex",
-        "nucleic_acids": "nucleic_acid",
-        "element_collections": "element_collection",
-    }
-
-    for entities_key, kind in entity_kind_map.items():
+    for entities_key, kind in ENTITY_KIND_MAP.items():
         for item in _safe_list(entities_raw.get(entities_key, [])):
             if not isinstance(item, dict):
                 continue
@@ -305,7 +315,7 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
             inp = _safe_str(inp)
             if not inp:
                 continue
-            entity_kind = _resolve_actor_kind(inp, proteins, complexes, compounds)
+            entity_kind = _resolve_actor_kind(inp, registry_kind)
             src_id = _add_entity_node(entity_kind, inp)
             _add_edge(src_id, rxn_id, "reactant")
 
@@ -313,7 +323,7 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
             out = _safe_str(out)
             if not out:
                 continue
-            entity_kind = _resolve_actor_kind(out, proteins, complexes, compounds)
+            entity_kind = _resolve_actor_kind(out, registry_kind)
             tgt_id = _add_entity_node(entity_kind, out)
             _add_edge(rxn_id, tgt_id, "product")
 
@@ -321,7 +331,7 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
             actor_name = _resolve_actor_name(enz)
             if not actor_name:
                 continue
-            actor_kind = _resolve_actor_kind(actor_name, proteins, complexes, compounds)
+            actor_kind = _resolve_actor_kind(actor_name, registry_kind)
             actor_id = _add_entity_node(actor_kind, actor_name, provenance="extracted")
             role = _safe_str((enz or {}).get("role")) or "catalyst"
             confidence = float((enz or {}).get("confidence", 1.0)) if isinstance(enz, dict) else 1.0
@@ -358,7 +368,7 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
                     if cargo_name:
                         break
         if cargo_name:
-            cargo_kind = _resolve_actor_kind(cargo_name, proteins, complexes, compounds)
+            cargo_kind = _resolve_actor_kind(cargo_name, registry_kind)
             cargo_id = _add_entity_node(cargo_kind, cargo_name)
             _add_edge(cargo_id, t_id, "cargo")
 
@@ -366,7 +376,7 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
             actor_name = _resolve_actor_name(tr)
             if not actor_name:
                 continue
-            actor_kind = _resolve_actor_kind(actor_name, proteins, complexes, compounds)
+            actor_kind = _resolve_actor_kind(actor_name, registry_kind)
             actor_id = _add_entity_node(actor_kind, actor_name)
             _add_edge(actor_id, t_id, "transporter")
 
@@ -395,7 +405,7 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
             actor_name = _resolve_actor_name(enz)
             if not actor_name:
                 continue
-            actor_kind = _resolve_actor_kind(actor_name, proteins, complexes, compounds)
+            actor_kind = _resolve_actor_kind(actor_name, registry_kind)
             actor_id = _add_entity_node(actor_kind, actor_name)
             _add_edge(actor_id, rct_id, "catalyst")
 
@@ -403,7 +413,7 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
             if isinstance(ews, dict):
                 el = _safe_str(ews.get("element"))
                 if el:
-                    el_kind = _resolve_actor_kind(el, proteins, complexes, compounds)
+                    el_kind = _resolve_actor_kind(el, registry_kind)
                     el_id = _add_entity_node(el_kind, el)
                     _add_edge(el_id, rct_id, "participant")
 
@@ -432,11 +442,11 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
         e1 = _safe_str(inter.get("entity_1"))
         e2 = _safe_str(inter.get("entity_2"))
         if e1:
-            k1 = _resolve_actor_kind(e1, proteins, complexes, compounds)
+            k1 = _resolve_actor_kind(e1, registry_kind)
             id1 = _add_entity_node(k1, e1)
             _add_edge(id1, inter_id, "participant")
         if e2:
-            k2 = _resolve_actor_kind(e2, proteins, complexes, compounds)
+            k2 = _resolve_actor_kind(e2, registry_kind)
             id2 = _add_entity_node(k2, e2)
             _add_edge(inter_id, id2, "participant")
 

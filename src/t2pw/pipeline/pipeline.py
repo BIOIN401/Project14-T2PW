@@ -56,6 +56,7 @@ from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, g
 from t2pw.pipeline.draft_graph import DraftGraph, build_draft_graph
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
 from t2pw.pipeline.reaction_lock_manifest import write_stage1_lock_artifacts
+from t2pw.pipeline.stage_one_ensemble import extraction_draws, run_ensemble
 
 logger = logging.getLogger(__name__)
 
@@ -252,6 +253,7 @@ def run_extraction_pipeline(
     max_attempts: int = 2,
     temperature: float = 0.0,
     max_tokens: int = 12000,
+    draws: Optional[int] = None,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     """
     Stage 1: strict extraction. Automatically retries with self-repair instructions if JSON parsing fails.
@@ -262,27 +264,38 @@ def run_extraction_pipeline(
         Short name of the pathway being modelled (e.g. "TCA cycle", "glycolysis").
         When provided it is injected into the prompt so the LLM can classify each
         reaction with a ``scope_membership`` label.
+    draws : int, optional
+        How many independent Stage-1 draws to issue and union (ORCH-750 (dispatched as ORCH-750; renumbered because another session had already claimed 748 in the ledger for the pathway-mining lane),
+        :mod:`t2pw.pipeline.stage_one_ensemble`). ``None`` reads
+        ``T2PW_EXTRACTION_DRAWS``. The default of 1 is a single ``_run_json_stage``
+        call with the arguments below, exactly as before the parameter existed.
     """
     if is_ambiguous_multi_example_review_context(pathway_context):
         raise _ambiguous_review_scope_failure(pathway_context)
 
-    return _run_json_stage(
-        stage_name="extraction",
-        model_env_var="OPENROUTER_EXTRACTION_MODEL",
-        system_prompt=(PROMPTS_DIR / "pwml_system.txt").read_text(encoding="utf-8"),
-        build_user_prompt=lambda prev_output, last_error: _build_extraction_prompt(
-            input_text, prev_output, last_error,
-            pathway_context=pathway_context,
-            pathway_scope=pathway_scope,
-            user_task_context=user_task_context,
-        ),
-        max_attempts=max_attempts,
-        temperature=temperature,
-        max_tokens=max_tokens,
-        # Stage 1 only. Stage 2 nests its output under ``additions``, so an empty
-        # top level there is normal rather than degenerate.
-        retry_on_empty_payload=True,
-    )
+    def _draw() -> Tuple[Dict[str, Any], AttemptLogs]:
+        return _run_json_stage(
+            stage_name="extraction",
+            model_env_var="OPENROUTER_EXTRACTION_MODEL",
+            system_prompt=(PROMPTS_DIR / "pwml_system.txt").read_text(encoding="utf-8"),
+            build_user_prompt=lambda prev_output, last_error: _build_extraction_prompt(
+                input_text, prev_output, last_error,
+                pathway_context=pathway_context,
+                pathway_scope=pathway_scope,
+                user_task_context=user_task_context,
+            ),
+            max_attempts=max_attempts,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            # Stage 1 only. Stage 2 nests its output under ``additions``, so an empty
+            # top level there is normal rather than degenerate.
+            retry_on_empty_payload=True,
+        )
+
+    count = extraction_draws(draws)
+    if count == 1:
+        return _draw()
+    return run_ensemble(_draw, count, failure=PipelineFailure)
 
 
 def filter_out_of_scope_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:

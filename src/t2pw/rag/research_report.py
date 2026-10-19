@@ -248,6 +248,12 @@ class ResearchReport:
     lines: List[str] = field(default_factory=list)
     reactions: List[Dict[str, Any]] = field(default_factory=list)
     entities: List[Dict[str, Any]] = field(default_factory=list)
+    #: Regulation, carried straight from the payload and NOT tiered. Interactions are not
+    #: conversions, so the tiering layer never assigned them and this report omitted every
+    #: one: a measured araC autoregulation run produced 1 reaction and 12 interactions and
+    #: this file showed only the reaction. Untiered is a limitation, stated in the section
+    #: header; absent was a misreport.
+    interactions: List[Dict[str, Any]] = field(default_factory=list)
     sources: List[Dict[str, Any]] = field(default_factory=list)
     review_flags: List[Dict[str, str]] = field(default_factory=list)
     format_gaps: List[Dict[str, str]] = field(default_factory=list)
@@ -263,6 +269,7 @@ class ResearchReport:
     def to_dict(self) -> Dict[str, Any]:
         return {
             "citations": {"reactions": self.reactions, "entities": self.entities},
+            "interactions": self.interactions,
             "format_gaps": self.format_gaps,
             "limitations": self.limitations,
             "pathway": {"name": self.pathway, "export_mode": self.mode},
@@ -315,6 +322,34 @@ def _confidence_text(value: Optional[float]) -> str:
     """Confidence is a heuristic; it is never rendered bare or as a percentage."""
 
     return "" if value is None else f"{value} (heuristic, not a probability)"
+
+
+def _payload_interactions(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Regulation rows as written in the payload, in payload order.
+
+    Read directly rather than through the tier report: ``assignment.kind`` is only ever
+    "reaction" or an entity, so an interaction can never arrive tiered. Each row keeps its
+    own evidence and provenance so a reader can see what it rests on.
+    """
+
+    out: List[Dict[str, Any]] = []
+    rows = _as_list(_as_dict(payload.get("processes")).get("interactions"))
+    for index, raw in enumerate(rows):
+        row = _as_dict(raw)
+        if not row:
+            continue
+        out.append({
+            "pointer": f"/processes/interactions/{index}",
+            "name": _text(row.get("name")),
+            "source": _text(row.get("entity_1")),
+            "relationship": _text(row.get("relationship")) or _text(row.get("class")),
+            "target": _text(row.get("entity_2")),
+            "biological_state": _text(row.get("biological_state")),
+            "evidence": _text(row.get("evidence")),
+            "provenance": _text(row.get("provenance")),
+            "confidence": row.get("confidence"),
+        })
+    return out
 
 
 def build_citation_report(
@@ -383,10 +418,13 @@ def build_citation_report(
         element["line"] = _element_line(element)
         (reactions if assignment.kind == "reaction" else entities).append(element)
 
+    interactions = _payload_interactions(payload_dict)
+
     counts = report.counts
     summary = {
         "element_count": len(reactions) + len(entities),
         "reaction_count": len(reactions),
+        "interaction_count": len(interactions),
         "entity_count": len(entities),
         "tier_counts": counts,
         "tier_labels": dict(TIER_LABELS),
@@ -406,6 +444,7 @@ def build_citation_report(
         lines=[element["line"] for element in reactions],
         reactions=reactions,
         entities=entities,
+        interactions=interactions,
         sources=sorted(all_sources.values(), key=lambda c: c["source_id"]),
         review_flags=flags,
         format_gaps=gaps,
@@ -689,6 +728,8 @@ def _text_blocks(report: "ResearchReport") -> List[str]:
 
     out.append("AT A GLANCE")
     out.append(f"  Reactions            {summary.get('reaction_count', len(reactions))}")
+    out.append(f"  Regulation           {summary.get('interaction_count', len(report.interactions))}"
+               " interaction(s), listed below and NOT tiered")
     out.append(f"  Entities             {summary.get('entity_count', len(entities))}")
     out.append(f"  Distinct sources     {summary.get('distinct_sources_cited', 0)}")
     out.append(
@@ -718,6 +759,37 @@ def _text_blocks(report: "ResearchReport") -> List[str]:
             out.append("")
     else:
         out.append("  (no reactions in this pathway)")
+        out.append("")
+
+    interactions = list(report.interactions)
+    out.append(_RULE)
+    out.append("REGULATION (INTERACTIONS)")
+    out.append(_RULE)
+    out.append("")
+    out.append("  Regulation is not a conversion, so none of it appears above. These rows")
+    out.append("  carry their own evidence but are NOT tiered: the tiering layer scores")
+    out.append("  reactions and entities only, so no tier, no RAG confidence and no source")
+    out.append("  list is available for them. Read the evidence quote on each row.")
+    out.append("")
+    if interactions:
+        for number, row in enumerate(interactions, start=1):
+            rel = row.get("relationship") or "interaction"
+            out.extend(_wrap(f"{number}. {row.get('source') or 'MISSING'}  --{rel}-->  "
+                             f"{row.get('target') or 'MISSING'}", "  "))
+            if row.get("biological_state"):
+                out.append(f"       state: {row['biological_state']}")
+            prov = row.get("provenance") or "unstated"
+            conf = row.get("confidence")
+            suffix = f" (confidence {conf})" if conf is not None and conf != 1.0 else ""
+            out.append(f"       provenance: {prov}{suffix}")
+            if row.get("evidence"):
+                out.append("       evidence:")
+                out.extend(_wrap(f"“{row['evidence']}”", "         "))
+            else:
+                out.append("       evidence: NONE RECORDED — treat as unsupported")
+            out.append("")
+    else:
+        out.append("  (no regulatory interactions in this pathway)")
         out.append("")
 
     out.append(_RULE)
