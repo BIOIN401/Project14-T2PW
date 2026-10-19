@@ -223,6 +223,24 @@ You must produce:
    regulation only at the gene or operon level, gene level IS the correct resolution and a
    finer row must not be manufactured. Finer than stated is a fabrication; coarser than
    stated is a loss. Record what is written.
+
+   ONE CLAIM, ONE RESOLUTION — finest wins. Having chosen the resolution above, emit
+   each claim exactly ONCE, at the finest resolution the text states, and do not ALSO
+   restate it coarser. Two rows restate one claim when the regulator, the sign and the
+   consequence are the same and only the grain of the target differs: where the text
+   supports "[Regulator] represses [Promoter]", the rows
+   "[Regulator] represses [Gene]" and "[Regulator] represses [the regulatory region]"
+   are that same finding written twice more, and only the finest of the three is kept.
+   A container — an operon, a gene, a transcription unit, a named regulatory region —
+   is a participant only where the text states regulation at that level and names no
+   finer element inside it for that same claim.
+   What is NOT a restatement, and where every row is kept: a binding event and its
+   stated consequence ("[Protein] binds [Site]" AND "[Protein] blocks [Promoter]"),
+   two different regulators on one target, one regulator on two different targets, and
+   one regulator acting with opposite sign under two stated conditions.
+   This rule only ever removes a row. It never adds one, never changes a sign, and
+   never promotes a coarse row to a finer resolution the text does not state. If you
+   cannot tell whether two rows are one claim, keep the finer row and drop the coarser.
 5) Visualizations + edges:
    Only output these if the text explicitly mentions diagram/figure/layout/color/edge/coordinates.
    Otherwise keep these arrays empty.

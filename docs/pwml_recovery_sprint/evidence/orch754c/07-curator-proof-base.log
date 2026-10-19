@@ -1,0 +1,62 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch754c\src\t2pw\__init__.py
+FF                                                                       [100%]
+================================== FAILURES ===================================
+________ test_curator_prompt_gives_no_instruction_to_add_interactions _________
+
+    def test_curator_prompt_gives_no_instruction_to_add_interactions() -> None:
+        text = CURATOR.read_text(encoding="utf-8")
+>       assert "/processes/interactions/-" not in text
+E       AssertionError: assert '/processes/interactions/-' not in 'You are a b...complexes.\n'
+E         
+E         '/processes/interactions/-' is contained here:
+E           op=add at /processes/interactions/- with the full object:
+E           name, entity_1, relationship, entity_2, biological_state, evidence, class, confidence,
+E           provenance, source_refs.
+E           
+E           Bind every addition to text already in the payload:...
+E         
+E         ...Full output truncated (42 lines hidden), use '-vv' to show
+
+tests\test_orch754c_curator_prompt_reverted.py:37: AssertionError
+__________________ test_curator_prompt_is_the_c9265fb8_text ___________________
+
+    def test_curator_prompt_is_the_c9265fb8_text() -> None:
+        text = CURATOR.read_text(encoding="utf-8")
+>       assert hashlib.sha256(text.encode("utf-8")).hexdigest() == BASE_TEXT_SHA256
+E       AssertionError: assert 'e6da963e76e6...76a809dc16821' == '6462c35ed813...3b57e20896531'
+E         
+E         - 6462c35ed8131f557f9c5cc1af7c75d7f10911529897a744bb33b57e20896531
+E         + e6da963e76e654ae23708636a3e06053e8884d996ff0b40d4d776a809dc16821
+
+tests\test_orch754c_curator_prompt_reverted.py:43: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch754c_curator_prompt_reverted.py::test_curator_prompt_gives_no_instruction_to_add_interactions
+FAILED tests/test_orch754c_curator_prompt_reverted.py::test_curator_prompt_is_the_c9265fb8_text
+2 failed in 0.11s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch754c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ba2c46ebe674174e64eefe98789af4c7ed6b8d68  [git, worktree dirty=False]
+label                   : curator-proof-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754c/07-curator-proof-base.pin.json -q --basetemp=C:/t/bt-orch754c/curator-proof-base-1 tests/test_orch754c_curator_prompt_reverted.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch754c
+root PID / process group: 238152 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.71 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  237880:python.exe
+descendants terminated  : 1  237880
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch754c\docs\pwml_recovery_sprint\evidence\g11\ORCH-754c\07-curator-proof-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-754c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
