@@ -1,0 +1,55 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch754c\src\t2pw\__init__.py
+FF                                                                       [100%]
+================================== FAILURES ===================================
+________ test_production_prompt_is_the_measured_control_byte_for_byte _________
+
+    def test_production_prompt_is_the_measured_control_byte_for_byte() -> None:
+>       assert PRODUCTION.read_bytes() == MEASURED.read_bytes()
+E       AssertionError: assert b'You are a P...olecules.\r\n' == b'You are a P...olecules.\r\n'
+E         
+E         At index 18496 diff: b'5' != b'\r'
+E         Use -v to get more diff
+
+tests\test_orch754c_production_prompt_is_measured_control.py:40: AssertionError
+____________________ test_production_prompt_text_is_pinned ____________________
+
+    def test_production_prompt_text_is_pinned() -> None:
+        text = PRODUCTION.read_text(encoding="utf-8")
+>       assert hashlib.sha256(text.encode("utf-8")).hexdigest() == MEASURED_TEXT_SHA256
+E       AssertionError: assert '2108aed08a89...1426c06c703b8' == '27f5e8732d77...a0da6a68b8156'
+E         
+E         - 27f5e8732d77083313cab590dd6259ffe3828816647b0795699a0da6a68b8156
+E         + 2108aed08a899a02c09328e31b05afbc050d66085bf40220f6e1426c06c703b8
+
+tests\test_orch754c_production_prompt_is_measured_control.py:45: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch754c_production_prompt_is_measured_control.py::test_production_prompt_is_the_measured_control_byte_for_byte
+FAILED tests/test_orch754c_production_prompt_is_measured_control.py::test_production_prompt_text_is_pinned
+2 failed in 0.11s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch754c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f9892cdf7d61ab487f6b0b0b67aeb094684d0c6f  [git, worktree dirty=False]
+label                   : proof-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754c/02-proof-base.pin.json -q --basetemp=C:/t/bt-orch754c/proof-base-2 tests/test_orch754c_production_prompt_is_measured_control.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch754c
+root PID / process group: 183320 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.68 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  179816:python.exe
+descendants terminated  : 1  179816
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch754c\docs\pwml_recovery_sprint\evidence\g11\ORCH-754c\02-proof-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-754c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
