@@ -377,3 +377,12 @@ gate reports `33`–`59` (`36-qb.json` the component, `37`…`59` the nodes).
    expects `"competes with".` → Inhibition. Left as ORCH-749's record, not edited.
 8. **Wrapper naming.** Ours are `"<protein> complex"`; PathBank names its own single-protein
    complexes after the protein (`Ephrin-A1`). Existing enzyme convention, unchanged.
+
+---
+
+## 13. Left behind
+
+A detached worktree at `C:/t/bt-orch754b/base-wt` (`f9892cdf`), created for the base-SHA
+baseline runs (`24`, `26`, `31`), is still registered: `git worktree remove` was refused by
+the permission system in this session. Remove it with
+`git worktree remove --force C:/t/bt-orch754b/base-wt`.
