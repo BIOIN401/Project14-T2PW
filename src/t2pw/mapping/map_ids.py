@@ -7555,6 +7555,9 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
 ) -> Dict[str, Any]:
     """Rewrite protein enzyme/modifier references to protein_complex references.
 
+    Also the protein endpoints of signed interactions (ORCH-754b, D-104): PathWhiz
+    has no bare-protein interaction member either, and they take the same wrapper.
+
     The rewrite exists because the PathWhiz importer refuses a bare protein as a
     reaction enzyme. It is **not** licence to change who catalyses the step: a
     PathBank complex may stand in for an enzyme only when this reaction accounts
@@ -7967,6 +7970,98 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             pointer = f"/processes/reactions/{ridx}/{key}"
             reaction[key] = _dedupe_actor_rows(
                 _rewrite_rows(rows, pointer, reaction, actor_scope), pointer
+            )
+
+    # ── Interaction endpoints (ORCH-754b, D-104) ─────────────────────────────
+    #
+    # PathWhiz has no bare-protein interaction member: an interaction element is a
+    # Compound, ElementCollection, NucleicAcid, ProteinComplex or Bound, and
+    # PathBank draws protein regulation between single-protein complexes
+    # (reference/PW687775.pwml, interaction 15843). So a protein endpoint gets the
+    # enzyme wrapper -- the same ``_resolve_complex_name``, cache and F-116 superset
+    # refusal -- built here, before the freeze, never by the exporter (merge rule 8).
+    # Only a row the PWML can carry is wrapped: its word must carry a sign, and every
+    # protein endpoint must have the species and UniProt/DrugBank identity the
+    # generated-complex gates require (``ir.validate_required_pwml_contract``), so a
+    # wrapper never turns a withheld row into a broken complex. Anything else is left
+    # as written; the exporter withholds it and names the reason. Runs before the
+    # dropped-protein repair below, so it only ever sees proteins still declared.
+    from t2pw.pwml.ir import interaction_relationship_word, pwml_interaction_type  # lazy: ir -> compound_resolution -> map_ids
+
+    for iidx, interaction in enumerate(_safe_list(processes.get("interactions"))):
+        if not isinstance(interaction, dict) or not pwml_interaction_type(
+            interaction_relationship_word(interaction)
+        ):
+            continue
+        endpoints: List[Tuple[str, str, Dict[str, Any]]] = []
+        # The exporter's own field precedence for each side.
+        for fields in (("left", "entity_1", "source"), ("right", "entity_2", "target")):
+            field = next((f for f in fields if interaction.get(f)), "")
+            name = _canonical_name(str(interaction.get(field) or "")) if field else ""
+            norm = _normalize_name(name)
+            if norm and norm in proteins_by_norm and norm not in complexes_by_norm:
+                endpoints.append((field, name, proteins_by_norm[norm]))
+        if not endpoints:
+            continue
+        # A complex already named like this protein's wrapper. Its own one-protein
+        # wrapper (built for it as an enzyme, or on an earlier pass) is reused as it
+        # stands; any other complex is never borrowed, because pointing the endpoint
+        # at a declared assembly would add its other members to the interaction.
+        named = {
+            name: complexes_by_norm.get(_normalize_name(_wrapper_complex_name(name)))
+            for _field, name, _row in endpoints
+        }
+        own_wrapper = {
+            name: row is not None
+            and is_generated_complex_wrapper(row)
+            and [_normalize_name(_component_name(c)) for c in _safe_list(row.get("components"))]
+            == [_normalize_name(name)]
+            for name, row in named.items()
+        }
+        missing = {
+            name: [
+                label
+                for label, present in (
+                    ("species", protein_species_context(row)),
+                    ("uniprot_or_drugbank", has_protein_external_identity(row)),
+                    # The Unknown sentinel's accession names no protein.
+                    ("real_identity", not is_pathbank_unknown_protein(row)),
+                    ("free_wrapper_name", named[name] is None or own_wrapper[name]),
+                )
+                if not present
+            ]
+            for _field, name, row in endpoints
+        }
+        if any(missing.values()):
+            summary["interaction_protein_endpoints_skipped_invalid_component"] = (
+                summary.get("interaction_protein_endpoints_skipped_invalid_component", 0) + 1
+            )
+            actions.append(
+                {
+                    "type": "interaction_protein_endpoint_wrapper_skipped_invalid_component",
+                    "json_pointer": f"/processes/interactions/{iidx}",
+                    "missing": {name: labels for name, labels in missing.items() if labels},
+                    "reason": "single-protein PathWhiz complex wrapper requires a mapped protein component; no endpoint of this interaction was wrapped",
+                }
+            )
+            continue
+        for field, name, row in endpoints:
+            pointer = f"/processes/interactions/{iidx}/{field}"
+            if own_wrapper[name]:
+                complex_name = _canonical_name(str(named[name].get("name") or ""))
+            else:
+                complex_name, _result = _resolve_complex_name(name, row, {}, interaction, set(), pointer)
+            interaction[field] = complex_name
+            summary["interaction_protein_endpoints_rewritten_to_complexes"] = (
+                summary.get("interaction_protein_endpoints_rewritten_to_complexes", 0) + 1
+            )
+            actions.append(
+                {
+                    "type": "interaction_protein_endpoint_rewritten_to_complex",
+                    "json_pointer": pointer,
+                    "protein": name,
+                    "protein_complex": complex_name,
+                }
             )
 
     # ── The references the drops above orphaned ──────────────────────────────

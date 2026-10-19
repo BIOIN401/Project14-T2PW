@@ -20,6 +20,8 @@ import re
 from dataclasses import dataclass, field, asdict
 from typing import Any, Dict, List, Mapping, Set
 
+from t2pw.pwml.ir import interaction_pwml_verdict, interaction_relationship_word
+
 
 # ---------------------------------------------------------------------------
 # Dataclasses
@@ -235,6 +237,11 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
         for item in _safe_list(entities_raw.get(entities_key, [])):
             if isinstance(item, dict) and _safe_str(item.get("name")):
                 registry_kind.setdefault(item["name"].strip(), kind)
+    protein_rows = {
+        item["name"].strip(): item
+        for item in _safe_list(entities_raw.get("proteins", []))
+        if isinstance(item, dict) and _safe_str(item.get("name"))
+    }
 
     # ------------------------------------------------------------------
     # Compartment index
@@ -429,6 +436,19 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
         node_ids.add(inter_id)
 
         rel = _safe_str(inter.get("relationship")) or "interaction"
+        e1 = _safe_str(inter.get("entity_1"))
+        e2 = _safe_str(inter.get("entity_2"))
+        # ORCH-754b / D-104: the text summary is the exact record of every interaction,
+        # so it needs the evidence and the exporter's own verdict on THIS payload, and a
+        # node has a field for neither. Kept beside the nodes, so an interaction-free
+        # graph serializes exactly as before.
+        graph.metadata.setdefault("interaction_records", {})[inter_id] = {
+            "evidence": _safe_str(inter.get("evidence")),
+            "pwml": interaction_pwml_verdict(
+                interaction_relationship_word(inter),
+                [(_resolve_actor_kind(e, registry_kind), protein_rows.get(e)) for e in (e1, e2) if e],
+            ),
+        }
         graph.nodes.append(DraftNode(
             id=inter_id,
             label=inter_name,
@@ -439,8 +459,6 @@ def build_draft_graph(merged_json: Dict[str, Any]) -> DraftGraph:
             provenance="extracted",
         ))
 
-        e1 = _safe_str(inter.get("entity_1"))
-        e2 = _safe_str(inter.get("entity_2"))
         if e1:
             k1 = _resolve_actor_kind(e1, registry_kind)
             id1 = _add_entity_node(k1, e1)
