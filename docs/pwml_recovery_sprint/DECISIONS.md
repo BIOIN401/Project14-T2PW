@@ -7090,3 +7090,24 @@ orchestrator writes in this file. Work: `ORCH-754` (lanes `a`, `b`, `c`, review 
 vs `v07`); the scoring rule for pathways with no metabolite chemistry; the two curated edges the paper
 contradicts; keeping or narrowing the `type="integer"` side effect (all ORCH-747 § 7); the three curated
 pathways with no usable paper (ORCH-751 § 4 item 6).
+
+---
+
+## D-104 AMENDMENT 1 — the curator's new power to add interactions is reverted; verb-form interaction types ratified; competition is not a sign · 2026-10-19 · LOCKED
+
+**Decided by the product owner** (2026-10-19, in session, on the `ORCH-754r0` review of `70d05e03`).
+Recorded by the Lead Orchestrator at the product owner's instruction to record the decisions made.
+
+1. **Reverted:** ORCH-747's change to `src/t2pw/llm/prompts/pathway_curator_system.txt` (new § 5 and the
+   exception it added to "Do not add new reactions or transports"). It let the live curator LLM add
+   interactions and nucleic-acid entities before the freeze. It required a verbatim quote, but
+   `pathway_curator.py` never sends the curator the evidence text, and no code gate checks such an add.
+   The file returns to its `c9265fb8` content (lane `ORCH-754c`). A gated version may be proposed later
+   as its own decision.
+2. **Ratified:** ORCH-749's mapping of unambiguous verb forms onto the two PathWhiz types ("activates" →
+   Activation, "inhibits"/"represses" → Inhibition). The product owner: "if its only activates or
+   inhibits then we should just do what we can". This was read by the orchestrator as covering the
+   verb forms; the product owner may narrow it.
+3. **Not a sign:** symmetric or unsigned relations, `competes with` first among them, are never
+   exported as a directed Activation or Inhibition. They stay in the text output with their original
+   word (D-104 § 4; lane `ORCH-754b`).

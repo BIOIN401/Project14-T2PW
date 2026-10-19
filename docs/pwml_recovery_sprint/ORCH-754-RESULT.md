@@ -60,6 +60,33 @@ comparing the text output by hand. On the answer, they ruled (D-104):
 All builders were Opus 5.5 at extra-high effort, as the product owner asked. Each lane is reviewed
 independently before merge.
 
+### 3.1 `754c` review — APPROVE WITH NOTES
+
+Production prompt equals the measured variant: the same git blob `4160a649…`. The new pin `27f5e873…`
+is the hash the measured draws recorded, found on 42 of them. The base failure was reproduced
+independently. SMOKE 508. Notes: stale lines in the lane's own RESULT and stale line-number comments
+outside its boundary. None block the merge.
+
+### 3.2 `754r0` review of `70d05e03` — **REJECT**, four blocking findings
+
+The ORCH-747 graph and report work, the PWML interaction plumbing and the `streamlit_app.py` hunk
+were found correct as far as checked. The four blocking findings, each with its routing:
+
+| # | finding | routed to |
+|---|---|---|
+| 1 | **The ensemble merge builds chimeric reactions.** The ORCH-752 key ignores cofactors, state and enzymes. A probe merged NAD-IDH (IDH3) and NADP-IDH (IDH1) into one row carrying NAD+, NADP+, NADH and NADPH; IDH1 vanished with no review flag. This is live whenever draws > 1, which `.env` now sets | `754a`: merge only *compatible* rows; a cofactor, enzyme or state conflict never merges. **Withdraws** the orchestrator's brief instruction 7 ("cofactor-blind key stays"). That instruction was the orchestrator's, not the product owner's |
+| 2 | **The live curator prompt lets an LLM add interactions with no code gate.** The prompt demands a verbatim quote, but the code never sends the curator the evidence text; adds at confidence 0.75 or above are accepted. No decision authorized it | **Product owner, 2026-10-19: revert.** `754c` restores the file to `c9265fb8` |
+| 3 | **Two pinned IR digests fail at `70d05e03`.** The delta was documented but the re-pin never done (rule 4) | `754b`: a deliberate re-pin with the cumulative documented delta |
+| 4 | **24 tests fail in the primary checkout** (`test_early_failure_replay.py`). `llm/client.py:22` runs `load_dotenv(override=True)`, so `.env`'s `T2PW_EXTRACTION_DRAWS=3` beats the code default, and even a shell setting. SMOKE did not catch it | `754a`: tests pin N=1 unless they opt in; affected chunks re-run with draws = 3 |
+
+Two non-blocking findings were also routed to `754b`:
+- `competes_with` was exported as a directed Inhibition, i.e. a symmetric relation given a direction after the freeze. It will be withheld from the PWML.
+- The withheld-interaction record was written only on the CLI path. It must also reach the app path's text output.
+
+**Process incident.** The reviewer left two idle `python -` processes (Windows PIDs 193876, 190584,
+created 13:59). The permission check refused its `taskkill`, so the orchestrator did not kill them
+on its behalf. Surfaced to the product owner.
+
 ## 4. Gates
 
 To be filled at integration.

@@ -10988,3 +10988,5 @@ Decisions: **`D-104`** (product owner, in session). Base `f9892cdf`.
 | main | fast-forward after every lane is reviewed, merged and tested (D-104 § 7) |
 
 No pipeline run and no LLM call is authorized under ORCH-754 (D-104 § 8). Full record: `ORCH-754-RESULT.md`.
+
+**`ORCH-754r0` · 2026-10-19 — REJECT of `70d05e03`**, four blocking findings: chimeric ensemble merge (NAD/NADP-IDH), the curator prompt letting an LLM add interactions ungated, two IR digests un-repinned, and 24 tests broken by `.env` draws = 3 through `load_dotenv(override=True)`. Routed to lanes `a`, `c` (product owner: **revert**, D-104 AMENDMENT 1), `b` and `a`. `754c` reviewed **APPROVE WITH NOTES**, merge held until the main checkout is quiet. Detail in `ORCH-754-RESULT.md` § 3.
