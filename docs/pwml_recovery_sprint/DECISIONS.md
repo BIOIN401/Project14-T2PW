@@ -7028,3 +7028,65 @@ Recorded by the Lead Orchestrator.
    moves to a separate agent.
 4. Merge gates as usual: an independent review of the actual diff (the eval patch included), then integration SMOKE,
    Chunk D, each lane's focused suite and gold-readers, run on the merged tip.
+
+---
+
+## D-104 — paper runs use 3 draws with a paper-grounded duplicate merge; protein interactions export through wrappers; prompt v03 promoted; main becomes the current line · 2026-10-19 · LOCKED
+
+**Decided by the product owner** (2026-10-19, in session, after reading `ORCH-751-RESULT.md` and
+`ORCH-752-RESULT.md`). Recorded by the Lead Orchestrator **at the product owner's explicit instruction**
+("update all docs as necessary with the decisions we are making"); this is the only reason the
+orchestrator writes in this file. Work: `ORCH-754` (lanes `a`, `b`, `c`, review `r0`).
+
+1. **Extraction budget.** `OPENROUTER_EXTRACTION_MAX_TOKENS=64000` in `.env` (was 16,000; ORCH-747 § 6.2
+   showed 16,000 is below this model's reasoning-plus-content need). Done 2026-10-19; `.env` is untracked.
+   The other budgets are unchanged; only the extraction budget was measured.
+2. **Three draws.** Paper runs use `T2PW_EXTRACTION_DRAWS=3`, set in `.env`. The code default stays 1, so
+   a run without the variable behaves exactly as before. Accepts the 3x Stage-1 cost (ORCH-747 § 12,
+   ORCH-751 § 3).
+3. **The duplicates the draws produce are merged, and the paper is the dictionary.** Answers
+   `ORCH-752` § 5 item 1 with a grounded form of its option (c):
+   - (a) two participant names are one name when **the paper text itself** defines one as the
+     abbreviation of the other; a draw-written `X (Y)` bridges only if the paper defines that pair;
+     an abbreviation the paper defines two ways bridges nothing;
+   - (b) a misspelt name that occurs nowhere in the paper snaps to the paper's spelling, under safety
+     rules that forbid snapping across digits/locants, Greek letters, D/L, R/S, cis/trans or charge,
+     and never snap a name shorter than 6 characters or with two candidates;
+   - (c) **after Stage 6, before the freeze, reactions merge on database IDs**: per participant the
+     identity is its admitted database ID; **with no database ID, the identity is the long form only**,
+     never the abbreviation;
+   - (d) a merged row is written with long-form names; evidence quotes stay verbatim; original
+     spellings are kept, not lost;
+   - (e) every pooled row carries its support (3/3, 2/3, 1/3), shown in the `.txt` text output;
+     a 1/N row is kept and flagged for review, never dropped (contract: `review_required`);
+   - (f) every merge records the rule that bridged it, so a human can audit each one; rows differing
+     in a defining participant that no rule bridges are never merged.
+   This governs **pooling only**. The evaluator's own name policy (`matcher.inner_key`,
+   `name_conflict`) is not changed by this decision.
+4. **Interactions in PathWhiz.** A protein that is an interaction endpoint is wrapped in a single-protein
+   ProteinComplex through the **existing** Stage-6 enzyme-wrapper path, before the freeze (merge rule 8).
+   PathWhiz accepts a ProteinComplex as an interaction element
+   (`smpdb/app/models/data/interactions/interaction_element.rb`) but validates the type to
+   **Activation or Inhibition only** (`interaction.rb:13, :32`), so only those export; every other
+   relationship stays withheld from the PWML with its reason. **The text output is the exact record**:
+   every interaction, exported or not, with its original relationship word, its evidence, and whether
+   it reached the PWML. Answers `ORCH-751` § 4 item 5.
+5. **Production prompt = `r2_01_control_v03`.** The measured control of ORCH-747 rounds 2-4 and the
+   ORCH-751 cohort replaces variant `v02`, so paper runs use the prompt the numbers came from.
+6. **Commit scope.** All uncommitted work is committed, except caches (`data/*_cache.json`) and run
+   scratch (`out/`, `outputs/`, `tmp/`, `runs_*/`). **Supersedes D-103 § 2:** the product owner's own
+   edit to the protected `streamlit_app.py` (UI token defaults read from `.env`) is committed in
+   `70d05e03`; the protected-file fingerprint moves and is recorded at merge.
+7. **`main`.** **Supersedes D-103 § 3's exclusion of `main`.** When every ORCH-754 lane is reviewed and
+   merged into `sprint/pwml-recovery` and the tests pass on the merged tip, `main` is fast-forwarded to
+   it and both are pushed to `origin`. `main` becomes the current product line and the working checkout
+   switches to it. `experiment/pathway-mining` stays separate and is not merged.
+8. **Not authorized:** running the pipeline or any LLM-backed leg as part of ORCH-754. Tests only. Paper
+   runs come afterwards, by the product owner.
+9. Merge gates as usual: an independent review of each lane's actual diff and of `70d05e03`, then each
+   lane's focused suite, the affected suites, and SMOKE on the merged tip, zero surviving processes.
+
+**Still open, carried forward, not decided here:** whether transcription is a reaction (ORCH-747 `v06`
+vs `v07`); the scoring rule for pathways with no metabolite chemistry; the two curated edges the paper
+contradicts; keeping or narrowing the `type="integer"` side effect (all ORCH-747 § 7); the three curated
+pathways with no usable paper (ORCH-751 § 4 item 6).

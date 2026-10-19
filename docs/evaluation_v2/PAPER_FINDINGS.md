@@ -12,6 +12,12 @@ three independent draws of the same prompt raised reaction recall from 0.689 to 
 the weakest condition at unchanged precision — so the dominant controllable factor is
 sampling variance, not instruction design.
 
+> **Amended 2026-10-19 (ORCH-751).** The pooling claim above held on the ORCH-747 draws and did
+> not generalise. On a fresh 3-draw cohort, enterobactin stayed at 4/5 after pooling because all
+> three draws missed the *same* reaction. Pooling recovers randomly missed reactions, not
+> systematically missed ones. Separately, unscored chlorophyll draws of 16/19/18 reactions pooled
+> to 41 distinct rows, inflated by name-form variance (ORCH-752). See § 5.5 and § 8.
+
 ---
 
 ## 1. What was evaluated
@@ -200,6 +206,13 @@ behaves.*
 
 ### 5.5 Pooling independent draws reaches recall 1.000 at unchanged precision
 
+> **Amended 2026-10-19.** This section reports the ORCH-747 round-4 draws and is kept as measured.
+> ORCH-751 (`docs/pwml_recovery_sprint/ORCH-751-RESULT.md` § 2.1) re-ran 3 draws per paper:
+> menaquinone pooled to 9/9, but **enterobactin pooled to 4/5, because every draw missed the same
+> reaction**. The supportable claim is narrower: pooling recovers *random* misses only. Pooled row
+> counts also inflate without gold to expose it (chlorophyll 16/19/18 → 41; ORCH-751 § 2.2,
+> ORCH-752 § 2), from name-form variance, not cofactors. D-104 adds a paper-grounded merge for it.
+
 Because precision is near-ceiling and each draw misses *different* reactions, the misses
 are recoverable by union. Expected recall against number of pooled draws, averaged over
 every combination of that size (n = 5 draws per arm):
@@ -335,7 +348,9 @@ construction; the distribution is.
 - Sampling variance at temperature 0 is large enough to invalidate single-draw comparisons
   (±0.25 F1).
 - Pooling three independent draws recovered all gold reactions in 3 of 4 conditions with no
-  precision loss, a far larger gain than any prompt variation tested.
+  precision loss, a far larger gain than any prompt variation tested. **Amended 2026-10-19:**
+  only where the draws' misses are random. ORCH-751 found a systematic miss (enterobactin, 4/5
+  in every draw and in the pool) that pooling cannot fix.
 - A paper-anchored second gold exposes errors in a curated reference database that a
   single-reference evaluation would have scored as pipeline failures.
 

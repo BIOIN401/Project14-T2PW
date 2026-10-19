@@ -10966,3 +10966,25 @@ contradicts.
 **`ORCH-749` · 2026-10-16** — interaction-type mapping extended to unambiguous verb forms. Corpus measured (I had said 271; the real figure is **336** rows across 95 committed legs): old noun-only table mapped **0**, new table maps **99** (91 Inhibition, 8 Activation), 237 correctly withheld as unsigned (binds 50, modifies 39, degrades 15). **But gate two binds:** most typed rows are still withheld as `bare_protein_endpoint`, so exportable rows go 0 → 6-11, not 0 → 99. 73 new tests, export chunk at exactly ORCH-747's 7 known failures, smoke 508, G9 satisfied. Evidence `g11/ORCH-749`.
 
 **`ORCH-751` · 2026-10-16** — scored cohort: 7 conditions x 3 draws, evidence `g11/ORCH-751`. **Corrects the ensembling headline.** Union recovered 9/9 on menaquinone (draws missed different reactions) but stayed at 4/5 on enterobactin (**all three draws missed the same one** — systematic misses do not pool away). Chlorophyll pooled 16/19/18 draws into **41 keys**, a 2.3x inflation caused by the cofactor-sensitive dedup key, invisible without gold. Only **13 of 36** curator-cited papers are fetchable (`isOpenAccess=N` → HTTP 500, no exceptions in 40+ fetches), so 6 of 7 picks are reviews and 3 pathways have no usable paper. Zero rows without evidence across all 21 draws (**125 draws cumulative**). Detail in `ORCH-751-RESULT.md`.
+
+**`ORCH-752` · 2026-10-16** (row added 2026-10-19; the crashed session wrote the result but no row) — ensemble dedup key made cofactor-blind as ORCH-751 § 2.2 recommended, and **it changed nothing: chlorophyll 41 → 41.** ORCH-751's diagnosis is disproved by its own payloads: the inflation is name-form variance in *defining* participants (`full name (ABBR)` vs `ABBR`, synonyms, one typo per draw), which no lexical key may collapse without a ruling. Interaction key folds verb and noun forms, 23 → 20. Focused 21, SMOKE 508, N=1 identical to base, zero survivors. Evidence `g11/ORCH-752/01-05`. Detail in `ORCH-752-RESULT.md`.
+
+**`ORCH-753` · 2026-10-16 — INTERRUPTED BY THE CRASH, state unknown.** A gold-cohort selection: 12 paper source manifests in `docs/evaluation_v2/gold_cohort/` (texts in `C:/t/eval-fulltext/`), committed today in `f9892cdf` as found. No RESULT doc, no ledger row, no README in the directory. Whether the selection was finished, and whether any gold was drafted, is not known. **Not resumed.**
+
+---
+
+## `ORCH-754` — duplicate merge, protein interactions, prompt v03, then main · 2026-10-19
+
+Decisions: **`D-104`** (product owner, in session). Base `f9892cdf`.
+
+| item | state |
+|---|---|
+| uncommitted work | **committed and pushed** to `sprint/pwml-recovery`: code `70d05e03`, docs/evidence `f9892cdf`. Caches, `out/`, `outputs/`, `tmp/`, `runs_*/` (~690 MB) deliberately left out. `70d05e03`'s message says "ORCH-753 reviews this diff"; read **ORCH-754** — 753 was already taken |
+| `.env` | `OPENROUTER_EXTRACTION_MAX_TOKENS` 16000 → **64000**; `T2PW_EXTRACTION_DRAWS=3` added (D-104 §§ 1-2) |
+| `ORCH-754a` | **DISPATCHED** — paper-as-dictionary duplicate merge, database-ID merge before the freeze, support counts in the text output. Worktree `.claude/worktrees/orch754a`, branch `orch754/a-ensemble-merge` |
+| `ORCH-754b` | **DISPATCHED** — protein interaction endpoints wrapped as single-protein complexes; text output is the exact interaction record. Worktree `orch754b`, branch `orch754/b-interaction-wrappers` |
+| `ORCH-754c` | **DISPATCHED** — production prompt v02 → `r2_01_control_v03`. Worktree `orch754c`, branch `orch754/c-prompt-v03` |
+| `ORCH-754r0` | **DISPATCHED** — independent review of `70d05e03`, which had none |
+| main | fast-forward after every lane is reviewed, merged and tested (D-104 § 7) |
+
+No pipeline run and no LLM call is authorized under ORCH-754 (D-104 § 8). Full record: `ORCH-754-RESULT.md`.
