@@ -1,0 +1,15 @@
+# Output of G11 run ORCH-754b/60 (unwrappable-names). That run executed C:/t/bt-orch754b/unwrappable_names.py,
+# byte-identical (same sha256) to orch754b_unwrappable_endpoints.py beside this file. Runs 61 and 62 of the committed
+# copy were refused by the shared heavy lock (held by ORCH-754 / ORCH-754a) before starting; nothing ran.
+# Format: endpoint occurrences, (paper, protein, missing). Offline Stage-6 replay + prefreeze + IR, tip only.
+6 ('PMC12452463', 'Fur', ('external_identity',))
+6 ('PMC12452463', 'RyhB', ('external_identity',))
+5 ('PMC12096016', 'EntB', ('external_identity',))
+4 ('PMC12444477', 'YejM', ('external_identity',))
+2 ('PMC12096016', 'Fur', ('external_identity',))
+1 ('PMC12856317', 'ALAS2', ('external_identity',))
+1 ('PMC12452463', 'Fnr', ('external_identity',))
+1 ('PMC12452463', 'EntF', ('external_identity',))
+1 ('PMC12096016', 'EntD', ('external_identity',))
+1 ('PMC12312563', 'MenD', ('external_identity',))
+rows-with-unwrappable-protein-endpoints (endpoint count): 28

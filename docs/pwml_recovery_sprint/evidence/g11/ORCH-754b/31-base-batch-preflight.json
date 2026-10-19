@@ -1,0 +1,195 @@
+{
+  "label": "base-batch-preflight",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/bt-orch754b/base-wt",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch754b/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754b/31-base-batch-preflight.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch754b/31-base-batch-preflight",
+    "-rf",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b",
+  "started_at": "2026-10-19T20:41:18+00:00",
+  "finished_at": "2026-10-19T20:41:26+00:00",
+  "duration_seconds": 8.55652129999362,
+  "timeout_seconds": 540.0,
+  "root_pid": 273128,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 273140,
+      "name": "python.exe",
+      "ppid": 273128
+    },
+    {
+      "pid": 273200,
+      "name": "python.exe",
+      "ppid": 273140
+    },
+    {
+      "pid": 273220,
+      "name": "python.exe",
+      "ppid": 273200
+    },
+    {
+      "pid": 272928,
+      "name": "python.exe",
+      "ppid": 273140
+    },
+    {
+      "pid": 272948,
+      "name": "python.exe",
+      "ppid": 272928
+    },
+    {
+      "pid": 272892,
+      "name": "python.exe",
+      "ppid": 273140
+    },
+    {
+      "pid": 273060,
+      "name": "python.exe",
+      "ppid": 272892
+    },
+    {
+      "pid": 273124,
+      "name": "python.exe",
+      "ppid": 273140
+    },
+    {
+      "pid": 273032,
+      "name": "python.exe",
+      "ppid": 273124
+    },
+    {
+      "pid": 273312,
+      "name": "python.exe",
+      "ppid": 273140
+    },
+    {
+      "pid": 273324,
+      "name": "python.exe",
+      "ppid": 273312
+    },
+    {
+      "pid": 272896,
+      "name": "python.exe",
+      "ppid": 273064
+    },
+    {
+      "pid": 273064,
+      "name": "python.exe",
+      "ppid": 273324
+    },
+    {
+      "pid": 272484,
+      "name": "python.exe",
+      "ppid": 272492
+    },
+    {
+      "pid": 272492,
+      "name": "python.exe",
+      "ppid": 273140
+    },
+    {
+      "pid": 272616,
+      "name": "python.exe",
+      "ppid": 272484
+    },
+    {
+      "pid": 273244,
+      "name": "python.exe",
+      "ppid": 272616
+    }
+  ],
+  "descendants_terminated": [
+    272484,
+    272492,
+    272616,
+    272892,
+    272896,
+    272928,
+    272948,
+    273032,
+    273060,
+    273064,
+    273124,
+    273140,
+    273200,
+    273220,
+    273244,
+    273312,
+    273324
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 190584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202640,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202680,
+      "name": "python.exe"
+    },
+    {
+      "pid": 272676,
+      "name": "python.exe"
+    },
+    {
+      "pid": 272724,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch754b/docs/pwml_recovery_sprint/evidence/g11/ORCH-754b/31-base-batch-preflight.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b",
+    "repo_head": "f9892cdf7d61ab487f6b0b0b67aeb094684d0c6f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-754b",
+    "token": "ORCH-754b:272724:def0a126c8fddb2a",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
