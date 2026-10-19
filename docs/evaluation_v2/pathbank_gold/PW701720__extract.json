@@ -1,0 +1,705 @@
+{
+  "schema": "t2pw.eval_v2.pathbank_extract/1",
+  "extracted_at": "2026-10-13",
+  "source": "PathBank MySQL (read-only); accession resolved via super_pathway_visualizations.pw_id",
+  "accession": "PW701720",
+  "pathway_id": 703792,
+  "spv_id": 702040,
+  "name": "Ara operon Inactivation (Autoregulation of AraC)",
+  "subject": "Signaling",
+  "sub_categories": [],
+  "status": null,
+  "species": {
+    "name": "Escherichia coli",
+    "taxonomy_id": "562",
+    "common_name": ""
+  },
+  "description": "The L-arabinose operon, also called the ara or araBAD operon, is an operon required for the breakdown of the five-carbon sugar, L-arabinose, in Escherichia coli. The L-arabinose operon contains three structural genes: araB, araA, araD (collectively known as araBAD), which encode for three metabolic enzymes that are required for the metabolism of L-arabinose. AraB (ribulokinase), AraA (an isomerase), AraD (an epimerase) produced by these genes catalyse conversion of L-arabinose to an intermediate of the pentose phosphate pathway, D-xylulose-5-phosphate.\nThe structural genes of the L-arabinose operon are transcribed from a common promoter into a single transcript, a mRNA. The expression of the L-arabinose operon is controlled as a single unit by the product of regulatory gene araC and the catabolite activator protein (CAP)-cAMP complex. The regulator protein AraC is sensitive to the level of arabinose and plays a dual role as both an activator in the presence of arabinose and a repressor in the absence of arabinose to regulate the expression of araBAD. AraC protein not only controls the expression of araBAD but also auto-regulates its own expression at high AraC levels.\n-----------------------------------\nNegative regulation of araBAD\nNegative regulation of L-arabinose operon via AraC protein:\nWhen arabinose is absent, cells do not need the araBAD products for breaking down arabinose. Therefore, dimeric AraC acts as a repressor: one monomer binds to the operator of the araBAD gene (araO2), another monomer binds to a distant DNA half site known as araI1. This leads to the formation of a DNA loop. This orientation blocks RNA polymerase from binding to the araBAD promoter. Therefore, transcription of structural gene araBAD is inhibited.\n-----------------------------------\nPositive regulation of araBAD\nPositive regulation of L-arabinose operon via dimeric AraC and CAP/cAMP:\nExpression of the araBAD operon is activated in the absence of glucose and in the presence of arabinose. When arabinose is present, both AraC and CAP work together and function as activators.\n-----------------------------------\nAutoregulation of AraC:\nThe expression of araC is negatively regulated by its own protein product, AraC. The excess AraC binds to the operator of the araC gene, araO1, at high AraC levels, which physically blocks the RNA polymerase from accessing the araC promoter. Therefore, the AraC protein inhibits its own expression at high concentrations.",
+  "curator": {
+    "user_id": 1534,
+    "created_at": "2025-06-11 21:32:16",
+    "updated_at": "2025-06-11 21:32:18"
+  },
+  "mutability": {
+    "private_pathway": false,
+    "locked": false,
+    "status_is_null": true,
+    "note": "status NULL or locked=0 means the curator can still change it; re-extract and compare content_sha256 before scoring"
+  },
+  "counts": {
+    "Interaction": 7,
+    "Reaction": 1
+  },
+  "references": [
+    {
+      "pubmed_id": "20491933",
+      "citation": "Schleif R: AraC protein, regulation of the l-arabinose operon in Escherichia coli, and the light switch mechanism of AraC action. FEMS Microbiol Rev. 2010 Sep;34(5):779-96. doi: 10.1111/j.1574-6976.2010.00226.x. Epub 2010 Apr 8."
+    },
+    {
+      "pubmed_id": null,
+      "citation": "Schleif R: Regulation of the L-arabinose operon of Escherichia coli. Trends in Genetics. 2000; 16(12):559-565."
+    }
+  ],
+  "sub_pathways": [],
+  "processes": [
+    {
+      "process_type": "Interaction",
+      "process_id": 16130,
+      "accession": "PW_I016130",
+      "direction": ">",
+      "interaction_type": "Activation",
+      "transport_type": null,
+      "spontaneous": null,
+      "source": null,
+      "signature": "Activation / R: ProteinComplex4116-1 > L: NucleicAcid274-1",
+      "biological_state": {
+        "id": 117,
+        "pwbs_id": "PW_BS000117",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "location": "Cytosol",
+        "cell_type": "Cell",
+        "tissue": null
+      },
+      "participants": [
+        {
+          "side": "left",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "ProteinComplex",
+          "element_id": 4116,
+          "resolved": true,
+          "name": " Arabinose operon regulatory protein",
+          "identifiers": {
+            "pwp_id": "PW_P004116"
+          },
+          "species": {
+            "id": 3,
+            "name": "Escherichia coli",
+            "taxonomy_id": "562",
+            "common_name": ""
+          },
+          "components": [
+            {
+              "protein_id": 10400,
+              "name": "Arabinose operon regulatory protein",
+              "gene_name": "araC",
+              "uniprot": "P0A9E0",
+              "ec_numbers": "",
+              "locus": null,
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 2,
+              "species": {
+                "id": 25,
+                "name": "Escherichia coli (strain K12)",
+                "taxonomy_id": "83333",
+                "common_name": null
+              }
+            }
+          ],
+          "cofactors": []
+        },
+        {
+          "side": "right",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 274,
+          "resolved": true,
+          "name": "araO1",
+          "short_name": "araO1",
+          "gene_name": null,
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000274"
+          }
+        }
+      ],
+      "catalysts": []
+    },
+    {
+      "process_type": "Interaction",
+      "process_id": 16132,
+      "accession": "PW_I016132",
+      "direction": ">",
+      "interaction_type": "Activation",
+      "transport_type": null,
+      "spontaneous": null,
+      "source": null,
+      "signature": "Activation / R: NucleicAcid274-1 > L: NucleicAcid272-1",
+      "biological_state": {
+        "id": 117,
+        "pwbs_id": "PW_BS000117",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "location": "Cytosol",
+        "cell_type": "Cell",
+        "tissue": null
+      },
+      "participants": [
+        {
+          "side": "left",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 274,
+          "resolved": true,
+          "name": "araO1",
+          "short_name": "araO1",
+          "gene_name": null,
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000274"
+          }
+        },
+        {
+          "side": "right",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 272,
+          "resolved": true,
+          "name": "Promoter araC",
+          "short_name": "PA",
+          "gene_name": null,
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000272"
+          }
+        }
+      ],
+      "catalysts": []
+    },
+    {
+      "process_type": "Interaction",
+      "process_id": 16133,
+      "accession": "PW_I016133",
+      "direction": ">",
+      "interaction_type": "Activation",
+      "transport_type": null,
+      "spontaneous": null,
+      "source": null,
+      "signature": "Activation / R: NucleicAcid274-1 > L: NucleicAcid275-1",
+      "biological_state": {
+        "id": 117,
+        "pwbs_id": "PW_BS000117",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "location": "Cytosol",
+        "cell_type": "Cell",
+        "tissue": null
+      },
+      "participants": [
+        {
+          "side": "left",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 274,
+          "resolved": true,
+          "name": "araO1",
+          "short_name": "araO1",
+          "gene_name": null,
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000274"
+          }
+        },
+        {
+          "side": "right",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 275,
+          "resolved": true,
+          "name": "CAP",
+          "short_name": "CAP",
+          "gene_name": null,
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000275"
+          }
+        }
+      ],
+      "catalysts": []
+    },
+    {
+      "process_type": "Interaction",
+      "process_id": 16134,
+      "accession": "PW_I016134",
+      "direction": ">",
+      "interaction_type": "Activation",
+      "transport_type": null,
+      "spontaneous": null,
+      "source": null,
+      "signature": "Activation / R: NucleicAcid275-1 > L: NucleicAcid925-1",
+      "biological_state": {
+        "id": 117,
+        "pwbs_id": "PW_BS000117",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "location": "Cytosol",
+        "cell_type": "Cell",
+        "tissue": null
+      },
+      "participants": [
+        {
+          "side": "left",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 275,
+          "resolved": true,
+          "name": "CAP",
+          "short_name": "CAP",
+          "gene_name": null,
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000275"
+          }
+        },
+        {
+          "side": "right",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 925,
+          "resolved": true,
+          "name": "Ara inducer gene",
+          "short_name": null,
+          "gene_name": "AraI",
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000925"
+          }
+        }
+      ],
+      "catalysts": []
+    },
+    {
+      "process_type": "Interaction",
+      "process_id": 16135,
+      "accession": "PW_I016135",
+      "direction": ">",
+      "interaction_type": "Activation",
+      "transport_type": null,
+      "spontaneous": null,
+      "source": null,
+      "signature": "Activation / R: NucleicAcid272-1 > L: NucleicAcid270-1",
+      "biological_state": {
+        "id": 117,
+        "pwbs_id": "PW_BS000117",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "location": "Cytosol",
+        "cell_type": "Cell",
+        "tissue": null
+      },
+      "participants": [
+        {
+          "side": "left",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 272,
+          "resolved": true,
+          "name": "Promoter araC",
+          "short_name": "PA",
+          "gene_name": null,
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000272"
+          }
+        },
+        {
+          "side": "right",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 270,
+          "resolved": true,
+          "name": "araC",
+          "short_name": "araC",
+          "gene_name": "araC",
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000270"
+          }
+        }
+      ],
+      "catalysts": []
+    },
+    {
+      "process_type": "Interaction",
+      "process_id": 16136,
+      "accession": "PW_I016136",
+      "direction": ">",
+      "interaction_type": "Inhibition",
+      "transport_type": null,
+      "spontaneous": null,
+      "source": null,
+      "signature": "Inhibition / R: ProteinComplex4116-1 > L: ProteinComplex368702-1",
+      "biological_state": {
+        "id": 117,
+        "pwbs_id": "PW_BS000117",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "location": "Cytosol",
+        "cell_type": "Cell",
+        "tissue": null
+      },
+      "participants": [
+        {
+          "side": "left",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "ProteinComplex",
+          "element_id": 4116,
+          "resolved": true,
+          "name": " Arabinose operon regulatory protein",
+          "identifiers": {
+            "pwp_id": "PW_P004116"
+          },
+          "species": {
+            "id": 3,
+            "name": "Escherichia coli",
+            "taxonomy_id": "562",
+            "common_name": ""
+          },
+          "components": [
+            {
+              "protein_id": 10400,
+              "name": "Arabinose operon regulatory protein",
+              "gene_name": "araC",
+              "uniprot": "P0A9E0",
+              "ec_numbers": "",
+              "locus": null,
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 2,
+              "species": {
+                "id": 25,
+                "name": "Escherichia coli (strain K12)",
+                "taxonomy_id": "83333",
+                "common_name": null
+              }
+            }
+          ],
+          "cofactors": []
+        },
+        {
+          "side": "right",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "ProteinComplex",
+          "element_id": 368702,
+          "resolved": true,
+          "name": "DNA-directed RNA polymerase",
+          "identifiers": {
+            "pwp_id": "PW_P368702"
+          },
+          "species": {
+            "id": 3,
+            "name": "Escherichia coli",
+            "taxonomy_id": "562",
+            "common_name": ""
+          },
+          "components": [
+            {
+              "protein_id": 6061,
+              "name": "DNA-directed RNA polymerase subunit alpha",
+              "gene_name": "rpoA",
+              "uniprot": "P0A7Z4",
+              "ec_numbers": "2.7.7.6",
+              "locus": "b3295",
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 1,
+              "species": {
+                "id": 3,
+                "name": "Escherichia coli",
+                "taxonomy_id": "562",
+                "common_name": ""
+              }
+            },
+            {
+              "protein_id": 6062,
+              "name": "DNA-directed RNA polymerase subunit omega",
+              "gene_name": "rpoZ",
+              "uniprot": "P0A800",
+              "ec_numbers": "2.7.7.6",
+              "locus": "b3649",
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 1,
+              "species": {
+                "id": 3,
+                "name": "Escherichia coli",
+                "taxonomy_id": "562",
+                "common_name": ""
+              }
+            },
+            {
+              "protein_id": 6093,
+              "name": "DNA-directed RNA polymerase subunit beta'",
+              "gene_name": "rpoC",
+              "uniprot": "P0A8T7",
+              "ec_numbers": "2.7.7.6",
+              "locus": "b3988",
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 1,
+              "species": {
+                "id": 3,
+                "name": "Escherichia coli",
+                "taxonomy_id": "562",
+                "common_name": ""
+              }
+            },
+            {
+              "protein_id": 6094,
+              "name": "DNA-directed RNA polymerase subunit beta",
+              "gene_name": "rpoB",
+              "uniprot": "P0A8V2",
+              "ec_numbers": "2.7.7.6",
+              "locus": "b3987",
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 1,
+              "species": {
+                "id": 3,
+                "name": "Escherichia coli",
+                "taxonomy_id": "562",
+                "common_name": ""
+              }
+            }
+          ],
+          "cofactors": []
+        }
+      ],
+      "catalysts": []
+    },
+    {
+      "process_type": "Interaction",
+      "process_id": 16137,
+      "accession": "PW_I016137",
+      "direction": ">",
+      "interaction_type": "Activation",
+      "transport_type": null,
+      "spontaneous": null,
+      "source": null,
+      "signature": "Activation / R: ProteinComplex368702-1 > L: NucleicAcid272-1",
+      "biological_state": {
+        "id": 117,
+        "pwbs_id": "PW_BS000117",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "location": "Cytosol",
+        "cell_type": "Cell",
+        "tissue": null
+      },
+      "participants": [
+        {
+          "side": "left",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "ProteinComplex",
+          "element_id": 368702,
+          "resolved": true,
+          "name": "DNA-directed RNA polymerase",
+          "identifiers": {
+            "pwp_id": "PW_P368702"
+          },
+          "species": {
+            "id": 3,
+            "name": "Escherichia coli",
+            "taxonomy_id": "562",
+            "common_name": ""
+          },
+          "components": [
+            {
+              "protein_id": 6061,
+              "name": "DNA-directed RNA polymerase subunit alpha",
+              "gene_name": "rpoA",
+              "uniprot": "P0A7Z4",
+              "ec_numbers": "2.7.7.6",
+              "locus": "b3295",
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 1,
+              "species": {
+                "id": 3,
+                "name": "Escherichia coli",
+                "taxonomy_id": "562",
+                "common_name": ""
+              }
+            },
+            {
+              "protein_id": 6062,
+              "name": "DNA-directed RNA polymerase subunit omega",
+              "gene_name": "rpoZ",
+              "uniprot": "P0A800",
+              "ec_numbers": "2.7.7.6",
+              "locus": "b3649",
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 1,
+              "species": {
+                "id": 3,
+                "name": "Escherichia coli",
+                "taxonomy_id": "562",
+                "common_name": ""
+              }
+            },
+            {
+              "protein_id": 6093,
+              "name": "DNA-directed RNA polymerase subunit beta'",
+              "gene_name": "rpoC",
+              "uniprot": "P0A8T7",
+              "ec_numbers": "2.7.7.6",
+              "locus": "b3988",
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 1,
+              "species": {
+                "id": 3,
+                "name": "Escherichia coli",
+                "taxonomy_id": "562",
+                "common_name": ""
+              }
+            },
+            {
+              "protein_id": 6094,
+              "name": "DNA-directed RNA polymerase subunit beta",
+              "gene_name": "rpoB",
+              "uniprot": "P0A8V2",
+              "ec_numbers": "2.7.7.6",
+              "locus": "b3987",
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 1,
+              "species": {
+                "id": 3,
+                "name": "Escherichia coli",
+                "taxonomy_id": "562",
+                "common_name": ""
+              }
+            }
+          ],
+          "cofactors": []
+        },
+        {
+          "side": "right",
+          "stoichiometry": 1,
+          "currency": null,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 272,
+          "resolved": true,
+          "name": "Promoter araC",
+          "short_name": "PA",
+          "gene_name": null,
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000272"
+          }
+        }
+      ],
+      "catalysts": []
+    },
+    {
+      "process_type": "Reaction",
+      "process_id": 1966965,
+      "accession": "PW_R1966965",
+      "direction": ">",
+      "interaction_type": null,
+      "transport_type": null,
+      "spontaneous": null,
+      "source": null,
+      "signature": "R: NucleicAcid270-1 > L: ProteinComplex4116-1",
+      "biological_state": {
+        "id": 117,
+        "pwbs_id": "PW_BS000117",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "location": "Cytosol",
+        "cell_type": "Cell",
+        "tissue": null
+      },
+      "participants": [
+        {
+          "side": "left",
+          "stoichiometry": 1,
+          "currency": false,
+          "altext": null,
+          "element_type": "NucleicAcid",
+          "element_id": 270,
+          "resolved": true,
+          "name": "araC",
+          "short_name": "araC",
+          "gene_name": "araC",
+          "nucleotide_type": "DNA",
+          "identifiers": {
+            "pwna_id": "PW_NA000270"
+          }
+        },
+        {
+          "side": "right",
+          "stoichiometry": 1,
+          "currency": false,
+          "altext": null,
+          "element_type": "ProteinComplex",
+          "element_id": 4116,
+          "resolved": true,
+          "name": " Arabinose operon regulatory protein",
+          "identifiers": {
+            "pwp_id": "PW_P004116"
+          },
+          "species": {
+            "id": 3,
+            "name": "Escherichia coli",
+            "taxonomy_id": "562",
+            "common_name": ""
+          },
+          "components": [
+            {
+              "protein_id": 10400,
+              "name": "Arabinose operon regulatory protein",
+              "gene_name": "araC",
+              "uniprot": "P0A9E0",
+              "ec_numbers": "",
+              "locus": null,
+              "hmdbp_id": null,
+              "synonyms": [],
+              "stoichiometry": 2,
+              "species": {
+                "id": 25,
+                "name": "Escherichia coli (strain K12)",
+                "taxonomy_id": "83333",
+                "common_name": null
+              }
+            }
+          ],
+          "cofactors": []
+        }
+      ],
+      "catalysts": []
+    }
+  ],
+  "unhandled_process_types": [],
+  "content_sha256": "efd8c1585ce00fdcd455732a80e7f833b78fe842cd75f614cf535d1e4d791c68"
+}

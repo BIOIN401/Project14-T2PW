@@ -1,0 +1,1243 @@
+{
+ "task": "ORCH-749",
+ "head_sha": "c9265fb89fb262467586ab3cd967d8fbd98f1b18",
+ "t2pw_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\src\\t2pw\\__init__.py",
+ "corpus": "every committed final_mapped.json under runs/ and runs_verify/ (git ls-files) with at least one interaction row",
+ "exporter_configuration": "build_pwml_ir(payload, db_resolver=_DownDb(), strict_db=True, name_index=None) -- the R3 test's DB-down configuration",
+ "legs_committed_with_final_mapped": 115,
+ "legs_with_interactions": 95,
+ "interaction_rows": 336,
+ "table_verdicts": {
+  "orch_747_nouns_only": {
+   "withheld": 336
+  },
+  "orch_749_this_tree": {
+   "Inhibition": 91,
+   "withheld": 237,
+   "Activation": 8
+  },
+  "orch_749_by_pathbank_type": {
+   "Inhibition": 91,
+   "Activation": 8
+  },
+  "by_run_root": {
+   "runs": {
+    "Inhibition": 10,
+    "withheld": 42
+   },
+   "runs_verify": {
+    "withheld": 195,
+    "Inhibition": 81,
+    "Activation": 8
+   }
+  }
+ },
+ "mapped_spellings": {
+  "inhibits": {
+   "type": "Inhibition",
+   "key": "inhibits",
+   "rows": 77
+  },
+  "activates": {
+   "type": "Activation",
+   "key": "activates",
+   "rows": 8
+  },
+  "represses": {
+   "type": "Inhibition",
+   "key": "represses",
+   "rows": 8
+  },
+  "INHIBITS": {
+   "type": "Inhibition",
+   "key": "inhibits",
+   "rows": 2
+  },
+  "REPRESSES": {
+   "type": "Inhibition",
+   "key": "represses",
+   "rows": 2
+  },
+  "competes_with": {
+   "type": "Inhibition",
+   "key": "competes_with",
+   "rows": 1
+  },
+  "downregulates": {
+   "type": "Inhibition",
+   "key": "downregulates",
+   "rows": 1
+  }
+ },
+ "withheld_spellings": {
+  "binds": 50,
+  "modifies": 39,
+  "degrades": 15,
+  "interacts_with": 14,
+  "regulates": 13,
+  "interacts with": 12,
+  "cofactor_of": 10,
+  "catalyzes": 10,
+  "transports": 7,
+  "MODIFIES": 6,
+  "ENCODES": 6,
+  "cofactor": 5,
+  "component_of": 4,
+  "modulates": 4,
+  "degraded_by": 4,
+  "BINDS_TO": 3,
+  "binds_to": 3,
+  "binds to": 3,
+  "phosphopantetheinylates": 3,
+  "COMPONENT_OF": 3,
+  "interacts": 3,
+  "recruits": 2,
+  "interaction": 2,
+  "REGULATES": 2,
+  "associates with": 1,
+  "INTERACTS_WITH": 1,
+  "precursor_of": 1,
+  "facilitates_transport_of": 1,
+  "catalyzes_synthesis_of": 1,
+  "allosteric_inhibitor_of": 1,
+  "BINDS": 1,
+  "catalyzes hydrolysis of": 1,
+  "may interact with": 1,
+  "substrate_of": 1,
+  "provides_substrate_for": 1,
+  "aids_transport_of": 1,
+  "synergizes_with": 1,
+  "NONCOVALENTLY_BOUND_TO": 1
+ },
+ "exporter_verdicts_on_legs_that_build_offline": {
+  "legs_built": 63,
+  "legs_stopped": {
+   "UnresolvedCompoundRowError": 31,
+   "DuplicateNamedRowError": 1
+  },
+  "rows_covered": 202,
+  "outcomes": {
+   "bare_protein_endpoint": 57,
+   "untyped_interaction": 139,
+   "exportable": 6
+  },
+  "by_spelling": {
+   "inhibits": {
+    "bare_protein_endpoint": 47,
+    "exportable": 4
+   },
+   "modifies": {
+    "untyped_interaction": 27
+   },
+   "binds": {
+    "untyped_interaction": 25
+   },
+   "interacts_with": {
+    "untyped_interaction": 10
+   },
+   "catalyzes": {
+    "untyped_interaction": 10
+   },
+   "degrades": {
+    "untyped_interaction": 9
+   },
+   "interacts with": {
+    "untyped_interaction": 8
+   },
+   "activates": {
+    "bare_protein_endpoint": 6,
+    "exportable": 1
+   },
+   "cofactor_of": {
+    "untyped_interaction": 6
+   },
+   "MODIFIES": {
+    "untyped_interaction": 4
+   },
+   "transports": {
+    "untyped_interaction": 4
+   },
+   "regulates": {
+    "untyped_interaction": 4
+   },
+   "component_of": {
+    "untyped_interaction": 3
+   },
+   "COMPONENT_OF": {
+    "untyped_interaction": 3
+   },
+   "interacts": {
+    "untyped_interaction": 3
+   },
+   "modulates": {
+    "untyped_interaction": 3
+   },
+   "phosphopantetheinylates": {
+    "untyped_interaction": 2
+   },
+   "represses": {
+    "exportable": 1,
+    "bare_protein_endpoint": 1
+   },
+   "cofactor": {
+    "untyped_interaction": 2
+   },
+   "interaction": {
+    "untyped_interaction": 2
+   },
+   "binds to": {
+    "untyped_interaction": 2
+   },
+   "REGULATES": {
+    "untyped_interaction": 2
+   },
+   "allosteric_inhibitor_of": {
+    "untyped_interaction": 1
+   },
+   "BINDS": {
+    "untyped_interaction": 1
+   },
+   "catalyzes hydrolysis of": {
+    "untyped_interaction": 1
+   },
+   "may interact with": {
+    "untyped_interaction": 1
+   },
+   "competes_with": {
+    "bare_protein_endpoint": 1
+   },
+   "substrate_of": {
+    "untyped_interaction": 1
+   },
+   "downregulates": {
+    "bare_protein_endpoint": 1
+   },
+   "provides_substrate_for": {
+    "untyped_interaction": 1
+   },
+   "aids_transport_of": {
+    "untyped_interaction": 1
+   },
+   "BINDS_TO": {
+    "untyped_interaction": 1
+   },
+   "synergizes_with": {
+    "untyped_interaction": 1
+   },
+   "INHIBITS": {
+    "bare_protein_endpoint": 1
+   },
+   "NONCOVALENTLY_BOUND_TO": {
+    "untyped_interaction": 1
+   }
+  }
+ },
+ "all_spellings": {
+  "inhibits": 77,
+  "binds": 50,
+  "modifies": 39,
+  "degrades": 15,
+  "interacts_with": 14,
+  "regulates": 13,
+  "interacts with": 12,
+  "cofactor_of": 10,
+  "catalyzes": 10,
+  "represses": 8,
+  "activates": 8,
+  "transports": 7,
+  "MODIFIES": 6,
+  "ENCODES": 6,
+  "cofactor": 5,
+  "component_of": 4,
+  "modulates": 4,
+  "degraded_by": 4,
+  "BINDS_TO": 3,
+  "binds_to": 3,
+  "binds to": 3,
+  "phosphopantetheinylates": 3,
+  "COMPONENT_OF": 3,
+  "interacts": 3,
+  "INHIBITS": 2,
+  "REPRESSES": 2,
+  "recruits": 2,
+  "interaction": 2,
+  "REGULATES": 2,
+  "associates with": 1,
+  "INTERACTS_WITH": 1,
+  "precursor_of": 1,
+  "facilitates_transport_of": 1,
+  "catalyzes_synthesis_of": 1,
+  "allosteric_inhibitor_of": 1,
+  "BINDS": 1,
+  "catalyzes hydrolysis of": 1,
+  "may interact with": 1,
+  "competes_with": 1,
+  "substrate_of": 1,
+  "downregulates": 1,
+  "provides_substrate_for": 1,
+  "aids_transport_of": 1,
+  "synergizes_with": 1,
+  "NONCOVALENTLY_BOUND_TO": 1
+ },
+ "per_leg": {
+  "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": {
+   "rows": 6,
+   "table_749": {
+    "withheld": 6
+   },
+   "exporter": {
+    "stop": "DuplicateNamedRowError"
+   }
+  },
+  "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "withheld": 2
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 8,
+   "table_749": {
+    "withheld": 7,
+    "Inhibition": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 3
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "withheld": 2
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json": {
+   "rows": 5,
+   "table_749": {
+    "withheld": 5
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json": {
+   "rows": 7,
+   "table_749": {
+    "withheld": 5,
+    "Inhibition": 2
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 8,
+   "table_749": {
+    "withheld": 7,
+    "Inhibition": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs/2026-08-02_2130/papers/PMC12856317/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 2,
+    "withheld": 2
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs/2026-08-02_2130/papers/PMC13231680/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1148/papers/PMC13231680/research/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "withheld": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "withheld": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "withheld": 1,
+    "Inhibition": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 6,
+   "table_749": {
+    "Inhibition": 4,
+    "withheld": 2
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 13,
+   "table_749": {
+    "Inhibition": 3,
+    "withheld": 10
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 6,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 5
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": {
+   "rows": 10,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 9
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": {
+   "rows": 5,
+   "table_749": {
+    "withheld": 5
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 8,
+   "table_749": {
+    "Inhibition": 3,
+    "Activation": 1,
+    "withheld": 4
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 5,
+   "table_749": {
+    "withheld": 4,
+    "Inhibition": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": {
+   "rows": 6,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 5
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-18_1328/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-18_1328/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "withheld": 1,
+    "Inhibition": 2
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-21_2014/papers/PMC12312563/research/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-21_2014/papers/PMC12312563/strict/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 3
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 3
+   }
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 5,
+   "table_749": {
+    "withheld": 5
+   },
+   "exporter": {
+    "untyped_interaction": 5
+   }
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Activation": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 3
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 3
+   }
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 3
+   },
+   "exporter": {
+    "exportable": 1,
+    "bare_protein_endpoint": 2
+   }
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "withheld": 2
+   },
+   "exporter": {
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12856317/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "exportable": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-22_1821/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 6,
+   "table_749": {
+    "withheld": 6
+   },
+   "exporter": {
+    "untyped_interaction": 6
+   }
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 6,
+   "table_749": {
+    "Activation": 1,
+    "Inhibition": 3,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "exportable": 3,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "withheld": 3
+   },
+   "exporter": {
+    "untyped_interaction": 3
+   }
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12856317/research/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12180156/research/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 2,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 2,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12180156/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "withheld": 2
+   },
+   "exporter": {
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "withheld": 3
+   },
+   "exporter": {
+    "untyped_interaction": 3
+   }
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12856317/research/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC13231680/research/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC13231680/strict/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 3
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 3
+   }
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 8,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 7
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 7
+   }
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 3
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 3
+   }
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "withheld": 1
+   },
+   "exporter": {
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "withheld": 2
+   },
+   "exporter": {
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12856317/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 5,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 4
+   },
+   "exporter": {
+    "stop": "UnresolvedCompoundRowError"
+   }
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC13231680/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-24_1402/papers/PMC12180156/research/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12180156/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12444477/strict/final_mapped.json": {
+   "rows": 13,
+   "table_749": {
+    "withheld": 12,
+    "Inhibition": 1
+   },
+   "exporter": {
+    "untyped_interaction": 12,
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 2,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 2,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12856317/research/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 2,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 2,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12444477/research/final_mapped.json": {
+   "rows": 8,
+   "table_749": {
+    "withheld": 7,
+    "Activation": 1
+   },
+   "exporter": {
+    "untyped_interaction": 7,
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12444477/strict/final_mapped.json": {
+   "rows": 5,
+   "table_749": {
+    "withheld": 4,
+    "Activation": 1
+   },
+   "exporter": {
+    "untyped_interaction": 4,
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 1,
+    "Activation": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "exportable": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 7,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 6
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 6
+   }
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "withheld": 1
+   },
+   "exporter": {
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12180156/strict/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "withheld": 2
+   },
+   "exporter": {
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "Inhibition": 2,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 2,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12856317/research/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC13231680/research/final_mapped.json": {
+   "rows": 4,
+   "table_749": {
+    "withheld": 4
+   },
+   "exporter": {
+    "untyped_interaction": 4
+   }
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12096016/research/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "Inhibition": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1
+   }
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12096016/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12180156/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12180156/strict/final_mapped.json": {
+   "rows": 3,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 2
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12444477/research/final_mapped.json": {
+   "rows": 16,
+   "table_749": {
+    "withheld": 11,
+    "Inhibition": 3,
+    "Activation": 2
+   },
+   "exporter": {
+    "untyped_interaction": 11,
+    "bare_protein_endpoint": 5
+   }
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12452463/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "withheld": 2
+   },
+   "exporter": {
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12452463/strict/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "withheld": 2
+   },
+   "exporter": {
+    "untyped_interaction": 2
+   }
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12856317/research/final_mapped.json": {
+   "rows": 2,
+   "table_749": {
+    "Inhibition": 1,
+    "withheld": 1
+   },
+   "exporter": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   }
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12856317/strict/final_mapped.json": {
+   "rows": 1,
+   "table_749": {
+    "withheld": 1
+   },
+   "exporter": {
+    "untyped_interaction": 1
+   }
+  }
+ }
+}

@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC13140650",
+  "pmid": "41452197",
+  "doi": "10.1111/pbi.70501",
+  "citation": "Dai Z et al. A Branched SNF1-Related Protein Kinase 2 Signalling Cascade Controls ABA-Induced Ethylene Production and Regulates Both Fruit Ripening and Reproductive Growth Plant biotechnology journal 2026.",
+  "is_review": false,
+  "content_cell": "signalling",
+  "organism_cell": "plant",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13140650/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "ff7f34b58c6b67ab5ca7f5754511cd34ad5d0572cef062490c5a868cfe577e59",
+  "text_sha256": "8a92a1f8ed03f1084ffa252be1f5618677dbc8b9206ebe91cb5b54ad8a2ed8a8",
+  "text_chars": 73830,
+  "pathway_in_one_line": "Abscisic acid activates tomato SlSnRK2 kinases which branch two ways - phosphorylating the transcription factor SlHB1 to switch on ACC oxidase, and phosphorylating SlMPK1/2 to stabilise ACC synthase - so both arms raise ethylene.",
+  "scope_note": "In scope: the ABA -> SlABI1 -> SlSnRK2.1/2.3/2.4/2.6/2.8 module, SlSnRK2.1/2.4 phosphorylating SlHB1, SlHB1 binding the SlACO1 promoter and activating its transcription, SlSnRK2.1/2.4 phosphorylating SlMPK1/2, the resulting post-translational stabilisation of SlACS2, and the one named conversion ACC -> ethylene by ACO1. Adjacent: the Arabidopsis precedent that AtMPK6 phosphorylates AtACS2/AtACS6, the SlAREB1/SlABF4 branch, and the NDGA inhibitor and fruit-ripening phenotype work. Explicit negative to preserve: SlSnRK2.5 binds SlHB1 but not SlABI1 and was dropped, so it must not appear as a cascade member. The SAM -> ACC step is NOT two-sided in this text - the substrate is never named - so an extraction claiming it is unsupported.",
+  "estimated_two_sided_conversions": 2,
+  "selected_because": "The strongest interaction carrier in the set: a branched cascade with both arms measured in the same paper, roughly 116 interaction-bearing sentences, and physical-interaction, phospho-site, promoter-binding and protein-stability evidence of four different kinds that a gold can label separately. It is also the regulatory paper most likely to settle the open scope question from PAPER_FINDINGS 6.4 - here a regulatory cascade and a genuine chemical step (ACC -> ethylene) sit in the same pathway, so the gold forces a decision instead of leaving one."
+}

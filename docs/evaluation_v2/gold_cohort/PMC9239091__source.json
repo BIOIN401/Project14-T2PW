@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC9239091",
+  "pmid": "35475649",
+  "doi": "10.1128/mbio.00219-22",
+  "citation": "Gao J et al. Fungal Melanin Biosynthesis Pathway as Source for Fungal Toxins mBio 2022.",
+  "is_review": false,
+  "content_cell": "metabolic chemistry",
+  "organism_cell": "fungal",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9239091/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "8234670303c01e4f0c3711a5dfd23b993a4f1a1427d8734318283054267cc499",
+  "text_sha256": "c916702511abdbc48b5f3c615b3169e9b2f74fedbc3b4c05e3c467f0d7af202c",
+  "text_chars": 89161,
+  "pathway_in_one_line": "The DHN melanin pathway in Alternaria alternata, shown by CRISPR deletions to branch at 1,8-DHN into the perylenequinone phytotoxins (altertoxins).",
+  "scope_note": "In scope: the pentaketide route YWA1/AT4HN -> T4HN -> scytalone -> 1,3,8-THN -> vermelone -> 1,8-DHN, the enzymes PksA, AygA/AygB, Brm1/Brm2, and the paper's own finding that 1,8-DHN is the last common intermediate of DHN melanin and perylenequinone biosynthesis. Adjacent and a real trap: a large amount of the same chemistry is restated for OTHER fungi (Aspergillus fumigatus alb1/ayg1/arp1/arp2/abr1/abr2, Botrytis cinerea BcPks12/13, Bcscd1, Bcbrn1/2). Those sentences name both sides too, so a blind drafter will book them; the gold must record them with the organism they belong to or mark them adjacent. Also adjacent: the alternariol (AOH) pathway and the cmrA transcription-factor regulation, which is interaction rather than chemistry.",
+  "estimated_two_sided_conversions": 7,
+  "selected_because": "The best stated chemistry available in a fungus, and the conversions are an ordered chain rather than isolated steps, so a recall failure is diagnosable. It also doubles as a plant-disease-mechanism paper (the products are phytotoxins) without being labelled as one. Second-choice fungal candidate, kept as a fallback: PMC5481523 (sorbicillin biosynthesis in Penicillium chrysogenum, 44,403 chars, ~5 conversions) is cleaner on scope but carries less reaction weight."
+}

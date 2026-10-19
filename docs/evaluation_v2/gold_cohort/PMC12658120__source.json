@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC12658120",
+  "pmid": "41298379",
+  "doi": "10.1038/s41467-025-65582-6",
+  "citation": "Meng Q et al. Itaconate transport across the plasma membrane and Salmonella-containing vacuole via MCT1/4 modulates macrophage antibacterial activity Nature communications 2025.",
+  "is_review": false,
+  "content_cell": "physiological/transport",
+  "organism_cell": "mammalian/human",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12658120/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "f5a11fe74fb54bf55c21191c269fda2e106cb68f90e1345291e8340f008a2439",
+  "text_sha256": "af592a24dde231c2dba3b9c5a2351e33e19013c0bf3293a7ef72ff453a4d690d",
+  "text_chars": 88690,
+  "pathway_in_one_line": "Macrophages make itaconate from cis-aconitate and then export it through MCT1 and MCT4, both across the plasma membrane and, with RAB32, into the Salmonella-containing vacuole, so blocking the transporters raises intracellular itaconate and kills more bacteria.",
+  "scope_note": "In scope: the one named conversion cis-aconitate -> itaconate by IRG1/ACOD1 (decarboxylation), itaconate export across the plasma membrane by MCT1 and MCT4, itaconate delivery into the Salmonella-containing vacuole by MCT1/MCT4 with RAB32, and the consequence chain where loss of that export raises intracellular itaconate and suppresses Salmonella replication. Adjacent: the TCA-cycle break at IDH1 that raises cis-aconitate (stated as an increase, not as a named conversion), itaconate inhibition of bacterial targets, and all pharmacology (AZD3965, VB124, Su3118, IRG1-IN-1) and knockout phenotyping. A drafter must not turn an inhibitor into a pathway participant.",
+  "estimated_two_sided_conversions": 1,
+  "selected_because": "The transport row needs a eukaryotic case, and this one has what the Dpp structure paper lacks: a named small-molecule cargo, two distinct membranes crossed in the same pathway, a named accessory factor for one of them, and one real chemical step feeding the transported pool. It is also host-pathogen, so it mixes two organisms in one pathway - a case the current gold never tests and one where organism tagging can fail silently."
+}

@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC11647477",
+  "pmid": "39476966",
+  "doi": "10.1016/j.jbc.2024.107935",
+  "citation": "Wissbroecker KB et al. Biochemical and genomic evidence for converging metabolic routes of metformin and biguanide breakdown in environmental Pseudomonads The Journal of biological chemistry 2024.",
+  "is_review": false,
+  "content_cell": "metabolic chemistry",
+  "organism_cell": "bacterial",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11647477/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "d8bf522bf6380aa95676597dd49db04068c4caa1efdac5a0cb2a70713f91d76b",
+  "text_sha256": "b9ef2eca6db4d160b6f35cb6dbdf020b48c3b731a566b0b9d001a3e87fa27fcf",
+  "text_chars": 56857,
+  "pathway_in_one_line": "Two convergent bacterial routes that funnel the drug metformin and the parent compound biguanide into guanylurea and then guanidine for nitrogen assimilation.",
+  "scope_note": "In scope: metformin -> guanylurea + dimethylamine (heteromeric metforminase MfmAB), biguanide -> guanylurea (novel aminohydrolase BguH), guanylurea -> guanidine (GuuH), and BguH acting on N-methylbiguanide at ~1% the biguanide rate. In scope as a PROPOSED but not demonstrated route: metformin -> N-methylbiguanide -> biguanide by successive N-demethylation; the paper is explicit that the demethylase was not found, so this must not be booked as a measured step. Adjacent: the ureohydrolase family context (arginase, agmatinase, five-oxoprolinase PxpBC), the downstream guanidine assimilation pathway, and the metal-dependence enzymology.",
+  "estimated_two_sided_conversions": 5,
+  "selected_because": "A bacterial metabolic paper deliberately unlike the existing enterobactin and menaquinone golds: a short degradative pathway with a small cast of small molecules, so a gold reviewer can hand-check it in one sitting. It also supplies two things the current gold lacks entirely - a conversion the paper proposes but refuses to claim, and a measured side-activity - which is exactly where the review_required / off-pathway machinery should be exercised."
+}

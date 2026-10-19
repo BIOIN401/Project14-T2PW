@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC12136057",
+  "pmid": "40053564",
+  "doi": "10.1371/journal.pbio.3003026",
+  "citation": "Li P et al. Structural characterization of the ABC transporter DppABCDF in Escherichia coli reveals insights into dipeptide acquisition PLoS biology 2025.",
+  "is_review": false,
+  "content_cell": "physiological/transport",
+  "organism_cell": "bacterial",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12136057/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "a472410333f17c06a7887385e52d2327724175918d149c147835a353b52e35c9",
+  "text_sha256": "0129788261bcc8c1b2513e387bf7c78a49b15d738cf5a3998793d3969e1417dd",
+  "text_chars": 72393,
+  "pathway_in_one_line": "Dipeptide import in E. coli: the periplasmic binding protein DppA captures the peptide and, only together with ATP, activates the heterotetrameric DppBCDF translocator to pump it into the cytoplasm.",
+  "scope_note": "In scope: the five-subunit assembly (DppA periplasmic SBP; DppB/DppC transmembrane; DppD/DppF ATPases), dipeptide import across the inner membrane, ATP binding to DppF and ATP hydrolysis during transport, the requirement that DppA and ATP bind concurrently before the translocator has any ATPase activity, and the [4Fe-4S] cluster on each ATPase C-terminus. Adjacent, named but belonging to other systems: MppA delivering murein tripeptide through the Opp translocator for peptidoglycan biosynthesis and through the Dpp translocator for heme acquisition, and the Mycobacterium tuberculosis heterotrimeric DppBCD/OppABCD comparison. The main drafting hazard is resolution: most of this paper's 'interactions' are residue-level contacts (the DppB K243-DppD E114 salt bridge, F164/I284/L280 hydrophobic packing) that are a level below pathway granularity, and the gold must set that floor explicitly or the extraction will be scored against dozens of side-chain contacts.",
+  "estimated_two_sided_conversions": 0,
+  "selected_because": "The transport cell needs a case where the transported species and the direction are both stated, and where transport is gated by a condition (DppA plus ATP) rather than happening unconditionally - that conditional is what a transport gold should be able to express. Bacterial, which keeps one organism in common with the existing gold so that a regression in the familiar domain is still visible. Verified free of peer-review sub-articles despite being PLoS."
+}

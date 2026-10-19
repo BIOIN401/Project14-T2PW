@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC13071380",
+  "pmid": "41677324",
+  "doi": "10.1042/bsr20254015",
+  "citation": "Schedlbauer A et al. Aminolevulinate inhibition of human coproporphyrinogen oxidase clarifies coproporphyrin III accumulation in porphyrias Bioscience reports 2026.",
+  "is_review": false,
+  "content_cell": "disease mechanism",
+  "organism_cell": "mammalian/human",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13071380/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "1241fd67c9016eba4bd984d2a5a6e040d6f79fbd51342a37bd7014e18e19efb6",
+  "text_sha256": "d99fbe119ccce0ee4d5b6a31e961a87d1414ad30c1e3e35a8012f9516640a354",
+  "text_chars": 44473,
+  "pathway_in_one_line": "Why coproporphyrin III piles up in ALAD-deficiency porphyria: accumulated delta-aminolevulinic acid inhibits coproporphyrinogen oxidase, and the oxidised substrate coproporphyrin III inhibits it further.",
+  "scope_note": "In scope: 2 delta-aminolevulinic acid -> porphobilinogen (ALAD, the deficient enzyme), coproporphyrinogen III -> protoporphyrinogen IX (CPOX, oxidative decarboxylation, the reaction assayed here), the non-enzymatic oxidation coproporphyrinogen III -> coproporphyrin III, and the chemical hydrogenation coproporphyrin III -> coproporphyrinogen III used to prepare substrate. Also stated: succinylacetoacetate/maleylacetoacetate decomposing to succinylacetone in tyrosinemia type I. Adjacent: the rest of the heme pathway, the inhibition kinetics and Michaelis-Menten parameters (not conversions), the lead inactivation result, and the circular-dichroism/thermal-stability characterisation. Note the distinction the paper itself insists on: coproporphyrin III is a non-enzymatic by-product, not a physiological reaction product - an extraction that books it as the CPOX product is wrong even though the two names are near-identical.",
+  "estimated_two_sided_conversions": 5,
+  "selected_because": "The shortest paper in the set (44k chars) and the only one whose content is a human disease mechanism carried by explicit chemistry, so it fills a content cell and an organism cell at once. The porphyrinogen-vs-porphyrin pair is a hard, biologically real naming test. It also deliberately separates an enzymatic product from a chemical by-product, which the product contract cares about and which no current gold paper exercises."
+}

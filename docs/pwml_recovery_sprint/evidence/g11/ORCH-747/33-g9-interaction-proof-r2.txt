@@ -1,0 +1,155 @@
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\orch747_interaction_export_base_proof.py:130: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  tar.extractall(tree)
+BASE  HEAD = e4348aafde57e2f30fb20e925786a1aafe45d005  (src/t2pw archived to C:\Users\Angad\AppData\Local\Temp\orch747_base_tree_y0nrorql)
+  t2pw resolved at : C:\Users\Angad\AppData\Local\Temp\orch747_base_tree_y0nrorql\src\t2pw\__init__.py
+  ir error codes   : []
+{
+ "interactions": [
+  {
+   "type": "activation",
+   "children": [
+    "id",
+    "name",
+    "interaction-type"
+   ],
+   "has_name": true,
+   "has_pwi_id": false,
+   "left_elements": null,
+   "right_elements": null
+  },
+  {
+   "type": "inhibition",
+   "children": [
+    "id",
+    "name",
+    "interaction-type"
+   ],
+   "has_name": true,
+   "has_pwi_id": false,
+   "left_elements": null,
+   "right_elements": null
+  },
+  {
+   "type": "binding",
+   "children": [
+    "id",
+    "name",
+    "interaction-type"
+   ],
+   "has_name": true,
+   "has_pwi_id": false,
+   "left_elements": null,
+   "right_elements": null
+  }
+ ],
+ "interaction_visualizations": []
+}
+  withheld         : None
+  tip QA on base   : ok=False errors=15
+    - Interaction '6' has interaction-type 'activation'; PathWhiz stores only Activation or Inhibition.
+    - Interaction '6' carries a <name> child, which PathBank never writes on an interaction.
+    - Interaction '6' has 0 interaction-left element(s); exactly one is required.
+    - Interaction '6' has 0 interaction-right element(s); exactly one is required.
+    - Interaction '6' has no interaction-visualization.
+    - Interaction '7' has interaction-type 'inhibition'; PathWhiz stores only Activation or Inhibition.
+    - Interaction '7' carries a <name> child, which PathBank never writes on an interaction.
+    - Interaction '7' has 0 interaction-left element(s); exactly one is required.
+    - Interaction '7' has 0 interaction-right element(s); exactly one is required.
+    - Interaction '7' has no interaction-visualization.
+    - Interaction '8' has interaction-type 'binding'; PathWhiz stores only Activation or Inhibition.
+    - Interaction '8' carries a <name> child, which PathBank never writes on an interaction.
+    - Interaction '8' has 0 interaction-left element(s); exactly one is required.
+    - Interaction '8' has 0 interaction-right element(s); exactly one is required.
+    - Interaction '8' has no interaction-visualization.
+
+TIP   working tree C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+  t2pw resolved at : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+  ir error codes   : []
+{
+ "interactions": [
+  {
+   "type": "Activation",
+   "children": [
+    "id",
+    "interaction-type",
+    "pwi-id",
+    "interaction-left-elements",
+    "interaction-right-elements"
+   ],
+   "has_name": false,
+   "has_pwi_id": true,
+   "left_elements": 1,
+   "right_elements": 1
+  },
+  {
+   "type": "Inhibition",
+   "children": [
+    "id",
+    "interaction-type",
+    "pwi-id",
+    "interaction-left-elements",
+    "interaction-right-elements"
+   ],
+   "has_name": false,
+   "has_pwi_id": true,
+   "left_elements": 1,
+   "right_elements": 1
+  }
+ ],
+ "interaction_visualizations": [
+  {
+   "interaction_id": "6",
+   "sides": [
+    "Left",
+    "Right"
+   ],
+   "member_tags": [
+    "interaction-nucleic-acid-visualization",
+    "interaction-protein-complex-visualization"
+   ]
+  },
+  {
+   "interaction_id": "9",
+   "sides": [
+    "Left",
+    "Right"
+   ],
+   "member_tags": [
+    "interaction-nucleic-acid-visualization",
+    "interaction-protein-complex-visualization"
+   ]
+  }
+ ]
+}
+  withheld         : [{"key": "int_3", "name": "AraC binds A site", "interaction_type": "binding", "biological_state_key": "bs_1", "reason": "untyped_interaction", "pointer": "/processes/interactions/2", "raw_interaction_type": "binding", "left": "AraC complex", "right": "A site"}]
+  tip QA on tip    : ok=True errors=[]
+
+base fails behaviourally : True
+tip passes               : True
+VERDICT: G9 satisfied -- the base writes every interaction as id/name/type with no elements, no pwi-id and no visualization (and lets the untyped one through); the tip writes PathBank's shape for the two typed ones and withholds the third.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4348aafde57e2f30fb20e925786a1aafe45d005  [git, worktree dirty=True]
+label                   : g9-interaction-proof-r2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/orch747_interaction_export_base_proof.py --rev HEAD
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 122184 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 0.75 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 6  121584:python.exe, 123420:git.exe, 122616:python.exe, 123224:python.exe, 122100:python.exe, 122596:python.exe
+descendants terminated  : 6  121584, 122100, 122596, 122616, 123224, 123420
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-747\33-g9-interaction-proof-r2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

@@ -1,0 +1,329 @@
+{
+  "schema": "t2pw.eval_v2.gold_supplement/1",
+  "description": "Paper gold for the PathBank lab pathways (ORCH-747). A SEPARATE file from gold_v2_supported_reactions.json, which stays byte-identical: three tests pin its four cases. Score it by passing --supplement to t2pw.bench.eval_v2.report, never by merging it into the pinned file.",
+  "completeness_definition": "As docs/evaluation_v2/README.md section 1, with one difference: no case here is certified complete yet, so none of these cases feeds precision, recall, F1 or the unsupported rate. report.evaluate already skips a case whose flag is false.",
+  "cases": {
+    "PMC319880": {
+      "supported_reactions_complete": false,
+      "species": "Escherichia coli",
+      "scope": "The control of araC transcription from the Pc promoter in Escherichia coli: the DNA sites in the ara regulatory region, which proteins occupy them (araC protein, CAP with cyclic AMP, RNA polymerase), and what that occupancy does to Pc activity. Induction of the araBAD operon from PBAD belongs to a sibling pathway and is OFF-PATHWAY here. The DNase protection and dimethyl sulfate methylation assays themselves, and any measurement that concerns araBAD expression only, are also off-pathway or excluded.",
+      "source": {
+        "pmcid": "PMC319880",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC319880/pdf/pnas00653-0116.pdf",
+        "fetch_date": "2026-10-13",
+        "xml_sha256": "f2339031ff0d621d514fe48d5b084d16edde9fdd01d0141f28ce4016454a5f8d",
+        "text_sha256": "ca9e1d602dc2cd53f30821ba9196bcbeb36304130d79785cf8f7ffbbf8b56ec5",
+        "citation": "Lee NL, Gielow WO, Wallace RG. Mechanism of araC autoregulation and the domains of two overlapping promoters, Pc and PBAD, in the L-arabinose regulatory region of Escherichia coli. Proc Natl Acad Sci USA. 1981 Feb;78(2):752-756.",
+        "source_format": "scanned_pdf",
+        "text_path_outside_repo": "C:/t/eval-fulltext/PMC319880.r3.txt"
+      },
+      "audit": "Every quote in this file is verbatim from C:/t/eval-fulltext/PMC319880.r3.txt and from nothing else; r3 is the authoritative text and both earlier revisions were discarded as evidence. Sections read in full: header, abstract, introduction, Materials and Methods, Results (DNA-Protein Contact Sites in the ara Regulatory Region; Polymerase binding sites at PBAD and Pc; The A Site Is a 'Classical' Operator for the araC Gene; The A Site Is Not Within PBAD), Discussion including the four numbered objections to Ogden et al., the abbreviations footnote, the legends of Figs. 1-7, acknowledgements and the reference list (read only to see what is cited). In r3 the body text runs continuously; only a few words remain displaced where lines cross the figure regions of page 3 (for instance the clause reporting that at 250 microM cAMP the CAP protected an additional region at -130 to -140 against DNase digestion, and the 'in the presence of polymerase' lead-in to the same paragraph). Those spans are readable but not quotable word for word, so they are skipped and the affected rows (I9, I10) carry other sentences instead. This is a transcription-control paper: it contains no metabolite conversion, so the content is protein-DNA occupancy (interactions) plus two gene-expression statements. Enzymes with a stated catalytic role: RNA polymerase holoenzyme (purified from E. coli NL20-000; attaches to Pc and protects a 65-bp region from -105 to -170, initiating araC transcription at -148; separately protects -39 to at least +24 at PBAD) - the only catalyst of an on-pathway transformation (R1). Named without a reaction of their own: DNase I and dimethyl sulfate (footprinting and methylation-protection reagents, excluded by SCOPE), the araC protein in its P1, P2 and P1' forms and the cyclic AMP-binding protein CAP (sequence-specific DNA-binding regulators, not catalysts here), and the unnamed 'enzymes required for the metabolism of L-arabinose' encoded by araBAD (a class, off-pathway). No transport step and no compartment appears anywhere in the paper, so the PathBank hint's 'Cytosol' was not carried over. Record-level observations about the hint, not about the paper: PathBank models CAP in pathway 703792 as nucleic_acids id 275, nucleotide_type DNA, although CAP is a protein and PathBank holds the correct protein record (proteins id 10248, cAMP-activated global transcriptional regulator CRP, UniProt P0ACJ8); 'Ara inducer gene' is nucleic_acids id 925, gene_name AraI, DNA; and the pathway uses Activation on six edges against Inhibition on one, so its signs are deliberate claims.",
+      "reactions": [
+        {
+          "id": "R1",
+          "label": "RNA polymerase: araC DNA (transcribed from Pc, start point -148) -> araC transcript",
+          "inputs": [
+            {
+              "name": "araC",
+              "aliases": [
+                "araC gene",
+                "araC DNA",
+                "ara regulatory region at Pc"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "araC transcript",
+              "aliases": [
+                "araC mRNA",
+                "araC leader RNA"
+              ],
+              "role": "defining"
+            }
+          ],
+          "enzyme": {
+            "name": "RNA polymerase",
+            "aliases": [
+              "RNA polymerase holoenzyme",
+              "DNA-directed RNA polymerase"
+            ],
+            "identifier": null
+          },
+          "catalytic_cofactors": [],
+          "reversible": false,
+          "quote": "1. The start pointforaraC transcription has beenlocated at -148 (9), and to initiate araC transcription, RNA polymerase attachestoPCandprotectsa65-bpregionfrom -105to -170.",
+          "supporting_quotes": [
+            "Itisclearthatthere isadirectcorrelation between A-site bindingandinhibition of araCmRNAsynthesis.",
+            "Cdenotesposition ofthe araCtranscript.",
+            "cause theinvitro transcription ofaraC isfullystimulatedbya 2.5 p.M cAMP (data not shown), which does not produce any bindingoftheCAPatthelow-affinitysite(see Fig. 3D).",
+            "Pc,promoterforthearaCgene."
+          ],
+          "note": "Full sentence restored from r3. The product side is now carried by a complete sentence naming araC mRNA synthesis (first supporting quote), with the araC transcript also named in the Fig. 5A legend; it is still a different sentence from the one naming the template and the enzyme. The four nucleoside triphosphates appear only as an assay addition in that legend, so they are not listed as cofactors."
+        }
+      ],
+      "off_pathway_reactions": [
+        {
+          "id": "O1",
+          "kind": "gene expression (lumped) in a sibling pathway",
+          "label": "araBAD operon -> enzymes required for the metabolism of L-arabinose",
+          "inputs": [
+            {
+              "name": "araBAD operon",
+              "aliases": [
+                "araBAD"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "enzymes required for the metabolism of L-arabinose",
+              "aliases": [],
+              "role": "defining"
+            }
+          ],
+          "enzyme": null,
+          "quote": "InEscherichia coli, enzymes requiredforthemetabolism ofL- arabinose are coded by the araBAD operon;",
+          "supporting_quotes": [],
+          "reason": "Expression of araBAD, not of araC; SCOPE puts araBAD induction from PBAD in a sibling pathway. The product is named only as an unresolved class of enzymes."
+        }
+      ],
+      "summary_statements": [
+        {
+          "id": "S1",
+          "label": "araC gene -> araC protein (transcription and translation lumped)",
+          "inputs": [
+            {
+              "name": "araC gene",
+              "aliases": [
+                "araC"
+              ],
+              "role": "defining"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "araC protein",
+              "aliases": [
+                "arabinose operon regulatory protein",
+                "P1",
+                "P2"
+              ],
+              "role": "defining"
+            }
+          ],
+          "quote": "araC gene under autoregulation still produces sufficient araC protein to sustain araBAD activation.",
+          "supporting_quotes": [
+            "The startpointsforthetranscriptionandtranslationofaraChavere- cently been determined (9)."
+          ],
+          "note": "Full sentence restored from r3: both sides are named in it, so the two-half apparatus of the previous pass is gone. Lumped, because the paper gives no intermediate for this statement and so covers transcription and translation in one step. Counterpart of PathBank PW_R1966965; placed in summary_statements under the lumping rule, and a human may prefer it as a reaction."
+        }
+      ],
+      "excluded_statements": [
+        {
+          "quote": "In ourwork, we examined the ara DNA region from about +26to-322forsitesofcontactwiththearaCprotein, theCAP, andRNApolymerase, usingtheabilityofboundproteinstopro- tectDNAagainst methylation (10)and DNase Idigestion (11).",
+          "reason": "Assay chemistry (dimethyl sulfate methylation protection and DNase I footprinting). SCOPE excludes the assays themselves. Full sentence restored from r3."
+        },
+        {
+          "quote": "ContactsitesforthearaCprotein, theCAP, andRNApolymer- asewere determined by usingthe methylation protection and DNase I footprinting techniques.",
+          "reason": "Second statement of the same assay basis, at the head of the Results; excluded for the same reason."
+        },
+        {
+          "quote": "Thus, the araC protein has three regulatory functions: (i) positivecontrolofaraBAD, (ii)negativecontrolofaraBAD,and (iii) negative control of araC.",
+          "reason": "Regulation summary with no substrate/product pair; the araC half is recorded as interaction I3."
+        },
+        {
+          "quote": "The expression ofaraC is re- pressedby its own productand stimulated bytheCAPsystem (5).",
+          "reason": "Regulation of expression, attributed to prior work (ref. 5), not a transformation; recorded as interactions I3 and I6."
+        },
+        {
+          "quote": "Noothersitewaspro- tectedbythearaCproteinwithintheDNAsegmentfrom +26 to -322.",
+          "reason": "Negative result bounding the site inventory; no interaction to record."
+        },
+        {
+          "quote": "4. Our results show that there is no mutual interference in thebindingofaraCproteintotheAsite(\"araO\")andthebind- ingofCAPtothehigh-affinityCAPsite(\"CRPBAD\").",
+          "reason": "Explicit negative result: an interaction that does NOT occur. Used to adjudicate PathBank PW_I016133 as contradicted; not recorded as an interaction."
+        },
+        {
+          "quote": "Atpresent, thereisnoevi- dencetosupporttheideathattheAsite, theoperatorlocusfor thearaCgene, isalsothesitefornegativecontrolofaraBAD.",
+          "reason": "Explicit negative result, and the denied effect is on araBAD (off-pathway). Restored from r3."
+        },
+        {
+          "quote": "(ii) araBAD tran- scription requires bindingat the B site only, not at the A site;",
+          "reason": "Regulation of araBAD transcription; off-pathway under SCOPE. Restored from r3."
+        },
+        {
+          "quote": "wehaveshownthatthebindingofP2totheAsiteisnotrequired fortranscriptionofaraBADintheexperimentdescribedinFig. 5B.",
+          "reason": "The Discussion statement of the same negative result; off-pathway under SCOPE."
+        },
+        {
+          "quote": "WehaveconcludedthattherearefiveDNA-proteincontactre- gions in the 147-base-pair DNA segment lying between the transcriptional startpoints ofaraBADandaraC.",
+          "reason": "Site inventory for the whole regulatory region, not a transformation or a single interaction."
+        },
+        {
+          "quote": "thatthearaO,whenboundtoaraCprotein, preventsthebind- ing of CAP to either CRPc or CRPBAD, and this in turn de-",
+          "reason": "Another group's model (Ogden et al., ref. 12), not a finding of this paper; the paper declares it untenable. Cited in the PathBank alignment for PW_I016133. The clause breaks at 'de-' across the page in r3 and resumes in the next row."
+        },
+        {
+          "quote": "creasestranscriptionofaraCandaraBAD.",
+          "reason": "Completion of the Ogden et al. model clause above, carried separately because the page break falls inside the word; also not this paper's claim."
+        },
+        {
+          "quote": "Webelievethattheabovemodelisuntenableforthefollow- ingreasons.",
+          "reason": "Meta-statement rejecting the cited model; carries no participants."
+        },
+        {
+          "quote": "ThearaCpromoteriscomprisedofthesitesiiiandivabove.",
+          "reason": "Definition of the Pc promoter domain (the CAP site plus the polymerase binding site for araC transcription); a site assignment, not a transformation or interaction."
+        },
+        {
+          "quote": "Thenontranscribedregion [147basepairs (bp)] contains the promoters, PBADand Pc, in- cludingtheirsitesofinteractionwithRNApolymeraseandwith theirrespectivepositiveregulators;i.e.,araCproteinandCAP forPBADandCAPforPc.",
+          "reason": "Architectural description of the regulatory region; names the positive regulators of Pc (CAP) and PBAD but states no single interaction event. The CAP-Pc half is recorded as I6."
+        },
+        {
+          "quote": "ThearaCgeneislocatednexttothearaBADoperon and is oppositely oriented (4).",
+          "reason": "Genetic map fact (prior work, ref. 4); no participants in a reaction or interaction."
+        }
+      ],
+      "interactions": [
+        {
+          "id": "I1",
+          "effect": "binding",
+          "source": "araC protein, P2 form",
+          "target": "A site (operator for the araC gene; 'araO')",
+          "quote": "At relatively high protein/DNAratios, the P2 form ofaraC proteinprotectedtworegionsofDNA(designatedAandBsites in Figs. 2 and 3).",
+          "note": "Full sentence restored from r3. The A site lies within the RNA polymerase binding site at Pc and is the operator locus for araC autoregulation. The A site has a greater affinity for P2 than for P1 (complete protection at protein/DNA = 2 for P2 against 20 for P1); the B-site half of the following sentence is off-pathway (I15). The paper identifies its A and B sites with Ogden et al.'s araO and araI by location. PathBank PW_I016130 labels this edge activation; the paper states occupancy."
+        },
+        {
+          "id": "I2",
+          "effect": "binding",
+          "source": "araC protein, P1 form (minus arabinose)",
+          "target": "A site (operator for the araC gene; 'araO')",
+          "quote": "In the absence ofL-arabinose, P1 can bindtotheA site andtherebycontinuetoregulateitsownsynthesis.",
+          "note": "Lower affinity than P2: footprinting needed a protein/DNA ratio of 20 for P1 against 2 for P2, and adding P1 to a polymerase-occupied Pc gave only an intermediate footprint change. The quote keeps the clause tying A-site occupancy by P1 directly to araC's own synthesis. PathBank has a single undifferentiated araC protein node, so P1 and P2 binding cannot be distinguished there."
+        },
+        {
+          "id": "I3",
+          "effect": "inhibition",
+          "source": "araC protein (P1 or P2) bound at the A site",
+          "target": "Pc (promoter for the araC gene)",
+          "quote": "Our resultssuggestthatthebasisforaraCautoregulationisthataraC protein, ineitheritsactivator(P2)orrepressor(P1)form, actsas arepressor foraraC, bybindingtothe RNApolymerase attach- mentsiteatthearaCpromoter.",
+          "note": "The abstract sentence is restored from r3, which makes page 1 continuous. The Results reach the same conclusion: 'The findings that the A site binds both P1 and P2 and that theseinteractions successfullycompetewithpolymerase bind- ingatPcestablish theAsiteas theoperatorlocusforaraC au- toregulation.' The functional measurement behind it is the direct correlation between A-site binding and inhibition of araC mRNA synthesis, quoted under R1, and the Discussion closes on negative control of Pc by P1 and P2."
+        },
+        {
+          "id": "I4",
+          "effect": "inhibition",
+          "source": "araC protein",
+          "target": "RNA polymerase (at Pc, region -105 to -147)",
+          "quote": "3. DirectcompetitionbetweenaraC proteinandRNApoly- meraseforthe -105to-147regionhasbeenshowntoresultin repressionofPc.",
+          "note": "Full numbered item restored from r3. Mechanistically this is competition for one and the same DNA site, not an inhibitory protein-protein contact: the Fig. 6 legend calls it 'CompetitionbetweenaraCproteinandRNApolymerase forthesamebindingsiteataraCpromoter.', and the footprint shows the polymerase pattern at Pc (enhanced digestion at -140/-141) replaced by the araC pattern (-136/-138) on addition of P2, intermediate with P1. PathBank PW_I016136 models it as a direct AraC protein -> RNA polymerase inhibition edge."
+        },
+        {
+          "id": "I5",
+          "effect": "binding",
+          "source": "RNA polymerase",
+          "target": "Pc (65-bp region, -105 to -170)",
+          "quote": "theAresiduesat 114and 137showedreducedmethylation, - - and the region from -105 to the end ofthe fragment at -170 protectedagainstDNase",
+          "note": "The footprint evidence, restored from r3. The protected adenines are at -114 and -137; this is one of the page-3 lines where the minus signs are still displaced, printing as '- -' after the numbers, so the span is quoted exactly as it stands. Discussion point 1, quoted under R1, states the same occupancy as a 65-bp region from -105 to -170."
+        },
+        {
+          "id": "I6",
+          "effect": "activation",
+          "source": "CAP with cyclic AMP, bound at the high-affinity CAP site (-77 to -110)",
+          "target": "Pc (promoter for the araC gene)",
+          "quote": "2. The high-affinity CAP site, located between -77 and -110,hasbeenshowntobethesiteofCAPstimulationofboth PcandPBAD",
+          "note": "One of the paper's two headline conclusions, with the numbered item restored from r3. Also stated as 'Thebinding ofthe CAP alone, in the absence ofP2, activates Pc but not PBAD,', as 'Thus, thearaCpromotershareswiththearaBADpromoterthesiteof interactionwithCAP.', and in the Discussion inventory as '(iii) the CAP site, which positively controls the expression of araBADon theleftandaraC on theright;'. The abstract puts the site 60 bases from the araC start point. In vitro araC transcription is fully stimulated at 2.5 microM cAMP, which gives no occupancy of the low-affinity site. PathBank has no CAP -> Promoter araC edge at all, so this row is paper_only."
+        },
+        {
+          "id": "I7",
+          "effect": "binding",
+          "source": "cyclic AMP",
+          "target": "CAP (cyclic AMP-binding protein / catabolite gene-activator protein)",
+          "quote": "The CAP without cAMP did not protect DNA.",
+          "note": "cAMP is required for CAP to occupy DNA at all; the titration in Fig. 3D runs 0, 25 nM, 2.5 microM and 250 microM cAMP."
+        },
+        {
+          "id": "I8",
+          "effect": "binding",
+          "source": "CAP with cyclic AMP (2.5 microM)",
+          "target": "high-affinity CAP site, between the A and B sites",
+          "quote": "At 2.5 AuM cAMP, itprotected a singleregionlocatedbetweentheAandB sites (designated CAPsitein Figs. 2and3).",
+          "note": "Full sentence restored from r3; 'At 2.5 AuM cAMP' is the text layer's rendering of 2.5 microM. Occupancy event for the shared CAP site whose functional consequence for Pc is I6."
+        },
+        {
+          "id": "I9",
+          "effect": "binding",
+          "source": "CAP with cyclic AMP (250 microM)",
+          "target": "low-affinity CAP site, -130 to -140, inside the Pc polymerase attachment site",
+          "quote": "Webelievethatthelow-affinityCAPsitelocatedbetween-130 and -140probablydoesnotconstitute thesiteforCAP-stimulationofthearaCpromoter, notonlybecauseitsposition(inre- lation to the polymerase binding site andtranscriptional start point)isatvariance withotherCAPsites (16, 17), butalsobe-",
+          "note": "Kept on-pathway because the site lies inside Pc, but the paper argues it is NOT the site of CAP stimulation of the araC promoter, and the clause continues into the sentence quoted under R1 about full stimulation at 2.5 microM cAMP. Position is also stated as 'The low-affinity CAP site, therefore, lies entirely within the polymerase attachment site, and it does not appearlikely that thebindingofCAPtoCRPC wouldenhance polymerase bind- ingtoPC.' and as 'This second CAP site lies entirely within the A'. The direct binding observation at 250 microM cAMP falls in a page-3 span where words are still displaced, so it is not quoted."
+        },
+        {
+          "id": "I10",
+          "effect": "inhibition",
+          "source": "RNA polymerase occupying Pc",
+          "target": "CAP binding at the low-affinity CAP site (-130 to -140)",
+          "quote": "thesecond, lower-affinity CAPsitedisappeared from the pro- tectionpattern, suggesting that the polymerase prevents CAP frombindingtothissite.",
+          "note": "Restored: the sentence is contiguous in r3, which is why this row was dropped only in the r2 pass. Its lead-in clause, placing the observation in the presence of polymerase, is one of the page-3 spans where words are still displaced, so the quote starts at 'thesecond,'. Mutual exclusion between polymerase occupancy of Pc and CAP occupancy of the low-affinity site; no PathBank counterpart."
+        },
+        {
+          "id": "I11",
+          "effect": "binding",
+          "source": "L-arabinose",
+          "target": "araC protein (giving the P2 form)",
+          "quote": "P2,formofthearaCproteinthatac- tivatesaraBADexpression, acquiredbytheproteininthepresenceof L-arabinose;",
+          "note": "Definition sentence restored from r3. The Fig. 4 legend gives the conditions: 'BindingwastestedforP2(A,33mMarabinose),Pl' (F, 33 mM D-fucose), or P1 (none) and visualized by the footprint method.' On-pathway only because the paper's point is that P2 as well as P1 represses Pc; the activator role named in the footnote is for araBAD."
+        },
+        {
+          "id": "I12",
+          "effect": "binding",
+          "source": "D-fucose (anti-inducer)",
+          "target": "araC protein (giving the P1 / P1' form)",
+          "quote": "P1, formofthearaCproteinthatrepressesaraBADexpression, generallyassociatedwiththeabsenceofinducerL-arabinoseorthepres- enceoftheanti-inducer, D-fucose;",
+          "note": "The araC protein-D-fucose complex is called P1' and is stated to have affinity for the B2 site and no affinity for the A site, intermediate between those of P2 and P1; its consequences are measured on araBAD, which is off-pathway."
+        },
+        {
+          "id": "I13",
+          "effect": "binding",
+          "scope": "off_pathway",
+          "source": "RNA polymerase",
+          "target": "PBAD (promoter for the araBAD operon), -39 to at least +24",
+          "quote": "the polymerase protected segment of DNA extending a from -39toatleast +24(seeFig. 5E).",
+          "reason": "Occupancy of the araBAD promoter, i.e. the sibling pathway; it bears on Pc only by being a different, non-overlapping polymerase site. Moved here from off_pathway_reactions: a binding has no product side, so it cannot be a transformation row.",
+          "note": "Was off_pathway_reactions O2, split into I13 and I14 because the paper states the two claims in separate quotable sentences. The experiment is introduced as 'Polymerase binding sites at PBAD and PC determined' and read out by methylation protection and DNase I footprinting."
+        },
+        {
+          "id": "I14",
+          "effect": "activation",
+          "scope": "off_pathway",
+          "source": "CAP-cAMP complex at the CAP site, together with P2 at the B site",
+          "target": "PBAD (attachment of RNA polymerase to that promoter)",
+          "quote": "interaction oftheCAP-cAMPcomplexattheCAPsiteandthe interaction ofP2atthe Bsitearebothnecessaryfortheattach- mentofRNApolymerasetothispromoter.",
+          "reason": "Positive control of the araBAD promoter, i.e. the sibling pathway; off-pathway under SCOPE. Second half of the former O2 row.",
+          "note": "Both interactions are stated to be necessary for polymerase attachment to PBAD, which is why this row is an activation of that promoter rather than a binding. The polymerase occupancy itself is I13; the P2-at-B-site binding is I15."
+        },
+        {
+          "id": "I15",
+          "effect": "binding",
+          "scope": "off_pathway",
+          "source": "araC protein P2 (araC protein plus L-arabinose)",
+          "target": "B site (araI), the positive-control site of araBAD",
+          "quote": "As shown below, the B site binds only P2, whereastheAsitebindsbothP2andP1.",
+          "reason": "The B site is stated to be responsible for the positive control of araBAD by P2 and is not required for Pc control; off-pathway under SCOPE. The A-site half of this sentence is carried on-pathway as I1/I2. Moved here from off_pathway_reactions: a binding has no product side, so it cannot be a transformation row.",
+          "note": "Was off_pathway_reactions O3. Also stated as 'peciallytheportiondesignated B2, bindsonlyP2;(ii)theAsite', and the sites of positive control in PBAD are given as 'WeagreewithOgdenetal.(12)thatthesitesofpositivecon- trol in PBAD are the high-affinity CAP site at -77 to -110' plus the B site at -42 to -80. The A-site half of the quoted sentence is carried on-pathway as I1/I2."
+        }
+      ],
+      "transports": [],
+      "completeness_status": "NOT CERTIFIED. Drafted by a model and verified only for verbatim quotation. A human must read the paper and certify exhaustiveness before any precision, recall or F1 is computed from this case.",
+      "drafter": {
+        "prompt": "paper_gold_drafter_v1",
+        "model": "claude-opus-5",
+        "date": "2026-10-13",
+        "mode": "pathbank_hinted"
+      },
+      "text_revision": "r3"
+    }
+  }
+}

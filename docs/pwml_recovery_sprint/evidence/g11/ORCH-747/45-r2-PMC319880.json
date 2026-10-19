@@ -1,0 +1,119 @@
+{
+  "label": "orch747-r2-PMC319880",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/scripts/prompt_ab.py",
+    "--text",
+    "C:/t/eval-fulltext/PMC319880.txt",
+    "--variant",
+    "r2_01_control_v03=docs/evaluation_v2/prompt_variants_r2/r2_01_control_v03.txt",
+    "--variant",
+    "r2_02_classify_then_branch=docs/evaluation_v2/prompt_variants_r2/r2_02_classify_then_branch.txt",
+    "--variant",
+    "r2_03_conditional_routing=docs/evaluation_v2/prompt_variants_r2/r2_03_conditional_routing.txt",
+    "--variant",
+    "r2_04_kind_recheck=docs/evaluation_v2/prompt_variants_r2/r2_04_kind_recheck.txt",
+    "--variant",
+    "r2_05_mixed_case_procedure=docs/evaluation_v2/prompt_variants_r2/r2_05_mixed_case_procedure.txt",
+    "--variant",
+    "r2_06_bucket_two_sided_gate=docs/evaluation_v2/prompt_variants_r2/r2_06_bucket_two_sided_gate.txt",
+    "--variant",
+    "r2_07_conversion_sweep=docs/evaluation_v2/prompt_variants_r2/r2_07_conversion_sweep.txt",
+    "--variant",
+    "r2_08_summary_not_a_step=docs/evaluation_v2/prompt_variants_r2/r2_08_summary_not_a_step.txt",
+    "--variant",
+    "r2_09_requested_pathway_boundary=docs/evaluation_v2/prompt_variants_r2/r2_09_requested_pathway_boundary.txt",
+    "--variant",
+    "r2_10_legend_vs_body=docs/evaluation_v2/prompt_variants_r2/r2_10_legend_vs_body.txt",
+    "--variant",
+    "r2_11_example2_repair=docs/evaluation_v2/prompt_variants_r2/r2_11_example2_repair.txt",
+    "--variant",
+    "r2_12_regulatory_example=docs/evaluation_v2/prompt_variants_r2/r2_12_regulatory_example.txt",
+    "--variant",
+    "r2_13_model_stated_example=docs/evaluation_v2/prompt_variants_r2/r2_13_model_stated_example.txt",
+    "--variant",
+    "r2_14_pre_output_self_check=docs/evaluation_v2/prompt_variants_r2/r2_14_pre_output_self_check.txt",
+    "--variant",
+    "r2_15_core_plus_typed_overlay=docs/evaluation_v2/prompt_variants_r2/r2_15_core_plus_typed_overlay.txt",
+    "--variant",
+    "r2_16_integrated=docs/evaluation_v2/prompt_variants_r2/r2_16_integrated.txt",
+    "--pathway",
+    "Ara operon inactivation (autoregulation of AraC)",
+    "--organism",
+    "Escherichia coli",
+    "--out",
+    "C:/t/prompt-grid/r2/PMC319880",
+    "--runs",
+    "1",
+    "--max-tokens",
+    "64000"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-10-16T03:49:07+00:00",
+  "finished_at": "2026-10-16T04:46:32+00:00",
+  "duration_seconds": 3445.2437439999776,
+  "timeout_seconds": 7200.0,
+  "root_pid": 455004,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 455780,
+      "name": "python.exe",
+      "ppid": 455004
+    }
+  ],
+  "descendants_terminated": [
+    455780
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 62496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 445188,
+      "name": "python.exe"
+    },
+    {
+      "pid": 447500,
+      "name": "python.exe"
+    },
+    {
+      "pid": 465288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 465516,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/ORCH-747/45-r2-PMC319880.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "c9265fb89fb262467586ab3cd967d8fbd98f1b18",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

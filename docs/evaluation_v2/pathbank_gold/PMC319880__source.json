@@ -1,0 +1,78 @@
+{
+  "note": "Source manifest for the PW701720 paper gold (ORCH-747). The paper text itself is NOT committed (it lives at C:/t/eval-fulltext/PMC319880.txt, the same convention t2pw.bench.eval_v2.fetch uses); what is committed is enough to prove a later reader read the same bytes.",
+  "pmcid": "PMC319880",
+  "pmid": "6262769",
+  "doi": "10.1073/pnas.78.2.752",
+  "citation": "Lee NL, Gielow WO, Wallace RG. Mechanism of araC autoregulation and the domains of two overlapping promoters, Pc and PBAD, in the L-arabinose regulatory region of Escherichia coli. Proc Natl Acad Sci USA. 1981 Feb;78(2):752-756.",
+  "chosen_by": "product owner, 2026-10-13",
+  "chosen_for": "PW701720 Ara operon Inactivation (Autoregulation of AraC)",
+  "source_format": "scanned_pdf",
+  "retrieval": {
+    "europepmc_fulltext_xml": "HTTP 500 - no machine-readable full text exists for this deposit",
+    "ncbi_efetch_pmc": "HTTP 200, metadata and a self-uri pointing at the PDF; no article body",
+    "pdf_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC319880/pdf/pnas00653-0116.pdf",
+    "pdf_acquired": "downloaded in a browser by the product owner; scripted GET returns an interstitial page, not the file"
+  },
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC319880/pdf/pnas00653-0116.pdf",
+  "fetch_date": "2026-10-13",
+  "xml_sha256": "f2339031ff0d621d514fe48d5b084d16edde9fdd01d0141f28ce4016454a5f8d",
+  "xml_sha256_note": "There is no XML. This field carries the sha256 of the PDF, because the loader requires a non-empty source hash; the field name is the loader's, not a claim that XML was fetched.",
+  "pdf_sha256": "f2339031ff0d621d514fe48d5b084d16edde9fdd01d0141f28ce4016454a5f8d",
+  "pdf_bytes": 1669167,
+  "pdf_pages": 5,
+  "text_sha256": "ca9e1d602dc2cd53f30821ba9196bcbeb36304130d79785cf8f7ffbbf8b56ec5",
+  "text_chars": 25516,
+  "text_words": 2415,
+  "text_extraction": {
+    "script": "docs/pwml_recovery_sprint/evidence/orch747_pdf_columns.py",
+    "library": "pdfplumber",
+    "ocr_used": false,
+    "why_not_the_production_reader": "t2pw.extraction.pdf_parser groups words into lines by vertical position. On a two-column page the columns share a baseline, so its output interleaves them: every sentence breaks mid-word and continues with text from the other column. Measured on this PDF: the abstract read 'The DNA-protein contact sites in theara regu- Thefunctionalsignificanceofbindingwasassessedbycorrelat- latoryregion,...'. No quote longer than one line can be verified against such a text, and because quote folding removes whitespace the damage is invisible to any hash check.",
+    "known_artifact": "The page-1 header block is reordered (title line before the journal line) by the full-width-line detection. The body is continuous.",
+    "glued_words": "The PDF's own text layer omits many inter-word spaces ('ofaraC'). Quote verification folds out every non-alphanumeric character (bench.goldset.fold_for_quote), so this does not affect whether a quote verifies.",
+    "residual_damage": "A few words remain displaced where text lines pass through figure regions on page 3, for example 'the CAP protected additional region, at -130 to -140, an against DNase digestion'. Sentences there are readable but not always quotable word for word. All continuous prose in the Introduction, Methods, Results and Discussion reads correctly, including the Discussion passage on the low-affinity CAP site and the central autoregulation result."
+  },
+  "text_path_outside_repo": "C:/t/eval-fulltext/PMC319880.r3.txt",
+  "text_revisions": {
+    "r1": {
+      "sha256": "337fb1c1faccbb354dd348870c1c1ce21a60f0ce308cf7d6657669f4759d99a6",
+      "rule": "gutter at the page midpoint",
+      "superseded_because": "a long left-column word crossing the midpoint made whole blocks of lines read as full width, so pages 1-3 and part of page 4 stayed interleaved. The blind drafter hit this and had to drop two statements it could not quote contiguously."
+    },
+    "r2": {
+      "sha256": "66377d1b57f04630710e89e8d182f9ee4c982147fba537212754c01e1a0ec8b3",
+      "rule": "gutter measured from each page's own whitespace, then the median gutter of the pages that reveal one applied to every page",
+      "authoritative": false,
+      "superseded_because": "The gutter was treated as a no-go band, which fails where a page's right column starts inside the shared band: page 3 begins its right column at x=335 while the median band runs to 340. Whole lines read as full width and stayed interleaved, including the paper's central autoregulation result."
+    },
+    "r3": {
+      "sha256": "ca9e1d602dc2cd53f30821ba9196bcbeb36304130d79785cf8f7ffbbf8b56ec5",
+      "rule": "each line is split where its own whitespace crosses the measured gutter centre, with a 10 pt minimum gap; a line that runs continuously across the centre is kept full width",
+      "why_10pt": "the real inter-column gap falls to 22 pt on page 3, so the earlier 24 pt threshold rejected a genuine column break. That single constant is what hid the sentence 'there is a direct correlation between A-site binding and inhibition of araC mRNA synthesis'.",
+      "authoritative": true,
+      "regression": {
+        "note": "Every quote in all four drafts verifies against r3, including the two round-0 drafts whose quotes failed against r1 and r2. The drafters had been quoting real sentences; the extraction was wrong, not the drafts.",
+        "blind_round0": {
+          "quotes": 35,
+          "verify_r2": 20,
+          "verify_r3": 35
+        },
+        "blind_repair": {
+          "quotes": 39,
+          "verify_r2": 39,
+          "verify_r3": 39
+        },
+        "hinted_round0": {
+          "quotes": 44,
+          "verify_r2": 23,
+          "verify_r3": 44
+        },
+        "hinted_repair": {
+          "quotes": 44,
+          "verify_r2": 44,
+          "verify_r3": 44
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+ "case_id": "PMC319880",
+ "match_rule": "same verbatim quote, or an overlapping name on each populated side with a matching effect",
+ "buckets": {
+  "reactions": {
+   "blind": 1,
+   "hinted": 1,
+   "matched": 0,
+   "blind_only": [
+    "RNA polymerase: transcription initiation at Pc -> araC transcript (araC mRNA)"
+   ],
+   "hinted_only": [
+    "RNA polymerase: araC DNA (transcribed from Pc, start point -148) -> araC transcript"
+   ],
+   "hinted_only_and_unrelated": [],
+   "matched_pairs": []
+  },
+  "off_pathway_reactions": {
+   "blind": 3,
+   "hinted": 1,
+   "matched": 0,
+   "blind_only": [
+    "RNA polymerase: transcription initiation at PBAD -> araBAD transcript",
+    "dimethyl sulfate methylates purine residues of the end-labelled ara DNA fragments",
+    "DNase I cleaves the ara DNA fragments into a size distribution of fragments"
+   ],
+   "hinted_only": [
+    "araBAD operon -> enzymes required for the metabolism of L-arabinose"
+   ],
+   "hinted_only_and_unrelated": [
+    "araBAD operon -> enzymes required for the metabolism of L-arabinose"
+   ],
+   "matched_pairs": []
+  },
+  "summary_statements": {
+   "blind": 1,
+   "hinted": 1,
+   "matched": 1,
+   "blind_only": [],
+   "hinted_only": [],
+   "hinted_only_and_unrelated": [],
+   "matched_pairs": [
+    {
+     "blind": "expression of the autoregulated araC gene yields araC protein (lumped transcription plus translation)",
+     "hinted": "araC gene -> araC protein (transcription and translation lumped)"
+    }
+   ]
+  },
+  "interactions": {
+   "blind": 11,
+   "hinted": 15,
+   "matched": 8,
+   "blind_only": [
+    "I3",
+    "I10",
+    "I11"
+   ],
+   "hinted_only": [
+    "I1",
+    "I2",
+    "I8",
+    "I9",
+    "I12",
+    "I13",
+    "I14"
+   ],
+   "hinted_only_and_unrelated": [
+    "I1",
+    "I2",
+    "I8",
+    "I9",
+    "I14"
+   ],
+   "matched_pairs": [
+    {
+     "blind": "I1",
+     "hinted": "I3"
+    },
+    {
+     "blind": "I2",
+     "hinted": "I15"
+    },
+    {
+     "blind": "I4",
+     "hinted": "I4"
+    },
+    {
+     "blind": "I5",
+     "hinted": "I5"
+    },
+    {
+     "blind": "I6",
+     "hinted": "I6"
+    },
+    {
+     "blind": "I7",
+     "hinted": "I7"
+    },
+    {
+     "blind": "I8",
+     "hinted": "I10"
+    },
+    {
+     "blind": "I9",
+     "hinted": "I11"
+    }
+   ]
+  },
+  "transports": {
+   "blind": 0,
+   "hinted": 0,
+   "matched": 0,
+   "blind_only": [],
+   "hinted_only": [],
+   "hinted_only_and_unrelated": [],
+   "matched_pairs": []
+  }
+ },
+ "quotes": {
+  "blind": 14,
+  "hinted": 17,
+  "shared_verbatim": 7
+ },
+ "contamination_check": {
+  "rule": "an in-scope reaction in the hinted pass that is not even related to any reaction the blind pass found. A different modelling of the same event is reported under hinted_only, not here.",
+  "in_scope_reactions_unrelated_to_anything_blind": [],
+  "in_scope_reactions_modelled_differently": [
+   "RNA polymerase: araC DNA (transcribed from Pc, start point -148) -> araC transcript"
+  ],
+  "verdict": "clean: the hint added no in-scope reaction unrelated to what the blind pass found"
+ }
+}

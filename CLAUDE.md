@@ -62,6 +62,38 @@ No patch merges unless **all** of these hold:
 `product_contract_violation`, `gold_data_defect`, or `policy_disagreement`, citing the
 gold `relevance_note` / `export_rationale`. Only the first justifies code.
 
+### Logging is not optional
+
+**Every piece of work is written into its doc before the task is reported done.** Work that
+exists only in a chat transcript is lost: the transcript is not searchable by the next
+session, is not reviewable, and cannot be cited in a merge gate. A task reported complete
+with nothing written down is not complete.
+
+| what you did | where it goes |
+|---|---|
+| a task, start to finish | `docs/pwml_recovery_sprint/ORCH-<id>-RESULT.md` — one per task; the full record, including what failed and why |
+| its live state: dispatched, merged, blocked | a row in `LEDGER.md` (append-only) |
+| a defect, a measurement, a wrong theory you ruled out | a numbered finding in the task's RESULT doc, and `FINDINGS.md` when it outlives the task |
+| a product decision | `DECISIONS.md` — **product owner only.** Never append to it yourself; record the open question in the RESULT doc instead |
+| a test or benchmark obligation that changed | `TEST_MATRIX.md`, in place, with the exact delta |
+| a bounded-run report, proof or verdict | `evidence/g11/<TASK-ID>/` — committed, never pasted (gate G11 rule 9) |
+| evaluation artifacts: gold, variants, run outputs | under `docs/evaluation_v2/`, with a README in the directory |
+
+Three rules about what the entry has to contain:
+
+1. **Record the failures and the dead ends, not just the result.** A theory you tested and
+   disproved is worth more than a conclusion, because it stops the next session re-running
+   it. If you were wrong, write down what you believed and what disproved it.
+2. **Cite the artifact, never the claim.** A number in a doc names the file it came from —
+   a wrapper report, a proof, a payload path. "Tests pass" with no report path is not a
+   record, and under G11 it is not evidence either.
+3. **State what is NOT settled.** Open questions go in the RESULT doc under a heading the
+   product owner can act on, with the options and what each costs. Silence reads as
+   agreement.
+
+Docs-only commits are made separately from code, and `git status --porcelain` is checked
+afterwards to confirm nothing else moved.
+
 ### Sprint-wide constraints
 
 - **Every test, benchmark and pipeline command runs through the bounded foreground

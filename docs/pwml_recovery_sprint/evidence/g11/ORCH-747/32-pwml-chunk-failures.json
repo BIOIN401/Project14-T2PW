@@ -1,0 +1,88 @@
+{
+  "label": "pwml-chunk-failures",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-747\\32-pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch747-pwml/fail7",
+    "-x",
+    "--maxfail=10",
+    "tests/test_canonicalization_preflight_and_species.py::test_preflight_warns_when_no_db_and_no_covering_index",
+    "tests/test_compound_resolution_extraction.py::test_build_pwml_ir_matches_the_pre_extraction_golden",
+    "tests/test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture",
+    "tests/test_compound_resolution_extraction.py::test_the_repaired_coverage_and_digest_pins_themselves_go_red",
+    "tests/test_prefreeze_species_resolution.py::test_new_acceptance_the_preflight_still_receives_the_at_risk_species",
+    "tests/test_pwml_ir_duplicate_row_refusal.py::test_new_acceptance_a_non_colliding_leg_is_byte_identical_to_the_base",
+    "tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-10-15T19:13:43+00:00",
+  "finished_at": "2026-10-15T19:13:51+00:00",
+  "duration_seconds": 7.782785400006105,
+  "timeout_seconds": 900.0,
+  "root_pid": 118572,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 122824,
+      "name": "python.exe",
+      "ppid": 118572
+    }
+  ],
+  "descendants_terminated": [
+    122824
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 62496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 73436,
+      "name": "python.exe"
+    },
+    {
+      "pid": 85176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 118536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 121844,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-747\\32-pwml-chunk-failures.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "e4348aafde57e2f30fb20e925786a1aafe45d005",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

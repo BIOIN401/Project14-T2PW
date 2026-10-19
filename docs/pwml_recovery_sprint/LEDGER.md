@@ -10925,3 +10925,44 @@ Change set F still follows pilot-004 and is not part of ORCH-748.
 | merge + gates | if approved: `--no-ff` merge into `experiment/pathway-mining` in `C:/t/mining`; mining suite and SMOKE (mining off, `--heavy-lock ORCH-748`, exactly 508) at the merged tip, run by `pwml-test-runner` |
 | pilot-004 | pre-registered here before any model call; frozen config of 001-003; worktree `C:/t/mining-pilot4` at the merged SHA; exact preflight and run commands recorded; ≤ $2 estimated |
 | ready means | the gate approved and merged, gates green at the merged tip, pilot-004 pre-registered and one command from launch. Otherwise **BLOCKED** |
+
+---
+
+## `ORCH-747` — paper gold, interaction plumbing, prompt grid · 2026-10-15
+
+Full record: [`ORCH-747-RESULT.md`](ORCH-747-RESULT.md). Base `e4348aaf`; working tree only,
+**nothing committed, nothing merged**. Smoke 508 measured 6 times, zero survivors each.
+Evidence `evidence/g11/ORCH-747/01–42`.
+
+| item | state |
+|---|---|
+| PathBank gold extractor | delivered. `bench/eval_v2/pathbank_gold.py` + `paper_gold.py`; `report.evaluate` takes `--supplement`. 15 + 13 new tests |
+| paper gold, PW701720 / PMC319880 | delivered, **NOT certified** — a human must certify exhaustiveness before any P/R/F1. Blind and hint-given drafts, contamination check clean |
+| graph kind resolution | **FIXED.** Every DNA entity was minted twice, 8 orphans on a real run. G9 proof satisfied; 5 tests |
+| interactions in the text reports | **FIXED.** Both outputs carry regulation with per-row evidence; report JSON key set moved deliberately |
+| interactions in the PWML | **FIXED but inert.** PathBank-shaped elements + visualization, Activation arrow / Inhibition T-bar from the live DB. 271 of 271 committed interactions use verb forms the exporter rejects, so nothing exports until D-open-1b |
+| prompt variants | 10 authored, all schema-identical to the baseline (86 keys, verified independently). In `docs/evaluation_v2/prompt_variants/` |
+| prompt grid | ran at 64,000 tokens. **v01 committed: 13/13 vocabulary violations; every other variant 0.** No variant produced a row without evidence. Best supported: `v03_resolution_precedence`, margin one row |
+| token budget | **production finding.** `.env` 16,000 is below this model's reasoning+content need; 64,000 (the code default) works. Closes the untested half of `PF-746-02` |
+| two variants mis-aimed | alias rows and split names originate AFTER stage 1, so `v04` and `v05` instruct a prompt that runs before the defect exists |
+| digest pins | 2 moved by the interaction work, delta documented (89 legs, 73 moved, all under interaction annotations); re-pin still owed |
+
+**Open for the product owner, detail in § 7 of the result:** raise the extraction token
+budget; map verb forms to interaction types; keep or narrow the `type="integer"` side
+effect; is transcription a reaction (`v06` vs `v07`, both demonstrated); scoring rule for
+pathways with no metabolite chemistry; classify the two curated edges the paper
+contradicts.
+
+**`ORCH-747` round 2 · 2026-10-15 late** — 16 generalizable variants (`prompt_variants_r2/`, all schema-identical, verified independently) scored against CERTIFIED gold on 2 metabolic papers plus araC; 48 draws, evidence `43-45`. **Precision 1.000 on every metabolic draw — not one false reaction in the grid — so the whole spread is recall.** No variant beat the control (`v03`); 3 tie it at worst-paper F1 0.889, 12 are worse, and `r2_06`/`r2_07` lose 7 of 9 reactions on the menaquinone paper although their author predicted them the biggest winners. All 16 scored recall 0 on araC's one gold reaction, so that paper cannot discriminate until `D-open-2` is ruled. Round 3 running: 3 draws x 6 shortlisted variants x 2 papers, evidence `46-47`. Detail in § 10 of the result.
+
+**`ORCH-747` round 3 · 2026-10-16** — 3 draws x 6 variants x 2 certified papers, 36 draws, evidence `46-47`. **Round 2 ranking did not survive: the run-to-run noise floor is ~±0.25 F1.** One prompt on one paper gave 9, then 7, then 4 matched reactions. `r2_13_model_stated_example` leads on mean F1 0.921 and is the only variant with no bad draw (worst 0.875); round 2 joint winner `v03` is third at 0.855 with a 0.615 draw. **Correction to round 2: precision is NOT 1.000 — 2 of 36 draws fell to 0.800.** Zero rows without an evidence quote across all 84 draws, which is the strongest standing result. Round 4 running: 5 draws head-to-head, `r2_13` vs control, evidence `48-49`. Detail in § 11.
+
+**`ORCH-747` round 4 · 2026-10-16** — 5 draws per arm head-to-head, `r2_13` vs control, 2 certified papers, evidence `48-49`. **No prompt is demonstrably better than the control**: difference in means 0.029 against a pooled sd of 0.135, i.e. 0.21 sd; it is a per-paper trade, not a win. § 11.5 item 1 withdrawn. **The finding that matters: pooling draws reaches recall 1.000 at precision 1.000.** Each draw misses different reactions, so the union recovers all of them — 115 pooled rows, 115 true positives, no false row. 3 draws reaches recall 1.000 in 3 of 4 arms (the weakest arm goes 0.689 -> 1.000, +0.31) versus +0.03 for the best prompt change. **Ensembling, not prompt wording, is the lever, by an order of magnitude** — a pipeline change and a product decision (3x cost per extraction). Standing result over all 104 draws: zero rows without a verbatim evidence quote. Detail in § 12.
+
+**`ORCH-747` paper write-up · 2026-10-16** — [`docs/evaluation_v2/PAPER_FINDINGS.md`](../evaluation_v2/PAPER_FINDINGS.md) is the scientific record: gold design (two golds, certification tracked, blind vs hinted with a contamination check), the measurement instrument, 114 draws across 4 rounds, the five supportable claims and the five that are NOT supportable, 7 numbered threats to validity, and a reproducibility table. The sprint result doc keeps the process history; the paper doc keeps the science.
+
+**`ORCH-750` (dispatched as 748; renumbered — another session holds 748) · 2026-10-16** — Stage-1 N-draw ensembling, OFF by default. `T2PW_EXTRACTION_DRAWS=3` or `draws=3`. New `pipeline/stage_one_ensemble.py`; `run_extraction_pipeline` returns the historical call unchanged at N=1, **proven identical to base `c9265fb8` on 4 cases**. Union dedup via `matcher.strict_key`; per-row attribution to a side file so the payload schema is untouched; a failed draw is survived. 17 focused + 69 affected + smoke 508, zero survivors. Evidence `g11/ORCH-750/01-06`. **See ORCH-751 § 2.2: the dedup key is cofactor-sensitive and inflates rows; fix before N>1 is used.**
+
+**`ORCH-749` · 2026-10-16** — interaction-type mapping extended to unambiguous verb forms. Corpus measured (I had said 271; the real figure is **336** rows across 95 committed legs): old noun-only table mapped **0**, new table maps **99** (91 Inhibition, 8 Activation), 237 correctly withheld as unsigned (binds 50, modifies 39, degrades 15). **But gate two binds:** most typed rows are still withheld as `bare_protein_endpoint`, so exportable rows go 0 → 6-11, not 0 → 99. 73 new tests, export chunk at exactly ORCH-747's 7 known failures, smoke 508, G9 satisfied. Evidence `g11/ORCH-749`.
+
+**`ORCH-751` · 2026-10-16** — scored cohort: 7 conditions x 3 draws, evidence `g11/ORCH-751`. **Corrects the ensembling headline.** Union recovered 9/9 on menaquinone (draws missed different reactions) but stayed at 4/5 on enterobactin (**all three draws missed the same one** — systematic misses do not pool away). Chlorophyll pooled 16/19/18 draws into **41 keys**, a 2.3x inflation caused by the cofactor-sensitive dedup key, invisible without gold. Only **13 of 36** curator-cited papers are fetchable (`isOpenAccess=N` → HTTP 500, no exceptions in 40+ fetches), so 6 of 7 picks are reviews and 3 pathways have no usable paper. Zero rows without evidence across all 21 draws (**125 draws cumulative**). Detail in `ORCH-751-RESULT.md`.

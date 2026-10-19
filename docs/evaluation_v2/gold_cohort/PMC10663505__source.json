@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC10663505",
+  "pmid": "37989995",
+  "doi": "10.1038/s41467-023-43419-4",
+  "citation": "Lin Y et al. PTK2B promotes TBK1 and STING oligomerization and enhances the STING-TBK1 signaling Nature communications 2023.",
+  "is_review": false,
+  "content_cell": "signalling",
+  "organism_cell": "mammalian/human",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10663505/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "0c845a774e2251a84b5df27d38575e86aaab152aaba4e7dfcbb83315a699a34f",
+  "text_sha256": "0733ebd2454a22c72ef53c4be0f7b1efd46c11a8f17dc2658aed7bd74e28f3da",
+  "text_chars": 88743,
+  "pathway_in_one_line": "The tyrosine kinase PTK2B phosphorylates TBK1 at Tyr591 to drive TBK1 oligomerisation, and separately promotes STING oligomerisation without needing its kinase activity, amplifying antiviral STING-TBK1 signalling.",
+  "scope_note": "In scope: PTK2B binding TBK1 and STING, PTK2B phosphorylating TBK1 Y591, the resulting TBK1 oligomerisation and activation, the kinase-independent STING oligomerisation (PTK2B K457R still works), cGAMP- and HSV-1-induced STING granule formation, TBK1 phosphorylating IRF3/IRF7 with their dimerisation and nuclear translocation, and the resulting interferon induction. Adjacent, restated from other work with both parties named: AKT1 phosphorylating TBK1 S510, PPM1A/PPM1B dephosphorylating TBK1 and STING, Lck/Hck/Fgr phosphorylating TBK1 Y354/Y394, SRC augmenting TBK1 autophosphorylation, GSK3-beta promoting TBK1 oligomerisation, and the DNA sensors DAI/IFI16/DDX41/cGAS. ZERO two-sided chemistry: cGAMP is described only as 'synthesized by cGAS', with no substrate named, so ATP + GTP -> cGAMP is NOT supported by this text.",
+  "estimated_two_sided_conversions": 0,
+  "selected_because": "The purest interaction paper in the set (about 154 interaction-bearing sentences, no peer-review correspondence in the XML) and it fills signalling x mammalian/human, the single most important domain absent from the current gold. It is also the clearest test of a distinction the evaluation has never measured: same-protein, different-residue edges (TBK1 Y591 vs Y354/Y394 vs S510) and activating vs inhibiting sign on the same pair. Chosen over PMC6529218 (GPCR/PKA/Raptor/mTORC1, eLife) specifically because that paper's full text carries 18,662 characters of peer-review correspondence."
+}

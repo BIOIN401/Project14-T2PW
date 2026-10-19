@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC13284371",
+  "pmid": "42014513",
+  "doi": "10.1038/s42003-026-10090-6",
+  "citation": "Chakraborty A et al. The transcription factor Rlm1 couples the MAPK Slt2/ERK1 pathway to the IRE1-driven unfolded protein response Communications biology 2026.",
+  "is_review": false,
+  "content_cell": "signalling",
+  "organism_cell": "fungal",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13284371/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "3560036444c03ea60a1af8da0f7d493db6c928e4f4b7878c1c0feeacb906a768",
+  "text_sha256": "df37124e110e1b9c4148d84edc3e4120622201da2ff12c95668c7efadb097d87",
+  "text_chars": 77702,
+  "pathway_in_one_line": "In yeast ER stress, the cell-wall-integrity MAPK Slt2 is activated independently of IRE1 and acts through the transcription factor Rlm1 to feed into the IRE1/Hac1 unfolded protein response.",
+  "scope_note": "In scope: the Bck1 -> Mkk1/Mkk2 -> Slt2 three-tier cascade, activation-loop phosphorylation of Slt2 at T190/Y192 under DTT and tunicamycin, IRE1 autophosphorylation at S841/T844, HAC1 mRNA splicing and Hac1 protein accumulation, Rlm1 acting downstream of Slt2, and the negative genetic interaction between the slt2 and ire1 pathways. Adjacent and voluminous: the Introduction restates the generic mammalian MAP3K -> MAP2K -> MAPK architecture with named pairs (Raf -> MEK1/2 -> ERK1/2, MEKK2/3 -> MEK5 -> BMK1, MKK4/7 -> JNK, MKK3/6 -> p38) and the three UPR sensors IRE1/PERK/ATF6. Those are not this organism and not measured here; a drafter that books them inflates the pathway with textbook mammalian signalling.",
+  "estimated_two_sided_conversions": 0,
+  "selected_because": "Fills signalling x fungal with a positive-result paper (about 105 interaction-bearing sentences) in which the measured cascade is short and ordered, so interaction recall is checkable. Deliberately chosen over PMC12691644 (Candida albicans Efg1 / protein kinase A, 45,797 chars), which is a well-executed NEGATIVE-result paper: its gold would be almost entirely refuted claims, which is interesting but a poor first drafting target. The large mammalian-signalling preamble is the known hazard and is the reason this is one of the two picks I am least confident about."
+}

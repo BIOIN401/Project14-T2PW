@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC12184417",
+  "pmid": "40504152",
+  "doi": "10.1073/pnas.2424409122",
+  "citation": "Rodriguez MM et al. CDADC1 is a vertebrate-specific dCTP deaminase that metabolizes gemcitabine and decitabine to prevent cellular toxicity Proceedings of the National Academy of Sciences of the United States of America 2025.",
+  "is_review": false,
+  "content_cell": "metabolic chemistry",
+  "organism_cell": "mammalian/human",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12184417/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "f5e3170ca4deb1e7a231c88178c4553ba4cc2b092142d905319c1fd29b7075a7",
+  "text_sha256": "25b9ee29abb670c0d653b9f87099a655a0adc27b2d09f2d9262b6ba1bde2d3a4",
+  "text_chars": 59524,
+  "pathway_in_one_line": "CDADC1 is identified as the first eukaryotic dCTP deaminase, converting dCTP to dUTP and likewise deaminating the triphosphates of gemcitabine and decitabine so that dUTPase can clear them before they reach DNA.",
+  "scope_note": "In scope: dCTP -> dUTP (CDADC1), dFdCTP -> dFdUTP and 5-aza-dCTP -> 5-aza-dUTP (CDADC1), dUTP -> dUMP and dFdUTP -> dFdUMP (DUT), dCMP -> dUMP (DCTD), dUMP -> dTMP (TYMS) and dTMP -> dTTP, and dFdC -> dFdU (CDA). In scope as explicit NEGATIVES, and the most valuable part of this paper for a gold: CDADC1 does not deaminate 5-methyl-dCTP, cytidine, deoxycytidine, dCMP or DNA, and only weakly deaminates cytarabine triphosphate. Adjacent: the E. coli dcd comparison, SAMHD1/UNG clearance routes, and all of the cell-growth and xenograft phenotyping.",
+  "estimated_two_sided_conversions": 8,
+  "selected_because": "Fills metabolic chemistry x mammalian/human with a paper whose chemistry is pure, enzymological and almost entirely one substrate class, so a human reviewer can certify exhaustiveness quickly. The nucleotide names (dCTP vs dCMP vs dUTP vs dFdCTP) are exactly the congener trap the strict matcher is built to punish, which makes this paper a good stress test of the no-containment rule rather than just another positive case."
+}

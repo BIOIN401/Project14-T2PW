@@ -1,0 +1,50 @@
+BASE (HEAD:src/t2pw/pipeline/draft_graph.py)
+{
+ "kinds": {
+  "compound": 4,
+  "protein": 1,
+  "protein_complex": 1,
+  "nucleic_acid": 2,
+  "element_collection": 1,
+  "reaction": 1,
+  "interaction": 3
+ },
+ "duplicated_across_kinds": {
+  "A site": [
+   "compound",
+   "nucleic_acid"
+  ],
+  "Pc promoter": [
+   "compound",
+   "nucleic_acid"
+  ],
+  "ara regulatory elements": [
+   "compound",
+   "element_collection"
+  ]
+ },
+ "orphan_entity_nodes": [
+  "A site",
+  "Pc promoter",
+  "ara regulatory elements"
+ ]
+}
+
+TIP (working tree)
+{
+ "kinds": {
+  "protein_complex": 1,
+  "protein": 1,
+  "compound": 1,
+  "nucleic_acid": 2,
+  "element_collection": 1,
+  "reaction": 1,
+  "interaction": 3
+ },
+ "duplicated_across_kinds": {},
+ "orphan_entity_nodes": []
+}
+
+base fails behaviourally : True
+tip passes               : True
+VERDICT: G9 satisfied -- the base mis-types and orphans these entities, the tip does not.

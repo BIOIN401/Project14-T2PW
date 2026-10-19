@@ -1,0 +1,290 @@
+{
+  "schema": "t2pw.eval_v2.gold_supplement_draft/1",
+  "drafter": {
+    "prompt": "pathbank_gold.draft_case",
+    "model": "none (database extract)",
+    "date": "2026-10-13",
+    "mode": "pathbank_structural"
+  },
+  "case_id": null,
+  "not_gold": "Quotes are empty by construction: these statements come from the lab's PathBank record, not from any paper. gold.load_supplement refuses this file. Use it only as the scope hint for paper_gold_drafter_v1.",
+  "pathbank": {
+    "accession": "PW701720",
+    "pathway_id": 703792,
+    "name": "Ara operon Inactivation (Autoregulation of AraC)",
+    "subject": "Signaling",
+    "content_sha256": "efd8c1585ce00fdcd455732a80e7f833b78fe842cd75f614cf535d1e4d791c68",
+    "updated_at": "2025-06-11 21:32:18",
+    "references": [
+      {
+        "pubmed_id": "20491933",
+        "citation": "Schleif R: AraC protein, regulation of the l-arabinose operon in Escherichia coli, and the light switch mechanism of AraC action. FEMS Microbiol Rev. 2010 Sep;34(5):779-96. doi: 10.1111/j.1574-6976.2010.00226.x. Epub 2010 Apr 8."
+      },
+      {
+        "pubmed_id": null,
+        "citation": "Schleif R: Regulation of the L-arabinose operon of Escherichia coli. Trends in Genetics. 2000; 16(12):559-565."
+      }
+    ]
+  },
+  "case": {
+    "supported_reactions_complete": false,
+    "species": "Escherichia coli",
+    "scope": "",
+    "source": {},
+    "audit": "",
+    "reactions": [
+      {
+        "id": "R1",
+        "pathbank_id": "PW_R1966965",
+        "process_type": "Reaction",
+        "label": "araC ->  Arabinose operon regulatory protein",
+        "inputs": [
+          {
+            "name": "araC",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000270"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "outputs": [
+          {
+            "name": " Arabinose operon regulatory protein",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwp_id": "PW_P004116"
+            },
+            "entity_kind": "ProteinComplex"
+          }
+        ],
+        "enzyme": null,
+        "reversible": false,
+        "compartment": "Cytosol",
+        "quote": "",
+        "supporting_quotes": [],
+        "evidence_required": "A PathBank record is not evidence about a paper. A human or the paper-gold drafter must supply a verbatim quote from the pinned full text before this row is gold."
+      }
+    ],
+    "off_pathway_reactions": [],
+    "summary_statements": [],
+    "excluded_statements": [],
+    "interactions": [
+      {
+        "id": "I1",
+        "pathbank_id": "PW_I016130",
+        "effect": "activation",
+        "source": [
+          {
+            "name": " Arabinose operon regulatory protein",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwp_id": "PW_P004116"
+            },
+            "entity_kind": "ProteinComplex"
+          }
+        ],
+        "target": [
+          {
+            "name": "araO1",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000274"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "compartment": "Cytosol",
+        "quote": ""
+      },
+      {
+        "id": "I2",
+        "pathbank_id": "PW_I016132",
+        "effect": "activation",
+        "source": [
+          {
+            "name": "araO1",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000274"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "target": [
+          {
+            "name": "Promoter araC",
+            "aliases": [
+              "PA"
+            ],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000272"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "compartment": "Cytosol",
+        "quote": ""
+      },
+      {
+        "id": "I3",
+        "pathbank_id": "PW_I016133",
+        "effect": "activation",
+        "source": [
+          {
+            "name": "araO1",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000274"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "target": [
+          {
+            "name": "CAP",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000275"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "compartment": "Cytosol",
+        "quote": ""
+      },
+      {
+        "id": "I4",
+        "pathbank_id": "PW_I016134",
+        "effect": "activation",
+        "source": [
+          {
+            "name": "CAP",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000275"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "target": [
+          {
+            "name": "Ara inducer gene",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000925"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "compartment": "Cytosol",
+        "quote": ""
+      },
+      {
+        "id": "I5",
+        "pathbank_id": "PW_I016135",
+        "effect": "activation",
+        "source": [
+          {
+            "name": "Promoter araC",
+            "aliases": [
+              "PA"
+            ],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000272"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "target": [
+          {
+            "name": "araC",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000270"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "compartment": "Cytosol",
+        "quote": ""
+      },
+      {
+        "id": "I6",
+        "pathbank_id": "PW_I016136",
+        "effect": "inhibition",
+        "source": [
+          {
+            "name": " Arabinose operon regulatory protein",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwp_id": "PW_P004116"
+            },
+            "entity_kind": "ProteinComplex"
+          }
+        ],
+        "target": [
+          {
+            "name": "DNA-directed RNA polymerase",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwp_id": "PW_P368702"
+            },
+            "entity_kind": "ProteinComplex"
+          }
+        ],
+        "compartment": "Cytosol",
+        "quote": ""
+      },
+      {
+        "id": "I7",
+        "pathbank_id": "PW_I016137",
+        "effect": "activation",
+        "source": [
+          {
+            "name": "DNA-directed RNA polymerase",
+            "aliases": [],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwp_id": "PW_P368702"
+            },
+            "entity_kind": "ProteinComplex"
+          }
+        ],
+        "target": [
+          {
+            "name": "Promoter araC",
+            "aliases": [
+              "PA"
+            ],
+            "role": "defining",
+            "pathbank_identifiers": {
+              "pwna_id": "PW_NA000272"
+            },
+            "entity_kind": "NucleicAcid"
+          }
+        ],
+        "compartment": "Cytosol",
+        "quote": ""
+      }
+    ],
+    "transports": []
+  },
+  "pathbank_alignment": [],
+  "paper_only": [],
+  "uncertain": []
+}

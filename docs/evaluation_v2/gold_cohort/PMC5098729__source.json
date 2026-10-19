@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC5098729",
+  "pmid": "27820863",
+  "doi": "10.1371/journal.ppat.1006010",
+  "citation": "Leija C et al. Pyrimidine Salvage Enzymes Are Essential for De Novo Biosynthesis of Deoxypyrimidine Nucleotides in Trypanosoma brucei PLoS pathogens 2016.",
+  "is_review": false,
+  "content_cell": "metabolic chemistry",
+  "organism_cell": "other (protozoan parasite)",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5098729/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "1ece6da6e01216fe656be92e84c3c6bcdede2a6fb2f1c73851880e3ca00b53a9",
+  "text_sha256": "f8dbb8159cbf8103d077273ec62d756e5b4090cbbb11b93b51094e8cf20bc5e2",
+  "text_chars": 109438,
+  "pathway_in_one_line": "The deoxypyrimidine interconversion cycle in Trypanosoma brucei, in which thymidine kinase, cytidine deaminase and a newly identified HD-domain 5'-nucleotidase together balance the dCTP, dUTP and dTTP pools.",
+  "scope_note": "In scope: deoxycytidine -> deoxyuridine (CDA), thymidine -> dTMP and deoxyuridine -> dUMP (TK), dCMP -> deoxycytidine / dTMP -> thymidine / dUMP -> deoxyuridine (the HD-domain 5'-nucleotidase identified here), dUMP -> dTMP (thymidylate synthase with 5,10-methylene-THF), uridine -> uracil (UPP), and the heterologous rescue conversions dCMP -> dUMP (human DCTD) and dCTP -> dUTP. In scope as an explicit NEGATIVE: uridine phosphorylase does NOT convert uracil to deoxyuridine, which is the paper's argument for a missing enzyme. Adjacent: the six de novo pyrimidine biosynthesis steps, which the text names only by enzyme and EC number with the substrates in the Fig 1 scheme - a drafter must not book them as two-sided. Also adjacent: the transamination / methionine / acetyl-ornithine metabolomics digressions in the Discussion.",
+  "estimated_two_sided_conversions": 9,
+  "selected_because": "The densest set of named two-sided conversions in the set, in a parasite, with a genuine negative result and a genuine missing-enzyme inference to test the review_required path. Longest paper chosen (109k chars) - accepted because the chemistry is concentrated in Fig 1 plus three Results sections and the rest is growth-rescue and metabolomics a drafter can scope out. This is the one paper in the set that duplicates an already-filled grid cell (metabolic chemistry x other); it was kept over a weaker paper in an empty cell."
+}

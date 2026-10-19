@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC9700705",
+  "pmid": "36434094",
+  "doi": "10.1038/s42003-022-04247-2",
+  "citation": "Sato T et al. A non-carboxylating pentose bisphosphate pathway in halophilic archaea Communications biology 2022.",
+  "is_review": false,
+  "content_cell": "metabolic chemistry",
+  "organism_cell": "other (archaea)",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9700705/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "1dfd2bc51c800a4def12e8eafbeaafc4d0dd1278f0259c4dabba9bb959bf272a",
+  "text_sha256": "e2cb15ba95c624c30859a9066d35367bc88551997f1a8dee5aca3abc601dd219",
+  "text_chars": 80198,
+  "pathway_in_one_line": "A newly identified haloarchaeal nucleoside degradation route that converts the ribose moiety of guanosine to dihydroxyacetone phosphate and ethylene glycol without any carboxylation step.",
+  "scope_note": "In scope: guanosine + phosphate -> ribose-1-phosphate + guanine (guanosine phosphorylase), R1P + ATP -> ribose-1,5-bisphosphate (ATP-dependent R1P kinase), R15P -> ribulose-1,5-bisphosphate (R15P isomerase), RuBP -> ribulose-1-phosphate (the previously unknown RuBP phosphatase), Ru1P -> DHAP + glycolaldehyde (Ru1P aldolase), and glycolaldehyde + NADH -> ethylene glycol. Adjacent and explicitly contrasted: the Thermococcus kodakarensis route where RuBP is carboxylated to 3-phosphoglycerate by Rubisco, the non-oxidative pentose phosphate pathway, the ribulose monophosphate pathway, and the R5P -> R1P -> R15P -> PRPP proposal from other work. Assay-reporter reactions (pyruvate kinase, lactate dehydrogenase, glycerol-3-phosphate dehydrogenase coupling) are off-pathway.",
+  "estimated_two_sided_conversions": 7,
+  "selected_because": "A whole novel pathway established enzyme by enzyme, every intermediate named in words, in a domain of life the gold has never seen. The deliberate contrast with the carboxylating Rubisco route gives a built-in near-miss test: a correct extraction must keep RuBP -> Ru1P and must not substitute RuBP -> 3-PGA."
+}

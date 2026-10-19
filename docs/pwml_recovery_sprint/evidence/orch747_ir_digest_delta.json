@@ -1,0 +1,2288 @@
+{
+ "base_rev": "HEAD",
+ "base_sha": "e4348aafde57e2f30fb20e925786a1aafe45d005",
+ "base_t2pw_file": "C:\\Users\\Angad\\AppData\\Local\\Temp\\orch747_delta_base__br2c617\\src\\t2pw\\__init__.py",
+ "tip_t2pw_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\src\\t2pw\\__init__.py",
+ "configuration": "run_prefreeze_resolution + build_pwml_ir, strict_db=True, db_resolver=_DownDb(), name_index=None (the R3 test's)",
+ "legs": 89,
+ "legs_moved": 73,
+ "interaction_outcomes_on_tip": {
+  "untyped_interaction": 265
+ },
+ "owned_prefixes": [
+  "/ir/processes/interactions/[]/key",
+  "/ir/processes/interactions/[]/export_status",
+  "/ir/processes/interactions/[]/withheld",
+  "/ir/processes/interactions/[]/interaction_type",
+  "/ir/processes/interactions/[]/left/key",
+  "/ir/processes/interactions/[]/right/key",
+  "/ir/locations",
+  "/ir/edges",
+  "/ir/process_visualizations",
+  "/ir/protein_complex_visualizations",
+  "/report/warnings",
+  "/report/counts/locations",
+  "/report/counts/edges",
+  "/report/counts/process_visualizations",
+  "/report/ir_validation/counts"
+ ],
+ "paths_outside_owned_prefixes": {},
+ "confined_to_interaction_export": true,
+ "per_leg": {
+  "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "32bf7893e62fcb8ac5799cbf7d910a8076ff51ca63693f66262c9f1f7b1b8dc2",
+   "tip_ir_sha256": "da59d8f75eed399d4b2fef9563dbe36b07bbd0aed7d089e05cba306e2d8aad8a",
+   "base_report_sha256": "026c8a8e6b69932ef78071186acf316fa3a4939c7f201980aa97b8020516e787",
+   "tip_report_sha256": "c9f5dba6e2ccf5a973a80303127ca9ea909a4291599d020227df982a380c1860",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": {
+   "base": "build:DuplicateNamedRowError:PWML_IR_DUPLICATE_NAMED_ROW: 2 rows at /entities/compounds share the PWML exporter name key 'lipid iv a': 'lipid IV_A' (key=cmp_6, pointer=/entities/compounds/5) and 'lipid IV A' (key=<unassigned>, pointer=/entities/compounds/23). The PWML exporter runs after the canonical freeze, so it may not choose between them, drop one, or merge them (PRODUCT_CONTRACT section 5, merge rule 8). Dropping one silently repoints every reference to the survivor, which carries different identifiers. Resolve the collision in the payload before the freeze -- see t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution.",
+   "tip": "build:DuplicateNamedRowError:PWML_IR_DUPLICATE_NAMED_ROW: 2 rows at /entities/compounds share the PWML exporter name key 'lipid iv a': 'lipid IV_A' (key=cmp_6, pointer=/entities/compounds/5) and 'lipid IV A' (key=<unassigned>, pointer=/entities/compounds/23). The PWML exporter runs after the canonical freeze, so it may not choose between them, drop one, or merge them (PRODUCT_CONTRACT section 5, merge rule 8). Dropping one silently repoints every reference to the survivor, which carries different identifiers. Resolve the collision in the payload before the freeze -- see t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution.",
+   "same_stop": true
+  },
+  "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "ac3e92e7b36d5e326aa0d72f36f43bfd20d91c0ab4e405dcea6f9352338a1e15",
+   "tip_ir_sha256": "a57f547a7488f47b988791e416eb987f392e462de9fa58b5dc993c04b866c14d",
+   "base_report_sha256": "9fc6158cc36df5311f9970dba2d54a07a6ecc9f398f02aa514eda552d85b91e9",
+   "tip_report_sha256": "38e673dc2d081d9d0cfacd5ea5d37da35ee1f00c723976c05b5df0969d0a9018",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 8,
+   "by_outcome": {
+    "untyped_interaction": 8
+   },
+   "base_ir_sha256": "1beabdfd14098366840dd3073d27c4a97a0db63a2c04dc732126a377e4ae5c7b",
+   "tip_ir_sha256": "d253d9ac6235786b6300b6ce04729edbf9e5dada5decab9319d29eb3eb94a60a",
+   "base_report_sha256": "c99b32e26264ca8c7763e7f577e7d9895d9b8c55b636492be7ea7170822b0c16",
+   "tip_report_sha256": "0f0eafd61ed42114d8567e47a2e894614fed2410cdcff20474e826fbc95c57b8",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     8
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "db6191dea61071227420e91d942ba949ab9ba27ad6312058fae16bd3b31a8038",
+   "tip_ir_sha256": "6167607248aaa3f9bb499225c6b2f994bb5daae7d28bad92515c658b4b5fbf82",
+   "base_report_sha256": "51beb36b55e48b45047a7128f53bab74632c4cf6614990b2609c4d2f3963c2e2",
+   "tip_report_sha256": "355dfce5d04775c8b649ac6859fdc468070a006bdaa4658c84cbe239b720a7dc",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     4
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12180156/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "18ed403257fbc1c894da5ba2b1ec2a53692895896967870f724057f41894320f",
+   "tip_ir_sha256": "18ed403257fbc1c894da5ba2b1ec2a53692895896967870f724057f41894320f",
+   "base_report_sha256": "95152882bd9a779698b400d9db66a3d7ea153d23ffba6b16061cc0593428027a",
+   "tip_report_sha256": "95152882bd9a779698b400d9db66a3d7ea153d23ffba6b16061cc0593428027a",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "d2ec6c4647b17f0f9b043fbafa9ade475a68c1f4c3668ef570e713ef11cd91e9",
+   "tip_ir_sha256": "acffb9e271f9646f8d33ea5bdb0566d2237c2217175fd2898a6bd4959d38e595",
+   "base_report_sha256": "06fc66018b73be7136d9a6467d33d6ed450d52ea2ab3300186c0730a64e5c2d4",
+   "tip_report_sha256": "36f2439c254ec63385b227d465ee0c861c907d382eca6d43cd2ca949af80b419",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json": {
+   "interactions": 5,
+   "by_outcome": {
+    "untyped_interaction": 5
+   },
+   "base_ir_sha256": "97babae99d75c6c5f64152512404136cafcccc5829206418970c7722986e9c43",
+   "tip_ir_sha256": "bb3b841066b07159c8e670db02680ffdfcd6889b8eec8b14c1f0ed8e9bb3b808",
+   "base_report_sha256": "08fd5a53d20f678f62e8f8249b66de3e812ad35f22586dfcc2b12c90f3c6d213",
+   "tip_report_sha256": "192f81ae9bf86705de7f65d2bb0714b4d3af50349f7481473ed489b7534ac3d0",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     5
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json": {
+   "interactions": 7,
+   "by_outcome": {
+    "untyped_interaction": 7
+   },
+   "base_ir_sha256": "e96f6e1eb4e579d209b5dcec1778880756d6a12a07e71059a6710692447ab14a",
+   "tip_ir_sha256": "671ca3edcd12f14d70ac4cd8e7718392c128ce9f010bbe165e4a5194b6a528bb",
+   "base_report_sha256": "368552fb5cbe146958abd46f5057dd397c6991ad6bef758a9f83de0e73b67ffb",
+   "tip_report_sha256": "b7be660a71943436a3baa473b774da1b486fd0f4f0e838664c3caf47123ccf95",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     7
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 8,
+   "by_outcome": {
+    "untyped_interaction": 8
+   },
+   "base_ir_sha256": "7e7090ef1c75547d28ce98edb4eeeabd63adde0c5f547a43faf686af9b17880c",
+   "tip_ir_sha256": "64723fd437973e8cd7e5ea51d5117fe85514939f96fe40d280e6aa52694039ae",
+   "base_report_sha256": "8b728dbb2d2215fa5ae60f2a6b953f2da164428dd3c7ce58fd7c36b88ccc98ff",
+   "tip_report_sha256": "166101babe0f5945f0eded9ab568f1bf426770382e919be649618187856ae5dc",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     8
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12782028/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "417cdb276299dcbc2c834035b063fb3ce745b7e481c8f5db6b79d58234b454e1",
+   "tip_ir_sha256": "417cdb276299dcbc2c834035b063fb3ce745b7e481c8f5db6b79d58234b454e1",
+   "base_report_sha256": "20a4c3d55350da856bfb48408113b648ef0dd89af1d6d5b068fbcd9b917c1f6a",
+   "tip_report_sha256": "20a4c3d55350da856bfb48408113b648ef0dd89af1d6d5b068fbcd9b917c1f6a",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "871d12a02a7e23be53a1fccfced415df7db3dd874e3498805ff0bdfe8c247064",
+   "tip_ir_sha256": "e5f0bd8a6e9d275dceead0bb2df20d82664c48f604c70212e8d8982986d3dc60",
+   "base_report_sha256": "e7a62ebf4a859fe15343d80d64af43f90889e03945ebe9a07285d44bef11d49a",
+   "tip_report_sha256": "55fb053be47ca4ef1b9527b3d5147eee0e2d37dc5a9f4cdae147c6d6f502064c",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "44c31f0115c032e628b3641d2af4ba80663fc618724f7664b4c65cf4d3eee116",
+   "tip_ir_sha256": "90bf243b54b0acfae64cb09d03655d74450395c585938fa28f7c8c9ed6c18c50",
+   "base_report_sha256": "207f0d9ab34e46fb7d772e51b5a3fb874c2c1e055fba54dda7dea5cb6db12e09",
+   "tip_report_sha256": "31178649fabeea0d26ed58692f8e56d6b9b8fbc3adf699e94465ce2e5b1700d5",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     4
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC13231680/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "76163046f97df48b4dc82396f0aa6a72d57cb85c84fcf109cdea967faba4b64c",
+   "tip_ir_sha256": "06fa21f779f02305ef13091fe67edfca646cff86b5055d9d247b559d070a8456",
+   "base_report_sha256": "44cf64e483ffe6fc124372457c8cc3cc7aa95c9233b8c80e9f5aa5c85d330803",
+   "tip_report_sha256": "1a61f0d18366500c51a1074b5b15839007bd9781e3a3e11d8e9606d1e75e8eee",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1148/papers/PMC13231680/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "a35e29151c79bca0201b9de82428e8e77ba9f67ee16191603119518fc331bf57",
+   "tip_ir_sha256": "eaf3ebe3a63d61858ebe1eed343be333a010b503e1111529598d5760a740ffc9",
+   "base_report_sha256": "6ef0c16b5609cb7de447efae478c3c081bf517463cb559e8b82a2dcf656cc084",
+   "tip_report_sha256": "9c1a8205b616381c8451d11c41c4566f3f576ef22c54774f86f04117530cdf5d",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "3b54592b05d108ee1302e770d8782219051234e3c049f612906b4003f26c8942",
+   "tip_ir_sha256": "5d0d44178b215da3a19400197488926a6098910021a2e5592b98909d5a87f522",
+   "base_report_sha256": "44e82f26a8661f0a1d9031b99f26c082e8f67e35d478e5ba17311c4921618052",
+   "tip_report_sha256": "b50d6f2d02ad509b5e150b3625170089509250d1f1bd12a1fd95dbd6b9ac53ea",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "34c85c38e95ac64bf1b5bfe94e6fcdb1e086dae19f70274152c4326d35977f5f",
+   "tip_ir_sha256": "ae3d9afa39258c776ffed823eb7ae378655ee8f3b659120e1612e2cbe09b159b",
+   "base_report_sha256": "b6e02976aea7100612bd0255dc9b89be1938a38ebafa18ea7eb3301defbe4d5c",
+   "tip_report_sha256": "ee9f6f19f8723802af2f51d808d489c5ac067bd76c01d87841244091c84131af",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "0447b9aecd6435f5e9fb75aea6067b9862264adf010113615eb40c5a00de3ee0",
+   "tip_ir_sha256": "b1051617d3da52e5a5e42a0407a0a07e402f1410b0cb2858a7b5c2a30cf5e3d7",
+   "base_report_sha256": "ceef07289718d1b4949827dcb359bfc1ad940c4ae687a757eb9560443bcb3110",
+   "tip_report_sha256": "e26021a71fcf4af942d55c66000f828b4cf391e912bc1485d671bbd4d2dcbb9c",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "2864cb13d3180ed95eb4bf4ab1adaf921bd38eb210bd59a3b6126b416a645b73",
+   "tip_ir_sha256": "78db1ae71161575af72a16ae6cc37a969a73e08b564bfaba2a66accfee7d8650",
+   "base_report_sha256": "9e56afc97880462bb3a0f418feb89502801e2e09aeae3e13dd9e9396381dd46c",
+   "tip_report_sha256": "533e334d6880000e3d7126225896a9135ae529dcc6806c8d573b8fbfd8314283",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 6,
+   "by_outcome": {
+    "untyped_interaction": 6
+   },
+   "base_ir_sha256": "69f28e66cd0922c79335114d0b3e5284fc04ff20456a5a377bc427e2813be2ed",
+   "tip_ir_sha256": "c0743d9d7201a30478961dd4fd8da15abf863585a4793562d443133bb2bdf9c1",
+   "base_report_sha256": "e030c174bf9102ddefdf936867dad11665e49e2883fb46c6259905a2758e0b36",
+   "tip_report_sha256": "5637ac290b1be10824f4583659dfaa6f7ed220749c356490122395d947d60f8c",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     6
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 13,
+   "by_outcome": {
+    "untyped_interaction": 13
+   },
+   "base_ir_sha256": "d9d2a80657899f30d5bd172d9f6d4102c5f3ee9a1404405eca462ecb4265073c",
+   "tip_ir_sha256": "377c0806eabc67f75a7897238b1309e5997a3573dacc2787f7c86abfd9be4cdd",
+   "base_report_sha256": "2d492563235163e9b3470e8e5081793e8a45b781585cc852ac00e1e0e83d7940",
+   "tip_report_sha256": "7ce9a35badb9843deae6e99c3234c896fd332bb961f63f7b26c7f21d7789d568",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     13
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "e9e6d54b5239b70b9de10d88fac92058edf5eb3135acc60c9eef2f2864aa5ebd",
+   "tip_ir_sha256": "112d57e3d2db2f3efc39fb9c619ed03f34afe418c770c6ff0c1cb6b144ccfd7a",
+   "base_report_sha256": "0945cb69ec05d5f0450f932142d0514026139e067794ae1580ca7bae8e61214e",
+   "tip_report_sha256": "f56ad0c0e547b8266f0848e3fe173a881586333103588fe2e90f995dec44be83",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "f982a6d3630380a1de7470e710053e48c4b2ecc1cb84a6185732ad7a5ef82825",
+   "tip_ir_sha256": "1169a1cb790b49e11c16504c2161539d1e313c031b64727e4f275434200155e4",
+   "base_report_sha256": "cdd7579c53302f9a7a9cfd273322a72b302f1a7a52b8f86dd798e09903d9041b",
+   "tip_report_sha256": "6b92952d9eb48a13946576e76290db793516fb4b519457b81682eb6a515fbba2",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "1b31ae799e6e0d29b2249b8105d0ecd290f668052eca3563e8b8079b8645bb5e",
+   "tip_ir_sha256": "06c5e816af39bc3e1ba3f1f9a934cf90395a3676afe1cf78f12fed86637a690c",
+   "base_report_sha256": "9338d221b8694e651a2d17e6f7a6b191bc9135e1087e4965d222bbc54b196d07",
+   "tip_report_sha256": "40a2a8c8da3809aaf38c0d4d937e45324097b571489a055e48cbb4ab35e2aa87",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 6,
+   "by_outcome": {
+    "untyped_interaction": 6
+   },
+   "base_ir_sha256": "258430ceeeb52a963a48153399f2ad2132dc0e365162861152582535989af1de",
+   "tip_ir_sha256": "1181abd3e4e2083342aaa590b3eb02136a6ed5b43a0f072296e4f38ab105cfb3",
+   "base_report_sha256": "01e5a88dc41a30f8faeca2c9b5075b22d4136d32de8443e58272bbc4f3e42b25",
+   "tip_report_sha256": "a3f2f186bc44841e5c7ccfa01c00a6f9491ae3d0e9d8fd0b4a097f111a270a81",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     6
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": {
+   "interactions": 10,
+   "by_outcome": {
+    "untyped_interaction": 10
+   },
+   "base_ir_sha256": "0d7de3a816bb652e6e8c0b83ebcfee0c82c432a0526dc7cd250bc15e5b736779",
+   "tip_ir_sha256": "8f9c0db0fc7c453e2394c79ce5d5270e5cae2773a3a0041bf4194ac06ea23673",
+   "base_report_sha256": "5c306c4d12de8a739067cf5a43a0465a9b32dbe7624c8fff4ca2004c2396a850",
+   "tip_report_sha256": "9ed058247d6d6c1024a0627892543e02618c21dc7769f9a17b470c1d82b4810e",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     10
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": {
+   "interactions": 5,
+   "by_outcome": {
+    "untyped_interaction": 5
+   },
+   "base_ir_sha256": "827894803df3f8c440da9de7a088644c94666dbb4fd1247b2d9d779cbcc0dea2",
+   "tip_ir_sha256": "2d63f4756428efd5370b0841f57f9cdeccb29f4059dc69d58b0c7671cf51d590",
+   "base_report_sha256": "47f513400e7db7d492c87387cabf59b2132a1ef7e0173cbf7f5bb2797f62c7d5",
+   "tip_report_sha256": "711f5eb70f3cb0fe24f71e837b00b557c8d5f7a14420dd087f4cdc67d85ee22a",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     5
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 8,
+   "by_outcome": {
+    "untyped_interaction": 8
+   },
+   "base_ir_sha256": "a33a598c6633a359ed6290b5ac8a77959e17689c32af263f160fdb3029b9c17e",
+   "tip_ir_sha256": "abc19312a67db78e5f3af7c8d6a3c190c7121e7091bc2a524f71e35c24e67302",
+   "base_report_sha256": "52cdef87217b1b2420d462667657917081c52cfeac56aa8dc47475ebb0a3de9d",
+   "tip_report_sha256": "99de8e65fb9744d6091ed8bbac8f45d9bfdad4a71bccb86a7c8f091f2d766e9f",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     8
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 5,
+   "by_outcome": {
+    "untyped_interaction": 5
+   },
+   "base_ir_sha256": "8c99eb8f55f0fd4dd08c77fb1b650431cdb03987c5fbbcdc6f93afa5cf5dc753",
+   "tip_ir_sha256": "f719d044971cf0c53f580079fc7f426134482da218b79f6a4c85ca4fc5f6422f",
+   "base_report_sha256": "773cd30f88c93ae2dc0ab2f204b2cb9a2004a8f96ee2a5985f8fccc14e65d69b",
+   "tip_report_sha256": "135267bf262fd0393bcdb80260f83b90712d5ba1f11d8bd45c2e25688376268c",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     5
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "7991cab97e9b688d4a6725a88ada9a2931dfad1d49fe9276ed7201d908b8981c",
+   "tip_ir_sha256": "7991cab97e9b688d4a6725a88ada9a2931dfad1d49fe9276ed7201d908b8981c",
+   "base_report_sha256": "c31864f365f6f2a1730033aa711dd460bee260f748285fe528068e66d11379b1",
+   "tip_report_sha256": "c31864f365f6f2a1730033aa711dd460bee260f748285fe528068e66d11379b1",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 6,
+   "by_outcome": {
+    "untyped_interaction": 6
+   },
+   "base_ir_sha256": "b2eac5a601854efe534cf09b307cb8509f79cffea7f41752d71c90a3f09826ca",
+   "tip_ir_sha256": "792347f449f6f4807eabfc86219bd3bfb85e90d3959e193daea4d8bbf94a18bb",
+   "base_report_sha256": "f8b1ce0c39928a1483d6cc1c26bdc8abf31d3b5381ffb39d0e7833f7188ab877",
+   "tip_report_sha256": "a244d5a26cda2e7ec61f48a50a0e57f6ffbce7e1b8c366238f46671c99066408",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     6
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "bac9b11a71207a7236bf53d1bb1e3a55cd9c9085758c76cead2afda7294bdc51",
+   "tip_ir_sha256": "cef2cba163e7bbf1e7dda5c7872ee0c8220a1ccacfce8bc77d8e7bc9156dc981",
+   "base_report_sha256": "75a5b6174e68fa0915e15d8f910c341a9ef87b784a09e8e017bf336420f951e9",
+   "tip_report_sha256": "6a1624664890d68a28edd73772b1138ae115bb2b9136450e62ee212c3350c8bf",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "347da1cfa5c383aa3e695db66e4ff60b9614c7241fe3bd930a62c0a0973e6894",
+   "tip_ir_sha256": "aafe11c0030d15296b7ffb711ca3b455a392825e36af2511ae2a26aa69a1829e",
+   "base_report_sha256": "ea8fcbf4d7b269a8439ea6357e33c5fb8a0b66527ab854864a03a6baa846639a",
+   "tip_report_sha256": "c51f862219a3dee8e46db8e2e4054851ed67ef61eb9bd5e810667d0f91bd2910",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_1822/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "cd6c8e425a822f032bf2a1795fd9a2c8601f659261dde8d4e0126a6a080c88c8",
+   "tip_ir_sha256": "cd6c8e425a822f032bf2a1795fd9a2c8601f659261dde8d4e0126a6a080c88c8",
+   "base_report_sha256": "eef02879c16caeabb5c98d5f96799a719391d36f071d6f6dbbf7068d04a1eba1",
+   "tip_report_sha256": "eef02879c16caeabb5c98d5f96799a719391d36f071d6f6dbbf7068d04a1eba1",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_1822/papers/PMC12782028/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "e1ec19ee6f101994c657e58af2c43e27dcf67be2d8dc7c7363b9cdf477e52ca3",
+   "tip_ir_sha256": "e1ec19ee6f101994c657e58af2c43e27dcf67be2d8dc7c7363b9cdf477e52ca3",
+   "base_report_sha256": "e3fc79fe4096d3adfaa73b59cf110d18335d2e72eecca67dabccbfe2bebd2934",
+   "tip_report_sha256": "e3fc79fe4096d3adfaa73b59cf110d18335d2e72eecca67dabccbfe2bebd2934",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2014/papers/PMC12312563/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "ba4f1489ab1d8cabc1c69036208053f8bb22826f8191d652d32194b25ab52220",
+   "tip_ir_sha256": "cc4276e68cdf6ba82a7cff1656784cb618921b352b1e8e4d5e8f42c40a2eecbc",
+   "base_report_sha256": "5838bcc3f093a685b944c9c18e010a5f7e59a15b116d8d821b62ca105256e7bb",
+   "tip_report_sha256": "bbfb0619686507ecaf8c1999e0d0924e1493998a0f2e67f7a3ba947a40a954ee",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2014/papers/PMC12312563/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "4ffbdd3a8ff0cf3c47d303d9f2302d35d5cd0f8dc91a59375e47022bdcc5d41f",
+   "tip_ir_sha256": "03fb564f91ba0c7116d7737a34081f60676f78d892324f0547cddf86ae677d69",
+   "base_report_sha256": "9b073e37d19d0c165e7132bb0e10b6ae02fa6f0297a33c716e9a7ce6ceddb374",
+   "tip_report_sha256": "1b9db10c8c3b5922c2f6e93146c4bb4b010e6c1136bdf1df16977adf77970d64",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     4
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "f3a5e3c66a6953cb653b6f6c707dad09ac2616834a10fdd0cb13b64371a83914",
+   "tip_ir_sha256": "8436b35e90cd42da0c6aa5fa81e003286026f13d82b0c199d6cadd14dfecce02",
+   "base_report_sha256": "7da2e613116e6722766a8c1219c4a73edde851d5a6dd4a5b0c78f6a4eff97781",
+   "tip_report_sha256": "e4ae4a5360a0a4d60a6aa64a2961dc750cd1654ea886c5d6816fa6592f02edef",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "20b70a463c7459619f40da17af9c6164048e10a06f15e020b5125f7a4fcf466f",
+   "tip_ir_sha256": "f7d5ae352ff6aade1ba7584767744f865b991b00a8a2892a48b6b3e16a0797d0",
+   "base_report_sha256": "e1f52cd921e1335dae762c08018e814067d4855ae97e06c0e036c961668e2339",
+   "tip_report_sha256": "245759c7ace3c8bb32cf79bbbbc2096652ed3dba54db93fb00c656b4634afd5f",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 5,
+   "by_outcome": {
+    "untyped_interaction": 5
+   },
+   "base_ir_sha256": "d691c40399f27dadb77a672c4ecfd6138e6573b7e946a81dcac45015e7022e3c",
+   "tip_ir_sha256": "40adb40e9557f069d17685d01febb1265e8689ef766217b6493af6ab186dad78",
+   "base_report_sha256": "ffdfde9dd97962cf01077d894c94c96578df7f1053c0f30744bc4f1e6d8ec54a",
+   "tip_report_sha256": "1ba66ae3251a4e0a7b4279be168029d901c8bad71bc41da0e38ee3ac0d7fa633",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     5
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "bb1dd85080a13234a7f424a689d2cd04fe0b59cf50e47cedf36a15596c434b9a",
+   "tip_ir_sha256": "87bb33b36db6d3294521465105bede27f583bd6a1159e669bd2bea52a38f1304",
+   "base_report_sha256": "15b4d39299b53031d2b2b88e242a6e364a837afa52dbe26f42555904695606cd",
+   "tip_report_sha256": "800e6a68f0a724b733bb6796cccefde46f5e890810d6b203c98441c6183a9ca1",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "dfb191134f46774480b8f0aba7d288aac60ed9ca2b79882a193232557e72662e",
+   "tip_ir_sha256": "7886b8270ea363fdfbeb6a92d8fb773190cdf136f75899fa6287850c0205b0f2",
+   "base_report_sha256": "7968e49fe2d1ba48934c8daee2bc4121f92a083b882d3c6b91cd66438af2eab6",
+   "tip_report_sha256": "0cfcc6520cbdd5dc1defc6ce21106ff87a93abf830f0a44e8ceebb5181e18ee2",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     4
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "5d5fce0bc86a9af3507da508f0420907b661266ba7fc7c558b7c391f3d0f46d6",
+   "tip_ir_sha256": "83540b75e9c7544d1373a62c06646cb30ba291d0cb27aa760535d455402fe243",
+   "base_report_sha256": "637c8624090966a10f9118156f601a60ce8f165f83f12aa1878784ec331d35d0",
+   "tip_report_sha256": "e2348e6d30961fe72b671b53e4229d95486ec0231a3b0eeb50397fd43728e814",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12180156/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "2974d783ebf23b22302b8b00f29bdd933858f8665e54978cc9c2022b8014cb18",
+   "tip_ir_sha256": "2974d783ebf23b22302b8b00f29bdd933858f8665e54978cc9c2022b8014cb18",
+   "base_report_sha256": "4ef56d165c31da128b1e49e740e92cd6aa1cd65ba44be41304506dbaed575366",
+   "tip_report_sha256": "4ef56d165c31da128b1e49e740e92cd6aa1cd65ba44be41304506dbaed575366",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12180156/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "c5b9fa267eb4bf53015e3a0ab79f73913f72bfd1810387c07f0e98def398cfd4",
+   "tip_ir_sha256": "c5b9fa267eb4bf53015e3a0ab79f73913f72bfd1810387c07f0e98def398cfd4",
+   "base_report_sha256": "3aa59dd40ea6423bbcfbb4bcd355db01217f820891d3b0af3747d0129875d6cd",
+   "tip_report_sha256": "3aa59dd40ea6423bbcfbb4bcd355db01217f820891d3b0af3747d0129875d6cd",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "1e6775c748bca87fb07bfc910b2ee61c22a6db6ac6d0e9cf08ad8de24245c775",
+   "tip_ir_sha256": "9e353d6e43aa6ef73a03d42eba9f4fb08daeec3b70edd1027b81abdf35303b78",
+   "base_report_sha256": "8579021ff17ed3e9030448da1cc22b00c59a0cb4501c35b435bdbb6ae55fd562",
+   "tip_report_sha256": "7b05b3e15e3c145352b865eeacb5de7d00af1d9d59ca263956ea026f77b65ead",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "0d2fb7d97a01ac060dbc10fdf12185cf4af1bc6bb31e1c53ea6c324606c1d6c6",
+   "tip_ir_sha256": "05fb361cfd4aedfa53bde695eeac3550b073c9a29c3505f4201b7068eb849b19",
+   "base_report_sha256": "ec2e8e69ea824060a3cf6c683bf6e3bfc115308e7df3f9437d27b795629491af",
+   "tip_report_sha256": "65c27d6c6a9d309e024ce786d600c5aa4e0f2eb3e82a8a96fa91865f5fda4c24",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "48b2831c4097602780d7936db554e4bcd296afdc207cc16c9f9e287dbe01f1ad",
+   "tip_ir_sha256": "48b2831c4097602780d7936db554e4bcd296afdc207cc16c9f9e287dbe01f1ad",
+   "base_report_sha256": "71c866ab919165896778c246fa1fc302ccd26d456b13a256dbbf9c9aae03e430",
+   "tip_report_sha256": "71c866ab919165896778c246fa1fc302ccd26d456b13a256dbbf9c9aae03e430",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12782028/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "0c08e551560e2d979b19b1f6131ab5623a0764ed6ffb385a5c4e83dc78e9b6c6",
+   "tip_ir_sha256": "0c08e551560e2d979b19b1f6131ab5623a0764ed6ffb385a5c4e83dc78e9b6c6",
+   "base_report_sha256": "edf321160ebe18bd12148432cef576dd01545028293956ef3a76dbb77878834e",
+   "tip_report_sha256": "edf321160ebe18bd12148432cef576dd01545028293956ef3a76dbb77878834e",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "f565d198c8ad6b2382f9e53437f9c466af5c83b795306cff3b301ee7b8c38188",
+   "tip_ir_sha256": "76468560405946079af55386622446dbd7dcb1a0b58ed56be1caf87d80cf6645",
+   "base_report_sha256": "363622d35d3dd13d9528fa36b6d2bcbf8405920e6181b3fe7b34b93360fd84ec",
+   "tip_report_sha256": "5bae7340837f76c73f3b972f0158a995250a4fb209215503b77a1b67148d96ac",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "e46e17eef12f01cdd4b5cb180ffc0a3ebad5deceb84333086cf231b13a7df844",
+   "tip_ir_sha256": "25f00eab4344e066dfe986c6f1bcdf8f0164768a842182a8eea0d2769d78bfa3",
+   "base_report_sha256": "99ff5b3b09db6356a6df9234168183b616f89c21abf04c8c3d5690de023314c3",
+   "tip_report_sha256": "5f2d3979605205c10944acf7fcf816e44e60f3c2a11b3bda7d91efe6f705a0a6",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_1821/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 6,
+   "by_outcome": {
+    "untyped_interaction": 6
+   },
+   "base_ir_sha256": "c21827d30454ed55bd93c68295f8a86ccd5c75d1fd5be9b1ac85a885c3de2a41",
+   "tip_ir_sha256": "4f32060c7fc469c6a550ee281b4cf8264b6895153337e97b7829ca1b926560b8",
+   "base_report_sha256": "1e57178b0d324ca4a82436bf339738c55f8f14999f87b86a15a2ebe3ef901356",
+   "tip_report_sha256": "55ee751cf851d66d46a9213ae91d9fb3a02be95cba834df59eab62c9eef053f2",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     6
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 6,
+   "by_outcome": {
+    "untyped_interaction": 6
+   },
+   "base_ir_sha256": "a25b8448ec740269bc3d7784243dd9dd2cca263acc275e8efaceed5f91eff2f3",
+   "tip_ir_sha256": "a6c1cf1c5859e2b07a81722f7a610b837048cfbfb9e3a38f5b42b30fd77fb357",
+   "base_report_sha256": "e98a2df74a3b1e7317e358f2bd4ad903fe56b92ffdea1178a3db7f9f43752ee1",
+   "tip_report_sha256": "164f7e0d9a4e290ce1b112b6fcf652403f4699bcbe13af88ac6f736a78ee71ea",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     6
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "0fbf66362275d724ae8d6857cc7a7521085cc8181bd6ebe5b23dd15f575c3505",
+   "tip_ir_sha256": "0ded4784a7e2c7f7246fe19147c2d4f2bffe50048c79ccccdef9d6e951184fd7",
+   "base_report_sha256": "04603a43eee1695ec8d578774f84a2d1becd9be42b4aeced1210a9d937e1164d",
+   "tip_report_sha256": "0859a8f57e5b53c4d2917d7697362f4e2b955430b1ee31de58e16a389d6d154b",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "f2f6f09beca8b197a6fb687d23fafd363e786d79f3c8c32c79aa1fee8e3adb5d",
+   "tip_ir_sha256": "ee4e5af2a37a177478982650507cfdb0932ebfe31f14c9e96d8546b33ea68f66",
+   "base_report_sha256": "2416e35e18a7cb8271e3b0ac875cd8178effe05f2f5a59bfd6b86bc826eed1b4",
+   "tip_report_sha256": "1f03437ee6701641c107f242265ebc6131636b31e5d3b9a408b46d206ec5784d",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "25d9f0a95862888457c4783b27fe1c4d0143781cd1c61fa524a4dd4c8aa82135",
+   "tip_ir_sha256": "f882205d22f2c392168e87c4d6cc76edc736ed1a25f3168ab4384e4e02bd0362",
+   "base_report_sha256": "5533c79486874f6715b48af0a32b6f7a633c9217879b4ec201a7a2519cc9afbb",
+   "tip_report_sha256": "e2f62673b5eaa9cd360d138ae57b1ad4c6f71ba939d4f9f43a0145c7e327e41a",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "ecba413aaa458cf730165d73288c409a35468fde6c0d030d2ce76f7774008eb0",
+   "tip_ir_sha256": "b0e2b4688875be821710dadfe8786ec80a0d24587eebf204fc66cd72fc61d162",
+   "base_report_sha256": "4092cdb79c8cf3d0d625e33b8544764a74be8d8df82d1831604282b9d77d69c1",
+   "tip_report_sha256": "45281b1987e3d8a96e63bdb520f5bb9595c64f9c207724bb798e6463f2a8106d",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "0b7b5d5f51623137e7ce83af8afe785e55dba74257480b16695f5f4431e1de05",
+   "tip_ir_sha256": "3dace9e64e9e4ba53b66eb61ba306b5e241d827fd0c303074e498bf59803fafd",
+   "base_report_sha256": "182754a346068fa3bc10357ac9ec4542246cadb4e4802cb3fc876f787e0b0fb3",
+   "tip_report_sha256": "d1f61a6612321d6e7f2a8edb06d51817f46a7afa83bf2a32f69c8d85c72ccc1b",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12180156/research/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "6c193c4c274fff68d00541259225ce371157838d464f7ccdd8c81d7ca215dcee",
+   "tip_ir_sha256": "613ea6fb9a16c498d630755a8aeb0dab53425e3c9c03111facd5a391076c907a",
+   "base_report_sha256": "c5d860f585ee5eb80130f9fba0cf903ab543de59e438f85d53bdb8251b2e8348",
+   "tip_report_sha256": "37e10ee397605bb0a57b6a9425e2409bc81020f0edf7eb82050b2e67211d9b75",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     4
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12180156/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "f80a1b74b38d6f0bea8d7ea9a5ce000f1e77a872a23eeb33e45a673c8d795ff3",
+   "tip_ir_sha256": "a59d3381d26fba7cbb5ecdabfc6346523cbf6e2aef2bacb9f7fd29bd8a3a4cc4",
+   "base_report_sha256": "560f18587fe9d81d0f0cc6cc1b8ea3e4a91cea857b5dbcde4142f66e4f4ffd3a",
+   "tip_report_sha256": "4af13f54235c2ae047928509821781ba04d3f2832fdbe84ea8f393cea136ad11",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "98d92a8b89dde87c33f8cb2dab438cc0de1fb4263ee270bb9916414c3e5c64a5",
+   "tip_ir_sha256": "274dab3294f95f0c061b716ff74c4a8e21a39368a627e296e9d0bbbe1d85362c",
+   "base_report_sha256": "e634ce860527d73645c3d7653301f17a71c90821e93e211abd032024ea477d63",
+   "tip_report_sha256": "186509430e9bacb92ae465101db6f223de4c691cb6fc4f1f85b735a23235d9c2",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "cb5a6c51a2033ae7ab683b26a7fcc7375e016ddbc1de790d598402a899b485be",
+   "tip_ir_sha256": "cd8b86a59bf15d5f3aa7d680dffc2cbd8995a8607786d6642427f1d6d03043f9",
+   "base_report_sha256": "4b8d7b2181be9ecd1cfc473c42629d9344f9920d21cdad284df23191d4211228",
+   "tip_report_sha256": "1ff9433231beb7474fa7f06b20fa1e1da492130b4ca57fc8209bb93454c6d473",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "748ed9be9abe9cb2e3f213434a9578421f6d243a804f6c38f9b2b74eb8febc3c",
+   "tip_ir_sha256": "748ed9be9abe9cb2e3f213434a9578421f6d243a804f6c38f9b2b74eb8febc3c",
+   "base_report_sha256": "6d280e8e2e4f56ff7091ebc0aa7ae5e30d0ef4f25440b491f292f6f24ae93f07",
+   "tip_report_sha256": "6d280e8e2e4f56ff7091ebc0aa7ae5e30d0ef4f25440b491f292f6f24ae93f07",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12782028/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "529d34d3c13a14f55c65f55f713279493d47d7c939c0594d4c9b9bf4af5eeadf",
+   "tip_ir_sha256": "529d34d3c13a14f55c65f55f713279493d47d7c939c0594d4c9b9bf4af5eeadf",
+   "base_report_sha256": "4f60a10bcd527d9fe9e5ae333a247def036ceeadcb358a6f93341009889a7a08",
+   "tip_report_sha256": "4f60a10bcd527d9fe9e5ae333a247def036ceeadcb358a6f93341009889a7a08",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "9bde4c50515ad4a2af94664be4b95087d88fe6e56ca5369f249582cf9a52ec26",
+   "tip_ir_sha256": "787a27f1c5fdf2db20f4f90bb65971d64f5f3cc89c774587c02c56d88a836466",
+   "base_report_sha256": "a0dffdb4bebe992f96889fcb97e56fb9d1f8c66372e792032a947662077a191a",
+   "tip_report_sha256": "7e606b50fc4b34ee5b9b7072d1266acf7418b16faaf98571d1294cf7640f087a",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "5a56a99dacc4e0334d6f767173c680a0ecfaef6e55ac55d1440f0280e3456046",
+   "tip_ir_sha256": "34dc7e06f8701f337f2f96d795a654d1590d92247b5b58e1db9e3a98703b8219",
+   "base_report_sha256": "8012a291b0a800e1a7e8e14d15a9f2bcc8bbaf0b0a4b7d472ecbf422b7e8c5ab",
+   "tip_report_sha256": "e3323cefa8eae9558336317e255afbd5c5c041dd070beac3df6e89ab1ec24d47",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC13231680/research/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "462d30d44142a51449a8fb704ee8d32e2aa28a7f6272347e81bbdd958e0639d2",
+   "tip_ir_sha256": "f97183e4e59e109f4e67bcfc4b49ba17ff68f006b1e3604c2c8f5049c4433495",
+   "base_report_sha256": "2246c1edaddc9290a3a43218a43f8fae93716d756e9b8646fb1bf8d84bf4ed6f",
+   "tip_report_sha256": "9af9ebe3309fa2b293c7fe56570ce090cd02183f53558ec957880583e42720c0",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC13231680/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "4508ce9859aab6336f4d2f847b34087c24d4806b74e3fe6fa70b6aa0c363315f",
+   "tip_ir_sha256": "758afe735915f16d28eb8f194b1595c845844a2f74d1ff461f83f828d6dfa484",
+   "base_report_sha256": "a9f53b019ea0e67ba69df9dd3db02bd6fed37728234cd8d1eb3d07f3723a51a1",
+   "tip_report_sha256": "8bca9ac5dd8d3e0291425c1d41bdd64b677cac38e80598bade6248b1d487054d",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     4
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 8,
+   "by_outcome": {
+    "untyped_interaction": 8
+   },
+   "base_ir_sha256": "33eb65e40f883b8195c8c279b2aebcfb991f9c0a8c9d12ecb1888335108991f1",
+   "tip_ir_sha256": "38c821097240bc445e5f93dd44f2440e3dcc4068275fe59d8f8189770f1f681b",
+   "base_report_sha256": "48186cd2751825e37627b8bf693327dedb3fc6765fe0570da645adae319b9dec",
+   "tip_report_sha256": "13bb93aef4df44f024b5e8ccab4972060bbb45ea0efc9b8ebc093f898ffd8cb1",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     8
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "9db1de2829bb0feaedfd09a1bb6581951bc321c38eea7127d5fc8df299558341",
+   "tip_ir_sha256": "e928f54046b7703e7490977f8e93e83c5ab78175e098da35e56f0d602222cf02",
+   "base_report_sha256": "97223d90d1b1ad51e7ec133585604cefc1a4e4f77eea2fd4f9e42cf8fab4b804",
+   "tip_report_sha256": "69316c894c6ad28435ed1799aff8e14f963b997b7eb321b02c1e4c2c5c6ab5de",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     4
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "7635bae260b3b00ffa1b7fbf48b51548cf1aa7ab2ad392aebc02cda28d4d7d31",
+   "tip_ir_sha256": "c8c6173fdd0f38d058c7c19e4eb91579ede96eabc285c906cd67fe72b2cb698b",
+   "base_report_sha256": "3e9581d794d1b60966850f69498745f8020f1c27aedb34495e6e2644964762fb",
+   "tip_report_sha256": "73f4916424130fc79f54ac9ebfdd075ea98d69d8a6e121becf4e46b39bab5fb2",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     1
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "a997f5fd25e7645ed0bbcb7311d8ba097a16f05be779676e3a7ee93152eaf268",
+   "tip_ir_sha256": "eaaabe0c5918aef665dcac5c3e3a2d989c3e3b9f0c57ee949657eefa1afa87f3",
+   "base_report_sha256": "37ff57e94c11bd779890b62a869363880446319d8d0efa012c2889aa0e0a3a81",
+   "tip_report_sha256": "18c69e15d71b1443d8f467a35f9fb4fd2f2744edbe92074f76e86ac849945652",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "92631e34c6c22436971a07413b92fc6c78eaee5d65fb9a3bfb6ee3f3e28779c4",
+   "tip_ir_sha256": "f4d8ef7c4266917c12451cdf873782813572021117985fd3554219db287f0621",
+   "base_report_sha256": "c20eeeed371d5f63bd0b3d95898ab6eb2c263f9fd7b2f6ea36535e2cfcb1d719",
+   "tip_report_sha256": "3aa3db088bfaa0b1ad1dbed37febee218162f20441048b6405cb2116192b8000",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC13231680/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "516d60f7ec5ab4b16169c89481815cc96e4340e234c29207819780bdb4ced63b",
+   "tip_ir_sha256": "2227fb1d8b03546ad0ac633449baec18a75ec50fec86a167bd217ce97f1e1dc3",
+   "base_report_sha256": "afe27ea84379e9df680082c14601926308d32f52c3df67816bb4e0007cbb454e",
+   "tip_report_sha256": "2ed8c4bd9046c3535074353bda3c80d06b13fa4741346deff83759807bf8cc91",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1402/papers/PMC12180156/research/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "bfad3992295f255335b2c1b3552234f34d2b8640ca3a289844777b2c30c7a886",
+   "tip_ir_sha256": "a701e99684ef2db76282bbb701eb6bc6b2f4aecf41b9f40ecaa30b814b0045e2",
+   "base_report_sha256": "2413a4b05dcc6198293e35f864b4f6fcf7dd203d75907335e41d2bda85b549b7",
+   "tip_report_sha256": "3b3a88a2d92d5b7b6fda24167af054fa22135bb246230240f5214910b56dd181",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1402/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "320c445b6b77f4d456914498cd465b6dbb0163f9af8541a0c2700a39b13cda88",
+   "tip_ir_sha256": "320c445b6b77f4d456914498cd465b6dbb0163f9af8541a0c2700a39b13cda88",
+   "base_report_sha256": "00096d5cd79ef300ec2ea3060042e4c073387bbb202b3e325f397be2ea3c17de",
+   "tip_report_sha256": "00096d5cd79ef300ec2ea3060042e4c073387bbb202b3e325f397be2ea3c17de",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "edae4e74643b21329ab4c2e333e15cf72a931bec7f516e28741fa28662b9ce6e",
+   "tip_ir_sha256": "1fe8eb416fd291a817eabb586cb4e528d5168aa6d1ad58ba36c6ee853a5baf0b",
+   "base_report_sha256": "caa266b240458c0431f0aed98613c83cc414c239ead9a7fcaa21fdcfc2076299",
+   "tip_report_sha256": "87dd04e47bfaf2b034b944759975642824f3c1426d71c598cb0d1093ec00924f",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "036bcfabd4edae1830caf5ec86128b5ae19668f6f8011091be6b9c8b6d13db8d",
+   "tip_ir_sha256": "36c4a946643caf09396792ede6d1e8a662d6d5f56ab4acc3fbc0e524378e7567",
+   "base_report_sha256": "c39852ae24295ebef46383a54ed82391a33beb64b47f42370ea7414cffb44b17",
+   "tip_report_sha256": "fe4076b179f7fd9f4fc2c4387c94d96ccf6f2ff1636b335110438901a7e8aa98",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12180156/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "9fec4198b7d40381d81efb8571eea7aae1f3ed22292514905d862020bcbd3169",
+   "tip_ir_sha256": "aec0bdd407a4cdc36a5984787525eb45023005ed04e6559689eb67af18a0652e",
+   "base_report_sha256": "6b7b9bda9c077a8141560b83730b0bb9eb80555fccd3d8ba2ae6f885f6528857",
+   "tip_report_sha256": "2be265a3a3bf5e6f53f92154929ba1c096d29064b6c06d560516726142fed82d",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     2
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12444477/strict/final_mapped.json": {
+   "interactions": 13,
+   "by_outcome": {
+    "untyped_interaction": 13
+   },
+   "base_ir_sha256": "9202047b73bf8109daa09c2dd3c543d75075bd112278f247e378239386c50801",
+   "tip_ir_sha256": "358c4aca62b1aa3b4d8d7b62607de1ae7cd014931bec248af9a8ef7b7708ac46",
+   "base_report_sha256": "c15b6220aa0aa57d62b99b5ce56ab72728bf2f0b4cec9ddf4b6eda24f6709e53",
+   "tip_report_sha256": "cddfb69f6bb68b32d729ff1ccd4ff87332f2227427f40c04be7b9b06f897c59f",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     13
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "1c9f7734a77f6be1dc0545602f1db86da7854801c3973cfa53b03c11c07f3a73",
+   "tip_ir_sha256": "2229bd479568118d30183bb6b356f1cdc60255d8300b17cd28ce84f6cfc9e881",
+   "base_report_sha256": "88abc984ac62274e0eb07d79c35b7d67dec7d0907b5b35462485723d9521c3e5",
+   "tip_report_sha256": "cb72992e3ac36975bce9f6dd9482722dbd1f2695c19a76b11ddfcf0f85105e6a",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     4
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "9ecfbdcbb7048ceb219af6c68cf6f872834bb631e9f24f03fbe46167a950baec",
+   "tip_ir_sha256": "9ecfbdcbb7048ceb219af6c68cf6f872834bb631e9f24f03fbe46167a950baec",
+   "base_report_sha256": "5503e37d4fa23dfa99cc4d9424d2b4a80a16afaa93a2471bbae93f7ed179f2c6",
+   "tip_report_sha256": "5503e37d4fa23dfa99cc4d9424d2b4a80a16afaa93a2471bbae93f7ed179f2c6",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "71f2d4649127f2fbade4b407dea2a861ffba8915960f4bcfacffcac90d11c4a8",
+   "tip_ir_sha256": "71f2d4649127f2fbade4b407dea2a861ffba8915960f4bcfacffcac90d11c4a8",
+   "base_report_sha256": "ffdc9054c410d47cdabd2608c541071d0dded01829e7f4b6fd6c89662b3d570d",
+   "tip_report_sha256": "ffdc9054c410d47cdabd2608c541071d0dded01829e7f4b6fd6c89662b3d570d",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12782028/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "ef934a3aa91240f76bbf9ee4bffcf2b13ff6f42575436d0503fc70073e6b71fc",
+   "tip_ir_sha256": "ef934a3aa91240f76bbf9ee4bffcf2b13ff6f42575436d0503fc70073e6b71fc",
+   "base_report_sha256": "c37f495bf1f54a977fbc6aeb1ab5112a6dbee9a099ed7683d8083adfe1729105",
+   "tip_report_sha256": "c37f495bf1f54a977fbc6aeb1ab5112a6dbee9a099ed7683d8083adfe1729105",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "5181d40a18f2d6c3e7f1e721f2bf4a6ef2a479845848f04c01ba1215c8bcd20c",
+   "tip_ir_sha256": "1ca187cac470fcaaee564c142db57e471dcbd51e4690c4cd9ca2fd5894133105",
+   "base_report_sha256": "79fed15b45d613dd20e33f428c52f901e766b27f0b6f5abe5561fd0d064ff1af",
+   "tip_report_sha256": "dcd0e90402a10fa46aad838c4fc8d4ce46c3fe13e01829b791afd48c733ae284",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     3
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "10b564447245e2abd236e33a79bb3d18dfc3a6f05e4c1993e56bff7e9241a5f2",
+   "tip_ir_sha256": "fff7a4815c584471f8deb2df8b068557dab9b700aefcaedd9e3daa5cdc32e2ad",
+   "base_report_sha256": "7c63acf4d9c8cbcc29c5ff603a7cc21c55f775c6546f684a383f92dccb6a242b",
+   "tip_report_sha256": "95d825622cb70e72334dc7971b3ce9a8eaecbe564531a13f159b0c4a76d2d6b4",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     4
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12444477/research/final_mapped.json": {
+   "interactions": 8,
+   "by_outcome": {
+    "untyped_interaction": 8
+   },
+   "base_ir_sha256": "546304449cbba63fb1719ad3f31210357d3931abd8c242582347220d23d7d83b",
+   "tip_ir_sha256": "345b93dbc55e2bd64fa48a598273a7b087efb1db39a40bd45ecf70401c0be8af",
+   "base_report_sha256": "90e99b7c1e46d660df77d0658c0bb219e62b844e6ed47a884e7af410ebff81b0",
+   "tip_report_sha256": "09c06444d7137aa0a2442a48d9a7a1b4c54205611aef2be39a32a4757b9fe63a",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     8
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12444477/strict/final_mapped.json": {
+   "interactions": 5,
+   "by_outcome": {
+    "untyped_interaction": 5
+   },
+   "base_ir_sha256": "f6e71e4dc92f15723ab755d619fda062bcd984e73238132145146994fb9423e7",
+   "tip_ir_sha256": "815a597cc9dee656263177a67f346890936bacea7192b0d38d83dceba1f658a4",
+   "base_report_sha256": "18dbab869b509e5ed860a9a16e2b82a140cbc8f394321cb2104a0a5c9eb2cc47",
+   "tip_report_sha256": "a7ecbfb3bd94557f6cee9907f50a059bb144ef741a01c0f04a453effb5d2e6d4",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     5
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "b5abcd2d65a2c3af5a77aea93d4b762a0b56c33e1289149a811cd05462e7b283",
+   "tip_ir_sha256": "bc66959badd0964626d0374054cd03700639b068b82a8ef7914d635e5003e642",
+   "base_report_sha256": "140b59264c90dbb7eab4ac364dc77d629a979be087229f3c0bc193f88d1ef6d5",
+   "tip_report_sha256": "329e142b5844f476f3a91f587b62ea2c0457ab65387b5f3964e4e855df77b737",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/export_status",
+    "/ir/processes/interactions/[]/left/key",
+    "/ir/processes/interactions/[]/right/key",
+    "/ir/processes/interactions/[]/withheld",
+    "/report/ir_validation/counts/process_members",
+    "/report/warnings"
+   ],
+   "added_warning_codes": [
+    [
+     "interaction_withheld_from_pwml",
+     4
+    ]
+   ],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  }
+ }
+}

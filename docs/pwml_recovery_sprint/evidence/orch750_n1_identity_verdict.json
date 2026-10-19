@@ -1,0 +1,59 @@
+{
+ "base_rev": "c9265fb89fb262467586ab3cd967d8fbd98f1b18",
+ "base_file": "src/t2pw/pipeline/pipeline.py",
+ "base_has_draws_parameter": false,
+ "tip_has_draws_parameter": true,
+ "cases": [
+  {
+   "env_T2PW_EXTRACTION_DRAWS": null,
+   "kwargs": {},
+   "base_calls": 1,
+   "tip_calls": 1,
+   "call_keyword_sets_equal": true,
+   "captured_observation_json_equal": true,
+   "tip_passes_stage_return_through": true
+  },
+  {
+   "env_T2PW_EXTRACTION_DRAWS": null,
+   "kwargs": {
+    "pathway_context": "<context>",
+    "pathway_scope": "glycolysis",
+    "user_task_context": "ctx",
+    "max_attempts": 3,
+    "temperature": 0.2,
+    "max_tokens": 64000
+   },
+   "base_calls": 1,
+   "tip_calls": 1,
+   "call_keyword_sets_equal": true,
+   "captured_observation_json_equal": true,
+   "tip_passes_stage_return_through": true
+  },
+  {
+   "env_T2PW_EXTRACTION_DRAWS": "1",
+   "kwargs": {},
+   "base_calls": 1,
+   "tip_calls": 1,
+   "call_keyword_sets_equal": true,
+   "captured_observation_json_equal": true,
+   "tip_passes_stage_return_through": true
+  },
+  {
+   "env_T2PW_EXTRACTION_DRAWS": "1",
+   "kwargs": {
+    "pathway_context": "<context>",
+    "pathway_scope": "glycolysis",
+    "user_task_context": "ctx",
+    "max_attempts": 3,
+    "temperature": 0.2,
+    "max_tokens": 64000
+   },
+   "base_calls": 1,
+   "tip_calls": 1,
+   "call_keyword_sets_equal": true,
+   "captured_observation_json_equal": true,
+   "tip_passes_stage_return_through": true
+  }
+ ],
+ "n1_behaviourally_identical": true
+}

@@ -1,0 +1,951 @@
+{
+ "task": "ORCH-752",
+ "payloads": [
+  {
+   "file": "control__run1__payload.json",
+   "sha256": "0c987729fefa989b649f684428df8666f4fff809139b9edf4325a60967945801"
+  },
+  {
+   "file": "control__run2__payload.json",
+   "sha256": "85d40dc03a31729747354718b5ff097577816022aaaca008a34a1866768f3dd0"
+  },
+  {
+   "file": "control__run3__payload.json",
+   "sha256": "bcef1632fba082bf4da3d25faa38974e8218b2c9c7295c43cf16403517bf95f2"
+  }
+ ],
+ "orch751_claim": {
+  "reactions_pooled_keys": 41,
+  "rows_per_draw": [
+   16,
+   19,
+   18
+  ],
+  "attributed_to": "cofactor-sensitive dedup key"
+ },
+ "summary": {
+  "/processes/reactions": {
+   "rows_per_draw": [
+    16,
+    19,
+    18
+   ],
+   "before_pooled_keys": 41,
+   "after_pooled_keys": 41,
+   "merge_draws_merged_rows": 41
+  },
+  "/processes/interactions": {
+   "rows_per_draw": [
+    0,
+    7,
+    16
+   ],
+   "before_pooled_keys": 23,
+   "after_pooled_keys": 20,
+   "merge_draws_merged_rows": 20
+  },
+  "/processes/transports": {
+   "rows_per_draw": [
+    0,
+    0,
+    0
+   ],
+   "before_pooled_keys": 0,
+   "after_pooled_keys": 0,
+   "merge_draws_merged_rows": 0
+  }
+ },
+ "cofactor_census": {
+  "currency_names_written": {
+   "Fe2+": 3,
+   "Mg2+": 3,
+   "ATP": 3,
+   "S-adenosyl L-methionine": 3,
+   "NADPH": 2,
+   "NADP+": 1
+  },
+  "defining_keys_whose_cofactor_set_varies_between_draws": []
+ },
+ "cofactors_added_by_merge": [],
+ "before": {
+  "/processes/reactions": {
+   "rows_per_draw": [
+    16,
+    19,
+    18
+   ],
+   "pooled_keys": 41,
+   "union_to_mean_ratio": 2.321,
+   "shared_by_pair": {
+    "draw 1 vs draw 2": 1,
+    "draw 1 vs draw 3": 11,
+    "draw 2 vs draw 3": 1
+   },
+   "shared_by_all": 1,
+   "keys": [
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "glu trnaglu -> gsa"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "gsa -> ala"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "ala -> pbg"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "pbg -> hmb"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "hmb -> urogen iii"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "urogen iii -> coprogen iii"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "coprogen iii -> protogen ix"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "protogen ix -> proto ix"
+    },
+    {
+     "draws": [
+      1
+     ],
+     "key": "fe2 + proto ix -> protoheme"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "atp + mg2 + proto ix -> mg proto ix"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "mg proto ix + s adenosyl l methionine -> mg proto me"
+    },
+    {
+     "draws": [
+      1
+     ],
+     "key": "mg proto me -> 3 8 divinyl protochlorophyllide"
+    },
+    {
+     "draws": [
+      1
+     ],
+     "key": "3 8 divinyl protochlorophyllide + nadph -> 3 8 divinyl chlorophyllide + nadp"
+    },
+    {
+     "draws": [
+      1
+     ],
+     "key": "3 8 divinyl chlorophyllide -> 3 vinyl chlide a"
+    },
+    {
+     "draws": [
+      1
+     ],
+     "key": "3 vinyl chlide a + geranyllgeraniol -> chl a"
+    },
+    {
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "key": "chlide a -> chlide b"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "glu trnaglu -> glu 1 semialdehyde gsa"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "glu 1 semialdehyde gsa -> 5 aminolevulinate ala"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "5 aminolevulinate ala -> porphobilinogen pbg"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "porphobilogen pbg -> hydroxymethybilane hmb"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "hydroxymethylbilane hmb -> uroporphyrinogen iii"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "uroporphyrinogen iii -> coproporphyrinogen iii"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "coproporphyrinogen iii -> protoporphyrinogen ix"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "protoporphyrinogen ix -> protoporphyrin ix"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "fe2 + protoporphyrin ix -> protoheme heme b"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "atp + mg2 + protoporphyrin ix -> mg proto ix"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "mg proto ix + s adenosyl l methionine -> mg proto ix monomethyl ester mg proto me"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "mg proto ix monomethyl ester mg proto me -> 3 8 divinyl protochlorophyllide dv pchlide"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "3 8 divinyl protochlorophyllide dv pchlide + nadph -> 3 8 divinyl chlorophyllide dv chlide"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "3 8 divinyl chlorophyllide dv chlide -> 3 vinyl chlide a mv chlide a"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "geranylgeranyl diphosphate -> phytyl diphosphate"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "3 vinyl chlide a mv chlide a -> chl a"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "chl a -> chl b"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "protoheme heme b -> biliverdin ix"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "fe2 + proto ix -> heme b"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "mg proto me -> dv pchlide"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "dv pchlide -> dv chlide"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "dv chlide -> mv chlide a"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "geranylgeranyl chain -> phytyl chain"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "geranylgeraniol + mv chlide a -> chl a"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "heme b -> bilverdin ix"
+    }
+   ]
+  },
+  "/processes/interactions": {
+   "rows_per_draw": [
+    0,
+    7,
+    16
+   ],
+   "pooled_keys": 23,
+   "union_to_mean_ratio": 3.0,
+   "shared_by_pair": {
+    "draw 1 vs draw 2": 0,
+    "draw 1 vs draw 3": 0,
+    "draw 2 vs draw 3": 0
+   },
+   "shared_by_all": 0,
+   "keys": [
+    {
+     "draws": [
+      2
+     ],
+     "key": "hy5 | activates | hema1"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "hy5 | activates | chlh"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "pif1 | inhibits | hema1"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "glk1 | activates | hema1"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "toc1 | inhibits | chlh"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "rve1 | activates | pora"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "scl27 | inhibits | porc"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "hy5 | activation | chlh"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "pif3 | inhibition | chlh"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "glk1 | activation | chlh"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": " | activation | pora"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "toc1 | inhibition | chlh"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "fhy3 | activation | alad1 hemb1"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "far1 | activation | alad1 hemb1"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "scl27 | inhibition | porc"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "della | inhibition | scl27"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "flu | inhibition | glutr"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "gbp | activation | glutr"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "cop1 | inhibition | hy5"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "pif1 | activation | cop1"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "arr10 | activation | hema1"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "arr12 | activation | hema1"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "toc1 | inhibition | pif3"
+    }
+   ]
+  },
+  "/processes/transports": {
+   "rows_per_draw": [
+    0,
+    0,
+    0
+   ],
+   "pooled_keys": 0,
+   "union_to_mean_ratio": null,
+   "shared_by_pair": {
+    "draw 1 vs draw 2": 0,
+    "draw 1 vs draw 3": 0,
+    "draw 2 vs draw 3": 0
+   },
+   "shared_by_all": 0,
+   "keys": []
+  }
+ },
+ "after": {
+  "/processes/reactions": {
+   "rows_per_draw": [
+    16,
+    19,
+    18
+   ],
+   "pooled_keys": 41,
+   "union_to_mean_ratio": 2.321,
+   "shared_by_pair": {
+    "draw 1 vs draw 2": 1,
+    "draw 1 vs draw 3": 11,
+    "draw 2 vs draw 3": 1
+   },
+   "shared_by_all": 1,
+   "keys": [
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "glu trnaglu -> gsa"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "gsa -> ala"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "ala -> pbg"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "pbg -> hmb"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "hmb -> urogen iii"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "urogen iii -> coprogen iii"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "coprogen iii -> protogen ix"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "protogen ix -> proto ix"
+    },
+    {
+     "draws": [
+      1
+     ],
+     "key": "proto ix -> protoheme"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "proto ix -> mg proto ix"
+    },
+    {
+     "draws": [
+      1,
+      3
+     ],
+     "key": "mg proto ix -> mg proto me"
+    },
+    {
+     "draws": [
+      1
+     ],
+     "key": "mg proto me -> 3 8 divinyl protochlorophyllide"
+    },
+    {
+     "draws": [
+      1
+     ],
+     "key": "3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide"
+    },
+    {
+     "draws": [
+      1
+     ],
+     "key": "3 8 divinyl chlorophyllide -> 3 vinyl chlide a"
+    },
+    {
+     "draws": [
+      1
+     ],
+     "key": "3 vinyl chlide a + geranyllgeraniol -> chl a"
+    },
+    {
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "key": "chlide a -> chlide b"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "glu trnaglu -> glu 1 semialdehyde gsa"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "glu 1 semialdehyde gsa -> 5 aminolevulinate ala"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "5 aminolevulinate ala -> porphobilinogen pbg"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "porphobilogen pbg -> hydroxymethybilane hmb"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "hydroxymethylbilane hmb -> uroporphyrinogen iii"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "uroporphyrinogen iii -> coproporphyrinogen iii"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "coproporphyrinogen iii -> protoporphyrinogen ix"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "protoporphyrinogen ix -> protoporphyrin ix"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "protoporphyrin ix -> protoheme heme b"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "protoporphyrin ix -> mg proto ix"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "mg proto ix -> mg proto ix monomethyl ester mg proto me"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "mg proto ix monomethyl ester mg proto me -> 3 8 divinyl protochlorophyllide dv pchlide"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "3 8 divinyl protochlorophyllide dv pchlide -> 3 8 divinyl chlorophyllide dv chlide"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "3 8 divinyl chlorophyllide dv chlide -> 3 vinyl chlide a mv chlide a"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "geranylgeranyl diphosphate -> phytyl diphosphate"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "3 vinyl chlide a mv chlide a -> chl a"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "chl a -> chl b"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "protoheme heme b -> biliverdin ix"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "proto ix -> heme b"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "mg proto me -> dv pchlide"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "dv pchlide -> dv chlide"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "dv chlide -> mv chlide a"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "geranylgeranyl chain -> phytyl chain"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "geranylgeraniol + mv chlide a -> chl a"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "heme b -> bilverdin ix"
+    }
+   ]
+  },
+  "/processes/interactions": {
+   "rows_per_draw": [
+    0,
+    7,
+    16
+   ],
+   "pooled_keys": 20,
+   "union_to_mean_ratio": 2.609,
+   "shared_by_pair": {
+    "draw 1 vs draw 2": 0,
+    "draw 1 vs draw 3": 0,
+    "draw 2 vs draw 3": 3
+   },
+   "shared_by_all": 0,
+   "keys": [
+    {
+     "draws": [
+      2
+     ],
+     "key": "hy5 | Activation | hema1"
+    },
+    {
+     "draws": [
+      2,
+      3
+     ],
+     "key": "hy5 | Activation | chlh"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "pif1 | Inhibition | hema1"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "glk1 | Activation | hema1"
+    },
+    {
+     "draws": [
+      2,
+      3
+     ],
+     "key": "toc1 | Inhibition | chlh"
+    },
+    {
+     "draws": [
+      2
+     ],
+     "key": "rve1 | Activation | pora"
+    },
+    {
+     "draws": [
+      2,
+      3
+     ],
+     "key": "scl27 | Inhibition | porc"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "pif3 | Inhibition | chlh"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "glk1 | Activation | chlh"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": " | Activation | pora"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "fhy3 | Activation | alad1 hemb1"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "far1 | Activation | alad1 hemb1"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "della | Inhibition | scl27"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "flu | Inhibition | glutr"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "gbp | Activation | glutr"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "cop1 | Inhibition | hy5"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "pif1 | Activation | cop1"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "arr10 | Activation | hema1"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "arr12 | Activation | hema1"
+    },
+    {
+     "draws": [
+      3
+     ],
+     "key": "toc1 | Inhibition | pif3"
+    }
+   ]
+  },
+  "/processes/transports": {
+   "rows_per_draw": [
+    0,
+    0,
+    0
+   ],
+   "pooled_keys": 0,
+   "union_to_mean_ratio": null,
+   "shared_by_pair": {
+    "draw 1 vs draw 2": 0,
+    "draw 1 vs draw 3": 0,
+    "draw 2 vs draw 3": 0
+   },
+   "shared_by_all": 0,
+   "keys": []
+  }
+ }
+}

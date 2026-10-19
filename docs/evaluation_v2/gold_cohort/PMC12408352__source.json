@@ -1,0 +1,20 @@
+{
+  "note": "Source manifest for the ORCH-753 gold cohort. The paper text is NOT committed; it lives at C:/t/eval-fulltext/<PMCID>.txt and gold.load_fulltext refuses a text whose sha256 differs.",
+  "pmcid": "PMC12408352",
+  "pmid": "40702181",
+  "doi": "10.1038/s41586-025-09175-9",
+  "citation": "Zhu B et al. Complete biosynthesis of salicylic acid from phenylalanine in plants Nature 2025.",
+  "is_review": false,
+  "content_cell": "metabolic chemistry",
+  "organism_cell": "plant",
+  "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12408352/fullTextXML",
+  "fetch_date": "2026-10-16",
+  "fulltext_http_status": 200,
+  "xml_sha256": "d5ccdca24a2c1c2fc6784d0787daea59102c95fe76feba40d579bc0ceafd94f0",
+  "text_sha256": "52cbc5aad19d34fa8a7770e05e13bb223a290fe4e5be00f6bacb4db34576e58e",
+  "text_chars": 97668,
+  "pathway_in_one_line": "The PAL route to salicylic acid in rice: trans-cinnamic acid is activated to cinnamoyl-CoA, beta-oxidised to benzoyl-CoA, esterified to benzyl benzoate, hydroxylated to benzyl salicylate, and hydrolysed to salicylic acid.",
+  "scope_note": "In scope: the seven-step CA -> CA-CoA -> BAc-CoA -> BA-CoA -> BB -> BS -> SA route and the enzymes OSD1, AIM1, OsKAT1/KAT2, OSD2, OSD3, OSD4, each measured here by in vitro assay with chromatographic product identification. Also in scope as an explicitly REFUTED conversion: the long-standing BA -> SA step attributed to benzoic acid 2-hydroxylase, which the paper argues does not occur. Adjacent, stated but not measured here: the isochorismate synthase route to SA, the beta-oxidation route as characterised in Petunia/Hypericum/tobacco/Populus, downstream SA signalling and SA glucosylation, and the subcellular-transport claims (BB moving peroxisome -> cytosol) which are inferences from localisation rather than measured transport.",
+  "estimated_two_sided_conversions": 8,
+  "selected_because": "The single best chemistry carrier in the set: a complete, linear, bounded pathway where every step is stated as a named substrate and a named product and also assayed one step at a time. Fills the plant cell that the existing gold has zero coverage of. Moderate length. Risk: compounds are introduced by name then used by abbreviation (CA, BA-CoA, BB, BS, BAlc), so a drafter must carry the abbreviation table or it will produce unmatchable names."
+}

@@ -1,0 +1,40 @@
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\orch747_ir_digest_delta.py:109: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  tar.extractall(tree)
+base HEAD = e4348aafde57e2f30fb20e925786a1aafe45d005; t2pw from C:\Users\Angad\AppData\Local\Temp\orch747_delta_base__br2c617\src\t2pw\__init__.py
+tip  t2pw from C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+legs: 89  moved: 73  interaction outcomes on tip: {'untyped_interaction': 265}
+   73 legs  /ir/processes/interactions/[]/export_status
+   72 legs  /ir/processes/interactions/[]/left/key
+   72 legs  /ir/processes/interactions/[]/right/key
+   73 legs  /ir/processes/interactions/[]/withheld
+   71 legs  /report/ir_validation/counts/process_members
+   73 legs  /report/warnings
+errors / ok / stops unchanged on every leg: True
+written: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\orch747_ir_digest_delta.json
+VERDICT: delta confined to the interaction export
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4348aafde57e2f30fb20e925786a1aafe45d005  [git, worktree dirty=True]
+label                   : ir-digest-delta
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/orch747_ir_digest_delta.py --rev HEAD
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 119532 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 2.82 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 6  124936:python.exe, 125220:git.exe, 125324:python.exe, 125336:python.exe, 125492:python.exe, 125696:python.exe
+descendants terminated  : 6  124936, 125220, 125324, 125336, 125492, 125696
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-747\34-ir-digest-delta.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

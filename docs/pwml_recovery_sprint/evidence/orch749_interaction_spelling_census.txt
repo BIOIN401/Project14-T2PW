@@ -1,0 +1,58 @@
+ORCH-749 interaction spelling census  (HEAD c9265fb8, t2pw from C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py)
+corpus: 95 committed final_mapped.json legs with interactions (of 115), 336 interaction rows
+
+table verdict, ORCH-747 nouns only : {'withheld': 336}
+table verdict, ORCH-749 this tree  : {'Inhibition': 91, 'withheld': 237, 'Activation': 8}   by type {'Inhibition': 91, 'Activation': 8}
+  by run root                      : {runs: {'Inhibition': 10, 'withheld': 42}, runs_verify: {'withheld': 195, 'Inhibition': 81, 'Activation': 8}}
+
+mapped spellings (rows, type):
+    77  'inhibits'                   -> Inhibition
+     8  'activates'                  -> Activation
+     8  'represses'                  -> Inhibition
+     2  'INHIBITS'                   -> Inhibition
+     2  'REPRESSES'                  -> Inhibition
+     1  'competes_with'              -> Inhibition
+     1  'downregulates'              -> Inhibition
+
+still withheld (rows, word as written):
+    50  'binds'
+    39  'modifies'
+    15  'degrades'
+    14  'interacts_with'
+    13  'regulates'
+    12  'interacts with'
+    10  'cofactor_of'
+    10  'catalyzes'
+     7  'transports'
+     6  'MODIFIES'
+     6  'ENCODES'
+     5  'cofactor'
+     4  'component_of'
+     4  'modulates'
+     4  'degraded_by'
+     3  'BINDS_TO'
+     3  'binds_to'
+     3  'binds to'
+     3  'phosphopantetheinylates'
+     3  'COMPONENT_OF'
+     3  'interacts'
+     2  'recruits'
+     2  'interaction'
+     2  'REGULATES'
+     1  'associates with'
+     1  'INTERACTS_WITH'
+     1  'precursor_of'
+     1  'facilitates_transport_of'
+     1  'catalyzes_synthesis_of'
+     1  'allosteric_inhibitor_of'
+     1  'BINDS'
+     1  'catalyzes hydrolysis of'
+     1  'may interact with'
+     1  'substrate_of'
+     1  'provides_substrate_for'
+     1  'aids_transport_of'
+     1  'synergizes_with'
+     1  'NONCOVALENTLY_BOUND_TO'
+
+exporter verdicts on the 63 legs that build offline (202 rows; stops: {'UnresolvedCompoundRowError': 31, 'DuplicateNamedRowError': 1}):
+  {'bare_protein_endpoint': 57, 'untyped_interaction': 139, 'exportable': 6}
