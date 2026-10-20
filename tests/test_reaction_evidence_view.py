@@ -85,7 +85,11 @@ def test_missing_artifacts_read_not_recorded(tmp_path):
     assert not at.exception
     assert [m.value for m in at.metric] == ["0.75", "true", "9", "1"]
     assert _texts(at.info) == ["Surviving reactions: Not recorded (no final_mapped.json)"]
-    assert [e.label for e in at.expander] == ["Quarantined / rejected candidate processes (Not recorded)"]
+    # ORCH-754b (merge rule 4, deliberate): the Interactions expander is new.
+    assert [e.label for e in at.expander] == [
+        "INTERACTIONS (0) -- PWML verdicts read from: Not recorded",
+        "Quarantined / rejected candidate processes (Not recorded)",
+    ]
     assert "Release status: Not recorded" in "\n".join(_texts(at.code))
 
 
@@ -102,8 +106,11 @@ def test_leg_directory_renders_header_reactions_quarantine_and_download(leg):
     ]
     labels = [e.label for e in at.expander]
     assert labels[0] == "Reaction 1: chorismate -> isochorismate"
-    assert len(labels) == 6 and labels[-1] == "Quarantined / rejected candidate processes (1)"
+    # ORCH-754b (merge rule 4, deliberate): one Interactions expander before the quarantine one.
+    assert len(labels) == 7 and labels[-1] == "Quarantined / rejected candidate processes (1)"
+    assert labels[-2] == "INTERACTIONS (3) -- PWML verdicts read from: pwml_ir.json"
     codes = "\n".join(_texts(at.code))
+    assert "INTERACTION 1  [final payload /processes/interactions/0]" in codes
     assert "Paper: PMC12096016" in codes and "Unmatched (4): NADH, ATP, EntD, Fur" in codes
     assert "QUARANTINED 1  [pre-quarantine /processes/reactions/5; reaction; lock rxn_lock_004]" in codes
     _silent_to_the_batch_driver(at)
@@ -121,6 +128,56 @@ def test_session_run_directory_uses_session_payload_when_no_final_mapped_on_disk
     assert len([e for e in at.expander if e.label.startswith("Reaction ")]) == 5
     codes = "\n".join(_texts(at.code))
     assert "Surviving reactions read from: session post_pipeline_artifacts[canonical_export_payload]" in codes
+
+
+def test_session_run_directory_reads_the_verdicts_from_the_sessions_own_export_ir(tmp_path):
+    """ORCH-754b, NEW ACCEPTANCE: an interactive run writes no pwml_ir.json, so the verdicts
+    come from the IR this session's export built, read as it stands, and say so."""
+
+    write_leg(tmp_path, names={"coverage_summary.json", "quarantine_report.json", "removed_entity_report.json"})
+    bundle = json.loads(BUNDLE.read_text(encoding="utf-8"))
+    ir = json.loads(json.dumps(bundle["pwml_ir.json"]))
+    ir["processes"]["interactions"][1].update(_withheld_binds())
+    at = _session_app(tmp_path, bundle, {"ok": True, "pwml_ir": ir, "output_path": str(tmp_path / "pathway.pwml"),
+                                         "xml_bytes": b"<pwml/>"})
+    _silent_to_the_batch_driver(at)
+    labels = [e.label for e in at.expander]
+    assert "INTERACTIONS (3) -- PWML verdicts read from: session pwml_export_result[pwml_ir]" in labels
+    assert "PWML: withheld -- untyped_interaction: the relationship word is neither" in "\n".join(_texts(at.code))
+
+
+def _withheld_binds() -> dict:
+    # The bundle's row 2, as a current IR records a withheld row.
+    return {"export_status": "withheld", "withheld": {
+        "reason": "untyped_interaction", "raw_interaction_type": "binds",
+        "left": "2,3-dihydroxybenzoic acid", "right": "EntE"}}
+
+
+def _session_app(tmp_path, bundle, export_result):
+    write_leg(tmp_path, names={"coverage_summary.json", "quarantine_report.json", "removed_entity_report.json"})
+    at = _app()
+    at.session_state["quarantine_artifacts"] = {"coverage_summary.json": str(tmp_path / "coverage_summary.json")}
+    at.session_state["post_pipeline_artifacts"] = {"canonical_export_payload": bundle[FINAL_MAPPED_FILENAME]}
+    at.session_state["pwml_export_result"] = export_result
+    return at.run()
+
+
+def test_an_export_that_wrote_no_pwml_shows_no_verdict_app_path(tmp_path):
+    """REGRESSION (G9): fails behaviourally at ``9da8358e``. On an IR-validation failure the
+    app returns ``ok: False`` and ``output_path: ""`` but still carries ``pwml_ir``; the page
+    took the IR's ``export_status`` at its word and said a row was drawn in no PWML at all."""
+
+    bundle = json.loads(BUNDLE.read_text(encoding="utf-8"))
+    ir = json.loads(json.dumps(bundle["pwml_ir.json"]))
+    ir["processes"]["interactions"][0].update(export_status="exportable", interaction_type="Inhibition")
+    ir["processes"]["interactions"][1].update(_withheld_binds())
+    at = _session_app(tmp_path, bundle, {"ok": False, "error": "PWML IR validation failed.", "output_path": "",
+                                         "pwml_ir": ir})
+    _silent_to_the_batch_driver(at)
+    codes = "\n".join(_texts(at.code))
+    assert "drawn as" not in codes and "withheld --" not in codes
+    assert codes.count("PWML: Not recorded (no PWML written: PWML IR validation failed.)") == 2
+    assert "PWML: Not recorded (this IR predates per-row export verdicts)" in codes  # row 3, untouched
 
 
 def test_section_follows_a_run_that_completes_after_the_first_render(leg):

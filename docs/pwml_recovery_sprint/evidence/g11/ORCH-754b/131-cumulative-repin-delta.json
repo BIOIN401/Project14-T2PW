@@ -1,0 +1,117 @@
+{
+  "label": "cumulative-repin-delta",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/orch754b_cumulative_repin.py",
+    "--pytest-output",
+    "docs/pwml_recovery_sprint/evidence/orch754b_pins_round2_before.pytest.log"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b",
+  "started_at": "2026-10-20T18:27:53+00:00",
+  "finished_at": "2026-10-20T18:28:20+00:00",
+  "duration_seconds": 26.188391800009413,
+  "timeout_seconds": 540.0,
+  "root_pid": 717108,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 717188,
+      "name": "python.exe",
+      "ppid": 717108
+    },
+    {
+      "pid": 716928,
+      "name": "python.exe",
+      "ppid": 717188
+    },
+    {
+      "pid": 717460,
+      "name": "python.exe",
+      "ppid": 716928
+    },
+    {
+      "pid": 718400,
+      "name": "python.exe",
+      "ppid": 717188
+    },
+    {
+      "pid": 718420,
+      "name": "python.exe",
+      "ppid": 718400
+    }
+  ],
+  "descendants_terminated": [
+    716928,
+    717188,
+    717460,
+    718400,
+    718420
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 190584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 678676,
+      "name": "python.exe"
+    },
+    {
+      "pid": 678752,
+      "name": "python.exe"
+    },
+    {
+      "pid": 714436,
+      "name": "python.exe"
+    },
+    {
+      "pid": 714704,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch754b/docs/pwml_recovery_sprint/evidence/g11/ORCH-754b/131-cumulative-repin-delta.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b",
+    "repo_head": "9da8358e8892e1b12764983eeb6a3985ce30eb42",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-754b",
+    "token": "ORCH-754b:714436:f6509f4d3539a655",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

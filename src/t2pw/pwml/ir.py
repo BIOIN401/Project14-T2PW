@@ -13,6 +13,12 @@ from t2pw.pipeline.entity_identity import (
 )
 from t2pw.pwml.compound_resolution import _compound_external_ids, _resolve_compound_rows
 from t2pw.pwml.compound_templates import select_compound_template_id
+from t2pw.pwml.interaction_types import (  # noqa: F401 -- re-exported: the names ir.py always had
+    PWML_INTERACTION_TYPES,
+    _interaction_type_key,
+    interaction_relationship_word,
+    pwml_interaction_type,
+)
 from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
 from t2pw.pwml.name_index import PathwhizNameIndex, default_name_index
 
@@ -22,51 +28,65 @@ logger = logging.getLogger(__name__)
 # offline canonicalization, distinct from "not provided -> load the default".
 _NAME_INDEX_UNSET = object()
 
-#: The only interaction types PathWhiz stores (``interactions.interaction_type``
-#: holds 11085 Activation and 4998 Inhibition rows and nothing else), keyed by
-#: the spellings the pipeline really writes for them. ORCH-747 accepted the two
-#: nouns alone, and no committed interaction is spelled that way -- they are verb
-#: forms (``inhibits``, ``represses``, ``activates``, ...), so everything was
-#: withheld. ORCH-749 adds the verb forms whose SIGN IS IN THE WORD: ``inhibits``
-#: is Inhibition in verb form, not a guessed sign. A word that carries no sign
-#: (``binds``, ``interacts``, ``modifies``, ``SAME_AS``, ``promoter_of``) is not
-#: here and stays withheld: PathBank has no neutral interaction type, and reading
-#: a sign into such a word would be the exporter repairing biology after the
-#: freeze (merge rule 8). The lookup is an exact match on
-#: :func:`_interaction_type_key` -- no stemming, no fuzzy matching -- so what
-#: exports is always readable from this table. Census over the committed runs:
-#: ``docs/pwml_recovery_sprint/evidence/orch749_interaction_spelling_census.json``.
-PWML_INTERACTION_TYPES = {
-    "activation": "Activation",
-    "activates": "Activation",
-    "stimulates": "Activation",
-    "induces": "Activation",
-    "upregulates": "Activation",
-    "up-regulates": "Activation",
-    "enhances": "Activation",
-    "promotes": "Activation",
-    "inhibition": "Inhibition",
-    "inhibits": "Inhibition",
-    "represses": "Inhibition",
-    "repression": "Inhibition",
-    "blocks": "Inhibition",
-    "suppresses": "Inhibition",
-    "downregulates": "Inhibition",
-    "down-regulates": "Inhibition",
-    "antagonizes": "Inhibition",
-    "competes with": "Inhibition",
-    "competes_with": "Inhibition",  # the pipeline's own spelling of the row above
-    "prevents": "Inhibition",
-}
+#: Kinds whose name a protein endpoint must not share (ORCH-754b round 2): an endpoint
+#: named like a nucleic acid, compound or element collection as well as a protein could
+#: mean either -- an sRNA's ``entC`` mRNA target, say -- so it is never drawn as the protein.
+AMBIGUOUS_ENDPOINT_KINDS = ("compound", "nucleic_acid", "element_collection")
 
 
-def _interaction_type_key(raw_type: Any) -> str:
-    """The :data:`PWML_INTERACTION_TYPES` key for a relationship as written.
+def interaction_pwml_verdict(
+    raw_type: Any,
+    endpoints: Sequence[Tuple[str, Optional[Dict[str, Any]]]],
+    ambiguous_endpoints: Sequence[Dict[str, Any]] = (),
+) -> Dict[str, Any]:
+    """What the PWML export does with one interaction, given its resolved endpoints.
 
-    Casefolded, whitespace collapsed, surrounding quotes and a trailing period
-    dropped -- and nothing else. The lookup that follows is exact.
+    Text outputs never recompute this: the human-facing record
+    (``app.reaction_evidence``) reads the verdict back out of the built IR.
+
+    ``endpoints`` is ``(entity_type, payload row)`` for each side that resolved.
+    Returns ``pwml_type`` (``""`` for an unsigned word), ``reason`` (``""`` when the row
+    is drawn) and ``unwrappable_proteins``. A bare protein cannot be drawn (PathWhiz has
+    no protein interaction member). Stage 6 wraps a protein endpoint only when it has a
+    species and a UniProt/DrugBank identity, and also refuses some that do (the Unknown
+    sentinel, a name another complex already holds, an ambiguous alias), so a protein
+    still bare here gets the missing piece named when one is missing, and otherwise
+    ``bare_protein_endpoint``: no wrapper exists in this payload, for whatever reason.
+    ``ambiguous_endpoints`` lists protein endpoints whose written name also names one of
+    :data:`AMBIGUOUS_ENDPOINT_KINDS`; such a row is ``ambiguous_protein_endpoint`` first.
     """
-    return re.sub(r"\s+", " ", str(raw_type or "")).casefold().strip(" \"'`“”‘’.")
+    pwml_type = pwml_interaction_type(raw_type)
+    verdict: Dict[str, Any] = {"pwml_type": pwml_type, "reason": "", "unwrappable_proteins": []}
+    if not pwml_type:
+        verdict["reason"] = "untyped_interaction"
+        return verdict
+    proteins = [row or {} for entity_type, row in endpoints if entity_type == "protein"]
+    if not proteins:
+        return verdict
+    if ambiguous_endpoints:
+        verdict["reason"] = "ambiguous_protein_endpoint"
+        verdict["ambiguous_endpoints"] = [dict(a) for a in ambiguous_endpoints]
+        return verdict
+    for row in proteins:
+        missing = [
+            label
+            for label, present in (
+                ("species", _entity_species_context(row)),
+                ("external_identity", _protein_external_id(row)),
+            )
+            if not present
+        ]
+        if missing:
+            verdict["unwrappable_proteins"].append({"name": _canonical(row.get("name")), "missing": missing})
+    missing_any = {label for u in verdict["unwrappable_proteins"] for label in u["missing"]}
+    verdict["reason"] = (
+        "protein_endpoint_missing_"
+        + "_and_".join(label for label in ("species", "external_identity") if label in missing_any)
+        if missing_any
+        else "bare_protein_endpoint"
+    )
+    return verdict
+
 
 #: The field a compound row carries once compound resolution has ruled on it.
 #: Written on **every** row by the resolution machinery -- ``matched``,
@@ -1481,6 +1501,9 @@ def build_pwml_ir(
 
     entity_by_name: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
     entity_by_key: Dict[str, Dict[str, Any]] = {}
+    #: The payload row behind each entity key, so the interaction loop can judge a bare
+    #: protein endpoint with the same predicates the generated-complex gates use.
+    source_row_by_key: Dict[str, Dict[str, Any]] = {}
     for source_key, entity_type, prefix, db_keys, db_field, strict_required in entity_specs:
         rows, _ = _dedupe_named_rows(
             _safe_list(entities.get(source_key)),
@@ -1544,6 +1567,7 @@ def build_pwml_ir(
             typed = dict(rec)
             typed["entity_type"] = entity_type
             entity_by_key[typed["key"]] = typed
+            source_row_by_key[typed["key"]] = row
             for alias in [
                 rec.get("name"),
                 rec.get("raw_name"),
@@ -2330,12 +2354,12 @@ def build_pwml_ir(
         interaction_index += 1
         int_key = f"int_{interaction_index}"
         bs_key = resolve_state(raw.get("biological_state"), f"/processes/interactions/{iidx}/biological_state", required=True)
-        raw_type = _canonical(raw.get("interaction_type") or raw.get("relationship") or raw.get("class") or "interaction")
+        raw_type = interaction_relationship_word(raw)
         # Spelling only: "activation" / "activates" -> "Activation", "inhibits" ->
         # "Inhibition". A word not in the table stays as written and is withheld
         # below -- mapping "binds" or "modifies" onto a sign would be the exporter
         # inventing biology after the freeze (merge rule 8).
-        interaction_type = PWML_INTERACTION_TYPES.get(_interaction_type_key(raw_type), raw_type)
+        interaction_type = pwml_interaction_type(raw_type) or raw_type
         interaction = {
             "key": int_key,
             "type": "interaction",
@@ -2358,11 +2382,26 @@ def build_pwml_ir(
         # complex, nucleic acid, element collection and bound). Anything else is
         # kept in the IR and reported, but withheld from the PWML: the writer
         # lists every withheld row in a side file next to the export.
-        withheld_reason = ""
-        if interaction_type not in PWML_INTERACTION_TYPES.values():
-            withheld_reason = "untyped_interaction"
-        elif any(side and side["entity_type"] == "protein" for side in (left_entity, right_entity)):
-            withheld_reason = "bare_protein_endpoint"
+        # ORCH-754b / D-104: the rule is :func:`interaction_pwml_verdict`; the exporter
+        # never builds a wrapper itself (merge rule 8).
+        # The written name, not the row the resolver chose: a protein endpoint whose
+        # name also registers a nucleic acid / compound / element collection is not
+        # known to be the protein, so it is never drawn as one.
+        ambiguous = []
+        for side, written in ((left_entity, left_name), (right_entity, right_name)):
+            if side and side["entity_type"] == "protein":
+                kinds = sorted(
+                    {c["entity_type"] for c in entity_by_name.get(_norm(written), [])} & set(AMBIGUOUS_ENDPOINT_KINDS)
+                )
+                if kinds:
+                    ambiguous.append({"name": written, "also_names": kinds})
+        verdict = interaction_pwml_verdict(
+            raw_type,
+            [(side["entity_type"], source_row_by_key.get(side["key"], side)) for side in (left_entity, right_entity) if side],
+            ambiguous,
+        )
+        withheld_reason = verdict["reason"]
+        unwrappable = verdict["unwrappable_proteins"]
         if withheld_reason:
             interaction["export_status"] = "withheld"
             interaction["withheld"] = {
@@ -2371,7 +2410,14 @@ def build_pwml_ir(
                 "raw_interaction_type": raw_type,
                 "left": left_name,
                 "right": right_name,
+                # ORCH-754b: the evidence travels with the verdict, so the record the app
+                # persists (``pwml_ir.json``) and the CLI side file are complete on their own.
+                "evidence": _canonical(raw.get("evidence")),
             }
+            if unwrappable:
+                interaction["withheld"]["unwrappable_proteins"] = unwrappable
+            if verdict.get("ambiguous_endpoints"):
+                interaction["withheld"]["ambiguous_endpoints"] = verdict["ambiguous_endpoints"]
             _add_issue(
                 report,
                 "warning",

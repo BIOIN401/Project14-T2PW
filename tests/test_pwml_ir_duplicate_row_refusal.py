@@ -278,7 +278,18 @@ def test_new_acceptance_a_reference_cannot_be_silently_repointed() -> None:
 R3_CONTROL_LEG = ("runs/2026-07-27_1623/papers/"
                   "PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/"
                   "final_mapped.json")
-R3_BASE_IR_DIGEST = "32bf7893e62fcb8ac5799cbf7d910a8076ff51ca63693f66262c9f1f7b1b8dc2"
+R3_BASE_IR_DIGEST = "14af62c13c45fe53c9ff4685d76d2591e024751abdd056eb37bd78f718adf471"
+#: MOVED, DELIBERATELY, by **ORCH-754b** on 2026-10-19 under permanent **merge rule 4**
+#: (the re-pin ORCH-747/749 owed, authorised for ORCH-754b): ``32bf7893e62f…`` ->
+#: ``14af62c13c45…``, cumulative ``c9265fb8`` -> ORCH-754b's tip. This leg carries ONE
+#: interaction, ``DHNA inhibits MenD``; the IR now annotates it (``export_status``, a ``key``
+#: per side, ``interaction_type`` spelled ``Inhibition``, and a ``withheld`` record --
+#: ``bare_protein_endpoint`` with its pointer, word and evidence -- because ``MenD`` is a bare
+#: protein in this already-mapped payload). That is the whole move: measured by
+#: ``evidence/orch754b_cumulative_repin.py`` (``orch754b_cumulative_repin.json``, G11
+#: ``ORCH-754b/18``), every changed pointer is under ``/ir/processes/interactions`` and no
+#: key was renumbered, no reference rebound, no entity or reaction moved -- the property
+#: this control exists to hold, still held.
 #: MOVED ONCE, DELIBERATELY, by **C-050k** on 2026-08-17 under permanent **merge rule 4**:
 #: ``476e41daeb97…`` -> ``026c8a8e6b69…``. **The IR digest above did NOT move**, which is
 #: the property this control exists to hold: no key was renumbered and no reference was
@@ -297,7 +308,12 @@ R3_BASE_IR_DIGEST = "32bf7893e62fcb8ac5799cbf7d910a8076ff51ca63693f66262c9f1f7b1
 #: ``_norm(name)``. It carries a real ALIAS collision -- ``{"name": "1,4-dihydroxy-2-
 #: naphthoic acid", "synonyms": ["DHNA"]}`` against a bare ``{"name": "DHNA"}`` -- which
 #: is precisely why C-050k exists and why this control is where the delta surfaces.
-R3_BASE_REPORT_DIGEST = "026c8a8e6b69932ef78071186acf316fa3a4939c7f201980aa97b8020516e787"
+R3_BASE_REPORT_DIGEST = "082729a8b74956771de08247c32f3dc10464dba44f629ece6a8ac02f82b7849a"
+#: MOVED by **ORCH-754b** (merge rule 4), cumulative from ``c9265fb8``: ``026c8a8e6b69…`` ->
+#: ``082729a8b749…``. The whole delta is ONE added ``interaction_withheld_from_pwml`` warning
+#: for that row and the ``process_members`` validation count its two sides add -- enumerated
+#: in the test below, so the re-pin cannot hide anything else. ``errors`` and ``ok`` did not
+#: move.
 
 
 class _DownDb:
@@ -341,8 +357,13 @@ def test_new_acceptance_a_non_colliding_leg_is_byte_identical_to_the_base() -> N
         "component_inferred_from_biological_state",
         "ambiguous_entity_row_reference",
         "ambiguous_entity_row_reference",
+        "interaction_withheld_from_pwml",
         "noncanonical_names_collision_risk",
-    ], "only the two C-050k warnings may be added, and nothing may be reordered"
+    ], "only the two C-050k warnings and ORCH-747's one interaction warning may be added, and nothing reordered"
+    assert [(i["reason"], i["raw_interaction_type"], i["pointer"]) for i in report["warnings"]
+            if i["code"] == "interaction_withheld_from_pwml"] == [
+        ("bare_protein_endpoint", "inhibits", "/processes/interactions/0"),
+    ]
     assert [(i["name"], i["pointer"], i["entity_keys"], i["bound_entity_key"])
             for i in report["warnings"]
             if i["code"] == "ambiguous_entity_row_reference"] == [

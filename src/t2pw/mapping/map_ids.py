@@ -40,6 +40,7 @@ from t2pw.pipeline.lineage import (
     read as read_lineage,
     record as record_lineage,
 )
+from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_interaction_type
 from t2pw.pipeline.reference_repair import (
     ReplacementRecord,
     repair_entity_references,
@@ -7555,6 +7556,9 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
 ) -> Dict[str, Any]:
     """Rewrite protein enzyme/modifier references to protein_complex references.
 
+    Also the protein endpoints of signed interactions (ORCH-754b, D-104): PathWhiz
+    has no bare-protein interaction member either, and they take the same wrapper.
+
     The rewrite exists because the PathWhiz importer refuses a bare protein as a
     reaction enzyme. It is **not** licence to change who catalyses the step: a
     PathBank complex may stand in for an enzyme only when this reaction accounts
@@ -7620,6 +7624,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         reaction: Dict[str, Any],
         actor_scope: Set[str],
         json_pointer: str,
+        record: bool = True,
     ) -> Tuple[str, Dict[str, Any]]:
         species = _species_for(protein_row, actor, reaction)
         protein_id = _to_positive_int(protein_row.get("pathbank_protein_id"))
@@ -7679,6 +7684,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             result = _single_component_wrapper_result(
                 protein_name, protein_row, species, result, refusal
             )
+        if refusal and record:
             summary["reaction_enzyme_complex_superset_promotions_refused"] = (
                 summary.get("reaction_enzyme_complex_superset_promotions_refused", 0) + 1
             )
@@ -7968,6 +7974,112 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             reaction[key] = _dedupe_actor_rows(
                 _rewrite_rows(rows, pointer, reaction, actor_scope), pointer
             )
+
+    # ── Interaction endpoints (ORCH-754b, D-104) ─────────────────────────────
+    #
+    # PathWhiz has no bare-protein interaction member: an interaction element is a
+    # Compound, ElementCollection, NucleicAcid, ProteinComplex or Bound, and
+    # PathBank draws protein regulation between single-protein complexes
+    # (reference/PW687775.pwml, interaction 15843). So a protein endpoint gets the
+    # enzyme wrapper -- the same ``_resolve_complex_name``, cache and F-116 superset
+    # refusal -- built here, before the freeze, never by the exporter (merge rule 8).
+    # Only a row the PWML can carry is wrapped: its word must carry a sign, and every
+    # protein endpoint must have the species and UniProt/DrugBank identity the
+    # generated-complex gates require (``ir.validate_required_pwml_contract``), so a
+    # wrapper never turns a withheld row into a broken complex. Anything else is left
+    # as written; the exporter withholds it and its own record names the reason.
+    # NOTHING about these rows is written to this report -- no counter, no action, no
+    # superset-refusal record: the report reaches the interactive curator's prompt
+    # (``interactive_curator.compact_mapping_misses``, which copies the summary dict
+    # whole), and D-104's 2026-10-20 ruling keeps every LLM input as the base produced
+    # it. The rewrite is recorded where it happens: the endpoint now names a wrapper row
+    # carrying ``generated`` / ``generation_reason``, and the IR's verdict says the rest.
+    # Runs before the dropped-protein repair below, so it only sees declared proteins.
+
+    def _alias_key(value: Any) -> str:
+        return " ".join(str(value or "").casefold().split())
+
+    # The exporter also resolves an endpoint through a protein's other names
+    # (``ir.build_pwml_ir`` registers name, raw_name, short_name, common_name and
+    # synonyms). Matched here only exactly (case and spacing aside), which is
+    # narrower than the exporter's own normalization, and only when ONE protein
+    # carries the name -- so this never picks a protein the exporter would not.
+    proteins_by_alias: Dict[str, List[Dict[str, Any]]] = {}
+    for row in proteins_by_norm.values():
+        names = [row.get(f) for f in ("name", "raw_name", "short_name", "common_name")]
+        for alias in {_alias_key(a) for a in [*names, *_safe_list(row.get("synonyms"))] if _alias_key(a)}:
+            proteins_by_alias.setdefault(alias, []).append(row)
+    # Fail closed (round 2): an endpoint whose name -- or the alias it matched -- also
+    # names a nucleic acid, compound or element collection is not known to be the
+    # protein (an sRNA's ``entC`` mRNA target), so no endpoint of that row is wrapped
+    # and the exporter withholds it as ``ambiguous_protein_endpoint``. Compared with
+    # this stage's own normalization, which is looser than the exporter's, so it
+    # refuses at least everything the exporter would call ambiguous.
+    other_kind_names = {
+        _normalize_name(str(alias))
+        for bucket in ("compounds", "nucleic_acids", "element_collections")
+        for row in _safe_list(entities.get(bucket))
+        if isinstance(row, dict)
+        for alias in [*(row.get(f) for f in ("name", "raw_name", "short_name", "common_name")),
+                      *_safe_list(row.get("synonyms"))]
+        if _normalize_name(str(alias or ""))
+    }
+
+    for iidx, interaction in enumerate(_safe_list(processes.get("interactions"))):
+        if not isinstance(interaction, dict) or not pwml_interaction_type(
+            interaction_relationship_word(interaction)
+        ):
+            continue
+        endpoints: List[Tuple[str, str, Dict[str, Any]]] = []
+        shared_name = False
+        # The exporter's own field precedence for each side.
+        for fields in (("left", "entity_1", "source"), ("right", "entity_2", "target")):
+            field = next((f for f in fields if interaction.get(f)), "")
+            written = _canonical_name(str(interaction.get(field) or "")) if field else ""
+            norm = _normalize_name(written)
+            if not norm or norm in complexes_by_norm:
+                continue
+            row = proteins_by_norm.get(norm)
+            if row is None and len(proteins_by_alias.get(_alias_key(written), [])) == 1:
+                row = proteins_by_alias[_alias_key(written)][0]
+            if row is not None:
+                shared_name = shared_name or norm in other_kind_names
+                # The wrapper is named after, and holds, the declared protein.
+                endpoints.append((field, _canonical_name(str(row.get("name") or written)), row))
+        if not endpoints or shared_name:
+            continue
+        # A complex already named like this protein's wrapper. Its own one-protein
+        # wrapper (built for it as an enzyme, or on an earlier pass) is reused as it
+        # stands; any other complex is never borrowed, because pointing the endpoint
+        # at a declared assembly would add its other members to the interaction.
+        named = {
+            name: complexes_by_norm.get(_normalize_name(_wrapper_complex_name(name)))
+            for _field, name, _row in endpoints
+        }
+        own_wrapper = {
+            name: row is not None
+            and is_generated_complex_wrapper(row)
+            and [_normalize_name(_component_name(c)) for c in _safe_list(row.get("components"))]
+            == [_normalize_name(name)]
+            for name, row in named.items()
+        }
+        if not all(
+            protein_species_context(row)
+            and has_protein_external_identity(row)
+            and not is_pathbank_unknown_protein(row)  # the sentinel's accession names no protein
+            and (named[name] is None or own_wrapper[name])
+            for _field, name, row in endpoints
+        ):
+            continue
+        for field, name, row in endpoints:
+            pointer = f"/processes/interactions/{iidx}/{field}"
+            if own_wrapper[name]:
+                complex_name = _canonical_name(str(named[name].get("name") or ""))
+            else:
+                complex_name, _result = _resolve_complex_name(
+                    name, row, {}, interaction, set(), pointer, record=False
+                )
+            interaction[field] = complex_name
 
     # ── The references the drops above orphaned ──────────────────────────────
     #

@@ -1,0 +1,4732 @@
+{
+ "base_rev": "f9892cdf",
+ "base_sha": "f9892cdf7d61ab487f6b0b0b67aeb094684d0c6f",
+ "base_t2pw_file": "C:\\Users\\Angad\\AppData\\Local\\Temp\\orch754b_base_z3v0jlxm\\src\\t2pw\\__init__.py",
+ "tip_t2pw_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b\\src\\t2pw\\__init__.py",
+ "inputs": 99,
+ "corpus_legs": 95,
+ "corpus_interaction_rows": 336,
+ "preservation": {
+  "inputs_with_no_protein_endpoint": 7,
+  "of_which_pwml_built_on_both": 5,
+  "names": [
+   "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json",
+   "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json",
+   "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json",
+   "runs_verify/2026-08-21_2239/papers/PMC12856317/research/final_mapped.json",
+   "runs_verify/2026-09-01_1612/papers/PMC12856317/strict/final_mapped.json",
+   "fixture:enzymes_only",
+   "fixture:enzyme_reaction_no_protein_endpoint"
+  ],
+  "byte_identical_failures": [],
+  "verdict": "PRESERVED"
+ },
+ "corpus_direct": {
+  "legs_built": 63,
+  "base": {
+   "bare_protein_endpoint": 57,
+   "untyped_interaction": 139,
+   "exportable": 6
+  },
+  "tip": {
+   "bare_protein_endpoint": 50,
+   "untyped_interaction": 140,
+   "protein_endpoint_missing_external_identity": 6,
+   "exportable": 6
+  }
+ },
+ "corpus_replay": {
+  "legs_built": 94,
+  "base": {
+   "bare_protein_endpoint": 86,
+   "untyped_interaction": 231,
+   "exportable": 13
+  },
+  "tip": {
+   "exportable": 73,
+   "untyped_interaction": 232,
+   "protein_endpoint_missing_external_identity": 23,
+   "ambiguous_protein_endpoint": 2
+  },
+  "pwml_interactions": [
+   4,
+   54
+  ]
+ },
+ "ir_error_codes_added_on_tip": {},
+ "contract_error_codes_added_on_tip": {},
+ "confinement": {
+  "inputs_checked": 99,
+  "violations": {},
+  "verdict": "CONFINED"
+ },
+ "per_input": {
+  "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": {
+   "interaction_rows": 6,
+   "protein_endpoint_rows": 6,
+   "direct": {
+    "base": {
+     "stop": "DuplicateNamedRowError"
+    },
+    "tip": {
+     "stop": "DuplicateNamedRowError"
+    }
+   },
+   "replay": {
+    "base": "build:DuplicateNamedRowError",
+    "tip": "build:DuplicateNamedRowError",
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 0,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 8,
+   "protein_endpoint_rows": 8,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 7,
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "untyped_interaction": 7,
+     "protein_endpoint_missing_external_identity": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 4,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "protein_endpoint_missing_external_identity": 1,
+     "untyped_interaction": 3
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json": {
+   "interaction_rows": 5,
+   "protein_endpoint_rows": 5,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 5
+    },
+    "tip": {
+     "untyped_interaction": 5
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json": {
+   "interaction_rows": 7,
+   "protein_endpoint_rows": 6,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 5,
+     "bare_protein_endpoint": 2
+    },
+    "tip": {
+     "untyped_interaction": 5,
+     "protein_endpoint_missing_external_identity": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 8,
+   "protein_endpoint_rows": 5,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 7,
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "untyped_interaction": 7,
+     "protein_endpoint_missing_external_identity": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-08-02_2130/papers/PMC12856317/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 0,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "exportable": 2,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 2,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs/2026-08-02_2130/papers/PMC13231680/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1148/papers/PMC13231680/research/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "protein_endpoint_missing_external_identity": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "protein_endpoint_missing_external_identity": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 1,
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "untyped_interaction": 1,
+     "protein_endpoint_missing_external_identity": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 6,
+   "protein_endpoint_rows": 6,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 4,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "protein_endpoint_missing_external_identity": 4,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 13,
+   "protein_endpoint_rows": 12,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 3,
+     "untyped_interaction": 10
+    },
+    "tip": {
+     "ambiguous_protein_endpoint": 2,
+     "untyped_interaction": 10,
+     "protein_endpoint_missing_external_identity": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 6,
+   "protein_endpoint_rows": 6,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 5
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 5
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": {
+   "interaction_rows": 10,
+   "protein_endpoint_rows": 8,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 9
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 9
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": {
+   "interaction_rows": 5,
+   "protein_endpoint_rows": 5,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 5
+    },
+    "tip": {
+     "untyped_interaction": 5
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 8,
+   "protein_endpoint_rows": 6,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 2,
+     "exportable": 2,
+     "untyped_interaction": 4
+    },
+    "tip": {
+     "protein_endpoint_missing_external_identity": 2,
+     "exportable": 2,
+     "untyped_interaction": 4
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     2,
+     2
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 5,
+   "protein_endpoint_rows": 5,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 4,
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "untyped_interaction": 4,
+     "protein_endpoint_missing_external_identity": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": {
+   "interaction_rows": 6,
+   "protein_endpoint_rows": 6,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 5
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 5
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 0,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     1,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-18_1328/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-18_1328/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 1,
+     "bare_protein_endpoint": 2
+    },
+    "tip": {
+     "untyped_interaction": 1,
+     "protein_endpoint_missing_external_identity": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2014/papers/PMC12312563/research/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "protein_endpoint_missing_external_identity": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "protein_endpoint_missing_external_identity": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2014/papers/PMC12312563/strict/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 4,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 3
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 5,
+   "protein_endpoint_rows": 5,
+   "direct": {
+    "base": {
+     "untyped_interaction": 5
+    },
+    "tip": {
+     "untyped_interaction": 5
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 5
+    },
+    "tip": {
+     "untyped_interaction": 5
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 4,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 3
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "exportable": 1,
+     "bare_protein_endpoint": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "bare_protein_endpoint": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "exportable": 1,
+     "bare_protein_endpoint": 2
+    },
+    "tip": {
+     "exportable": 3
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12856317/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 0,
+   "direct": {
+    "base": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     1,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_1821/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 6,
+   "protein_endpoint_rows": 6,
+   "direct": {
+    "base": {
+     "untyped_interaction": 6
+    },
+    "tip": {
+     "untyped_interaction": 6
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 6
+    },
+    "tip": {
+     "untyped_interaction": 6
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 6,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "exportable": 3,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "exportable": 3,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "exportable": 3,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 4,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "untyped_interaction": 3
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "untyped_interaction": 3
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12856317/research/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12180156/research/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 4,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 2,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     2
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12180156/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "untyped_interaction": 3
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "untyped_interaction": 3
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12856317/research/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC13231680/research/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC13231680/strict/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 3
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 8,
+   "protein_endpoint_rows": 7,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 7
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 7
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 7
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 7
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 4,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 3
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 3
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12856317/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 5,
+   "protein_endpoint_rows": 5,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 4
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 4
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC13231680/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1402/papers/PMC12180156/research/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12180156/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12444477/strict/final_mapped.json": {
+   "interaction_rows": 13,
+   "protein_endpoint_rows": 12,
+   "direct": {
+    "base": {
+     "untyped_interaction": 12,
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "untyped_interaction": 13
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 12,
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "untyped_interaction": 13
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 4,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "protein_endpoint_missing_external_identity": 2,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "protein_endpoint_missing_external_identity": 2,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12856317/research/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 4,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 2,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     2
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12444477/research/final_mapped.json": {
+   "interaction_rows": 8,
+   "protein_endpoint_rows": 8,
+   "direct": {
+    "base": {
+     "untyped_interaction": 7,
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "untyped_interaction": 7,
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 7,
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "untyped_interaction": 7,
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12444477/strict/final_mapped.json": {
+   "interaction_rows": 5,
+   "protein_endpoint_rows": 4,
+   "direct": {
+    "base": {
+     "untyped_interaction": 4,
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "untyped_interaction": 4,
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 4,
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "untyped_interaction": 4,
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "exportable": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 2,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 7,
+   "protein_endpoint_rows": 7,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 6
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 6
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 6
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 6
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12180156/strict/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 4,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 2,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     2
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12856317/research/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-08-28_1816/papers/PMC13231680/research/final_mapped.json": {
+   "interaction_rows": 4,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "untyped_interaction": 4
+    },
+    "tip": {
+     "untyped_interaction": 4
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 4
+    },
+    "tip": {
+     "untyped_interaction": 4
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12096016/research/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12096016/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12180156/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12180156/strict/final_mapped.json": {
+   "interaction_rows": 3,
+   "protein_endpoint_rows": 3,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12444477/research/final_mapped.json": {
+   "interaction_rows": 16,
+   "protein_endpoint_rows": 16,
+   "direct": {
+    "base": {
+     "untyped_interaction": 11,
+     "bare_protein_endpoint": 5
+    },
+    "tip": {
+     "untyped_interaction": 11,
+     "protein_endpoint_missing_external_identity": 3,
+     "bare_protein_endpoint": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 11,
+     "bare_protein_endpoint": 4,
+     "exportable": 1
+    },
+    "tip": {
+     "untyped_interaction": 11,
+     "protein_endpoint_missing_external_identity": 2,
+     "exportable": 3
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12452463/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12452463/strict/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 2,
+   "direct": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 2
+    },
+    "tip": {
+     "untyped_interaction": 2
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12856317/research/final_mapped.json": {
+   "interaction_rows": 2,
+   "protein_endpoint_rows": 1,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 1,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 1,
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "runs_verify/2026-09-01_1612/papers/PMC12856317/strict/final_mapped.json": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 0,
+   "direct": {
+    "base": {
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "untyped_interaction": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "fixture:enzymes_only": {
+   "interaction_rows": 0,
+   "protein_endpoint_rows": 0,
+   "direct": {
+    "base": {},
+    "tip": {}
+   },
+   "replay": {
+    "base": {},
+    "tip": {},
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     null,
+     null
+    ],
+    "pwml_built": [
+     false,
+     false
+    ],
+    "pwml_stop": [
+     "ValueError",
+     "ValueError"
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "fixture:enzyme_reaction_no_protein_endpoint": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 0,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "exportable": 1
+    },
+    "tip": {
+     "exportable": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     1,
+     1
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": true,
+    "report_sha256": true,
+    "pwml_sha256": true,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "fixture:protein_endpoints": {
+   "interaction_rows": 5,
+   "protein_endpoint_rows": 5,
+   "direct": {
+    "base": {
+     "bare_protein_endpoint": 4,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 1,
+     "protein_endpoint_missing_external_identity": 1,
+     "protein_endpoint_missing_species": 1
+    }
+   },
+   "replay": {
+    "base": {
+     "bare_protein_endpoint": 4,
+     "untyped_interaction": 1
+    },
+    "tip": {
+     "exportable": 2,
+     "untyped_interaction": 1,
+     "protein_endpoint_missing_external_identity": 1,
+     "protein_endpoint_missing_species": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     0,
+     2
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": false,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  },
+  "correction:competes_with": {
+   "interaction_rows": 1,
+   "protein_endpoint_rows": 0,
+   "direct": {
+    "base": {
+     "stop": "UnresolvedCompoundRowError"
+    },
+    "tip": {
+     "stop": "UnresolvedCompoundRowError"
+    }
+   },
+   "replay": {
+    "base": {
+     "exportable": 1
+    },
+    "tip": {
+     "untyped_interaction": 1
+    },
+    "tip_stage6_summary_interaction_keys": {},
+    "pwml_interactions": [
+     1,
+     0
+    ],
+    "pwml_built": [
+     true,
+     true
+    ],
+    "pwml_stop": [
+     null,
+     null
+    ],
+    "tip_ir_error_codes_added": []
+   },
+   "byte_identical": {
+    "stage6_payload_sha256": true,
+    "stage6_report_sha256": true,
+    "ir_without_withheld_evidence_sha256": false,
+    "report_sha256": false,
+    "pwml_sha256": false,
+    "stop": true,
+    "pwml_stop": true
+   },
+   "confinement_violations": [],
+   "contract_error_codes_added": []
+  }
+ },
+ "g9_correction_competes_with": {
+  "base": {
+   "exportable": 1
+  },
+  "tip": {
+   "untyped_interaction": 1
+  },
+  "holds": true
+ }
+}

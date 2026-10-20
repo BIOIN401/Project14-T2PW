@@ -55,14 +55,17 @@ INHIBITION = [
     "downregulates",
     "down-regulates",
     "antagonizes",
-    "competes with",
-    "competes_with",
     "prevents",
 ]
 
 #: Words the pipeline really writes whose sign is NOT in the word. PathBank has no neutral
 #: interaction type, so each must stay withheld rather than be guessed into one.
 UNSIGNED = [
+    # ORCH-754b moved these two out of INHIBITION, deliberately (merge rule 4): competition
+    # is symmetric, so the word names no direction and drawing it as entity_1 -| entity_2
+    # was the exporter choosing one after the freeze (merge rule 8).
+    "competes with",
+    "competes_with",
     "binds",
     "binding",
     "binds_to",
@@ -204,7 +207,6 @@ def test_a_word_whose_sign_is_not_in_it_is_withheld_not_guessed(word: str) -> No
         ("“inhibits”", "Inhibition"),
         ("inhibits.", "Inhibition"),
         ('"Activates".', "Activation"),
-        ("Competes  With", "Inhibition"),
         ("UP-REGULATES", "Activation"),
         ("Down-Regulates", "Inhibition"),
         ("Activation", "Activation"),
@@ -244,7 +246,7 @@ def test_no_stemming_a_near_miss_of_a_table_word_is_withheld(near_miss: str) -> 
 
 
 def test_the_pwml_carries_the_signed_rows_and_withholds_the_unsigned_ones() -> None:
-    words = ["inhibits", "binds", "activates", "SAME_AS", "REPRESSES", "promoter_of", '"competes with".']
+    words = ["inhibits", "binds", "activates", "SAME_AS", "REPRESSES", "promoter_of", "prevents"]
     ir, report = build_pwml_ir(_payload(*words), strict_db=True, name_index=None)
     assert report["errors"] == []
     signature = discover_structure_signature(REFERENCE)

@@ -770,6 +770,11 @@ def _text_blocks(report: "ResearchReport") -> List[str]:
     out.append("  carry their own evidence but are NOT tiered: the tiering layer scores")
     out.append("  reactions and entities only, so no tier, no RAG confidence and no source")
     out.append("  list is available for them. Read the evidence quote on each row.")
+    # ORCH-754b / D-104: the text output says, for every interaction, whether it
+    # reached the PWML. Here none did, for one reason. Human-facing only: no model
+    # reads this report.
+    out.append("  Research mode writes no PWML, so none of these rows reached one. A")
+    out.append("  strict run's reaction_evidence.txt gives the exporter's own verdict per row.")
     out.append("")
     if interactions:
         for number, row in enumerate(interactions, start=1):

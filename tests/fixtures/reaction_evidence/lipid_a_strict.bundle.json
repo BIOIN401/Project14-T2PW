@@ -835,43 +835,108 @@
    ],
    "interactions": [
     {
-     "name": "FabZ dehydrates β-hydroxyacyl-ACP"
+     "name": "FabZ dehydrates β-hydroxyacyl-ACP",
+     "relationship": "catalyzes",
+     "entity_1": "FabZ",
+     "entity_2": "R-3-hydroxymyristoyl-ACP",
+     "biological_state": "cytoplasmic state",
+     "evidence": "FabZ catalyzes the dehydration of β-hydroxyacyl-ACPs"
     },
     {
-     "name": "Competition between FabZ and LpxA"
+     "name": "Competition between FabZ and LpxA",
+     "relationship": "competes_with",
+     "entity_1": "FabZ",
+     "entity_2": "LpxA",
+     "biological_state": "cytoplasmic state",
+     "evidence": "FabZ competes with Ec LpxA for their common substrate"
     },
     {
-     "name": "R-3-hydroxymyristoyl-ACP is substrate for LpxA"
+     "name": "R-3-hydroxymyristoyl-ACP is substrate for LpxA",
+     "relationship": "substrate_of",
+     "entity_1": "R-3-hydroxymyristoyl-ACP",
+     "entity_2": "LpxA",
+     "biological_state": "cytoplasmic state",
+     "evidence": "Ec LpxA substrate R- 3-hydroxymyristoyl-ACP"
     },
     {
-     "name": "WaaA modifies Kdo-lipid IVA"
+     "name": "WaaA modifies Kdo-lipid IVA",
+     "relationship": "catalyzes",
+     "entity_1": "WaaA",
+     "entity_2": "Kdo-lipid IVA",
+     "biological_state": "cytoplasmic state",
+     "evidence": "WaaA adds a number of Kdo residues to form Kdo-lipid IV A"
     },
     {
-     "name": "LpxK phosphorylates lipid IVA"
+     "name": "LpxK phosphorylates lipid IVA",
+     "relationship": "catalyzes",
+     "entity_1": "LpxK",
+     "entity_2": "lipid IVA",
+     "biological_state": "cytoplasmic state",
+     "evidence": "LpxK to produce lipid IV A"
     },
     {
-     "name": "MsbA transports core-lipid A"
+     "name": "MsbA transports core-lipid A",
+     "relationship": "transports",
+     "entity_1": "MsbA",
+     "entity_2": "core-lipid A",
+     "biological_state": "cytoplasmic leaflet of IM state",
+     "evidence": "MsbA flips core-lipid A from the cytoplasmic leaflet to the periplasmic leaflet of the IM"
     },
     {
-     "name": "Lpt system transports core-lipid A to OM"
+     "name": "Lpt system transports core-lipid A to OM",
+     "relationship": "transports",
+     "entity_1": "Lpt system",
+     "entity_2": "core-lipid A",
+     "biological_state": "periplasmic leaflet of IM state",
+     "evidence": "the lipopolysaccharide transport (Lpt) system transports core-lipid A to the OM"
     },
     {
-     "name": "FabZ catalyzes dehydration of β-hydroxyacyl-ACP"
+     "name": "FabZ catalyzes dehydration of β-hydroxyacyl-ACP",
+     "relationship": "catalyzes",
+     "entity_1": "FabZ",
+     "entity_2": "β-hydroxyacyl-ACP",
+     "biological_state": "cytoplasmic state",
+     "evidence": "FabZ catalyzes the dehydration of β-hydroxyacyl-ACPs to continue acyl chain elongation"
     },
     {
-     "name": "LpxC deacetylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     "name": "LpxC deacetylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "relationship": "catalyzes",
+     "entity_1": "LpxC",
+     "entity_2": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "biological_state": "cytoplasmic state",
+     "evidence": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety"
     },
     {
-     "name": "LpxD acylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     "name": "LpxD acylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "relationship": "catalyzes",
+     "entity_1": "LpxD",
+     "entity_2": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "biological_state": "cytoplasmic state",
+     "evidence": "addition of the next acyl group by LpxD"
     },
     {
-     "name": "LpxH dephosphorylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+     "name": "LpxH dephosphorylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "relationship": "catalyzes",
+     "entity_1": "LpxH",
+     "entity_2": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "biological_state": "cytoplasmic state",
+     "evidence": "removal of UMP by LpxH"
     },
     {
-     "name": "LpxB catalyzes disaccharide formation"
+     "name": "LpxB catalyzes disaccharide formation",
+     "relationship": "catalyzes",
+     "entity_1": "LpxB",
+     "entity_2": "lipid IVA",
+     "biological_state": "cytoplasmic state",
+     "evidence": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate"
     },
     {
-     "name": "LpxA acylates UDP-GlcNAc"
+     "name": "LpxA acylates UDP-GlcNAc",
+     "relationship": "catalyzes",
+     "entity_1": "LpxA",
+     "entity_2": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "biological_state": "cytoplasmic state",
+     "evidence": "LpxA, acylates uridine diphosphate-N-acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier protein (ACP) substrate"
     }
    ]
   },
@@ -1122,5 +1187,64 @@
     }
    }
   ]
- }
+ },
+ "pwml_ir.json": {
+  "processes": {
+   "interactions": [
+    {
+     "name": "FabZ dehydrates β-hydroxyacyl-ACP",
+     "interaction_type": "catalyzes"
+    },
+    {
+     "name": "Competition between FabZ and LpxA",
+     "interaction_type": "competes_with"
+    },
+    {
+     "name": "R-3-hydroxymyristoyl-ACP is substrate for LpxA",
+     "interaction_type": "substrate_of"
+    },
+    {
+     "name": "WaaA modifies Kdo-lipid IVA",
+     "interaction_type": "catalyzes"
+    },
+    {
+     "name": "LpxK phosphorylates lipid IVA",
+     "interaction_type": "catalyzes"
+    },
+    {
+     "name": "MsbA transports core-lipid A",
+     "interaction_type": "transports"
+    },
+    {
+     "name": "Lpt system transports core-lipid A to OM",
+     "interaction_type": "transports"
+    },
+    {
+     "name": "FabZ catalyzes dehydration of β-hydroxyacyl-ACP",
+     "interaction_type": "catalyzes"
+    },
+    {
+     "name": "LpxC deacetylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "interaction_type": "catalyzes"
+    },
+    {
+     "name": "LpxD acylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "interaction_type": "catalyzes"
+    },
+    {
+     "name": "LpxH dephosphorylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+     "interaction_type": "catalyzes"
+    },
+    {
+     "name": "LpxB catalyzes disaccharide formation",
+     "interaction_type": "catalyzes"
+    },
+    {
+     "name": "LpxA acylates UDP-GlcNAc",
+     "interaction_type": "catalyzes"
+    }
+   ]
+  }
+ },
+ "pathway.review_required.pwml": "(trimmed: the reaction-evidence report reads only that this file exists)"
 }

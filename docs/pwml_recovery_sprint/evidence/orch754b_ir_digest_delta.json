@@ -1,0 +1,1673 @@
+{
+ "base_rev": "f9892cdf",
+ "base_sha": "f9892cdf7d61ab487f6b0b0b67aeb094684d0c6f",
+ "base_t2pw_file": "C:\\Users\\Angad\\AppData\\Local\\Temp\\orch747_delta_base_uzomg8y7\\src\\t2pw\\__init__.py",
+ "tip_t2pw_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b\\src\\t2pw\\__init__.py",
+ "configuration": "run_prefreeze_resolution + build_pwml_ir, strict_db=True, db_resolver=_DownDb(), name_index=None (the R3 test's)",
+ "legs": 89,
+ "legs_moved": 73,
+ "interaction_outcomes_on_tip": {
+  "bare_protein_endpoint": 44,
+  "untyped_interaction": 188,
+  "protein_endpoint_missing_external_identity": 22,
+  "exportable": 11
+ },
+ "owned_prefixes": [
+  "/ir/processes/interactions/[]/withheld",
+  "/ir/processes/interactions/[]/export_status",
+  "/ir/processes/interactions/[]/interaction_type",
+  "/ir/locations",
+  "/ir/edges",
+  "/ir/process_visualizations",
+  "/report/warnings",
+  "/report/counts/locations",
+  "/report/counts/edges",
+  "/report/counts/process_visualizations",
+  "/report/ir_validation/counts"
+ ],
+ "paths_outside_owned_prefixes": {},
+ "confined_to_interaction_export": true,
+ "per_leg": {
+  "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "bare_protein_endpoint": 1
+   },
+   "base_ir_sha256": "6d058eb00b59e155a784214c31a1446be0b13d944e458980053c9c4cd175e078",
+   "tip_ir_sha256": "14af62c13c45fe53c9ff4685d76d2591e024751abdd056eb37bd78f718adf471",
+   "base_report_sha256": "082729a8b74956771de08247c32f3dc10464dba44f629ece6a8ac02f82b7849a",
+   "tip_report_sha256": "082729a8b74956771de08247c32f3dc10464dba44f629ece6a8ac02f82b7849a",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": {
+   "base": "build:DuplicateNamedRowError:PWML_IR_DUPLICATE_NAMED_ROW: 2 rows at /entities/compounds share the PWML exporter name key 'lipid iv a': 'lipid IV_A' (key=cmp_6, pointer=/entities/compounds/5) and 'lipid IV A' (key=<unassigned>, pointer=/entities/compounds/23). The PWML exporter runs after the canonical freeze, so it may not choose between them, drop one, or merge them (PRODUCT_CONTRACT section 5, merge rule 8). Dropping one silently repoints every reference to the survivor, which carries different identifiers. Resolve the collision in the payload before the freeze -- see t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution.",
+   "tip": "build:DuplicateNamedRowError:PWML_IR_DUPLICATE_NAMED_ROW: 2 rows at /entities/compounds share the PWML exporter name key 'lipid iv a': 'lipid IV_A' (key=cmp_6, pointer=/entities/compounds/5) and 'lipid IV A' (key=<unassigned>, pointer=/entities/compounds/23). The PWML exporter runs after the canonical freeze, so it may not choose between them, drop one, or merge them (PRODUCT_CONTRACT section 5, merge rule 8). Dropping one silently repoints every reference to the survivor, which carries different identifiers. Resolve the collision in the payload before the freeze -- see t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution.",
+   "same_stop": true
+  },
+  "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "a57f547a7488f47b988791e416eb987f392e462de9fa58b5dc993c04b866c14d",
+   "tip_ir_sha256": "18cd48772093f524bd794da9538a61d22a14bce0e6e30ab4ef6985baa19a9eb4",
+   "base_report_sha256": "38e673dc2d081d9d0cfacd5ea5d37da35ee1f00c723976c05b5df0969d0a9018",
+   "tip_report_sha256": "38e673dc2d081d9d0cfacd5ea5d37da35ee1f00c723976c05b5df0969d0a9018",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 8,
+   "by_outcome": {
+    "untyped_interaction": 7,
+    "protein_endpoint_missing_external_identity": 1
+   },
+   "base_ir_sha256": "dfadec7a1a621f8ff6ee9288a2878cb585958a69267ee9eb8c1711e3a0fd3d8a",
+   "tip_ir_sha256": "730ee26aacace3b6a59d399315fae2c9ca5dd7373d3b3c4ecd6ff8d14bad0733",
+   "base_report_sha256": "eeb7321e2f73e3840ec92baaf9f3c68e0645aac63d3f49f21efa01945594dbd1",
+   "tip_report_sha256": "2ec48550abf0832af4a32e5bd41f0b3e024428c29e7e098f5c241a78aae140d9",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "protein_endpoint_missing_external_identity": 1,
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "b688cd40bd1200ea081bce88ac19eb8af1d4f2a7a652c2755e359e4fd4692cd8",
+   "tip_ir_sha256": "9a8836fb6e19b6a4657453a35efe2c1e96074c309fb112a5640f80f90dcc3055",
+   "base_report_sha256": "8da6c278131233bd6ad7a5175a18f708c92ee0e393f0b0012e32ae0b0d01d303",
+   "tip_report_sha256": "31571a38c25488df36fce67b53ecb6ecb858160369e21d82305739d850bc65df",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12180156/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "18ed403257fbc1c894da5ba2b1ec2a53692895896967870f724057f41894320f",
+   "tip_ir_sha256": "18ed403257fbc1c894da5ba2b1ec2a53692895896967870f724057f41894320f",
+   "base_report_sha256": "95152882bd9a779698b400d9db66a3d7ea153d23ffba6b16061cc0593428027a",
+   "tip_report_sha256": "95152882bd9a779698b400d9db66a3d7ea153d23ffba6b16061cc0593428027a",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "acffb9e271f9646f8d33ea5bdb0566d2237c2217175fd2898a6bd4959d38e595",
+   "tip_ir_sha256": "9c7b418a318df12923f29fd038a132961813a1bed5884b32bf41afdf1b68f5e1",
+   "base_report_sha256": "36f2439c254ec63385b227d465ee0c861c907d382eca6d43cd2ca949af80b419",
+   "tip_report_sha256": "36f2439c254ec63385b227d465ee0c861c907d382eca6d43cd2ca949af80b419",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json": {
+   "interactions": 5,
+   "by_outcome": {
+    "untyped_interaction": 5
+   },
+   "base_ir_sha256": "bb3b841066b07159c8e670db02680ffdfcd6889b8eec8b14c1f0ed8e9bb3b808",
+   "tip_ir_sha256": "32cdee12f4249a8568a965b580311aac325d770604e9647f6aa09899f6028fce",
+   "base_report_sha256": "192f81ae9bf86705de7f65d2bb0714b4d3af50349f7481473ed489b7534ac3d0",
+   "tip_report_sha256": "192f81ae9bf86705de7f65d2bb0714b4d3af50349f7481473ed489b7534ac3d0",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json": {
+   "interactions": 7,
+   "by_outcome": {
+    "untyped_interaction": 5,
+    "protein_endpoint_missing_external_identity": 2
+   },
+   "base_ir_sha256": "0368ba813b4bc2f861db20b3a35ff7fad00f304e1728f4cbcc6f6d6a56dbf1f0",
+   "tip_ir_sha256": "bb427aa25b2bfcba8b984f7eeaf211589abf5093f7b3a68bdbfde1cd070d7bb8",
+   "base_report_sha256": "7a2a87460f7bc7b9f52f12f350d62d5b03a933af842307028595730d607f7370",
+   "tip_report_sha256": "b21c6c5329fd8dd62fe7db13ebbf7a9aae90c2b8d077b0af5df1fa00885d1ead",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 8,
+   "by_outcome": {
+    "untyped_interaction": 7,
+    "protein_endpoint_missing_external_identity": 1
+   },
+   "base_ir_sha256": "79a046d3a05d398233667521a34b019ae33065efa8be4bbfefbda65d0b3dfb28",
+   "tip_ir_sha256": "647ae76117679f11b5b5f4e5a57744b2e64c80a6f450640fd96dc373cde98291",
+   "base_report_sha256": "fd888dbcdc644a571e374adcc106eaf4dc33f1a11dbf370c3510579e9350eae2",
+   "tip_report_sha256": "17efaacf339408539d6b7234296612d5976b3b64f0ccbda3f1886d7be6f7a452",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12782028/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "417cdb276299dcbc2c834035b063fb3ce745b7e481c8f5db6b79d58234b454e1",
+   "tip_ir_sha256": "417cdb276299dcbc2c834035b063fb3ce745b7e481c8f5db6b79d58234b454e1",
+   "base_report_sha256": "20a4c3d55350da856bfb48408113b648ef0dd89af1d6d5b068fbcd9b917c1f6a",
+   "tip_report_sha256": "20a4c3d55350da856bfb48408113b648ef0dd89af1d6d5b068fbcd9b917c1f6a",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "protein_endpoint_missing_external_identity": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "1df6093c6d556ebe03aa41a7496af2ef7ac9f95e0baab169db1176f8bb15c23c",
+   "tip_ir_sha256": "dac707aab44116f19a1f04a84b1726eadaff5f5b9484cec3075c0ad6ce578bf5",
+   "base_report_sha256": "819477364b9c8e772acab8dc105e017f527ecc2771162a17c8a10ed140e43d3a",
+   "tip_report_sha256": "aae02e9f791e63a0035bdbf26ad9bdb47c3ac2e3f343497d00c8cd33d3f8a59e",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "exportable": 2,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "349e56333c58e47add20d407c4224e97760aa739f4f9b3b2f63fcbfd89ee72d7",
+   "tip_ir_sha256": "144059d29da782ad7e61331a626b93534ce88d82d2558d71eb840257b1141a2f",
+   "base_report_sha256": "59fa4bc134c3b005579fef8272d48298bebfcc73e19408071b892ab2201d32f2",
+   "tip_report_sha256": "59fa4bc134c3b005579fef8272d48298bebfcc73e19408071b892ab2201d32f2",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs/2026-08-02_2130/papers/PMC13231680/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "02bc82478938bdfee23d35b6e97c991f89d8efed4b253088cd9b0a383100b529",
+   "tip_ir_sha256": "c2f4108e1ea5ee709f30203c271b9e7baa756a65f1202e20e23504480e7458be",
+   "base_report_sha256": "c1952891fba934f80d3f7e9084e6c6a93f523c43022faddc1e069f2236d1ade3",
+   "tip_report_sha256": "c1952891fba934f80d3f7e9084e6c6a93f523c43022faddc1e069f2236d1ade3",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1148/papers/PMC13231680/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "eaf3ebe3a63d61858ebe1eed343be333a010b503e1111529598d5760a740ffc9",
+   "tip_ir_sha256": "5c3cc3122aad8d71e9ee8e489050fac01dc00bec184a596598b8f0a58c05a370",
+   "base_report_sha256": "9c1a8205b616381c8451d11c41c4566f3f576ef22c54774f86f04117530cdf5d",
+   "tip_report_sha256": "9c1a8205b616381c8451d11c41c4566f3f576ef22c54774f86f04117530cdf5d",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "5d0d44178b215da3a19400197488926a6098910021a2e5592b98909d5a87f522",
+   "tip_ir_sha256": "26d1a11f87dcffe5b35d7bac23b7de955a23c183e7b4a01e9690958923a9874f",
+   "base_report_sha256": "b50d6f2d02ad509b5e150b3625170089509250d1f1bd12a1fd95dbd6b9ac53ea",
+   "tip_report_sha256": "b50d6f2d02ad509b5e150b3625170089509250d1f1bd12a1fd95dbd6b9ac53ea",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "protein_endpoint_missing_external_identity": 1
+   },
+   "base_ir_sha256": "1cc423544a0af521f3ac3ff3d707c222989e0cd525e51dfe1061e0b28dc49ff3",
+   "tip_ir_sha256": "2533021e4170893c6bb437fe264cfea599ffc89142dd11e7152d7993f1f70428",
+   "base_report_sha256": "49ca8f2cd3e9759f9cf106ba071816c622ec2fd56ae248a5d8cbd194804a23c4",
+   "tip_report_sha256": "785f1fbd509dc74497e9494b462c78fb7493e6cced99b6f644b5c61806be11de",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "protein_endpoint_missing_external_identity": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "72fbfdd91156818f62694ae471c92993af76349885f02680d72fa85e201af765",
+   "tip_ir_sha256": "6341d307af6da9bf51e5843f1d79d35a0182867c3a236a97aa579751b025dff6",
+   "base_report_sha256": "c9efc756306f72c8a9623262a3e1949743099fddcd5080252d222af3df08aab9",
+   "tip_report_sha256": "7aff505e4c81d64a2d2a157b43394694f2cef0a1a5383b4033353a39a6a19f54",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 1,
+    "protein_endpoint_missing_external_identity": 1
+   },
+   "base_ir_sha256": "fe46b196efe1caa8bc9daca13fdde31df98a0deb9dbbc8f6b7a3a99d6eb66708",
+   "tip_ir_sha256": "9b118b5c37092b45e38a824e9947fc995c7f44068e9aad06a2f64ef6d97cc945",
+   "base_report_sha256": "9c5d290151dd3371f3b47bc7aac581e2082b8ae9c4c2f219ffdc9afb56a7be3b",
+   "tip_report_sha256": "263480f568f09189e8da897d754868b0b03428d89a2bb88d0db0a59034f4db97",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 6,
+   "by_outcome": {
+    "protein_endpoint_missing_external_identity": 4,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "00c9f72681530f2dfd22460d5486b96c89c92932c6f8ce1d3d8da2068b0631d6",
+   "tip_ir_sha256": "f41a77b8c91b88565752f3f2f40c80f9cb12f6c8c1021a052a3f67e34ebc091f",
+   "base_report_sha256": "638dfcea96f8f61b83097513597c0fec2390c5f188354c3361b51a921dabdc7f",
+   "tip_report_sha256": "d8ec0ba19638951be9f94740d2a0a6d7f102cecc7c634df42830427963995fee",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 13,
+   "by_outcome": {
+    "protein_endpoint_missing_external_identity": 3,
+    "untyped_interaction": 10
+   },
+   "base_ir_sha256": "35d6e953b81cf2573cbb664f2c6b5cd65b852bd23fdb52452d211bbbb8e645b3",
+   "tip_ir_sha256": "03d8bda6685bd5e8fc86b055010027803ca904033cef811c8d7bd67601777af9",
+   "base_report_sha256": "1d7c167f79f83505492b7c7c00e1f5de29d6188231e2602f9f986dd9e931b3b0",
+   "tip_report_sha256": "dc343946a106aca9674acf0962d884e0227333bedbcbd43c2e29f1022f8c118d",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "944b676cf37a4e35943a0c572699a57f782213018c0e456a4372075a3fc38f9c",
+   "tip_ir_sha256": "152925ce066251a0b47631fe60a491cc3a67937d8ad3fcc87824e22f32807922",
+   "base_report_sha256": "eeffb742a63a9235512f6b6a4ff024824dfcaffbf1bceac18b23303ff4a613f8",
+   "tip_report_sha256": "eeffb742a63a9235512f6b6a4ff024824dfcaffbf1bceac18b23303ff4a613f8",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "f0c5c3cfc26ab61f6abd38488b2baa22bb665995a70be32db712c903025c3765",
+   "tip_ir_sha256": "4f08ca56e2ffe5324f87f1f0437e6e70d4af68b4dabef4e200a976a42b72d7c0",
+   "base_report_sha256": "a7d978ddb0d042f5f3c0105c1d9621d58acea05cd3b131e5289f0ad0a711aa05",
+   "tip_report_sha256": "a7d978ddb0d042f5f3c0105c1d9621d58acea05cd3b131e5289f0ad0a711aa05",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "bare_protein_endpoint": 1
+   },
+   "base_ir_sha256": "1cd6cd6fbaddbe424e42a2022ad1e863a3d72f17618dc0317e3190084c112690",
+   "tip_ir_sha256": "9311d306568b8b5f5d741c87b0bc741c7cd154a6719057355536bcb9751f564b",
+   "base_report_sha256": "318a858fccac81f5ff8fe773405f051c7074f4664a000663605cd317ab68ef0e",
+   "tip_report_sha256": "318a858fccac81f5ff8fe773405f051c7074f4664a000663605cd317ab68ef0e",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 6,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 5
+   },
+   "base_ir_sha256": "22f62d3e093c367318d394365e6d6380d8d00a323dd2957c8a0d9855793e1124",
+   "tip_ir_sha256": "94fef3ee862039f1be6740ae3a5f1a045a35575220f26d63765fda79aa096b57",
+   "base_report_sha256": "40c2cfa109667786ff81813e940f57cffab0705e49a0159e9d67c9af35f02f83",
+   "tip_report_sha256": "40c2cfa109667786ff81813e940f57cffab0705e49a0159e9d67c9af35f02f83",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": {
+   "interactions": 10,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 9
+   },
+   "base_ir_sha256": "c646ef13b9f4afc96b11434038ab08cf3c08ac46f30f0e8d9fc7c1f9c9995f64",
+   "tip_ir_sha256": "db39263248be5b379791efdd252872b1782820c512af0591971f6b7fae4d23e4",
+   "base_report_sha256": "ec8272a30bd16ea8c48c7a00445e1931f71e978daaa1215798cbfe31c7b8d1b3",
+   "tip_report_sha256": "ec8272a30bd16ea8c48c7a00445e1931f71e978daaa1215798cbfe31c7b8d1b3",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": {
+   "interactions": 5,
+   "by_outcome": {
+    "untyped_interaction": 5
+   },
+   "base_ir_sha256": "2d63f4756428efd5370b0841f57f9cdeccb29f4059dc69d58b0c7671cf51d590",
+   "tip_ir_sha256": "b8c3af26b42f4e20527d4f9958c1a142fd3ea0f97cab338d3381e9ac97670cdd",
+   "base_report_sha256": "711f5eb70f3cb0fe24f71e837b00b557c8d5f7a14420dd087f4cdc67d85ee22a",
+   "tip_report_sha256": "711f5eb70f3cb0fe24f71e837b00b557c8d5f7a14420dd087f4cdc67d85ee22a",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 8,
+   "by_outcome": {
+    "protein_endpoint_missing_external_identity": 2,
+    "exportable": 2,
+    "untyped_interaction": 4
+   },
+   "base_ir_sha256": "4bf97d7c8e914715b2e0bd2e6000b32c0b3a49fd8a104392852d4a5c2155fce3",
+   "tip_ir_sha256": "227665ffc1e73c07fbe7bc4452db7b4c901f47ce1a9d51b0c4f87b03a202f1fb",
+   "base_report_sha256": "4c96947ec7ecfc0dbbf9766824d0a2053ee7bf4b206ccbbe0880c956e7001319",
+   "tip_report_sha256": "7776bef4a26b344194dbee035028feb8eb7fcf905ee18174485b12645ebc4b4f",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 5,
+   "by_outcome": {
+    "untyped_interaction": 4,
+    "protein_endpoint_missing_external_identity": 1
+   },
+   "base_ir_sha256": "10b1bed3ee8dc447498dfd46b5188500ec2f5460cf75f678594291fc465026eb",
+   "tip_ir_sha256": "36ddb8e9a42f0eaf7ef852943ed9eb3a64147df6fbb3f6afad39848b9b1cced9",
+   "base_report_sha256": "b5bf01a0c24c804fcca84300783d2d2333c586c5473536d2df12735d9ce24667",
+   "tip_report_sha256": "27192c3c6774f365b4c9fcc4551e887e3f70d15d82e42eda9a52924ecd4c40bb",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "7991cab97e9b688d4a6725a88ada9a2931dfad1d49fe9276ed7201d908b8981c",
+   "tip_ir_sha256": "7991cab97e9b688d4a6725a88ada9a2931dfad1d49fe9276ed7201d908b8981c",
+   "base_report_sha256": "c31864f365f6f2a1730033aa711dd460bee260f748285fe528068e66d11379b1",
+   "tip_report_sha256": "c31864f365f6f2a1730033aa711dd460bee260f748285fe528068e66d11379b1",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 6,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 5
+   },
+   "base_ir_sha256": "9cf277607a5adba13712c7164dbfaece2e9459ab0177d9ce037ee5ecd0de3403",
+   "tip_ir_sha256": "3cadd35c1a1f140a9059a6f998b6ffed5139e152eac7b57f90f2f97f5f9fc214",
+   "base_report_sha256": "a26e10f565626aa230843bf5636077dc86c0107190d3ffeca234e1f27adb70bd",
+   "tip_report_sha256": "a26e10f565626aa230843bf5636077dc86c0107190d3ffeca234e1f27adb70bd",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "exportable": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "e961aa5996d986942a5739ddd430e12286aa0752613c28f04cbe852684fb4032",
+   "tip_ir_sha256": "06a193affbeb8c6a81889d6e337ed3186e352f4c5ccfb2cfc86d03e1b0c1f927",
+   "base_report_sha256": "7e6981f755b198de72bf15a0d4be5506b1a2fa9220b493d8fa66551a3279c65e",
+   "tip_report_sha256": "7e6981f755b198de72bf15a0d4be5506b1a2fa9220b493d8fa66551a3279c65e",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "bc24085af98c8407782194b0e09d6f4dcfd00cd6412398416a7a594d51f1317d",
+   "tip_ir_sha256": "05c2cc82b10967d33fb0cea2924688688596432d2d0845d3cfbf783e402d3c07",
+   "base_report_sha256": "68f79ca2951f3a2a35e2f3f77a99614320aaaeceb183e939e1c5fecdbe897b9c",
+   "tip_report_sha256": "68f79ca2951f3a2a35e2f3f77a99614320aaaeceb183e939e1c5fecdbe897b9c",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_1822/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "cd6c8e425a822f032bf2a1795fd9a2c8601f659261dde8d4e0126a6a080c88c8",
+   "tip_ir_sha256": "cd6c8e425a822f032bf2a1795fd9a2c8601f659261dde8d4e0126a6a080c88c8",
+   "base_report_sha256": "eef02879c16caeabb5c98d5f96799a719391d36f071d6f6dbbf7068d04a1eba1",
+   "tip_report_sha256": "eef02879c16caeabb5c98d5f96799a719391d36f071d6f6dbbf7068d04a1eba1",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_1822/papers/PMC12782028/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "e1ec19ee6f101994c657e58af2c43e27dcf67be2d8dc7c7363b9cdf477e52ca3",
+   "tip_ir_sha256": "e1ec19ee6f101994c657e58af2c43e27dcf67be2d8dc7c7363b9cdf477e52ca3",
+   "base_report_sha256": "e3fc79fe4096d3adfaa73b59cf110d18335d2e72eecca67dabccbfe2bebd2934",
+   "tip_report_sha256": "e3fc79fe4096d3adfaa73b59cf110d18335d2e72eecca67dabccbfe2bebd2934",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2014/papers/PMC12312563/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "protein_endpoint_missing_external_identity": 1
+   },
+   "base_ir_sha256": "76baf3ae8cd4855a23e6a7cf2d05cac62b0f6d2343cd0b2c9296568c38e3489f",
+   "tip_ir_sha256": "21a83e667020b1bfc981d60d3e781e9efca6459a239fd2127c4731abd3f7aafb",
+   "base_report_sha256": "24b50f76993ae09f42b051dc3446de0337edc4b43e8bafa1caa607d92dc08ddd",
+   "tip_report_sha256": "fad8a222a54265f10b21444d87b3759aae577f1148b5303fa1419fdd7fdd9ae8",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2014/papers/PMC12312563/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "e87a6d9516000ff31d7a568e1cb62ace02bb51b77243f2742f7e4970a2dabd21",
+   "tip_ir_sha256": "e0c35d74c1d7fab95aff7a1342c38b66cc147d60aafed1834584b853df49c7ca",
+   "base_report_sha256": "ebcc68d4089b8bbc45c3869ad642590dba97864f73ce2031427a9a3151c59a01",
+   "tip_report_sha256": "ebcc68d4089b8bbc45c3869ad642590dba97864f73ce2031427a9a3151c59a01",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "bare_protein_endpoint": 1
+   },
+   "base_ir_sha256": "bac587873c731b9d426e5bfe6f2cde4753abb4efa864951d3c40e2c8658f61c6",
+   "tip_ir_sha256": "09ae625788895dfd9164b1651e8f69539b03309ea70f5a3f4e5a6295cb73352c",
+   "base_report_sha256": "670ee95f1ae7931306d05835eb407ae83db475fdf2801252ffc02f1f959f4f67",
+   "tip_report_sha256": "670ee95f1ae7931306d05835eb407ae83db475fdf2801252ffc02f1f959f4f67",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "a3ad3394fc658ac8c53807dd280a7dfec73341150f54ff545d60494861aa3880",
+   "tip_ir_sha256": "7af7094eb78bf23ae139cb5fd81245d8e969d5df845f07adec40f547b5cfa765",
+   "base_report_sha256": "be5833bb6148dcf8f0da731194a1a06046abdc84d1e5f1f43e2d81f4a8711f14",
+   "tip_report_sha256": "be5833bb6148dcf8f0da731194a1a06046abdc84d1e5f1f43e2d81f4a8711f14",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 5,
+   "by_outcome": {
+    "untyped_interaction": 5
+   },
+   "base_ir_sha256": "40adb40e9557f069d17685d01febb1265e8689ef766217b6493af6ab186dad78",
+   "tip_ir_sha256": "3700d1cd986ed9938c6075775b44ffb2748f8afbc07b3892d8cd77fb8453a8b4",
+   "base_report_sha256": "1ba66ae3251a4e0a7b4279be168029d901c8bad71bc41da0e38ee3ac0d7fa633",
+   "tip_report_sha256": "1ba66ae3251a4e0a7b4279be168029d901c8bad71bc41da0e38ee3ac0d7fa633",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2057/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "bare_protein_endpoint": 1
+   },
+   "base_ir_sha256": "e9bc2c687858f33ddd8e1c979eaf8a4cf1c162f7d2d4224499cadc60512acfe8",
+   "tip_ir_sha256": "1397a4d2bd960f283cb33628064d8dbca0819ea2551b140ab12dae347fb04edc",
+   "base_report_sha256": "abef95182edc2a2d3393c48a704d62d81b5c70deee61e80b77051af82cc9a157",
+   "tip_report_sha256": "abef95182edc2a2d3393c48a704d62d81b5c70deee61e80b77051af82cc9a157",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "6fddf9dda183ca6c694efad15f386b173a37a4a7116f80ae162a256b8ccd0b89",
+   "tip_ir_sha256": "108409a6b7f3768255b803f1620101c5ba8ec1b775f6c854034c85c4b0c229b8",
+   "base_report_sha256": "53037ee552ccc517dc8d69d1ce1a546c59bab14f136e4afb5593f790ecde419d",
+   "tip_report_sha256": "53037ee552ccc517dc8d69d1ce1a546c59bab14f136e4afb5593f790ecde419d",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "950d3bc8157fef4ee7eef27552df73dc40abb1abe71273ccba21edf8fcccd342",
+   "tip_ir_sha256": "fa4451fe9d25413ed6ac6b21120034028fc2b711466b88f60aff13efb2889969",
+   "base_report_sha256": "327077b51fee78cf78e60b03adf5461b3ae8c6309e26244e65faa2ee0351f664",
+   "tip_report_sha256": "327077b51fee78cf78e60b03adf5461b3ae8c6309e26244e65faa2ee0351f664",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12180156/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "2974d783ebf23b22302b8b00f29bdd933858f8665e54978cc9c2022b8014cb18",
+   "tip_ir_sha256": "2974d783ebf23b22302b8b00f29bdd933858f8665e54978cc9c2022b8014cb18",
+   "base_report_sha256": "4ef56d165c31da128b1e49e740e92cd6aa1cd65ba44be41304506dbaed575366",
+   "tip_report_sha256": "4ef56d165c31da128b1e49e740e92cd6aa1cd65ba44be41304506dbaed575366",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12180156/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "c5b9fa267eb4bf53015e3a0ab79f73913f72bfd1810387c07f0e98def398cfd4",
+   "tip_ir_sha256": "c5b9fa267eb4bf53015e3a0ab79f73913f72bfd1810387c07f0e98def398cfd4",
+   "base_report_sha256": "3aa59dd40ea6423bbcfbb4bcd355db01217f820891d3b0af3747d0129875d6cd",
+   "tip_report_sha256": "3aa59dd40ea6423bbcfbb4bcd355db01217f820891d3b0af3747d0129875d6cd",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "exportable": 1,
+    "bare_protein_endpoint": 2
+   },
+   "base_ir_sha256": "7d4a1122e7274ee2e37ef39b3c03d76b5b356eee3d3c445defb7c472a1eadf01",
+   "tip_ir_sha256": "b801bd868bb210caa37f4f8c2a67ce311444de987216c20cfb76e4a5517a38cd",
+   "base_report_sha256": "45e614b883d8fbd32621a492351e0c520040ec929f121adfc3570d71074e13d3",
+   "tip_report_sha256": "45e614b883d8fbd32621a492351e0c520040ec929f121adfc3570d71074e13d3",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "05fb361cfd4aedfa53bde695eeac3550b073c9a29c3505f4201b7068eb849b19",
+   "tip_ir_sha256": "f405cc58da321ad1a9d7746ebcb7a0b92722ac6aa5a966a9eb9782b096f8bd59",
+   "base_report_sha256": "65c27d6c6a9d309e024ce786d600c5aa4e0f2eb3e82a8a96fa91865f5fda4c24",
+   "tip_report_sha256": "65c27d6c6a9d309e024ce786d600c5aa4e0f2eb3e82a8a96fa91865f5fda4c24",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "48b2831c4097602780d7936db554e4bcd296afdc207cc16c9f9e287dbe01f1ad",
+   "tip_ir_sha256": "48b2831c4097602780d7936db554e4bcd296afdc207cc16c9f9e287dbe01f1ad",
+   "base_report_sha256": "71c866ab919165896778c246fa1fc302ccd26d456b13a256dbbf9c9aae03e430",
+   "tip_report_sha256": "71c866ab919165896778c246fa1fc302ccd26d456b13a256dbbf9c9aae03e430",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12782028/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "0c08e551560e2d979b19b1f6131ab5623a0764ed6ffb385a5c4e83dc78e9b6c6",
+   "tip_ir_sha256": "0c08e551560e2d979b19b1f6131ab5623a0764ed6ffb385a5c4e83dc78e9b6c6",
+   "base_report_sha256": "edf321160ebe18bd12148432cef576dd01545028293956ef3a76dbb77878834e",
+   "tip_report_sha256": "edf321160ebe18bd12148432cef576dd01545028293956ef3a76dbb77878834e",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "exportable": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "8754a4fe769ac5bbe82261f08447cb803485dc88a9f0f9c434619c3d3df933a7",
+   "tip_ir_sha256": "2c06e874b73330194af45def7ae6b2e1a5bdb4db891b6ba518b8c13c3f097a3d",
+   "base_report_sha256": "634fe0f39166bf1fdf4374bf1e0ec688f9507ad34d2cb833f3815633f6274b24",
+   "tip_report_sha256": "634fe0f39166bf1fdf4374bf1e0ec688f9507ad34d2cb833f3815633f6274b24",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-21_2239/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "bdbd51f84321f2cd346e9606f0216341f30949ce6aa951597a632fe5eb8e9f04",
+   "tip_ir_sha256": "91155585f50d8bfac345058b1ee9a143c14fcca5556891e25a7e1b5063f5a137",
+   "base_report_sha256": "7d78816f452b5e9b0e0425b59c201a31feae2c85ba885a329b46e9ad077998ca",
+   "tip_report_sha256": "7d78816f452b5e9b0e0425b59c201a31feae2c85ba885a329b46e9ad077998ca",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_1821/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 6,
+   "by_outcome": {
+    "untyped_interaction": 6
+   },
+   "base_ir_sha256": "4f32060c7fc469c6a550ee281b4cf8264b6895153337e97b7829ca1b926560b8",
+   "tip_ir_sha256": "07e725d10ce13c0e830eb7635121c965ea4c716bafe837cb20ecc612bc867b23",
+   "base_report_sha256": "55ee751cf851d66d46a9213ae91d9fb3a02be95cba834df59eab62c9eef053f2",
+   "tip_report_sha256": "55ee751cf851d66d46a9213ae91d9fb3a02be95cba834df59eab62c9eef053f2",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 6,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "exportable": 3,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "22f6dfcba4fad65f1c059d365e765c41f235e386f29391fbb72e942c043d1492",
+   "tip_ir_sha256": "ccbcde3e10722edafd1e1f22bb9bd3af97ad83b9d9b2b036a14ba1d7792cce5b",
+   "base_report_sha256": "5a1ef13a36681ec515686c5cce5000afd8ffd5639573e72406e296377f737c0b",
+   "tip_report_sha256": "5a1ef13a36681ec515686c5cce5000afd8ffd5639573e72406e296377f737c0b",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "0ded4784a7e2c7f7246fe19147c2d4f2bffe50048c79ccccdef9d6e951184fd7",
+   "tip_ir_sha256": "4f0dd1d180e6d90ca30d1d37c3aa918237704f7acceb797a7c80a541bfb4e6a1",
+   "base_report_sha256": "0859a8f57e5b53c4d2917d7697362f4e2b955430b1ee31de58e16a389d6d154b",
+   "tip_report_sha256": "0859a8f57e5b53c4d2917d7697362f4e2b955430b1ee31de58e16a389d6d154b",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "bare_protein_endpoint": 1
+   },
+   "base_ir_sha256": "6b31701b75db4fcff86eb267757f16dcfd1be062636a2272116d71e5c24f3bf7",
+   "tip_ir_sha256": "fdd9bf3d69bd44a98bcc30693b25ea13bdc7ba69eaa7ee4bdff38ea7cd22f03a",
+   "base_report_sha256": "661dadc44e85d6c1bc0316b359f5e555d4f32a159460b479781d0ca576f5985f",
+   "tip_report_sha256": "661dadc44e85d6c1bc0316b359f5e555d4f32a159460b479781d0ca576f5985f",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2017/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "c42497262c5ad73c0eed764c5ca5a18c26f45e6efcf5c1177edb948643137205",
+   "tip_ir_sha256": "0e43d1d11845caa6d04d0659076a3cfcba268e160568a72fb93f199edaa6a456",
+   "base_report_sha256": "db8f751bbbc6b6fedd56a216b7f33ebcdc7d4ce301fbe6cb240f71a480557ee5",
+   "tip_report_sha256": "db8f751bbbc6b6fedd56a216b7f33ebcdc7d4ce301fbe6cb240f71a480557ee5",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "af102b0b162428a6336b5ea5d7868b7d05cc5411dad6bee6e8766e1f6bb4c12a",
+   "tip_ir_sha256": "220e29da5d60ca48551df77b582116d1e70d134fa256ae99c413fcc39f56d85c",
+   "base_report_sha256": "94e9cfdf544fa1671a7b69c3c16f4815b008457955edac6e8b1bf9c2386ac577",
+   "tip_report_sha256": "94e9cfdf544fa1671a7b69c3c16f4815b008457955edac6e8b1bf9c2386ac577",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "bare_protein_endpoint": 1
+   },
+   "base_ir_sha256": "c0b4bd13b770bdcb897ad5dc8199bfd6d93a6c800d1dd83c615e6a172baba2b6",
+   "tip_ir_sha256": "2a1d678ff6dbbdaff5a15c0a4114ab41fa7885fc457e599d76e230177107a0a0",
+   "base_report_sha256": "d87f6e49bdc84a6d1118e2ac84732ccbd8ab2ef11667a34159e4265565c1da10",
+   "tip_report_sha256": "d87f6e49bdc84a6d1118e2ac84732ccbd8ab2ef11667a34159e4265565c1da10",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12180156/research/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "bare_protein_endpoint": 2,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "3a4e659cb091d702350580ff57b4d4f2d594c676442db943a0c2742dcec8b1ad",
+   "tip_ir_sha256": "57b0c1bef38ff1c5338930f0b47780363c5bfff1df5821cdea956483e67bb64c",
+   "base_report_sha256": "ee0579cfe94767ee4fef961a58fcbfc54f418f1767d3aa582932660f1b11e69b",
+   "tip_report_sha256": "ee0579cfe94767ee4fef961a58fcbfc54f418f1767d3aa582932660f1b11e69b",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12180156/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "2f11cd11c9223e110945e6aa43d099686f5cf0af8cf3d5cd4b84ad27d5b9faff",
+   "tip_ir_sha256": "bd611381765ca419f7d3ad4fa4bb23a79ac754985346a378942969c91a957780",
+   "base_report_sha256": "159a75a18fd7615cf98e2d2853b2730606ffa7e9ded89152f05235721f38c73a",
+   "tip_report_sha256": "159a75a18fd7615cf98e2d2853b2730606ffa7e9ded89152f05235721f38c73a",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "274dab3294f95f0c061b716ff74c4a8e21a39368a627e296e9d0bbbe1d85362c",
+   "tip_ir_sha256": "399f3138963410505c2896f659d184344f3e3d7a04ad04a4835cfe6e24486b64",
+   "base_report_sha256": "186509430e9bacb92ae465101db6f223de4c691cb6fc4f1f85b735a23235d9c2",
+   "tip_report_sha256": "186509430e9bacb92ae465101db6f223de4c691cb6fc4f1f85b735a23235d9c2",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "cd8b86a59bf15d5f3aa7d680dffc2cbd8995a8607786d6642427f1d6d03043f9",
+   "tip_ir_sha256": "9d431c95c7fa1b46a58fe23039043e68fad9910bb32e001788d26ee49f72a536",
+   "base_report_sha256": "1ff9433231beb7474fa7f06b20fa1e1da492130b4ca57fc8209bb93454c6d473",
+   "tip_report_sha256": "1ff9433231beb7474fa7f06b20fa1e1da492130b4ca57fc8209bb93454c6d473",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "748ed9be9abe9cb2e3f213434a9578421f6d243a804f6c38f9b2b74eb8febc3c",
+   "tip_ir_sha256": "748ed9be9abe9cb2e3f213434a9578421f6d243a804f6c38f9b2b74eb8febc3c",
+   "base_report_sha256": "6d280e8e2e4f56ff7091ebc0aa7ae5e30d0ef4f25440b491f292f6f24ae93f07",
+   "tip_report_sha256": "6d280e8e2e4f56ff7091ebc0aa7ae5e30d0ef4f25440b491f292f6f24ae93f07",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12782028/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "529d34d3c13a14f55c65f55f713279493d47d7c939c0594d4c9b9bf4af5eeadf",
+   "tip_ir_sha256": "529d34d3c13a14f55c65f55f713279493d47d7c939c0594d4c9b9bf4af5eeadf",
+   "base_report_sha256": "4f60a10bcd527d9fe9e5ae333a247def036ceeadcb358a6f93341009889a7a08",
+   "tip_report_sha256": "4f60a10bcd527d9fe9e5ae333a247def036ceeadcb358a6f93341009889a7a08",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "bare_protein_endpoint": 1
+   },
+   "base_ir_sha256": "e79e6509d66033450d9a81269722ff3aa81c8eecd2808109c4f8be4f7ad1ece9",
+   "tip_ir_sha256": "90c296d23830ec9369bcd0240874b00ba4427d8fa7b08146b669c8a553986e73",
+   "base_report_sha256": "c3d2e6c853cb4fa382ecdd425558d81fa0963382a5a063bcf032e9fc5bc65dad",
+   "tip_report_sha256": "c3d2e6c853cb4fa382ecdd425558d81fa0963382a5a063bcf032e9fc5bc65dad",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "841573d14a0c9b05e3bbdbdf416e426cdc38f90826ed430d55fafc5f11dd20e5",
+   "tip_ir_sha256": "3f2156dd8c36f814e832d00cf200e5032d65c9d945216467f64a712f6d101416",
+   "base_report_sha256": "d62aa4effccc94ae3a2a09fca807b236d5631bc6a0045ffe49ff837104705057",
+   "tip_report_sha256": "d62aa4effccc94ae3a2a09fca807b236d5631bc6a0045ffe49ff837104705057",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC13231680/research/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "3bede6490786ee8b21ce0477753bddead8c97ffe7628071d23da3403b615ab53",
+   "tip_ir_sha256": "e8d45d1d7cfdd068c37ccc85c003fabc9d0ce3213038dcf8eef0075b016c5daf",
+   "base_report_sha256": "297b43a42112110e0df5966f35e25e24730abf7ebb5f3924f8f8c124d6762670",
+   "tip_report_sha256": "297b43a42112110e0df5966f35e25e24730abf7ebb5f3924f8f8c124d6762670",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-22_2147/papers/PMC13231680/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "ef33f7af0585cffa331f5eb79bf7a43725b74feefe79621f109791ec6010deb0",
+   "tip_ir_sha256": "ff37579ce64f373d09551fedd3d2f0dac9f8d4e5178d90ed29de04f119da3169",
+   "base_report_sha256": "9e57e252e8280a70673248f92ffef3e637e22bbf07c3271e3d4fd32d14b7683b",
+   "tip_report_sha256": "9e57e252e8280a70673248f92ffef3e637e22bbf07c3271e3d4fd32d14b7683b",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 8,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 7
+   },
+   "base_ir_sha256": "be8c4bef8ac59eb1519478ac03a3fad9dee230d1615f8dabcfc1aa97d54985a3",
+   "tip_ir_sha256": "9d4fb92362ebdccaee3cd5c7c2cfa8a8f0639d65e1ea081805567007f13cfd4c",
+   "base_report_sha256": "e7c0293e2db8412cfa99b53712a9dbc70329c4b787a82506708b17a453ad1aef",
+   "tip_report_sha256": "e7c0293e2db8412cfa99b53712a9dbc70329c4b787a82506708b17a453ad1aef",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 3
+   },
+   "base_ir_sha256": "b79c8658a48ce60d1e3f3240d692c2a5a20b2522b809e9cad6f9284bd4012827",
+   "tip_ir_sha256": "41787b46a7cdada42a60d49f7e255b2f1962817d6b2ecdeadb210b312f6060b2",
+   "base_report_sha256": "7aa1bcecbcb7ef040c92b657b8020a6ffebb84cff75be5e75aa938682c5e5001",
+   "tip_report_sha256": "7aa1bcecbcb7ef040c92b657b8020a6ffebb84cff75be5e75aa938682c5e5001",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 1,
+   "by_outcome": {
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "c8c6173fdd0f38d058c7c19e4eb91579ede96eabc285c906cd67fe72b2cb698b",
+   "tip_ir_sha256": "81225b76cd51a43c041fc1072f93d6ed9b9d48cfd4f184018bc69f80a4d23989",
+   "base_report_sha256": "73f4916424130fc79f54ac9ebfdd075ea98d69d8a6e121becf4e46b39bab5fb2",
+   "tip_report_sha256": "73f4916424130fc79f54ac9ebfdd075ea98d69d8a6e121becf4e46b39bab5fb2",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "eaaabe0c5918aef665dcac5c3e3a2d989c3e3b9f0c57ee949657eefa1afa87f3",
+   "tip_ir_sha256": "6cb2461dfc71bfe3410d1c8c673cc2a8589f65378b68cc1c8e12869b4ae51279",
+   "base_report_sha256": "18c69e15d71b1443d8f467a35f9fb4fd2f2744edbe92074f76e86ac849945652",
+   "tip_report_sha256": "18c69e15d71b1443d8f467a35f9fb4fd2f2744edbe92074f76e86ac849945652",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "26f8a23691b5d0b820a2c7e3af3df925702447d34cae69a767306a68690694f9",
+   "tip_ir_sha256": "f50bfdd948211cdb7921d437d077b9342dfb2091452e3e07e3dfc6f9b0192d8f",
+   "base_report_sha256": "9f1e25e129244d7f670e183e5e74815132468fb7b400f6cf85164fcf788fa865",
+   "tip_report_sha256": "9f1e25e129244d7f670e183e5e74815132468fb7b400f6cf85164fcf788fa865",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1203/papers/PMC13231680/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "98e47f267770005dbc553202825d9ddfb00913b2efac311feebc7bcf9e9cf070",
+   "tip_ir_sha256": "0ae4a850948e2a332f5bd713e6aea0173b2c3cb0fcdad46919b9b95ac5a8cd62",
+   "base_report_sha256": "1454e96269f178cf6ccbec6eb4a8a88ac612051ea68485a5b5efdf2b1a989f15",
+   "tip_report_sha256": "1454e96269f178cf6ccbec6eb4a8a88ac612051ea68485a5b5efdf2b1a989f15",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1402/papers/PMC12180156/research/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "ffec0afeb05968823e23c51a91b7a89f7eaf737673293ff8f97a445f1791e57a",
+   "tip_ir_sha256": "53fff0715bb4950a58094b3ace37c28ba36eb463f5f3e493aee20b71270cbf49",
+   "base_report_sha256": "9bbc351f0cacf5430401b855e4ceb88ba380b93bc303ad1fa6cf1be0528b90e9",
+   "tip_report_sha256": "9bbc351f0cacf5430401b855e4ceb88ba380b93bc303ad1fa6cf1be0528b90e9",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1402/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "320c445b6b77f4d456914498cd465b6dbb0163f9af8541a0c2700a39b13cda88",
+   "tip_ir_sha256": "320c445b6b77f4d456914498cd465b6dbb0163f9af8541a0c2700a39b13cda88",
+   "base_report_sha256": "00096d5cd79ef300ec2ea3060042e4c073387bbb202b3e325f397be2ea3c17de",
+   "tip_report_sha256": "00096d5cd79ef300ec2ea3060042e4c073387bbb202b3e325f397be2ea3c17de",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12096016/research/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "823bb05bef67405c298d657ea697431b47a8842379d505107662380fb361d4f6",
+   "tip_ir_sha256": "8056d07d3ab4d6248a1a83d0ec0415d8d53179fdd1c4f38943304a94f31e8d7e",
+   "base_report_sha256": "1542768ed499513938fdf4c723e45c187ea37b24a6c4e72a25d48e05e6b7e653",
+   "tip_report_sha256": "1542768ed499513938fdf4c723e45c187ea37b24a6c4e72a25d48e05e6b7e653",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12096016/strict/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "4747ebb1786cb5d3e1a6091b9f7f784f03f311d213030dbc94d73a34d72ba21a",
+   "tip_ir_sha256": "bc7f6e51f85badadfcfa06620151e743f8fd1d0f89445bcd80f89b6753a75324",
+   "base_report_sha256": "f08378e86a45143443f126e4098824e1bbe1a24cfa6b0f82a41f5aa052c5e227",
+   "tip_report_sha256": "f08378e86a45143443f126e4098824e1bbe1a24cfa6b0f82a41f5aa052c5e227",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12180156/strict/final_mapped.json": {
+   "interactions": 2,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 1
+   },
+   "base_ir_sha256": "1dd6a7fddb2fb13c31c213dd2d5d00621e178b4e2f3bd04cbd098e52f7b63a0a",
+   "tip_ir_sha256": "9217686e6ba64349a6d8e8cde1228dcfe2183f137e728ce336e0f4c17782e75f",
+   "base_report_sha256": "86fc49342729bbddc1dfa6f0555ef9934c95ca01a744109877677202307e7874",
+   "tip_report_sha256": "86fc49342729bbddc1dfa6f0555ef9934c95ca01a744109877677202307e7874",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12444477/strict/final_mapped.json": {
+   "interactions": 13,
+   "by_outcome": {
+    "untyped_interaction": 13
+   },
+   "base_ir_sha256": "56cd19d4d945567da313537e0a4697f8cbbf0c5b05627df90e22b1307c774e09",
+   "tip_ir_sha256": "5dd5cd36d6c6a4f9a543c68b06f8452630e65105c720ad8ce33170a3d7098aff",
+   "base_report_sha256": "f7997875cac8b23b151eb07ca118081de977036ca15cbb2924040fe1f98a989c",
+   "tip_report_sha256": "cddfb69f6bb68b32d729ff1ccd4ff87332f2227427f40c04be7b9b06f897c59f",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/interaction_type",
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12452463/research/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "protein_endpoint_missing_external_identity": 2,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "568036cc2014480b8d60e6864de6a977571ecfee621cc4b9ffcfe20d6e8cbef3",
+   "tip_ir_sha256": "ef8992c4139e026dc8873944214644070b2751ea85bec81ed3e3cd23a41ff886",
+   "base_report_sha256": "1214f80c6d64911a19cd183ee9fe953a3eff5575d2fc4ecc9d5261448289d657",
+   "tip_report_sha256": "a851d42e7aa625a25473691bc043e609931f067435a57bc83991561f8afed7f2",
+   "ir_moved": true,
+   "report_moved": true,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence",
+    "/ir/processes/interactions/[]/withheld/reason",
+    "/ir/processes/interactions/[]/withheld/unwrappable_proteins",
+    "/report/warnings/[]/message",
+    "/report/warnings/[]/reason"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12452463/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "9ecfbdcbb7048ceb219af6c68cf6f872834bb631e9f24f03fbe46167a950baec",
+   "tip_ir_sha256": "9ecfbdcbb7048ceb219af6c68cf6f872834bb631e9f24f03fbe46167a950baec",
+   "base_report_sha256": "5503e37d4fa23dfa99cc4d9424d2b4a80a16afaa93a2471bbae93f7ed179f2c6",
+   "tip_report_sha256": "5503e37d4fa23dfa99cc4d9424d2b4a80a16afaa93a2471bbae93f7ed179f2c6",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12782028/research/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "71f2d4649127f2fbade4b407dea2a861ffba8915960f4bcfacffcac90d11c4a8",
+   "tip_ir_sha256": "71f2d4649127f2fbade4b407dea2a861ffba8915960f4bcfacffcac90d11c4a8",
+   "base_report_sha256": "ffdc9054c410d47cdabd2608c541071d0dded01829e7f4b6fd6c89662b3d570d",
+   "tip_report_sha256": "ffdc9054c410d47cdabd2608c541071d0dded01829e7f4b6fd6c89662b3d570d",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12782028/strict/final_mapped.json": {
+   "interactions": 0,
+   "by_outcome": {},
+   "base_ir_sha256": "ef934a3aa91240f76bbf9ee4bffcf2b13ff6f42575436d0503fc70073e6b71fc",
+   "tip_ir_sha256": "ef934a3aa91240f76bbf9ee4bffcf2b13ff6f42575436d0503fc70073e6b71fc",
+   "base_report_sha256": "c37f495bf1f54a977fbc6aeb1ab5112a6dbee9a099ed7683d8083adfe1729105",
+   "tip_report_sha256": "c37f495bf1f54a977fbc6aeb1ab5112a6dbee9a099ed7683d8083adfe1729105",
+   "ir_moved": false,
+   "report_moved": false,
+   "changed_paths": [],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12856317/research/final_mapped.json": {
+   "interactions": 3,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "29b7f99c99390c559b258c4ed1d14b90b26cbbf367b97a44a8c21f94d03c1f60",
+   "tip_ir_sha256": "d2ea1debeb2158fb1bca82b6be9bfe2597fa292d288669c48b2d975b46dcedff",
+   "base_report_sha256": "bf2e51279b1ca0172c1770451bdb1ce8a6fa55ea4672503d5015c16e511a5f5d",
+   "tip_report_sha256": "bf2e51279b1ca0172c1770451bdb1ce8a6fa55ea4672503d5015c16e511a5f5d",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-24_1428/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "bare_protein_endpoint": 2,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "f115a2796749ff751718dd427522b6ac63481d572501eefa9e76f11d09fedb5c",
+   "tip_ir_sha256": "f0446b3cade834d3edd51b6618d722a0b7c50adc5a40a2eb89c979126023efb4",
+   "base_report_sha256": "0b41cb44b765fd150d140290f8241b5695e79c41ab2c191031bf587cc3d3e7b8",
+   "tip_report_sha256": "0b41cb44b765fd150d140290f8241b5695e79c41ab2c191031bf587cc3d3e7b8",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12444477/research/final_mapped.json": {
+   "interactions": 8,
+   "by_outcome": {
+    "untyped_interaction": 7,
+    "bare_protein_endpoint": 1
+   },
+   "base_ir_sha256": "fa6c972d033715a65f2e120ba1acf5c0c74c1b15ec41510e73caffb5f5d75d4f",
+   "tip_ir_sha256": "07729f63929becea2aaae95126b0167183b35f915fa16bfbf7bc49048562e494",
+   "base_report_sha256": "2905da50bb3fc783e8d68d1707a884d8438c2c8ae5ea68fcef1085d14d7076a9",
+   "tip_report_sha256": "2905da50bb3fc783e8d68d1707a884d8438c2c8ae5ea68fcef1085d14d7076a9",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12444477/strict/final_mapped.json": {
+   "interactions": 5,
+   "by_outcome": {
+    "untyped_interaction": 4,
+    "bare_protein_endpoint": 1
+   },
+   "base_ir_sha256": "2424f7a750de272c7bcbf6dcdae1d2941b0bcf81914c75cc5fb8f1142547e6df",
+   "tip_ir_sha256": "393a3ecb6c3c21a30caac83a1c806c3d6e9cc9ce619859cf216c2783a1ae1e25",
+   "base_report_sha256": "bfbcceaa60a09f666ba4320dda5dc08af30dd95e0d6448f4270ee3c1c3828919",
+   "tip_report_sha256": "bfbcceaa60a09f666ba4320dda5dc08af30dd95e0d6448f4270ee3c1c3828919",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  },
+  "runs_verify/2026-08-25_1216/papers/PMC12856317/strict/final_mapped.json": {
+   "interactions": 4,
+   "by_outcome": {
+    "bare_protein_endpoint": 1,
+    "exportable": 1,
+    "untyped_interaction": 2
+   },
+   "base_ir_sha256": "26cf42acd6771833f6166396e30433679ca8a27e78da023858162d0c90e863f7",
+   "tip_ir_sha256": "149018dc92b70a3a232d4d5795974ad8ded54fc5a577d888374c079cced49ce4",
+   "base_report_sha256": "d7f09b133fc1335cad42b9e07d1b570582fbce6313b0f6bc88b8249e9c03995b",
+   "tip_report_sha256": "d7f09b133fc1335cad42b9e07d1b570582fbce6313b0f6bc88b8249e9c03995b",
+   "ir_moved": true,
+   "report_moved": false,
+   "changed_paths": [
+    "/ir/processes/interactions/[]/withheld/evidence"
+   ],
+   "added_warning_codes": [],
+   "errors_unchanged": true,
+   "ok_unchanged": true
+  }
+ }
+}
