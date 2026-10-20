@@ -7129,3 +7129,23 @@ the Lead Orchestrator at the product owner's instruction to record the decisions
    byte-identical to what `f9892cdf` produces for the same payload.** Each lane proves it with a test.
 3. Not changed by this amendment: the interaction lines ORCH-747 already put into the summary before
    `f9892cdf`. Whether those should also leave the LLM-fed text is open.
+
+---
+
+## D-104 AMENDMENT 3 — merge compatibility: an undefined state is no state; an enzyme subset merges into the larger set · 2026-10-20 · LOCKED
+
+**Decided by the product owner** (2026-10-20, in session, on `ORCH-754a` questions 1-2). Recorded by the
+Lead Orchestrator at the product owner's instruction to record the decisions made.
+
+Background: after the `754r0` chimera finding, rows merge only when they are *compatible*. Different
+cofactors in one role, different enzymes, or different states keep rows apart. Under that rule
+chlorophyll stayed at 41 pooled rows, because draw 2 names a state (`plastidic state`) its own payload
+never defines.
+
+1. **An undefined biological state counts as "no state stated".** A defined state and an undefined one
+   are compatible; two different defined states still conflict. Every merge that relies on this is
+   flagged for review (`undefined_state_treated_as_absent`) in the side file and the human-facing text.
+   Lane estimate: chlorophyll 41 → about 30, with the gold scores unchanged.
+2. **An enzyme set that is a subset of another is compatible, and the merged row keeps the larger set**,
+   but only when a verbatim quote supports the extra enzyme. Overlapping but non-nested sets still
+   conflict.
