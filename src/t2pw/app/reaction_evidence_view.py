@@ -121,14 +121,27 @@ def _render_body() -> None:
             artifacts[FINAL_MAPPED_FILENAME] = payload
             source = f"session post_pipeline_artifacts[{key}]"
     ir_source = PWML_IR_FILENAME
+    pwml_written: Optional[bool] = None  # a run directory: decided by its PWML files
+    no_pwml_cause = ""
     if PWML_IR_FILENAME not in artifacts and directory == session_dir and _session_ir() is not None:
+        result = st.session_state["pwml_export_result"]
         artifacts[PWML_IR_FILENAME] = _session_ir()
         ir_source = "session pwml_export_result[pwml_ir]"
+        # The app keeps the IR even when validation stopped the export (ok False, no
+        # output): a verdict is shown only when the export actually wrote a PWML.
+        pwml_written = result.get("ok") is True and bool(result.get("xml_bytes") or result.get("output_path"))
+        no_pwml_cause = (
+            str(result.get("error") or "the export reported ok=false").strip()
+            if result.get("ok") is not True
+            else "the export result carries no PWML"
+        )
     if not artifacts:
         st.info(f"None of {', '.join(JSON_ARTIFACTS)} was found in {directory}.")
         return
 
-    report = build_report(artifacts, payload_source=source, ir_source=ir_source)
+    report = build_report(
+        artifacts, payload_source=source, ir_source=ir_source, pwml_written=pwml_written, no_pwml_cause=no_pwml_cause
+    )
     st.download_button(
         DOWNLOAD_LABEL,
         data=render_text(report).encode("utf-8"),

@@ -32,7 +32,8 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 # Only names that exist at the base too, so the G9 runs at earlier SHAs fail on behaviour.
-from t2pw.app.reaction_evidence import build_report, render_text  # noqa: E402
+from t2pw.app.reaction_evidence import build_report, load_run_artifacts, render_text  # noqa: E402
+from t2pw.curation.interactive_curator import compact_mapping_misses  # noqa: E402
 from t2pw.mapping.map_ids import MappingCache, _rewrite_reaction_protein_enzymes_to_complexes  # noqa: E402
 from t2pw.pipeline.draft_graph import build_draft_graph  # noqa: E402
 from t2pw.pipeline.qa_graph import generate_qa_report  # noqa: E402
@@ -159,18 +160,10 @@ def test_signed_protein_endpoints_are_rewritten_to_single_protein_wrappers() -> 
     # The proteins stay declared: the wrapper refers to them, it does not replace them.
     assert {p["name"] for p in payload["entities"]["proteins"]} == {"SFXN4", "ALAS2", "FtsH", "Orphan"}
 
-    assert report["summary"]["interaction_protein_endpoints_rewritten_to_complexes"] == 3
-    # A row left alone leaves no trace in this report: it reaches an LLM prompt (D-104,
-    # 2026-10-20 ruling). The exporter's own record names why the row was withheld.
-    assert [k for k in report["summary"] if k.startswith("interaction_")] == [
-        "interaction_protein_endpoints_rewritten_to_complexes"
-    ]
-    rewritten = [a for a in report["actions"] if a["type"] == "interaction_protein_endpoint_rewritten_to_complex"]
-    assert {(a["json_pointer"], a["protein"], a["protein_complex"]) for a in rewritten} == {
-        ("/processes/interactions/0/entity_1", "SFXN4", "SFXN4 complex"),
-        ("/processes/interactions/0/entity_2", "ALAS2", "ALAS2 complex"),
-        ("/processes/interactions/1/entity_1", "ALAS2", "ALAS2 complex"),
-    }
+    # No bookkeeping, wrapped or not: this report reaches the interactive curator's prompt
+    # (D-104, 2026-10-20 ruling; round-2 review). The rewrite is in the payload itself.
+    assert not [k for k in report["summary"] if "interaction" in k]
+    assert not [a for a in report["actions"] if "interaction" in a["type"]]
 
 
 def test_unsigned_and_unwrappable_rows_are_left_exactly_as_written() -> None:
@@ -183,8 +176,8 @@ def test_unsigned_and_unwrappable_rows_are_left_exactly_as_written() -> None:
     # ALAS2 alone would not make the row drawable.
     assert rows[3] == original[3]
     assert rows[4] == original[4]
-    touched = {a["json_pointer"].rsplit("/", 1)[0] for a in report["actions"] if a["type"].startswith("interaction_")}
-    assert touched == {"/processes/interactions/0", "/processes/interactions/1"}
+    assert (rows[0]["entity_1"], rows[1]["entity_1"]) == ("SFXN4 complex", "ALAS2 complex")
+    assert not [a for a in report["actions"] if "interaction" in a["type"]]
 
 
 def test_an_interaction_free_payload_gets_no_new_summary_keys() -> None:
@@ -260,7 +253,10 @@ def test_the_enzyme_superset_refusal_applies_to_interaction_endpoints() -> None:
     wrapper = next(r for r in payload["entities"]["protein_complexes"] if r["name"] == "ALAS2 complex")
     assert [c["name"] for c in wrapper["components"]] == ["ALAS2"]
     assert "STRANGER" not in str(payload["entities"]["protein_complexes"])
-    assert report["summary"]["reaction_enzyme_complex_superset_promotions_refused"] == 2
+    # The refusal happened (one-protein wrapper) and, for an interaction endpoint, is not
+    # written into the report the curator reads (round 2).
+    assert "reaction_enzyme_complex_superset_promotions_refused" not in report["summary"]
+    assert not report["actions"]
 
 
 # ── the wrappers pass the generated-complex gates, untouched ─────────────────
@@ -379,22 +375,32 @@ def _ir_for(payload: dict) -> dict:
     return ir
 
 
-def _evidence_blocks(payload: dict, ir: dict) -> dict:
-    """``{"INTERACTION n": its block}`` from the reaction-evidence .txt."""
-    text = render_text(build_report({"final_mapped.json": payload, "pwml_ir.json": ir}))
+def _evidence_blocks(payload: dict, ir: dict, pwml_written: bool = True) -> dict:
+    """``{"INTERACTION n": its block}`` from the reaction-evidence .txt of a run that wrote a PWML."""
+    artifacts = {"final_mapped.json": payload, "pwml_ir.json": ir}
+    if pwml_written:
+        artifacts["pathway.pwml"] = True
+    text = render_text(build_report(artifacts))
     chunks = re.split(r"\n(?=INTERACTION \d+  \[)", text)
     return {c.split("  [")[0]: c.split("\n\n")[0] for c in chunks if re.match(r"INTERACTION \d+  \[", c)}
 
 
-def _assert_the_record_states_the_ir(blocks: dict, ir: dict) -> None:
+def _expected_line(row: dict, pwml_written: bool = True) -> str:
+    """What the record must say for one IR row: the IR's verdict, only for a written PWML."""
+    if not pwml_written:
+        return "PWML: Not recorded (no PWML written"
+    if row["export_status"] == "withheld":
+        return f"PWML: withheld -- {row['withheld']['reason']}"
+    if not (isinstance(row.get("left"), dict) and isinstance(row.get("right"), dict)):
+        return "PWML: Not recorded (the IR resolved no entity for an endpoint of this row)"
+    return f"PWML: drawn as {row['interaction_type']}"
+
+
+def _assert_the_record_states_the_ir(blocks: dict, ir: dict, pwml_written: bool = True) -> None:
     rows = ir["processes"]["interactions"]
     assert len(blocks) == len(rows)
     for number, row in enumerate(rows, 1):
-        block = blocks[f"INTERACTION {number}"]
-        if row["export_status"] == "exportable":
-            assert f"PWML: drawn as {row['interaction_type']}" in block
-        else:
-            assert f"PWML: withheld -- {row['withheld']['reason']}" in block
+        assert _expected_line(row, pwml_written) in blocks[f"INTERACTION {number}"]
 
 
 def _synonym_payload() -> dict:
@@ -437,7 +443,7 @@ def test_a_protein_named_by_its_synonym_is_wrapped_and_the_record_says_drawn() -
     assert payload["processes"]["interactions"][0]["entity_1"] == "EntC complex"
     wrapper = next(r for r in payload["entities"]["protein_complexes"] if r["name"] == "EntC complex")
     assert [c["name"] for c in wrapper["components"]] == ["EntC"]  # the declared protein, not the alias
-    assert report["summary"]["interaction_protein_endpoints_rewritten_to_complexes"] == 1
+    assert not [k for k in report["summary"] if "interaction" in k]
     ir = _ir_for(payload)
     assert (ir["processes"]["interactions"][0]["export_status"], ir["processes"]["interactions"][0]["interaction_type"]) == (
         "exportable", "Inhibition")
@@ -502,6 +508,77 @@ def test_the_research_report_says_no_row_reached_a_pwml_and_keeps_its_json_shape
                                            "biological_state", "evidence", "provenance", "confidence"}
 
 
+# ── round 2: a verdict only for a PWML that exists, and only for its own row ──
+
+
+NO_PWML = "PWML: Not recorded (no PWML written: neither pathway.pwml nor pathway.review_required.pwml is in this run)"
+
+
+def test_no_verdict_is_shown_when_no_pwml_was_written_batch_path(tmp_path: Path) -> None:
+    """REGRESSION (G9): fails behaviourally at ``9da8358e``, which printed "drawn as" from the
+    IR's ``export_status`` alone. The batch driver writes ``pwml_ir.json`` even when no PWML
+    was written -- the shape of committed ``runs_verify/2026-08-25_1216/papers/PMC12856317/strict``."""
+    payload = _wrapped_post_stage6()
+    ir = _ir_for(payload)
+    (tmp_path / "final_mapped.json").write_text(json.dumps(payload), encoding="utf-8")
+    (tmp_path / "pwml_ir.json").write_text(json.dumps(ir), encoding="utf-8")
+    text = render_text(build_report(load_run_artifacts(tmp_path)))
+    assert "drawn as" not in text
+    assert text.count(NO_PWML) == 5
+    (tmp_path / "pathway.review_required.pwml").write_text("<pwml/>", encoding="utf-8")
+    text = render_text(build_report(load_run_artifacts(tmp_path)))
+    assert text.count("PWML: drawn as") == 2 and NO_PWML not in text
+
+
+def test_a_stale_ir_row_is_never_paired_with_a_different_word_or_endpoint() -> None:
+    """Round-2 finding 3: refinement can replace the export IR while the payload beside it is
+    older (or the reverse). Count and names alone let a new verdict sit under an old word."""
+    payload = _wrapped_post_stage6()
+    ir = _ir_for(payload)
+    stale = deepcopy(payload)
+    rows = stale["processes"]["interactions"]
+    rows[0]["relationship"] = "binds"          # a drawn row, its word changed
+    rows[1]["entity_2"] = "SFXN4 complex"      # a drawn row, an endpoint changed
+    rows[3]["entity_1"] = "Orphan"             # a withheld row, an endpoint changed
+    blocks = _evidence_blocks(stale, ir)
+    for number in (1, 2, 4):
+        assert "was built from a different relationship or endpoints" in blocks[f"INTERACTION {number}"]
+    assert "PWML: withheld -- untyped_interaction" in blocks["INTERACTION 3"]  # an unchanged row keeps it
+    assert "PWML: withheld -- protein_endpoint_missing_species" in blocks["INTERACTION 5"]
+
+
+def _shared_by_name() -> dict:
+    payload = _payload()
+    payload["entities"]["nucleic_acids"].append({"name": "ALAS2", "class": "nucleic_acid"})
+    payload["processes"]["interactions"] = payload["processes"]["interactions"][:1]  # SFXN4 inhibits ALAS2
+    return payload
+
+
+def _shared_by_alias() -> dict:
+    payload = _synonym_payload()
+    payload["entities"]["nucleic_acids"].append({"name": "Isochorismate synthase EntC", "class": "nucleic_acid"})
+    return payload
+
+
+def test_a_protein_endpoint_also_named_like_another_kind_is_never_wrapped_and_both_outputs_say_why() -> None:
+    """NEW (round-2 finding 4, fail closed): an endpoint whose name -- or the alias it
+    matched -- also names a nucleic acid is not known to be the protein (an sRNA's mRNA
+    target, say). Stage 6 wraps no endpoint of the row; the IR and the record both say why."""
+    for build, name in ((_shared_by_name, "ALAS2"), (_shared_by_alias, "Isochorismate synthase EntC")):
+        payload = build()
+        original = deepcopy(payload["processes"]["interactions"])
+        _stage6(payload)
+        assert payload["processes"]["interactions"] == original
+        assert not [r for r in payload["entities"]["protein_complexes"] if r.get("generated")]
+        ir = _ir_for(payload)
+        withheld = ir["processes"]["interactions"][0]["withheld"]
+        assert withheld["reason"] == "ambiguous_protein_endpoint"
+        assert withheld["ambiguous_endpoints"] == [{"name": name, "also_names": ["nucleic_acid"]}]
+        block = _evidence_blocks(payload, ir)["INTERACTION 1"]
+        assert (f"PWML: withheld -- ambiguous_protein_endpoint: {name} also names a nucleic acid in this "
+                "payload, so it is not known to be the protein and is not drawn as one") in block
+
+
 # ── D-104 ruling of 2026-10-20: every LLM input is the base's, byte for byte ──
 
 
@@ -510,17 +587,27 @@ def _sha(value: object) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def _llm_bound_digests() -> dict:
+def _wrapped_post_stage6() -> dict:
+    payload = _payload()
+    _stage6(payload)
+    return payload
+
+
+def _llm_bound_digests(post_stage6: dict | None = None) -> dict:
     """What reaches a model, for fixed payloads: the reaction summary (the curator and the
-    enrichment agent), the draft graph and the QA report it is built from, and the Stage-6
-    report and payload for a payload whose signed rows cannot be wrapped (the report feeds
-    the interactive curator's "Mapping Misses")."""
+    enrichment agent), the draft graph and the QA report it is built from; the Stage-6
+    report and payload for a payload whose signed rows cannot be wrapped; and, round 2, the
+    WRAPPED case -- the Stage-6 report and the curator's "Mapping Misses" for a payload Stage 6
+    does wrap, plus every text a model reads from the post-Stage-6 payload. ``post_stage6`` is
+    that payload as THIS tree's Stage 6 produced it; the evidence script hands the tip's to the
+    base, so both trees read the same payload and only the wrapper (authorized) differs."""
     out = {}
     payloads = {
         "fixture": _payload(),
         "synonym_fixture": _synonym_payload(),
         "committed_synonym_leg": json.loads(SYNONYM_LEG.read_text(encoding="utf-8")),
         "committed_lipid_a_research": json.loads(LIPID_A_LEG.read_text(encoding="utf-8")),
+        "wrapped_post_stage6": post_stage6 if post_stage6 is not None else _wrapped_post_stage6(),
     }
     for name, payload in payloads.items():
         graph = build_draft_graph(deepcopy(payload))
@@ -534,11 +621,18 @@ def _llm_bound_digests() -> dict:
     unwrappable["processes"]["interactions"] = unwrappable["processes"]["interactions"][2:]
     report = _stage6(unwrappable)
     out["stage6_all_unwrappable"] = _sha({"report": report, "payload": unwrappable})
+    wrapped_report = _stage6(_payload())  # the same input on both trees; only the tip wraps
+    out["stage6_wrapped_report"] = _sha(wrapped_report)
+    out["stage6_wrapped_mapping_misses"] = _sha(
+        compact_mapping_misses({"summary": wrapped_report["summary"], "enzyme_complex_conversion": wrapped_report})
+    )
     return out
 
 
 #: ``_llm_bound_digests()`` at base ``f9892cdf``, computed by
-#: ``docs/pwml_recovery_sprint/evidence/orch754b_llm_input_identity.py``.
+#: ``docs/pwml_recovery_sprint/evidence/orch754b_llm_input_identity.py``. ``wrapped_post_stage6``
+#: is the base's text generators run on the TIP's post-Stage-6 payload (the wrapper is the one
+#: authorized difference); ``stage6_wrapped_*`` is each tree's own Stage 6 on the same input.
 LLM_BOUND_BASE_DIGESTS: dict = {
     "fixture": {
         "reaction_summary": "8457bc67e09062d1cfa9af9aed322aafd66010304ec8863db41024fb2807d7e6",
@@ -560,7 +654,14 @@ LLM_BOUND_BASE_DIGESTS: dict = {
         "draft_graph": "978f3a09c9768f1ba4b166bfd6782a5f5a021c389ebb8758494c4cdd06504119",
         "qa_report": "1829e4ef6c7869aba66cabca5c818174dfe5eaac4ff35c4b2a1d87c23c18f689"
     },
-    "stage6_all_unwrappable": "75d9b8b2f729368908d6d847b3f3d539815e6d959d0b01770f3f31db88c968e6"
+    "wrapped_post_stage6": {
+        "reaction_summary": "10cd71373108b1b872eb583fc81fedb991f3e6da4bd8e4d69d5f8b88c96bd07d",
+        "draft_graph": "1923f35f1f3323a315833e3885bf688dce0b69031548936d7b7592d36aed2316",
+        "qa_report": "f03ee0791c61a9867d8cc8cbb85920bbef2ca2a520cae6a1eaa6290a5ed95a54"
+    },
+    "stage6_all_unwrappable": "75d9b8b2f729368908d6d847b3f3d539815e6d959d0b01770f3f31db88c968e6",
+    "stage6_wrapped_report": "33514f4c236a2fad43ad733d953761c1e3c22f6c9fe3685b9cec11eb5c30769d",
+    "stage6_wrapped_mapping_misses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
 }
 
 

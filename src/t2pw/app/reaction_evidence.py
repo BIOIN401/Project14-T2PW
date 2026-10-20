@@ -9,11 +9,13 @@ canonical payload, ``batch.driver._add_identity_artifacts``, including its
 ``process_normalizer.dedupe_processes`` and strict quarantine all append to; a row
 from it is labelled by that record name, never by a guessed stage), ``pwml_ir.json``
 (the IR the PWML was written from, ``batch.driver._add_pwml_artifacts``: each
-interaction's export verdict is READ from it, never recomputed) and the first
+interaction's export verdict is READ from it, never recomputed, and only when a PWML
+was written) and the first
 record of ``LEG_TRACE.jsonl`` for the paper id. Nothing
 is recomputed, repaired, merged or deleted, and no model, embedding or network
-call is made: this module imports only the standard library and the quarantine
-filename constants.
+call is made: this module imports only the standard library, the quarantine
+filename constants and the interaction sign table (``t2pw.pwml.interaction_types``,
+itself standard-library only).
 
 A value an artifact does not carry is rendered ``Not recorded``; it is never
 guessed. A missing artifact (``Not recorded``) and a recorded empty list
@@ -27,9 +29,14 @@ reaction" and both stay in the report exactly as the pathway has them.
 from __future__ import annotations
 
 import json
+import re
 import unicodedata
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional
+
+# Standard library only (the sign table, no exporter): used to check that an IR row
+# belongs to the payload row beside it, never to decide a verdict.
+from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_interaction_type
 
 from t2pw.pipeline.strict_quarantine import (
     COVERAGE_REPORT_FILENAME,
@@ -39,6 +46,12 @@ from t2pw.pipeline.strict_quarantine import (
 
 FINAL_MAPPED_FILENAME = "final_mapped.json"
 PWML_IR_FILENAME = "pwml_ir.json"
+#: The PWML a strict leg writes (``batch.driver``: release-ready / review-required). A verdict
+#: is shown only when one of them is present: an IR exists even when validation stopped the
+#: export (``streamlit_app`` returns ``ok: False`` with ``pwml_ir``; the driver still writes
+#: ``pwml_ir.json``), and a verdict then would claim a row was drawn in a file that was never
+#: written.
+PWML_FILENAMES = ("pathway.pwml", "pathway.review_required.pwml")
 LEG_TRACE_FILENAME = "LEG_TRACE.jsonl"
 JSON_ARTIFACTS = (
     COVERAGE_REPORT_FILENAME,
@@ -226,6 +239,10 @@ _WITHHELD_GLOSS = {
         "a protein endpoint is not wrapped in a single-protein complex in this payload, "
         "and PathWhiz has no bare-protein interaction member"
     ),
+    "ambiguous_protein_endpoint": (
+        "a protein endpoint's name also names another kind of entity in this payload, "
+        "so it is not known to be the protein and is not drawn as one"
+    ),
 }
 _MISSING = {"species": "species", "external_identity": "UniProt/DrugBank identity"}
 
@@ -248,11 +265,52 @@ def _pwml_verdict(row: Mapping[str, Any]) -> str:
     ]
     if lacking:
         gloss = "; ".join(lacking) + ", which a single-protein complex wrapper requires"
+    shared = [
+        f"{_text(a.get('name')) or NOT_RECORDED} also names a "
+        + " and a ".join(_text(k).replace("_", " ") for k in _list(a.get("also_names")))
+        for a in map(_dict, _list(withheld.get("ambiguous_endpoints")))
+    ]
+    if shared:
+        gloss = "; ".join(shared) + " in this payload, so it is not known to be the protein and is not drawn as one"
     return f"withheld -- {reason}" + (f": {gloss}" if gloss else "")
 
 
-def _interactions(payload: Mapping[str, Any], ir: Any, ir_source: str) -> List[Dict[str, Any]]:
-    """Every interaction in the final payload, with the IR's own verdict on it."""
+def _one_line(value: Any) -> str:
+    return " ".join(_text(value).split())
+
+
+def _ir_norm(value: Any) -> str:
+    # The exporter's name key (``ir._norm``), used only to see whether the entity an IR row
+    # was bound to carries the name the payload row writes.
+    return re.sub(r"[^a-z0-9:+ ]+", " ", _one_line(value).casefold()).strip()
+
+
+def _same_row(row: Mapping[str, Any], ir_row: Mapping[str, Any], ir_entities: Mapping[str, Any]) -> bool:
+    """Was ``ir_row`` built from ``row``? Word and both endpoints, as the exporter read them."""
+
+    word = interaction_relationship_word(row)
+    left = _one_line(row.get("left") or row.get("entity_1") or row.get("source"))
+    right = _one_line(row.get("right") or row.get("entity_2") or row.get("target"))
+    if _text(ir_row.get("export_status")) == "withheld":
+        withheld = _dict(ir_row.get("withheld"))
+        return (_text(withheld.get("raw_interaction_type")), _text(withheld.get("left")), _text(withheld.get("right"))) == (
+            word, left, right)
+    # A drawn row keeps the sign, not the word, and the entity each side was bound to.
+    if pwml_interaction_type(word) != _text(ir_row.get("interaction_type")):
+        return False
+    for side, written in (("left", left), ("right", right)):
+        entity = _dict(ir_entities.get(_text(_dict(ir_row.get(side)).get("entity_key"))))
+        names = [entity.get(f) for f in ("name", "raw_name", "short_name", "common_name")]
+        if _ir_norm(written) not in {_ir_norm(n) for n in [*names, *_list(entity.get("synonyms"))] if _ir_norm(n)}:
+            return False
+    return True
+
+
+def _interactions(payload: Mapping[str, Any], ir: Any, ir_source: str, no_pwml: str) -> List[Dict[str, Any]]:
+    """Every interaction in the final payload, with the IR's own verdict on it.
+
+    ``no_pwml`` is why no PWML was written, or ``""`` when one was.
+    """
 
     rows = [(i, r) for i, r in enumerate(_list(_dict(payload.get("processes")).get("interactions"))) if isinstance(r, dict)]
     ir_rows = _list(_dict(_dict(ir).get("processes")).get("interactions")) if isinstance(ir, dict) else None
@@ -262,14 +320,31 @@ def _interactions(payload: Mapping[str, Any], ir: Any, ir_source: str) -> List[D
         _text(_dict(v).get("name")) == (" ".join(_text(r.get("name")).split()) or f"Interaction {k}")
         for k, ((_i, r), v) in enumerate(zip(rows, ir_rows), 1)
     )
+    ir_entities = {
+        _text(e.get("key")): e
+        for bucket in _dict(_dict(ir).get("entities")).values()
+        for e in map(_dict, _list(bucket))
+        if _text(e.get("key"))
+    }
     out: List[Dict[str, Any]] = []
     for k, (index, row) in enumerate(rows, 1):
+        ir_row = _dict(ir_rows[k - 1]) if lined_up else {}
         if ir_rows is None:
             verdict = f"{NOT_RECORDED} (no {PWML_IR_FILENAME}: no PWML IR was built for this run)"
         elif not lined_up:
             verdict = f"{NOT_RECORDED} ({ir_source} does not line up with the interactions of the final payload)"
+        elif _text(ir_row.get("export_status")) not in ("exportable", "withheld"):
+            verdict = _pwml_verdict(ir_row)  # an IR older than per-row verdicts says so
+        elif no_pwml:
+            verdict = f"{NOT_RECORDED} (no PWML written: {no_pwml})"
+        elif _text(ir_row.get("export_status")) == "exportable" and not all(
+            isinstance(ir_row.get(side), dict) for side in ("left", "right")
+        ):
+            verdict = f"{NOT_RECORDED} (the IR resolved no entity for an endpoint of this row)"
+        elif not _same_row(row, ir_row, ir_entities):
+            verdict = f"{NOT_RECORDED} ({ir_source} row {k} was built from a different relationship or endpoints)"
         else:
-            verdict = _pwml_verdict(_dict(ir_rows[k - 1]))
+            verdict = _pwml_verdict(ir_row)
         out.append(
             {
                 "number": k,
@@ -301,6 +376,9 @@ def load_run_artifacts(directory: Any) -> Dict[str, Any]:
             found[LEG_TRACE_FILENAME] = json.loads(handle.readline())
     except (OSError, ValueError):
         pass
+    for name in PWML_FILENAMES:  # presence only: the report never reads a PWML
+        if (root / name).is_file():
+            found[name] = True
     return found
 
 
@@ -309,6 +387,8 @@ def build_report(
     *,
     payload_source: str = FINAL_MAPPED_FILENAME,
     ir_source: str = PWML_IR_FILENAME,
+    pwml_written: Optional[bool] = None,
+    no_pwml_cause: str = "",
 ) -> Dict[str, Any]:
     """The review model, a plain dict built only from ``artifacts`` (``{filename: parsed}``)."""
 
@@ -503,7 +583,15 @@ def build_report(
             (payload_source if name == FINAL_MAPPED_FILENAME else name for name in artifacts), key=str.lower
         ),
         "reactions": reactions,
-        "interactions": _interactions(payload, artifacts.get(PWML_IR_FILENAME), ir_source),
+        "interactions": _interactions(
+            payload,
+            artifacts.get(PWML_IR_FILENAME),
+            ir_source,
+            # A run directory says by its files; the app says by its export result.
+            ""
+            if (any(name in artifacts for name in PWML_FILENAMES) if pwml_written is None else pwml_written)
+            else (no_pwml_cause or f"neither {' nor '.join(PWML_FILENAMES)} is in this run"),
+        ),
         "ir_source": ir_source if PWML_IR_FILENAME in artifacts else NOT_RECORDED,
         "quarantined": quarantined,
         "removed_entities": removed_entities,

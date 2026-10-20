@@ -489,6 +489,17 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 #: are pytest's own (``evidence/orch754b_pins_before_repin.pytest.log``), and the
 #: out-of-pytest instrument reproduced every committed pin at the base and every pytest
 #: digest at the tip once it applied this module's autouse ``_no_live_db`` patch itself.
+#:
+#: **MOVED AN EIGHTH TIME, ON ONE LEG, by ORCH-754b repair round 2 (2026-10-20)**, merge rule 4:
+#: ``runs_verify/2026-08-04_1358/papers/PMC12096016/research`` ``e0ef63b1…`` -> ``d8bd9a2c…``. Two
+#: of its rows, ``2,3-DHB inhibits EntB isochorismatase`` and ``Fur represses entD``, name an endpoint
+#: (``EntB``, ``entD``) that is both a protein and a nucleic acid in that payload; the IR now
+#: withholds them as ``ambiguous_protein_endpoint`` instead of naming a missing identity. The whole
+#: move, measured base ``9da8358e`` -> tip by ``evidence/orch754b_ir_digest_delta.py --rev 9da8358e``
+#: (``orch754b_ir_digest_delta_round2.json``, G11 ``ORCH-754b/132``): that one leg, under
+#: ``withheld/reason``, ``withheld/ambiguous_endpoints``, ``withheld/unwrappable_proteins`` and the
+#: matching warning text; nothing else, no error / ok / stop moved. The new value is pytest's
+#: (``evidence/orch754b_pins_round2_before.pytest.log``).
 GOLDEN = {
     "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "a8880057346845b22a1be8ce3ef7e5acd2332db0e7893e36beacc14bbba62b59",
     # C-050h delta: f0dd12d5… -> e5a40385…, then the ONLY moved digest again under
@@ -520,7 +531,7 @@ GOLDEN = {
     "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": "9b45b2f78e0cf8f6f6164c1dc6a24c76708f69762870ce1450bb8dbbb57e399b",
     "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": "c6caa117c0b6d0e8499a1f3d7fadd9aefdee2fd0ace73ccb3759724e4c884681",
     "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": "b1ae1a97a4f17eb6618cdc3a6a39170f2841d746559a1322a56d477728aaf7e4",
-    "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": "e0ef63b16e128228605824734786c719314a822173cce3bbd3f6e1374be3ca62",
+    "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": "d8bd9a2c7a94ff10157a6a9133c2c12a559d654c8ddbf928cec9e17a11093347",
     "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": "4c9d3c3ee47e0966e577a744b3b262a170f80c55d31ccd5198771c8f2f9be185",
     "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": "428fce1aa7e9a21f337158a70ead719a05570b163c0e9b1e3458dd2b60fc460d",
     "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": "6cbe8e113571225f3bfdedfedd84e557f7c01824b4d23c222f679efa92e73212",

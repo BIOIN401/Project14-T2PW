@@ -40,6 +40,7 @@ from t2pw.pipeline.lineage import (
     read as read_lineage,
     record as record_lineage,
 )
+from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_interaction_type
 from t2pw.pipeline.reference_repair import (
     ReplacementRecord,
     repair_entity_references,
@@ -7623,6 +7624,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         reaction: Dict[str, Any],
         actor_scope: Set[str],
         json_pointer: str,
+        record: bool = True,
     ) -> Tuple[str, Dict[str, Any]]:
         species = _species_for(protein_row, actor, reaction)
         protein_id = _to_positive_int(protein_row.get("pathbank_protein_id"))
@@ -7682,6 +7684,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             result = _single_component_wrapper_result(
                 protein_name, protein_row, species, result, refusal
             )
+        if refusal and record:
             summary["reaction_enzyme_complex_superset_promotions_refused"] = (
                 summary.get("reaction_enzyme_complex_superset_promotions_refused", 0) + 1
             )
@@ -7985,11 +7988,13 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     # generated-complex gates require (``ir.validate_required_pwml_contract``), so a
     # wrapper never turns a withheld row into a broken complex. Anything else is left
     # as written; the exporter withholds it and its own record names the reason.
-    # Nothing is written to this report for a row left alone: the report reaches the
-    # interactive curator's prompt (``interactive_curator.compact_mapping_misses``),
-    # and D-104's 2026-10-20 ruling keeps every LLM input as the base produced it.
+    # NOTHING about these rows is written to this report -- no counter, no action, no
+    # superset-refusal record: the report reaches the interactive curator's prompt
+    # (``interactive_curator.compact_mapping_misses``, which copies the summary dict
+    # whole), and D-104's 2026-10-20 ruling keeps every LLM input as the base produced
+    # it. The rewrite is recorded where it happens: the endpoint now names a wrapper row
+    # carrying ``generated`` / ``generation_reason``, and the IR's verdict says the rest.
     # Runs before the dropped-protein repair below, so it only sees declared proteins.
-    from t2pw.pwml.ir import interaction_relationship_word, pwml_interaction_type  # lazy: ir -> compound_resolution -> map_ids
 
     def _alias_key(value: Any) -> str:
         return " ".join(str(value or "").casefold().split())
@@ -8004,6 +8009,21 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         names = [row.get(f) for f in ("name", "raw_name", "short_name", "common_name")]
         for alias in {_alias_key(a) for a in [*names, *_safe_list(row.get("synonyms"))] if _alias_key(a)}:
             proteins_by_alias.setdefault(alias, []).append(row)
+    # Fail closed (round 2): an endpoint whose name -- or the alias it matched -- also
+    # names a nucleic acid, compound or element collection is not known to be the
+    # protein (an sRNA's ``entC`` mRNA target), so no endpoint of that row is wrapped
+    # and the exporter withholds it as ``ambiguous_protein_endpoint``. Compared with
+    # this stage's own normalization, which is looser than the exporter's, so it
+    # refuses at least everything the exporter would call ambiguous.
+    other_kind_names = {
+        _normalize_name(str(alias))
+        for bucket in ("compounds", "nucleic_acids", "element_collections")
+        for row in _safe_list(entities.get(bucket))
+        if isinstance(row, dict)
+        for alias in [*(row.get(f) for f in ("name", "raw_name", "short_name", "common_name")),
+                      *_safe_list(row.get("synonyms"))]
+        if _normalize_name(str(alias or ""))
+    }
 
     for iidx, interaction in enumerate(_safe_list(processes.get("interactions"))):
         if not isinstance(interaction, dict) or not pwml_interaction_type(
@@ -8011,6 +8031,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         ):
             continue
         endpoints: List[Tuple[str, str, Dict[str, Any]]] = []
+        shared_name = False
         # The exporter's own field precedence for each side.
         for fields in (("left", "entity_1", "source"), ("right", "entity_2", "target")):
             field = next((f for f in fields if interaction.get(f)), "")
@@ -8022,9 +8043,10 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             if row is None and len(proteins_by_alias.get(_alias_key(written), [])) == 1:
                 row = proteins_by_alias[_alias_key(written)][0]
             if row is not None:
+                shared_name = shared_name or norm in other_kind_names
                 # The wrapper is named after, and holds, the declared protein.
                 endpoints.append((field, _canonical_name(str(row.get("name") or written)), row))
-        if not endpoints:
+        if not endpoints or shared_name:
             continue
         # A complex already named like this protein's wrapper. Its own one-protein
         # wrapper (built for it as an enzyme, or on an earlier pass) is reused as it
@@ -8054,19 +8076,10 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             if own_wrapper[name]:
                 complex_name = _canonical_name(str(named[name].get("name") or ""))
             else:
-                complex_name, _result = _resolve_complex_name(name, row, {}, interaction, set(), pointer)
+                complex_name, _result = _resolve_complex_name(
+                    name, row, {}, interaction, set(), pointer, record=False
+                )
             interaction[field] = complex_name
-            summary["interaction_protein_endpoints_rewritten_to_complexes"] = (
-                summary.get("interaction_protein_endpoints_rewritten_to_complexes", 0) + 1
-            )
-            actions.append(
-                {
-                    "type": "interaction_protein_endpoint_rewritten_to_complex",
-                    "json_pointer": pointer,
-                    "protein": name,
-                    "protein_complex": complex_name,
-                }
-            )
 
     # ── The references the drops above orphaned ──────────────────────────────
     #
