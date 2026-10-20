@@ -53,11 +53,12 @@ distinct is a row the evaluator scores as distinct (``reactions.score_leg``, R-D
 * a row nothing above can key (all key fields blank): its JSON serialisation, so
   distinct unkeyable rows are never collapsed into one
 
-``strict_key`` is :func:`t2pw.bench.eval_v2.matcher.strict_key` (NFKC, Greek spelled
+``strict_key`` is :func:`t2pw.pipeline.name_keys.strict_key` (NFKC, Greek spelled
 out, casefold, trailing charge dropped, ``-ic acid`` -> ``-ate``, pyrophosphate ==
-diphosphate). It is imported inside the function because ``t2pw.pipeline`` must not
-import ``t2pw.bench`` at module level (release_status.py:112; strict_quarantine.py:2704
-is the precedent seam).
+diphosphate): production's own copy of the evaluation matcher's key, so that
+``t2pw.pipeline`` imports nothing from ``t2pw.bench`` and the evaluator stays independent
+of what it measures (ORCH-754d; ``tests/test_name_keys_match_evaluation_matcher.py``
+pins the two copies equal).
 
 Which draw(s) produced each row goes to the side file ``stage1_ensemble_report.json``
 beside the run's other extraction diagnostics, and a bounded summary goes into
@@ -108,6 +109,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 from t2pw.pipeline.extraction_diagnostics import OUTCOME_OK, current as current_diagnostics
+from t2pw.pipeline.name_keys import mentions, strict_key, text_key
 from t2pw.pipeline.paper_lexicon import RULE_DATABASE_ID, RULE_EXACT, RULE_TYPO, PaperLexicon, spelling_key
 from t2pw.pipeline.participant_schema import PARTICIPANT_NAME_KEYS
 
@@ -182,8 +184,6 @@ def extraction_draws(override: Optional[int] = None) -> int:
 
 
 def _strict_key(value: Any) -> str:
-    from t2pw.bench.eval_v2.matcher import strict_key  # function-local: layering, see module doc
-
     return strict_key(value)
 
 
@@ -287,8 +287,6 @@ def _profile(row: Dict[str, Any], states: Dict[str, Dict[str, Any]],
     """Everything :func:`_conflict` compares, computed once per row. ``enzyme_entries``
     keeps each enzyme's own entry and key, so a larger set can be carried (ruling Q2)."""
 
-    from t2pw.bench.eval_v2.matcher import text_key  # function-local: layering
-
     entries = tuple((slot, item, name, enzyme_key(name)) for slot, item, name in _enzyme_entries(row))
     quotes = [row.get("evidence")] + [item.get("evidence") for _s, item, _n, _k in entries if isinstance(item, dict)]
     return {
@@ -332,9 +330,6 @@ def _conflict(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> str:
     PPi); enzyme sets that do not nest (A+B vs A+C); an extra enzyme no quote names; two
     DEFINED states that differ."""
 
-    from t2pw.bench.eval_v2.matcher import mentions  # function-local: layering
-
-
     if not a or not b:
         return ""
     for slot in ("inputs", "outputs"):
@@ -369,8 +364,6 @@ def _donate_cofactors(survivor: Dict[str, Any], later: Dict[str, Any]) -> Tuple[
     must support every participant it carries, and quotes are never edited or joined).
     A cofactor the survivor's quote does not support is withheld and returned with the
     donor's quote, for the side file. Returns ``(added names, withheld records)``."""
-
-    from t2pw.bench.eval_v2.matcher import mentions, text_key  # function-local: layering
 
     evidence = text_key(survivor.get("evidence") if isinstance(survivor.get("evidence"), str) else "")
     added: List[str] = []
@@ -409,8 +402,6 @@ def _prefers(survivor: Optional[Dict[str, Any]], other: Optional[Dict[str, Any]]
 
 def _naming_quote(name: str, row: Dict[str, Any], item: Any = None) -> str:
     """The verbatim quote on ``row`` -- its evidence, else ``item``'s own -- that names ``name``."""
-
-    from t2pw.bench.eval_v2.matcher import mentions, text_key  # function-local: layering
 
     for quote in (row.get("evidence"), item.get("evidence") if isinstance(item, dict) else None):
         if isinstance(quote, str) and mentions(name, text_key(quote)):
