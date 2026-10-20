@@ -7167,3 +7167,21 @@ Recorded by the Lead Orchestrator at the product owner's instruction to record t
 2. **The database-ID merge (D-104 § 3(c)) runs on the Stage-6 mapping pass only**, not on the RAG-round
    or Stage-2B passes. If that cannot be achieved without editing the protected `streamlit_app.py`, the
    lane reports back and the product owner decides.
+
+---
+
+## D-104 AMENDMENT 5 — the protected `streamlit_app.py` may take one keyword argument at the Stage-6 `map_payload` call · 2026-10-20 · LOCKED
+
+**Decided by the product owner** (2026-10-20, in session, on `ORCH-754a` round 3's report that D-104
+AMENDMENT 4 § 2 could not be met without the protected file). Recorded by the Lead Orchestrator at the
+product owner's instruction to record the decisions made.
+
+1. `map_payload` gains `merge_identity_duplicates=False`. At the default its behaviour is unchanged for
+   every caller.
+2. **The frozen and PROTECTED `src/t2pw/app/streamlit_app.py` (D-090 / D-097 § 4 / D-102 / D-103) may take
+   exactly one change:** `merge_identity_duplicates=True` on the existing Stage-6 `map_payload` call. The
+   RAG-round and Stage-2B calls keep the default. No other byte of that file is authorized. The
+   protected-file fingerprint moves and is recorded at merge.
+3. Any Stage-6 entry point outside that file (CLI or batch) passes True as well, each one listed in the
+   lane's RESULT.
+4. Chosen over a separate end-of-file hook (larger edit) and over shipping without the database-ID merge.

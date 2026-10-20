@@ -11032,3 +11032,5 @@ is pushed.**
 Change set F and `PF-746-01..05` are not dispatched.
 
 **`ORCH-754b` · 2026-10-20 — MERGED** at `c711d859` (`219d0003`) after review round 3 APPROVE WITH NOTES. SMOKE 508 on the merged tip (`g11/ORCH-754/04`).
+
+**`ORCH-754a` round 3 · 2026-10-20 — tip `fee60532`.** B1-B3, N1/N3, N4 and N5 fixed; chlorophyll 29; gold unchanged. N2 could not be met without the protected file, so rule 3 was left unwired. Product owner: option B, **D-104 AMENDMENT 5** (one keyword argument at the Stage-6 call). Round 4 dispatched. Orchestrator ruling: an empty enzyme set falls under the AMENDMENT 3 § 2 quote rule.
