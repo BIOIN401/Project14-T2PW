@@ -87,6 +87,19 @@ Two non-blocking findings were also routed to `754b`:
 created 13:59). The permission check refused its `taskkill`, so the orchestrator did not kill them
 on its behalf. Surfaced to the product owner.
 
+### 3.3 `754b` review — **REJECT**, repair round 1
+
+The biology gates hold. The re-pin is valid: R3 was reproduced exactly, and every moved pointer sits under interactions, report warnings or counts. The match to PathBank `PW687775` interaction 15843 holds.
+
+| # | finding | resolution |
+|---|---|---|
+| 1 | The text can say "Inhibition, drawn" while the IR withholds the row. The text resolves endpoints by exact or lowercased name; the IR uses synonyms with protein first. On committed payloads, 2/336 rows disagree (PMC12452463 `entC`/`entF`) | `754b`: the text verdict comes from the IR's own resolution |
+| 2 | `draft_graph.py` was edited outside the boundary | **Granted by the orchestrator**: the reviewer judged it necessary and minimal, with nodes and edges unchanged |
+| 3 | The new lines changed live LLM input: `reaction_summary.txt` feeds the curator and the enrichment agent; +32%, instruction-like wording | **Product owner: human-facing outputs only**, D-104 AMENDMENT 2. Applied to `754a`'s support marks too |
+| 4 | `ir.py:138` message is untrue for rows Stage 6 refused | `754b` |
+
+Scratch worktrees left by `754b` (`C:/t/bt-orch754b/base-wt`) and by its reviewer (`C:/t/bt-orch754b-rev/{base,tip}-wt`) are registered with git. Removing them was refused to the agents; it is left to the product owner.
+
 ## 4. Gates
 
 | after | run | report | result |

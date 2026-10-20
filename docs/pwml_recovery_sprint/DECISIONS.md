@@ -7111,3 +7111,21 @@ Recorded by the Lead Orchestrator at the product owner's instruction to record t
 3. **Not a sign:** symmetric or unsigned relations, `competes with` first among them, are never
    exported as a directed Activation or Inhibition. They stay in the text output with their original
    word (D-104 § 4; lane `ORCH-754b`).
+
+---
+
+## D-104 AMENDMENT 2 — the exact record and the support marks go to human-facing outputs only; LLM inputs do not change · 2026-10-20 · LOCKED
+
+**Decided by the product owner** (2026-10-20, in session, on the `ORCH-754b-review` finding 3). Recorded by
+the Lead Orchestrator at the product owner's instruction to record the decisions made.
+
+1. `reaction_summary.txt` is not only a human output. It is fed to two live LLMs: the curator
+   (`streamlit_app.py:4232-4236` → `pathway_curator.py:299-300`) and the enrichment agent
+   (`gap_resolver.py:2727-2728`). Lane `754b`'s exact interaction record grew it 32% (median +596
+   characters, max +3,763), some lines read like instructions, and the curator may replace an
+   interaction's relationship at confidence ≥0.88.
+2. **Ruling:** the exact interaction record (D-104 § 4) and the ensemble support marks (D-104 § 3(e))
+   go **only** into outputs the product owner reads. **Every input that reaches an LLM stays
+   byte-identical to what `f9892cdf` produces for the same payload.** Each lane proves it with a test.
+3. Not changed by this amendment: the interaction lines ORCH-747 already put into the summary before
+   `f9892cdf`. Whether those should also leave the LLM-fed text is open.
