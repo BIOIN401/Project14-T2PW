@@ -7,23 +7,119 @@
 | 1 | `772bd3df`, `cf84626b` | `6c75112f` |
 | 2 (rulings Q1, Q2) | `1cfae4d3` | `989dee54` |
 | 3 (repairs after the review of `989dee54` returned REJECT) | `bf04375b` | `fee60532` |
-| 4 (D-104 amendment 5: rule 3 at Stage 6, N6, the empty enzyme set) | `cf10337a` | the commit after it |
+| 4 (D-104 amendment 5: rule 3 at Stage 6, N6, the empty enzyme set) | `cf10337a` | `75ca32f3` |
+| 5 (repairs after the re-review of `75ca32f3` returned REJECT) | `1cf72b4e` | the commit after it |
 
-Bounded-run reports `evidence/g11/ORCH-754a/01`–`202`, pins `evidence/g11/pin/ORCH-754a/`. Offline only: **no LLM call and no pipeline run anywhere in this task.**
+Bounded-run reports `evidence/g11/ORCH-754a/01`–`222`, pins `evidence/g11/pin/ORCH-754a/`. Offline only: **no LLM call and no pipeline run anywhere in this task.**
 
-**Headline (current tip, round 4).**
+**Headline (current tip, round 5).**
 
-- **Rule 3 runs at Stage 6 only** (D-104 amendment 5):
-  - `map_payload` / `run_mapping` gain `merge_identity_duplicates=False`. At `False` they are base-identical for every caller (`/139`).
-  - `streamlit_app.py` changes by **one line**: `merge_identity_duplicates=True` on the Stage-6 call.
-  - The legacy CLI's post-audit mapping also passes `True`. Every other call keeps the default (§ 11.2).
-- **N6 is fixed:** after rule 3 removes rows, the mapping report's reaction `json_pointer`s are rewritten, and each move is recorded.
-- **An empty enzyme set is a subset under B2:** an unquoted extra enzyme refuses the merge; a quoted one merges and keeps its quote.
-- **The round-3 repairs stand:** B1, B2, B3, N1, N3, N4 and N5.
-- **Numbers are unchanged:** chlorophyll 41 → **29**, enterobactin 4/5 at P 0.8, menaquinone 9/9 at P 1.0.
-- **Gates:** SMOKE 508 at both envs; Chunk D qb 23/23 at both envs; zero survivors. The only reds are three failures, each proven on base.
+- **Round 5 repairs both items the re-review of `75ca32f3` blocked on** (§ 12):
+  - **N5:** every quote a merged-away row carries is now recorded on its merge entry, its own and every entry's (enzyme, modifier, participant, transporter...), at Stage 1 in every bucket and in rule 3. The cohort and the reviewer's p12 show **0 quotes lost**.
+  - **Amendment 4:** every typo snap is listed and every typo-bridged merge flagged, including a name only compared (an enzyme). Chlorophyll had a fifth, unflagged snap: `geranyllgeranyl reductase`.
+- **Round 4 stands** (§ 11): rule 3 at Stage 6 only, through `map_payload(merge_identity_duplicates=...)` and the one-line `streamlit_app.py` change; N6; the empty enzyme set is a subset.
+- **Rounds 3 and 2 stand:** B1, B2, B3, N1, N3, N4, N5, Q1 and Q2.
+- **Numbers are unchanged:** chlorophyll 41 → **29**, enterobactin 4/5 at P 0.8, menaquinone 9/9 at P 1.0. N=1 is base-identical, and so are the LLM goldens.
+- **Gates (round 5):** focused 122 and SMOKE 508 at both envs; the quarantine-boundary and c055 AppTests green alone at both envs; zero surviving processes.
 
-**Read § 11 first** (round 4), then § 10 (round 3), then § 0 (round 2). §§ 1–8 are the round-1 record.
+**Read § 12 first** (round 5), then § 11 (round 4), § 10 (round 3) and § 0 (round 2). §§ 1–8 are the round-1 record.
+
+---
+
+## 12. Round 5: repairs after the re-review of `75ca32f3`
+
+**Code** `1cf72b4e` (`stage_one_ensemble.py`, `tests/test_stage_one_paper_dictionary.py` only). Reports `evidence/g11/ORCH-754a/203`–`222`.
+
+The re-review reproduced and kept everything else: B1–B3, N1/N3, N4, N6, the one-line `streamlit_app.py` diff (unchanged: numstat `1 0` vs `f9892cdf`), the call sites, the gold and N=1. It REJECTED on two narrow items in `stage_one_ensemble.py`.
+
+### 12.1 Blocking 1: entry-level quotes were lost (N5 incomplete)
+
+**What was wrong.** A merge entry kept only row-level quotes: `evidence` and `previous_survivor_evidence` at Stage 1, `merged_evidence` in rule 3. When the survivor already named the same enzyme or modifier, the quote on the merged-away row's entry was dropped from the payload and from the side file.
+
+The diagnostic (`C:/t/bt-orch754a/r5_diag.py`, committed byte-identical as `evidence/orch754a_r5_quote_diag.py`; run `/204` at `75ca32f3`) measured exact verbatim losses, stricter than the reviewer's substring check in p12:
+
+| case | quotes lost | where they sat |
+|---|---|---|
+| chlorophyll | 11 | modifier entries, including the draw's misspelled `modifers` slot |
+| menaquinone | 2 | MenE and MenH modifier entries |
+| enterobactin | 1 | a transport's `transporters` entry |
+
+The enterobactin loss is in a **non-reaction bucket**. That rules out a reaction-only fix.
+
+**Fix.** `_entry_quotes(row)` walks a row and returns every nested `evidence` value with its JSON pointer. It is recorded on the merge entry in three places:
+- Stage 1, in `_union`, which serves every bucket: `entry_evidence` for the merged-away row;
+- Stage 1, on a survivor swap: `previous_survivor_entry_evidence` for the displaced survivor;
+- rule 3: `merged_entry_evidence`.
+
+Both `.txt` renderers print each one as `entry quote at /modifiers/0/evidence: '...'`.
+
+**After the fix.**
+- The diagnostic at the tip (`/207`) finds **0 lost**.
+- The reviewer's own p12, run read-only through the wrapper (`/209`), prints `absent from payload AND side file: 0` for all three cases.
+- Every reaction quote is also in the `.txt`. Quotes from other buckets are in the JSON side file only, because the `.txt` renders reaction rows only (ruling 2026-10-20). See § 12.5.
+
+**The quote-conservation test.** `test_round5_stage1_conserves_every_quote_of_every_draw` and `test_round5_rule3_conserves_every_quote_of_every_row` check that every distinct `evidence` value of every input is found verbatim in the output payload or in the side file. Cases:
+- the three cohort cases (chlorophyll, enterobactin, menaquinone);
+- two synthetic Stage-1 cases, where the survivor is displaced or keeps its place;
+- three synthetic rule-3 payloads: the first row survives, a later locked row survives, the larger enzyme set survives.
+
+The synthetic Stage-1 cases also check the `.txt`.
+
+### 12.2 Blocking 2: an enzyme-name snap went unflagged (amendment 4)
+
+**What was wrong.**
+- Enzyme names and interaction endpoints are **compared** through `canonical()`, in `_canonicalise.note` and `_profile`'s enzyme key, but never written. Only participant renames reached `typo_snapped`.
+- A merge whose bridge included `typo` was not counted as flagged.
+- Probe p11 (`Glutamyl-tRNA reducase` / `reductase`) said "bridged by typo", yet showed `TYPO SNAPS (0)` and `0 merge(s) flagged`.
+
+**Fix.**
+- `merge_draws` hands each draw a recording wrapper of the cached `canonical`. Every result whose rules contain `typo` is filed per draw, as `{draw, from, to, compared_only: true}`.
+- `typo_snapped` = the written snaps (unchanged shape) + the compared-only snaps not already written.
+- Every merge with `typo` in `bridged_by` carries `typo_flag: "typo_snapped"`, gets a `FLAG (review)` line, and counts in the flagged total.
+
+**Consequence on the cohort.** Chlorophyll had a **fifth snap that nobody saw**: draw 1's enzyme `geranyllgeranyl reductase` → `geranylgeranyl reductase`, compared only. It is now listed and flagged. `test_ruling_n4_the_four_chlorophyll_typos_still_snap_and_are_flagged` now expects it. This is a deliberate correction, and it fails at `75ca32f3`.
+
+The flagged-merge count on chlorophyll stays **11**: its only typo-bridged merge (PBG deaminase, `abbreviation, typo`) was already flagged for the undefined state. That merge now carries both flags.
+
+**Test.** `test_round5_an_enzyme_name_snap_is_listed_and_its_merge_flagged` is probe p11, with exact assertions. The reviewer's p11, run read-only (`/208`), prints `1 merge(s) flagged`, `TYPO SNAPS (1)`, and the compared-only line.
+
+### 12.3 Notes fixed
+
+- **The rule-3 `.txt` now prints what the survivor took or kept.** That covers `state_taken`, `enzymes_added`, `enzymes_kept`, `enzymes_withheld`, `cofactors_added` and `cofactors_withheld`. One `_audit_lines` renderer is now shared with Stage 1. Test: `test_round5_the_rule3_text_prints_what_the_survivor_took`.
+  - Wording change: the undefined-state flag line now reads "its payload's `biological_states`" rather than "its draw's", because rule 3 has no draw.
+- **Rule 3 folds the loser's content even when the lock rule decided the pair.** This differs from `dedupe_processes`, which folds nothing. Probe p3: a locked survivor took an unlocked row's `biological_state`. Every fold is recorded on the merge entry, and every quote the loser carried is recorded there too. The `merge_on_mapped_identity` docstring now says so.
+- **`interactive_curator.py:578` stays `False`.** Per the orchestrator, it is a curation remap, not a Stage-6 entry point. The call-site table in § 11.2 is unchanged.
+
+### 12.4 Gates (code `1cf72b4e`)
+
+| gate | default env | `T2PW_EXTRACTION_DRAWS=3` |
+|---|---|---|
+| focused: `test_stage_one_ensemble.py` 28 + `test_stage_one_paper_dictionary.py` 94 | **122 passed** (`/211`) | **122 passed** (`/215`) |
+| **SMOKE** | **508 passed** (`/212`) | **508 passed** (`/216`) |
+| `test_streamlit_quarantine_boundary.py` alone | 23 passed (`/213`) | 23 passed (`/217`) |
+| `test_c055_rag_loop_wiring.py` alone | 14 passed (`/214`) | 14 passed (`/218`) |
+
+| proof | report | result |
+|---|---|---|
+| G9: the round-5 tests at `75ca32f3` (src restored, `git diff --quiet` checked) | `/210` | **11 failed**: the 10 new cases (5 Stage-1 conservation, 3 rule-3 conservation, p11, rule-3 text) + the corrected chlorophyll-typo test |
+| G9: the same tests at the tip | `/211`, `/215` | pass |
+| gold replays | `/219` | chlorophyll 41 → **29**; enterobactin 4/5 at P 0.8; menaquinone 9/9 at P 1.0 (unchanged) |
+| N=1 identity with base | `/220` | `N=1 IDENTICAL to base` |
+| LLM-bound text equals the base goldens | `/221` | `d171a3b8…` and `ab01b0dd…`, unchanged. The pooled payload is unchanged too (`test_the_pooled_payload_a_model_reads_carries_no_mark` passes) |
+| `map_payload` base identity | `/222` | `map_payload BASE-IDENTICAL` |
+| reviewer probes p11 and p12, read-only | `/208`, `/209` | p11 flagged; p12 0 lost in all three cases |
+| merge-tree | -- | `HEAD` vs `c711d859` → tree `83af674f`, exit 0; vs sprint tip `994ff43c` → tree `c201dc1a`, exit 0 |
+
+- Every run was bounded and shows zero surviving processes (20 cleanup reports, `/203`–`/222`).
+- G11 check: `g11_evidence.py check --task ORCH-754a`: **219 artifacts, 0 non-compliant**, exit 0, no pin REFUSED; the 54 unpinned direct-pytest reports are still only the round-4 `chunk_d_gate.py` inner runs.
+- **Evidence re-measured** (`/219`): `orch754a_ensemble_merge.json` and the three `orch754a_*_side_file.txt` gain the entry quotes, the typo flag, the fifth snap and the flag-line wording. No reaction count or row changed.
+- **TEST_MATRIX delta, round 5:** the focused selection is now **122** (dictionary file 84 → 94). SMOKE stays 508.
+
+### 12.5 Still not settled (round 5)
+
+1. **Non-reaction quotes are in the JSON side file only.** Merged-away rows of other buckets (entities, interactions, transports, element_locations, biological_states) keep their quotes in `stage1_ensemble_report.json`, but the `.txt` renders reaction rows only (ruling 2026-10-20; ORCH-754b owns the interaction rows). If the product owner wants them in the human `.txt` too, that is a renderer-only change.
+2. **Compared-only snaps of non-reaction names are listed too.** For example, an entity row's name compared through the paper. Some of those can never bridge a merge, because the entity `row_key` uses the name as written. They are flagged anyway: over-flagging is the safe side of amendment 4.
+3. § 11.8 items 1–4 are unchanged.
 
 ---
 
