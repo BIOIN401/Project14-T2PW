@@ -1091,13 +1091,21 @@
       "entity": "Mg-chelatase",
       "entity_type": "protein_complex",
       "role": "catalyst",
-      "evidence": "Mg-chelatase catalyzes insertion of Mg2+ into Proto IX",
+      "evidence": "Mg2+ ion is inserted into Proto IX in ATP-dependent manner by Mg-chelatase",
+      "confidence": 1.0,
+      "provenance": "extracted"
+     },
+     {
+      "entity": "GUN4",
+      "entity_type": "protein",
+      "role": "activator",
+      "evidence": "GUN4 assists this step by stabilizing the Mg-chelatase complex",
       "confidence": 1.0,
       "provenance": "extracted"
      }
     ],
-    "biological_state": "plastid",
-    "evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner by Mg-chelatase",
+    "biological_state": "plastid state",
+    "evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX",
     "class": "biochemical_reaction",
     "scope_membership": "core",
     "confidence": 1.0,
@@ -1265,188 +1273,6 @@
     "source_refs": []
    },
    {
-    "name": "Glu-tRNA reductase reaction",
-    "inputs": [
-     "Glu-tRNAGlu"
-    ],
-    "outputs": [
-     "Glu 1-semialdehyde"
-    ],
-    "modifiers": [
-     {
-      "entity": "Glu-tRNA reductase (GluTR)",
-      "entity_type": "protein",
-      "role": "catalyst",
-      "evidence": "Glu-tRNAGlu is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "Glu-tRNAGlu formed from Glu and tRNAGlu within plastids is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR).",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
-    "name": "GSAT reaction",
-    "inputs": [
-     "Glu 1-semialdehyde"
-    ],
-    "outputs": [
-     "5-aminolevulinic acid"
-    ],
-    "modifiers": [
-     {
-      "entity": "GSA aminotransferase (GSAT)",
-      "entity_type": "protein",
-      "role": "catalyst",
-      "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT), which catalyzes the intramolecular transfer of an amino group.",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
-    "name": "ALA dehydratase reaction",
-    "inputs": [
-     "5-aminolevulinic acid"
-    ],
-    "outputs": [
-     "porphobilinogen"
-    ],
-    "modifiers": [
-     {
-      "entity": "ALA dehydratase (ALAD)",
-      "entity_type": "protein",
-      "role": "catalyst",
-      "evidence": "two molecules of ALA are condensed asymmetrically to form PBG, catalyzed by ALA dehydratase",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
-    "name": "PBG deaminase reaction",
-    "inputs": [
-     "porphobilinogen"
-    ],
-    "outputs": [
-     "hydroxymethylbilane"
-    ],
-    "modifiers": [
-     {
-      "entity": "PBG deaminase",
-      "entity_type": "protein",
-      "role": "catalyst",
-      "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in HMB",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB).",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
-    "name": "UROS reaction",
-    "inputs": [
-     "hydroxymethylbilane"
-    ],
-    "outputs": [
-     "uroporphyrinogen III"
-    ],
-    "modifiers": [
-     {
-      "entity": "Urogen III synthase (UROS)",
-      "entity_type": "protein",
-      "role": "catalyst",
-      "evidence": "HMB is converted into the first macrocyclic tetrapyrrole, uroporphyrinogen III, by Urogen III synthase",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "HMB is converted into the first macrocyclic tetrapyrrole, uroporphyrinogen III, by Urogen III synthase (UROS)",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
-    "name": "UROD reaction",
-    "inputs": [
-     "uroporphyrinogen III"
-    ],
-    "outputs": [
-     "coproporphyrinogen III"
-    ],
-    "modifiers": [
-     {
-      "entity": "Urogen III decarboxylase (UROD)",
-      "entity_type": "protein",
-      "role": "catalyst",
-      "evidence": "then metabolized to coproporphyrinogen III by Urogen III decarboxylase (UROD)",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "then metabolized to coproporphyrinogen III by Urogen III decarboxylase (UROD).",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
-    "name": "CPO reaction",
-    "inputs": [
-     "coproporphyrinogen III"
-    ],
-    "outputs": [
-     "protoporphyrinogen IX"
-    ],
-    "modifiers": [
-     {
-      "entity": "Coprogen III oxidase (CPO)",
-      "entity_type": "protein",
-      "role": "catalyst",
-      "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen IX",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
     "name": "PPO reaction",
     "inputs": [
      "protoporphyrinogen IX"
@@ -1493,87 +1319,6 @@
     ],
     "biological_state": "plastidic state",
     "evidence": "an Fe2+ ion is inserted into the Proto IX macrocycle by ferrochelatase to form protoheme (heme b)",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
-    "name": "Mg-chelatase reaction",
-    "inputs": [
-     "protoporphyrin IX",
-     "Mg2+",
-     "ATP"
-    ],
-    "outputs": [
-     "Mg-Proto IX"
-    ],
-    "modifiers": [
-     {
-      "entity": "Mg-chelatase",
-      "entity_type": "protein_complex",
-      "role": "catalyst",
-      "evidence": "an Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX. This reaction is catalyzed by Mg-chelatase",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "an Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX. This reaction is catalyzed by Mg-chelatase consisting of the three subuits CHL D, CH IH, and CHL I",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
-    "name": "Mg-Proto IX methyltransferas reaction",
-    "inputs": [
-     "Mg-Proto IX",
-     "S-adenosyl L-methionine"
-    ],
-    "outputs": [
-     "Mg-Proto IX monomethyl ester"
-    ],
-    "modifiers": [
-     {
-      "entity": "Mg-Proto IX methyltransferase",
-      "entity_type": "protein",
-      "role": "catalyst",
-      "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase, to result in Mg-Proto IX monomethyl ester (Mg-Proto ME).",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
-    "name": "Mg-Proto ME cyclase reaction",
-    "inputs": [
-     "Mg-Proto IX monomethyl ester"
-    ],
-    "outputs": [
-     "3,8-divinyl-protochlorophyllide"
-    ],
-    "modifiers": [
-     {
-      "entity": "Mg-Proto ME cyclase",
-      "entity_type": "protein_complex",
-      "role": "catalyst",
-      "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase",
     "class": "biochemical_reaction",
     "scope_membership": "core",
     "confidence": 1.0,
@@ -1686,32 +1431,6 @@
     "source_refs": []
    },
    {
-    "name": "Chlide a oxygenase reaction (Chlide a)",
-    "inputs": [
-     "Chlide a"
-    ],
-    "outputs": [
-     "Chlide b"
-    ],
-    "modifiers": [
-     {
-      "entity": "Chlide a oxygenase (CAO)",
-      "entity_type": "protein",
-      "role": "catalyst",
-      "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastidic state",
-    "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO).",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
     "name": "Chlide a oxygenase reaction (Chl a)",
     "inputs": [
      "Chl a"
@@ -1784,42 +1503,6 @@
     ],
     "biological_state": "plastid state",
     "evidence": "Fe2+ ion is inserted into the Proto IX macrocycle by ferrochelatase to form protoheme",
-    "class": "biochemical_reaction",
-    "scope_membership": "core",
-    "confidence": 1.0,
-    "provenance": "extracted",
-    "source_refs": []
-   },
-   {
-    "name": "Mg-chelatase reaction",
-    "inputs": [
-     "protoporphyrin IX",
-     "Mg2+",
-     "ATP"
-    ],
-    "outputs": [
-     "Mg-Proto IX"
-    ],
-    "modifiers": [
-     {
-      "entity": "Mg-chelatase",
-      "entity_type": "protein_complex",
-      "role": "catalyst",
-      "evidence": "Mg2+ ion is inserted into Proto IX in ATP-dependent manner by Mg-chelatase",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     },
-     {
-      "entity": "GUN4",
-      "entity_type": "protein",
-      "role": "activator",
-      "evidence": "GUN4 assists this step by stabilizing the Mg-chelatase complex",
-      "confidence": 1.0,
-      "provenance": "extracted"
-     }
-    ],
-    "biological_state": "plastid state",
-    "evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX",
     "class": "biochemical_reaction",
     "scope_membership": "core",
     "confidence": 1.0,

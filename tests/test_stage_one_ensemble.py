@@ -434,13 +434,14 @@ def test_interaction_verb_forms_are_one_relationship() -> None:
 # chlorophyll draws pool the same chemistry under the paper's abbreviation, its long form
 # and a misspelling as separate rows. This test drives the PUBLIC entry point with the three
 # real draws and the real paper text, so it fails behaviourally on the base module and
-# passes at the tip (base pre-runs: ``evidence/g11/ORCH-754a/01-focused-pre`` with the first
-# expectation, ``02-focused-pre`` with this one). D-104 rules 1 and 2, under finding 1's
-# compatibility rule: draws 1 and 3 pool every step into ONE row -- the last two only
-# because the paper defines ``DV-Pchlide`` and ``DV-Chlide``, which the base module keeps
-# apart (3 rows) -- and draw 2 stays a row of its own, because its reactions name a
-# biological state (``plastidic state``) its payload never defines (it wrote the bucket as
-# ``biogical_states``), so the two states cannot be compared and the merge fails closed.
+# passes at the tip (base pre-runs: ``evidence/g11/ORCH-754a/01``, ``06``, ``46`` and the one
+# for this expectation, named in ORCH-754a-RESULT.md). D-104 rules 1 and 2, under finding 1's
+# compatibility rule as the product owner ruled it on 2026-10-20: draw 2's undefined
+# ``plastidic state`` (it wrote the bucket as ``biogical_states``) counts as no state, so
+# every step pools into ONE row -- except two, where the enzymes conflict: ``PPO`` vs
+# ``Protogen IX oxidase (PPO)`` (Schwartz-Hearst cannot derive the pair) and ``POR`` vs
+# ``Pchlide oxidoreductase (POR)`` (the paper gives POR two long forms). The base module
+# pools every step into 2 or 3 rows.
 
 EVIDENCE = ROOT / "docs" / "pwml_recovery_sprint" / "evidence"
 CHLOROPHYLL_DRAWS = [EVIDENCE / "orch752_chlorophyll_payloads" / f"control__run{i}__payload.json" for i in (1, 2, 3)]
@@ -487,7 +488,8 @@ def test_chlorophyll_pools_each_paper_step_once(no_env: None, monkeypatch: pytes
         want_in, want_out = _keys(ins), _keys(outs)
         counts[f"{sorted(ins)[0]} -> {sorted(outs)[0]}"] = sum(
             1 for got_in, got_out in pooled if got_in & want_in and got_out & want_out)
-    assert counts == {step: 2 for step in counts}, counts
+    split = {"Protogen IX -> Proto IX", "3,8-divinyl-protochlorophyllide -> 3,8-divinyl-chlorophyllide"}
+    assert counts == {step: 2 if step in split else 1 for step in counts}, counts
 
 
 # --------------------------------------------------------------------------- ORCH-754a finding 1: chimeric reactions
@@ -530,7 +532,7 @@ def test_a_cofactor_role_conflict_separates_whatever_else_agrees() -> None:
     assert [r["name"] for r in _reactions(merged)] == ["c", "d"]
 
 
-def test_different_enzymes_or_states_separate_the_same_chemistry() -> None:
+def test_different_enzymes_or_defined_states_separate_the_same_chemistry() -> None:
     states = [{"name": "cyto", "subcellular_location": "cytosol"}, {"name": "mito", "subcellular_location": "mitochondrion"}]
     one = {"name": "one", "inputs": ["X"], "outputs": ["Y"], "enzymes": [{"entity": "E1"}], "evidence": "q"}
     two = {"name": "two", "inputs": ["X"], "outputs": ["Y"], "enzymes": [{"entity": "E2"}], "evidence": "q"}

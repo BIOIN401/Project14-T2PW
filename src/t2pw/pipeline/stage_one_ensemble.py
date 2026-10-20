@@ -33,7 +33,13 @@ distinct is a row the evaluator scores as distinct (``reactions.score_leg``, R-D
   cannot classify), within one draw and across draws. A conflicting row stays its own row,
   and the side file says why (``kept_apart_from``). A survivor keeps its own evidence and
   participants, and gains a later row's cofactor only when its OWN quote names it; a
-  cofactor it cannot support is listed with the donor's quote (``cofactors_withheld``)
+  cofactor it cannot support is listed with the donor's quote (``cofactors_withheld``).
+  Product-owner rulings of 2026-10-20: a biological state its payload never defines counts
+  as NO state (the merge is flagged ``undefined_state_treated_as_absent``, naming it); an
+  enzyme set containing the other is compatible and the larger set is kept, each extra
+  enzyme only on a quote that names it (``enzymes_added`` / ``enzymes_withheld``); and the
+  row that states more -- a defined state, then the larger enzyme set -- becomes the
+  survivor, so its own quote is the one kept (``became_survivor``)
 * interaction: (entity_1, relationship, entity_2); the names strict-keyed, the relationship
   by the type the exporter will emit for it (``ir.PWML_INTERACTION_TYPES``: ``activates``
   and ``activation`` are one ``Activation``; a word that table does not know keeps its
@@ -112,6 +118,8 @@ REPORT_NAME = "stage1_ensemble_report.json"
 #: :func:`merge_on_mapped_identity`'s record: its return key, and its side file.
 IDENTITY_REPORT_KEY = "ensemble_identity_merge"
 IDENTITY_REPORT_NAME = "ensemble_identity_merge_report.json"
+#: The review flag on a merge that treated an undefined biological state as absent (ruling Q1).
+UNDEFINED_STATE_FLAG = "undefined_state_treated_as_absent"
 #: Fields of a row that NAME an entity, rewritten in step with it (rule 4).
 _REFERENCE_FIELDS = {
     "/processes/reactions": ("inputs", "outputs", "enzymes", "modifiers"),
@@ -251,8 +259,8 @@ def _cofactor_molecules(value: Any) -> frozenset:
                      for _item, _name, key in _side(value)[1])
 
 
-def _enzyme_names(row: Dict[str, Any]) -> List[str]:
-    return [name for slot in ("enzymes", "modifiers") for _item, name in _participants(row.get(slot))]
+def _enzyme_entries(row: Dict[str, Any]) -> List[Tuple[str, Any, str]]:
+    return [(slot, item, name) for slot in ("enzymes", "modifiers") for item, name in _participants(row.get(slot))]
 
 
 def _state_profile(label: Any, states: Dict[str, Dict[str, Any]]) -> Dict[str, str]:
@@ -281,24 +289,45 @@ def _states_by_key(payload: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
 
 def _profile(row: Dict[str, Any], states: Dict[str, Dict[str, Any]],
              enzyme_key: Callable[[str], Any]) -> Dict[str, Any]:
-    """Everything :func:`_conflict` compares, computed once per row."""
+    """Everything :func:`_conflict` compares, computed once per row. ``enzyme_entries``
+    keeps each enzyme's own entry and key, so a larger set can be carried (ruling Q2)."""
 
+    entries = tuple((slot, item, name, enzyme_key(name)) for slot, item, name in _enzyme_entries(row))
     return {
         "inputs": _cofactor_molecules(row.get("inputs")),
         "outputs": _cofactor_molecules(row.get("outputs")),
-        "enzymes": frozenset(enzyme_key(name) for name in _enzyme_names(row)),
+        "enzymes": frozenset(entry[3] for entry in entries),
+        "enzyme_entries": entries,
         "state": _state_profile(row.get("biological_state"), states),
     }
+
+
+def _defined(state: Optional[Dict[str, str]]) -> bool:
+    """A state its payload defines (resolved to a ``biological_states`` row)."""
+
+    return bool(state) and "location" in state
+
+
+def _undefined_state(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> str:
+    """The state label(s) a merge of ``a`` and ``b`` treats as absent (ruling Q1), or ``''``:
+    both rows name a state, the names differ, and at least one is undefined in its payload."""
+
+    sa, sb = (a or {}).get("state") or {}, (b or {}).get("state") or {}
+    if not sa or not sb or sa["label"] == sb["label"] or (_defined(sa) and _defined(sb)):
+        return ""
+    return ", ".join(repr(s["label"]) for s in (sa, sb) if not _defined(s))
 
 
 def _conflict(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> str:
     """Why two rows under one reaction key are NOT one reaction, or ``''`` (finding 1).
 
-    Compatible: one row naming a cofactor, enzyme or state the other omits. Conflict, and
-    never merged: both naming different cofactors in one role (:data:`_COFACTOR_ROLE`);
-    any cofactor that cannot be classified unless one row's cofactors contain the
-    other's (fail closed); both naming enzymes and the enzyme sets differ; both stating a
-    biological state and the states differ -- or cannot be compared."""
+    Compatible: one row naming a cofactor, enzyme or state the other omits; one row's
+    enzyme set containing the other's (product-owner ruling 2026-10-20, Q2); a state one
+    payload never defines, which counts as no state stated (ruling Q1 -- the merge is then
+    flagged, :func:`_undefined_state`). Conflict, and never merged: both naming different
+    cofactors in one role (:data:`_COFACTOR_ROLE`); any cofactor that cannot be classified
+    unless one row's cofactors contain the other's (fail closed); enzyme sets that are not
+    nested (A+B vs A+C, A vs B); two DEFINED states that differ."""
 
     if not a or not b:
         return ""
@@ -311,12 +340,11 @@ def _conflict(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> str:
             rb = {m for m in mb if _COFACTOR_ROLE.get(m) == role}
             if ra and rb and ra != rb:
                 return f"{slot}: different {role} cofactors {_show(ra)} vs {_show(rb)}"
-    if a["enzymes"] and b["enzymes"] and a["enzymes"] != b["enzymes"]:
-        return f"different enzymes {_show(a['enzymes'])} vs {_show(b['enzymes'])}"
+    ea, eb = a["enzymes"], b["enzymes"]
+    if ea and eb and not (ea <= eb or eb <= ea):
+        return f"different enzymes {_show(ea)} vs {_show(eb)}"
     sa, sb = a["state"], b["state"]
-    if sa and sb and sa["label"] != sb["label"]:
-        if "location" not in sa or "location" not in sb:
-            return f"biological_state {sa['label']!r} vs {sb['label']!r} cannot be compared"
+    if _defined(sa) and _defined(sb) and sa["label"] != sb["label"]:
         for field in ("location", "cell_type", "tissue", "species"):
             if sa[field] and sb[field] and sa[field] != sb[field]:
                 return f"biological_state {field} {sa[field]!r} vs {sb[field]!r}"
@@ -355,6 +383,65 @@ def _donate_cofactors(survivor: Dict[str, Any], later: Dict[str, Any]) -> Tuple[
                 withheld.append({"cofactor": name, "side": slot,
                                  "donor_evidence": later.get("evidence")})
     return added, withheld
+
+
+def _prefers(survivor: Optional[Dict[str, Any]], other: Optional[Dict[str, Any]]) -> str:
+    """Why ``other`` should be the survivor instead, or ``''``: a defined biological state
+    beats an undefined or absent one (ruling Q1), then the larger enzyme set (Q2), so the
+    row that states more keeps its own evidence."""
+
+    if not survivor or not other:
+        return ""
+    if _defined(other["state"]) and not _defined(survivor["state"]):
+        return "it states a defined biological_state"
+    if _defined(other["state"]) == _defined(survivor["state"]) and survivor["enzymes"] < other["enzymes"]:
+        return "it names the larger enzyme set"
+    return ""
+
+
+def _fold(survivor: Dict[str, Any], other: Dict[str, Any], own: Dict[str, Any],
+          theirs: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """Carry onto ``survivor`` (in place) what the compatible ``other`` row adds, each
+    piece only on a verbatim quote. Returns ``(audit fields, survivor's new profile)``.
+
+    * a defined biological state, when the survivor's is undefined or absent (Q1);
+    * enzymes outside the survivor's set (Q2), each only when ``other``'s row quote or the
+      enzyme entry's own quote names it -- that quote is recorded with it;
+    * cofactors, each only when the SURVIVOR's quote names it (:func:`_donate_cofactors`).
+    """
+
+    from t2pw.bench.eval_v2.matcher import mentions, text_key  # function-local: layering
+
+    audit: Dict[str, Any] = {}
+    new = dict(own)
+    if _defined(theirs["state"]) and not _defined(own["state"]):
+        audit["state_taken"] = other.get("biological_state")
+        survivor["biological_state"] = other.get("biological_state")
+        new["state"] = theirs["state"]
+    row_quote = text_key(other.get("evidence") if isinstance(other.get("evidence"), str) else "")
+    entries = list(own["enzyme_entries"])
+    for slot, item, name, key in theirs["enzyme_entries"]:
+        if key in new["enzymes"]:
+            continue
+        own_quote = item.get("evidence") if isinstance(item, dict) and isinstance(item.get("evidence"), str) else ""
+        if mentions(name, row_quote) or mentions(name, text_key(own_quote)):
+            if not isinstance(survivor.get(slot), list):
+                survivor[slot] = []
+            survivor[slot].append(deepcopy(item))
+            new["enzymes"] = new["enzymes"] | {key}
+            entries.append((slot, item, name, key))
+            audit.setdefault("enzymes_added", []).append(
+                {"enzyme": name, "supporting_quote": other.get("evidence") if mentions(name, row_quote) else own_quote})
+        else:
+            audit.setdefault("enzymes_withheld", []).append({"enzyme": name, "donor_evidence": other.get("evidence")})
+    new["enzyme_entries"] = tuple(entries)
+    added, withheld = _donate_cofactors(survivor, other)
+    if added:
+        audit["cofactors_added"] = added
+    if withheld:
+        audit["cofactors_withheld"] = withheld
+    new["inputs"], new["outputs"] = _cofactor_molecules(survivor.get("inputs")), _cofactor_molecules(survivor.get("outputs"))
+    return audit, new
 
 
 def _signature(row: Any) -> str:
@@ -425,18 +512,30 @@ def _bridge(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> List[st
 
 
 def _absorb(profile: Optional[Dict[str, Any]], other: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-    """A survivor's profile after a compatible row joins it: every cofactor either claimed,
-    and the first stated enzymes and state. Later rows are judged against ALL of it, so a
-    row compatible with each of two conflicting rows can never join them into one."""
+    """What a record has CLAIMED once a compatible row joins it: every cofactor and enzyme
+    either row named, and a defined state over an undefined one. Later rows are judged
+    against all of it, so a row compatible with each of two conflicting rows can never
+    join them into one."""
 
     if not profile or not other:
         return profile or other
-    return {
-        "inputs": profile["inputs"] | other["inputs"],
-        "outputs": profile["outputs"] | other["outputs"],
-        "enzymes": profile["enzymes"] or other["enzymes"],
-        "state": profile["state"] or other["state"],
-    }
+    state = next((st for st in (profile["state"], other["state"]) if _defined(st)), profile["state"] or other["state"])
+    return {**profile,
+            "inputs": profile["inputs"] | other["inputs"],
+            "outputs": profile["outputs"] | other["outputs"],
+            "enzymes": profile["enzymes"] | other["enzymes"],
+            "state": state}
+
+
+def _record_merge(record: Dict[str, Any], merge: Dict[str, Any], audit: Dict[str, Any]) -> None:
+    """File one merge's audit on its side-file record (lists extend, so nothing is lost)."""
+
+    record.setdefault("merges", []).append(merge)
+    for field, value in audit.items():
+        if isinstance(value, list):
+            record.setdefault(field, []).extend(value)
+        else:
+            record.setdefault(field, []).append(value)
 
 
 def _union(dest: List[Any], items: List[Any], path: str, draw: int,
@@ -457,21 +556,35 @@ def _union(dest: List[Any], items: List[Any], path: str, draw: int,
             dest.append(deepcopy(item))
             # "_row" is the surviving object, for cofactor donation; "_notes" what the paper
             # rewrote on it, for rule 6; "_profile" what finding 1 compares. merge_draws strips them.
+            # "_own" is the surviving row's own profile, for ruling Q1/Q2's survivor choice.
             records.append({"key": _label(key), "name": _row_name(item), "draws": [draw], "_row": dest[-1],
-                            "_notes": note, "_profile": note.get("profile"),
+                            "_notes": note, "_profile": note.get("profile"), "_own": note.get("profile"),
                             **({"kept_apart_from": kept_apart} if kept_apart else {})})
             continue
         if record["draws"][-1] != draw:
             record["draws"].append(draw)
-        record.setdefault("merges", []).append(
-            {"draw": draw, "name": _row_name(item), "bridged_by": _bridge(record["_notes"], note)})
-        if path == _REACTIONS and isinstance(item, dict):
-            record["_profile"] = _absorb(record["_profile"], note.get("profile"))
-            added, withheld = _donate_cofactors(record["_row"], item)
-            if added:
-                record.setdefault("cofactors_added", []).extend(added)
-            if withheld:
-                record.setdefault("cofactors_withheld", []).extend(withheld)
+        merge: Dict[str, Any] = {"draw": draw, "name": _row_name(item), "bridged_by": _bridge(record["_notes"], note)}
+        audit: Dict[str, Any] = {}
+        theirs = note.get("profile")
+        if path == _REACTIONS and isinstance(item, dict) and theirs and record["_own"]:
+            undefined = _undefined_state(record["_profile"], theirs)
+            if undefined:
+                merge["flag"] = {"reason": UNDEFINED_STATE_FLAG, "undefined_state": undefined}
+            record["_profile"] = _absorb(record["_profile"], theirs)
+            why = _prefers(record["_own"], theirs)
+            if why:
+                # The joining row states more: it survives, with its own evidence, in the
+                # first row's place; the previous survivor is folded into it.
+                previous, previous_profile = deepcopy(record["_row"]), record["_own"]
+                record["_row"].clear()
+                record["_row"].update(deepcopy(item))
+                merge["became_survivor"] = why
+                merge["previous_survivor"] = _row_name(previous)
+                record["name"] = _row_name(item)
+                audit, record["_own"] = _fold(record["_row"], previous, theirs, previous_profile)
+            else:
+                audit, record["_own"] = _fold(record["_row"], item, record["_own"], theirs)
+        _record_merge(record, merge, audit)
 
 
 def _merge_into(target: Dict[str, Any], source: Dict[str, Any], path: str, draw: int,
@@ -714,7 +827,8 @@ def render_report_text(report: Dict[str, Any]) -> str:
         f"Draws: {report.get('draws_succeeded')} of {report.get('draws_requested')} succeeded"
         + "".join(f"; draw {f.get('draw')} failed ({f.get('error')})" for f in report.get("failed_draws") or []),
         f"Paper dictionary: {dictionary}",
-        f"Pooled reactions: {len(rows)} ({sum(1 for r in rows if r.get('review_required'))} found by one draw only)",
+        f"Pooled reactions: {len(rows)} ({sum(1 for r in rows if r.get('review_required'))} found by one draw only; "
+        f"{sum(1 for r in rows for m in r.get('merges') or [] if m.get('flag'))} merge(s) flagged for review)",
         "",
     ]
     for number, row in enumerate(rows, 1):
@@ -724,7 +838,20 @@ def render_report_text(report: Dict[str, Any]) -> str:
         lines.append(f"  Key:  {row.get('key')}")
         for merge in row.get("merges") or []:
             lines.append(f"  Merged draw {merge.get('draw')} row {merge.get('name')!r}: bridged by "
-                         f"{', '.join(merge.get('bridged_by') or [])}")
+                         f"{', '.join(merge.get('bridged_by') or [])}"
+                         + (f"; it became the survivor (over {merge.get('previous_survivor')!r}) because "
+                            f"{merge['became_survivor']}" if merge.get("became_survivor") else ""))
+            if merge.get("flag"):
+                lines.append(f"    FLAG (review): {merge['flag']['reason']} -- {merge['flag']['undefined_state']} "
+                             f"is not defined in its draw's biological_states")
+        for state in row.get("state_taken") or []:
+            lines.append(f"  Biological state taken from a merged row: {state!r}")
+        for enzyme in row.get("enzymes_added") or []:
+            lines.append(f"  Enzyme added from a merged row: {enzyme.get('enzyme')} -- supporting quote: "
+                         f"{enzyme.get('supporting_quote')!r}")
+        for enzyme in row.get("enzymes_withheld") or []:
+            lines.append(f"  Enzyme withheld: {enzyme.get('enzyme')} -- no quote names it; the donor's quote: "
+                         f"{enzyme.get('donor_evidence')!r}")
         for other in row.get("kept_apart_from") or []:
             lines.append(f"  Kept apart from {other.get('name')!r} (draws {', '.join(map(str, other.get('draws') or []))}): "
                          f"{other.get('reason')}")
@@ -982,7 +1109,7 @@ def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
                if isinstance(r, dict) and r.get("reaction")}
     states = _states_by_key(payload)
     # Enzymes compare by identity too: the same UniProt under two names is one enzyme.
-    survivors: Dict[Tuple[frozenset, frozenset], List[List[Any]]] = {}
+    survivors: Dict[Tuple[frozenset, frozenset], List[List[Any]]] = {}  # [row, claimed, own profile]
     kept: List[Any] = []
     merges: List[Dict[str, Any]] = []
     refused: List[Dict[str, Any]] = []
@@ -1003,28 +1130,39 @@ def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
             refused.append({"name": _row_name(row), "would_merge_into": _row_name(candidate[0]),
                             "json_pointer": f"{path}/{index}", "reason": reason})
         if slot is None:
-            group.append([row, profile])
+            group.append([row, profile, profile])
             kept.append(row)
             continue
         first = slot[0]
-        if _strict_key(row.get("name")) in coupled:
+        why = _prefers(slot[2], profile)
+        away = first if why else row
+        if _strict_key(away.get("name")) in coupled:
             refused.append({"name": _row_name(row), "would_merge_into": _row_name(first),
                             "json_pointer": f"{path}/{index}", "reason": "named by a reaction_coupled_transport"})
             kept.append(row)
             continue
+        bridged = RULE_EXACT if row_key(path, row) == row_key(path, first) else RULE_DATABASE_ID
+        undefined = _undefined_state(slot[1], profile)
         slot[1] = _absorb(slot[1], profile)
-        added, withheld = _donate_cofactors(first, row)
+        if why:
+            away = deepcopy(first)
+            first.clear()
+            first.update(deepcopy(row))
+            audit, slot[2] = _fold(first, away, profile, slot[2])
+        else:
+            audit, slot[2] = _fold(first, row, slot[2], profile)
         merges.append({
-            "survivor": _row_name(first), "merged": _row_name(row), "json_pointer": f"{path}/{index}",
-            "bridged_by": RULE_EXACT if row_key(path, row) == row_key(path, first) else RULE_DATABASE_ID,
-            **({"cofactors_added": added} if added else {}),
-            **({"cofactors_withheld": withheld} if withheld else {}),
+            "survivor": _row_name(first), "merged": _row_name(away), "json_pointer": f"{path}/{index}",
+            "bridged_by": bridged,
+            **({"became_survivor": why} if why else {}),
+            **({"flag": {"reason": UNDEFINED_STATE_FLAG, "undefined_state": undefined}} if undefined else {}),
+            **audit,
         })
-        if _lock_id(row):
+        if _lock_id(away):
             quarantined.append({
-                "reaction_name": _row_name(row) or "<unnamed>", "reason": "ensemble_identity_duplicate",
+                "reaction_name": _row_name(away) or "<unnamed>", "reason": "ensemble_identity_duplicate",
                 "action": "merged_into_identity_duplicate", "json_pointer": f"{path}/{index}",
-                "original_reaction": deepcopy(row), "locked_reaction_id": _lock_id(row),
+                "original_reaction": deepcopy(away), "locked_reaction_id": _lock_id(away),
                 "merged_into": _lock_id(first) or _row_name(first),
             })
     if merges:
@@ -1055,7 +1193,10 @@ def _write_identity_side_file(artifact_dir: Optional[Path], record: Dict[str, An
     path = Path(artifact_dir) / IDENTITY_REPORT_NAME
     lines = [f"DATABASE-IDENTITY MERGE (rule 3, after mapping): {record['reactions_before']} -> "
              f"{record['reactions_after']} reactions"]
-    lines += [f"  {m['survivor']!r} <- {m['merged']!r}: bridged by {m['bridged_by']}" for m in record["merges"]]
+    for m in record["merges"]:
+        lines.append(f"  {m['survivor']!r} <- {m['merged']!r}: bridged by {m['bridged_by']}")
+        if m.get("flag"):
+            lines.append(f"    FLAG (review): {m['flag']['reason']} -- {m['flag']['undefined_state']}")
     lines += [f"  kept apart: {r['name']!r} from {r['would_merge_into']!r}: {r['reason']}" for r in record["refused"]]
     try:
         path.parent.mkdir(parents=True, exist_ok=True)

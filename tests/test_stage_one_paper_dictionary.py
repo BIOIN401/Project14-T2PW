@@ -40,6 +40,7 @@ from t2pw.pipeline.stage_one_ensemble import (  # noqa: E402
     ENV_VAR,
     IDENTITY_REPORT_KEY,
     REPORT_NAME,
+    UNDEFINED_STATE_FLAG,
     merge_draws,
     merge_on_mapped_identity,
     render_report_text,
@@ -211,18 +212,102 @@ def test_a_row_compatible_with_two_conflicting_rows_cannot_join_them() -> None:
     assert [r["name"] for r in _reactions(merged)] == ["plain", "nadp"]  # nad joined plain; nadp may not
 
 
-def test_an_undefined_state_cannot_be_compared_and_fails_closed() -> None:
-    states = [{"name": "plastid state", "subcellular_location": "plastid"},
-              {"name": "plastidic state", "subcellular_location": "plastids"}]
+STATES = [{"name": "plastid state", "subcellular_location": "plastid"},
+          {"name": "plastidic state", "subcellular_location": "plastids"},
+          {"name": "mito state", "subcellular_location": "mitochondrion"}]
+
+
+def test_two_defined_states_are_compared_by_compartment() -> None:
     a = {"name": "a", "inputs": ["X1"], "outputs": ["X2"], "biological_state": "plastid state", "evidence": "q"}
     b = {"name": "b", "inputs": ["X1"], "outputs": ["X2"], "biological_state": "plastidic state", "evidence": "q"}
-    merged, _ = merge_draws([_draw([a], biological_states=states), _draw([b], biological_states=states)])
-    assert [r["name"] for r in _reactions(merged)] == ["a"]  # same compartment, plural folded
-    merged, _ = merge_draws([_draw([a], biological_states=states), _draw([b])])
-    assert [r["name"] for r in _reactions(merged)] == ["a", "b"]  # draw 2 never defines its state
+    c = {"name": "c", "inputs": ["X1"], "outputs": ["X2"], "biological_state": "mito state", "evidence": "q"}
+    merged, report = merge_draws([_draw([a], biological_states=STATES), _draw([b], biological_states=STATES),
+                                  _draw([c], biological_states=STATES)])
+    assert [r["name"] for r in _reactions(merged)] == ["a", "c"]  # plural folded; plastid is not mitochondrion
+    assert "flag" not in report["buckets"]["/processes/reactions"]["rows"][0]["merges"][0]  # both defined
 
 
-# --------------------------------------------------------------------------- rule 5 downstream
+def test_ruling_q1_an_undefined_state_counts_as_absent_and_the_merge_is_flagged() -> None:
+    undefined = {"name": "first", "inputs": ["X1"], "outputs": ["X2"], "biological_state": "plastidic state",
+                 "evidence": "q undefined"}
+    defined = {"name": "second", "inputs": ["X1"], "outputs": ["X2"], "biological_state": "plastid state",
+               "evidence": "q defined"}
+    other = {"name": "third", "inputs": ["X1"], "outputs": ["X2"], "biological_state": "mito state", "evidence": "q"}
+    merged, report = merge_draws([_draw([undefined]), _draw([defined], biological_states=STATES),
+                                  _draw([other], biological_states=STATES)])
+    # The defined-state row survives with its own evidence; two DEFINED states that differ still conflict.
+    assert [(r["name"], r["biological_state"], r["evidence"]) for r in _reactions(merged)] == [
+        ("second", "plastid state", "q defined"), ("third", "mito state", "q")]
+    rec = report["buckets"]["/processes/reactions"]["rows"][0]
+    [merge] = rec["merges"]
+    assert merge["flag"] == {"reason": UNDEFINED_STATE_FLAG, "undefined_state": "'plastidic state'"}
+    assert merge["became_survivor"] == "it states a defined biological_state"
+    text = render_report_text(report)
+    assert "FLAG (review): undefined_state_treated_as_absent -- 'plastidic state'" in text
+
+
+def test_ruling_q1_a_defined_state_is_carried_onto_a_survivor_without_one() -> None:
+    plain = {"name": "plain", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "E1"}, {"entity": "E2"}],
+             "biological_state": "plastidic state", "evidence": "E1 and E2 make X2"}
+    located = {"name": "located", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "E1"}],
+               "biological_state": "plastid state", "evidence": "E1 makes X2 in plastids"}
+    merged, report = merge_draws([_draw([located], biological_states=STATES), _draw([plain])])
+    [row] = _reactions(merged)
+    # located survives (a defined state outranks the larger enzyme set) and keeps its quote;
+    # E2 is carried because the row that named it quotes it.
+    assert (row["name"], row["biological_state"], row["evidence"]) == ("located", "plastid state", "E1 makes X2 in plastids")
+    assert [e["entity"] for e in row["enzymes"]] == ["E1", "E2"]
+    [rec] = report["buckets"]["/processes/reactions"]["rows"]
+    assert rec["enzymes_added"] == [{"enzyme": "E2", "supporting_quote": "E1 and E2 make X2"}]
+
+
+def test_ruling_q2_mg_chelatase_and_gun4_merge_and_keep_gun4() -> None:
+    small = {"name": "Mg-chelatase reaction", "inputs": ["Proto IX", "Mg2+", "ATP"], "outputs": ["Mg-Proto IX"],
+             "modifiers": [{"entity": "Mg-chelatase"}], "evidence": "Mg-chelatase inserts Mg2+ using ATP"}
+    large = {"name": "Mg-chelatase + GUN4", "inputs": ["Proto IX", "Mg2+", "ATP"], "outputs": ["Mg-Proto IX"],
+             "modifiers": [{"entity": "Mg-chelatase"}, {"entity": "GUN4"}],
+             "evidence": "Mg-chelatase, stimulated by GUN4, inserts Mg2+"}
+    merged, report = merge_draws([_draw([small]), _draw([large])])
+    [row] = _reactions(merged)
+    # The larger-set row survives, so its own quote -- the one naming GUN4 -- is kept.
+    assert [m["entity"] for m in row["modifiers"]] == ["Mg-chelatase", "GUN4"]
+    assert row["evidence"] == large["evidence"]
+    [rec] = report["buckets"]["/processes/reactions"]["rows"]
+    assert rec["merges"][0]["became_survivor"] == "it names the larger enzyme set"
+
+
+def test_ruling_q2_an_extra_enzyme_no_quote_names_is_withheld() -> None:
+    located = {"name": "located", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "E1"}],
+               "biological_state": "plastid state", "evidence": "E1 makes X2"}
+    larger = {"name": "larger", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "E1"}, {"entity": "E3"}],
+              "evidence": "E1 makes X2"}  # names E3 nowhere
+    merged, report = merge_draws([_draw([located], biological_states=STATES), _draw([larger])])
+    [row] = _reactions(merged)
+    assert [e["entity"] for e in row["enzymes"]] == ["E1"]
+    [rec] = report["buckets"]["/processes/reactions"]["rows"]
+    assert rec["enzymes_withheld"] == [{"enzyme": "E3", "donor_evidence": "E1 makes X2"}]
+
+
+def test_ruling_q2_overlapping_enzyme_sets_that_do_not_nest_stay_apart() -> None:
+    ab = {"name": "ab", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "A"}, {"entity": "B1"}], "evidence": "q"}
+    ac = {"name": "ac", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "A"}, {"entity": "C1"}], "evidence": "q"}
+    merged, report = merge_draws([_draw([ab]), _draw([ac])])
+    assert [r["name"] for r in _reactions(merged)] == ["ab", "ac"]
+    assert report["buckets"]["/processes/reactions"]["rows"][1]["kept_apart_from"][0]["reason"] == \
+        "different enzymes {a, b1} vs {a, c1}"
+
+
+def test_shared_locant_never_bridges_a_different_locant() -> None:
+    """Q3, the negative case: ``uroporphyrinogen (Urogen) III`` defines ``Urogen III`` only."""
+
+    lexicon = _lexicon()
+    assert lexicon.canonical("Urogen III")[0] == "uroporphyrinogen III"
+    assert lexicon.canonical("Urogen I") == ("Urogen I", [], "")
+    assert lexicon.canonical("Urogen IV") == ("Urogen IV", [], "")
+    merged, _ = merge_draws([_draw([{"name": "a", "inputs": ["Urogen I"], "outputs": ["X9"], "evidence": "q"}]),
+                             _draw([{"name": "b", "inputs": ["uroporphyrinogen III"], "outputs": ["X9"], "evidence": "q"}])],
+                            paper_text=PAPER)
+    assert [r["inputs"] for r in _reactions(merged)] == [["Urogen I"], ["uroporphyrinogen III"]]
 
 
 POOLED_FIXTURE = FIXTURES / "chlorophyll_pooled_payload.json"
@@ -390,6 +475,21 @@ def test_rule3_the_chelatase_metal_still_separates_fe_from_mg() -> None:
     # "magnesium" is currency because it shares Mg2+'s identity, so the two Mg rows are one;
     # Fe never meets Mg, even on a side made only of the metal.
     assert [r["name"] for r in _reactions(payload)] == ["Fe-chelatase", "Mg-chelatase", "metal only Fe", "metal only Mg"]
+
+
+@pytest.mark.usefixtures("pooled_run")
+def test_rule3_an_enzyme_superset_by_identity_merges_and_keeps_the_larger_set() -> None:
+    rows = [{"name": "small", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["protoheme"],
+             "enzymes": [{"entity": "FC1"}], "evidence": "FC1 inserts iron"},
+            {"name": "large", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["heme b"],
+             "enzymes": [{"entity": "ferrochelatase 1"}, {"entity": "FC2"}], "evidence": "ferrochelatase 1 and FC2 insert iron"}]
+    payload = _mapped(rows, [_row("protoheme", HEME), _row("heme b", HEME)])
+    payload["entities"]["proteins"] = [_row("FC1", {"uniprot": "P42043"}), _row("ferrochelatase 1", {"uniprot": "P42043"}),
+                                       _row("FC2", {"uniprot": "O04921"})]
+    report = merge_on_mapped_identity(payload)[IDENTITY_REPORT_KEY]
+    [row] = _reactions(payload)
+    assert (row["name"], row["evidence"]) == ("large", "ferrochelatase 1 and FC2 insert iron")
+    assert [m["became_survivor"] for m in report["merges"]] == ["it names the larger enzyme set"]
 
 
 @pytest.mark.usefixtures("pooled_run")
