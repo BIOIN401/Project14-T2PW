@@ -100,11 +100,16 @@ The biology gates hold. The re-pin is valid: R3 was reproduced exactly, and ever
 
 Scratch worktrees left by `754b` (`C:/t/bt-orch754b/base-wt`) and by its reviewer (`C:/t/bt-orch754b-rev/{base,tip}-wt`) are registered with git. Removing them was refused to the agents; it is left to the product owner.
 
+### 3.4 `754b` review rounds 2-3
+
+Round 2 **REJECT** (`9da8358e`): a Stage-6 summary counter reached the interactive curator's Mapping Misses (24/95 replay legs), and the `.txt` printed "drawn" when no PWML was written. Round 3 **APPROVE WITH NOTES** (`219d0003`), judged against the fixed severity standard. Mapping Misses differ on 0/95 legs; base and tip LLM-bound text are identical on the same post-Stage-6 payload; the moved GOLDEN digest was reproduced; the no-PWML path was checked on a committed leg; the sign-table move was byte-identical. Notes: the `ambiguous_protein_endpoint` reason hides a missing identity in the human record, and the wrapped-leg count (55 vs 56) is not reconciled. **Merged at `c711d859`.**
+
 ## 4. Gates
 
 | after | run | report | result |
 |---|---|---|---|
 | merge of `754c` (`ca852bb6`) | SMOKE, primary checkout (`.env` present, draws = 3) | `evidence/g11/ORCH-754/03-smoke-after-c.json`, pin `pin/ORCH-754/03-…`, log `evidence/orch754/03-smoke-after-c.log` | **508 passed** in 42.69 s, 0 survivors |
+| merge of `754b` (`c711d859`) | SMOKE, primary checkout | `evidence/g11/ORCH-754/04-smoke-after-b.json`, pin `pin/ORCH-754/04-…`, log `evidence/orch754/04-smoke-after-b.log` | **508 passed** in 70.30 s, 0 survivors |
 
 Reports `01` and `02` were reserved and never written: `01` waited on the heavy lock, which `754b`'s SMOKE held, and `02` failed on a missing log directory. Their placeholders sit in the git-ignored `.staging/`; `g11_evidence.py check --task ORCH-754` exits 0.
 

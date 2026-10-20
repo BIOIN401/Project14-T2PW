@@ -11030,3 +11030,5 @@ is pushed.**
    pseudo-organisms.
 
 Change set F and `PF-746-01..05` are not dispatched.
+
+**`ORCH-754b` · 2026-10-20 — MERGED** at `c711d859` (`219d0003`) after review round 3 APPROVE WITH NOTES. SMOKE 508 on the merged tip (`g11/ORCH-754/04`).
