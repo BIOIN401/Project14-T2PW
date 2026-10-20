@@ -7149,3 +7149,21 @@ never defines.
 2. **An enzyme set that is a subset of another is compatible, and the merged row keeps the larger set**,
    but only when a verbatim quote supports the extra enzyme. Overlapping but non-nested sets still
    conflict.
+
+---
+
+## D-104 AMENDMENT 4 — typo matching narrowed and flagged; the database-ID merge runs at Stage 6 only · 2026-10-20 · LOCKED
+
+**Decided by the product owner** (2026-10-20, in session, on the `ORCH-754a-review` findings N4 and N2).
+Recorded by the Lead Orchestrator at the product owner's instruction to record the decisions made.
+
+1. **Typo matching (narrows D-104 § 3(b)).** A snap may only insert or delete letters, never substitute
+   them, within edit distance 2, and the existing safety rules stay. This keeps the four real chlorophyll
+   typos (`geranyllgeraniol`, `porphobilogen`, `hydroxymethybilane`, `bilverdin`). It blocks
+   octanoate/octenoate, sulfonate/sulfinate and heptanoate/hexanoate. Every snap is flagged
+   `typo_snapped` in the human-facing output and never in LLM-bound text. **Standard:** a lookalike pair
+   that still snaps, is flagged and loses nothing (e.g. cystine/cysteine) is acceptable and is not a
+   blocking review finding. The product owner reviews flagged snaps during hand comparison.
+2. **The database-ID merge (D-104 § 3(c)) runs on the Stage-6 mapping pass only**, not on the RAG-round
+   or Stage-2B passes. If that cannot be achieved without editing the protected `streamlit_app.py`, the
+   lane reports back and the product owner decides.

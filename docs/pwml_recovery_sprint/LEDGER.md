@@ -10998,3 +10998,7 @@ No pipeline run and no LLM call is authorized under ORCH-754 (D-104 § 8). Full 
 **`ORCH-754b-review` round 2 · 2026-10-20 — REJECT of `9da8358e`**, two small blocking items: a Stage-6 summary counter reaches the interactive curator's Mapping Misses prompt (24/95 replay legs); and the `.txt` prints "drawn" when an IR exists but no PWML was written. The synonym match, the bundles and the gates hold. Repair round 2 dispatched.
 
 **`ORCH-754a` · 2026-10-20 — AMENDMENT 3 implemented at `989dee54`:** chlorophyll **41 → 29** (11 at 3/3, 2 at 2/3, 16 at 1/3; 24 merges, 11 flagged `undefined_state_treated_as_absent`). Enterobactin 4/5 and menaquinone 9/9 unchanged. N=1 identical to base. Independent review dispatched.
+
+**`ORCH-754a-review` · 2026-10-20 — REJECT of `989dee54`.** Blocking: B1 case-folded abbreviation rewrite (`ACP` renamed acetyl phosphate; `Ala` → 5-aminolevulinic acid); B2 extra-enzyme quote check skipped; B3 cofactor "role" grouped by chemical family (MDH/MQO and ATP-PFK/PPi-PFP merged). The orchestrator replaced role grouping with a nested-set cofactor rule. The product owner ruled N4 (typo narrowed and flagged) and N2 (Stage 6 only): D-104 AMENDMENT 4. Severity standard fixed before the next round. Repair round 3 dispatched.
+
+**`ORCH-754b` repair round 2 · 2026-10-20 — tip `219d0003`.** Bookkeeping no longer reaches the curator (0/95 replay legs differ, 71 endpoints wrapped). A verdict is printed only when a PWML was written. Ambiguous endpoints are withheld (`ambiguous_protein_endpoint`). Review round 3 dispatched.
