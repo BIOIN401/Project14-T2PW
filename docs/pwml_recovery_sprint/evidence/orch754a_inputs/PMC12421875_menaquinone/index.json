@@ -1,0 +1,69 @@
+{
+  "schema": "t2pw.prompt_ab/1",
+  "ran_at": "2026-10-16T21:21:53",
+  "paper": "C:\\t\\eval-fulltext\\PMC12421875.txt",
+  "paper_sha256": "3c5635652c3e8c00589ca6d53fff7258a66eb03e4000cffa7647c563ddb0571b",
+  "pathway": "menaquinone biosynthesis",
+  "organism": "Lactococcus lactis",
+  "scope": "",
+  "temperature": 0.0,
+  "max_tokens": 64000,
+  "max_attempts": 2,
+  "note": "Hand comparison only. Nothing here is scored, and identical legs differ even at temperature 0, so a single-draw difference is not a result.",
+  "draws": [
+    {
+      "variant": "control",
+      "run": 1,
+      "prompt_origin": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\evaluation_v2\\prompt_variants_r2\\r2_01_control_v03.txt",
+      "prompt_sha256": "27f5e8732d77083313cab590dd6259ffe3828816647b0795699a0da6a68b8156",
+      "prompt_chars": 37761,
+      "counts": {
+        "reactions": 2,
+        "reaction_coupled_transports": 0,
+        "transports": 1,
+        "interactions": 1,
+        "compounds": 4,
+        "proteins": 2,
+        "protein_complexes": 0,
+        "nucleic_acids": 0,
+        "interactions_without_evidence": 0
+      }
+    },
+    {
+      "variant": "control",
+      "run": 2,
+      "prompt_origin": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\evaluation_v2\\prompt_variants_r2\\r2_01_control_v03.txt",
+      "prompt_sha256": "27f5e8732d77083313cab590dd6259ffe3828816647b0795699a0da6a68b8156",
+      "prompt_chars": 37761,
+      "counts": {
+        "reactions": 9,
+        "reaction_coupled_transports": 0,
+        "transports": 1,
+        "interactions": 1,
+        "compounds": 11,
+        "proteins": 9,
+        "protein_complexes": 0,
+        "nucleic_acids": 0,
+        "interactions_without_evidence": 0
+      }
+    },
+    {
+      "variant": "control",
+      "run": 3,
+      "prompt_origin": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\evaluation_v2\\prompt_variants_r2\\r2_01_control_v03.txt",
+      "prompt_sha256": "27f5e8732d77083313cab590dd6259ffe3828816647b0795699a0da6a68b8156",
+      "prompt_chars": 37761,
+      "counts": {
+        "reactions": 7,
+        "reaction_coupled_transports": 0,
+        "transports": 1,
+        "interactions": 1,
+        "compounds": 8,
+        "proteins": 7,
+        "protein_complexes": 0,
+        "nucleic_acids": 0,
+        "interactions_without_evidence": 0
+      }
+    }
+  ]
+}

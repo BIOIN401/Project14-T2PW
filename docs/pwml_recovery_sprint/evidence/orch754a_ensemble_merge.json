@@ -1,0 +1,2554 @@
+{
+ "task": "ORCH-754a",
+ "base_rev": "f9892cdf",
+ "strict_rev": "cf84626b",
+ "round2_rev": "1cfae4d3",
+ "cases": {
+  "chlorophyll": {
+   "paper": "PMC5130987",
+   "paper_sha256": "8f7ff62b3c06becad52ae27d45cd5b3f2eb5cf4a5847dd1945e2bab4861cf3fa",
+   "payloads": [
+    {
+     "file": "orch752_chlorophyll_payloads\\control__run1__payload.json",
+     "sha256_lf": "72f5bb9cccf79b8f8c6c9539141458485dd1b980bd7ae82b5206081b3fcc3cdc"
+    },
+    {
+     "file": "orch752_chlorophyll_payloads\\control__run2__payload.json",
+     "sha256_lf": "c7a286e54e6dc8dfa3fa4323bcb7a1b35775ec1e0858b2f63074b6599779c7f9"
+    },
+    {
+     "file": "orch752_chlorophyll_payloads\\control__run3__payload.json",
+     "sha256_lf": "cf0df02bac6bdb29220c7d78c732358a5d987a976fc797d84dfce032ef8f62cf"
+    }
+   ],
+   "reactions_per_draw": [
+    16,
+    19,
+    18
+   ],
+   "pooled_reactions": {
+    "base": 41,
+    "tip_no_paper": 42,
+    "strict_before_rulings": 41,
+    "round2_tip": 29,
+    "tip": 29
+   },
+   "tip_lexicon": {
+    "paper_chars": 100209,
+    "abbreviation_pairs": 58,
+    "ambiguous_abbreviations": {
+     "TPB": [
+      "tetrapyrrole biosynthesis",
+      "tetrapyrrole biosynthesis pathway"
+     ],
+     "POR": [
+      "Pchlide oxidoreductase",
+      "protochlorophyllide oxidoreductase"
+     ]
+    }
+   },
+   "tip_names_rewritten": [
+    {
+     "draw": 1,
+     "from": "GSA",
+     "to": "Glu 1-semialdehyde",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 1,
+     "from": "ALA",
+     "to": "5-aminolevulinic acid",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 1,
+     "from": "PBG",
+     "to": "porphobilinogen",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 1,
+     "from": "HMB",
+     "to": "hydroxymethylbilane",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 1,
+     "from": "Urogen III",
+     "to": "uroporphyrinogen III",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "shared_locant"
+    },
+    {
+     "draw": 1,
+     "from": "Coprogen III",
+     "to": "coproporphyrinogen III",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "shared_locant"
+    },
+    {
+     "draw": 1,
+     "from": "Protogen IX",
+     "to": "protoporphyrinogen IX",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "shared_locant"
+    },
+    {
+     "draw": 1,
+     "from": "Proto IX",
+     "to": "protoporphyrin IX",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "shared_locant"
+    },
+    {
+     "draw": 1,
+     "from": "Mg-Proto ME",
+     "to": "Mg-Proto IX monomethyl ester",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 1,
+     "from": "geranyllgeraniol",
+     "to": "geranylgeraniol",
+     "rules": [
+      "typo"
+     ],
+     "flag": "typo_snapped"
+    },
+    {
+     "draw": 2,
+     "from": "Glu 1-semialdehyde (GSA)",
+     "to": "Glu 1-semialdehyde",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 2,
+     "from": "5-aminolevulinic acid (ALA)",
+     "to": "5-aminolevulinic acid",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 2,
+     "from": "porphobilinogen (PBG)",
+     "to": "porphobilinogen",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 2,
+     "from": "porphobilogen (PBG)",
+     "to": "porphobilinogen",
+     "rules": [
+      "typo",
+      "abbreviation"
+     ],
+     "pattern": "long (SF)",
+     "flag": "typo_snapped"
+    },
+    {
+     "draw": 2,
+     "from": "hydroxymethybilane (HMB)",
+     "to": "hydroxymethylbilane",
+     "rules": [
+      "typo",
+      "abbreviation"
+     ],
+     "pattern": "long (SF)",
+     "flag": "typo_snapped"
+    },
+    {
+     "draw": 2,
+     "from": "hydroxymethylbilane (HMB)",
+     "to": "hydroxymethylbilane",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 2,
+     "from": "Mg-Proto IX monomethyl ester (Mg-Proto ME)",
+     "to": "Mg-Proto IX monomethyl ester",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 2,
+     "from": "3,8-divinyl-protochlorophyllide (DV-Pchlide)",
+     "to": "3,8-divinyl-protochlorophyllide",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 2,
+     "from": "3,8-divinyl-chlorophyllide (DV-Chlide)",
+     "to": "3,8-divinyl-chlorophyllide",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 3,
+     "from": "GSA",
+     "to": "Glu 1-semialdehyde",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 3,
+     "from": "ALA",
+     "to": "5-aminolevulinic acid",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 3,
+     "from": "PBG",
+     "to": "porphobilinogen",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 3,
+     "from": "HMB",
+     "to": "hydroxymethylbilane",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 3,
+     "from": "Urogen III",
+     "to": "uroporphyrinogen III",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "shared_locant"
+    },
+    {
+     "draw": 3,
+     "from": "Coprogen III",
+     "to": "coproporphyrinogen III",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "shared_locant"
+    },
+    {
+     "draw": 3,
+     "from": "Protogen IX",
+     "to": "protoporphyrinogen IX",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "shared_locant"
+    },
+    {
+     "draw": 3,
+     "from": "Proto IX",
+     "to": "protoporphyrin IX",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "shared_locant"
+    },
+    {
+     "draw": 3,
+     "from": "Mg-Proto ME",
+     "to": "Mg-Proto IX monomethyl ester",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 3,
+     "from": "DV-Pchlide",
+     "to": "3,8-divinyl-protochlorophyllide",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 3,
+     "from": "DV-Chlide",
+     "to": "3,8-divinyl-chlorophyllide",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 3,
+     "from": "bilverdin IX",
+     "to": "biliverdin IX",
+     "rules": [
+      "typo"
+     ],
+     "flag": "typo_snapped"
+    }
+   ],
+   "tip_rows": [
+    {
+     "key": "glu trnaglu -> glu 1 semialdehyde",
+     "name": "Glu-tRNA reductase reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "Glu-tRNA reductase reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "Glu-tRNAGlu formed from Glu and tRNAGlu within plastids is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR).",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Glu-tRNAGlu is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "GluTR reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "reduced to GSA by Glu-tRNA reductase (GluTR)",
+       "entry_evidence": [
+        {
+         "at": "/modifers/0/evidence",
+         "evidence": "reduced to GSA by Glu-tRNA reductase (GluTR)"
+        }
+       ]
+      }
+     ],
+     "enzymes_kept": [
+      {
+       "enzyme": "GluTR",
+       "supporting_quote": "Glu-tRNAGlu is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR)"
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "glu 1 semialdehyde -> 5 aminolevulinate",
+     "name": "GSAT reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "GSAT reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT), which catalyzes the intramolecular transfer of an amino group.",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "GSAT reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "GSA is converted to ALA by GSA aminotransferase",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "GSA is converted to ALA by GSA aminotransferase"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "5 aminolevulinate -> porphobilinogen",
+     "name": "ALAD reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "ALA dehydratase reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "two molecules of ALA are condensed asymmetrically to form PBG, catalyzed by ALA dehydratase"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "ALAD reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "two molecules of ALA are condensed asymmetrically to form PBG",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "two molecules of ALA are condensed asymmetrically to form PBG"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "porphobilinogen -> hydroxymethylbilane",
+     "name": "PBG deaminase reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "PBG deaminase reaction",
+       "bridged_by": [
+        "abbreviation",
+        "typo"
+       ],
+       "typo_flag": "typo_snapped",
+       "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB).",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in HMB"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "PBG deaminase reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "Four PBG molcules are then sequentially polymerized by PBG deaminase",
+       "entry_evidence": [
+        {
+         "at": "/modifers/0/evidence",
+         "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase"
+        }
+       ]
+      }
+     ],
+     "enzymes_kept": [
+      {
+       "enzyme": "PBG deaminase",
+       "supporting_quote": "four PBG molecules are then sequentially polymerized by PBG deaminase to result in HMB"
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "hydroxymethylbilane -> uroporphyrinogen iii",
+     "name": "UROS reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "UROS reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "HMB is converted into the first macrocyclic tetrapyrrole, uroporphyrinogen III, by Urogen III synthase (UROS)",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "HMB is converted into the first macrocyclic tetrapyrrole, uroporphyrinogen III, by Urogen III synthase"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "UROS reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "HMB is converted into Urogen III by Urogen III synthase",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "HMB is converted into Urogen III by Urogen III synthase"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "uroporphyrinogen iii -> coproporphyrinogen iii",
+     "name": "UROD reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "UROD reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "then metabolized to coproporphyrinogen III by Urogen III decarboxylase (UROD).",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "then metabolized to coproporphyrinogen III by Urogen III decarboxylase (UROD)"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "UROD reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "metabolized to coproporphyrinogen III by Urogen III decarboxylase",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "metabolized to coproporphyrinogen III by Urogen III decarboxylase"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "coproporphyrinogen iii -> protoporphyrinogen ix",
+     "name": "CPO reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "CPO reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen IX"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "CPO reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "Coprogen III is oxidized by CPO to form protoporphyrinogen IX",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Coprogen III is oxidized by Coprogen III oxidase to form protoporphyrinogen IX"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "protoporphyrinogen ix -> protoporphyrin ix",
+     "name": "PPO reaction",
+     "draws": [
+      1,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 3,
+       "name": "PPO reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "Protoporphyrinogen IX is further oxidized by PPO to result in protoporphyrin IX",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Protoporphyrinogen IX is further oxidized by Protogen IX oxidase to result in protoporphyrin IX"
+        }
+       ]
+      }
+     ],
+     "support": "2/3"
+    },
+    {
+     "key": "protoporphyrinogen ix -> protoporphyrin ix",
+     "name": "PPO reaction",
+     "draws": [
+      2
+     ],
+     "kept_apart_from": [
+      {
+       "name": "PPO reaction",
+       "draws": [
+        1
+       ],
+       "reason": "different enzymes {ppo} vs {protogen ix oxidase ppo}"
+      }
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "protoporphyrin ix -> protoheme",
+     "name": "ferrochelatase reaction",
+     "draws": [
+      1
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "protoporphyrin ix -> mg proto ix",
+     "name": "Mg-chelatase reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "Mg-chelatase reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "an Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX. This reaction is catalyzed by Mg-chelatase consisting of the three subuits CHL D, CH IH, and CHL I",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "an Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX. This reaction is catalyzed by Mg-chelatase"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "Mg-chelatase reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Mg2+ ion is inserted into Proto IX in ATP-dependent manner by Mg-chelatase"
+        },
+        {
+         "at": "/modifiers/1/evidence",
+         "evidence": "GUN4 assists this step by stabilizing the Mg-chelatase complex"
+        }
+       ],
+       "became_survivor": "it names the larger enzyme set",
+       "previous_survivor": "Mg-chelatase reaction",
+       "previous_survivor_evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner by Mg-chelatase",
+       "previous_survivor_entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Mg-chelatase catalyzes insertion of Mg2+ into Proto IX"
+        }
+       ]
+      }
+     ],
+     "enzymes_kept": [
+      {
+       "enzyme": "GUN4",
+       "supporting_quote": "GUN4 assists this step by stabilizing the Mg-chelatase complex"
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "mg proto ix -> mg proto ix monomethyl ester",
+     "name": "Mg-Proto IX methyltransferase reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "Mg-Proto IX methyltransferas reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase, to result in Mg-Proto IX monomethyl ester (Mg-Proto ME).",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "Mg-Proto IX methyltransferase reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide",
+     "name": "Mg-Proto ME cyclase reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "Mg-Proto ME cyclase reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "Mg-Proto ME cyclase reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide by Mg-Proto ME cyclase",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide by Mg-Proto ME cyclase"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide",
+     "name": "POR reaction",
+     "draws": [
+      1,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 3,
+       "name": "POR reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "D ring of DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to form DV-Chlide",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "D ring of DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to form DV-Chlide"
+        }
+       ]
+      }
+     ],
+     "support": "2/3"
+    },
+    {
+     "key": "3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide",
+     "name": "POR reaction",
+     "draws": [
+      2
+     ],
+     "kept_apart_from": [
+      {
+       "name": "POR reaction",
+       "draws": [
+        1
+       ],
+       "reason": "different enzymes {por} vs {pchlide oxidoreductase por}"
+      }
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "3 8 divinyl chlorophyllide -> 3 vinyl chlide a",
+     "name": "DVR reaction",
+     "draws": [
+      1
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "3 vinyl chlide a + geranylgeraniol -> chl a",
+     "name": "Chl synthase reaction",
+     "draws": [
+      1
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "chlide a -> chlide b",
+     "name": "CAO reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "Chlide a oxygenase reaction (Chlide a)",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO).",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)"
+        }
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
+      {
+       "draw": 3,
+       "name": "CAO reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "protoporphyrin ix -> protoheme heme b",
+     "name": "Fero chelatase reaction",
+     "draws": [
+      2
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "3 8 divinyl chlorophyllide -> 3 vinyl chlide a mv chlide a",
+     "name": "DVR reaction",
+     "draws": [
+      2
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "geranylgeranyl diphosphate -> phytyl diphosphate",
+     "name": "geranylgeranyl reductase reaction",
+     "draws": [
+      2
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "3 vinyl chlide a mv chlide a -> chl a",
+     "name": "Chl synthase reaction",
+     "draws": [
+      2
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "chl a -> chl b",
+     "name": "Chlide a oxygenase reaction (Chl a)",
+     "draws": [
+      2
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "protoheme heme b -> biliverdin ix",
+     "name": "heme oxygenase reaction",
+     "draws": [
+      2
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "protoporphyrin ix -> heme b",
+     "name": "Ferrochelatase reaction",
+     "draws": [
+      3
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "3 8 divinyl chlorophyllide -> mv chlide a",
+     "name": "DVR reaction",
+     "draws": [
+      3
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "geranylgeranyl chain -> phytyl chain",
+     "name": "Geranylgeranyl reductase reaction",
+     "draws": [
+      3
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "geranylgeraniol + mv chlide a -> chl a",
+     "name": "Chl synthase reaction",
+     "draws": [
+      3
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "heme b -> biliverdin ix",
+     "name": "Heme oxygenase reaction",
+     "draws": [
+      3
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    }
+   ],
+   "tip_payload_reactions": [
+    {
+     "name": "Glu-tRNA reductase reaction",
+     "inputs": [
+      "Glu-tRNAGlu"
+     ],
+     "outputs": [
+      "Glu 1-semialdehyde"
+     ],
+     "biological_state": "plastid",
+     "evidence": "Glu-tRNAGlu is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR)"
+    },
+    {
+     "name": "GSAT reaction",
+     "inputs": [
+      "Glu 1-semialdehyde"
+     ],
+     "outputs": [
+      "5-aminolevulinic acid"
+     ],
+     "biological_state": "plastid",
+     "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)"
+    },
+    {
+     "name": "ALAD reaction",
+     "inputs": [
+      "5-aminolevulinic acid"
+     ],
+     "outputs": [
+      "porphobilinogen"
+     ],
+     "biological_state": "plastid",
+     "evidence": "two molecules of ALA are condensed asymmetrically to form the monopyrrole PBG by ALAD"
+    },
+    {
+     "name": "PBG deaminase reaction",
+     "inputs": [
+      "porphobilinogen"
+     ],
+     "outputs": [
+      "hydroxymethylbilane"
+     ],
+     "biological_state": "plastid",
+     "evidence": "four PBG molecules are then sequentially polymerized by PBG deaminase to result in HMB"
+    },
+    {
+     "name": "UROS reaction",
+     "inputs": [
+      "hydroxymethylbilane"
+     ],
+     "outputs": [
+      "uroporphyrinogen III"
+     ],
+     "biological_state": "plastid",
+     "evidence": "HMB is converted into the first macrocyclic tetrapyrrole, Urogen III, by UROS"
+    },
+    {
+     "name": "UROD reaction",
+     "inputs": [
+      "uroporphyrinogen III"
+     ],
+     "outputs": [
+      "coproporphyrinogen III"
+     ],
+     "biological_state": "plastid",
+     "evidence": "then metabolized to Coprogen III by Urogen III decarboxylase (UROD)"
+    },
+    {
+     "name": "CPO reaction",
+     "inputs": [
+      "coproporphyrinogen III"
+     ],
+     "outputs": [
+      "protoporphyrinogen IX"
+     ],
+     "biological_state": "plastid",
+     "evidence": "Coprogen III is oxidized by CPO to form Protogen IX"
+    },
+    {
+     "name": "PPO reaction",
+     "inputs": [
+      "protoporphyrinogen IX"
+     ],
+     "outputs": [
+      "protoporphyrin IX"
+     ],
+     "biological_state": "plastid",
+     "evidence": "which is further oxidized by Protogen IX oxidase (PPO) to result in Proto IX"
+    },
+    {
+     "name": "ferrochelatase reaction",
+     "inputs": [
+      "protoporphyrin IX",
+      "Fe2+"
+     ],
+     "outputs": [
+      "protoheme"
+     ],
+     "biological_state": "plastid",
+     "evidence": "an Fe2+ ion is inserted into the Proto IX macrocycle by ferrochelatase to form protoheme"
+    },
+    {
+     "name": "Mg-chelatase reaction",
+     "inputs": [
+      "protoporphyrin IX",
+      "Mg2+",
+      "ATP"
+     ],
+     "outputs": [
+      "Mg-Proto IX"
+     ],
+     "biological_state": "plastid state",
+     "evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX"
+    },
+    {
+     "name": "Mg-Proto IX methyltransferase reaction",
+     "inputs": [
+      "Mg-Proto IX",
+      "S-adenosyl L-methionine"
+     ],
+     "outputs": [
+      "Mg-Proto IX monomethyl ester"
+     ],
+     "biological_state": "plastid",
+     "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase"
+    },
+    {
+     "name": "Mg-Proto ME cyclase reaction",
+     "inputs": [
+      "Mg-Proto IX monomethyl ester"
+     ],
+     "outputs": [
+      "3,8-divinyl-protochlorophyllide"
+     ],
+     "biological_state": "plastid",
+     "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide by Mg-Proto ME cyclase"
+    },
+    {
+     "name": "POR reaction",
+     "inputs": [
+      "3,8-divinyl-protochlorophyllide",
+      "NADPH"
+     ],
+     "outputs": [
+      "3,8-divinyl-chlorophyllide",
+      "NADP+"
+     ],
+     "biological_state": "plastid",
+     "evidence": "the D ring of DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to form DV-Chlide"
+    },
+    {
+     "name": "DVR reaction",
+     "inputs": [
+      "3,8-divinyl-chlorophyllide"
+     ],
+     "outputs": [
+      "3-vinyl Chlide a"
+     ],
+     "biological_state": "plastid",
+     "evidence": "DV-Chlide is converted to 3-vinyl Chlide a by DV-Chlide reductase (DVR)"
+    },
+    {
+     "name": "Chl synthase reaction",
+     "inputs": [
+      "3-vinyl Chlide a",
+      "geranylgeraniol"
+     ],
+     "outputs": [
+      "Chl a"
+     ],
+     "biological_state": "plastid",
+     "evidence": "Chl a is formed by esterification of MV-Chlide with geranyllgeraniol by Chl synthase"
+    },
+    {
+     "name": "CAO reaction",
+     "inputs": [
+      "Chlide a"
+     ],
+     "outputs": [
+      "Chlide b"
+     ],
+     "biological_state": "plastid",
+     "evidence": "Some of Chlide a is converted into Chlide b by Chlide a oxygenase (CAO)"
+    },
+    {
+     "name": "PPO reaction",
+     "inputs": [
+      "protoporphyrinogen IX"
+     ],
+     "outputs": [
+      "protoporphyrin IX"
+     ],
+     "biological_state": "plastidic state",
+     "evidence": "further oxidized by Protogen IX oxidase (PPO) to result in protoporphyrin (Proto) IX"
+    },
+    {
+     "name": "Fero chelatase reaction",
+     "inputs": [
+      "protoporphyrin IX",
+      "Fe2+"
+     ],
+     "outputs": [
+      "protoheme (heme b)"
+     ],
+     "biological_state": "plastidic state",
+     "evidence": "an Fe2+ ion is inserted into the Proto IX macrocycle by ferrochelatase to form protoheme (heme b)"
+    },
+    {
+     "name": "POR reaction",
+     "inputs": [
+      "3,8-divinyl-protochlorophyllide",
+      "NADPH"
+     ],
+     "outputs": [
+      "3,8-divinyl-chlorophyllide"
+     ],
+     "biological_state": "plastidic state",
+     "evidence": "the D ring of DV-Pchlide is reduced by Pchlide oxydoreductase (POR) to form 3,8-diviny-chlorophyllide (DV-Chlide)."
+    },
+    {
+     "name": "DVR reaction",
+     "inputs": [
+      "3,8-divinyl-chlorophyllide"
+     ],
+     "outputs": [
+      "3-vinyl Chlide a (MV-Chlide a)"
+     ],
+     "biological_state": "plastidic state",
+     "evidence": "DV-Chlide is converted to 3-vinyl Chlide a (MV-Chlide a) by DV-Chlide reedcase (DVR)."
+    },
+    {
+     "name": "geranylgeranyl reductase reaction",
+     "inputs": [
+      "geranylgeranyl pyrophosphate"
+     ],
+     "outputs": [
+      "phytyl pyrophosphate"
+     ],
+     "biological_state": "plastidic state",
+     "evidence": "a geranylgeranyl chain is reduced by geranylgeranyl reductase encoded by CHLP to form a phytyl chain."
+    },
+    {
+     "name": "Chl synthase reaction",
+     "inputs": [
+      "3-vinyl Chlide a (MV-Chlide a)"
+     ],
+     "outputs": [
+      "Chl a"
+     ],
+     "biological_state": "plastidic state",
+     "evidence": "Chl a is formed by esterification of MV-Chlide with geranylgeraniol or phytol, which is catalyzed by Chl synthase."
+    },
+    {
+     "name": "Chlide a oxygenase reaction (Chl a)",
+     "inputs": [
+      "Chl a"
+     ],
+     "outputs": [
+      "Chl b"
+     ],
+     "biological_state": "plastidic state",
+     "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)."
+    },
+    {
+     "name": "heme oxygenase reaction",
+     "inputs": [
+      "protoheme (heme b)"
+     ],
+     "outputs": [
+      "biliverdin IX"
+     ],
+     "biological_state": "plastidic state",
+     "evidence": "Four heme oxygenase (HO) genes have been identified, with HO1 playing a major role in the reaction for the synthesis of a linear tetrapyrrole biliverdin IX from heme b."
+    },
+    {
+     "name": "Ferrochelatase reaction",
+     "inputs": [
+      "protoporphyrin IX",
+      "Fe2+"
+     ],
+     "outputs": [
+      "heme b"
+     ],
+     "biological_state": "plastid state",
+     "evidence": "Fe2+ ion is inserted into the Proto IX macrocycle by ferrochelatase to form protoheme"
+    },
+    {
+     "name": "DVR reaction",
+     "inputs": [
+      "3,8-divinyl-chlorophyllide"
+     ],
+     "outputs": [
+      "MV-Chlide a"
+     ],
+     "biological_state": "plastid state",
+     "evidence": "DV-Chlide is converted to 3-vinyl Chlide a by DV-Chlide reductase"
+    },
+    {
+     "name": "Geranylgeranyl reductase reaction",
+     "inputs": [
+      "geranylgeranyl chain"
+     ],
+     "outputs": [
+      "phytyl chain"
+     ],
+     "biological_state": "plastid state",
+     "evidence": "geranylgeranyl chain is reduced by geranylgeranyl reductase encoded by CHLP"
+    },
+    {
+     "name": "Chl synthase reaction",
+     "inputs": [
+      "MV-Chlide a",
+      "geranylgeraniol"
+     ],
+     "outputs": [
+      "Chl a"
+     ],
+     "biological_state": "plastid state",
+     "evidence": "Chl a is formed by esterification of MV-Chlide with geranylgeraniol or phytol by Chl synthase"
+    },
+    {
+     "name": "Heme oxygenase reaction",
+     "inputs": [
+      "heme b"
+     ],
+     "outputs": [
+      "biliverdin IX"
+     ],
+     "biological_state": "plastid state",
+     "evidence": "For the synthesis of biliverdin IX from heme b, four HO genes with HO1 playing a major role"
+    }
+   ]
+  },
+  "enterobactin": {
+   "paper": "PMC12096016",
+   "paper_sha256": "b7d583c0835c64cb6a55799e1d94f58442cfa6d8d122d83e581de38887f3a5b8",
+   "payloads": [
+    {
+     "file": "orch754a_inputs\\PMC12096016_enterobactin\\control__run1__payload.json",
+     "sha256_lf": "b5c087ec4efd40acc41043bed02fcb6bbe97f8291d817096c86e23a5e63a3859"
+    },
+    {
+     "file": "orch754a_inputs\\PMC12096016_enterobactin\\control__run2__payload.json",
+     "sha256_lf": "2a32ed591c8f0bc792e2f4b844c6ca608f8c8edd801c83d4753c855802d52b45"
+    },
+    {
+     "file": "orch754a_inputs\\PMC12096016_enterobactin\\control__run3__payload.json",
+     "sha256_lf": "47c8eda3c28f07f1bf60d888292a701428669926e281c5a6b1beee4429c0655d"
+    }
+   ],
+   "reactions_per_draw": [
+    4,
+    5,
+    5
+   ],
+   "pooled_reactions": {
+    "base": 5,
+    "tip_no_paper": 5,
+    "strict_before_rulings": 5,
+    "round2_tip": 5,
+    "tip": 5
+   },
+   "orch751_union": {
+    "matched": 4,
+    "gold": 5,
+    "union_rows": 6
+   },
+   "per_draw_score": [
+    {
+     "gold_reactions": 5,
+     "matched": 4,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+     ],
+     "rows_claimed": 4,
+     "precision": 1.0,
+     "recall": 0.8,
+     "f1": 0.8889,
+     "row_classes": {
+      "target_paper_supported": 4,
+      "paper_stated_off_pathway": 0,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    {
+     "gold_reactions": 5,
+     "matched": 4,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+     ],
+     "rows_claimed": 5,
+     "precision": 0.8,
+     "recall": 0.8,
+     "f1": 0.8,
+     "row_classes": {
+      "target_paper_supported": 4,
+      "paper_stated_off_pathway": 1,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    {
+     "gold_reactions": 5,
+     "matched": 4,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+     ],
+     "rows_claimed": 5,
+     "precision": 0.8,
+     "recall": 0.8,
+     "f1": 0.8,
+     "row_classes": {
+      "target_paper_supported": 4,
+      "paper_stated_off_pathway": 1,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    }
+   ],
+   "score": {
+    "base": {
+     "gold_reactions": 5,
+     "matched": 4,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+     ],
+     "rows_claimed": 5,
+     "precision": 0.8,
+     "recall": 0.8,
+     "f1": 0.8,
+     "row_classes": {
+      "target_paper_supported": 4,
+      "paper_stated_off_pathway": 1,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    "tip_no_paper": {
+     "gold_reactions": 5,
+     "matched": 4,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+     ],
+     "rows_claimed": 5,
+     "precision": 0.8,
+     "recall": 0.8,
+     "f1": 0.8,
+     "row_classes": {
+      "target_paper_supported": 4,
+      "paper_stated_off_pathway": 1,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    "strict_before_rulings": {
+     "gold_reactions": 5,
+     "matched": 4,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+     ],
+     "rows_claimed": 5,
+     "precision": 0.8,
+     "recall": 0.8,
+     "f1": 0.8,
+     "row_classes": {
+      "target_paper_supported": 4,
+      "paper_stated_off_pathway": 1,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    "round2_tip": {
+     "gold_reactions": 5,
+     "matched": 4,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+     ],
+     "rows_claimed": 5,
+     "precision": 0.8,
+     "recall": 0.8,
+     "f1": 0.8,
+     "row_classes": {
+      "target_paper_supported": 4,
+      "paper_stated_off_pathway": 1,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    "tip": {
+     "gold_reactions": 5,
+     "matched": 4,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+     ],
+     "rows_claimed": 5,
+     "precision": 0.8,
+     "recall": 0.8,
+     "f1": 0.8,
+     "row_classes": {
+      "target_paper_supported": 4,
+      "paper_stated_off_pathway": 1,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    }
+   },
+   "tip_lexicon": {
+    "paper_chars": 45763,
+    "abbreviation_pairs": 17,
+    "ambiguous_abbreviations": {}
+   },
+   "tip_names_rewritten": [],
+   "tip_rows": [
+    {
+     "key": "chorismate -> isochorismate",
+     "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "EntC-catalyzed isomerization of chorismate to isochorismate",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "EntC (isochorismate synthase; EC 5.4.4.2)"
+        }
+       ]
+      },
+      {
+       "draw": 3,
+       "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "EntC-catalyzed isomerization of chorismate to isochorismate",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "EntC (isochorismate synthase; EC 5.4.4.2)"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "isochorismate -> 2 3 dihydro 2 3 dihydroxybenzoate + pyruvate",
+     "name": "EntB isochorismatase reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"
+        }
+       ]
+      },
+      {
+       "draw": 3,
+       "name": "EntB isochorismatase reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate by EntB isochorismatase activity",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate by EntB isochorismatase activity"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "2 3 dihydro 2 3 dihydroxybenzoate -> 2 3 dihydroxybenzoate",
+     "name": "EntA dehydrogenase reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "EntA-catalyzed dehydrogenation of 2,3-diDHB to 2,3-DHB",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
+        }
+       ]
+      },
+      {
+       "draw": 3,
+       "name": "EntA-catalyzed dehydrogenation",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "2 3 dihydroxybenzoate -> 2 3 dihydroxybenzoyl amp",
+     "name": "EntE adenylation of 2,3-DHB",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "EntE-catalyzed adenylation of 2,3-DHB",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+        }
+       ]
+      },
+      {
+       "draw": 3,
+       "name": "EntE-catalyzed adenylation of 2,3-DHB",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "2,3-DHB is adenylated by EntE in an ATP-dependent reaction",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "2,3-DHB is adenylated by EntE in an ATP-dependent reaction"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "pyruvate -> lactate",
+     "name": "LDH-catalyzed reduction of pyruvate to lactate",
+     "draws": [
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 3,
+       "name": "LDH-catalyzed reduction of pyruvate",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "LDH-catalyzed conversion of pyruvate to lactate is monitored by loss of OD340",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "LDH-catalyzed conversion of pyruvate to lactate is monitored by loss of OD340"
+        }
+       ]
+      }
+     ],
+     "support": "2/3"
+    }
+   ],
+   "tip_payload_reactions": [
+    {
+     "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
+     "inputs": [
+      "chorismate"
+     ],
+     "outputs": [
+      "isochorismate"
+     ],
+     "biological_state": "cytoplasmic state",
+     "evidence": "EntC-catalyzed isomerization of chorismate to isochorismate"
+    },
+    {
+     "name": "EntB isochorismatase reaction",
+     "inputs": [
+      "isochorismate"
+     ],
+     "outputs": [
+      "2,3-dihydro-2,3-dihydroxybenzoate",
+      "pyruvate"
+     ],
+     "biological_state": "cytoplasmic state",
+     "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"
+    },
+    {
+     "name": "EntA dehydrogenase reaction",
+     "inputs": [
+      "2,3-dihydro-2,3-dihydroxybenzoate"
+     ],
+     "outputs": [
+      "2,3-dihydroxybenzoic acid"
+     ],
+     "biological_state": "cytoplasmic state",
+     "evidence": "2,3-DHB is produced from chorismate by sequential reactions catalyzed by three enzymes: ... EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
+    },
+    {
+     "name": "EntE adenylation of 2,3-DHB",
+     "inputs": [
+      "2,3-dihydroxybenzoic acid",
+      "ATP"
+     ],
+     "outputs": [
+      "2,3-dihydroxybenzoyl-AMP",
+      "PPi"
+     ],
+     "biological_state": "cytoplasmic state",
+     "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+    },
+    {
+     "name": "LDH-catalyzed reduction of pyruvate to lactate",
+     "inputs": [
+      "pyruvate",
+      "NADH"
+     ],
+     "outputs": [
+      "lactate",
+      "NAD+"
+     ],
+     "biological_state": "",
+     "evidence": "LDH-catalyzed conversion of pyruvate to lactate is then monitored by loss of OD340 following oxidation of NADH to NAD+"
+    }
+   ]
+  },
+  "menaquinone": {
+   "paper": "PMC12421875",
+   "paper_sha256": "3c5635652c3e8c00589ca6d53fff7258a66eb03e4000cffa7647c563ddb0571b",
+   "payloads": [
+    {
+     "file": "orch754a_inputs\\PMC12421875_menaquinone\\control__run1__payload.json",
+     "sha256_lf": "7d38f265aaab9bc5511a785ed55d4fbaff9e7cfc9f0caf155db218069a6a6866"
+    },
+    {
+     "file": "orch754a_inputs\\PMC12421875_menaquinone\\control__run2__payload.json",
+     "sha256_lf": "71bd3bd450d9847ac66edc4438e7ce0dded08c1d4bdb0a913846a18c1bbc4a75"
+    },
+    {
+     "file": "orch754a_inputs\\PMC12421875_menaquinone\\control__run3__payload.json",
+     "sha256_lf": "9db6c92e7752288ed36fe343bac0e95d2a5f9b3ff759a3e6f45fb0c3a5123811"
+    }
+   ],
+   "reactions_per_draw": [
+    2,
+    9,
+    7
+   ],
+   "pooled_reactions": {
+    "base": 9,
+    "tip_no_paper": 9,
+    "strict_before_rulings": 9,
+    "round2_tip": 9,
+    "tip": 9
+   },
+   "orch751_union": {
+    "matched": 9,
+    "gold": 9,
+    "union_rows": 9
+   },
+   "per_draw_score": [
+    {
+     "gold_reactions": 9,
+     "matched": 2,
+     "gold_reactions_matched": [
+      "R1",
+      "R2"
+     ],
+     "rows_claimed": 2,
+     "precision": 1.0,
+     "recall": 0.2222,
+     "f1": 0.3636,
+     "row_classes": {
+      "target_paper_supported": 2,
+      "paper_stated_off_pathway": 0,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    {
+     "gold_reactions": 9,
+     "matched": 9,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9"
+     ],
+     "rows_claimed": 9,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "row_classes": {
+      "target_paper_supported": 9,
+      "paper_stated_off_pathway": 0,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    {
+     "gold_reactions": 9,
+     "matched": 7,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7"
+     ],
+     "rows_claimed": 7,
+     "precision": 1.0,
+     "recall": 0.7778,
+     "f1": 0.875,
+     "row_classes": {
+      "target_paper_supported": 7,
+      "paper_stated_off_pathway": 0,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    }
+   ],
+   "score": {
+    "base": {
+     "gold_reactions": 9,
+     "matched": 9,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9"
+     ],
+     "rows_claimed": 9,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "row_classes": {
+      "target_paper_supported": 9,
+      "paper_stated_off_pathway": 0,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    "tip_no_paper": {
+     "gold_reactions": 9,
+     "matched": 9,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9"
+     ],
+     "rows_claimed": 9,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "row_classes": {
+      "target_paper_supported": 9,
+      "paper_stated_off_pathway": 0,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    "strict_before_rulings": {
+     "gold_reactions": 9,
+     "matched": 9,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9"
+     ],
+     "rows_claimed": 9,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "row_classes": {
+      "target_paper_supported": 9,
+      "paper_stated_off_pathway": 0,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    "round2_tip": {
+     "gold_reactions": 9,
+     "matched": 9,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9"
+     ],
+     "rows_claimed": 9,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "row_classes": {
+      "target_paper_supported": 9,
+      "paper_stated_off_pathway": 0,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
+    "tip": {
+     "gold_reactions": 9,
+     "matched": 9,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9"
+     ],
+     "rows_claimed": 9,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "row_classes": {
+      "target_paper_supported": 9,
+      "paper_stated_off_pathway": 0,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    }
+   },
+   "tip_lexicon": {
+    "paper_chars": 69368,
+    "abbreviation_pairs": 15,
+    "ambiguous_abbreviations": {}
+   },
+   "tip_names_rewritten": [
+    {
+     "draw": 1,
+     "from": "SEPHCHC",
+     "to": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 1,
+     "from": "DHNA",
+     "to": "1,4-dihydroxy-2-naphthoic acid",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 2,
+     "from": "SEPHCHC",
+     "to": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 2,
+     "from": "DHNA",
+     "to": "1,4-dihydroxy-2-naphthoic acid",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 3,
+     "from": "SEPHCHC",
+     "to": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    },
+    {
+     "draw": 3,
+     "from": "DHNA",
+     "to": "1,4-dihydroxy-2-naphthoic acid",
+     "rules": [
+      "abbreviation"
+     ],
+     "pattern": "long (SF)"
+    }
+   ],
+   "tip_rows": [
+    {
+     "key": "chorismate -> isochorismate",
+     "name": "MenF reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "MenF reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate"
+        }
+       ]
+      },
+      {
+       "draw": 3,
+       "name": "MenF reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "isochorismate -> 2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate",
+     "name": "MenD reaction",
+     "draws": [
+      1,
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 2,
+       "name": "MenD reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "MenD facilitates the conversion of isochorismate to SEPHCHC"
+        }
+       ]
+      },
+      {
+       "draw": 3,
+       "name": "MenD reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "MenD facilitates the conversion of isochorismate to SEPHCHC",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "MenD facilitates the conversion of isochorismate to SEPHCHC"
+        }
+       ]
+      }
+     ],
+     "support": "3/3"
+    },
+    {
+     "key": "2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate -> shchc",
+     "name": "MenH reaction",
+     "draws": [
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 3,
+       "name": "MenH reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "d[D]/dt = k_cat_H [MenH][C]/(KM_H+[C]) - k_cat_C [MenC][D]/(KM_C+[D])",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "d[D]/dt = k_cat_H [MenH][C]/(KM_H+[C]) - k_cat_C [MenC][D]/(KM_C+[D])"
+        }
+       ],
+       "became_survivor": "it states a defined biological_state",
+       "previous_survivor": "MenH reaction",
+       "previous_survivor_evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+       "previous_survivor_entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "MenH is part of the seven-enzyme pathway to produce DHNA"
+        }
+       ]
+      }
+     ],
+     "support": "2/3"
+    },
+    {
+     "key": "shchc -> osb",
+     "name": "MenC reaction",
+     "draws": [
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 3,
+       "name": "MenC reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "d[D]/dt = ... - k_cat_C [MenC][D]/(KM_C+[D]) and d[E]/dt = ... + k_cat_C [MenC][D]/(KM_C+[D])",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "d[D]/dt = ... - k_cat_C [MenC][D]/(KM_C+[D]) and d[E]/dt = ... + k_cat_C [MenC][D]/(KM_C+[D])"
+        }
+       ]
+      }
+     ],
+     "support": "2/3"
+    },
+    {
+     "key": "osb -> osb coa",
+     "name": "MenE reaction",
+     "draws": [
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 3,
+       "name": "MenE reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "d[E]/dt = ... - k_cat_E [MenE][E]/(KM_E+[E]) and d[F]/dt = ... + k_cat_E [MenE][E]/(KM_E+[E])",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "d[E]/dt = ... - k_cat_E [MenE][E]/(KM_E+[E]) and d[F]/dt = ... + k_cat_E [MenE][E]/(KM_E+[E])"
+        }
+       ],
+       "became_survivor": "it states a defined biological_state",
+       "previous_survivor": "MenE reaction",
+       "previous_survivor_evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+       "previous_survivor_entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "MenE is part of the seven-enzyme pathway"
+        }
+       ]
+      }
+     ],
+     "support": "2/3"
+    },
+    {
+     "key": "osb coa -> dhna coa",
+     "name": "MenB reaction",
+     "draws": [
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 3,
+       "name": "MenB reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "d[F]/dt = ... - k_cat_B [MenB][F]/(KM_B+[F]) and d[G]/dt = ... + k_cat_B [MenB][F]/(KM_B+[F])",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "d[F]/dt = ... - k_cat_B [MenB][F]/(KM_B+[F]) and d[G]/dt = ... + k_cat_B [MenB][F]/(KM_B+[F])"
+        }
+       ]
+      }
+     ],
+     "support": "2/3"
+    },
+    {
+     "key": "dhna coa -> 1 4 dihydroxy 2 naphthoate",
+     "name": "MenI reaction",
+     "draws": [
+      2,
+      3
+     ],
+     "merges": [
+      {
+       "draw": 3,
+       "name": "MenI reaction",
+       "bridged_by": [
+        "exact"
+       ],
+       "evidence": "d[G]/dt = ... - k_cat_I [MenI][G]/(KM_I+[G]) and d[DHNA]in/dt = ... + k_cat_I [MenI][G]/(KM_I+[G])",
+       "entry_evidence": [
+        {
+         "at": "/modifiers/0/evidence",
+         "evidence": "d[G]/dt = ... - k_cat_I [MenI][G]/(KM_I+[G]) and d[DHNA]in/dt = ... + k_cat_I [MenI][G]/(KM_I+[G])"
+        }
+       ]
+      }
+     ],
+     "support": "2/3"
+    },
+    {
+     "key": "1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> dmk",
+     "name": "MenA reaction",
+     "draws": [
+      2
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    },
+    {
+     "key": "dmk -> mk",
+     "name": "MenG reaction",
+     "draws": [
+      2
+     ],
+     "support": "1/3",
+     "review_required": "found by one draw only"
+    }
+   ],
+   "tip_payload_reactions": [
+    {
+     "name": "MenF reaction",
+     "inputs": [
+      "chorismate"
+     ],
+     "outputs": [
+      "isochorismate"
+     ],
+     "biological_state": "Intracellular state",
+     "evidence": "MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)"
+    },
+    {
+     "name": "MenD reaction",
+     "inputs": [
+      "isochorismate"
+     ],
+     "outputs": [
+      "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+     ],
+     "biological_state": "Intracellular state",
+     "evidence": "MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C), with DHNA acting as a non-competitive inhibitor"
+    },
+    {
+     "name": "MenH reaction",
+     "inputs": [
+      "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+     ],
+     "outputs": [
+      "SHCHC"
+     ],
+     "biological_state": "L. lactis intracellular state",
+     "evidence": "d[D]/dt = k_cat_H [MenH][C]/(KM_H+[C]) - k_cat_C [MenC][D]/(KM_C+[D])"
+    },
+    {
+     "name": "MenC reaction",
+     "inputs": [
+      "SHCHC"
+     ],
+     "outputs": [
+      "OSB"
+     ],
+     "biological_state": "cytosolic state",
+     "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
+    },
+    {
+     "name": "MenE reaction",
+     "inputs": [
+      "OSB"
+     ],
+     "outputs": [
+      "OSB-CoA"
+     ],
+     "biological_state": "L. lactis intracellular state",
+     "evidence": "d[E]/dt = ... - k_cat_E [MenE][E]/(KM_E+[E]) and d[F]/dt = ... + k_cat_E [MenE][E]/(KM_E+[E])"
+    },
+    {
+     "name": "MenB reaction",
+     "inputs": [
+      "OSB-CoA"
+     ],
+     "outputs": [
+      "DHNA-CoA"
+     ],
+     "biological_state": "cytosolic state",
+     "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
+    },
+    {
+     "name": "MenI reaction",
+     "inputs": [
+      "DHNA-CoA"
+     ],
+     "outputs": [
+      "1,4-dihydroxy-2-naphthoic acid"
+     ],
+     "biological_state": "cytosolic state",
+     "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
+    },
+    {
+     "name": "MenA reaction",
+     "inputs": [
+      "1,4-dihydroxy-2-naphthoic acid",
+      "prenyl diphosphate"
+     ],
+     "outputs": [
+      "DMK"
+     ],
+     "biological_state": "cytosolic state",
+     "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+    },
+    {
+     "name": "MenG reaction",
+     "inputs": [
+      "DMK"
+     ],
+     "outputs": [
+      "MK"
+     ],
+     "biological_state": "cytosolic state",
+     "evidence": "MenG demethylates DMK to generate MK"
+    }
+   ]
+  }
+ }
+}

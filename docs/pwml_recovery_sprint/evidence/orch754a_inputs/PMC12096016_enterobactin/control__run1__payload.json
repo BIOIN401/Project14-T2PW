@@ -1,0 +1,440 @@
+{
+  "scope_warning": "",
+  "compartments": [
+    {
+      "name": "cytoplasm",
+      "canonical_name": "cytosol",
+      "go_id": ""
+    },
+    {
+      "name": "extracellular",
+      "canonical_name": "extracellular",
+      "go_id": ""
+    }
+  ],
+  "entities": {
+    "cell_types": [],
+    "species": [
+      {
+        "name": "Escherichia coli",
+        "taxonomy_id": "562"
+      }
+    ],
+    "tissues": [],
+    "subcellular_locations": [
+      {
+        "name": "cytoplasm",
+        "canonical_id": "",
+        "evidence": "enterobactin is synthesized in the cytoplasm"
+      },
+      {
+        "name": "extracellular",
+        "canonical_id": "",
+        "evidence": "secreted to the extracellular environment"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "chorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "2,3-dihydroxybenzoic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "pyruvate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ATP",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "2,3-dihydroxybenzoyl-AMP",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "PPi",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "enterobactin",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ferric enterobactin",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "element_collections": [],
+    "nucleic_acids": [],
+    "proteins": [
+      {
+        "name": "EntC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EntB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EntA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EntE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "TolC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "TonB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "protein_complexes": []
+  },
+  "biological_states": [
+    {
+      "name": "cytoplasmic state",
+      "species": "Escherichia coli",
+      "cell_type": "",
+      "tissue": "",
+      "subcellular_location": "cytoplasm",
+      "compartment_canonical": "cytosol",
+      "evidence": "enterobactin is synthesized in the cytoplasm"
+    },
+    {
+      "name": "extracellular state",
+      "species": "Escherichia coli",
+      "cell_type": "",
+      "tissue": "",
+      "subcellular_location": "extracellular",
+      "compartment_canonical": "extracellular",
+      "evidence": "secreted to the extracellular environment"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "chorismate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "EntC-catalyzed isomerization of chorismate to isochorismate"
+      },
+      {
+        "compound": "isochorismate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"
+      },
+      {
+        "compound": "2,3-dihydro-2,3-dihydroxybenzoate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"
+      },
+      {
+        "compound": "2,3-dihydroxybenzoic acid",
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is produced from chorismate by sequential reactions catalyzed by three enzymes: ... EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
+      },
+      {
+        "compound": "pyruvate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"
+      },
+      {
+        "compound": "ATP",
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+      },
+      {
+        "compound": "2,3-dihydroxybenzoyl-AMP",
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+      },
+      {
+        "compound": "PPi",
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+      },
+      {
+        "compound": "enterobactin",
+        "biological_state": "cytoplasmic state",
+        "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+      },
+      {
+        "compound": "enterobactin",
+        "biological_state": "extracellular state",
+        "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+      },
+      {
+        "compound": "ferric enterobactin",
+        "biological_state": "extracellular state",
+        "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake"
+      },
+      {
+        "compound": "ferric enterobactin",
+        "biological_state": "cytoplasmic state",
+        "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake"
+      }
+    ],
+    "element_collection_locations": [],
+    "nucleic_acid_locations": [],
+    "protein_locations": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "modifiers": [
+          {
+            "entity": "EntC",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "EntC (isochorismate synthase; EC 5.4.4.2)",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "EntC-catalyzed isomerization of chorismate to isochorismate",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "EntB isochorismatase reaction",
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "2,3-dihydro-2,3-dihydroxybenzoate",
+          "pyruvate"
+        ],
+        "modifiers": [
+          {
+            "entity": "EntB",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "EntA dehydrogenase reaction",
+        "inputs": [
+          "2,3-dihydro-2,3-dihydroxybenzoate"
+        ],
+        "outputs": [
+          "2,3-dihydroxybenzoic acid"
+        ],
+        "modifiers": [
+          {
+            "entity": "EntA",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is produced from chorismate by sequential reactions catalyzed by three enzymes: ... EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "EntE adenylation of 2,3-DHB",
+        "inputs": [
+          "2,3-dihydroxybenzoic acid",
+          "ATP"
+        ],
+        "outputs": [
+          "2,3-dihydroxybenzoyl-AMP",
+          "PPi"
+        ],
+        "modifiers": [
+          {
+            "entity": "EntE",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [
+      {
+        "name": "Enterobactin secretion via TolC",
+        "cargo": "enterobactin",
+        "from_biological_state": "cytoplasmic state",
+        "to_biological_state": "extracellular state",
+        "transporters": [
+          {
+            "entity": "TolC",
+            "entity_type": "protein",
+            "role": "transporter",
+            "biological_state": "extracellular state",
+            "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+          }
+        ],
+        "elements_with_states": [
+          {
+            "side": "left",
+            "element": "enterobactin",
+            "biological_state": "cytoplasmic state",
+            "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+          },
+          {
+            "side": "right",
+            "element": "enterobactin",
+            "biological_state": "extracellular state",
+            "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+          }
+        ],
+        "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+        "class": "transport_reaction",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "Ferric-enterobactin import via TonB",
+        "cargo": "ferric enterobactin",
+        "from_biological_state": "extracellular state",
+        "to_biological_state": "cytoplasmic state",
+        "transporters": [
+          {
+            "entity": "TonB",
+            "entity_type": "protein",
+            "role": "transporter",
+            "biological_state": "cytoplasmic state",
+            "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake"
+          }
+        ],
+        "elements_with_states": [
+          {
+            "side": "left",
+            "element": "ferric enterobactin",
+            "biological_state": "extracellular state",
+            "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake"
+          },
+          {
+            "side": "right",
+            "element": "ferric enterobactin",
+            "biological_state": "cytoplasmic state",
+            "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake"
+          }
+        ],
+        "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake",
+        "class": "transport_reaction",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      }
+    ],
+    "interactions": [
+      {
+        "name": "2,3-DHB competitive inhibition of EntB isochorismatase",
+        "entity_1": "2,3-dihydroxybenzoic acid",
+        "relationship": "inhibition",
+        "entity_2": "EntB",
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is a competitive inhibitor of apo-EntB isochorismatase activity (Ki ~ 200 μM)",
+        "class": "inhibition",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      }
+    ]
+  },
+  "visualizations": {
+    "bounds": [],
+    "bound_visualizations": [],
+    "protein_complex_visualizations": [],
+    "reaction_visualizations": [],
+    "reaction_coupled_transport_visualizations": [],
+    "transport_visualizations": [],
+    "interaction_visualizations": [],
+    "sub_pathway_visualizations": [],
+    "edges": [],
+    "vacuous": {
+      "vacuous_compound_visualizations": [],
+      "vacuous_nucleic_acid_visualizations": [],
+      "vacuous_element_collection_visualizations": [],
+      "vacuous_protein_visualizations": []
+    }
+  }
+}

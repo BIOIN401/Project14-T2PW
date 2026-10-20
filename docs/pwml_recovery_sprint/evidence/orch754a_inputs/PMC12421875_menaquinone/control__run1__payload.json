@@ -1,0 +1,248 @@
+{
+  "scope_warning": "",
+  "compartments": [
+    {
+      "name": "intracellular",
+      "canonical_name": "cytosol",
+      "go_id": ""
+    },
+    {
+      "name": "extracellular",
+      "canonical_name": "extracellular",
+      "go_id": ""
+    }
+  ],
+  "entities": {
+    "cell_types": [],
+    "species": [
+      {
+        "name": "Lactococcus lactis",
+        "taxonomy_id": ""
+      }
+    ],
+    "tissues": [],
+    "subcellular_locations": [
+      {
+        "name": "intracellular",
+        "canonical_id": "",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "name": "extracellular",
+        "canonical_id": "",
+        "evidence": "extracellular DHNA concentration"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "chorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SEPHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHNA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "element_collections": [],
+    "nucleic_acids": [],
+    "proteins": [
+      {
+        "name": "MenF",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "protein_complexes": []
+  },
+  "biological_states": [
+    {
+      "name": "Intracellular state",
+      "species": "Lactococcus lactis",
+      "cell_type": "",
+      "tissue": "",
+      "subcellular_location": "intracellular",
+      "compartment_canonical": "cytosol",
+      "evidence": "intracellular DHNA concentration"
+    },
+    {
+      "name": "Extracellular state",
+      "species": "Lactococcus lactis",
+      "cell_type": "",
+      "tissue": "",
+      "subcellular_location": "extracellular",
+      "compartment_canonical": "extracellular",
+      "evidence": "extracellular DHNA concentration"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "chorismate",
+        "biological_state": "Intracellular state",
+        "evidence": "chorismate, the key branch point"
+      },
+      {
+        "compound": "isochorismate",
+        "biological_state": "Intracellular state",
+        "evidence": "MenF's product isochorismate"
+      },
+      {
+        "compound": "SEPHCHC",
+        "biological_state": "Intracellular state",
+        "evidence": "conversion of isochorismate to SEPHCHC"
+      },
+      {
+        "compound": "DHNA",
+        "biological_state": "Intracellular state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "compound": "DHNA",
+        "biological_state": "Extracellular state",
+        "evidence": "DHNA concentrations secreted from L. lactis"
+      }
+    ],
+    "element_collection_locations": [],
+    "nucleic_acid_locations": [],
+    "protein_locations": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "name": "MenF reaction",
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "modifiers": [
+          {
+            "entity": "MenF",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "Intracellular state",
+        "evidence": "MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "MenD reaction",
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "modifiers": [
+          {
+            "entity": "MenD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C)",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "Intracellular state",
+        "evidence": "MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C), with DHNA acting as a non-competitive inhibitor",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [
+      {
+        "name": "DHNA diffusion",
+        "cargo": "DHNA",
+        "from_biological_state": "Intracellular state",
+        "to_biological_state": "Extracellular state",
+        "transporters": [],
+        "elements_with_states": [
+          {
+            "side": "left",
+            "element": "DHNA",
+            "biological_state": "Intracellular state",
+            "evidence": "DHNA outflux due to its passive diffusion to the extracellular space"
+          },
+          {
+            "side": "right",
+            "element": "DHNA",
+            "biological_state": "Extracellular state",
+            "evidence": "DHNA outflux due to its passive diffusion to the extracellular space"
+          }
+        ],
+        "evidence": "DHNA outflux due to its passive diffusion to the extracellular space",
+        "class": "transport_reaction",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      }
+    ],
+    "interactions": [
+      {
+        "name": "DHNA inhibits MenD",
+        "entity_1": "DHNA",
+        "relationship": "inhibition",
+        "entity_2": "MenD",
+        "biological_state": "Intracellular state",
+        "evidence": "DHNA allosterically inhibits MenD",
+        "class": "inhibition",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      }
+    ]
+  },
+  "visualizations": {
+    "bounds": [],
+    "bound_visualizations": [],
+    "protein_complex_visualizations": [],
+    "reaction_visualizations": [],
+    "reaction_coupled_transport_visualizations": [],
+    "transport_visualizations": [],
+    "interaction_visualizations": [],
+    "sub_pathway_visualizations": [],
+    "edges": [],
+    "vacuous": {
+      "vacuous_compound_visualizations": [],
+      "vacuous_nucleic_acid_visualizations": [],
+      "vacuous_element_collection_visualizations": [],
+      "vacuous_protein_visualizations": []
+    }
+  }
+}

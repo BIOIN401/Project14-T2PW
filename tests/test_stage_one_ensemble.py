@@ -402,11 +402,13 @@ def test_a_defining_participant_always_separates() -> None:
 
 
 def test_collapsed_duplicate_donates_its_cofactors_to_the_survivor() -> None:
-    first = {"name": "r", "inputs": ["A"], "outputs": ["B"], "evidence": "E first"}
+    # ORCH-754a finding 1: a cofactor is donated only when the SURVIVOR's own quote names it,
+    # so this survivor's quote now names all three (see the withheld case below).
+    first = {"name": "r", "inputs": ["A"], "outputs": ["B"], "evidence": "A is reduced by NADPH to B, giving NADP+ and H2O"}
     later = {"name": "r again", "inputs": ["NADPH", "A"], "outputs": ["NADP+", "B", "H2O"], "evidence": "E later"}
     merged, report = merge_draws([{"processes": {"reactions": [first]}}, {"processes": {"reactions": [later]}}])
     [row] = merged["processes"]["reactions"]
-    assert (row["name"], row["evidence"]) == ("r", "E first")
+    assert (row["name"], row["evidence"]) == ("r", first["evidence"])
     assert row["inputs"] == ["A", "NADPH"] and row["outputs"] == ["B", "NADP+", "H2O"]
     [rec] = report["buckets"]["/processes/reactions"]["rows"]
     assert rec["draws"] == [1, 2] and rec["cofactors_added"] == ["NADPH", "NADP+", "H2O"]
@@ -415,7 +417,7 @@ def test_collapsed_duplicate_donates_its_cofactors_to_the_survivor() -> None:
     merged2, report2 = merge_draws([{"processes": {"reactions": [later]}}, {"processes": {"reactions": [first]}},
                                     {"processes": {"reactions": [later]}}])
     [row2] = merged2["processes"]["reactions"]
-    assert row2["inputs"] == ["NADPH", "A"] and row2["evidence"] == "E later"
+    assert row2["inputs"] == ["NADPH", "A"] and row2["evidence"] == "E later"  # nothing to donate
     assert "cofactors_added" not in report2["buckets"]["/processes/reactions"]["rows"][0]
 
 
@@ -425,3 +427,151 @@ def test_interaction_verb_forms_are_one_relationship() -> None:
     assert k("inhibits") == k("inhibition") != k("activates")
     # A word carrying no sign stays as written: "binds" is not "interacts_with".
     assert k("binds") != k("interacts_with")
+
+
+# --------------------------------------------------------------------------- ORCH-754a: the paper is the dictionary
+# G9: a CORRECTION of the delivered pooling behaviour (ORCH-751 § 2.2, ORCH-752 § 2): the
+# chlorophyll draws pool the same chemistry under the paper's abbreviation, its long form
+# and a misspelling as separate rows. This test drives the PUBLIC entry point with the three
+# real draws and the real paper text, so it fails behaviourally on the base module and
+# passes at the tip (base pre-runs: ``evidence/g11/ORCH-754a/01``, ``06``, ``46`` and the one
+# for this expectation, named in ORCH-754a-RESULT.md). D-104 rules 1 and 2, under finding 1's
+# compatibility rule as the product owner ruled it on 2026-10-20: draw 2's undefined
+# ``plastidic state`` (it wrote the bucket as ``biogical_states``) counts as no state, so
+# every step pools into ONE row -- except two, where the enzymes conflict: ``PPO`` vs
+# ``Protogen IX oxidase (PPO)`` (Schwartz-Hearst cannot derive the pair) and ``POR`` vs
+# ``Pchlide oxidoreductase (POR)`` (the paper gives POR two long forms). The base module
+# pools every step into 2 or 3 rows.
+
+EVIDENCE = ROOT / "docs" / "pwml_recovery_sprint" / "evidence"
+CHLOROPHYLL_DRAWS = [EVIDENCE / "orch752_chlorophyll_payloads" / f"control__run{i}__payload.json" for i in (1, 2, 3)]
+CHLOROPHYLL_PAPER = EVIDENCE / "orch754a_inputs" / "papers" / "PMC5130987.txt"
+
+# Each step is one reaction of the paper written under every spelling the three draws used
+# (abbreviation, ``long (ABBR)``, misspelling) plus the paper's long form.
+_GSA = {"GSA", "Glu 1-semialdehyde (GSA)", "Glu 1-semialdehyde"}
+_ALA = {"ALA", "5-aminolevulinic acid (ALA)", "5-aminolevulinic acid"}
+_PBG = {"PBG", "porphobilinogen (PBG)", "porphobilogen (PBG)", "porphobilinogen"}
+_HMB = {"HMB", "hydroxymethybilane (HMB)", "hydroxymethylbilane (HMB)", "hydroxymethylbilane"}
+_UROGEN = {"Urogen III", "uroporphyrinogen III"}
+_COPROGEN = {"Coprogen III", "coproporphyrinogen III"}
+_PROTOGEN = {"Protogen IX", "protoporphyrinogen IX"}
+_PROTO = {"Proto IX", "protoporphyrin IX"}
+_MGPROTO_ME = {"Mg-Proto ME", "Mg-Proto IX monomethyl ester (Mg-Proto ME)", "Mg-Proto IX monomethyl ester"}
+_DV_PCHLIDE = {"DV-Pchlide", "3,8-divinyl-protochlorophyllide (DV-Pchlide)", "3,8-divinyl-protochlorophyllide"}
+_DV_CHLIDE = {"DV-Chlide", "3,8-divinyl-chlorophyllide (DV-Chlide)", "3,8-divinyl-chlorophyllide"}
+CHLOROPHYLL_STEPS = [
+    ({"Glu-tRNAGlu"}, _GSA), (_GSA, _ALA), (_ALA, _PBG), (_PBG, _HMB), (_HMB, _UROGEN),
+    (_UROGEN, _COPROGEN), (_COPROGEN, _PROTOGEN), (_PROTOGEN, _PROTO), ({"Mg-Proto IX"}, _MGPROTO_ME),
+    (_MGPROTO_ME, _DV_PCHLIDE), (_DV_PCHLIDE, _DV_CHLIDE),
+]
+
+
+def _keys(names: Any) -> Set[str]:
+    from t2pw.bench.eval_v2.matcher import strict_key
+
+    return {strict_key(n) for n in names}
+
+
+def test_chlorophyll_pools_each_paper_step_once(no_env: None, monkeypatch: pytest.MonkeyPatch) -> None:
+    draws = [json.loads(p.read_text(encoding="utf-8")) for p in CHLOROPHYLL_DRAWS]
+    paper = CHLOROPHYLL_PAPER.read_text(encoding="utf-8")
+    rec = Recorder(draws)
+    monkeypatch.setattr(pipeline_mod, "_run_json_stage", rec)
+
+    merged, _attempts = run_extraction_pipeline(paper, draws=3)
+
+    assert len(rec.calls) == 3
+    pooled = [(_keys(r.get("inputs") or []), _keys(r.get("outputs") or [])) for r in _reactions(merged)]
+    counts = {}
+    for ins, outs in CHLOROPHYLL_STEPS:
+        want_in, want_out = _keys(ins), _keys(outs)
+        counts[f"{sorted(ins)[0]} -> {sorted(outs)[0]}"] = sum(
+            1 for got_in, got_out in pooled if got_in & want_in and got_out & want_out)
+    split = {"Protogen IX -> Proto IX", "3,8-divinyl-protochlorophyllide -> 3,8-divinyl-chlorophyllide"}
+    assert counts == {step: 2 if step in split else 1 for step in counts}, counts
+
+
+# --------------------------------------------------------------------------- ORCH-754a finding 1: chimeric reactions
+# G9: CORRECTIONS of ORCH-750/752's delivered behaviour, so each fails behaviourally on the
+# base module (base pre-runs ``evidence/g11/ORCH-754a/06``, ``46``, ``69`` and the round-3 one
+# named in ORCH-754a-RESULT.md) and passes at the tip. The base key
+# ignores cofactors, enzymes and biological_state and the merge unions cofactors, so an
+# NAD-dependent and an NADP-dependent IDH row became ONE chimeric row
+# ``isocitrate + NAD+ + NADP+ -> 2-oxoglutarate + NADH + CO2 + NADPH`` carrying only IDH3 and
+# draw 1's evidence (reviewer probe ``C:/t/bt-orch754r0/probe/probe_chimera.py``). Rule: two
+# rows merge only when they are compatible -- one omitting what the other names -- never
+# when they conflict.
+
+IDH_NAD = {"name": "IDH (NAD)", "inputs": ["isocitrate", "NAD+"], "outputs": ["2-oxoglutarate", "NADH", "CO2"],
+           "enzymes": [{"entity": "IDH3"}], "evidence": "q1"}
+IDH_NADP = {"name": "IDH (NADP)", "inputs": ["isocitrate", "NADP+"], "outputs": ["2-oxoglutarate", "NADPH", "CO2"],
+            "enzymes": [{"entity": "IDH1"}], "evidence": "q2"}
+
+
+def _shape(row: Dict[str, Any]) -> Any:
+    return (row["name"], row["inputs"], row["outputs"], row.get("enzymes"), row["evidence"])
+
+
+@pytest.mark.parametrize("draws", [
+    [{"processes": {"reactions": [IDH_NAD]}}, {"processes": {"reactions": [IDH_NADP]}}],   # two draws
+    [{"processes": {"reactions": [IDH_NAD, IDH_NADP]}}],                                   # one draw
+], ids=["across_draws", "within_one_draw"])
+def test_the_reviewers_idh_chimera_stays_two_reactions(draws: List[Dict[str, Any]]) -> None:
+    merged, _report = merge_draws(deepcopy(draws))
+    assert [_shape(r) for r in _reactions(merged)] == [_shape(IDH_NAD), _shape(IDH_NADP)]
+
+
+def test_two_rows_each_naming_a_cofactor_the_other_lacks_stay_apart() -> None:
+    """Review B3: cofactor sets must NEST per side. A chemical-family table let MDH (NAD+)
+    meet MQO (FAD) and ATP-PFK meet PPi-PFP (reviewer probes p1, p3); both stay apart."""
+
+    def pair(x: Dict[str, Any], y: Dict[str, Any]) -> List[str]:
+        merged, _ = merge_draws([{"processes": {"reactions": [x]}}, {"processes": {"reactions": [y]}}])
+        return [r["name"] for r in _reactions(merged)]
+
+    mdh = {"name": "MDH", "inputs": ["malate", "NAD+"], "outputs": ["oxaloacetate", "NADH"],
+           "enzymes": [{"entity": "MDH"}], "evidence": "MDH oxidises malate with NAD+"}
+    mqo = {"name": "MQO", "inputs": ["malate", "FAD"], "outputs": ["oxaloacetate", "FADH2"],
+           "evidence": "malate:quinone oxidoreductase uses FAD"}
+    pfk = {"name": "PFK", "inputs": ["fructose 6-phosphate", "ATP"], "outputs": ["fructose 1,6-bisphosphate", "ADP"],
+           "enzymes": [{"entity": "PFK"}], "evidence": "PFK uses ATP"}
+    pfp = {"name": "PFP", "inputs": ["fructose 6-phosphate", "PPi"], "outputs": ["fructose 1,6-bisphosphate", "Pi"],
+           "evidence": "PPi-dependent PFP"}
+    assert pair(mdh, mqo) == ["MDH", "MQO"]
+    assert pair(pfk, pfp) == ["PFK", "PFP"]
+    a = {"name": "a", "inputs": ["X", "ATP"], "outputs": ["Y"], "evidence": "X and ATP give Y"}
+    b = {"name": "b", "inputs": ["X", "ADP"], "outputs": ["Y"], "evidence": "X and ADP give Y"}
+    c = {"name": "c", "inputs": ["X", "Mg2+"], "outputs": ["Y"], "evidence": "X with Mg2+ gives Y"}
+    d = {"name": "d", "inputs": ["X", "Mn2+"], "outputs": ["Y"], "evidence": "X with Mn2+ gives Y"}
+    merged, _ = merge_draws([{"processes": {"reactions": [a]}}, {"processes": {"reactions": [b]}}])
+    assert [r["name"] for r in _reactions(merged)] == ["a", "b"]
+    merged, _ = merge_draws([{"processes": {"reactions": [c]}}, {"processes": {"reactions": [d]}}])
+    assert [r["name"] for r in _reactions(merged)] == ["c", "d"]
+
+
+def test_different_enzymes_or_defined_states_separate_the_same_chemistry() -> None:
+    states = [{"name": "cyto", "subcellular_location": "cytosol"}, {"name": "mito", "subcellular_location": "mitochondrion"}]
+    one = {"name": "one", "inputs": ["X"], "outputs": ["Y"], "enzymes": [{"entity": "E1"}], "evidence": "q"}
+    two = {"name": "two", "inputs": ["X"], "outputs": ["Y"], "enzymes": [{"entity": "E2"}], "evidence": "q"}
+    merged, _ = merge_draws([{"processes": {"reactions": [one]}}, {"processes": {"reactions": [two]}}])
+    assert [r["name"] for r in _reactions(merged)] == ["one", "two"]
+    cyto = {"name": "cyto row", "inputs": ["X"], "outputs": ["Y"], "biological_state": "cyto", "evidence": "q"}
+    mito = {"name": "mito row", "inputs": ["X"], "outputs": ["Y"], "biological_state": "mito", "evidence": "q"}
+    merged, _ = merge_draws([{"biological_states": states, "processes": {"reactions": [cyto]}},
+                             {"biological_states": states, "processes": {"reactions": [mito]}}])
+    assert [r["name"] for r in _reactions(merged)] == ["cyto row", "mito row"]
+
+
+def test_a_cofactor_the_survivors_own_quote_does_not_support_is_not_donated() -> None:
+    first = {"name": "r", "inputs": ["A"], "outputs": ["B"], "evidence": "A becomes B"}
+    later = {"name": "r again", "inputs": ["A", "NADPH"], "outputs": ["B"], "evidence": "NADPH reduces A to B"}
+    merged, report = merge_draws([{"processes": {"reactions": [first]}}, {"processes": {"reactions": [later]}}])
+    [row] = _reactions(merged)
+    assert row["inputs"] == ["A"] and row["evidence"] == "A becomes B"
+
+
+def test_the_draw_count_variable_is_the_one_conftest_pins() -> None:
+    from conftest import DRAWS_ENV_VAR
+
+    assert DRAWS_ENV_VAR == ENV_VAR

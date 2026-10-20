@@ -126,6 +126,7 @@ def run_legacy_sbml_pipeline(
         mapped_json,
         mapping_report,
         cache_path=mapping_cache,
+        merge_identity_duplicates=True,  # this path's Stage-6 mapping (D-104 amendment 5)
     )
 
     sbml_result = build_sbml(
@@ -295,7 +296,8 @@ def run_extraction_pipeline(
     count = extraction_draws(draws)
     if count == 1:
         return _draw()
-    return run_ensemble(_draw, count, failure=PipelineFailure)
+    # The input text is the paper the draws read: D-104 makes it the merge's dictionary.
+    return run_ensemble(_draw, count, failure=PipelineFailure, paper_text=input_text)
 
 
 def filter_out_of_scope_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:

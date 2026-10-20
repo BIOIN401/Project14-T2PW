@@ -1,0 +1,111 @@
+ORCH-754a pooled Stage-1 draws, paper as the dictionary (offline; 3 saved draws each)
+
+== chlorophyll (PMC5130987)  reactions per draw [16, 19, 18]
+   base                                         pooled reactions  41
+   tip_no_paper                                 pooled reactions  42
+   strict_before_rulings                        pooled reactions  41
+   round2_tip                                   pooled reactions  29
+   tip                                          pooled reactions  29
+   tip rows (support | key | merges: draw->rule [* = flagged undefined_state_treated_as_absent; S = became survivor] | kept apart because | cofactors withheld):
+     3/3 | glu trnaglu -> glu 1 semialdehyde | d2->abbreviation*, d3->exact | - | -
+     3/3 | glu 1 semialdehyde -> 5 aminolevulinate | d2->abbreviation*, d3->exact | - | -
+     3/3 | 5 aminolevulinate -> porphobilinogen | d2->abbreviation*, d3->exact | - | -
+     3/3 | porphobilinogen -> hydroxymethylbilane | d2->abbreviation+typo*, d3->exact | - | -
+     3/3 | hydroxymethylbilane -> uroporphyrinogen iii | d2->abbreviation*, d3->exact | - | -
+     3/3 | uroporphyrinogen iii -> coproporphyrinogen iii | d2->abbreviation*, d3->exact | - | -
+     3/3 | coproporphyrinogen iii -> protoporphyrinogen ix | d2->abbreviation*, d3->exact | - | -
+     2/3 | protoporphyrinogen ix -> protoporphyrin ix | d3->exact | - | -
+     1/3 | protoporphyrinogen ix -> protoporphyrin ix | - | different enzymes {ppo} vs {protogen ix oxidase ppo} | -
+     1/3 | protoporphyrin ix -> protoheme | - | - | -
+     3/3 | protoporphyrin ix -> mg proto ix | d2->abbreviation*, d3->exact S | - | -
+     3/3 | mg proto ix -> mg proto ix monomethyl ester | d2->abbreviation*, d3->exact | - | -
+     3/3 | mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide | d2->abbreviation*, d3->abbreviation | - | -
+     2/3 | 3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide | d3->abbreviation | - | -
+     1/3 | 3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide | - | different enzymes {por} vs {pchlide oxidoreductase por} | -
+     1/3 | 3 8 divinyl chlorophyllide -> 3 vinyl chlide a | - | - | -
+     1/3 | 3 vinyl chlide a + geranylgeraniol -> chl a | - | - | -
+     3/3 | chlide a -> chlide b | d2->abbreviation*, d3->exact | - | -
+     1/3 | protoporphyrin ix -> protoheme heme b | - | - | -
+     1/3 | 3 8 divinyl chlorophyllide -> 3 vinyl chlide a mv chlide a | - | - | -
+     1/3 | geranylgeranyl diphosphate -> phytyl diphosphate | - | - | -
+     1/3 | 3 vinyl chlide a mv chlide a -> chl a | - | - | -
+     1/3 | chl a -> chl b | - | - | -
+     1/3 | protoheme heme b -> biliverdin ix | - | - | -
+     1/3 | protoporphyrin ix -> heme b | - | - | -
+     1/3 | 3 8 divinyl chlorophyllide -> mv chlide a | - | - | -
+     1/3 | geranylgeranyl chain -> phytyl chain | - | - | -
+     1/3 | geranylgeraniol + mv chlide a -> chl a | - | - | -
+     1/3 | heme b -> biliverdin ix | - | - | -
+   names rewritten at the tip (draw: from -> to [rules]):
+     d1: 'GSA' -> 'Glu 1-semialdehyde' ['abbreviation'] (long (SF))
+     d1: 'ALA' -> '5-aminolevulinic acid' ['abbreviation'] (long (SF))
+     d1: 'PBG' -> 'porphobilinogen' ['abbreviation'] (long (SF))
+     d1: 'HMB' -> 'hydroxymethylbilane' ['abbreviation'] (long (SF))
+     d1: 'Urogen III' -> 'uroporphyrinogen III' ['abbreviation'] (shared_locant)
+     d1: 'Coprogen III' -> 'coproporphyrinogen III' ['abbreviation'] (shared_locant)
+     d1: 'Protogen IX' -> 'protoporphyrinogen IX' ['abbreviation'] (shared_locant)
+     d1: 'Proto IX' -> 'protoporphyrin IX' ['abbreviation'] (shared_locant)
+     d1: 'Mg-Proto ME' -> 'Mg-Proto IX monomethyl ester' ['abbreviation'] (long (SF))
+     d1: 'geranyllgeraniol' -> 'geranylgeraniol' ['typo']
+     d2: 'Glu 1-semialdehyde (GSA)' -> 'Glu 1-semialdehyde' ['abbreviation'] (long (SF))
+     d2: '5-aminolevulinic acid (ALA)' -> '5-aminolevulinic acid' ['abbreviation'] (long (SF))
+     d2: 'porphobilinogen (PBG)' -> 'porphobilinogen' ['abbreviation'] (long (SF))
+     d2: 'porphobilogen (PBG)' -> 'porphobilinogen' ['typo', 'abbreviation'] (long (SF))
+     d2: 'hydroxymethybilane (HMB)' -> 'hydroxymethylbilane' ['typo', 'abbreviation'] (long (SF))
+     d2: 'hydroxymethylbilane (HMB)' -> 'hydroxymethylbilane' ['abbreviation'] (long (SF))
+     d2: 'Mg-Proto IX monomethyl ester (Mg-Proto ME)' -> 'Mg-Proto IX monomethyl ester' ['abbreviation'] (long (SF))
+     d2: '3,8-divinyl-protochlorophyllide (DV-Pchlide)' -> '3,8-divinyl-protochlorophyllide' ['abbreviation'] (long (SF))
+     d2: '3,8-divinyl-chlorophyllide (DV-Chlide)' -> '3,8-divinyl-chlorophyllide' ['abbreviation'] (long (SF))
+     d3: 'GSA' -> 'Glu 1-semialdehyde' ['abbreviation'] (long (SF))
+     d3: 'ALA' -> '5-aminolevulinic acid' ['abbreviation'] (long (SF))
+     d3: 'PBG' -> 'porphobilinogen' ['abbreviation'] (long (SF))
+     d3: 'HMB' -> 'hydroxymethylbilane' ['abbreviation'] (long (SF))
+     d3: 'Urogen III' -> 'uroporphyrinogen III' ['abbreviation'] (shared_locant)
+     d3: 'Coprogen III' -> 'coproporphyrinogen III' ['abbreviation'] (shared_locant)
+     d3: 'Protogen IX' -> 'protoporphyrinogen IX' ['abbreviation'] (shared_locant)
+     d3: 'Proto IX' -> 'protoporphyrin IX' ['abbreviation'] (shared_locant)
+     d3: 'Mg-Proto ME' -> 'Mg-Proto IX monomethyl ester' ['abbreviation'] (long (SF))
+     d3: 'DV-Pchlide' -> '3,8-divinyl-protochlorophyllide' ['abbreviation'] (long (SF))
+     d3: 'DV-Chlide' -> '3,8-divinyl-chlorophyllide' ['abbreviation'] (long (SF))
+     d3: 'bilverdin IX' -> 'biliverdin IX' ['typo']
+
+== enterobactin (PMC12096016)  reactions per draw [4, 5, 5]
+   base                                         pooled reactions   5  matched 4/5  recall 0.8  precision 0.8  rows claimed 5
+   tip_no_paper                                 pooled reactions   5  matched 4/5  recall 0.8  precision 0.8  rows claimed 5
+   strict_before_rulings                        pooled reactions   5  matched 4/5  recall 0.8  precision 0.8  rows claimed 5
+   round2_tip                                   pooled reactions   5  matched 4/5  recall 0.8  precision 0.8  rows claimed 5
+   tip                                          pooled reactions   5  matched 4/5  recall 0.8  precision 0.8  rows claimed 5
+   ORCH-751 union (reference)                    matched 4/5
+   tip rows (support | key | merges: draw->rule [* = flagged undefined_state_treated_as_absent; S = became survivor] | kept apart because | cofactors withheld):
+     3/3 | chorismate -> isochorismate | d2->exact, d3->exact | - | -
+     3/3 | isochorismate -> 2 3 dihydro 2 3 dihydroxybenzoate + pyruvate | d2->exact, d3->exact | - | -
+     3/3 | 2 3 dihydro 2 3 dihydroxybenzoate -> 2 3 dihydroxybenzoate | d2->exact, d3->exact | - | -
+     3/3 | 2 3 dihydroxybenzoate -> 2 3 dihydroxybenzoyl amp | d2->exact, d3->exact | - | -
+     2/3 | pyruvate -> lactate | d3->exact | - | -
+   names rewritten at the tip (draw: from -> to [rules]):
+
+== menaquinone (PMC12421875)  reactions per draw [2, 9, 7]
+   base                                         pooled reactions   9  matched 9/9  recall 1.0  precision 1.0  rows claimed 9
+   tip_no_paper                                 pooled reactions   9  matched 9/9  recall 1.0  precision 1.0  rows claimed 9
+   strict_before_rulings                        pooled reactions   9  matched 9/9  recall 1.0  precision 1.0  rows claimed 9
+   round2_tip                                   pooled reactions   9  matched 9/9  recall 1.0  precision 1.0  rows claimed 9
+   tip                                          pooled reactions   9  matched 9/9  recall 1.0  precision 1.0  rows claimed 9
+   ORCH-751 union (reference)                    matched 9/9
+   tip rows (support | key | merges: draw->rule [* = flagged undefined_state_treated_as_absent; S = became survivor] | kept apart because | cofactors withheld):
+     3/3 | chorismate -> isochorismate | d2->exact, d3->exact | - | -
+     3/3 | isochorismate -> 2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 ca | d2->exact, d3->exact | - | -
+     2/3 | 2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate -> shch | d3->exact S | - | -
+     2/3 | shchc -> osb | d3->exact | - | -
+     2/3 | osb -> osb coa | d3->exact S | - | -
+     2/3 | osb coa -> dhna coa | d3->exact | - | -
+     2/3 | dhna coa -> 1 4 dihydroxy 2 naphthoate | d3->exact | - | -
+     1/3 | 1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> dmk | - | - | -
+     1/3 | dmk -> mk | - | - | -
+   names rewritten at the tip (draw: from -> to [rules]):
+     d1: 'SEPHCHC' -> '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate' ['abbreviation'] (long (SF))
+     d1: 'DHNA' -> '1,4-dihydroxy-2-naphthoic acid' ['abbreviation'] (long (SF))
+     d2: 'SEPHCHC' -> '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate' ['abbreviation'] (long (SF))
+     d2: 'DHNA' -> '1,4-dihydroxy-2-naphthoic acid' ['abbreviation'] (long (SF))
+     d3: 'SEPHCHC' -> '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate' ['abbreviation'] (long (SF))
+     d3: 'DHNA' -> '1,4-dihydroxy-2-naphthoic acid' ['abbreviation'] (long (SF))
+

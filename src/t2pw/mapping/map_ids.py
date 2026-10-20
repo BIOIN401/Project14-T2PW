@@ -10124,6 +10124,7 @@ def map_payload(
     allow_complex_wrapper_creation: bool = True,
     allow_structural_cleanup: bool = True,
     mode: ExportMode = DEFAULT_EXPORT_MODE,
+    merge_identity_duplicates: bool = False,
 ) -> Dict[str, Any]:
     """Resolve every entity in ``payload`` against PathBank/UniProt/ChEBI.
 
@@ -10133,6 +10134,12 @@ def map_payload(
     being re-routed to the complex mapper. It does not relax any gate and does
     not change which identifiers are accepted -- wrapper creation stays under
     the separate ``allow_complex_wrapper_creation`` flag the caller already owns.
+
+    ``merge_identity_duplicates`` (D-104 amendment 5, ORCH-754a): ``True`` only on the
+    Stage-6 pass. It then runs D-104 rule 3 last
+    (:func:`t2pw.pipeline.stage_one_ensemble.merge_on_mapped_identity`, itself a no-op
+    unless this run's Stage 1 pooled 2+ draws) and moves this report's reaction pointers
+    with it. ``False``, the default, leaves every caller's output exactly as before.
     """
 
     if not isinstance(payload, dict):
@@ -11110,6 +11117,10 @@ def map_payload(
     # can tell fail-open from a clean bill of health.
     if identity_admission.SOURCE_INDEX_KEY in mapped or identity_admission_report["withheld"]:
         report[identity_admission.REPORT_KEY] = identity_admission_report
+    if merge_identity_duplicates:
+        from t2pw.pipeline.stage_one_ensemble import merge_on_mapped_identity  # function-local: layering
+
+        merge_on_mapped_identity(mapped, report=report)
     return {"payload": mapped, "report": report}
 
 
@@ -11126,6 +11137,7 @@ def run_mapping(
     allow_complex_wrapper_creation: bool = True,
     allow_structural_cleanup: bool = True,
     mode: ExportMode = DEFAULT_EXPORT_MODE,
+    merge_identity_duplicates: bool = False,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -11140,6 +11152,7 @@ def run_mapping(
         allow_complex_wrapper_creation=allow_complex_wrapper_creation,
         allow_structural_cleanup=allow_structural_cleanup,
         mode=mode,
+        merge_identity_duplicates=merge_identity_duplicates,
     )
     mapped = _safe_dict(result.get("payload"))
     report = _safe_dict(result.get("report"))

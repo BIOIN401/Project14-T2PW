@@ -1,0 +1,253 @@
+{
+  "label": "r4-gate-streamlit-a-draws3",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754a/128-r4-gate-streamlit-a-draws3.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch754a/128-r4-gate-streamlit-a-draws3-8762",
+    "-rf",
+    "tests/test_batch_driver.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+    "tests/test_c060a_requested_pathway_wiring.py",
+    "tests/test_c064_round_cap_reason.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c079_interactive_prompt_allowlist.py",
+    "tests/test_c082_species_rename_declination.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py",
+    "tests/test_c119_g9_base_failure_proof.py",
+    "tests/test_c126_g9_base_failure_proof.py",
+    "tests/test_dependency_declarations.py",
+    "tests/test_entity_admission.py",
+    "tests/test_f179_reaction_support.py",
+    "tests/test_prefreeze_compound_resolution.py",
+    "tests/test_prefreeze_third_export_seam.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a",
+  "started_at": "2026-10-20T20:02:52+00:00",
+  "finished_at": "2026-10-20T20:04:07+00:00",
+  "duration_seconds": 75.41702140000416,
+  "timeout_seconds": 540.0,
+  "root_pid": 769144,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 762460,
+      "name": "python.exe",
+      "ppid": 769144
+    },
+    {
+      "pid": 772896,
+      "name": "git.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 774452,
+      "name": "git.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 773372,
+      "name": "git.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 774396,
+      "name": "git.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 766524,
+      "name": "python.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 773988,
+      "name": "python.exe",
+      "ppid": 766524
+    },
+    {
+      "pid": 775032,
+      "name": "python.exe",
+      "ppid": 775116
+    },
+    {
+      "pid": 775116,
+      "name": "python.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 769852,
+      "name": "git.exe",
+      "ppid": 775032
+    },
+    {
+      "pid": 771564,
+      "name": "python.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 774588,
+      "name": "python.exe",
+      "ppid": 771564
+    },
+    {
+      "pid": 767444,
+      "name": "python.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 774412,
+      "name": "python.exe",
+      "ppid": 767444
+    },
+    {
+      "pid": 770140,
+      "name": "python.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 773876,
+      "name": "python.exe",
+      "ppid": 770140
+    },
+    {
+      "pid": 766180,
+      "name": "python.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 768428,
+      "name": "python.exe",
+      "ppid": 766180
+    },
+    {
+      "pid": 773784,
+      "name": "git.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 773408,
+      "name": "git.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 751612,
+      "name": "git.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 773708,
+      "name": "git.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 774484,
+      "name": "git.exe",
+      "ppid": 762460
+    },
+    {
+      "pid": 758656,
+      "name": "git.exe",
+      "ppid": 762460
+    }
+  ],
+  "descendants_terminated": [
+    751612,
+    758656,
+    762460,
+    766180,
+    766524,
+    767444,
+    768428,
+    769852,
+    770140,
+    771564,
+    772896,
+    773372,
+    773408,
+    773708,
+    773784,
+    773876,
+    773988,
+    774396,
+    774412,
+    774452,
+    774484,
+    774588,
+    775032,
+    775116
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 190584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 742748,
+      "name": "python.exe"
+    },
+    {
+      "pid": 744080,
+      "name": "python.exe"
+    },
+    {
+      "pid": 774604,
+      "name": "python.exe"
+    },
+    {
+      "pid": 774620,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-754a\\128-r4-gate-streamlit-a-draws3.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a",
+    "repo_head": "fee605324dc9b64c4f9d2b4d1006657a32c1ec4c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-754a",
+    "token": "ORCH-754a:774604:f48ff49ecd088818",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,81 @@
+STAGE-1 ENSEMBLE: POOLED REACTIONS
+Draws: 3 of 3 succeeded
+Paper dictionary: 15 abbreviation pair(s); ambiguous, bridging nothing: none
+Pooled reactions: 9 (2 found by one draw only; 0 merge(s) flagged for review)
+
+REACTION 1  [3/3 draws: 1, 2, 3]
+  Name: MenF reaction
+  Key:  chorismate -> isochorismate
+  Merged draw 2 row 'MenF reaction': bridged by exact
+    its quote: 'MenF catalyzes a reversible reaction converting chorismate to isochorismate'
+    its entry quote at /modifiers/0/evidence: 'MenF catalyzes a reversible reaction converting chorismate to isochorismate'
+  Merged draw 3 row 'MenF reaction': bridged by exact
+    its quote: 'MenF catalyzes a reversible reaction converting chorismate to isochorismate'
+    its entry quote at /modifiers/0/evidence: 'MenF catalyzes a reversible reaction converting chorismate to isochorismate'
+
+REACTION 2  [3/3 draws: 1, 2, 3]
+  Name: MenD reaction
+  Key:  isochorismate -> 2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate
+  Merged draw 2 row 'MenD reaction': bridged by exact
+    its quote: 'MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)'
+    its entry quote at /modifiers/0/evidence: 'MenD facilitates the conversion of isochorismate to SEPHCHC'
+  Merged draw 3 row 'MenD reaction': bridged by exact
+    its quote: 'MenD facilitates the conversion of isochorismate to SEPHCHC'
+    its entry quote at /modifiers/0/evidence: 'MenD facilitates the conversion of isochorismate to SEPHCHC'
+
+REACTION 3  [2/3 draws: 2, 3]
+  Name: MenH reaction
+  Key:  2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate -> shchc
+  Merged draw 3 row 'MenH reaction': bridged by exact; it became the survivor (over 'MenH reaction') because it states a defined biological_state
+    its quote: 'd[D]/dt = k_cat_H [MenH][C]/(KM_H+[C]) - k_cat_C [MenC][D]/(KM_C+[D])'
+    its entry quote at /modifiers/0/evidence: 'd[D]/dt = k_cat_H [MenH][C]/(KM_H+[C]) - k_cat_C [MenC][D]/(KM_C+[D])'
+    the displaced survivor's quote: 'MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA'
+    the displaced survivor's entry quote at /modifiers/0/evidence: 'MenH is part of the seven-enzyme pathway to produce DHNA'
+
+REACTION 4  [2/3 draws: 2, 3]
+  Name: MenC reaction
+  Key:  shchc -> osb
+  Merged draw 3 row 'MenC reaction': bridged by exact
+    its quote: 'd[D]/dt = ... - k_cat_C [MenC][D]/(KM_C+[D]) and d[E]/dt = ... + k_cat_C [MenC][D]/(KM_C+[D])'
+    its entry quote at /modifiers/0/evidence: 'd[D]/dt = ... - k_cat_C [MenC][D]/(KM_C+[D]) and d[E]/dt = ... + k_cat_C [MenC][D]/(KM_C+[D])'
+
+REACTION 5  [2/3 draws: 2, 3]
+  Name: MenE reaction
+  Key:  osb -> osb coa
+  Merged draw 3 row 'MenE reaction': bridged by exact; it became the survivor (over 'MenE reaction') because it states a defined biological_state
+    its quote: 'd[E]/dt = ... - k_cat_E [MenE][E]/(KM_E+[E]) and d[F]/dt = ... + k_cat_E [MenE][E]/(KM_E+[E])'
+    its entry quote at /modifiers/0/evidence: 'd[E]/dt = ... - k_cat_E [MenE][E]/(KM_E+[E]) and d[F]/dt = ... + k_cat_E [MenE][E]/(KM_E+[E])'
+    the displaced survivor's quote: 'MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA'
+    the displaced survivor's entry quote at /modifiers/0/evidence: 'MenE is part of the seven-enzyme pathway'
+
+REACTION 6  [2/3 draws: 2, 3]
+  Name: MenB reaction
+  Key:  osb coa -> dhna coa
+  Merged draw 3 row 'MenB reaction': bridged by exact
+    its quote: 'd[F]/dt = ... - k_cat_B [MenB][F]/(KM_B+[F]) and d[G]/dt = ... + k_cat_B [MenB][F]/(KM_B+[F])'
+    its entry quote at /modifiers/0/evidence: 'd[F]/dt = ... - k_cat_B [MenB][F]/(KM_B+[F]) and d[G]/dt = ... + k_cat_B [MenB][F]/(KM_B+[F])'
+
+REACTION 7  [2/3 draws: 2, 3]
+  Name: MenI reaction
+  Key:  dhna coa -> 1 4 dihydroxy 2 naphthoate
+  Merged draw 3 row 'MenI reaction': bridged by exact
+    its quote: 'd[G]/dt = ... - k_cat_I [MenI][G]/(KM_I+[G]) and d[DHNA]in/dt = ... + k_cat_I [MenI][G]/(KM_I+[G])'
+    its entry quote at /modifiers/0/evidence: 'd[G]/dt = ... - k_cat_I [MenI][G]/(KM_I+[G]) and d[DHNA]in/dt = ... + k_cat_I [MenI][G]/(KM_I+[G])'
+
+REACTION 8  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: MenA reaction
+  Key:  1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> dmk
+
+REACTION 9  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: MenG reaction
+  Key:  dmk -> mk
+
+TYPO SNAPS -- each FLAGGED for review (0)
+
+NAMES REWRITTEN (6)
+  draw 1: 'SEPHCHC' -> '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate' [abbreviation, long (SF)]
+  draw 1: 'DHNA' -> '1,4-dihydroxy-2-naphthoic acid' [abbreviation, long (SF)]
+  draw 2: 'SEPHCHC' -> '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate' [abbreviation, long (SF)]
+  draw 2: 'DHNA' -> '1,4-dihydroxy-2-naphthoic acid' [abbreviation, long (SF)]
+  draw 3: 'SEPHCHC' -> '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate' [abbreviation, long (SF)]
+  draw 3: 'DHNA' -> '1,4-dihydroxy-2-naphthoic acid' [abbreviation, long (SF)]

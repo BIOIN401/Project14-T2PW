@@ -4259,6 +4259,7 @@ def run_post_pipeline_sbml_artifacts(
             allow_complex_wrapper_creation=not research_mode,
             allow_structural_cleanup=not research_mode,
             mode=export_mode,
+            merge_identity_duplicates=True,
         )
         if not isinstance(mapping_result, dict):
             raise ValueError("Stage 6 mapping returned a malformed result: expected an object.")
