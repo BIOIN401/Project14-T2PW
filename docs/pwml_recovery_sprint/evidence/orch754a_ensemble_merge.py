@@ -9,10 +9,11 @@ gold cases, scored with the evaluator's own ``reactions.score_leg`` (as
                       (ORCH-750 + ORCH-752's cofactor-blind key), loaded from ``git show``;
 * ``tip_no_paper`` -- the tip's merge with no paper text: finding 1's compatibility rule only;
 * ``tip``          -- the tip's merge with the paper text, which is what
-                      ``run_extraction_pipeline`` now does at N>1 (DELIVERED);
-* ``counterfactual_undefined_state_is_no_state`` -- ``tip`` with ONE rule relaxed, for the
-                      open question in the RESULT doc: a biological_state label its draw never
-                      defines is treated as no state instead of failing closed. NOT delivered.
+                      ``run_extraction_pipeline`` now does at N>1 (DELIVERED; includes the
+                      product owner's 2026-10-20 rulings Q1 and Q2);
+* ``strict_before_rulings`` -- the same merge AS COMMITTED at ``--strict-rev``
+                      (``cf84626b``): finding 1's rule before Q1/Q2, when an undefined
+                      state failed closed and any differing enzyme set conflicted.
 
 Inputs are committed beside this file: the chlorophyll draws in
 ``orch752_chlorophyll_payloads/``, the enterobactin and menaquinone draws and all three
@@ -36,7 +37,6 @@ import sys
 import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
@@ -64,9 +64,9 @@ def _sha(data: bytes) -> str:
 def _base_module(rev: str) -> Any:
     text = subprocess.run(["git", "show", f"{rev}:src/t2pw/pipeline/stage_one_ensemble.py"], cwd=REPO,
                           capture_output=True, text=True, encoding="utf-8", check=True).stdout
-    path = Path(tempfile.mkdtemp(prefix="orch754a_base_")) / "stage_one_ensemble_base.py"
+    path = Path(tempfile.mkdtemp(prefix="orch754a_base_")) / f"stage_one_ensemble_{rev}.py"
     path.write_text(text, encoding="utf-8")
-    spec = importlib.util.spec_from_file_location("stage_one_ensemble_base", path)
+    spec = importlib.util.spec_from_file_location(f"stage_one_ensemble_{rev}", path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
     spec.loader.exec_module(module)
@@ -91,17 +91,16 @@ def _rows(report: Dict[str, Any]) -> List[Dict[str, Any]]:
 def main() -> int:
     ap = argparse.ArgumentParser(description=(__doc__ or "").splitlines()[0])
     ap.add_argument("--base-rev", default="f9892cdf")
+    ap.add_argument("--strict-rev", default="cf84626b")
     ap.add_argument("--out", default=str(HERE / "orch754a_ensemble_merge.json"))
     args = ap.parse_args()
 
     base = _base_module(args.base_rev)
+    strict = _base_module(args.strict_rev)
     gold = dict(load_supplement())
-    delivered = tip._state_profile
 
-    def undefined_is_none(label: Any, states: Dict[str, Any]) -> Dict[str, str]:
-        return delivered(label, states) if tip._strict_key(label) in states else {}
-
-    result: Dict[str, Any] = {"task": "ORCH-754a", "base_rev": args.base_rev, "cases": {}}
+    result: Dict[str, Any] = {"task": "ORCH-754a", "base_rev": args.base_rev, "strict_rev": args.strict_rev,
+                              "cases": {}}
     lines = ["ORCH-754a pooled Stage-1 draws, paper as the dictionary (offline; 3 saved draws each)", ""]
     for name, spec in CASES.items():
         files = [spec["draws"] / f"control__run{i}__payload.json" for i in (1, 2, 3)]
@@ -113,9 +112,8 @@ def main() -> int:
         paper = paper_bytes.decode("utf-8")
 
         pooled = {"base": base.merge_draws(draws), "tip_no_paper": tip.merge_draws(draws),
+                  "strict_before_rulings": strict.merge_draws(draws, paper_text=paper),
                   "tip": tip.merge_draws(draws, paper_text=paper)}
-        with patch.object(tip, "_state_profile", undefined_is_none):
-            pooled["counterfactual_undefined_state_is_no_state"] = tip.merge_draws(draws, paper_text=paper)
 
         entry: Dict[str, Any] = {
             "paper": spec["paper"], "paper_sha256": recorded,
@@ -152,9 +150,11 @@ def main() -> int:
         if spec["gold"]:
             lines.append(f"   ORCH-751 union (reference)                    matched {ORCH751[name]['matched']}/"
                          f"{ORCH751[name]['gold']}")
-        lines.append("   tip rows (support | key | merges: draw->rule | kept apart because | cofactors withheld):")
+        lines.append("   tip rows (support | key | merges: draw->rule [* = flagged undefined_state_treated_as_absent;"
+                     " S = became survivor] | kept apart because | cofactors withheld):")
         for row in entry["tip_rows"]:
-            merges = ", ".join(f"d{m['draw']}->{'+'.join(m['bridged_by'])}" for m in row.get("merges", [])) or "-"
+            merges = ", ".join(f"d{m['draw']}->{'+'.join(m['bridged_by'])}{'*' if m.get('flag') else ''}"
+                               f"{' S' if m.get('became_survivor') else ''}" for m in row.get("merges", [])) or "-"
             apart = "; ".join(k["reason"] for k in row.get("kept_apart_from", [])) or "-"
             withheld = ", ".join(w["cofactor"] for w in row.get("cofactors_withheld", [])) or "-"
             lines.append(f"     {row['support']} | {row['key'][:70]} | {merges} | {apart} | {withheld}")

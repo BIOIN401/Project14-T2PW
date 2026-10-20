@@ -1,11 +1,144 @@
 # ORCH-754a — the paper as the dictionary of a pooled extraction (D-104), plus findings 1 and 4
 
 **Status:** delivered on `orch754/a-ensemble-merge` (base `f9892cdf`), not merged, not pushed.
-Code commits `772bd3df` and `cf84626b`; this doc and the evidence in the docs/evidence commit that follows `cf84626b`.
-Bounded-run reports `evidence/g11/ORCH-754a/01`–`63`, pins `evidence/g11/pin/ORCH-754a/`.
-Offline only: **no LLM call and no pipeline run anywhere in this task.**
 
-**Headline.**
+- Round 1: code `772bd3df` and `cf84626b`, docs and evidence `6c75112f`.
+- Round 2, which implements the product owner's rulings of 2026-10-20 on questions 1 and 2: code `1cfae4d3`, docs and evidence in the commit after it.
+- Bounded-run reports `evidence/g11/ORCH-754a/01`–`86`, pins `evidence/g11/pin/ORCH-754a/`.
+- Offline only: **no LLM call and no pipeline run anywhere in this task.**
+
+**Headline (current tip).**
+
+- Chlorophyll pools **41 → 29** reactions: 11 at 3/3 support, 2 at 2/3, 16 at 1/3 (all kept).
+  - 11 merges are flagged `undefined_state_treated_as_absent`, naming `'plastidic state'`.
+  - Two steps stay split, on enzymes the paper dictionary cannot bridge: `PPO`, and the ambiguous `POR`.
+- Gold is unchanged: enterobactin 4/5 at precision 0.8, menaquinone 9/9 at precision 1.0. That holds at base, before the rulings, and now.
+- The chimera fix (finding 1), the `.env` isolation (finding 4) and the human-only support marks (§ 1.6) all still hold.
+
+**Read § 0 first.** It records the round-2 rulings and what they changed. §§ 1–8 are the round-1 record, still accurate except where § 0 supersedes them: § 1.5's state and enzyme rules, the § 2.1 numbers, and § 7 items 1–3.
+
+---
+
+## 0. Round 2: the rulings of 2026-10-20
+
+### 0.1 Q1 (product owner): an undefined biological state counts as no state stated
+
+**Ruling.**
+
+- A row whose `biological_state` names a state its own draw never defines is treated as having no state, for compatibility.
+- A defined state against an undefined one is therefore compatible. Two defined states that differ still conflict.
+- Every merge that relied on this is flagged.
+- The survivor keeps a defined state. The row with the defined state is preferred as survivor.
+
+**Implementation** (`stage_one_ensemble._conflict`, `_undefined_state`, `_prefers`, `_fold`):
+
+- *Which states are compared.* `_conflict` compares only states that resolve to a `biological_states` row of the same payload (`_defined`). Defined states are compared by compartment, cell type, tissue and species, as before.
+- *The flag.* `_undefined_state` names the undefined label(s) whenever both rows state something different and at least one is undefined. The merge entry then carries `flag: {reason: "undefined_state_treated_as_absent", undefined_state: "'plastidic state'"}`. The side-file `.txt` prints `FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states`. Rule-3 merges carry and print the same flag.
+- *Survivor choice.* `_prefers` makes the joining row the survivor when it has a defined state and the current survivor does not. It takes the first row's place in the pooled list, and the previous survivor is folded into it (`became_survivor`, `previous_survivor`). If the survivor is kept but lacks a defined state, `_fold` copies the other row's defined label (`state_taken`).
+- *Tests:*
+  - `test_ruling_q1_an_undefined_state_counts_as_absent_and_the_merge_is_flagged`: the defined-state row survives with its own quote, the flag names the state, and a third row in a different defined compartment stays apart;
+  - `test_ruling_q1_a_defined_state_is_carried_onto_a_survivor_without_one`;
+  - `test_two_defined_states_are_compared_by_compartment`.
+
+**Note.** The survivor preference also applies when the other row states no state at all. That is the same rule, "the row that states more survives". It moved two menaquinone survivors (MenH and MenE rows of draw 3 over draw 2's stateless rows), and the gold score is unchanged.
+
+### 0.2 Q2 (product owner): enzyme supersets merge, and the larger set is kept
+
+**Ruling.**
+
+- Two enzyme sets, one a subset of the other after the paper dictionary and the identity rules, are compatible.
+- The survivor carries the larger set, but each extra enzyme only on a verbatim quote that supports it.
+- The larger-set row is preferred as survivor.
+- Overlapping sets that do not nest still conflict.
+
+**Implementation.**
+
+- `_conflict` refuses only non-nested enzyme sets: A+B vs A+C, and A vs B.
+- `_prefers` makes the larger-set row the survivor when both rows' states are equally defined. A defined state outranks a larger enzyme set.
+- When the survivor is kept, `_fold` copies each extra enzyme entry only if the merged row's own quote, or that enzyme entry's own `evidence`, names it. The quote is recorded with it (`enzymes_added: [{enzyme, supporting_quote}]`). Otherwise the enzyme is listed in `enzymes_withheld` with the donor quote.
+- The record's claimed profile now carries the union of enzyme sets, so a third row is judged against everything the record already absorbed.
+- Rule 3 uses the same mechanics, with enzymes compared by identity.
+- *Tests:*
+  - `test_ruling_q2_mg_chelatase_and_gun4_merge_and_keep_gun4`: the GUN4 row survives, keeping its own quote that names GUN4;
+  - `test_ruling_q2_an_extra_enzyme_no_quote_names_is_withheld`;
+  - `test_ruling_q2_overlapping_enzyme_sets_that_do_not_nest_stay_apart`;
+  - `test_rule3_an_enzyme_superset_by_identity_merges_and_keeps_the_larger_set`.
+
+### 0.3 Orchestrator rulings on Q3 to Q7
+
+- **Q3, `shared_locant`: accepted provisionally, pending independent review.**
+  - *The exact rule.* Let Schwartz–Hearst accept a pair from the `long form (SF)` pattern; the swapped `SF (long)` pattern never qualifies. If the text right after the closing parenthesis matches `\s*([IVX]{1,4}|[A-Za-z])(?![\w-])`, a second pair `(SF + " " + T, long + " " + T)` is registered with pattern `shared_locant`. `T` is a roman numeral of 1–4 characters from `I`, `V`, `X`, or one letter, not followed by a word character or hyphen. Only the locant the paper actually writes after that parenthesis is registered.
+  - *Negative test.* `test_shared_locant_never_bridges_a_different_locant`: `Urogen III` → `uroporphyrinogen III`, but `Urogen I` and `Urogen IV` are untouched, and a `Urogen I` row never pools with `uroporphyrinogen III`.
+- **Q4** (reaction-evidence UI reads the side file): deferred, not in this lane.
+- **Q5** (1/N drives `release_status`): no, not in this lane.
+- **Q6** (rule-3 lock record in `quarantined_locked_reactions`): accepted. It matches `dedupe_processes`.
+- **Q7** (menaquinone `DHNA` interaction endpoint renamed): noted for integration with ORCH-754b.
+- **Instruction 7's withdrawal** is recorded by the orchestrator in `ORCH-754-RESULT.md`. It needs no DECISIONS entry, so the item in § 7.12 is withdrawn.
+
+### 0.4 Measurements (`evidence/orch754a_ensemble_merge.{py,json,txt}`, run `g11/ORCH-754a/84`)
+
+`strict_before_rulings` is the merge as committed at `cf84626b`, loaded from `git show`.
+
+| pooling | chlorophyll | enterobactin (5 gold) | menaquinone (9 gold) |
+|---|---|---|---|
+| base `f9892cdf` | 41 | 4/5, P 0.8 | 9/9, P 1.0 |
+| `cf84626b` (strict, before the rulings) | 41 | 4/5, P 0.8 | 9/9, P 1.0 |
+| **tip, delivered** | **29** | **4/5, P 0.8** | **9/9, P 1.0** |
+| ORCH-751 union (reference) | -- | 4/5 | 9/9 |
+
+The round-1 counterfactual (an undefined state treated as no state, Q1 alone) gave 30. Q2 merges the Mg-chelatase/GUN4 pair as well, which gives 29.
+
+**Chlorophyll per-merge table** (the full table, naming the bridging rule of each row, is in `orch754a_ensemble_merge.txt`; the hand-comparison text is `orch754a_chlorophyll_side_file.txt`):
+
+| rows | support | merges, draw → rule (`*` = flagged undefined state) |
+|---|---|---|
+| Glu-tRNAGlu → GSA, GSA → ALA, ALA → PBG, HMB → Urogen III, Urogen III → Coprogen III, Coprogen III → Protogen IX, Mg-Proto IX → Mg-Proto ME, Chlide a → Chlide b | 3/3 | d2 → abbreviation\*, d3 → exact |
+| PBG → HMB | 3/3 | d2 → abbreviation+typo\*, d3 → exact |
+| Proto IX → Mg-Proto IX (Mg-chelatase) | 3/3 | d2 → abbreviation\*, d3 → exact; **d3 became the survivor** (larger enzyme set, GUN4, its own quote kept) |
+| Mg-Proto ME → DV-Pchlide | 3/3 | d2 → abbreviation\*, d3 → abbreviation |
+| Protogen IX → Proto IX | 2/3 + 1/3 | d3 → exact; d2 kept apart: `different enzymes {ppo} vs {protogen ix oxidase ppo}` |
+| DV-Pchlide → DV-Chlide | 2/3 + 1/3 | d3 → abbreviation; d2 kept apart: `different enzymes {por} vs {pchlide oxidoreductase por}` |
+| 14 single-draw rows (heme b/protoheme variants, MV-Chlide a variants, GGPP/phytyl chain, Chl a → Chl b, etc.) | 1/3 | none; kept and flagged `review_required` |
+
+**Totals:** 24 merges, 11 flagged, 1 survivor replaced, 2 kept apart. No enzyme, cofactor or state had to be carried, because every survivor already named what it absorbed.
+
+**Gold, before and after.** Enterobactin is 4/5 at P 0.8, with 5 rows claimed: 4 target plus 1 `paper_stated_off_pathway`, the LDH row. Menaquinone is 9/9 at P 1.0. Both identical in all three poolings. No recall or precision drop.
+
+### 0.5 Gates, round 2 (tip `1cfae4d3`; the battery ran on exactly that content before it was committed)
+
+Every run was bounded, with zero survivors. G11 check: **83 artifacts, 0 non-compliant**, each with a pin verdict, none refused.
+
+| gate | default env | `T2PW_EXTRACTION_DRAWS=3` |
+|---|---|---|
+| focused (`test_stage_one_ensemble.py` + `test_stage_one_paper_dictionary.py`) | **87 passed** (`evidence/g11/ORCH-754a/70`) | **87 passed** (`/76`) |
+| affected, pipeline and summary (the 12 files of § 3.1) | **203 passed** (`/71`) | **203 passed** (`/77`) |
+| affected, mapping (the 17 files of § 3.1) | 397 passed, 1 skipped, **1 failed = pre-existing c075** (`/72`) | same (`/78`) |
+| AppTest `test_c055_rag_loop_wiring.py`, alone | **14 passed** (`/73`) | **14 passed** (`/79`) |
+| AppTest `test_streamlit_quarantine_boundary.py`, alone | **23 passed** (`/74`) | **23 passed** (`/80`) |
+| **SMOKE** (22 files) | **508 passed** (`/75`) | **508 passed** (`/81`) |
+| without conftest, the reviewer's condition | -- | pipeline: 24 failed, all `test_early_failure_replay` (`/82`); mapping: only c075 (`/83`) |
+
+| proof | report | result |
+|---|---|---|
+| G9 base pre-run, final test file, src modules restored to `f9892cdf` | `evidence/g11/ORCH-754a/69` | **6 failed, 22 passed**: the chlorophyll steps, IDH ×2, ATP/ADP + Mg/Mn, enzymes/defined states, unsupported donation |
+| N=1 `run_extraction_pipeline` identical to base | `/85`, `evidence/orch754a_n1_identity_verdict.json` | **N=1 IDENTICAL to base** |
+| model-bound text: base-rendered goldens | `/86` (and `/65`) | N=1 `d171a3b8…`, pooled `ab01b0dd…`, identical in both runs |
+| gold replays and chlorophyll measurement | `/84` (and `/67`) | § 0.4 |
+
+**TEST_MATRIX delta, round 2.** The focused selection is now 87 tests: `test_stage_one_ensemble.py` 28, `test_stage_one_paper_dictionary.py` 59. SMOKE stays 508. Two goldens in `tests/fixtures/orch754a/` were regenerated, because the delivered pooled payload changed: N=1 draw sha256 `d171a3b8…` (unchanged), pooled `ab01b0dd…` (was `7258fe0a…`). Both were rendered by the base modules.
+
+### 0.6 Still not settled (round 2)
+
+1. **Survivor replacement rewrites the first row's place.** When a later row wins on Q1 or Q2, the earlier survivor's quote is no longer the row's quote. It survives only through the merge record in the side file. That is what the ruling asks ("its own evidence is kept"), recorded here because it changes "first occurrence wins".
+2. **A defined state outranks a larger enzyme set** when they point to different rows. The other row's extra enzymes then need a quote (`enzymes_withheld` otherwise). The PO may prefer the opposite order.
+3. **Enzyme names that are not dictionary pairs still split** (`PPO` vs `Protogen IX oxidase (PPO)`, and the ambiguous `POR`), as in round 1 § 7.2.
+4. Round-1 § 7 items 4–11 are unchanged, except item 6 (Q6, accepted) and item 12 (withdrawn).
+
+---
+
+# Round 1 record (tip `cf84626b`)
+
+**Round-1 headline (superseded by § 0 where they differ).**
 
 - The D-104 merge rules are built and pinned: Schwartz–Hearst abbreviation pairs, typo snapping, the long-form rewrite, support counts, a bridging rule recorded on every merge, and the post-mapping database-identity merge.
 - On chlorophyll the pool stays at **41 → 41**, and the reason is now a deliberate fail-closed rule, not the dictionary. Finding 1's compatibility rule keeps draw 2 apart: every one of draw 2's reactions names a biological state (`plastidic state`) that its payload never defines, because the draw wrote the bucket as `biogical_states`. With that one rule relaxed the pool is **30** (§ 2.1, counterfactual). That relaxation is an open question for the product owner (§ 7.1).
@@ -221,6 +354,8 @@ Candidates, withheld ids and an unrecorded `mapped_ids` never count (7 parametri
 ---
 
 ## 2. Measurements
+
+*Round-1 numbers. They are in commit `6c75112f`'s copies of the files named below; those files now hold the round-2 run (§ 0.4), whose `strict_before_rulings` column reproduces round 1's delivered 41.*
 
 Script `evidence/orch754a_ensemble_merge.py` → `.json`, `.txt`, and the side-file text `orch754a_{chlorophyll,enterobactin,menaquinone}_side_file.txt`. Run bounded at `g11/ORCH-754a/61`.
 

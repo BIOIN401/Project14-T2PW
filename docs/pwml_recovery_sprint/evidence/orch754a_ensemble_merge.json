@@ -1,6 +1,7 @@
 {
  "task": "ORCH-754a",
  "base_rev": "f9892cdf",
+ "strict_rev": "cf84626b",
  "cases": {
   "chlorophyll": {
    "paper": "PMC5130987",
@@ -26,9 +27,9 @@
    ],
    "pooled_reactions": {
     "base": 41,
-    "tip_no_paper": 43,
-    "tip": 41,
-    "counterfactual_undefined_state_is_no_state": 30
+    "tip_no_paper": 42,
+    "strict_before_rulings": 41,
+    "tip": 29
    },
    "tip_lexicon": {
     "paper_chars": 100209,
@@ -331,9 +332,21 @@
      "name": "Glu-tRNA reductase reaction",
      "draws": [
       1,
+      2,
       3
      ],
      "merges": [
+      {
+       "draw": 2,
+       "name": "Glu-tRNA reductase reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
       {
        "draw": 3,
        "name": "GluTR reaction",
@@ -342,34 +355,28 @@
        ]
       }
      ],
-     "support": "2/3"
-    },
-    {
-     "key": "glu trnaglu -> glu 1 semialdehyde",
-     "name": "Glu-tRNA reductase reaction",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "Glu-tRNA reductase reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "glu 1 semialdehyde -> 5 aminolevulinate",
      "name": "GSAT reaction",
      "draws": [
       1,
+      2,
       3
      ],
      "merges": [
+      {
+       "draw": 2,
+       "name": "GSAT reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
       {
        "draw": 3,
        "name": "GSAT reaction",
@@ -378,34 +385,28 @@
        ]
       }
      ],
-     "support": "2/3"
-    },
-    {
-     "key": "glu 1 semialdehyde -> 5 aminolevulinate",
-     "name": "GSAT reaction",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "GSAT reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "5 aminolevulinate -> porphobilinogen",
      "name": "ALAD reaction",
      "draws": [
       1,
+      2,
       3
      ],
      "merges": [
+      {
+       "draw": 2,
+       "name": "ALA dehydratase reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
       {
        "draw": 3,
        "name": "ALAD reaction",
@@ -414,34 +415,29 @@
        ]
       }
      ],
-     "support": "2/3"
-    },
-    {
-     "key": "5 aminolevulinate -> porphobilinogen",
-     "name": "ALA dehydratase reaction",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "ALAD reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "porphobilinogen -> hydroxymethylbilane",
      "name": "PBG deaminase reaction",
      "draws": [
       1,
+      2,
       3
      ],
      "merges": [
+      {
+       "draw": 2,
+       "name": "PBG deaminase reaction",
+       "bridged_by": [
+        "abbreviation",
+        "typo"
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
       {
        "draw": 3,
        "name": "PBG deaminase reaction",
@@ -450,34 +446,28 @@
        ]
       }
      ],
-     "support": "2/3"
-    },
-    {
-     "key": "porphobilinogen -> hydroxymethylbilane",
-     "name": "PBG deaminase reaction",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "PBG deaminase reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "hydroxymethylbilane -> uroporphyrinogen iii",
      "name": "UROS reaction",
      "draws": [
       1,
+      2,
       3
      ],
      "merges": [
+      {
+       "draw": 2,
+       "name": "UROS reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
       {
        "draw": 3,
        "name": "UROS reaction",
@@ -486,34 +476,28 @@
        ]
       }
      ],
-     "support": "2/3"
-    },
-    {
-     "key": "hydroxymethylbilane -> uroporphyrinogen iii",
-     "name": "UROS reaction",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "UROS reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "uroporphyrinogen iii -> coproporphyrinogen iii",
      "name": "UROD reaction",
      "draws": [
       1,
+      2,
       3
      ],
      "merges": [
+      {
+       "draw": 2,
+       "name": "UROD reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
       {
        "draw": 3,
        "name": "UROD reaction",
@@ -522,34 +506,28 @@
        ]
       }
      ],
-     "support": "2/3"
-    },
-    {
-     "key": "uroporphyrinogen iii -> coproporphyrinogen iii",
-     "name": "UROD reaction",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "UROD reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "coproporphyrinogen iii -> protoporphyrinogen ix",
      "name": "CPO reaction",
      "draws": [
       1,
+      2,
       3
      ],
      "merges": [
+      {
+       "draw": 2,
+       "name": "CPO reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
       {
        "draw": 3,
        "name": "CPO reaction",
@@ -558,25 +536,7 @@
        ]
       }
      ],
-     "support": "2/3"
-    },
-    {
-     "key": "coproporphyrinogen iii -> protoporphyrinogen ix",
-     "name": "CPO reaction",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "CPO reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "protoporphyrinogen ix -> protoporphyrin ix",
@@ -627,62 +587,54 @@
      "key": "protoporphyrin ix -> mg proto ix",
      "name": "Mg-chelatase reaction",
      "draws": [
-      1
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
-    },
-    {
-     "key": "protoporphyrin ix -> mg proto ix",
-     "name": "Mg-chelatase reaction",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "Mg-chelatase reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
-    },
-    {
-     "key": "protoporphyrin ix -> mg proto ix",
-     "name": "Mg-chelatase reaction",
-     "draws": [
+      1,
+      2,
       3
      ],
-     "kept_apart_from": [
+     "merges": [
       {
+       "draw": 2,
        "name": "Mg-chelatase reaction",
-       "draws": [
-        1
+       "bridged_by": [
+        "abbreviation"
        ],
-       "reason": "different enzymes {mg chelatase} vs {gun4, mg chelatase}"
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
       },
       {
+       "draw": 3,
        "name": "Mg-chelatase reaction",
-       "draws": [
-        2
+       "bridged_by": [
+        "exact"
        ],
-       "reason": "different enzymes {mg chelatase} vs {gun4, mg chelatase}"
+       "became_survivor": "it names the larger enzyme set",
+       "previous_survivor": "Mg-chelatase reaction"
       }
      ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "mg proto ix -> mg proto ix monomethyl ester",
      "name": "Mg-Proto IX methyltransferase reaction",
      "draws": [
       1,
+      2,
       3
      ],
      "merges": [
+      {
+       "draw": 2,
+       "name": "Mg-Proto IX methyltransferas reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
       {
        "draw": 3,
        "name": "Mg-Proto IX methyltransferase reaction",
@@ -691,34 +643,28 @@
        ]
       }
      ],
-     "support": "2/3"
-    },
-    {
-     "key": "mg proto ix -> mg proto ix monomethyl ester",
-     "name": "Mg-Proto IX methyltransferas reaction",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "Mg-Proto IX methyltransferase reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide",
      "name": "Mg-Proto ME cyclase reaction",
      "draws": [
       1,
+      2,
       3
      ],
      "merges": [
+      {
+       "draw": 2,
+       "name": "Mg-Proto ME cyclase reaction",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
       {
        "draw": 3,
        "name": "Mg-Proto ME cyclase reaction",
@@ -727,25 +673,7 @@
        ]
       }
      ],
-     "support": "2/3"
-    },
-    {
-     "key": "mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide",
-     "name": "Mg-Proto ME cyclase reaction",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "Mg-Proto ME cyclase reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide",
@@ -806,9 +734,21 @@
      "name": "CAO reaction",
      "draws": [
       1,
+      2,
       3
      ],
      "merges": [
+      {
+       "draw": 2,
+       "name": "Chlide a oxygenase reaction (Chlide a)",
+       "bridged_by": [
+        "abbreviation"
+       ],
+       "flag": {
+        "reason": "undefined_state_treated_as_absent",
+        "undefined_state": "'plastidic state'"
+       }
+      },
       {
        "draw": 3,
        "name": "CAO reaction",
@@ -817,25 +757,7 @@
        ]
       }
      ],
-     "support": "2/3"
-    },
-    {
-     "key": "chlide a -> chlide b",
-     "name": "Chlide a oxygenase reaction (Chlide a)",
-     "draws": [
-      2
-     ],
-     "kept_apart_from": [
-      {
-       "name": "CAO reaction",
-       "draws": [
-        1
-       ],
-       "reason": "biological_state 'plastid' vs 'plastidic state' cannot be compared"
-      }
-     ],
-     "support": "1/3",
-     "review_required": "found by one draw only"
+     "support": "3/3"
     },
     {
      "key": "protoporphyrin ix -> protoheme heme b",
@@ -1048,8 +970,8 @@
      "outputs": [
       "Mg-Proto IX"
      ],
-     "biological_state": "plastid",
-     "evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner by Mg-chelatase"
+     "biological_state": "plastid state",
+     "evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX"
     },
     {
      "name": "Mg-Proto IX methyltransferase reaction",
@@ -1122,83 +1044,6 @@
      "evidence": "Some of Chlide a is converted into Chlide b by Chlide a oxygenase (CAO)"
     },
     {
-     "name": "Glu-tRNA reductase reaction",
-     "inputs": [
-      "Glu-tRNAGlu"
-     ],
-     "outputs": [
-      "Glu 1-semialdehyde"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "Glu-tRNAGlu formed from Glu and tRNAGlu within plastids is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR)."
-    },
-    {
-     "name": "GSAT reaction",
-     "inputs": [
-      "Glu 1-semialdehyde"
-     ],
-     "outputs": [
-      "5-aminolevulinic acid"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT), which catalyzes the intramolecular transfer of an amino group."
-    },
-    {
-     "name": "ALA dehydratase reaction",
-     "inputs": [
-      "5-aminolevulinic acid"
-     ],
-     "outputs": [
-      "porphobilinogen"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)"
-    },
-    {
-     "name": "PBG deaminase reaction",
-     "inputs": [
-      "porphobilinogen"
-     ],
-     "outputs": [
-      "hydroxymethylbilane"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB)."
-    },
-    {
-     "name": "UROS reaction",
-     "inputs": [
-      "hydroxymethylbilane"
-     ],
-     "outputs": [
-      "uroporphyrinogen III"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "HMB is converted into the first macrocyclic tetrapyrrole, uroporphyrinogen III, by Urogen III synthase (UROS)"
-    },
-    {
-     "name": "UROD reaction",
-     "inputs": [
-      "uroporphyrinogen III"
-     ],
-     "outputs": [
-      "coproporphyrinogen III"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "then metabolized to coproporphyrinogen III by Urogen III decarboxylase (UROD)."
-    },
-    {
-     "name": "CPO reaction",
-     "inputs": [
-      "coproporphyrinogen III"
-     ],
-     "outputs": [
-      "protoporphyrinogen IX"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX"
-    },
-    {
      "name": "PPO reaction",
      "inputs": [
       "protoporphyrinogen IX"
@@ -1220,42 +1065,6 @@
      ],
      "biological_state": "plastidic state",
      "evidence": "an Fe2+ ion is inserted into the Proto IX macrocycle by ferrochelatase to form protoheme (heme b)"
-    },
-    {
-     "name": "Mg-chelatase reaction",
-     "inputs": [
-      "protoporphyrin IX",
-      "Mg2+",
-      "ATP"
-     ],
-     "outputs": [
-      "Mg-Proto IX"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "an Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX. This reaction is catalyzed by Mg-chelatase consisting of the three subuits CHL D, CH IH, and CHL I"
-    },
-    {
-     "name": "Mg-Proto IX methyltransferas reaction",
-     "inputs": [
-      "Mg-Proto IX",
-      "S-adenosyl L-methionine"
-     ],
-     "outputs": [
-      "Mg-Proto IX monomethyl ester"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase, to result in Mg-Proto IX monomethyl ester (Mg-Proto ME)."
-    },
-    {
-     "name": "Mg-Proto ME cyclase reaction",
-     "inputs": [
-      "Mg-Proto IX monomethyl ester"
-     ],
-     "outputs": [
-      "3,8-divinyl-protochlorophyllide"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase"
     },
     {
      "name": "POR reaction",
@@ -1303,17 +1112,6 @@
      "evidence": "Chl a is formed by esterification of MV-Chlide with geranylgeraniol or phytol, which is catalyzed by Chl synthase."
     },
     {
-     "name": "Chlide a oxygenase reaction (Chlide a)",
-     "inputs": [
-      "Chlide a"
-     ],
-     "outputs": [
-      "Chlide b"
-     ],
-     "biological_state": "plastidic state",
-     "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)."
-    },
-    {
      "name": "Chlide a oxygenase reaction (Chl a)",
      "inputs": [
       "Chl a"
@@ -1346,19 +1144,6 @@
      ],
      "biological_state": "plastid state",
      "evidence": "Fe2+ ion is inserted into the Proto IX macrocycle by ferrochelatase to form protoheme"
-    },
-    {
-     "name": "Mg-chelatase reaction",
-     "inputs": [
-      "protoporphyrin IX",
-      "Mg2+",
-      "ATP"
-     ],
-     "outputs": [
-      "Mg-Proto IX"
-     ],
-     "biological_state": "plastid state",
-     "evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX"
     },
     {
      "name": "DVR reaction",
@@ -1432,8 +1217,8 @@
    "pooled_reactions": {
     "base": 5,
     "tip_no_paper": 5,
-    "tip": 5,
-    "counterfactual_undefined_state_is_no_state": 5
+    "strict_before_rulings": 5,
+    "tip": 5
    },
    "orch751_union": {
     "matched": 4,
@@ -1563,7 +1348,7 @@
       "unsupported": 0
      }
     },
-    "tip": {
+    "strict_before_rulings": {
      "gold_reactions": 5,
      "matched": 4,
      "gold_reactions_matched": [
@@ -1587,7 +1372,7 @@
       "unsupported": 0
      }
     },
-    "counterfactual_undefined_state_is_no_state": {
+    "tip": {
      "gold_reactions": 5,
      "matched": 4,
      "gold_reactions_matched": [
@@ -1830,8 +1615,8 @@
    "pooled_reactions": {
     "base": 9,
     "tip_no_paper": 9,
-    "tip": 9,
-    "counterfactual_undefined_state_is_no_state": 9
+    "strict_before_rulings": 9,
+    "tip": 9
    },
    "orch751_union": {
     "matched": 9,
@@ -1977,7 +1762,7 @@
       "unsupported": 0
      }
     },
-    "tip": {
+    "strict_before_rulings": {
      "gold_reactions": 9,
      "matched": 9,
      "gold_reactions_matched": [
@@ -2006,7 +1791,7 @@
       "unsupported": 0
      }
     },
-    "counterfactual_undefined_state_is_no_state": {
+    "tip": {
      "gold_reactions": 9,
      "matched": 9,
      "gold_reactions_matched": [
@@ -2163,7 +1948,9 @@
        "name": "MenH reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "became_survivor": "it states a defined biological_state",
+       "previous_survivor": "MenH reaction"
       }
      ],
      "support": "2/3"
@@ -2199,7 +1986,9 @@
        "name": "MenE reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "became_survivor": "it states a defined biological_state",
+       "previous_survivor": "MenE reaction"
       }
      ],
      "support": "2/3"
@@ -2290,8 +2079,8 @@
      "outputs": [
       "SHCHC"
      ],
-     "biological_state": null,
-     "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
+     "biological_state": "L. lactis intracellular state",
+     "evidence": "d[D]/dt = k_cat_H [MenH][C]/(KM_H+[C]) - k_cat_C [MenC][D]/(KM_C+[D])"
     },
     {
      "name": "MenC reaction",
@@ -2312,8 +2101,8 @@
      "outputs": [
       "OSB-CoA"
      ],
-     "biological_state": null,
-     "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
+     "biological_state": "L. lactis intracellular state",
+     "evidence": "d[E]/dt = ... - k_cat_E [MenE][E]/(KM_E+[E]) and d[F]/dt = ... + k_cat_E [MenE][E]/(KM_E+[E])"
     },
     {
      "name": "MenB reaction",

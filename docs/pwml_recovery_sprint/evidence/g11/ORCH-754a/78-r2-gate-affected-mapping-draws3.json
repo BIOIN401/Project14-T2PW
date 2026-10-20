@@ -1,0 +1,133 @@
+{
+  "label": "r2-gate-affected-mapping-draws3",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754a/78-r2-gate-affected-mapping-draws3.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch754a/78-r2-gate-affected-mapping-draws3-29673",
+    "-rf",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c095_wrapper_superset_identity.py",
+    "tests/test_c122_db_first_alias.py",
+    "tests/test_entity_identity_contracts.py",
+    "tests/test_interactive_curator.py",
+    "tests/test_map_ids.py",
+    "tests/test_map_ids_mapping_lineage.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_pathbank_unknown_fallback.py",
+    "tests/test_protein_export_policy.py",
+    "tests/test_rag_synthesize.py",
+    "tests/test_reference_repair.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_stage2_mapping_boundary.py",
+    "tests/test_streamlit_stage8_export_contract.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a",
+  "started_at": "2026-10-20T17:56:05+00:00",
+  "finished_at": "2026-10-20T17:56:15+00:00",
+  "duration_seconds": 9.293162099987967,
+  "timeout_seconds": 540.0,
+  "root_pid": 671964,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 666744,
+      "name": "python.exe",
+      "ppid": 671964
+    },
+    {
+      "pid": 668864,
+      "name": "git.exe",
+      "ppid": 666744
+    },
+    {
+      "pid": 614760,
+      "name": "git.exe",
+      "ppid": 666744
+    }
+  ],
+  "descendants_terminated": [
+    614760,
+    666744,
+    668864
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 190584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 587540,
+      "name": "python.exe"
+    },
+    {
+      "pid": 588156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 659876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 666176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 668088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 671640,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-754a\\78-r2-gate-affected-mapping-draws3.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a",
+    "repo_head": "6c75112f124cc6938fccbbf4de5e26d46eafee1b",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-754a",
+    "token": "ORCH-754a:659876:100bcdc385dcd550",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
