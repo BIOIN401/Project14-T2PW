@@ -76,10 +76,14 @@ first rewritten by :class:`~t2pw.pipeline.paper_lexicon.PaperLexicon`:
   so rule 7's cofactor-blind key still sees it. Every rewrite is listed in the side file
   (``names_rewritten``), so no original spelling is lost.
 
-Rule 5, support: when 2+ draws succeed every pooled reaction carries ``ensemble_support`` =
-``{"draws": [...], "of": <successful draws>}``, the one key this merge adds to the payload;
-every row of every bucket carries ``support`` and, at 1/N, ``review_required`` in the side
-file. A 1/N row is KEPT -- PRODUCT_CONTRACT § 7: incomplete-but-correct is reviewed, never
+Rule 5, support, narrowed by the product owner on 2026-10-20: the marks go to HUMAN-FACING
+outputs only, because every text the pipeline already produces reaches a model --
+``reaction_summary.txt`` feeds the curator and the enrichment agent, and this merge's
+payload is pasted whole into the Stage-2 prompt. So the payload gains NO key (the schema is
+frozen, as ORCH-750 designed it), and every row of every bucket carries ``support`` and, at
+1/N, ``review_required`` in the side file, which :func:`render_report_text` also writes as
+``stage1_ensemble_report.txt`` for the hand comparison. Nothing reads either file back. A
+1/N row is KEPT -- PRODUCT_CONTRACT § 7: incomplete-but-correct is reviewed, never
 dropped. Rule 6: every collapse is listed on its row in the side file with the rule(s) that
 bridged it (``exact`` -- which includes the cofactor-blind key -- ``abbreviation``,
 ``typo``). Rule 3 (database identity) runs after Stage 6 mapping: see
@@ -105,10 +109,9 @@ logger = logging.getLogger(__name__)
 ENV_VAR = "T2PW_EXTRACTION_DRAWS"
 BOUNDARY_STAGE1_ENSEMBLE = "stage1_ensemble"
 REPORT_NAME = "stage1_ensemble_report.json"
-#: The one payload key the merge adds (rule 5), on pooled reaction rows at N>1 only.
-SUPPORT_KEY = "ensemble_support"
-#: Where :func:`merge_on_mapped_identity` files its record in the mapping report.
+#: :func:`merge_on_mapped_identity`'s record: its return key, and its side file.
 IDENTITY_REPORT_KEY = "ensemble_identity_merge"
+IDENTITY_REPORT_NAME = "ensemble_identity_merge_report.json"
 #: Fields of a row that NAME an entity, rewritten in step with it (rule 4).
 _REFERENCE_FIELDS = {
     "/processes/reactions": ("inputs", "outputs", "enzymes", "modifiers"),
@@ -604,9 +607,9 @@ def merge_draws(payloads: Sequence[Optional[Dict[str, Any]]],
 
     ``paper_text`` switches on D-104 rules 1, 2 and 4 (module doc); without it names are
     keyed exactly as ORCH-752 keyed them. Finding 1's compatibility rule applies either way.
-    Returns ``(merged, report)``: ``merged`` carries no key the draws did not carry except
-    :data:`SUPPORT_KEY` on reactions when more than one draw succeeded; ``report`` is the
-    per-row attribution described in the module doc.
+    Returns ``(merged, report)``: ``merged`` carries no key the draws did not carry -- it is
+    the Stage-2 prompt, so no support mark or merge note may ride on it -- and ``report``
+    is the per-row attribution described in the module doc.
     """
 
     n = len(payloads)
@@ -644,8 +647,6 @@ def merge_draws(payloads: Sequence[Optional[Dict[str, Any]]],
             record["support"] = f"{len(record['draws'])}/{succeeded}"
             if succeeded > 1 and len(record["draws"]) == 1:
                 record["review_required"] = "found by one draw only"
-            if path == _REACTIONS and succeeded > 1 and isinstance(record["_row"], dict):
-                record["_row"][SUPPORT_KEY] = {"draws": list(record["draws"]), "of": succeeded}
         rows = [{k: v for k, v in r.items() if not k.startswith("_")} for r in records]
         buckets[path] = {
             "merged": len(rows),
@@ -691,9 +692,61 @@ def _summary(report: Dict[str, Any], report_path: str) -> Dict[str, Any]:
     }
 
 
+def render_report_text(report: Dict[str, Any]) -> str:
+    """The side file as text a person reads (D-104 rule 5; product-owner ruling 2026-10-20).
+
+    Written ONLY to ``stage1_ensemble_report.txt`` beside the JSON side file: nothing in
+    this repository reads either file back, and no model ever sees them. That is the
+    point -- ``reaction_summary.txt`` feeds the curator and the enrichment agent, and the
+    pooled payload itself is the Stage-2 prompt, so the support marks and merge notes are
+    kept out of both. Reaction rows only. A pure function of ``report``.
+    """
+
+    lexicon = report.get("paper_lexicon") or {}
+    if "abbreviation_pairs" in lexicon:
+        ambiguous = ", ".join(sorted(lexicon.get("ambiguous_abbreviations") or {})) or "none"
+        dictionary = f"{lexicon['abbreviation_pairs']} abbreviation pair(s); ambiguous, bridging nothing: {ambiguous}"
+    else:
+        dictionary = f"not evaluated -- {lexicon.get('reason') or 'no paper text'}"
+    rows = ((report.get("buckets") or {}).get(_REACTIONS) or {}).get("rows") or []
+    lines = [
+        "STAGE-1 ENSEMBLE: POOLED REACTIONS",
+        f"Draws: {report.get('draws_succeeded')} of {report.get('draws_requested')} succeeded"
+        + "".join(f"; draw {f.get('draw')} failed ({f.get('error')})" for f in report.get("failed_draws") or []),
+        f"Paper dictionary: {dictionary}",
+        f"Pooled reactions: {len(rows)} ({sum(1 for r in rows if r.get('review_required'))} found by one draw only)",
+        "",
+    ]
+    for number, row in enumerate(rows, 1):
+        flag = "  -- REVIEW: found by one draw only" if row.get("review_required") else ""
+        lines.append(f"REACTION {number}  [{row.get('support')} draws: {', '.join(map(str, row.get('draws') or []))}]{flag}")
+        lines.append(f"  Name: {row.get('name') or '(unnamed)'}")
+        lines.append(f"  Key:  {row.get('key')}")
+        for merge in row.get("merges") or []:
+            lines.append(f"  Merged draw {merge.get('draw')} row {merge.get('name')!r}: bridged by "
+                         f"{', '.join(merge.get('bridged_by') or [])}")
+        for other in row.get("kept_apart_from") or []:
+            lines.append(f"  Kept apart from {other.get('name')!r} (draws {', '.join(map(str, other.get('draws') or []))}): "
+                         f"{other.get('reason')}")
+        if row.get("cofactors_added"):
+            lines.append(f"  Cofactors added from a merged row: {', '.join(row['cofactors_added'])}")
+        for withheld in row.get("cofactors_withheld") or []:
+            lines.append(f"  Cofactor withheld ({withheld.get('side')}): {withheld.get('cofactor')} -- this row's quote "
+                         f"does not name it; the donor's quote: {withheld.get('donor_evidence')!r}")
+        lines.append("")
+    renames = report.get("names_rewritten") or []
+    lines.append(f"NAMES REWRITTEN ({len(renames)})")
+    for rename in renames:
+        pattern = f", {rename['pattern']}" if rename.get("pattern") else ""
+        lines.append(f"  draw {rename.get('draw')}: {rename.get('from')!r} -> {rename.get('to')!r} "
+                     f"[{', '.join(rename.get('rules') or [])}{pattern}]")
+    return "\n".join(lines) + "\n"
+
+
 def _write_side_file(artifact_dir: Optional[Path], report: Dict[str, Any]) -> str:
-    """Append ``report`` to the run's side file. Never raises: a report that can kill
-    the run it describes is worse than no report. Returns the path written, or ``''``."""
+    """Append ``report`` to the run's side file, and its text rendering to the ``.txt``
+    beside it. Never raises: a report that can kill the run it describes is worse than no
+    report. Returns the JSON path written, or ``''``."""
 
     if artifact_dir is None:
         return ""
@@ -706,6 +759,8 @@ def _write_side_file(artifact_dir: Optional[Path], report: Dict[str, Any]) -> st
         existing.append(report)
         path.write_text(json.dumps(existing, indent=2, ensure_ascii=False, default=str),
                         encoding="utf-8")
+        with path.with_suffix(".txt").open("a", encoding="utf-8") as text:
+            text.write(render_report_text(report) + "\n")
     except (OSError, ValueError, TypeError) as exc:
         logger.warning("stage1 ensemble report could not be written to %s: %s", path, exc)
         return ""
@@ -819,18 +874,34 @@ def _account_locks(payload: Dict[str, Any], quarantined: List[Dict[str, Any]]) -
         }
 
 
+def _pooled_draws() -> int:
+    """N for the run in progress, or 0 when its Stage 1 did not pool (see
+    :func:`merge_on_mapped_identity`)."""
+
+    try:
+        n = extraction_draws()
+    except ValueError:
+        return 0
+    if n <= 1:
+        return 0
+    pooled = [b for b in current_diagnostics().boundaries if b.get("boundary") == BOUNDARY_STAGE1_ENSEMBLE]
+    succeeded = max((int((b.get("ensemble") or {}).get("draws_succeeded") or 0) for b in pooled), default=0)
+    return n if succeeded > 1 else 0
+
+
 def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
     """D-104 rule 3: after Stage 6 mapping, two reactions whose defining participants
     resolve to the same identities are one reaction. Mutates ``payload`` in place.
 
     Called once, at the end of ``map_ids.map_payload`` -- after identities are assigned
-    and admitted, before the canonical freeze (merge rule 8). Applies only to a payload a
-    pooled Stage 1 produced: one whose reactions carry :data:`SUPPORT_KEY` out of more
-    than one draw. N is a fact about the run that made the payload, not about the process
-    mapping it, so ``T2PW_EXTRACTION_DRAWS`` is deliberately NOT read here: re-mapping a
-    saved N=1 payload under a ``.env`` that says 3 must not move it. Otherwise (every
-    N=1 payload) it returns ``{}`` and touches nothing; when it applies it returns
-    ``{IDENTITY_REPORT_KEY: record}``.
+    and admitted, before the canonical freeze (merge rule 8). Applies only when THIS run's
+    Stage 1 pooled (:func:`_pooled_draws`): ``T2PW_EXTRACTION_DRAWS`` > 1 AND the run's
+    diagnostics hold the ``stage1_ensemble`` boundary of 2+ successful draws. Both, because
+    the payload can carry no marker (it is a model prompt; module doc) and the variable
+    alone would merge a saved N=1 payload re-mapped under a ``.env`` that says 3.
+    Otherwise it returns ``{}`` and touches nothing, so N=1 output does not move; when it
+    applies it returns ``{IDENTITY_REPORT_KEY: record}`` and files the record in the run's
+    side files (:func:`_write_identity_side_file`) -- never in the mapping report.
 
     Per participant, identity = the admitted accessions of the entity row it names
     (:func:`_admitted_ids`; rows sharing an accession of one kind are one identity, and a
@@ -842,18 +913,14 @@ def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
     from Mg. Rows sharing a key merge only when :func:`_conflict` finds them compatible --
     cofactor roles, enzymes (by identity) and biological state, exactly as at Stage 1;
     a conflicting pair stays two rows and is listed under ``refused``. The first row
-    survives with its own evidence and participants, and gains the later row's draws and
-    each cofactor its own quote supports; a merged-away locked reaction is filed as a
+    survives with its own evidence and participants, and gains each cofactor of the later
+    row that its own quote supports; a merged-away locked reaction is filed as a
     quarantined duplicate. A row a ``reaction_coupled_transport`` names is never merged
     away, because its reference would dangle.
     """
 
-    if not isinstance(payload, dict):
-        return {}
-    pooled = [r[SUPPORT_KEY].get("of") for r in ((payload.get("processes") or {}).get("reactions") or [])
-              if isinstance(r, dict) and isinstance(r.get(SUPPORT_KEY), dict)]
-    n = max((of for of in pooled if isinstance(of, int) and not isinstance(of, bool)), default=0)
-    if n <= 1:
+    n = _pooled_draws()
+    if n <= 1 or not isinstance(payload, dict):
         return {}
     from t2pw.mapping.identity_admission import entity_kind_class  # function-local: layering
 
@@ -947,11 +1014,6 @@ def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
             continue
         slot[1] = _absorb(slot[1], profile)
         added, withheld = _donate_cofactors(first, row)
-        mine, theirs = first.get(SUPPORT_KEY), row.get(SUPPORT_KEY)
-        if isinstance(theirs, dict):
-            mine = mine if isinstance(mine, dict) else {"draws": [], "of": 0}
-            first[SUPPORT_KEY] = {"draws": sorted(set(mine.get("draws") or []) | set(theirs.get("draws") or [])),
-                                  "of": max(int(mine.get("of") or 0), int(theirs.get("of") or 0))}
         merges.append({
             "survivor": _row_name(first), "merged": _row_name(row), "json_pointer": f"{path}/{index}",
             "bridged_by": RULE_EXACT if row_key(path, row) == row_key(path, first) else RULE_DATABASE_ID,
@@ -969,7 +1031,7 @@ def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
         processes["reactions"] = kept
     if quarantined:
         _account_locks(payload, quarantined)
-    return {IDENTITY_REPORT_KEY: {
+    record = {
         "draws": n,
         "reactions_before": len(reactions),
         "reactions_after": len(kept),
@@ -977,4 +1039,30 @@ def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
         "conflicting_identity_groups": len(conflicted),
         "merges": merges,
         "refused": refused,
-    }}
+    }
+    _write_identity_side_file(current_diagnostics().artifact_dir, record)
+    return {IDENTITY_REPORT_KEY: record}
+
+
+def _write_identity_side_file(artifact_dir: Optional[Path], record: Dict[str, Any]) -> None:
+    """File one rule-3 pass beside the Stage-1 side file: appended to
+    ``ensemble_identity_merge_report.json`` and, as text, to ``stage1_ensemble_report.txt``.
+    NOT in the mapping report: ``interactive_curator.compact_mapping_misses`` walks that
+    report into a model prompt (ruling 2026-10-20). Never raises."""
+
+    if artifact_dir is None:
+        return
+    path = Path(artifact_dir) / IDENTITY_REPORT_NAME
+    lines = [f"DATABASE-IDENTITY MERGE (rule 3, after mapping): {record['reactions_before']} -> "
+             f"{record['reactions_after']} reactions"]
+    lines += [f"  {m['survivor']!r} <- {m['merged']!r}: bridged by {m['bridged_by']}" for m in record["merges"]]
+    lines += [f"  kept apart: {r['name']!r} from {r['would_merge_into']!r}: {r['reason']}" for r in record["refused"]]
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        existing = json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
+        existing = existing if isinstance(existing, list) else [existing]
+        path.write_text(json.dumps([*existing, record], indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+        with (Path(artifact_dir) / REPORT_NAME).with_suffix(".txt").open("a", encoding="utf-8") as text:
+            text.write("\n".join(lines) + "\n\n")
+    except (OSError, ValueError, TypeError) as exc:
+        logger.warning("ensemble identity merge record could not be written to %s: %s", path, exc)

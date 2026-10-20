@@ -251,21 +251,12 @@ def test_three_draws_union_with_dedup_first_occurrence_wins(no_env: None, monkey
     assert all("raw" in a for a in attempts)
 
 
-#: The one key the merge adds (ORCH-754a, D-104 rule 5: every pooled reaction carries its
-#: support count). Spelled here, not imported, so this file collects on the base module.
-SUPPORT = "ensemble_support"
-SUPPORT_PATHS = {f"/processes/reactions/{SUPPORT}", f"/processes/reactions/{SUPPORT}/draws",
-                 f"/processes/reactions/{SUPPORT}/of"}
-
-
 def test_merge_adds_no_key_the_draws_did_not_carry() -> None:
-    # Pin moved deliberately by ORCH-754a: D-104 rule 5 puts the support count ON the row.
     merged, _report = merge_draws([DRAW_1, DRAW_2, DRAW_3])
-    assert _key_paths(merged) <= _key_paths(DRAW_1) | _key_paths(DRAW_2) | _key_paths(DRAW_3) | SUPPORT_PATHS
-    # and every row object is a draw's own row, verbatim apart from that count
+    assert _key_paths(merged) <= _key_paths(DRAW_1) | _key_paths(DRAW_2) | _key_paths(DRAW_3)
+    # and every row object is a draw's own row, verbatim
     for row in _reactions(merged):
-        bare = {k: v for k, v in row.items() if k != SUPPORT}
-        assert any(bare in _reactions(d) for d in (DRAW_1, DRAW_2, DRAW_3))
+        assert any(row in _reactions(d) for d in (DRAW_1, DRAW_2, DRAW_3))
 
 
 def test_single_payload_merge_is_identity() -> None:

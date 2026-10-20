@@ -1,10 +1,13 @@
 """NEW ACCEPTANCE TESTS for ORCH-754a: the paper as the dictionary of a pooled extraction.
 
 G9 labelling: everything here is a NEW capability ruled by the product owner on 2026-10-19
-(D-104) -- Schwartz-Hearst abbreviation pairs, paper-relative typo snapping, the long-form
-rewrite, the per-row support count, the support line in the text summary, and the
-post-mapping database-identity merge -- so these are explicitly labelled new acceptance
-tests and claim no base-commit failure. The CORRECTIONS of delivered behaviour (the
+(D-104) and narrowed on 2026-10-20 -- Schwartz-Hearst abbreviation pairs, paper-relative
+typo snapping, the long-form rewrite, the per-row support count in the side file and its
+text rendering, the post-mapping database-identity merge, and the suite's isolation from
+``.env`` -- so these are explicitly labelled new acceptance tests and claim no base-commit
+failure. The one PRESERVATION claim -- what a model is shown is base's bytes -- is checked
+against goldens rendered by the base modules themselves
+(``evidence/orch754a_llm_input_base_golden.py``). The CORRECTIONS of delivered behaviour (the
 chlorophyll inflation, finding 1's chimeric rows) live in ``tests/test_stage_one_ensemble.py``
 with their base-module proofs.
 
@@ -28,17 +31,21 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from t2pw.pipeline import extraction_diagnostics as diag  # noqa: E402
 from t2pw.pipeline import reaction_summary  # noqa: E402
 from t2pw.pipeline.draft_graph import build_draft_graph  # noqa: E402
 from t2pw.pipeline.paper_lexicon import PaperLexicon, abbreviation_pairs  # noqa: E402
-from t2pw.pipeline.pipeline import clean_stage_one_with_report  # noqa: E402
 from t2pw.pipeline.stage_one_ensemble import (  # noqa: E402
+    BOUNDARY_STAGE1_ENSEMBLE,
     ENV_VAR,
     IDENTITY_REPORT_KEY,
-    SUPPORT_KEY,
+    REPORT_NAME,
     merge_draws,
     merge_on_mapped_identity,
+    render_report_text,
 )
+
+FIXTURES = ROOT / "tests" / "fixtures" / "orch754a"
 
 PAPER = (
     "Glu-tRNA is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR). "
@@ -140,7 +147,6 @@ def test_abbreviation_spellings_pool_into_one_long_form_row() -> None:
     [row] = _reactions(merged)
     assert (row["inputs"], row["outputs"]) == (["Glu 1-semialdehyde"], ["5-aminolevulinic acid"])
     assert row["evidence"] == "GSA is converted to ALA"  # verbatim, never rewritten
-    assert row[SUPPORT_KEY] == {"draws": [1, 2], "of": 2}
     assert [c["name"] for c in merged["entities"]["compounds"]] == ["Glu 1-semialdehyde", "5-aminolevulinic acid"]
     assert merged["element_locations"]["compound_locations"][0]["compound"] == "Glu 1-semialdehyde"
     assert merged["processes"]["interactions"][0]["entity_1"] == "Glu 1-semialdehyde"
@@ -165,10 +171,10 @@ def test_currency_is_never_rewritten_even_when_the_paper_defines_it() -> None:
     assert _reactions(merged)[0]["inputs"] == ["X1", "ATP"]
 
 
-def test_a_one_draw_row_is_kept_and_flagged_for_review() -> None:
+def test_a_one_draw_row_is_kept_and_flagged_for_review_in_the_side_file() -> None:
     merged, report = merge_draws([_draw([{"name": "only", "inputs": ["X1"], "outputs": ["X2"], "evidence": "q"}]),
                                   _draw([]), _draw([])], paper_text=PAPER)
-    assert _reactions(merged)[0][SUPPORT_KEY] == {"draws": [1], "of": 3}
+    assert [r["name"] for r in _reactions(merged)] == ["only"]  # kept, never dropped
     [rec] = report["buckets"]["/processes/reactions"]["rows"]
     assert rec["support"] == "1/3" and rec["review_required"] == "found by one draw only"
 
@@ -219,33 +225,64 @@ def test_an_undefined_state_cannot_be_compared_and_fails_closed() -> None:
 # --------------------------------------------------------------------------- rule 5 downstream
 
 
-def test_cleaning_carries_the_support_count_and_only_its_exact_shape() -> None:
-    row = {"name": "r", "inputs": ["A"], "outputs": ["B"], "evidence": "q"}
-    payload = {"entities": {}, "processes": {"reactions": [
-        {**row, SUPPORT_KEY: {"draws": [1, 3], "of": 3}},
-        {**row, "name": "r2", SUPPORT_KEY: {"draws": [1], "of": 1}},      # N=1 can never carry it
-        {**row, "name": "r3", SUPPORT_KEY: "2/3"},
-    ]}}
-    cleaned, _ = clean_stage_one_with_report(payload)
-    assert [r.get(SUPPORT_KEY) for r in _reactions(cleaned)] == [{"draws": [1, 3], "of": 3}, None, None]
+POOLED_FIXTURE = FIXTURES / "chlorophyll_pooled_payload.json"
+LLM_GOLDENS = [("chlorophyll_draw1_payload.json", "chlorophyll_draw1_reaction_summary.base.txt"),
+               ("chlorophyll_pooled_payload.json", "chlorophyll_pooled_reaction_summary.base.txt")]
 
 
-def test_the_text_summary_shows_support_and_flags_one_draw_rows() -> None:
-    payload = {"entities": {}, "processes": {"reactions": [
-        {"name": "two", "inputs": ["A"], "outputs": ["B"], SUPPORT_KEY: {"draws": [1, 2], "of": 3}},
-        {"name": "one", "inputs": ["B"], "outputs": ["C"], SUPPORT_KEY: {"draws": [3], "of": 3}},
-    ]}}
-    graph = build_draft_graph(payload)
-    text = reaction_summary.generate_reaction_summary(graph, {}, payload=payload)
-    assert "  Support:   2/3 draws\n" in text
-    assert "  Support:   1/3 draws -- REVIEW: only one draw produced this reaction" in text
-    # Without the key -- every N=1 run -- not one line changes.
-    bare = deepcopy(payload)
-    for r in _reactions(bare):
-        r.pop(SUPPORT_KEY)
-    assert reaction_summary.generate_reaction_summary(build_draft_graph(bare), {}, payload=bare) == \
-        reaction_summary.generate_reaction_summary(build_draft_graph(bare), {})
-    assert "Support:" not in reaction_summary.generate_reaction_summary(build_draft_graph(bare), {})
+@pytest.mark.parametrize("payload_name, golden_name", LLM_GOLDENS)
+def test_what_a_model_reads_is_the_bases_bytes(payload_name: str, golden_name: str) -> None:
+    """Ruling 2026-10-20. ``generate_reaction_summary`` is the text the curator and the
+    enrichment agent receive; for an N=1 payload and for a pooled one it must be byte-for-byte
+    what the BASE modules render (goldens: ``evidence/orch754a_llm_input_base_golden.py``)."""
+
+    payload = json.loads((FIXTURES / payload_name).read_text(encoding="utf-8"))
+    text = reaction_summary.generate_reaction_summary(build_draft_graph(payload), {})
+    assert text == (FIXTURES / golden_name).read_text(encoding="utf-8")
+    assert "Support" not in text and "REVIEW" not in text and "bridged" not in text
+
+
+def test_the_pooled_payload_a_model_reads_carries_no_mark() -> None:
+    """The pooled payload is pasted whole into the Stage-2 prompt (``json.dumps(stage_one)``)."""
+
+    evidence = ROOT / "docs" / "pwml_recovery_sprint" / "evidence"
+    draws = [json.loads((evidence / "orch752_chlorophyll_payloads" / f"control__run{i}__payload.json")
+                        .read_text(encoding="utf-8")) for i in (1, 2, 3)]
+    paper = (evidence / "orch754a_inputs" / "papers" / "PMC5130987.txt").read_text(encoding="utf-8")
+    merged, _report = merge_draws(draws, paper_text=paper)
+    # The golden's fixture IS the delivered merge (interactions, lane ORCH-754b's, left out).
+    reactions_only = {**merged, "processes": {k: v for k, v in merged["processes"].items() if k != "interactions"}}
+    assert reactions_only == json.loads(POOLED_FIXTURE.read_text(encoding="utf-8"))
+    prompt = json.dumps(merged, indent=2, ensure_ascii=False)
+    for mark in ('"support"', '"review_required"', '"merges"', '"bridged_by"', '"kept_apart_from"',
+                 '"cofactors_withheld"', '"names_rewritten"', "ensemble"):
+        assert mark not in prompt, mark
+
+
+def test_the_human_side_file_text_carries_the_marks(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from t2pw.pipeline import pipeline as pipeline_mod
+
+    plain = {"name": "plain", "inputs": ["GSA"], "outputs": ["X2"], "evidence": "GSA gives X2"}
+    long_form = {"name": "long", "inputs": ["Glu 1-semialdehyde (GSA)"], "outputs": ["X2"], "evidence": "q"}
+    lonely = {"name": "lonely", "inputs": ["X3"], "outputs": ["X4"], "evidence": "q"}
+    nadp = {"name": "nadp", "inputs": ["GSA", "NADP+"], "outputs": ["X2"], "evidence": "q"}
+    nad = {"name": "nad", "inputs": ["GSA", "NAD+"], "outputs": ["X2"], "evidence": "q"}
+    calls = iter([_draw([plain, nadp]), _draw([long_form, lonely]), _draw([nad])])
+    monkeypatch.setattr(pipeline_mod, "_run_json_stage", lambda **_: (deepcopy(next(calls)), []))
+    monkeypatch.setenv(ENV_VAR, "3")
+    diag.activate(run_id="orch754a", artifact_dir=tmp_path)
+    try:
+        pipeline_mod.run_extraction_pipeline(PAPER)
+    finally:
+        diag.deactivate()
+    text = (tmp_path / REPORT_NAME).with_suffix(".txt").read_text(encoding="utf-8")
+    [report] = json.loads((tmp_path / REPORT_NAME).read_text(encoding="utf-8"))
+    assert text == render_report_text(report) + "\n"
+    assert "REACTION 1  [2/3 draws: 1, 2]" in text
+    assert "Merged draw 2 row 'long': bridged by abbreviation" in text
+    assert "[1/3 draws: 2]  -- REVIEW: found by one draw only" in text
+    assert "inputs: different nicotinamide cofactors {nadp} vs {nad}" in text
+    assert "draw 1: 'GSA' -> 'Glu 1-semialdehyde' [abbreviation, long (SF)]" in text
 
 
 # --------------------------------------------------------------------------- rule 3
@@ -260,34 +297,43 @@ def _row(name: str, ids: Any = None, **meta: Any) -> Dict[str, Any]:
 
 
 def _mapped(reactions: List[Dict[str, Any]], compounds: List[Dict[str, Any]], **extra: Any) -> Dict[str, Any]:
-    """A mapped payload a pooled Stage 1 produced: every reaction carries a support count."""
-
-    rows = deepcopy(reactions)
-    for i, row in enumerate(rows):
-        row.setdefault(SUPPORT_KEY, {"draws": [i % 3 + 1], "of": 3})
-    return {"entities": {"compounds": compounds}, "processes": {"reactions": rows}, **extra}
+    return {"entities": {"compounds": compounds}, "processes": {"reactions": deepcopy(reactions)}, **extra}
 
 
-# Rule 3 reads N from the payload's support counts (``_mapped``), never from the environment.
+def _record_pooled_stage1(succeeded: int = 3) -> None:
+    diag.current().record_boundary(stage="extraction", boundary=BOUNDARY_STAGE1_ENSEMBLE, attempts=3,
+                                   ensemble={"draws_succeeded": succeeded})
+
+
+@pytest.fixture
+def pooled_run(monkeypatch: pytest.MonkeyPatch) -> Any:
+    """A run whose Stage 1 pooled three draws: the variable says 3 AND the run's diagnostics
+    hold the stage1_ensemble boundary. Rule 3 needs both (``_pooled_draws``)."""
+
+    monkeypatch.setenv(ENV_VAR, "3")
+    diag.activate(run_id="orch754a-rule3")
+    _record_pooled_stage1()
+    yield
+    diag.deactivate()
 
 
 HEME = {"chebi": "CHEBI:17627"}
-FERRO = [{"name": "ferro A", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["protoheme"], "evidence": "q1",
-          SUPPORT_KEY: {"draws": [1], "of": 3}},
-         {"name": "ferro B", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["heme b"], "evidence": "q3",
-          SUPPORT_KEY: {"draws": [3], "of": 3}}]
+FERRO = [{"name": "ferro A", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["protoheme"], "evidence": "q1"},
+         {"name": "ferro B", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["heme b"], "evidence": "q3"}]
 
 
+@pytest.mark.usefixtures("pooled_run")
 def test_rule3_synonyms_with_one_admitted_id_merge() -> None:
     payload = _mapped(FERRO, [_row("protoporphyrin IX", {"chebi": "CHEBI:15430"}), _row("Fe2+", {"chebi": "CHEBI:29033"}),
                               _row("protoheme", HEME), _row("heme b", HEME)])
     report = merge_on_mapped_identity(payload)[IDENTITY_REPORT_KEY]
     [row] = _reactions(payload)
-    assert (row["name"], row["evidence"], row[SUPPORT_KEY]) == ("ferro A", "q1", {"draws": [1, 3], "of": 3})
+    assert (row["name"], row["evidence"]) == ("ferro A", "q1")
     assert [m["bridged_by"] for m in report["merges"]] == ["database-id"]
     assert (report["reactions_before"], report["reactions_after"]) == (2, 1)
 
 
+@pytest.mark.usefixtures("pooled_run")
 def test_rule3_same_name_with_different_ids_never_merges() -> None:
     rows = [{"name": "a", "inputs": ["Heme"], "outputs": ["X1"], "evidence": "q"},
             {"name": "b", "inputs": ["heme"], "outputs": ["X1"], "evidence": "q"}]
@@ -296,6 +342,7 @@ def test_rule3_same_name_with_different_ids_never_merges() -> None:
     assert [r["name"] for r in _reactions(payload)] == ["a", "b"]
 
 
+@pytest.mark.usefixtures("pooled_run")
 def test_rule3_without_an_id_the_identity_is_the_long_form_stage1_wrote() -> None:
     pooled, _ = merge_draws([_draw([{"name": "a", "inputs": ["GSA"], "outputs": ["X1"], "evidence": "q"}]),
                              _draw([{"name": "b", "inputs": ["Glu 1-semialdehyde (GSA)"], "outputs": ["X1"],
@@ -318,12 +365,14 @@ def test_rule3_without_an_id_the_identity_is_the_long_form_stage1_wrote() -> Non
     {"mapped_ids": HEME},                                                                          # no mapping record
     {"rejected_mapped_ids": HEME, "mapping_meta": {"confidence": 1.0}},                            # withheld
 ], ids=["candidate", "unresolved", "placeholder", "best_effort", "low_confidence", "unrecorded", "withheld"])
+@pytest.mark.usefixtures("pooled_run")
 def test_rule3_provisional_ids_never_merge(weak: Dict[str, Any]) -> None:
     payload = _mapped(FERRO, [_row("protoheme", HEME), {"name": "heme b", **deepcopy(weak)}])
     report = merge_on_mapped_identity(payload)[IDENTITY_REPORT_KEY]
     assert len(_reactions(payload)) == 2 and report["merges"] == []
 
 
+@pytest.mark.usefixtures("pooled_run")
 def test_rule3_the_chelatase_metal_still_separates_fe_from_mg() -> None:
     compounds = [_row("Proto IX", {"chebi": "CHEBI:15430"}), _row("protoporphyrin IX", {"chebi": "CHEBI:15430"}),
                  _row("Fe2+", {"chebi": "CHEBI:29033"}), _row("Mg2+", {"chebi": "CHEBI:18420"}),
@@ -343,6 +392,7 @@ def test_rule3_the_chelatase_metal_still_separates_fe_from_mg() -> None:
     assert [r["name"] for r in _reactions(payload)] == ["Fe-chelatase", "Mg-chelatase", "metal only Fe", "metal only Mg"]
 
 
+@pytest.mark.usefixtures("pooled_run")
 def test_rule3_applies_the_same_compatibility_test() -> None:
     rows = [{"name": "IDH3", "inputs": ["isocitrate", "NAD+"], "outputs": ["2-oxoglutarate", "NADH"], "evidence": "q"},
             {"name": "IDH1", "inputs": ["isocitric acid", "NADP+"], "outputs": ["2-oxoglutarate", "NADPH"], "evidence": "q"}]
@@ -352,6 +402,7 @@ def test_rule3_applies_the_same_compatibility_test() -> None:
     assert "nicotinamide" in report["refused"][0]["reason"]
 
 
+@pytest.mark.usefixtures("pooled_run")
 def test_rule3_files_a_merged_away_lock_and_keeps_every_lock_accounted() -> None:
     rows = deepcopy(FERRO)
     rows[0]["locked_reaction_id"], rows[1]["locked_reaction_id"] = "L1", "L2"
@@ -363,6 +414,7 @@ def test_rule3_files_a_merged_away_lock_and_keeps_every_lock_accounted() -> None
     assert payload["locked_reaction_filter_report"]["unaccounted_locked_reactions"] == 0
 
 
+@pytest.mark.usefixtures("pooled_run")
 def test_rule3_never_merges_away_a_row_a_coupled_transport_names() -> None:
     payload = _mapped(FERRO, [_row("protoheme", HEME), _row("heme b", HEME)])
     payload["processes"]["reaction_coupled_transports"] = [{"reaction": "ferro B", "transport": "t"}]
@@ -370,22 +422,26 @@ def test_rule3_never_merges_away_a_row_a_coupled_transport_names() -> None:
     assert len(_reactions(payload)) == 2 and report["refused"][0]["reason"] == "named by a reaction_coupled_transport"
 
 
-def test_rule3_never_touches_a_single_draw_payload_whatever_the_environment(monkeypatch: pytest.MonkeyPatch) -> None:
-    payload = _mapped(FERRO, [_row("protoheme", HEME), _row("heme b", HEME)])
-    for row in _reactions(payload):
-        row.pop(SUPPORT_KEY)  # an N=1 payload: Stage 1 never stamps one
-    single_of_one = deepcopy(payload)
-    for row in _reactions(single_of_one):
-        row[SUPPORT_KEY] = {"draws": [1], "of": 1}
-    for candidate in (payload, single_of_one):
-        before = json.dumps(candidate, sort_keys=True)
-        for value in (None, "1", "3"):  # a .env saying 3 must not move a saved N=1 payload
-            if value is None:
-                monkeypatch.delenv(ENV_VAR, raising=False)
-            else:
-                monkeypatch.setenv(ENV_VAR, value)
-            assert merge_on_mapped_identity(candidate) == {}
-            assert json.dumps(candidate, sort_keys=True) == before
+@pytest.mark.parametrize("draws_env, recorded", [(None, 3), ("1", 3), ("3", None), ("3", 1), ("garbage", 3)],
+                         ids=["env_unset", "env_one", "stage1_never_pooled", "one_draw_succeeded", "env_invalid"])
+def test_rule3_touches_nothing_unless_this_run_pooled(monkeypatch: pytest.MonkeyPatch, draws_env: Any,
+                                                      recorded: Any) -> None:
+    """N=1 output never moves -- including a saved N=1 payload re-mapped under a .env of 3."""
+
+    if draws_env is None:
+        monkeypatch.delenv(ENV_VAR, raising=False)
+    else:
+        monkeypatch.setenv(ENV_VAR, draws_env)
+    diag.activate(run_id="orch754a-n1")
+    try:
+        if recorded is not None:
+            _record_pooled_stage1(recorded)
+        payload = _mapped(FERRO, [_row("protoheme", HEME), _row("heme b", HEME)])
+        before = json.dumps(payload, sort_keys=True)
+        assert merge_on_mapped_identity(payload) == {}
+        assert json.dumps(payload, sort_keys=True) == before
+    finally:
+        diag.deactivate()
 
 
 def _map_offline(payload: Dict[str, Any], tmp_path: Path) -> Dict[str, Any]:
@@ -401,17 +457,27 @@ def _map_offline(payload: Dict[str, Any], tmp_path: Path) -> Dict[str, Any]:
         return map_ids.map_payload(payload, cache_path=tmp_path / "cache.json", id_source="db", use_cache=False)
 
 
-def test_map_payload_runs_rule3_last_and_only_on_a_pooled_payload(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_map_payload_runs_rule3_last_and_only_when_the_run_pooled(monkeypatch: pytest.MonkeyPatch,
+                                                                   tmp_path: Path) -> None:
     rows = [{"name": "a", "inputs": ["X1"], "outputs": ["X2"], "evidence": "q"},
             {"name": "b", "inputs": ["x1"], "outputs": ["X2"], "evidence": "q"}]
+    payload = _mapped(rows, [{"name": "X1"}, {"name": "X2"}])
     monkeypatch.setenv(ENV_VAR, "3")
-    single = _map_offline({"entities": {"compounds": [{"name": "X1"}, {"name": "X2"}]},
-                           "processes": {"reactions": deepcopy(rows)}}, tmp_path)
-    assert [r["name"] for r in _reactions(single["payload"])] == ["a", "b"]
-    assert IDENTITY_REPORT_KEY not in single["report"]
-    pooled = _map_offline(_mapped(rows, [{"name": "X1"}, {"name": "X2"}]), tmp_path)
+    diag.activate(run_id="orch754a-wiring", artifact_dir=tmp_path / "diag")
+    try:
+        single = _map_offline(deepcopy(payload), tmp_path)  # the variable alone is not enough
+        assert [r["name"] for r in _reactions(single["payload"])] == ["a", "b"]
+        _record_pooled_stage1()
+        pooled = _map_offline(deepcopy(payload), tmp_path)
+    finally:
+        diag.deactivate()
+    # The record goes to the side files, never into the mapping report a model can read.
+    assert IDENTITY_REPORT_KEY not in json.dumps(pooled["report"])
+    [record] = json.loads((tmp_path / "diag" / "ensemble_identity_merge_report.json").read_text(encoding="utf-8"))
+    assert [m["bridged_by"] for m in record["merges"]] == ["exact"]
+    assert "DATABASE-IDENTITY MERGE (rule 3, after mapping): 2 -> 1 reactions" in (
+        tmp_path / "diag" / "stage1_ensemble_report.txt").read_text(encoding="utf-8")
     assert [r["name"] for r in _reactions(pooled["payload"])] == ["a"]
-    assert pooled["report"][IDENTITY_REPORT_KEY]["merges"][0]["bridged_by"] == "exact"
 
 
 # --------------------------------------------------------------------------- finding 4: the suite ignores .env's draw count
