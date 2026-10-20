@@ -57,7 +57,8 @@ PAPER = (
     "Energy comes from adenosine triphosphate (ATP). A protein-protein interaction (PPI) "
     "screen. Heme oxygenase releases biliverdin from heme. "
     "Hexokinase gives glucose-6-phosphate; alpha-ketoglutarate, sulfate, maltose, ferrocyanide "
-    "and the synthetic pair glucuronate and glacuronate also occur."
+    "and the synthetic pair glucuronate and glacuronate also occur. "
+    "Lookalikes: octanoate, sulfonate, hexanoate, cysteine and erythrose."
 )
 
 
@@ -152,7 +153,8 @@ def test_abbreviation_spellings_pool_into_one_long_form_row() -> None:
     assert merged["element_locations"]["compound_locations"][0]["compound"] == "Glu 1-semialdehyde"
     assert merged["processes"]["interactions"][0]["entity_1"] == "Glu 1-semialdehyde"
     [rec] = report["buckets"]["/processes/reactions"]["rows"]
-    assert rec["support"] == "2/2" and rec["merges"] == [{"draw": 2, "name": "r2", "bridged_by": ["abbreviation"]}]
+    assert rec["support"] == "2/2" and rec["merges"] == [{"draw": 2, "name": "r2", "bridged_by": ["abbreviation"],
+                                                         "evidence": d2["processes"]["reactions"][0]["evidence"]}]
     spellings = {(r["draw"], r["from"]) for r in report["names_rewritten"]}
     assert {(1, "GSA"), (1, "ALA"), (2, "Glu 1-semialdehyde (GSA)"), (2, "5-aminolevulinic acid (ALA)")} <= spellings
     assert d1["processes"]["reactions"][0]["inputs"] == ["GSA"]  # the draw itself is never touched
@@ -201,7 +203,7 @@ def test_a_row_kept_apart_records_why() -> None:
     _merged, report = merge_draws([_draw([a]), _draw([b])])
     rows = report["buckets"]["/processes/reactions"]["rows"]
     assert [r["name"] for r in rows] == ["a", "b"]
-    assert "different nicotinamide cofactors" in rows[1]["kept_apart_from"][0]["reason"]
+    assert rows[1]["kept_apart_from"][0]["reason"] == "inputs: cofactors {nad} vs {nadp} -- each names one the other lacks"
 
 
 def test_a_row_compatible_with_two_conflicting_rows_cannot_join_them() -> None:
@@ -273,19 +275,32 @@ def test_ruling_q2_mg_chelatase_and_gun4_merge_and_keep_gun4() -> None:
     assert [m["entity"] for m in row["modifiers"]] == ["Mg-chelatase", "GUN4"]
     assert row["evidence"] == large["evidence"]
     [rec] = report["buckets"]["/processes/reactions"]["rows"]
-    assert rec["merges"][0]["became_survivor"] == "it names the larger enzyme set"
+    [merge] = rec["merges"]
+    assert merge["became_survivor"] == "it names the larger enzyme set"
+    # Review N5 (probe p7): the displaced survivor's quote is kept in the side file and its text.
+    assert merge["previous_survivor_evidence"] == small["evidence"] and merge["evidence"] == large["evidence"]
+    assert rec["enzymes_kept"] == [{"enzyme": "GUN4", "supporting_quote": large["evidence"]}]
+    assert f"the displaced survivor's quote: {small['evidence']!r}" in render_report_text(report)
 
 
-def test_ruling_q2_an_extra_enzyme_no_quote_names_is_withheld() -> None:
-    located = {"name": "located", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "E1"}],
-               "biological_state": "plastid state", "evidence": "E1 makes X2"}
-    larger = {"name": "larger", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "E1"}, {"entity": "E3"}],
-              "evidence": "E1 makes X2"}  # names E3 nowhere
-    merged, report = merge_draws([_draw([located], biological_states=STATES), _draw([larger])])
-    [row] = _reactions(merged)
-    assert [e["entity"] for e in row["enzymes"]] == ["E1"]
-    [rec] = report["buckets"]["/processes/reactions"]["rows"]
-    assert rec["enzymes_withheld"] == [{"enzyme": "E3", "donor_evidence": "E1 makes X2"}]
+@pytest.mark.parametrize("survivor_first", [True, False], ids=["smaller_first", "larger_first"])
+def test_review_b2_an_extra_enzyme_no_quote_names_refuses_the_merge(survivor_first: bool) -> None:
+    """Review B2 (probe p6): whichever row would survive, an extra enzyme that no verbatim
+    quote on either row names keeps the rows apart -- fail closed, nothing lost."""
+
+    small = {"name": "small", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "EnzA"}],
+             "evidence": "EnzA converts X1 to X2"}
+    large = {"name": "large", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "EnzA"}, {"entity": "EnzB"}],
+             "evidence": "EnzA converts X1 to X2"}  # names EnzB nowhere
+    order = [small, large] if survivor_first else [large, small]
+    merged, report = merge_draws([_draw([r]) for r in order])
+    assert sorted(r["name"] for r in _reactions(merged)) == ["large", "small"]
+    reason = report["buckets"]["/processes/reactions"]["rows"][1]["kept_apart_from"][0]["reason"]
+    assert reason == "enzyme 'EnzB' of the larger set is named by no quote on either row"
+    # A quote on the OTHER row naming the extra enzyme is enough.
+    small_naming = {**small, "evidence": "EnzA, helped by EnzB, converts X1 to X2"}
+    merged, report = merge_draws([_draw([small_naming]), _draw([large])])
+    assert [r["name"] for r in _reactions(merged)] == ["large"]
 
 
 def test_ruling_q2_overlapping_enzyme_sets_that_do_not_nest_stay_apart() -> None:
@@ -295,6 +310,68 @@ def test_ruling_q2_overlapping_enzyme_sets_that_do_not_nest_stay_apart() -> None
     assert [r["name"] for r in _reactions(merged)] == ["ab", "ac"]
     assert report["buckets"]["/processes/reactions"]["rows"][1]["kept_apart_from"][0]["reason"] == \
         "different enzymes {a, b1} vs {a, c1}"
+
+
+# ----------------------------------------------------------------- review B1: exact short forms
+
+
+@pytest.mark.parametrize("acp_first", [True, False], ids=["ACP_first", "AcP_first"])
+def test_review_b1_case_variants_of_a_short_form_never_share_a_rule(acp_first: bool) -> None:
+    """Probe p9: the paper defines ``AcP`` (acetyl phosphate) and ``ACP`` (acyl carrier
+    protein); each spelling takes only its own long form, whichever a draw wrote first."""
+
+    paper = ("Acetate kinase forms acetyl phosphate (AcP) from acetate. The acyl carrier protein (ACP) carries "
+             "the acyl chain. Phosphotransacetylase converts acetyl-CoA to AcP. Malonyl-CoA is transferred to ACP.")
+    pta = {"name": "pta", "inputs": ["acetyl-CoA", "Pi"], "outputs": ["AcP", "CoA"], "evidence": "q1"}
+    mat = {"name": "mat", "inputs": ["malonyl-CoA", "ACP"], "outputs": ["malonyl-ACP", "CoA"], "evidence": "q2"}
+    rows = [mat, pta] if acp_first else [pta, mat]
+    draw = {"entities": {"compounds": [{"name": "AcP"}], "proteins": [{"name": "ACP"}]}, "processes": {"reactions": rows}}
+    merged, _ = merge_draws([deepcopy(draw), deepcopy(draw)], paper_text=paper)
+    by_name = {r["name"]: r for r in _reactions(merged)}
+    assert by_name["pta"]["outputs"] == ["acetyl phosphate", "CoA"]
+    assert by_name["mat"]["inputs"] == ["malonyl-CoA", "acyl carrier protein"]
+    assert merged["entities"]["compounds"] == [{"name": "acetyl phosphate"}]
+    assert merged["entities"]["proteins"] == [{"name": "acyl carrier protein"}]
+
+
+def test_review_b1_a_spelling_the_paper_does_not_define_is_untouched() -> None:
+    """Probe p10: a paper defining only ``ALA`` never turns ``Ala`` (alanine) into it."""
+
+    paper = "Glutamate is converted to 5-aminolevulinic acid (ALA). Alanine aminotransferase is not involved."
+    draw = {"processes": {"reactions": [{"name": "a", "inputs": ["GSA"], "outputs": ["ALA"], "evidence": "q"},
+                                        {"name": "b", "inputs": ["pyruvate", "Ala"], "outputs": ["Y"], "evidence": "Ala"}]}}
+    merged, _ = merge_draws([deepcopy(draw), deepcopy(draw)], paper_text=paper)
+    assert [(r["inputs"], r["outputs"]) for r in _reactions(merged)] == [
+        (["GSA"], ["5-aminolevulinic acid"]), (["pyruvate", "Ala"], ["Y"])]
+
+
+# ----------------------------------------------------------------- ruling N4: insert/delete-only snaps, flagged
+
+
+@pytest.mark.parametrize("name", ["octenoate", "sulfinate", "heptanoate"])
+def test_ruling_n4_a_substitution_never_snaps(name: str) -> None:
+    assert _lexicon().snap(name) is None  # octanoate, sulfonate, hexanoate are in the paper
+
+
+@pytest.mark.parametrize("typo, fixed", [("cystine", "cysteine"), ("erythrulose", "erythrose")])
+def test_ruling_n4_an_insertion_or_deletion_may_snap_and_is_flagged(typo: str, fixed: str) -> None:
+    assert _lexicon().snap(typo) == fixed
+    merged, report = merge_draws([_draw([{"name": "r", "inputs": [typo], "outputs": ["X9"], "evidence": "q"}]),
+                                  _draw([])], paper_text=PAPER)
+    assert _reactions(merged)[0]["inputs"] == [fixed]
+    assert report["typo_snapped"] == [{"draw": 1, "from": typo, "to": fixed}]
+    assert f"FLAG (review): typo_snapped -- draw 1: {typo!r} -> {fixed!r}" in render_report_text(report)
+
+
+def test_ruling_n4_the_four_chlorophyll_typos_still_snap_and_are_flagged() -> None:
+    evidence = ROOT / "docs" / "pwml_recovery_sprint" / "evidence"
+    draws = [json.loads((evidence / "orch752_chlorophyll_payloads" / f"control__run{i}__payload.json")
+                        .read_text(encoding="utf-8")) for i in (1, 2, 3)]
+    paper = (evidence / "orch754a_inputs" / "papers" / "PMC5130987.txt").read_text(encoding="utf-8")
+    _merged, report = merge_draws(draws, paper_text=paper)
+    snapped = {(t["from"], t["to"]) for t in report["typo_snapped"]}
+    assert snapped == {("geranyllgeraniol", "geranylgeraniol"), ("porphobilogen (PBG)", "porphobilinogen"),
+                       ("hydroxymethybilane (HMB)", "hydroxymethylbilane"), ("bilverdin IX", "biliverdin IX")}
 
 
 def test_shared_locant_never_bridges_a_different_locant() -> None:
@@ -366,7 +443,7 @@ def test_the_human_side_file_text_carries_the_marks(monkeypatch: pytest.MonkeyPa
     assert "REACTION 1  [2/3 draws: 1, 2]" in text
     assert "Merged draw 2 row 'long': bridged by abbreviation" in text
     assert "[1/3 draws: 2]  -- REVIEW: found by one draw only" in text
-    assert "inputs: different nicotinamide cofactors {nadp} vs {nad}" in text
+    assert "inputs: cofactors {nadp} vs {nad} -- each names one the other lacks" in text
     assert "draw 1: 'GSA' -> 'Glu 1-semialdehyde' [abbreviation, long (SF)]" in text
 
 
@@ -499,7 +576,7 @@ def test_rule3_applies_the_same_compatibility_test() -> None:
     payload = _mapped(rows, [_row("isocitrate", {"chebi": "CHEBI:16087"}), _row("isocitric acid", {"chebi": "CHEBI:16087"})])
     report = merge_on_mapped_identity(payload)[IDENTITY_REPORT_KEY]
     assert [r["name"] for r in _reactions(payload)] == ["IDH3", "IDH1"]
-    assert "nicotinamide" in report["refused"][0]["reason"]
+    assert report["refused"][0]["reason"] == "inputs: cofactors {nad} vs {nadp} -- each names one the other lacks"
 
 
 @pytest.mark.usefixtures("pooled_run")
@@ -510,8 +587,57 @@ def test_rule3_files_a_merged_away_lock_and_keeps_every_lock_accounted() -> None
                       locked_reaction_filter_report={"locked_reactions_found": 2})
     merge_on_mapped_identity(payload)
     [record] = payload["quarantined_locked_reactions"]
-    assert (record["locked_reaction_id"], record["reason"], record["merged_into"]) == ("L2", "ensemble_identity_duplicate", "L1")
+    assert (record["locked_reaction_id"], record["reason"], record["json_pointer"]) == (
+        "L2", "duplicate_locked_reaction", "/processes/reactions/1")
     assert payload["locked_reaction_filter_report"]["unaccounted_locked_reactions"] == 0
+
+
+def _dedupe(payload: Dict[str, Any]) -> Dict[str, Any]:
+    from t2pw.pipeline.process_normalizer import dedupe_processes
+
+    out = deepcopy(payload)
+    dedupe_processes(out)
+    return out
+
+
+@pytest.mark.usefixtures("pooled_run")
+@pytest.mark.parametrize("locks", [("L1", "L2"), (None, "L2"), ("L1", None), ("L1", "L1")],
+                         ids=["two_locks", "later_locked", "first_locked", "one_lock_twice"])
+def test_rule3_files_locked_duplicates_exactly_as_dedupe_processes_does(locks: Any) -> None:
+    """Review N1/N3: for equivalent duplicates rule 3 writes what ``dedupe_processes`` writes --
+    the same surviving row, the same ``quarantined_locked_reactions`` record (shape, reason
+    vocabulary, ``json_pointer`` of the row merged away) and the same lock report."""
+
+    row = {"name": "ferrochelatase reaction", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["protoheme"],
+           "evidence": "ferrochelatase inserts Fe2+ into protoporphyrin IX"}
+    rows = [{**row, **({"locked_reaction_id": lock} if lock else {})} for lock in locks]
+    payload = _mapped(rows, [], locked_reaction_filter_report={"locked_reactions_found": len({l for l in locks if l})})
+    expected = _dedupe(payload)
+    merge_on_mapped_identity(payload)
+    assert _reactions(payload) == _reactions(expected)
+    assert payload.get("quarantined_locked_reactions", []) == expected.get("quarantined_locked_reactions", [])
+    assert payload.get("locked_reaction_filter_report") == expected.get("locked_reaction_filter_report")
+
+
+@pytest.mark.usefixtures("pooled_run")
+def test_rule3_a_locked_row_always_survives() -> None:
+    """Probe p3 A: an unlocked row with a defined state does not displace a locked one."""
+
+    states = [{"name": "chloroplast", "subcellular_location": "chloroplast"}]
+    rows = [{"name": "ferro locked", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["protoheme"],
+             "evidence": "paper quote", "locked_reaction_id": "rxn_lock_001"},
+            {"name": "x0", "inputs": ["A"], "outputs": ["B"], "evidence": "q"},
+            {"name": "ferro enrichment", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["heme b"],
+             "evidence": "db", "biological_state": "chloroplast"}]
+    payload = _mapped(rows, [_row("protoheme", HEME), _row("heme b", HEME)], biological_states=states,
+                      locked_reaction_filter_report={"locked_reactions_found": 1})
+    report = merge_on_mapped_identity(payload)[IDENTITY_REPORT_KEY]
+    assert [(r["name"], r.get("locked_reaction_id")) for r in _reactions(payload)] == [
+        ("ferro locked", "rxn_lock_001"), ("x0", None)]
+    assert _reactions(payload)[0]["biological_state"] == "chloroplast"  # the defined state still carried (Q1)
+    [merge] = report["merges"]
+    assert (merge["json_pointer"], merge["merged_evidence"]) == ("/processes/reactions/2", "db")
+    assert "quarantined_locked_reactions" not in payload  # an unlocked loser files nothing, as in dedupe
 
 
 @pytest.mark.usefixtures("pooled_run")
@@ -557,27 +683,25 @@ def _map_offline(payload: Dict[str, Any], tmp_path: Path) -> Dict[str, Any]:
         return map_ids.map_payload(payload, cache_path=tmp_path / "cache.json", id_source="db", use_cache=False)
 
 
-def test_map_payload_runs_rule3_last_and_only_when_the_run_pooled(monkeypatch: pytest.MonkeyPatch,
-                                                                   tmp_path: Path) -> None:
+def test_map_payload_never_runs_rule3_until_a_stage6_seam_is_authorised(monkeypatch: pytest.MonkeyPatch,
+                                                                         tmp_path: Path) -> None:
+    """Ruling N2: rule 3 at Stage 6 only. ``map_payload`` cannot tell Stage 6 from the RAG
+    round or Stage 2B without an edit to ``streamlit_app.py``, so it does not run rule 3 at
+    all -- not even in a pooled run -- and the mapping report never mentions it."""
+
     rows = [{"name": "a", "inputs": ["X1"], "outputs": ["X2"], "evidence": "q"},
             {"name": "b", "inputs": ["x1"], "outputs": ["X2"], "evidence": "q"}]
     payload = _mapped(rows, [{"name": "X1"}, {"name": "X2"}])
     monkeypatch.setenv(ENV_VAR, "3")
     diag.activate(run_id="orch754a-wiring", artifact_dir=tmp_path / "diag")
     try:
-        single = _map_offline(deepcopy(payload), tmp_path)  # the variable alone is not enough
-        assert [r["name"] for r in _reactions(single["payload"])] == ["a", "b"]
         _record_pooled_stage1()
         pooled = _map_offline(deepcopy(payload), tmp_path)
     finally:
         diag.deactivate()
-    # The record goes to the side files, never into the mapping report a model can read.
+    assert [r["name"] for r in _reactions(pooled["payload"])] == ["a", "b"]
     assert IDENTITY_REPORT_KEY not in json.dumps(pooled["report"])
-    [record] = json.loads((tmp_path / "diag" / "ensemble_identity_merge_report.json").read_text(encoding="utf-8"))
-    assert [m["bridged_by"] for m in record["merges"]] == ["exact"]
-    assert "DATABASE-IDENTITY MERGE (rule 3, after mapping): 2 -> 1 reactions" in (
-        tmp_path / "diag" / "stage1_ensemble_report.txt").read_text(encoding="utf-8")
-    assert [r["name"] for r in _reactions(pooled["payload"])] == ["a"]
+    assert not (tmp_path / "diag" / "ensemble_identity_merge_report.json").exists()
 
 
 # --------------------------------------------------------------------------- finding 4: the suite ignores .env's draw count

@@ -494,7 +494,8 @@ def test_chlorophyll_pools_each_paper_step_once(no_env: None, monkeypatch: pytes
 
 # --------------------------------------------------------------------------- ORCH-754a finding 1: chimeric reactions
 # G9: CORRECTIONS of ORCH-750/752's delivered behaviour, so each fails behaviourally on the
-# base module (``evidence/g11/ORCH-754a/02-focused-pre``) and passes at the tip. The base key
+# base module (base pre-runs ``evidence/g11/ORCH-754a/06``, ``46``, ``69`` and the round-3 one
+# named in ORCH-754a-RESULT.md) and passes at the tip. The base key
 # ignores cofactors, enzymes and biological_state and the merge unions cofactors, so an
 # NAD-dependent and an NADP-dependent IDH row became ONE chimeric row
 # ``isocitrate + NAD+ + NADP+ -> 2-oxoglutarate + NADH + CO2 + NADPH`` carrying only IDH3 and
@@ -521,7 +522,24 @@ def test_the_reviewers_idh_chimera_stays_two_reactions(draws: List[Dict[str, Any
     assert [_shape(r) for r in _reactions(merged)] == [_shape(IDH_NAD), _shape(IDH_NADP)]
 
 
-def test_a_cofactor_role_conflict_separates_whatever_else_agrees() -> None:
+def test_two_rows_each_naming_a_cofactor_the_other_lacks_stay_apart() -> None:
+    """Review B3: cofactor sets must NEST per side. A chemical-family table let MDH (NAD+)
+    meet MQO (FAD) and ATP-PFK meet PPi-PFP (reviewer probes p1, p3); both stay apart."""
+
+    def pair(x: Dict[str, Any], y: Dict[str, Any]) -> List[str]:
+        merged, _ = merge_draws([{"processes": {"reactions": [x]}}, {"processes": {"reactions": [y]}}])
+        return [r["name"] for r in _reactions(merged)]
+
+    mdh = {"name": "MDH", "inputs": ["malate", "NAD+"], "outputs": ["oxaloacetate", "NADH"],
+           "enzymes": [{"entity": "MDH"}], "evidence": "MDH oxidises malate with NAD+"}
+    mqo = {"name": "MQO", "inputs": ["malate", "FAD"], "outputs": ["oxaloacetate", "FADH2"],
+           "evidence": "malate:quinone oxidoreductase uses FAD"}
+    pfk = {"name": "PFK", "inputs": ["fructose 6-phosphate", "ATP"], "outputs": ["fructose 1,6-bisphosphate", "ADP"],
+           "enzymes": [{"entity": "PFK"}], "evidence": "PFK uses ATP"}
+    pfp = {"name": "PFP", "inputs": ["fructose 6-phosphate", "PPi"], "outputs": ["fructose 1,6-bisphosphate", "Pi"],
+           "evidence": "PPi-dependent PFP"}
+    assert pair(mdh, mqo) == ["MDH", "MQO"]
+    assert pair(pfk, pfp) == ["PFK", "PFP"]
     a = {"name": "a", "inputs": ["X", "ATP"], "outputs": ["Y"], "evidence": "X and ATP give Y"}
     b = {"name": "b", "inputs": ["X", "ADP"], "outputs": ["Y"], "evidence": "X and ADP give Y"}
     c = {"name": "c", "inputs": ["X", "Mg2+"], "outputs": ["Y"], "evidence": "X with Mg2+ gives Y"}

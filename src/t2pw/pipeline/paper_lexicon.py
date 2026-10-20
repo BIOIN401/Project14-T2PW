@@ -25,8 +25,10 @@ of 6+ characters are ever replaced, so short tokens that carry the chemistry (``
 are never touched and every other character of the name, charge signs included, is kept; a
 replaced word must keep its digits and Greek letters, its first two and last three
 characters (``sulfate``/``sulfite``, ``maltose``/``maltase`` stay apart), its oxidation-state
-and ``ethyl`` morphemes (``ferrocyanide``/``ferricyanide``, ``methyl``/``ethyl``) and at most
-1 edit (2 from 10 characters up); and two or more candidates mean no snap. Known ceiling: a
+and ``ethyl`` morphemes (``ferrocyanide``/``ferricyanide``, ``methyl``/``ethyl``), and differ
+from it ONLY by inserted (or only by deleted) letters, at most 1 (2 from 10 characters up) --
+never a substitution (ruling N4, 2026-10-20); and two or more candidates mean no snap. Every
+snap is flagged ``typo_snapped`` by the ensemble, in its side file and text only. Known ceiling: a
 one-letter edit inside a long word that changes the molecule in a way none of these rules
 names would still snap -- but only onto a word the paper itself uses, from a name the paper
 never uses.
@@ -64,8 +66,9 @@ _IDENTITY_MORPHEMES = re.compile(r"ferr[oi]|cupr[oi]|(?<!m)ethyl")
 _DASHES = {**dict.fromkeys(range(0x2010, 0x2016), "-"), 0x2212: "-"}  # hyphens, dashes, minus
 
 
-def _sf_key(value: object) -> str:
-    """How a short form is matched: CASE-SENSITIVE, unlike every other name key here.
+def spelling_key(value: object) -> str:
+    """How a short form -- and, in the ensemble's rewrite map, every participant spelling --
+    is matched: CASE-SENSITIVE, unlike every other name key here.
     ``PPI`` (protein-protein interaction, PMC12096016) is not ``PPi`` (pyrophosphate), and
     ``NO`` is not ``no``; only NFKC, dash style and whitespace are folded."""
 
@@ -146,7 +149,7 @@ def abbreviation_pairs(text: str) -> List[Tuple[str, str, str]]:
             long = long[1:]  # SH keeps an unclosed outer parenthesis: "(2,5-dihydroxybenzoic acid (2,5-DHB)"
         # Written as the paper spells it, but with ASCII dashes: a U+2010 hyphen in a name is
         # a name a database lookup can miss, and strict_key already treats the two as one.
-        long = _sf_key(long)
+        long = spelling_key(long)
         out.append((short, long, pattern))
         tail = _LOCANT.match(text, m.end())
         if pattern == PATTERN_LONG_SHORT and tail:
@@ -157,9 +160,18 @@ def abbreviation_pairs(text: str) -> List[Tuple[str, str, str]]:
 # ---------------------------------------------------------------------------- the lexicon
 
 
-def _edits(a: str, b: str) -> int:
-    ops = difflib.SequenceMatcher(None, a, b, autojunk=False).get_opcodes()
-    return sum(max(i2 - i1, j2 - j1) for tag, i1, i2, j1, j2 in ops if tag != "equal")
+def _only_inserted_or_deleted(a: str, b: str) -> int:
+    """How many letters turn one word into the other by INSERTION ONLY (or deletion only:
+    the shorter word is a subsequence of the longer), or ``-1`` when that is impossible --
+    any substitution, transposition or mixed change. Ruling N4: a snap never substitutes,
+    so ``octanoate``/``octenoate``, ``sulfonate``/``sulfinate`` and ``heptanoate``/
+    ``hexanoate`` can never meet."""
+
+    short, long = sorted((a, b), key=len)
+    if len(short) == len(long):
+        return -1
+    letters = iter(long)
+    return len(long) - len(short) if all(ch in letters for ch in short) else -1
 
 
 def _snappable(word: str, candidate: str) -> bool:
@@ -175,7 +187,8 @@ def _snappable(word: str, candidate: str) -> bool:
         return False
     if _IDENTITY_MORPHEMES.findall(word) != _IDENTITY_MORPHEMES.findall(candidate):
         return False
-    return _edits(word, candidate) <= (1 if max(len(word), len(candidate)) < 10 else 2)
+    edits = _only_inserted_or_deleted(word, candidate)
+    return 1 <= edits <= (1 if max(len(word), len(candidate)) < 10 else 2)
 
 
 class PaperLexicon:
@@ -191,7 +204,7 @@ class PaperLexicon:
         self._word_keys = list(words)
         found: Dict[str, Dict[str, Tuple[str, str, str]]] = {}
         for short, long, pattern in abbreviation_pairs(self.text):
-            sk, lk = _sf_key(short), _strict_key(long)
+            sk, lk = spelling_key(short), _strict_key(long)
             if sk and lk and sk != lk:
                 found.setdefault(sk, {}).setdefault(lk, (short, long, pattern))
         #: case-sensitive short form -> (short, long, pattern), unambiguous pairs only
@@ -233,7 +246,7 @@ class PaperLexicon:
         """Rule 1: ``(long form as the paper writes it, pattern)`` when the paper defines
         ``name`` -- or both halves of a ``X (Y)`` name -- as one abbreviation pair."""
 
-        pair = self.pairs.get(_sf_key(name))
+        pair = self.pairs.get(spelling_key(name))
         if pair:
             return pair[1], pair[2]
         m = _TRAILING_PAREN.match(name.strip())
@@ -241,7 +254,7 @@ class PaperLexicon:
             return None
         outer, inner = m.group("outer"), m.group("inner")
         for short, other in ((inner, outer), (outer, inner)):
-            pair = self.pairs.get(_sf_key(short))
+            pair = self.pairs.get(spelling_key(short))
             if pair and _strict_key(pair[1]) == _strict_key(other):
                 return pair[1], pair[2]
         return None
@@ -272,6 +285,6 @@ class PaperLexicon:
 
 __all__ = [
     "PATTERN_LONG_SHORT", "PATTERN_SHARED_LOCANT", "PATTERN_SHORT_LONG", "PaperLexicon",
-    "RULE_ABBREVIATION", "RULE_DATABASE_ID", "RULE_EXACT", "RULE_TYPO", "abbreviation_pairs",
+    "RULE_ABBREVIATION", "RULE_DATABASE_ID", "RULE_EXACT", "RULE_TYPO", "abbreviation_pairs", "spelling_key",
 ]
 
