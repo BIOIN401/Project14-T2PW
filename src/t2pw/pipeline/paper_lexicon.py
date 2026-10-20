@@ -33,9 +33,10 @@ one-letter edit inside a long word that changes the molecule in a way none of th
 names would still snap -- but only onto a word the paper itself uses, from a name the paper
 never uses.
 
-Matching is by :func:`t2pw.bench.eval_v2.matcher.strict_key`, the key the ensemble and the
-evaluator already use, so "occurs in the paper" means "``mentions`` finds it on whole-token
-boundaries in the strict-keyed text". Standard library only.
+Matching is by :func:`t2pw.pipeline.name_keys.strict_key`, the ensemble's key and
+production's own copy of the evaluator's (that module says why it is a copy), so "occurs
+in the paper" means "``mentions`` finds it on whole-token boundaries in the strict-keyed
+text". Standard library only, besides that module (itself standard library only).
 """
 
 from __future__ import annotations
@@ -44,6 +45,8 @@ import difflib
 import re
 import unicodedata
 from typing import Dict, List, Optional, Tuple
+
+from t2pw.pipeline.name_keys import strict_key
 
 RULE_EXACT = "exact"
 RULE_ABBREVIATION = "abbreviation"
@@ -77,8 +80,6 @@ def spelling_key(value: object) -> str:
 
 
 def _strict_key(value: object) -> str:
-    from t2pw.bench.eval_v2.matcher import strict_key  # function-local: layering, see stage_one_ensemble
-
     return strict_key(value)
 
 
