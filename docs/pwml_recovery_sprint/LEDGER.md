@@ -11002,3 +11002,31 @@ No pipeline run and no LLM call is authorized under ORCH-754 (D-104 § 8). Full 
 **`ORCH-754a-review` · 2026-10-20 — REJECT of `989dee54`.** Blocking: B1 case-folded abbreviation rewrite (`ACP` renamed acetyl phosphate; `Ala` → 5-aminolevulinic acid); B2 extra-enzyme quote check skipped; B3 cofactor "role" grouped by chemical family (MDH/MQO and ATP-PFK/PPi-PFP merged). The orchestrator replaced role grouping with a nested-set cofactor rule. The product owner ruled N4 (typo narrowed and flagged) and N2 (Stage 6 only): D-104 AMENDMENT 4. Severity standard fixed before the next round. Repair round 3 dispatched.
 
 **`ORCH-754b` repair round 2 · 2026-10-20 — tip `219d0003`.** Bookkeeping no longer reaches the curator (0/95 replay legs differ, 71 endpoints wrapped). A verdict is printed only when a PWML was written. Ambiguous endpoints are withheld (`ambiguous_protein_endpoint`). Review round 3 dispatched.
+
+### `ORCH-748` close — gate merged, pilot-004 RUN: PLAUSIBLE_BUT_THIN, definition of done MET · 2026-10-20
+
+Full record: [`ORCH-748-RESULT.md`](ORCH-748-RESULT.md). The progress, merge, pre-registration and close entries are in
+`docs/pathway_mining/evidence/orch748/PROGRESS.md` on `experiment/pathway-mining`. They were kept off this ledger until
+ORCH-747's uncommitted edits here were committed. **Nothing is merged into `sprint/pwml-recovery` or `main`, and nothing
+is pushed.**
+
+| item | value |
+|---|---|
+| species gate | change set E repair 3 (`c4a1468f`, five subtract-only `_NO_EFFECT` entries), G9 `055` 16 / 16. One re-review under the decision-2 bar: `pwml-reviewer` APPROVE (docs re-check at `8668d18a`), bio and red team SOUND_WITH_FINDINGS, all three fit for pilot |
+| merge | `--no-ff` into `experiment/pathway-mining` = **`cc9dbc0d`**; mining suite 1145 (`056`), SMOKE 508 with mining off (`057`, `--heavy-lock ORCH-748`), 0 survivors |
+| pre-launch re-check | 2026-10-19, `de3c4358`: everything held. Its "ruled out" on the token budget is **wrong**; corrected in `c6570797` |
+| pilot-004 | launched on the product owner's go-ahead 2026-10-20. Preflight 12 / 12; run 2,141.83 s, 2 rounds, stopped at 150 papers discovered, exit 5, 0 survivors, est. $0.066 |
+| result | **1 admitted target reaction**, OPDA -> 4,5-didehydro-JA (review grade, `CORRECT_TARGET_SPECIES`); 60 candidates; 0 admissions against policy; 0 wrong identifiers. `pwml-bio-auditor`: **PLAUSIBLE_BUT_THIN, DoD met, no blocking finding**. This is the first pilot to meet the DoD |
+| record | `experiment/pathway-mining-pilot-004` @ `9128aa8c`, `docs/pathway_mining/pilot/004/PILOT-004-RESULT.md` (run, wrapper reports, both audits, acquire cache by sha256) |
+| constraint now | extraction yield, not the gate. The 12,000-token mining budget plus the shrink ladder's prefix truncation lost the two OPR3 review reactions; a thin answer lost the in-planta T1 |
+| deviations | both pilot auditors started the interpreter outside the wrapper (3 starts in total, no file read, disclosed); 0 survivors |
+
+**Open for the product owner** (detail and costs in `PILOT-004-RESULT.md`):
+1. the extraction budget and passage loss: (a) raise `PATHWAY_MINING_MAX_TOKENS`, (b) use smaller batches, (c) re-send
+   the dropped passages in mining's `modelclient.py` (a card, review and G9), or (d) leave it;
+2. whether collapsed net conversions are acceptable in the primary graph;
+3. the alias-blind ortholog veto, on which the only admission depends;
+4. three smaller policy items: "can" in the hedge list, chemical correctness of the candidate graph, and title-screen
+   pseudo-organisms.
+
+Change set F and `PF-746-01..05` are not dispatched.
