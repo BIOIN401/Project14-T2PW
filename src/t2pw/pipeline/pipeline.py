@@ -295,7 +295,8 @@ def run_extraction_pipeline(
     count = extraction_draws(draws)
     if count == 1:
         return _draw()
-    return run_ensemble(_draw, count, failure=PipelineFailure)
+    # The input text is the paper the draws read: D-104 makes it the merge's dictionary.
+    return run_ensemble(_draw, count, failure=PipelineFailure, paper_text=input_text)
 
 
 def filter_out_of_scope_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
@@ -1319,7 +1320,7 @@ def build_and_save_draft_graph(
         len(qa_report["flags"]),
     )
 
-    reaction_summary = generate_reaction_summary(graph, qa_report)
+    reaction_summary = generate_reaction_summary(graph, qa_report, payload=merged_json)
     filter_report = merged_json.get("locked_reaction_filter_report") if isinstance(merged_json, dict) else None
     if isinstance(filter_report, dict):
         locked_count = int(filter_report.get("locked_reactions_found") or 0)
@@ -2172,6 +2173,23 @@ def _carry_scope_membership(entry: Dict[str, Any], item: Dict[str, Any]) -> None
         entry["scope_membership"] = scope.strip()
 
 
+def _carry_ensemble_support(entry: Dict[str, Any], item: Dict[str, Any]) -> None:
+    """Keep the N-draw support count (ORCH-754a, D-104 rule 5) through this rebuild.
+
+    Only the exact shape :mod:`t2pw.pipeline.stage_one_ensemble` writes -- draw numbers
+    out of ``of`` > 1 successful draws -- is carried, so a single-draw payload can never
+    gain the key. Appended last, so a row without it keeps its exact key order.
+    """
+
+    value = item.get("ensemble_support")
+    if not isinstance(value, dict):
+        return
+    of, draws = value.get("of"), value.get("draws")
+    if (isinstance(of, int) and not isinstance(of, bool) and of > 1 and isinstance(draws, list) and draws
+            and all(isinstance(d, int) and not isinstance(d, bool) and d >= 1 for d in draws)):
+        entry["ensemble_support"] = {"draws": list(draws), "of": of}
+
+
 def _clean_processes(
     processes: Dict[str, Any],
     ledger: Optional[DiscardLedger] = None,
@@ -2275,6 +2293,7 @@ def _clean_processes(
         # byte-for-byte what it was before, and so a row with no RAG carrier gains
         # no key at all.
         _carry_rag_provenance(entry, item)
+        _carry_ensemble_support(entry, item)
         reactions_out.append(entry)
 
     if reactions_out:

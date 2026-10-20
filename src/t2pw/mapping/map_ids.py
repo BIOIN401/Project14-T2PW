@@ -10998,6 +10998,8 @@ def map_payload(
     # can tell fail-open from a clean bill of health.
     if identity_admission.SOURCE_INDEX_KEY in mapped or identity_admission_report["withheld"]:
         report[identity_admission.REPORT_KEY] = identity_admission_report
+    from t2pw.pipeline.stage_one_ensemble import merge_on_mapped_identity  # ORCH-754a, D-104 rule 3; {} at N=1
+    report.update(merge_on_mapped_identity(mapped))
     return {"payload": mapped, "report": report}
 
 

@@ -1,0 +1,69 @@
+{
+  "schema": "t2pw.prompt_ab/1",
+  "ran_at": "2026-10-16T21:17:41",
+  "paper": "C:\\t\\eval-fulltext\\PMC12096016.txt",
+  "paper_sha256": "b7d583c0835c64cb6a55799e1d94f58442cfa6d8d122d83e581de38887f3a5b8",
+  "pathway": "enterobactin biosynthesis",
+  "organism": "Escherichia coli",
+  "scope": "",
+  "temperature": 0.0,
+  "max_tokens": 64000,
+  "max_attempts": 2,
+  "note": "Hand comparison only. Nothing here is scored, and identical legs differ even at temperature 0, so a single-draw difference is not a result.",
+  "draws": [
+    {
+      "variant": "control",
+      "run": 1,
+      "prompt_origin": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\evaluation_v2\\prompt_variants_r2\\r2_01_control_v03.txt",
+      "prompt_sha256": "27f5e8732d77083313cab590dd6259ffe3828816647b0795699a0da6a68b8156",
+      "prompt_chars": 37761,
+      "counts": {
+        "reactions": 4,
+        "reaction_coupled_transports": 0,
+        "transports": 2,
+        "interactions": 1,
+        "compounds": 10,
+        "proteins": 6,
+        "protein_complexes": 0,
+        "nucleic_acids": 0,
+        "interactions_without_evidence": 0
+      }
+    },
+    {
+      "variant": "control",
+      "run": 2,
+      "prompt_origin": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\evaluation_v2\\prompt_variants_r2\\r2_01_control_v03.txt",
+      "prompt_sha256": "27f5e8732d77083313cab590dd6259ffe3828816647b0795699a0da6a68b8156",
+      "prompt_chars": 37761,
+      "counts": {
+        "reactions": 5,
+        "reaction_coupled_transports": 0,
+        "transports": 2,
+        "interactions": 3,
+        "compounds": 15,
+        "proteins": 11,
+        "protein_complexes": 0,
+        "nucleic_acids": 1,
+        "interactions_without_evidence": 0
+      }
+    },
+    {
+      "variant": "control",
+      "run": 3,
+      "prompt_origin": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\evaluation_v2\\prompt_variants_r2\\r2_01_control_v03.txt",
+      "prompt_sha256": "27f5e8732d77083313cab590dd6259ffe3828816647b0795699a0da6a68b8156",
+      "prompt_chars": 37761,
+      "counts": {
+        "reactions": 5,
+        "reaction_coupled_transports": 0,
+        "transports": 2,
+        "interactions": 2,
+        "compounds": 15,
+        "proteins": 12,
+        "protein_complexes": 0,
+        "nucleic_acids": 0,
+        "interactions_without_evidence": 0
+      }
+    }
+  ]
+}

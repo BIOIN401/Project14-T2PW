@@ -1,0 +1,417 @@
+{
+  "scope_warning": "",
+  "compartments": [
+    {
+      "name": "cytosol",
+      "canonical_name": "cytosol",
+      "go_id": ""
+    },
+    {
+      "name": "extracellular",
+      "canonical_name": "extracellular",
+      "go_id": ""
+    }
+  ],
+  "entities": {
+    "cell_types": [],
+    "species": [
+      {
+        "name": "Lactococcus lactis",
+        "taxonomy_id": ""
+      }
+    ],
+    "tissues": [],
+    "subcellular_locations": [
+      {
+        "name": "cytosol",
+        "canonical_id": "",
+        "evidence": "intracellular DHNA"
+      },
+      {
+        "name": "extracellular",
+        "canonical_id": "",
+        "evidence": "extracellular DHNA"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "chorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SEPHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "OSB",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "OSB-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHNA-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHNA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "element_collections": [],
+    "nucleic_acids": [],
+    "proteins": [
+      {
+        "name": "MenF",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenI",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "protein_complexes": []
+  },
+  "biological_states": [
+    {
+      "name": "L. lactis intracellular state",
+      "species": "Lactococcus lactis",
+      "cell_type": "",
+      "tissue": "",
+      "subcellular_location": "cytosol",
+      "compartment_canonical": "cytosol",
+      "evidence": "intracellular DHNA"
+    },
+    {
+      "name": "L. lactis extracellular state",
+      "species": "Lactococcus lactis",
+      "cell_type": "",
+      "tissue": "",
+      "subcellular_location": "extracellular",
+      "compartment_canonical": "extracellular",
+      "evidence": "extracellular DHNA"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "DHNA",
+        "biological_state": "L. lactis intracellular state",
+        "evidence": "intracellular DHNA"
+      },
+      {
+        "compound": "DHNA",
+        "biological_state": "L. lactis extracellular state",
+        "evidence": "extracellular DHNA"
+      }
+    ],
+    "element_collection_locations": [],
+    "nucleic_acid_locations": [],
+    "protein_locations": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "name": "MenF reaction",
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "modifiers": [
+          {
+            "entity": "MenF",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "L. lactis intracellular state",
+        "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "MenD reaction",
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "modifiers": [
+          {
+            "entity": "MenD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "MenD facilitates the conversion of isochorismate to SEPHCHC",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "L. lactis intracellular state",
+        "evidence": "MenD facilitates the conversion of isochorismate to SEPHCHC",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "MenH reaction",
+        "inputs": [
+          "SEPHCHC"
+        ],
+        "outputs": [
+          "SHCHC"
+        ],
+        "modifiers": [
+          {
+            "entity": "MenH",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "d[D]/dt = k_cat_H [MenH][C]/(KM_H+[C]) - k_cat_C [MenC][D]/(KM_C+[D])",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "L. lactis intracellular state",
+        "evidence": "d[D]/dt = k_cat_H [MenH][C]/(KM_H+[C]) - k_cat_C [MenC][D]/(KM_C+[D])",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "MenC reaction",
+        "inputs": [
+          "SHCHC"
+        ],
+        "outputs": [
+          "OSB"
+        ],
+        "modifiers": [
+          {
+            "entity": "MenC",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "d[D]/dt = ... - k_cat_C [MenC][D]/(KM_C+[D]) and d[E]/dt = ... + k_cat_C [MenC][D]/(KM_C+[D])",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "L. lactis intracellular state",
+        "evidence": "d[D]/dt = ... - k_cat_C [MenC][D]/(KM_C+[D]) and d[E]/dt = ... + k_cat_C [MenC][D]/(KM_C+[D])",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "MenE reaction",
+        "inputs": [
+          "OSB"
+        ],
+        "outputs": [
+          "OSB-CoA"
+        ],
+        "modifiers": [
+          {
+            "entity": "MenE",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "d[E]/dt = ... - k_cat_E [MenE][E]/(KM_E+[E]) and d[F]/dt = ... + k_cat_E [MenE][E]/(KM_E+[E])",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "L. lactis intracellular state",
+        "evidence": "d[E]/dt = ... - k_cat_E [MenE][E]/(KM_E+[E]) and d[F]/dt = ... + k_cat_E [MenE][E]/(KM_E+[E])",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "MenB reaction",
+        "inputs": [
+          "OSB-CoA"
+        ],
+        "outputs": [
+          "DHNA-CoA"
+        ],
+        "modifiers": [
+          {
+            "entity": "MenB",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "d[F]/dt = ... - k_cat_B [MenB][F]/(KM_B+[F]) and d[G]/dt = ... + k_cat_B [MenB][F]/(KM_B+[F])",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "L. lactis intracellular state",
+        "evidence": "d[F]/dt = ... - k_cat_B [MenB][F]/(KM_B+[F]) and d[G]/dt = ... + k_cat_B [MenB][F]/(KM_B+[F])",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      },
+      {
+        "name": "MenI reaction",
+        "inputs": [
+          "DHNA-CoA"
+        ],
+        "outputs": [
+          "DHNA"
+        ],
+        "modifiers": [
+          {
+            "entity": "MenI",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "d[G]/dt = ... - k_cat_I [MenI][G]/(KM_I+[G]) and d[DHNA]in/dt = ... + k_cat_I [MenI][G]/(KM_I+[G])",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "L. lactis intracellular state",
+        "evidence": "d[G]/dt = ... - k_cat_I [MenI][G]/(KM_I+[G]) and d[DHNA]in/dt = ... + k_cat_I [MenI][G]/(KM_I+[G])",
+        "class": "biochemical_reaction",
+        "scope_membership": "core",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [
+      {
+        "name": "DHNA diffusion out of cell",
+        "cargo": "DHNA",
+        "from_biological_state": "L. lactis intracellular state",
+        "to_biological_state": "L. lactis extracellular state",
+        "transporters": [],
+        "elements_with_states": [
+          {
+            "side": "left",
+            "element": "DHNA",
+            "biological_state": "L. lactis intracellular state",
+            "evidence": "intracellular DHNA"
+          },
+          {
+            "side": "right",
+            "element": "DHNA",
+            "biological_state": "L. lactis extracellular state",
+            "evidence": "extracellular DHNA"
+          }
+        ],
+        "evidence": "DHNA diffusion through the membrane occurs at a rate k_DHNA",
+        "class": "transport_reaction",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      }
+    ],
+    "interactions": [
+      {
+        "name": "DHNA allosteric inhibition of MenD",
+        "entity_1": "DHNA",
+        "relationship": "inhibition",
+        "entity_2": "MenD",
+        "biological_state": "L. lactis intracellular state",
+        "evidence": "DHNA allosterically inhibits MenD",
+        "class": "inhibition",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
+      }
+    ]
+  },
+  "visualizations": {
+    "bounds": [],
+    "bound_visualizations": [],
+    "protein_complex_visualizations": [],
+    "reaction_visualizations": [],
+    "reaction_coupled_transport_visualizations": [],
+    "transport_visualizations": [],
+    "interaction_visualizations": [],
+    "sub_pathway_visualizations": [],
+    "edges": [],
+    "vacuous": {
+      "vacuous_compound_visualizations": [],
+      "vacuous_nucleic_acid_visualizations": [],
+      "vacuous_element_collection_visualizations": [],
+      "vacuous_protein_visualizations": []
+    }
+  }
+}

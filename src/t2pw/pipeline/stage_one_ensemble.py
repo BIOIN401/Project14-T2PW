@@ -25,9 +25,15 @@ distinct is a row the evaluator scores as distinct (``reactions.score_leg``, R-D
   ``role: cofactor`` on the participant, or a name in :data:`CURRENCY_KEYS` -- never
   defines a reaction, exactly as the evaluator scores it (``gold.ROLES``; ORCH-751 § 2.2
   measured the exact-set key inflating pooled rows). A side holding nothing but currency
-  keeps every name, so ``ADP + Pi -> ATP`` is not ``GDP + Pi -> GTP``. When a later row
-  collapses onto a survivor, the survivor keeps its evidence and gains any cofactor the
-  later row named on that side (ORCH-752)
+  keeps every name, so ``ADP + Pi -> ATP`` is not ``GDP + Pi -> GTP``. That key only
+  PROPOSES a merge (ORCH-754a finding 1, which withdrew "the cofactor-blind key stays"):
+  rows sharing it are one reaction only when :func:`_conflict` finds them compatible --
+  one row omitting a cofactor, enzyme or state the other names -- and never when they
+  conflict (NAD+ vs NADP+, different enzymes, different biological states, or anything it
+  cannot classify), within one draw and across draws. A conflicting row stays its own row,
+  and the side file says why (``kept_apart_from``). A survivor keeps its own evidence and
+  participants, and gains a later row's cofactor only when its OWN quote names it; a
+  cofactor it cannot support is listed with the donor's quote (``cofactors_withheld``)
 * interaction: (entity_1, relationship, entity_2); the names strict-keyed, the relationship
   by the type the exporter will emit for it (``ir.PWML_INTERACTION_TYPES``: ``activates``
   and ``activation`` are one ``Activation``; a word that table does not know keeps its
@@ -47,11 +53,37 @@ diphosphate). It is imported inside the function because ``t2pw.pipeline`` must 
 import ``t2pw.bench`` at module level (release_status.py:112; strict_quarantine.py:2704
 is the precedent seam).
 
-The payload schema is frozen: the merge adds no key of its own, so which draw(s)
-produced each row cannot live in the payload. It goes to the side file
-``stage1_ensemble_report.json`` beside the run's other extraction diagnostics, and a
-bounded summary goes into ``extraction_boundary_report.json`` as a ``stage1_ensemble``
-boundary record.
+Which draw(s) produced each row goes to the side file ``stage1_ensemble_report.json``
+beside the run's other extraction diagnostics, and a bounded summary goes into
+``extraction_boundary_report.json`` as a ``stage1_ensemble`` boundary record.
+
+The paper is the dictionary (ORCH-754a, D-104)
+----------------------------------------------
+ORCH-752 measured that pooled rows inflate because draws write one molecule several ways
+(``GSA``, ``Glu 1-semialdehyde (GSA)``, ``porphobilogen``). When the paper text reaches
+:func:`merge_draws` (``run_extraction_pipeline`` passes its input text), every draw is
+first rewritten by :class:`~t2pw.pipeline.paper_lexicon.PaperLexicon`:
+
+* rule 1, abbreviation: a name the paper defines as an abbreviation -- or a ``X (Y)`` name
+  whose halves the paper defines as one pair -- becomes the paper's LONG form;
+* rule 2, typo: a name absent from the paper snaps to the paper's spelling when exactly one
+  safe candidate exists (safety rules in that module);
+* rule 4, long form only: the rewrite reaches every row that names the participant -- the
+  reaction sides, the entity registry, element locations, transport cargo, and enzyme or
+  interaction endpoints naming it -- so a renamed entity is never left dangling. Enzyme
+  names are COMPARED through the paper (finding 1) but written as the draw wrote them. Evidence is never
+  edited. A currency name (:data:`CURRENCY_KEYS`) is never rewritten: ``ATP`` stays ``ATP``
+  so rule 7's cofactor-blind key still sees it. Every rewrite is listed in the side file
+  (``names_rewritten``), so no original spelling is lost.
+
+Rule 5, support: when 2+ draws succeed every pooled reaction carries ``ensemble_support`` =
+``{"draws": [...], "of": <successful draws>}``, the one key this merge adds to the payload;
+every row of every bucket carries ``support`` and, at 1/N, ``review_required`` in the side
+file. A 1/N row is KEPT -- PRODUCT_CONTRACT § 7: incomplete-but-correct is reviewed, never
+dropped. Rule 6: every collapse is listed on its row in the side file with the rule(s) that
+bridged it (``exact`` -- which includes the cofactor-blind key -- ``abbreviation``,
+``typo``). Rule 3 (database identity) runs after Stage 6 mapping: see
+:func:`merge_on_mapped_identity`.
 """
 
 from __future__ import annotations
@@ -60,10 +92,12 @@ import json
 import logging
 import os
 from copy import deepcopy
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 from t2pw.pipeline.extraction_diagnostics import OUTCOME_OK, current as current_diagnostics
+from t2pw.pipeline.paper_lexicon import RULE_DATABASE_ID, RULE_EXACT, PaperLexicon
 from t2pw.pipeline.participant_schema import PARTICIPANT_NAME_KEYS
 
 logger = logging.getLogger(__name__)
@@ -71,9 +105,20 @@ logger = logging.getLogger(__name__)
 ENV_VAR = "T2PW_EXTRACTION_DRAWS"
 BOUNDARY_STAGE1_ENSEMBLE = "stage1_ensemble"
 REPORT_NAME = "stage1_ensemble_report.json"
+#: The one payload key the merge adds (rule 5), on pooled reaction rows at N>1 only.
+SUPPORT_KEY = "ensemble_support"
+#: Where :func:`merge_on_mapped_identity` files its record in the mapping report.
+IDENTITY_REPORT_KEY = "ensemble_identity_merge"
+#: Fields of a row that NAME an entity, rewritten in step with it (rule 4).
+_REFERENCE_FIELDS = {
+    "/processes/reactions": ("inputs", "outputs", "enzymes", "modifiers"),
+    "/processes/transports": ("cargo",),
+    "/processes/interactions": ("entity_1", "entity_2"),
+}
 
 #: The buckets the bounded summary totals over; the side file carries every bucket.
 _SUMMARISED_PREFIXES = ("/processes/", "/entities/")
+_REACTIONS = "/processes/reactions"
 #: The fields ``_dedup_element_locations`` reads the located entity from.
 _LOCATION_ENTITY_KEYS = ("compound", "element_collection", "nucleic_acid", "protein", "element")
 
@@ -174,22 +219,139 @@ def _relationship_key(value: Any) -> str:
     return PWML_INTERACTION_TYPES.get(_interaction_type_key(text)) or _strict_key(text)
 
 
-def _donate_cofactors(survivor: Dict[str, Any], later: Dict[str, Any]) -> List[str]:
-    """Give ``survivor`` every cofactor ``later`` names on a side it does not already carry
-    there. Its evidence and its own participants are untouched. Returns the names added."""
+#: ORCH-754a finding 1. Spellings of ONE molecule among :data:`CURRENCY_KEYS`, so ``CoA``
+#: beside ``coenzyme A`` is never read as two cofactors.
+_SAME_COFACTOR = {
+    "coenzyme a": "coa", "water": "h2o", "phosphate": "pi", "diphosphate": "ppi", "proton": "h",
+    "s adenosyl l methionine": "sam", "s adenosylmethionine": "sam",
+    "s adenosyl l homocysteine": "sah", "s adenosylhomocysteine": "sah",
+    "mg": "mg2", "zn": "zn2", "ca": "ca2",          # these metals occur as the 2+ ion only
+}
+#: Cofactors that can stand in for one another in ONE slot: two rows naming different
+#: members of a group on one side are different reactions (NAD+ vs NADP+, ATP vs ADP,
+#: Mg2+ vs Mn2+). A currency molecule in no group is unique, so it can never conflict;
+#: a cofactor outside :data:`CURRENCY_KEYS` (``role: cofactor`` on a payload participant)
+#: cannot be classified at all, and :func:`_conflict` then fails closed.
+_COFACTOR_ROLE = {
+    **dict.fromkeys(("nad", "nadh", "nadp", "nadph"), "nicotinamide"),
+    **dict.fromkeys(("atp", "adp", "amp"), "adenine nucleotide"),
+    **dict.fromkeys(("fad", "fadh2"), "flavin"),
+    **dict.fromkeys(("mg2", "fe2", "fe3", "fe", "zn2", "mn2", "mn", "ca2", "cu2", "cu", "k", "na"), "metal ion"),
+}
 
+
+def _cofactor_molecules(value: Any) -> frozenset:
+    """One side's cofactors as molecules: a currency key folded by :data:`_SAME_COFACTOR`,
+    or ``("unclassified", key)`` for a cofactor only the payload's role marks as one."""
+
+    return frozenset(_SAME_COFACTOR.get(key, key) if key in CURRENCY_KEYS else ("unclassified", key)
+                     for _item, _name, key in _side(value)[1])
+
+
+def _enzyme_names(row: Dict[str, Any]) -> List[str]:
+    return [name for slot in ("enzymes", "modifiers") for _item, name in _participants(row.get(slot))]
+
+
+def _state_profile(label: Any, states: Dict[str, Dict[str, Any]]) -> Dict[str, str]:
+    """What a reaction's ``biological_state`` label denotes. Resolved through the
+    ``biological_states`` row of that name in the same payload: its compartment
+    (``compartment_canonical``, else ``subcellular_location`` with a plural ``-s`` folded,
+    so ``plastids`` is ``plastid``), cell type, tissue and species. A label with no
+    definition is only its own text."""
+
+    key = _strict_key(label)
+    row = states.get(key)
+    if not key or not isinstance(row, dict):
+        return {"label": key} if key else {}
+    loc = _strict_key(row.get("compartment_canonical")) or _strict_key(row.get("subcellular_location"))
+    return {
+        "label": key,
+        "location": " ".join(t[:-1] if len(t) > 3 and t.endswith("s") else t for t in loc.split()),
+        **{f: _strict_key(row.get(f)) for f in ("cell_type", "tissue", "species")},
+    }
+
+
+def _states_by_key(payload: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    rows = payload.get("biological_states") if isinstance(payload, dict) else None
+    return {_strict_key(r.get("name")): r for r in rows or [] if isinstance(r, dict) and r.get("name")}
+
+
+def _profile(row: Dict[str, Any], states: Dict[str, Dict[str, Any]],
+             enzyme_key: Callable[[str], Any]) -> Dict[str, Any]:
+    """Everything :func:`_conflict` compares, computed once per row."""
+
+    return {
+        "inputs": _cofactor_molecules(row.get("inputs")),
+        "outputs": _cofactor_molecules(row.get("outputs")),
+        "enzymes": frozenset(enzyme_key(name) for name in _enzyme_names(row)),
+        "state": _state_profile(row.get("biological_state"), states),
+    }
+
+
+def _conflict(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> str:
+    """Why two rows under one reaction key are NOT one reaction, or ``''`` (finding 1).
+
+    Compatible: one row naming a cofactor, enzyme or state the other omits. Conflict, and
+    never merged: both naming different cofactors in one role (:data:`_COFACTOR_ROLE`);
+    any cofactor that cannot be classified unless one row's cofactors contain the
+    other's (fail closed); both naming enzymes and the enzyme sets differ; both stating a
+    biological state and the states differ -- or cannot be compared."""
+
+    if not a or not b:
+        return ""
+    for slot in ("inputs", "outputs"):
+        ma, mb = a[slot], b[slot]
+        if any(isinstance(m, tuple) for m in ma | mb) and not (ma <= mb or mb <= ma):
+            return f"{slot}: cofactors {_show(ma)} vs {_show(mb)} include one that cannot be classified"
+        for role in sorted({_COFACTOR_ROLE[m] for m in ma | mb if m in _COFACTOR_ROLE}):
+            ra = {m for m in ma if _COFACTOR_ROLE.get(m) == role}
+            rb = {m for m in mb if _COFACTOR_ROLE.get(m) == role}
+            if ra and rb and ra != rb:
+                return f"{slot}: different {role} cofactors {_show(ra)} vs {_show(rb)}"
+    if a["enzymes"] and b["enzymes"] and a["enzymes"] != b["enzymes"]:
+        return f"different enzymes {_show(a['enzymes'])} vs {_show(b['enzymes'])}"
+    sa, sb = a["state"], b["state"]
+    if sa and sb and sa["label"] != sb["label"]:
+        if "location" not in sa or "location" not in sb:
+            return f"biological_state {sa['label']!r} vs {sb['label']!r} cannot be compared"
+        for field in ("location", "cell_type", "tissue", "species"):
+            if sa[field] and sb[field] and sa[field] != sb[field]:
+                return f"biological_state {field} {sa[field]!r} vs {sb[field]!r}"
+    return ""
+
+
+def _show(values: Any) -> str:
+    return "{" + ", ".join(sorted(v[1] if isinstance(v, tuple) else str(v) for v in values)) + "}"
+
+
+def _donate_cofactors(survivor: Dict[str, Any], later: Dict[str, Any]) -> Tuple[List[str], List[Dict[str, Any]]]:
+    """Give ``survivor`` each cofactor ``later`` names on a side it does not already carry
+    there -- but only one its OWN evidence quote names (finding 1: a survivor's evidence
+    must support every participant it carries, and quotes are never edited or joined).
+    A cofactor the survivor's quote does not support is withheld and returned with the
+    donor's quote, for the side file. Returns ``(added names, withheld records)``."""
+
+    from t2pw.bench.eval_v2.matcher import mentions, text_key  # function-local: layering
+
+    evidence = text_key(survivor.get("evidence") if isinstance(survivor.get("evidence"), str) else "")
     added: List[str] = []
+    withheld: List[Dict[str, Any]] = []
     for slot in ("inputs", "outputs"):
         have = survivor.get(slot)
         if not isinstance(have, list):
             continue
         present = {_strict_key(name) for _, name in _participants(have)}
         for item, name, key in _side(later.get(slot))[1]:
-            if key not in present:
+            if key in present:
+                continue
+            present.add(key)
+            if mentions(name, evidence):
                 have.append(deepcopy(item))
-                present.add(key)
                 added.append(name)
-    return added
+            else:
+                withheld.append({"cofactor": name, "side": slot,
+                                 "donor_evidence": later.get("evidence")})
+    return added, withheld
 
 
 def _signature(row: Any) -> str:
@@ -241,78 +403,265 @@ def _row_name(row: Any) -> str:
     return str(row)[:200]
 
 
+#: Per row (by ``id``), what the paper rewrote on it: ``{"refs": every name key it carries,
+#: "renamed": {new key: (original key, rules)}}``. Built by :func:`_canonicalise`.
+Notes = Dict[int, Dict[str, Any]]
+
+
+def _bridge(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> List[str]:
+    """Rule 6: the rule(s) that made two rows one. A name both rows carry under the same new
+    key but different original keys was bridged by whatever rewrote it; nothing else was."""
+
+    a, b = a or {"refs": set(), "renamed": {}}, b or {"refs": set(), "renamed": {}}
+    rules: set = set()
+    for key in a["refs"] & b["refs"]:
+        (raw_a, rules_a), (raw_b, rules_b) = (n["renamed"].get(key, (key, ())) for n in (a, b))
+        if raw_a != raw_b:
+            rules.update(rules_a, rules_b)
+    return sorted(rules) or [RULE_EXACT]
+
+
+def _absorb(profile: Optional[Dict[str, Any]], other: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """A survivor's profile after a compatible row joins it: every cofactor either claimed,
+    and the first stated enzymes and state. Later rows are judged against ALL of it, so a
+    row compatible with each of two conflicting rows can never join them into one."""
+
+    if not profile or not other:
+        return profile or other
+    return {
+        "inputs": profile["inputs"] | other["inputs"],
+        "outputs": profile["outputs"] | other["outputs"],
+        "enzymes": profile["enzymes"] or other["enzymes"],
+        "state": profile["state"] or other["state"],
+    }
+
+
 def _union(dest: List[Any], items: List[Any], path: str, draw: int,
-           bucket: Dict[Tuple[Any, ...], Dict[str, Any]]) -> None:
+           bucket: Dict[Tuple[Any, ...], List[Dict[str, Any]]], notes: Notes) -> None:
     for item in items:
         key = row_key(path, item)
-        record = bucket.get(key)
+        note = notes.get(id(item)) or {}
+        records = bucket.setdefault(key, [])
+        record = None
+        kept_apart: List[Dict[str, Any]] = []
+        for candidate in records:
+            reason = _conflict(candidate["_profile"], note.get("profile")) if path == _REACTIONS else ""
+            if not reason:
+                record = candidate
+                break
+            kept_apart.append({"name": candidate["name"], "draws": list(candidate["draws"]), "reason": reason})
         if record is None:
             dest.append(deepcopy(item))
-            # "_row" is the surviving object, for cofactor donation; merge_draws strips it.
-            bucket[key] = {"key": _label(key), "name": _row_name(item), "draws": [draw], "_row": dest[-1]}
+            # "_row" is the surviving object, for cofactor donation; "_notes" what the paper
+            # rewrote on it, for rule 6; "_profile" what finding 1 compares. merge_draws strips them.
+            records.append({"key": _label(key), "name": _row_name(item), "draws": [draw], "_row": dest[-1],
+                            "_notes": note, "_profile": note.get("profile"),
+                            **({"kept_apart_from": kept_apart} if kept_apart else {})})
             continue
         if record["draws"][-1] != draw:
             record["draws"].append(draw)
-        if path == "/processes/reactions" and isinstance(item, dict):
-            added = _donate_cofactors(record["_row"], item)
+        record.setdefault("merges", []).append(
+            {"draw": draw, "name": _row_name(item), "bridged_by": _bridge(record["_notes"], note)})
+        if path == _REACTIONS and isinstance(item, dict):
+            record["_profile"] = _absorb(record["_profile"], note.get("profile"))
+            added, withheld = _donate_cofactors(record["_row"], item)
             if added:
                 record.setdefault("cofactors_added", []).extend(added)
+            if withheld:
+                record.setdefault("cofactors_withheld", []).extend(withheld)
 
 
 def _merge_into(target: Dict[str, Any], source: Dict[str, Any], path: str, draw: int,
-                seen: Dict[str, Dict[Tuple[Any, ...], Dict[str, Any]]],
-                per_draw: Dict[str, List[int]], n: int) -> None:
+                seen: Dict[str, Dict[Tuple[Any, ...], List[Dict[str, Any]]]],
+                per_draw: Dict[str, List[int]], n: int, notes: Notes) -> None:
     for key, value in source.items():
         child = f"{path}/{key}"
         if isinstance(value, dict):
             if key not in target:
                 target[key] = {}
             if isinstance(target[key], dict):
-                _merge_into(target[key], value, child, draw, seen, per_draw, n)
+                _merge_into(target[key], value, child, draw, seen, per_draw, n, notes)
         elif isinstance(value, list):
             if key not in target:
                 target[key] = []
             per_draw.setdefault(child, [0] * n)[draw - 1] += len(value)
             if isinstance(target[key], list):
-                _union(target[key], value, child, draw, seen.setdefault(child, {}))
+                _union(target[key], value, child, draw, seen.setdefault(child, {}), notes)
         elif key not in target or target[key] in ("", None):
             # First non-empty scalar wins, as _merge_dict_in_place already does for chunks.
             target[key] = value
 
 
-def merge_draws(payloads: Sequence[Optional[Dict[str, Any]]]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+def _rename_slot(value: Any, rename: Callable[[str], str]) -> Any:
+    """A slot of strings or participant dicts with every name passed through ``rename``."""
+
+    if isinstance(value, str):
+        return rename(value)
+    if not isinstance(value, list):
+        return value
+    out: List[Any] = []
+    for item in value:
+        if isinstance(item, str):
+            out.append(rename(item))
+        elif isinstance(item, dict):
+            field = next((k for k in PARTICIPANT_NAME_KEYS if isinstance(item.get(k), str) and item[k]), None)
+            out.append({**item, field: rename(item[field])} if field else item)
+        else:
+            out.append(item)
+    return out
+
+
+Canonical = Callable[[str], Tuple[str, List[str], str]]
+
+
+#: strict key of a participant spelling -> (name to write, rules, pattern)
+Rewrite = Dict[str, Tuple[str, List[str], str]]
+
+
+def _rewrite_map(payloads: Sequence[Optional[Dict[str, Any]]], canonical: Canonical) -> Rewrite:
+    """Rules 1 and 2 over every reaction participant ANY draw wrote, so a spelling one draw
+    uses only as an interaction endpoint or location still follows the rename."""
+
+    rewrite: Rewrite = {}
+    for payload in payloads:
+        processes = payload.get("processes") if isinstance(payload, dict) else None
+        for row in (processes or {}).get("reactions") or []:
+            if not isinstance(row, dict):
+                continue
+            for slot in ("inputs", "outputs"):
+                for _item, name in _participants(row.get(slot)):
+                    key = _strict_key(name)
+                    if key and key not in rewrite and key not in CURRENCY_KEYS:
+                        rewrite[key] = canonical(name)
+    return rewrite
+
+
+def _canonicalise(draw: Dict[str, Any], rewrite: Rewrite, canonical: Canonical, number: int,
+                  renames: List[Dict[str, Any]], notes: Notes) -> Dict[str, Any]:
+    """Rules 1, 2 and 4 on a deep copy of one draw (see module doc). The names rewritten
+    are the reaction participants; every other row naming one follows it. Enzyme names
+    are compared through the paper too (finding 1) but written as the draw wrote them."""
+
+    out = deepcopy(draw)
+    processes = out.get("processes") if isinstance(out.get("processes"), dict) else {}
+    done: Dict[str, Dict[str, Any]] = {}
+
+    def rename(name: str) -> str:
+        hit = rewrite.get(_strict_key(name))
+        if not hit or not hit[1]:
+            return name
+        if name not in done:
+            done[name] = {"draw": number, "from": name, "to": hit[0], "rules": hit[1],
+                          **({"pattern": hit[2]} if hit[2] else {})}
+        return hit[0]
+
+    def note(row: Dict[str, Any], names: List[str]) -> None:
+        renamed = {}
+        refs = set()
+        for name in names:
+            raw = _strict_key(name)
+            if raw in rewrite:
+                new, rules = rewrite[raw][:2]
+            elif raw in CURRENCY_KEYS:
+                new, rules = name, []
+            else:  # an enzyme or interaction endpoint: compared through the paper, never renamed
+                new, rules = canonical(name)[:2]
+            key = _strict_key(new) if rules else raw
+            refs.add(key)
+            if rules:
+                renamed[key] = (raw, tuple(rules))
+        notes[id(row)] = {"refs": refs, "renamed": renamed}
+
+    for path, fields in _REFERENCE_FIELDS.items():
+        for row in processes.get(path.rsplit("/", 1)[1]) or []:
+            if not isinstance(row, dict):
+                continue
+            names = [n for f in fields for _i, n in _participants(row.get(f))]
+            note(row, names)
+            for f in fields:
+                if f in row:
+                    row[f] = _rename_slot(row[f], rename)
+    entities = out.get("entities") if isinstance(out.get("entities"), dict) else {}
+    for rows in entities.values():
+        for row in rows if isinstance(rows, list) else []:
+            if isinstance(row, dict) and isinstance(row.get("name"), str):
+                note(row, [row["name"]])
+                row["name"] = rename(row["name"])
+    locations = out.get("element_locations") if isinstance(out.get("element_locations"), dict) else {}
+    for rows in locations.values():
+        for row in rows if isinstance(rows, list) else []:
+            if isinstance(row, dict):
+                for f in _LOCATION_ENTITY_KEYS:
+                    if isinstance(row.get(f), str):
+                        row[f] = rename(row[f])
+    renames.extend(done.values())
+    return out
+
+
+def merge_draws(payloads: Sequence[Optional[Dict[str, Any]]],
+                paper_text: Optional[str] = None) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     """Union the draws into one payload. Position = draw number; ``None`` = a failed draw.
 
-    Returns ``(merged, report)``. ``merged`` carries no key the draws did not themselves
-    carry; ``report`` is the per-row attribution described in the module doc.
+    ``paper_text`` switches on D-104 rules 1, 2 and 4 (module doc); without it names are
+    keyed exactly as ORCH-752 keyed them. Finding 1's compatibility rule applies either way.
+    Returns ``(merged, report)``: ``merged`` carries no key the draws did not carry except
+    :data:`SUPPORT_KEY` on reactions when more than one draw succeeded; ``report`` is the
+    per-row attribution described in the module doc.
     """
 
     n = len(payloads)
     if not any(isinstance(p, dict) for p in payloads):
         raise ValueError("merge_draws needs at least one successful draw")
+    succeeded = sum(1 for p in payloads if isinstance(p, dict))
+    lexicon = PaperLexicon(paper_text) if paper_text and str(paper_text).strip() else None
+    renames: List[Dict[str, Any]] = []
+    notes: Notes = {}
+    enzyme_key: Callable[[str], str] = _strict_key
+    if lexicon is not None:
+        canonical: Canonical = lru_cache(maxsize=None)(lexicon.canonical)
+        rewrite = _rewrite_map(payloads, canonical)
+        payloads = [_canonicalise(p, rewrite, canonical, i, renames, notes) if isinstance(p, dict) else p
+                    for i, p in enumerate(payloads, start=1)]
+        enzyme_key = lambda name: _strict_key(canonical(name)[0])  # noqa: E731
+    for payload in payloads:
+        if isinstance(payload, dict):
+            states = _states_by_key(payload)
+            for row in (payload.get("processes") or {}).get("reactions") or []:
+                if isinstance(row, dict):
+                    notes.setdefault(id(row), {"refs": set(), "renamed": {}})["profile"] = _profile(
+                        row, states, enzyme_key)
     merged: Dict[str, Any] = {}
-    seen: Dict[str, Dict[Tuple[Any, ...], Dict[str, Any]]] = {}
+    seen: Dict[str, Dict[Tuple[Any, ...], List[Dict[str, Any]]]] = {}
     per_draw: Dict[str, List[int]] = {}
     for index, payload in enumerate(payloads, start=1):
         if isinstance(payload, dict):
-            _merge_into(merged, payload, "", index, seen, per_draw, n)
+            _merge_into(merged, payload, "", index, seen, per_draw, n, notes)
 
     buckets: Dict[str, Dict[str, Any]] = {}
     for path, bucket in seen.items():
-        rows = [{k: v for k, v in r.items() if k != "_row"} for r in bucket.values()]
+        records = [record for group in bucket.values() for record in group]
+        for record in records:
+            record["support"] = f"{len(record['draws'])}/{succeeded}"
+            if succeeded > 1 and len(record["draws"]) == 1:
+                record["review_required"] = "found by one draw only"
+            if path == _REACTIONS and succeeded > 1 and isinstance(record["_row"], dict):
+                record["_row"][SUPPORT_KEY] = {"draws": list(record["draws"]), "of": succeeded}
+        rows = [{k: v for k, v in r.items() if not k.startswith("_")} for r in records]
         buckets[path] = {
             "merged": len(rows),
             "rows_per_draw": per_draw.get(path, [0] * n),
             "first_seen_in_draw": [sum(1 for r in rows if r["draws"][0] == d) for d in range(1, n + 1)],
             "unique_to_one_draw": sum(1 for r in rows if len(r["draws"]) == 1),
-            "in_every_successful_draw": sum(
-                1 for r in rows if len(r["draws"]) == sum(1 for p in payloads if isinstance(p, dict))),
+            "in_every_successful_draw": sum(1 for r in rows if len(r["draws"]) == succeeded),
             "rows": rows,
         }
     report = {
         "draws_requested": n,
-        "draws_succeeded": sum(1 for p in payloads if isinstance(p, dict)),
-        "draws_failed": sum(1 for p in payloads if not isinstance(p, dict)),
+        "draws_succeeded": succeeded,
+        "draws_failed": n - succeeded,
+        "paper_lexicon": lexicon.summary() if lexicon is not None else {
+            "status": "not_evaluated", "reason": "no paper text reached the merge"},
+        "names_rewritten": renames,
         "buckets": buckets,
     }
     return merged, report
@@ -363,7 +712,8 @@ def _write_side_file(artifact_dir: Optional[Path], report: Dict[str, Any]) -> st
     return str(path)
 
 
-def run_ensemble(draw: DrawFn, n: int, *, failure: type) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
+def run_ensemble(draw: DrawFn, n: int, *, failure: type,
+                 paper_text: Optional[str] = None) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
     """Issue ``draw`` ``n`` times, union the successes, raise only when every draw failed.
 
     ``failure`` is the exception class that means "this draw produced nothing usable"
@@ -389,7 +739,7 @@ def run_ensemble(draw: DrawFn, n: int, *, failure: type) -> Tuple[Dict[str, Any]
     if not any(isinstance(p, dict) for p in payloads):
         raise failures[-1][1]
 
-    merged, report = merge_draws(payloads)
+    merged, report = merge_draws(payloads, paper_text=paper_text)
     report["failed_draws"] = [
         {"draw": index, "stage": str(getattr(exc, "stage", "") or ""), "error": str(exc)}
         for index, exc in failures
@@ -404,3 +754,227 @@ def run_ensemble(draw: DrawFn, n: int, *, failure: type) -> Tuple[Dict[str, Any]
         ensemble=_summary(report, report_path),
     )
     return merged, attempts
+
+
+# ----------------------------------------------------------------------------- rule 3
+
+#: Entity buckets whose rows carry database identities a reaction participant can resolve to.
+_IDENTITY_BUCKETS = ("compounds", "proteins", "protein_complexes", "nucleic_acids", "element_collections")
+#: ``map_payload`` counts a mapping under this confidence as ``low_confidence_mappings``; such
+#: an identity is not confident enough to merge two reactions on.
+_CONFIDENT = 0.78
+
+
+def _admitted_ids(row: Dict[str, Any]) -> Dict[str, str]:
+    """The identities rule 3 may merge on: real accessions ``map_payload`` left in
+    ``mapped_ids`` after ``_admit_identities`` withheld the unsupported ones -- and only
+    from a confident, non-placeholder mapping. Candidates (``mapping_meta.candidates``),
+    withheld ids (``rejected_mapped_ids``), best-effort and low-confidence matches and
+    Unknown-backed placeholders never count."""
+
+    from t2pw.mapping.identity_admission import external_accessions  # function-local: layering
+    from t2pw.pipeline.entity_identity import (IDENTITY_PLACEHOLDER, IDENTITY_UNRESOLVED,
+                                               is_pathbank_unknown_protein)
+
+    meta = row.get("mapping_meta") if isinstance(row.get("mapping_meta"), dict) else {}
+    if is_pathbank_unknown_protein(row) or meta.get("identity_status") in (IDENTITY_PLACEHOLDER,
+                                                                             IDENTITY_UNRESOLVED):
+        return {}
+    try:
+        confidence = float(meta.get("confidence") or 0.0)
+    except (TypeError, ValueError):
+        return {}
+    if meta.get("best_effort") or confidence < _CONFIDENT:
+        return {}
+    return external_accessions(row)
+
+
+def _lock_id(row: Any) -> str:
+    value = row.get("locked_reaction_id") if isinstance(row, dict) else None
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return str(value)
+    return value.strip() if isinstance(value, str) else ""
+
+
+def _account_locks(payload: Dict[str, Any], quarantined: List[Dict[str, Any]]) -> None:
+    """File merged-away locked reactions exactly as ``dedupe_processes`` files a duplicate
+    locked reaction, and recompute ``locked_reaction_filter_report`` by its rule, so no
+    lock goes ``unaccounted``."""
+
+    existing = payload.get("quarantined_locked_reactions")
+    records = [r for r in existing if isinstance(r, dict)] if isinstance(existing, list) else []
+    records.extend(quarantined)
+    payload["quarantined_locked_reactions"] = records
+    active = {_lock_id(r) for r in (payload.get("processes") or {}).get("reactions") or [] if _lock_id(r)}
+    held = {_lock_id(r) for r in records if _lock_id(r)}
+    prior = payload.get("locked_reaction_filter_report")
+    prior = prior if isinstance(prior, dict) else {}
+    found = max(int(prior.get("locked_reactions_found") or 0), len(active | held))
+    if found:
+        payload["locked_reaction_filter_report"] = {
+            "locked_reactions_found": found,
+            "exported_locked_reactions": len(active),
+            "quarantined_locked_reactions": len(held),
+            "unaccounted_locked_reactions": max(0, found - len(active | held)),
+        }
+
+
+def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """D-104 rule 3: after Stage 6 mapping, two reactions whose defining participants
+    resolve to the same identities are one reaction. Mutates ``payload`` in place.
+
+    Called once, at the end of ``map_ids.map_payload`` -- after identities are assigned
+    and admitted, before the canonical freeze (merge rule 8). Applies only to a payload a
+    pooled Stage 1 produced: one whose reactions carry :data:`SUPPORT_KEY` out of more
+    than one draw. N is a fact about the run that made the payload, not about the process
+    mapping it, so ``T2PW_EXTRACTION_DRAWS`` is deliberately NOT read here: re-mapping a
+    saved N=1 payload under a ``.env`` that says 3 must not move it. Otherwise (every
+    N=1 payload) it returns ``{}`` and touches nothing; when it applies it returns
+    ``{IDENTITY_REPORT_KEY: record}``.
+
+    Per participant, identity = the admitted accessions of the entity row it names
+    (:func:`_admitted_ids`; rows sharing an accession of one kind are one identity, and a
+    group whose accessions disagree in any namespace is no identity at all), else its name
+    -- which at N>1 Stage 1 has already written as the paper's long form (rules 1 and 4).
+    The key is ORCH-752's cofactor-blind key over those identities (rule 7): a participant
+    is currency by name or by sharing an identity with a currency-named entity, and a side
+    made only of currency keeps every identity, so a chelatase's metal still separates Fe
+    from Mg. Rows sharing a key merge only when :func:`_conflict` finds them compatible --
+    cofactor roles, enzymes (by identity) and biological state, exactly as at Stage 1;
+    a conflicting pair stays two rows and is listed under ``refused``. The first row
+    survives with its own evidence and participants, and gains the later row's draws and
+    each cofactor its own quote supports; a merged-away locked reaction is filed as a
+    quarantined duplicate. A row a ``reaction_coupled_transport`` names is never merged
+    away, because its reference would dangle.
+    """
+
+    if not isinstance(payload, dict):
+        return {}
+    pooled = [r[SUPPORT_KEY].get("of") for r in ((payload.get("processes") or {}).get("reactions") or [])
+              if isinstance(r, dict) and isinstance(r.get(SUPPORT_KEY), dict)]
+    n = max((of for of in pooled if isinstance(of, int) and not isinstance(of, bool)), default=0)
+    if n <= 1:
+        return {}
+    from t2pw.mapping.identity_admission import entity_kind_class  # function-local: layering
+
+    path = "/processes/reactions"
+    entities = payload.get("entities") if isinstance(payload.get("entities"), dict) else {}
+    parent: Dict[Any, Any] = {}
+
+    def find(x: Any) -> Any:
+        while parent.setdefault(x, x) != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    rows: List[Tuple[str, List[Tuple[str, str, str]]]] = []
+    for bucket in _IDENTITY_BUCKETS:
+        for row in entities.get(bucket) or []:
+            if isinstance(row, dict) and isinstance(row.get("name"), str) and row["name"].strip():
+                kind = entity_kind_class(bucket)
+                tokens = [(kind, ns, value) for ns, value in sorted(_admitted_ids(row).items())]
+                for token in tokens:
+                    parent[find(token)] = find(tokens[0])
+                rows.append((row["name"], tokens))
+    values: Dict[Any, Dict[Tuple[str, str], set]] = {}
+    for _name, tokens in rows:
+        for kind, ns, value in tokens:
+            values.setdefault(find(tokens[0]), {}).setdefault((kind, ns), set()).add(value)
+    conflicted = {root for root, by_ns in values.items() if any(len(v) > 1 for v in by_ns.values())}
+    exact: Dict[str, Any] = {}
+    by_key: Dict[str, set] = {}
+    for name, tokens in rows:
+        root = find(tokens[0]) if tokens else None
+        ident = ("id", root) if tokens and root not in conflicted else None
+        exact.setdefault(name, ident)
+        by_key.setdefault(_strict_key(name), set()).add(ident)
+    currency = {exact[name] for name, _t in rows if exact[name] and _strict_key(name) in CURRENCY_KEYS}
+
+    def identity(name: str) -> Any:
+        ident = exact.get(name)
+        if name not in exact:
+            found = by_key.get(_strict_key(name), set())
+            ident = next(iter(found)) if len(found) == 1 else None
+        return ident or ("name", _strict_key(name))
+
+    def side(value: Any) -> frozenset:
+        defining, every = set(), set()
+        for item, name in _participants(value):
+            key = _strict_key(name)
+            if not key:
+                continue
+            ident = identity(name)
+            every.add(ident)
+            if not (_is_cofactor(item, key) or ident in currency):
+                defining.add(ident)
+        return frozenset(defining or every)
+
+    processes = payload.get("processes") if isinstance(payload.get("processes"), dict) else {}
+    reactions = processes.get("reactions") if isinstance(processes.get("reactions"), list) else []
+    coupled = {_strict_key(r.get("reaction")) for r in processes.get("reaction_coupled_transports") or []
+               if isinstance(r, dict) and r.get("reaction")}
+    states = _states_by_key(payload)
+    # Enzymes compare by identity too: the same UniProt under two names is one enzyme.
+    survivors: Dict[Tuple[frozenset, frozenset], List[List[Any]]] = {}
+    kept: List[Any] = []
+    merges: List[Dict[str, Any]] = []
+    refused: List[Dict[str, Any]] = []
+    quarantined: List[Dict[str, Any]] = []
+    for index, row in enumerate(reactions):
+        if not isinstance(row, dict):
+            kept.append(row)
+            continue
+        key = (side(row.get("inputs")), side(row.get("outputs")))
+        profile = _profile(row, states, identity)
+        group = survivors.setdefault(key, [])
+        slot = None
+        for candidate in group:
+            reason = _conflict(candidate[1], profile)
+            if not reason:
+                slot = candidate
+                break
+            refused.append({"name": _row_name(row), "would_merge_into": _row_name(candidate[0]),
+                            "json_pointer": f"{path}/{index}", "reason": reason})
+        if slot is None:
+            group.append([row, profile])
+            kept.append(row)
+            continue
+        first = slot[0]
+        if _strict_key(row.get("name")) in coupled:
+            refused.append({"name": _row_name(row), "would_merge_into": _row_name(first),
+                            "json_pointer": f"{path}/{index}", "reason": "named by a reaction_coupled_transport"})
+            kept.append(row)
+            continue
+        slot[1] = _absorb(slot[1], profile)
+        added, withheld = _donate_cofactors(first, row)
+        mine, theirs = first.get(SUPPORT_KEY), row.get(SUPPORT_KEY)
+        if isinstance(theirs, dict):
+            mine = mine if isinstance(mine, dict) else {"draws": [], "of": 0}
+            first[SUPPORT_KEY] = {"draws": sorted(set(mine.get("draws") or []) | set(theirs.get("draws") or [])),
+                                  "of": max(int(mine.get("of") or 0), int(theirs.get("of") or 0))}
+        merges.append({
+            "survivor": _row_name(first), "merged": _row_name(row), "json_pointer": f"{path}/{index}",
+            "bridged_by": RULE_EXACT if row_key(path, row) == row_key(path, first) else RULE_DATABASE_ID,
+            **({"cofactors_added": added} if added else {}),
+            **({"cofactors_withheld": withheld} if withheld else {}),
+        })
+        if _lock_id(row):
+            quarantined.append({
+                "reaction_name": _row_name(row) or "<unnamed>", "reason": "ensemble_identity_duplicate",
+                "action": "merged_into_identity_duplicate", "json_pointer": f"{path}/{index}",
+                "original_reaction": deepcopy(row), "locked_reaction_id": _lock_id(row),
+                "merged_into": _lock_id(first) or _row_name(first),
+            })
+    if merges:
+        processes["reactions"] = kept
+    if quarantined:
+        _account_locks(payload, quarantined)
+    return {IDENTITY_REPORT_KEY: {
+        "draws": n,
+        "reactions_before": len(reactions),
+        "reactions_after": len(kept),
+        "entities_with_admitted_identity": sum(1 for name, _t in rows if exact.get(name)),
+        "conflicting_identity_groups": len(conflicted),
+        "merges": merges,
+        "refused": refused,
+    }}

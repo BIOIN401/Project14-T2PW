@@ -19,7 +19,35 @@ from typing import Any, Dict, List, Optional, Tuple
 # Public entry point
 # ---------------------------------------------------------------------------
 
-def generate_reaction_summary(draft_graph: Any, qa_report: Dict[str, Any]) -> str:
+def _support_lines(payload: Any, count: int) -> List[str]:
+    """One ``Support:`` line per reaction node, ``""`` where there is nothing to say.
+
+    ``build_draft_graph`` makes exactly one reaction node per dict row of
+    ``processes.reactions``, in order, so the i-th node is the i-th dict row. If the counts
+    disagree the alignment is not trusted and nothing is printed.
+    """
+
+    processes = payload.get("processes") if isinstance(payload, dict) else None
+    rows = [r for r in (processes or {}).get("reactions") or [] if isinstance(r, dict)]
+    if len(rows) != count:
+        return [""] * count
+    out: List[str] = []
+    for row in rows:
+        value = row.get("ensemble_support")
+        draws = value.get("draws") if isinstance(value, dict) else None
+        of = value.get("of") if isinstance(value, dict) else None
+        if not isinstance(draws, list) or not isinstance(of, int) or of < 2:
+            out.append("")
+            continue
+        line = f"  Support:   {len(draws)}/{of} draws"
+        if len(draws) == 1:
+            line += " -- REVIEW: only one draw produced this reaction"
+        out.append(line)
+    return out
+
+
+def generate_reaction_summary(draft_graph: Any, qa_report: Dict[str, Any],
+                              payload: Optional[Dict[str, Any]] = None) -> str:
     """
     Convert a DraftGraph + QA report into a human-readable pathway summary.
 
@@ -29,6 +57,11 @@ def generate_reaction_summary(draft_graph: Any, qa_report: Dict[str, Any]) -> st
         A ``DraftGraph`` instance (from draft_graph.py).
     qa_report:
         The dict produced by ``qa_graph.generate_qa_report()``.
+    payload:
+        Optional. The payload the graph was built from. When its reactions carry the
+        N-draw ``ensemble_support`` count (ORCH-754a, D-104 rule 5), each REACTION block
+        shows it on a ``Support:`` line, and a reaction only one draw produced is marked
+        for review. A payload without the key -- every N=1 run -- prints exactly as before.
 
     Returns
     -------
@@ -146,6 +179,7 @@ def generate_reaction_summary(draft_graph: Any, qa_report: Dict[str, Any]) -> st
     # Reactions
     # ------------------------------------------------------------------
     reactions = [n for n in nodes if n.kind == "reaction"]
+    support = _support_lines(payload, len(reactions))
     for i, rxn in enumerate(reactions, 1):
         rxn_key = (rxn.label or "").lower()
         lines.append(f"REACTION {i}: {rxn.label}")
@@ -193,6 +227,8 @@ def generate_reaction_summary(draft_graph: Any, qa_report: Dict[str, Any]) -> st
         if rxn_key in transport_like_reactions:
             rxn_flags.append(f"transport_like — {transport_like_reactions[rxn_key]}")
 
+        if support[i - 1]:
+            lines.append(support[i - 1])
         lines.append(f"  QA flags:  {'; '.join(rxn_flags) if rxn_flags else 'none'}")
         lines.append("")
 
