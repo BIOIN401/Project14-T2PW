@@ -11069,3 +11069,5 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 | correctness bar | C1-C8 in the brief: citations unchanged; accurate species and grade labels with no species transfer; chemistry-only links with no cofactor or generic-name bridges; every link labelled; "novel" never claimed outright; the target-species view kept as a filter |
 | review bar | set before round 0. Blocking = a C1-C8 violation shown end to end, a false connection or wrong label in a realistic case, a provenance loss, a forbidden edit, or a failing gate. At most 2 repair rounds per change set |
 | records | every step is appended to `docs/pathway_mining/evidence/orch760/PROGRESS.md` on the mining branch. The overseer copies the close entry here |
+
+**`ORCH-754` · 2026-10-20 — DONE.** `754d` MERGED at `ff3457fa` after review APPROVE WITH NOTES. Final tip: SMOKE 508 (`g11/ORCH-754/56`); eval-v2 + focused 239 passed, 0 failed (`57`). **`main` fast-forwarded to the sprint tip and pushed** (D-104 § 7). The checkout switch to `main` is held: ORCH-760 commits to sprint from this checkout. Open items in `ORCH-754-RESULT.md` § 5.

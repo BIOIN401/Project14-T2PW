@@ -950,6 +950,7 @@ logs `evidence/orch754/`.
 | `754a` ensemble merge | `tests/test_stage_one_ensemble.py`, `tests/test_stage_one_paper_dictionary.py` | 28 + 94 = **122** |
 | `754b` protein interactions | `tests/test_pwml_interaction_protein_wrappers.py` (new, 24), `tests/test_pwml_interaction_type_spellings.py` (net −1), `tests/test_reaction_evidence.py`, `tests/test_reaction_evidence_view.py` (AppTest, 11) | see `ORCH-754b-RESULT.md` § 15 |
 | `754c` prompts | `tests/test_orch754c_production_prompt_is_measured_control.py`, `tests/test_orch754c_curator_prompt_reverted.py` | 4 |
+| `754d` evaluation layering | `tests/test_name_keys_match_evaluation_matcher.py` (new; pins `pipeline/name_keys.py` equal to the evaluation matcher) | 3; lane `754a`+`754d` focused = **125** |
 
 ### `tests/conftest.py` (new, ORCH-754a)
 
@@ -1005,3 +1006,5 @@ The c081/c089 corpus tests skip any path containing `worktrees`, so a run from `
 (ORCH-750's ensembling borrowed the evaluation matcher), and ORCH-754a extended it. No lane ran the
 `test_eval_v2_*` files, so it was found only at integration (`g11/ORCH-754/54`; at base, `55`). Fixed by
 `ORCH-754d`. **Add `tests/test_eval_v2_*.py` to the integration gate of any change under `src/t2pw/pipeline/`.**
+
+After `754d` (merged `ff3457fa`), `tests/test_eval_v2_*.py` + the focused files + `test_early_failure_replay.py`: **239 passed, 1 xfailed, 0 failed** (`g11/ORCH-754/57`); SMOKE 508 (`56`). The two copies of the normalizer (production `name_keys.py`, evaluator `matcher.py`) must change together; the equality test is the alarm, and its reviewer measured it as weaker than an AST identity check (some Greek-table mutants survive). Strengthening it is open.

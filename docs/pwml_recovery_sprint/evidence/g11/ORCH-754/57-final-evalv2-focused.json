@@ -1,0 +1,207 @@
+{
+  "label": "final-evalv2-focused",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754/57-final-evalv2-focused.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch754/57-final-evalv2-focused",
+    "tests/test_eval_v2_embedding_cache.py",
+    "tests/test_eval_v2_gold_matcher.py",
+    "tests/test_eval_v2_metrics.py",
+    "tests/test_eval_v2_paper_gold.py",
+    "tests/test_eval_v2_pathbank_gold.py",
+    "tests/test_eval_v2_report.py",
+    "tests/test_stage_one_ensemble.py",
+    "tests/test_stage_one_paper_dictionary.py",
+    "tests/test_name_keys_match_evaluation_matcher.py",
+    "tests/test_early_failure_replay.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-10-20T21:58:25+00:00",
+  "finished_at": "2026-10-20T21:58:59+00:00",
+  "duration_seconds": 32.99737669999013,
+  "timeout_seconds": 240.0,
+  "root_pid": 915728,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 915860,
+      "name": "python.exe",
+      "ppid": 915728
+    },
+    {
+      "pid": 908692,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 915508,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 915492,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 910316,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 915704,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 915952,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 915148,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 912796,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 916380,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 915684,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 909780,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 915592,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 912300,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 915316,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 914792,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 917116,
+      "name": "git.exe",
+      "ppid": 915860
+    },
+    {
+      "pid": 917312,
+      "name": "git.exe",
+      "ppid": 915860
+    }
+  ],
+  "descendants_terminated": [
+    908692,
+    909780,
+    910316,
+    912300,
+    912796,
+    914792,
+    915148,
+    915316,
+    915492,
+    915508,
+    915592,
+    915684,
+    915704,
+    915860,
+    915952,
+    916380,
+    917116,
+    917312
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 190584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 884260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 884620,
+      "name": "python.exe"
+    },
+    {
+      "pid": 909500,
+      "name": "python.exe"
+    },
+    {
+      "pid": 914496,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-754\\57-final-evalv2-focused.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "ff3457fa58946e8066dcc97a39b2415264639e70",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-754",
+    "token": "ORCH-754:909500:cf98db9cca83cfa8",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

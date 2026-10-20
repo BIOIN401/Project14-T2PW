@@ -1,6 +1,6 @@
 # ORCH-754 — duplicate merge, protein interactions, prompt v03, then main
 
-**Status:** IN PROGRESS. Orchestrator record; each lane writes its own `ORCH-754{a,b,c}-RESULT.md`.
+**Status:** DONE. All four lanes reviewed and merged into `sprint/pwml-recovery`, integration gates green apart from pre-existing failures, `main` fast-forwarded and pushed (§ 4). Orchestrator record; each lane writes its own `ORCH-754{a,b,c,d}-RESULT.md`.
 Decisions: **D-104** (product owner, 2026-10-19, in session). Base `f9892cdf`.
 
 ## 1. What the product owner asked for
@@ -110,7 +110,7 @@ Review 1 **REJECT** (`989dee54`): case-folded abbreviations (`ACP` renamed acety
 
 ### 3.6 `754d` — evaluation layering
 
-Dispatched after integration found the `eval_v2` layering test red. See § 4.
+Dispatched after integration found `test_no_production_module_imports_evaluation_v2` red (since `70d05e03`). Verbatim copies of the matcher functions in `pipeline/name_keys.py`, with an equality test. Review **APPROVE WITH NOTES**: the copies were found AST-identical, and a 92-output base-vs-tip A/B gave identical hashes. Note: the equality test is weaker than an AST identity check. **Merged at `ff3457fa`.**
 
 ## 4. Gates
 
@@ -129,7 +129,18 @@ Dispatched after integration found the `eval_v2` layering test red. See § 4.
 
 `g11_evidence.py check --task ORCH-754`: 53 artifacts, 0 non-compliant. The 32 without a pin are Chunk D's inner per-node runs.
 
+| after | run | report | result |
+|---|---|---|---|
+| merge of `754d` (`ff3457fa`), final tip | SMOKE | `56` | **508 passed** |
+| | all `test_eval_v2_*` + ensemble, dictionary, name-key and early-failure-replay files | `57` | **239 passed, 1 xfailed, 0 failed** |
+
+**Not re-run after `754d`:** the 82-file union and Chunk D. `754d` touches only name-key imports, and its reviewer proved byte-identical behaviour across 92 outputs, so the union and Chunk D results on `adc49c40` stand.
+
 Reports `01` and `02` were reserved and never written: `01` waited on the heavy lock, which `754b`'s SMOKE held, and `02` failed on a missing log directory. Their placeholders sit in the git-ignored `.staging/`; `g11_evidence.py check --task ORCH-754` exits 0.
+
+## 4a. `main`
+
+`main` was fast-forwarded to the `sprint/pwml-recovery` tip and both were pushed to `origin` (D-104 § 7). **The working checkout was NOT switched to `main`.** A parallel session (ORCH-760, pathway mining) became active during integration and commits ledger rows to `sprint/pwml-recovery` from this checkout (`c60c1755`). Switching the checkout would send its next commit to `main` without it noticing. The switch waits for the product owner.
 
 ## 5. Open for the product owner
 
@@ -138,3 +149,9 @@ Reports `01` and `02` were reserved and never written: `01` waited on the heavy 
    evidence, so this is your call.
 2. **`ORCH-753`, the interrupted gold cohort.** Resume it, or drop it. Building gold for the cohort is
    what ORCH-751 § 5 called "the obvious next investment".
+3. **Switch the checkout to `main`** once ORCH-760 is not committing from the primary checkout (§ 4a).
+4. **The first live 3-draw run is the first end-to-end test** of the ensemble path. Rule 3, the database-ID merge, has only been exercised on synthetic payloads, because it needs a real Stage 6.
+5. **ORCH-747's interaction lines in the LLM-fed summary**, which predate D-104 AMENDMENT 2, still reach the curator and the enrichment agent (AMENDMENT 2 § 3).
+6. **Strengthen the normalizer drift alarm** to an AST identity check (`754d` review note).
+7. **Four tests fail only in the primary checkout** because the database is reachable there (`TEST_MATRIX.md` § ORCH-754). Decide whether those tests should skip when a DB is configured.
+8. **Cleanup the agents could not do** (refused by the permission system): scratch worktrees under `C:/t/bt-orch754b/`, `C:/t/bt-orch754b-rev/`, `C:/t/bt-orch754a-rev/`, and **`C:/t/bt-orch754/env-base` and `env-tip`, which hold copies of `.env`**; plus two idle `python -` processes (PIDs 193876, 190584) left by the `754r0` reviewer.
