@@ -556,6 +556,29 @@ def _absorb(profile: Optional[Dict[str, Any]], other: Optional[Dict[str, Any]]) 
             "state": state}
 
 
+def _entry_quotes(row: Any) -> List[Dict[str, Any]]:
+    """Every ``evidence`` value INSIDE ``row`` -- on an enzyme, modifier, participant,
+    cofactor, transporter or any other entry -- with the JSON pointer it sits at (review N5,
+    round 5: a merged-away row's entry quotes are recorded, not only its own). The row's
+    top-level ``evidence`` is recorded beside it, so it is not repeated here."""
+
+    found: List[Dict[str, Any]] = []
+
+    def walk(node: Any, at: str) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key == "evidence" and at and value:
+                    found.append({"at": f"{at}/evidence", "evidence": value})
+                else:
+                    walk(value, f"{at}/{key}")
+        elif isinstance(node, list):
+            for index, value in enumerate(node):
+                walk(value, f"{at}/{index}")
+
+    walk(row, "")
+    return found
+
+
 def _record_merge(record: Dict[str, Any], merge: Dict[str, Any], audit: Dict[str, Any]) -> None:
     """File one merge's audit on its side-file record (lists extend, so nothing is lost)."""
 
@@ -593,8 +616,12 @@ def _union(dest: List[Any], items: List[Any], path: str, draw: int,
         if record["draws"][-1] != draw:
             record["draws"].append(draw)
         merge: Dict[str, Any] = {"draw": draw, "name": _row_name(item), "bridged_by": _bridge(record["_notes"], note)}
+        if RULE_TYPO in merge["bridged_by"]:
+            merge["typo_flag"] = TYPO_FLAG  # D-104 amendment 4: a typo bridge is flagged for review
         if isinstance(item, dict) and item.get("evidence"):
             merge["evidence"] = item.get("evidence")  # review N5: no merged row's quote is lost
+        if _entry_quotes(item):
+            merge["entry_evidence"] = _entry_quotes(item)  # ... nor an entry's (round 5)
         audit: Dict[str, Any] = {}
         theirs = note.get("profile")
         if path == _REACTIONS and isinstance(item, dict) and theirs and record["_own"]:
@@ -612,6 +639,8 @@ def _union(dest: List[Any], items: List[Any], path: str, draw: int,
                 merge["became_survivor"] = why
                 merge["previous_survivor"] = _row_name(previous)
                 merge["previous_survivor_evidence"] = previous.get("evidence")
+                if _entry_quotes(previous):
+                    merge["previous_survivor_entry_evidence"] = _entry_quotes(previous)
                 record["name"] = _row_name(item)
                 audit, record["_own"] = _fold(record["_row"], previous, theirs, previous_profile)
             else:
@@ -771,16 +800,29 @@ def merge_draws(payloads: Sequence[Optional[Dict[str, Any]]],
     lexicon = PaperLexicon(paper_text) if paper_text and str(paper_text).strip() else None
     renames: List[Dict[str, Any]] = []
     notes: Notes = {}
-    enzyme_key: Callable[[str], str] = _strict_key
+    #: (draw, name) -> a typo snap applied to a name only COMPARED through the paper (an
+    #: enzyme, an interaction endpoint...), never written (D-104 amendment 4, probe p11).
+    compared: Dict[Tuple[int, str], Dict[str, Any]] = {}
+
+    def draw_canonical(number: int) -> Canonical:
+        def canon(name: str) -> Tuple[str, List[str], str]:
+            hit = canonical(name)
+            if RULE_TYPO in hit[1]:
+                compared.setdefault((number, name), {"draw": number, "from": name, "to": hit[0], "compared_only": True})
+            return hit
+        return canon
+
     if lexicon is not None:
         canonical: Canonical = lru_cache(maxsize=None)(lexicon.canonical)
         rewrite = _rewrite_map(payloads, canonical)
-        payloads = [_canonicalise(p, rewrite, canonical, i, renames, notes) if isinstance(p, dict) else p
+        payloads = [_canonicalise(p, rewrite, draw_canonical(i), i, renames, notes) if isinstance(p, dict) else p
                     for i, p in enumerate(payloads, start=1)]
-        enzyme_key = lambda name: _strict_key(canonical(name)[0])  # noqa: E731
-    for payload in payloads:
+    for number, payload in enumerate(payloads, start=1):
         if isinstance(payload, dict):
             states = _states_by_key(payload)
+            enzyme_key: Callable[[str], str] = _strict_key
+            if lexicon is not None:
+                enzyme_key = lambda name, canon=draw_canonical(number): _strict_key(canon(name)[0])  # noqa: E731
             for row in (payload.get("processes") or {}).get("reactions") or []:
                 if isinstance(row, dict):
                     notes.setdefault(id(row), {"refs": set(), "renamed": {}})["profile"] = _profile(
@@ -808,6 +850,8 @@ def merge_draws(payloads: Sequence[Optional[Dict[str, Any]]],
             "in_every_successful_draw": sum(1 for r in rows if len(r["draws"]) == succeeded),
             "rows": rows,
         }
+    written = [{"draw": r["draw"], "from": r["from"], "to": r["to"]} for r in renames if r.get("flag") == TYPO_FLAG]
+    done_written = {(w["draw"], w["from"]) for w in written}
     report = {
         "draws_requested": n,
         "draws_succeeded": succeeded,
@@ -815,7 +859,8 @@ def merge_draws(payloads: Sequence[Optional[Dict[str, Any]]],
         "paper_lexicon": lexicon.summary() if lexicon is not None else {
             "status": "not_evaluated", "reason": "no paper text reached the merge"},
         "names_rewritten": renames,
-        "typo_snapped": [{"draw": r["draw"], "from": r["from"], "to": r["to"]} for r in renames if r.get("flag") == TYPO_FLAG],
+        # Every snap, written (a participant renamed) or compared only (amendment 4).
+        "typo_snapped": written + [c for (draw, name), c in compared.items() if (draw, name) not in done_written],
         "buckets": buckets,
     }
     return merged, report
@@ -845,6 +890,44 @@ def _summary(report: Dict[str, Any], report_path: str) -> Dict[str, Any]:
     }
 
 
+def _quote_lines(who: str, quotes: Any) -> List[str]:
+    return [f"{who} entry quote at {q.get('at')}: {q.get('evidence')!r}" for q in quotes or []]
+
+
+def _flag_lines(merge: Dict[str, Any]) -> List[str]:
+    lines = []
+    if merge.get("flag"):
+        lines.append(f"    FLAG (review): {merge['flag']['reason']} -- {merge['flag']['undefined_state']} "
+                     f"is not defined in its payload's biological_states")
+    if merge.get("typo_flag"):
+        lines.append(f"    FLAG (review): {merge['typo_flag']} -- bridged by a typo snap (see TYPO SNAPS)")
+    return lines
+
+
+def _audit_lines(entry: Dict[str, Any]) -> List[str]:
+    """What a survivor took from, or kept over, the rows merged into it -- a Stage-1 row
+    record or a rule-3 merge entry (whose ``state_taken`` is one value, not a list)."""
+
+    states = entry.get("state_taken")
+    lines = [f"  Biological state taken from a merged row: {state!r}"
+             for state in (states if isinstance(states, list) else [states] if states else [])]
+    for enzyme in entry.get("enzymes_added") or []:
+        lines.append(f"  Enzyme added from a merged row: {enzyme.get('enzyme')} -- supporting quote: "
+                     f"{enzyme.get('supporting_quote')!r}")
+    for enzyme in entry.get("enzymes_kept") or []:
+        lines.append(f"  Enzyme kept over a merged row's smaller set: {enzyme.get('enzyme')} -- supporting quote: "
+                     f"{enzyme.get('supporting_quote')!r}")
+    for enzyme in entry.get("enzymes_withheld") or []:
+        lines.append(f"  Enzyme withheld: {enzyme.get('enzyme')} -- no quote names it; the donor's quote: "
+                     f"{enzyme.get('donor_evidence')!r}")
+    if entry.get("cofactors_added"):
+        lines.append(f"  Cofactors added from a merged row: {', '.join(entry['cofactors_added'])}")
+    for withheld in entry.get("cofactors_withheld") or []:
+        lines.append(f"  Cofactor withheld ({withheld.get('side')}): {withheld.get('cofactor')} -- this row's quote "
+                     f"does not name it; the donor's quote: {withheld.get('donor_evidence')!r}")
+    return lines
+
+
 def render_report_text(report: Dict[str, Any]) -> str:
     """The side file as text a person reads (D-104 rule 5; product-owner ruling 2026-10-20).
 
@@ -868,7 +951,8 @@ def render_report_text(report: Dict[str, Any]) -> str:
         + "".join(f"; draw {f.get('draw')} failed ({f.get('error')})" for f in report.get("failed_draws") or []),
         f"Paper dictionary: {dictionary}",
         f"Pooled reactions: {len(rows)} ({sum(1 for r in rows if r.get('review_required'))} found by one draw only; "
-        f"{sum(1 for r in rows for m in r.get('merges') or [] if m.get('flag'))} merge(s) flagged for review)",
+        f"{sum(1 for r in rows for m in r.get('merges') or [] if m.get('flag') or m.get('typo_flag'))} "
+        "merge(s) flagged for review)",
         "",
     ]
     for number, row in enumerate(rows, 1):
@@ -883,34 +967,20 @@ def render_report_text(report: Dict[str, Any]) -> str:
                             f"{merge['became_survivor']}" if merge.get("became_survivor") else ""))
             if merge.get("evidence"):
                 lines.append(f"    its quote: {merge['evidence']!r}")
+            lines += _quote_lines("    its", merge.get("entry_evidence"))
             if merge.get("previous_survivor_evidence"):
                 lines.append(f"    the displaced survivor's quote: {merge['previous_survivor_evidence']!r}")
-            if merge.get("flag"):
-                lines.append(f"    FLAG (review): {merge['flag']['reason']} -- {merge['flag']['undefined_state']} "
-                             f"is not defined in its draw's biological_states")
-        for state in row.get("state_taken") or []:
-            lines.append(f"  Biological state taken from a merged row: {state!r}")
-        for enzyme in row.get("enzymes_added") or []:
-            lines.append(f"  Enzyme added from a merged row: {enzyme.get('enzyme')} -- supporting quote: "
-                         f"{enzyme.get('supporting_quote')!r}")
-        for enzyme in row.get("enzymes_kept") or []:
-            lines.append(f"  Enzyme kept over a merged row's smaller set: {enzyme.get('enzyme')} -- supporting quote: "
-                         f"{enzyme.get('supporting_quote')!r}")
-        for enzyme in row.get("enzymes_withheld") or []:
-            lines.append(f"  Enzyme withheld: {enzyme.get('enzyme')} -- no quote names it; the donor's quote: "
-                         f"{enzyme.get('donor_evidence')!r}")
+            lines += _quote_lines("    the displaced survivor's", merge.get("previous_survivor_entry_evidence"))
+            lines += _flag_lines(merge)
+        lines += _audit_lines(row)
         for other in row.get("kept_apart_from") or []:
             lines.append(f"  Kept apart from {other.get('name')!r} (draws {', '.join(map(str, other.get('draws') or []))}): "
                          f"{other.get('reason')}")
-        if row.get("cofactors_added"):
-            lines.append(f"  Cofactors added from a merged row: {', '.join(row['cofactors_added'])}")
-        for withheld in row.get("cofactors_withheld") or []:
-            lines.append(f"  Cofactor withheld ({withheld.get('side')}): {withheld.get('cofactor')} -- this row's quote "
-                         f"does not name it; the donor's quote: {withheld.get('donor_evidence')!r}")
         lines.append("")
     snaps = report.get("typo_snapped") or []
     lines.append(f"TYPO SNAPS -- each FLAGGED for review ({len(snaps)})")
-    lines += [f"  FLAG (review): {TYPO_FLAG} -- draw {t.get('draw')}: {t.get('from')!r} -> {t.get('to')!r}" for t in snaps]
+    lines += [f"  FLAG (review): {TYPO_FLAG} -- draw {t.get('draw')}: {t.get('from')!r} -> {t.get('to')!r}"
+              + (" (compared only; written as the draw wrote it)" if t.get("compared_only") else "") for t in snaps]
     lines.append("")
     renames = report.get("names_rewritten") or []
     lines.append(f"NAMES REWRITTEN ({len(renames)})")
@@ -1109,9 +1179,13 @@ def merge_on_mapped_identity(payload: Dict[str, Any], report: Optional[Dict[str,
     (``duplicate_locked_reaction`` / ``quarantined_from_active_reactions``, ``json_pointer``
     naming the row actually merged away); two rows sharing a lock id drop the loser
     silently, the lock staying exported; ``locked_reaction_filter_report`` is recomputed by
-    dedupe's rule. One difference, stated: among rows the lock rule does not order, the
-    survivor is chosen by the product owner's Q1/Q2 preference and the loser's content is
-    folded in, where dedupe picks ``_best_record`` and folds nothing. A row a
+    dedupe's rule. Two differences, stated: among rows the lock rule does not order, the
+    survivor is chosen by the product owner's Q1/Q2 preference, where dedupe picks
+    ``_best_record``; and in EVERY merge -- one the lock rule decided included -- the loser's
+    content (a defined state, quoted enzymes, quoted cofactors) is folded into the survivor
+    and recorded, where dedupe folds nothing (probe p3: a locked survivor takes an unlocked
+    row's ``biological_state``). Every quote the loser carried, its own and its entries',
+    is recorded on the merge entry (review N5, round 5). A row a
     ``reaction_coupled_transport`` names is never merged away, because its reference would
     dangle.
     """
@@ -1240,6 +1314,7 @@ def merge_on_mapped_identity(payload: Dict[str, Any], report: Optional[Dict[str,
         merges.append({
             "survivor": _row_name(first), "merged": _row_name(away), "json_pointer": f"{path}/{away_index}",
             "bridged_by": bridged, "merged_evidence": away.get("evidence"),
+            **({"merged_entry_evidence": _entry_quotes(away)} if _entry_quotes(away) else {}),
             **({"became_survivor": why} if why else {}),
             **({"flag": {"reason": UNDEFINED_STATE_FLAG, "undefined_state": undefined}} if undefined else {}),
             **audit,
@@ -1312,12 +1387,14 @@ def _write_identity_side_file(artifact_dir: Optional[Path], record: Dict[str, An
     lines = [f"DATABASE-IDENTITY MERGE (rule 3, after mapping): {record['reactions_before']} -> "
              f"{record['reactions_after']} reactions"]
     for m in record["merges"]:
-        lines.append(f"  {m['survivor']!r} <- {m['merged']!r}: bridged by {m['bridged_by']}")
-        if m.get("flag"):
-            lines.append(f"    FLAG (review): {m['flag']['reason']} -- {m['flag']['undefined_state']}")
+        lines.append(f"  {m['survivor']!r} <- {m['merged']!r}: bridged by {m['bridged_by']}"
+                     + (f"; the survivor because {m['became_survivor']}" if m.get("became_survivor") else ""))
+        if m.get("merged_evidence"):
+            lines.append(f"    merged row's quote: {m['merged_evidence']!r}")
+        lines += _quote_lines("    merged row's", m.get("merged_entry_evidence"))
+        lines += _flag_lines(m)
+        lines += ["  " + line for line in _audit_lines(m)]
     lines += [f"  kept apart: {r['name']!r} from {r['would_merge_into']!r}: {r['reason']}" for r in record["refused"]]
-    lines += [f"  merged row's quote ({m['merged']!r}): {m['merged_evidence']!r}" for m in record["merges"]
-              if m.get("merged_evidence")]
     lines += [f"  mapping-report pointer moved: {m['from']} -> {m['to']}" for m in record.get("report_pointers_moved") or []]
     try:
         path.parent.mkdir(parents=True, exist_ok=True)

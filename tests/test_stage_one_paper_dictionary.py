@@ -370,9 +370,11 @@ def test_ruling_n4_the_four_chlorophyll_typos_still_snap_and_are_flagged() -> No
                         .read_text(encoding="utf-8")) for i in (1, 2, 3)]
     paper = (evidence / "orch754a_inputs" / "papers" / "PMC5130987.txt").read_text(encoding="utf-8")
     _merged, report = merge_draws(draws, paper_text=paper)
-    snapped = {(t["from"], t["to"]) for t in report["typo_snapped"]}
-    assert snapped == {("geranyllgeraniol", "geranylgeraniol"), ("porphobilogen (PBG)", "porphobilinogen"),
-                       ("hydroxymethybilane (HMB)", "hydroxymethylbilane"), ("bilverdin IX", "biliverdin IX")}
+    snapped = {(t["from"], t["to"], t.get("compared_only", False)) for t in report["typo_snapped"]}
+    assert snapped == {("geranyllgeraniol", "geranylgeraniol", False), ("porphobilogen (PBG)", "porphobilinogen", False),
+                       ("hydroxymethybilane (HMB)", "hydroxymethylbilane", False), ("bilverdin IX", "biliverdin IX", False),
+                       # round 5 (probe p11's class): an enzyme name compared through the paper, now flagged too
+                       ("geranyllgeranyl reductase", "geranylgeranyl reductase", True)}
 
 
 def test_shared_locant_never_bridges_a_different_locant() -> None:
@@ -847,6 +849,135 @@ def test_round4_a_quoted_enzyme_over_an_empty_set_merges_and_records_its_quote()
     assert (row["name"], [e["entity"] for e in row["enzymes"]]) == ("bare", ["EnzQ"])
     [rec] = report["buckets"]["/processes/reactions"]["rows"]
     assert rec["enzymes_added"] == [{"enzyme": "EnzQ", "supporting_quote": named["evidence"]}]
+
+
+# ---------------------------------------------------------------- round 5: quote conservation (review N5, probe p12)
+
+
+def _evidence(node: Any) -> List[Any]:
+    """Every non-empty ``evidence`` value anywhere in ``node`` (rows, entries, participants)."""
+
+    if isinstance(node, dict):
+        return [v for k, v in node.items() if k == "evidence" and v] + [
+            q for k, v in node.items() if k != "evidence" for q in _evidence(v)]
+    if isinstance(node, list):
+        return [q for v in node for q in _evidence(v)]
+    return []
+
+
+def _strings(node: Any) -> set:
+    if isinstance(node, dict):
+        return {s for v in node.values() for s in _strings(v)}
+    if isinstance(node, list):
+        return {s for v in node for s in _strings(v)}
+    return {node} if isinstance(node, str) else set()
+
+
+def _lost(inputs: List[Any], output: Any, side: Any, text: str = "") -> List[str]:
+    """Quotes of the inputs found verbatim neither in the output payload nor in the side
+    file -- its JSON and, when given, its human ``.txt``."""
+
+    kept, recorded = _strings(output), _strings(side)
+    return sorted({q for x in inputs for q in _evidence(x)
+                   if q not in kept and (q not in recorded or (text and repr(q) not in text))})
+
+
+EVIDENCE_DIR = ROOT / "docs" / "pwml_recovery_sprint" / "evidence"
+COHORT = {
+    "chlorophyll": (EVIDENCE_DIR / "orch752_chlorophyll_payloads", "PMC5130987"),
+    "enterobactin": (EVIDENCE_DIR / "orch754a_inputs" / "PMC12096016_enterobactin", "PMC12096016"),
+    "menaquinone": (EVIDENCE_DIR / "orch754a_inputs" / "PMC12421875_menaquinone", "PMC12421875"),
+}
+_PLAIN = {"name": "plain", "inputs": [{"entity": "X1", "evidence": "X1 enters (draw-1 participant)"}], "outputs": ["X2"],
+          "modifiers": [{"entity": "EnzQ", "evidence": "EnzQ is required (draw-1 modifier)"}],
+          "evidence": "EnzQ turns X1 into X2"}
+_STATED = {"name": "stated", "inputs": ["X1"], "outputs": ["X2"], "biological_state": "plastid state",
+           "modifiers": [{"entity": "EnzQ", "evidence": "EnzQ acts in plastids (draw-2 modifier)"}],
+           "evidence": "EnzQ turns X1 into X2 in plastids"}
+STAGE1_SYNTHETIC = {  # the survivor is displaced, or keeps its place, over a row whose entries carry quotes
+    "displaced_survivor": [_draw([_PLAIN]), _draw([_STATED], biological_states=STATES)],
+    "kept_survivor": [_draw([_STATED], biological_states=STATES), _draw([_PLAIN])],
+}
+
+
+@pytest.mark.parametrize("case", [*COHORT, *STAGE1_SYNTHETIC])
+def test_round5_stage1_conserves_every_quote_of_every_draw(case: str) -> None:
+    """Probe p12: every distinct evidence string in any input draw -- a row's, or an enzyme,
+    modifier, participant or cofactor entry's -- is in the pooled payload or the side file."""
+
+    if case in COHORT:
+        folder, pmc = COHORT[case]
+        draws = [json.loads((folder / f"control__run{i}__payload.json").read_text(encoding="utf-8")) for i in (1, 2, 3)]
+        paper = (EVIDENCE_DIR / "orch754a_inputs" / "papers" / f"{pmc}.txt").read_text(encoding="utf-8")
+    else:
+        draws, paper = STAGE1_SYNTHETIC[case], PAPER
+    merged, report = merge_draws(deepcopy(draws), paper_text=paper)
+    # The .txt renders reaction rows only (ruling 2026-10-20), so the reaction-only synthetic
+    # cases also check it; every bucket's quotes are checked against the JSON side file.
+    assert _lost(draws, merged, report, render_report_text(report) if case in STAGE1_SYNTHETIC else "") == []
+
+
+_FECH_A = {"name": "ferro A", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["protoheme"],
+           "enzymes": [{"entity": "FECH", "evidence": "FECH inserts iron (row A entry)"}], "evidence": "FECH makes protoheme"}
+_FECH_B = {"name": "ferro B", "inputs": [{"entity": "protoporphyrin IX", "evidence": "row B participant quote"}, "Fe2+"],
+           "outputs": ["heme b"], "enzymes": [{"entity": "FECH", "evidence": "FECH inserts iron (row B entry)"}],
+           "evidence": "FECH makes heme b"}
+RULE3_SYNTHETIC = {
+    "first_survives": [_FECH_A, _FECH_B],
+    "locked_later_row_survives": [_FECH_A, {**_FECH_B, "locked_reaction_id": "L9"}],
+    "larger_enzyme_set_survives": [_FECH_A, {**_FECH_B, "enzymes": _FECH_B["enzymes"] + [
+        {"entity": "GUN4", "evidence": "GUN4 assists FECH (row B entry)"}], "evidence": "FECH and GUN4 make heme b"}],
+}
+
+
+@pytest.mark.usefixtures("pooled_run")
+@pytest.mark.parametrize("case", list(RULE3_SYNTHETIC))
+def test_round5_rule3_conserves_every_quote_of_every_row(case: str) -> None:
+    rows = deepcopy(RULE3_SYNTHETIC[case])
+    payload = _mapped(rows, [_row("protoheme", HEME), _row("heme b", HEME)], locked_reaction_filter_report={
+        "locked_reactions_found": sum(1 for r in rows if r.get("locked_reaction_id"))})
+    record = merge_on_mapped_identity(payload)[IDENTITY_REPORT_KEY]
+    assert record["reactions_after"] == 1
+    assert _lost(rows, payload, record) == []
+
+
+def test_round5_an_enzyme_name_snap_is_listed_and_its_merge_flagged() -> None:
+    """Probe p11 (D-104 amendment 4): an enzyme name compared through the paper's spelling is
+    a typo snap like any other -- listed under ``typo_snapped`` and its merge flagged."""
+
+    paper = "Glutamyl-tRNA reductase converts glutamyl-tRNA to glutamate semialdehyde in the plastid."
+    a = {"name": "a", "inputs": ["glutamyl-tRNA"], "outputs": ["glutamate semialdehyde"],
+         "enzymes": [{"entity": "Glutamyl-tRNA reductase"}], "evidence": "Glutamyl-tRNA reductase converts glutamyl-tRNA"}
+    b = {"name": "b", "inputs": ["glutamyl-tRNA"], "outputs": ["glutamate semialdehyde"],
+         "enzymes": [{"entity": "Glutamyl-tRNA reducase"}], "evidence": "Glutamyl-tRNA reducase converts glutamyl-tRNA"}
+    merged, report = merge_draws([_draw([a]), _draw([b])], paper_text=paper)
+    [row] = _reactions(merged)
+    assert row["enzymes"] == [{"entity": "Glutamyl-tRNA reductase"}]
+    assert report["typo_snapped"] == [{"draw": 2, "from": "Glutamyl-tRNA reducase", "to": "Glutamyl-tRNA reductase",
+                                       "compared_only": True}]
+    [merge] = report["buckets"]["/processes/reactions"]["rows"][0]["merges"]
+    assert merge["bridged_by"] == ["typo"] and merge["typo_flag"] == "typo_snapped"
+    text = render_report_text(report)
+    assert "1 merge(s) flagged for review" in text and "TYPO SNAPS -- each FLAGGED for review (1)" in text
+
+
+def test_round5_the_rule3_text_prints_what_the_survivor_took(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    states = [{"name": "chloroplast", "subcellular_location": "chloroplast"}]
+    rows = [{"name": "ferro locked", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["protoheme"],
+             "evidence": "paper quote", "locked_reaction_id": "rxn_lock_001"},
+            {"name": "ferro enrichment", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["heme b"],
+             "evidence": "db", "biological_state": "chloroplast"}]
+    payload = _mapped(rows, [_row("protoheme", HEME), _row("heme b", HEME)], biological_states=states,
+                      locked_reaction_filter_report={"locked_reactions_found": 1})
+    monkeypatch.setenv(ENV_VAR, "3")
+    diag.activate(run_id="orch754a-r5", artifact_dir=tmp_path)
+    try:
+        _record_pooled_stage1()
+        merge_on_mapped_identity(payload)
+    finally:
+        diag.deactivate()
+    text = (tmp_path / REPORT_NAME).with_suffix(".txt").read_text(encoding="utf-8")
+    assert "Biological state taken from a merged row: 'chloroplast'" in text
 
 
 # --------------------------------------------------------------------------- finding 4: the suite ignores .env's draw count
