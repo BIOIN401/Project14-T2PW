@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 from copy import deepcopy
 from pathlib import Path
@@ -508,7 +509,7 @@ def test_rule3_same_name_with_different_ids_never_merges() -> None:
 def test_rule3_without_an_id_the_identity_is_the_long_form_stage1_wrote() -> None:
     pooled, _ = merge_draws([_draw([{"name": "a", "inputs": ["GSA"], "outputs": ["X1"], "evidence": "q"}]),
                              _draw([{"name": "b", "inputs": ["Glu 1-semialdehyde (GSA)"], "outputs": ["X1"],
-                                     "enzymes": [{"entity": "E9"}], "evidence": "q"}],
+                                     "enzymes": [{"entity": "E9"}], "evidence": "E9 makes X1"}],
                                    biological_states=[{"name": "s", "subcellular_location": "cytosol"}])],
                             paper_text=PAPER)
     assert [r["inputs"] for r in _reactions(pooled)] == [["Glu 1-semialdehyde"]]  # one row, long form
@@ -683,25 +684,169 @@ def _map_offline(payload: Dict[str, Any], tmp_path: Path) -> Dict[str, Any]:
         return map_ids.map_payload(payload, cache_path=tmp_path / "cache.json", id_source="db", use_cache=False)
 
 
-def test_map_payload_never_runs_rule3_until_a_stage6_seam_is_authorised(monkeypatch: pytest.MonkeyPatch,
-                                                                         tmp_path: Path) -> None:
-    """Ruling N2: rule 3 at Stage 6 only. ``map_payload`` cannot tell Stage 6 from the RAG
-    round or Stage 2B without an edit to ``streamlit_app.py``, so it does not run rule 3 at
-    all -- not even in a pooled run -- and the mapping report never mentions it."""
+# ---------------------------------------------------------------- round 4: rule 3 at Stage 6 (D-104 amendment 5)
 
-    rows = [{"name": "a", "inputs": ["X1"], "outputs": ["X2"], "evidence": "q"},
-            {"name": "b", "inputs": ["x1"], "outputs": ["X2"], "evidence": "q"}]
-    payload = _mapped(rows, [{"name": "X1"}, {"name": "X2"}])
-    monkeypatch.setenv(ENV_VAR, "3")
-    diag.activate(run_id="orch754a-wiring", artifact_dir=tmp_path / "diag")
+
+def _resolver(admitted: bool):
+    """A stand-in for ``map_ids._map_compound_with_strategy``: heme b and protoheme resolve
+    to one ChEBI record -- admitted when ``admitted``, else offered only as a candidate."""
+
+    ids = {"protoheme": "CHEBI:17627", "heme b": "CHEBI:17627", "protoporphyrin IX": "CHEBI:15430"}
+
+    def fake(*, name: str, **_: Any) -> Dict[str, Any]:
+        chebi = ids.get(name)
+        if chebi is None:
+            return {"status": "unmapped", "reason": "no_match", "candidates": []}
+        candidate = {"name": name, "mapped_ids": {"chebi": chebi}}
+        if not admitted:
+            return {"status": "unmapped", "reason": "ambiguous", "candidates": [candidate]}
+        return {"status": "mapped", "mapped_ids": {"chebi": chebi}, "confidence": 1.0, "provider": "fake",
+                "source": "api", "chosen_rule": "exact_name", "candidates": [candidate],
+                "resolution": {"status": "matched"}}
+
+    return fake
+
+
+STAGE6_ROWS = [{"name": "ferro A", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["protoheme"], "evidence": "q1"},
+               {"name": "other", "inputs": ["X7"], "outputs": ["X8"], "evidence": "q2"},
+               {"name": "ferro B", "inputs": ["protoporphyrin IX", "Fe2+"], "outputs": ["heme b"], "evidence": "q3"}]
+
+
+def _stage6(tmp_path: Path, *, keyword: Any, admitted: bool = True, pooled: Any = 3, env: Any = "3",
+            monkeypatch: pytest.MonkeyPatch) -> Dict[str, Any]:
+    """``map_payload`` offline on the protoheme/heme b payload, in a run that pooled
+    ``pooled`` successful draws (``None``: Stage 1 never pooled)."""
+
+    from t2pw.mapping import map_ids
+
+    if env is None:
+        monkeypatch.delenv(ENV_VAR, raising=False)
+    else:
+        monkeypatch.setenv(ENV_VAR, env)
+    payload = _mapped(STAGE6_ROWS, [{"name": n} for n in ("protoporphyrin IX", "Fe2+", "protoheme", "heme b", "X7", "X8")])
+    kwargs = {} if keyword is None else {"merge_identity_duplicates": keyword}
+    diag.activate(run_id="orch754a-stage6", artifact_dir=tmp_path / "diag")
     try:
-        _record_pooled_stage1()
-        pooled = _map_offline(deepcopy(payload), tmp_path)
+        if pooled is not None:
+            _record_pooled_stage1(pooled)
+        with patch.object(map_ids, "_map_compound_with_strategy", side_effect=_resolver(admitted)), \
+                patch.dict(os.environ, {"T2PW_SPECIES_LLM": "0", "T2PW_SPECIES_NCBI": "0"}), \
+                patch.object(map_ids.PathBankDbResolver, "from_env", classmethod(lambda cls, overrides=None: None)), \
+                patch.object(map_ids, "_ai_protein_synonym_lookup", return_value=[]), \
+                patch.object(map_ids.HttpClient, "get", side_effect=RuntimeError("network call during an offline run")):
+            return map_ids.map_payload(deepcopy(payload), cache_path=tmp_path / "cache.json", id_source="db",
+                                       use_cache=False, **kwargs)
     finally:
         diag.deactivate()
-    assert [r["name"] for r in _reactions(pooled["payload"])] == ["a", "b"]
-    assert IDENTITY_REPORT_KEY not in json.dumps(pooled["report"])
+
+
+def _canon(result: Dict[str, Any]) -> str:
+    return json.dumps(result, sort_keys=True, ensure_ascii=False, default=str)
+
+
+def test_stage6_merges_synonyms_sharing_an_admitted_id(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    result = _stage6(tmp_path, keyword=True, monkeypatch=monkeypatch)
+    assert [r["name"] for r in _reactions(result["payload"])] == ["ferro A", "other"]
+    [record] = json.loads((tmp_path / "diag" / "ensemble_identity_merge_report.json").read_text(encoding="utf-8"))
+    assert [(m["survivor"], m["merged"], m["bridged_by"]) for m in record["merges"]] == [("ferro A", "ferro B", "database-id")]
+    # Review N6: no pointer in the mapping report names a reaction past the end.
+    pointers = re.findall(r'"/processes/reactions/(\d+)', json.dumps(result["report"]))
+    assert all(int(i) < 2 for i in pointers)
+
+
+def test_stage6_candidate_ids_do_not_merge(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    result = _stage6(tmp_path, keyword=True, admitted=False, monkeypatch=monkeypatch)
+    assert [r["name"] for r in _reactions(result["payload"])] == ["ferro A", "other", "ferro B"]
+
+
+@pytest.mark.parametrize("pooled, env", [(None, "3"), (1, "3"), (3, None)],
+                         ids=["stage1_never_pooled", "one_draw_succeeded", "draw_count_one"])
+def test_stage6_runs_rule3_only_when_the_run_pooled(tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+                                                    pooled: Any, env: Any) -> None:
+    on = _stage6(tmp_path / "on", keyword=True, pooled=pooled, env=env, monkeypatch=monkeypatch)
+    off = _stage6(tmp_path / "off", keyword=None, pooled=pooled, env=env, monkeypatch=monkeypatch)
+    assert len(_reactions(on["payload"])) == 3
+    assert _canon(on) == _canon(off)  # at N=1 Stage 6 is the default call, byte for byte
+
+
+@pytest.mark.parametrize("keyword", [None, False], ids=["default", "explicit_false"])
+def test_every_non_stage6_call_never_runs_rule3_even_in_a_pooled_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+                                                                     keyword: Any) -> None:
+    result = _stage6(tmp_path, keyword=keyword, monkeypatch=monkeypatch)
+    assert len(_reactions(result["payload"])) == 3
     assert not (tmp_path / "diag" / "ensemble_identity_merge_report.json").exists()
+
+
+def test_rule3_moves_the_reports_reaction_pointers(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Review N6, exactly: survivors move to their new index with their sub-path; a merged-away
+    row's pointer moves to its survivor's reaction; non-reaction pointers are untouched."""
+
+    monkeypatch.setenv(ENV_VAR, "3")
+    diag.activate(run_id="orch754a-n6")
+    try:
+        _record_pooled_stage1()
+        payload = _mapped(STAGE6_ROWS, [_row("protoheme", HEME), _row("heme b", HEME)])
+        report = {"enzyme_complex_conversion": {"actions": [
+            {"json_pointer": "/processes/reactions/0/enzymes/0"}, {"json_pointer": "/processes/reactions/1/enzymes/2"},
+            {"json_pointer": "/processes/reactions/2/enzymes/0"}, {"json_pointer": "/entities/compounds/2"}]}}
+        record = merge_on_mapped_identity(payload, report=report)[IDENTITY_REPORT_KEY]
+    finally:
+        diag.deactivate()
+    assert [a["json_pointer"] for a in report["enzyme_complex_conversion"]["actions"]] == [
+        "/processes/reactions/0/enzymes/0", "/processes/reactions/1/enzymes/2",
+        "/processes/reactions/0", "/entities/compounds/2"]
+    assert record["report_pointers_moved"] == [{"from": "/processes/reactions/2/enzymes/0", "to": "/processes/reactions/0"}]
+
+
+def test_only_the_stage6_call_sites_pass_the_keyword() -> None:
+    """Wiring pin (D-104 amendment 5): the keyword appears on the Stage-6 call in
+    ``streamlit_app.py`` (the only app call with ``use_cache=False``) and on the legacy
+    CLI's post-audit mapping, and on no other ``map_payload`` / ``run_mapping`` call."""
+
+    import ast
+
+    found = []
+    for rel in ("src/t2pw/app/streamlit_app.py", "src/t2pw/pipeline/pipeline.py", "src/t2pw/curation/interactive_curator.py",
+                "src/t2pw/mapping/map_ids.py"):
+        for node in ast.walk(ast.parse((ROOT / rel).read_text(encoding="utf-8"))):
+            if isinstance(node, ast.Call) and getattr(node.func, "id", getattr(node.func, "attr", "")) in ("map_payload", "run_mapping"):
+                kw = {k.arg: ast.unparse(k.value) for k in node.keywords}
+                found.append((rel, node.lineno, kw.get("merge_identity_duplicates"), kw.get("use_cache")))
+    passing = [(rel, value, cache) for rel, _line, value, cache in found if value is not None]
+    assert passing == [("src/t2pw/app/streamlit_app.py", "True", "False"), ("src/t2pw/pipeline/pipeline.py", "True", None),
+                       ("src/t2pw/mapping/map_ids.py", "merge_identity_duplicates", "use_cache")]
+    assert sum(1 for rel, *_ in found if rel == "src/t2pw/app/streamlit_app.py") == 3
+
+
+# ---------------------------------------------------------------- round 4: an empty enzyme set is a subset (B2)
+
+
+def test_round4_an_unquoted_enzyme_over_an_empty_set_refuses_the_merge() -> None:
+    bare = {"name": "bare", "inputs": ["X1"], "outputs": ["X2"], "evidence": "X1 becomes X2"}
+    named = {"name": "named", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "EnzQ"}],
+             "evidence": "X1 becomes X2"}  # names EnzQ nowhere
+    for order in ([bare, named], [named, bare]):
+        merged, _ = merge_draws([_draw([r]) for r in order])
+        assert sorted(r["name"] for r in _reactions(merged)) == ["bare", "named"]
+
+
+def test_round4_a_quoted_enzyme_over_an_empty_set_merges_and_records_its_quote() -> None:
+    bare = {"name": "bare", "inputs": ["X1"], "outputs": ["X2"], "biological_state": "plastid state",
+            "evidence": "X1 becomes X2 in plastids"}
+    named = {"name": "named", "inputs": ["X1"], "outputs": ["X2"], "enzymes": [{"entity": "EnzQ"}],
+             "evidence": "EnzQ turns X1 into X2"}
+    # The enzyme row survives (larger set): its quote is recorded as the support.
+    merged, report = merge_draws([_draw([bare]), _draw([named])])
+    [row] = _reactions(merged)
+    assert (row["name"], [e["entity"] for e in row["enzymes"]]) == ("named", ["EnzQ"])
+    [rec] = report["buckets"]["/processes/reactions"]["rows"]
+    assert rec["enzymes_kept"] == [{"enzyme": "EnzQ", "supporting_quote": named["evidence"]}]
+    # The bare row survives (it states a defined state): the enzyme is carried with its quote.
+    merged, report = merge_draws([_draw([bare], biological_states=STATES), _draw([named])])
+    [row] = _reactions(merged)
+    assert (row["name"], [e["entity"] for e in row["enzymes"]]) == ("bare", ["EnzQ"])
+    [rec] = report["buckets"]["/processes/reactions"]["rows"]
+    assert rec["enzymes_added"] == [{"enzyme": "EnzQ", "supporting_quote": named["evidence"]}]
 
 
 # --------------------------------------------------------------------------- finding 4: the suite ignores .env's draw count

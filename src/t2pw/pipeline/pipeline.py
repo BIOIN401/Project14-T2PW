@@ -126,6 +126,7 @@ def run_legacy_sbml_pipeline(
         mapped_json,
         mapping_report,
         cache_path=mapping_cache,
+        merge_identity_duplicates=True,  # this path's Stage-6 mapping (D-104 amendment 5)
     )
 
     sbml_result = build_sbml(

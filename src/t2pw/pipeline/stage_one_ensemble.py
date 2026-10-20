@@ -101,6 +101,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 from copy import deepcopy
 from functools import lru_cache
 from pathlib import Path
@@ -343,7 +344,9 @@ def _conflict(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> str:
     ea, eb = a["enzymes"], b["enzymes"]
     if ea and eb and not (ea <= eb or eb <= ea):
         return f"different enzymes {_show(ea)} vs {_show(eb)}"
-    if ea and eb and ea != eb:
+    if ea != eb:
+        # D-104 amendment 3 § 2, applied consistently (round 4): an empty enzyme set is a
+        # subset too, so the enzymes a row adds over one that names none need a quote.
         small, large = (a, b) if ea < eb else (b, a)
         for _slot, _item, name, key in large["enzyme_entries"]:
             if key not in small["enzymes"] and not (mentions(name, large["quote"]) or mentions(name, small["quote"])):
@@ -428,8 +431,9 @@ def _fold(survivor: Dict[str, Any], other: Dict[str, Any], own: Dict[str, Any],
 
     audit: Dict[str, Any] = {}
     new = dict(own)
-    if theirs["enzymes"] and theirs["enzymes"] < own["enzymes"]:
-        # The survivor's set is the larger one (B2): record the quote that names each extra.
+    if theirs["enzymes"] < own["enzymes"]:
+        # The survivor's set is the larger one -- over an empty set too (round 4) -- so record
+        # the quote that names each extra (B2).
         for _slot, item, name, key in own["enzyme_entries"]:
             if key not in theirs["enzymes"]:
                 audit.setdefault("enzymes_kept", []).append(
@@ -451,8 +455,9 @@ def _fold(survivor: Dict[str, Any], other: Dict[str, Any], own: Dict[str, Any],
             entries.append((slot, item, name, key))
             audit.setdefault("enzymes_added", []).append({"enzyme": name, "supporting_quote": quote})
         else:
-            # Only reachable when the survivor named NO enzyme: a superset with an unquoted
-            # extra is refused by _conflict (B2). Recorded with the donor quote, never lost.
+            # _conflict refused every extra no quote names (B2), so this is reached only when
+            # the naming quote sits on a row absorbed EARLIER into this record. Recorded with
+            # the donor quote; that quote is also on the earlier merge entry (N5). Never silent.
             audit.setdefault("enzymes_withheld", []).append({"enzyme": name, "donor_evidence": other.get("evidence")})
     new["enzyme_entries"] = tuple(entries)
     new["quote"] = " ".join(q for q in (own["quote"], theirs["quote"]) if q)
@@ -1062,18 +1067,22 @@ def _pooled_draws() -> int:
     return n if succeeded > 1 else 0
 
 
-def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
+def merge_on_mapped_identity(payload: Dict[str, Any], report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """D-104 rule 3: after Stage 6 mapping, two reactions whose defining participants
     resolve to the same identities are one reaction. Mutates ``payload`` in place.
 
-    **Not wired (round 3).** The product owner ruled (N2) that it may run on the Stage-6
-    mapping pass only. ``map_payload`` is called identically at the RAG round, Stage 2B
-    and Stage 6 (``streamlit_app.py:1060, 3487, 4248``), and nothing reachable without
-    editing that protected file tells them apart -- ``use_cache=False`` happens to mark the
-    Stage-6 call today, which is a coincidence, not a contract -- so the round-2 call at
-    the end of ``map_payload`` was removed rather than guessed. Wiring it at Stage 6 needs
-    an authorised ``streamlit_app.py`` hook (ORCH-754a-RESULT § 10). Meant to run after
-    identities are assigned and admitted, before the canonical freeze (merge rule 8).
+    **Stage 6 only** (product-owner ruling N2, D-104 amendment 5): it runs only from
+    ``map_payload(..., merge_identity_duplicates=True)``, which the Stage-6 call in
+    ``streamlit_app.py`` and the legacy CLI's post-audit mapping pass; the RAG-round and
+    Stage-2B calls keep the default ``False`` and never reach it. That is after identities
+    are assigned and admitted, before the canonical freeze (merge rule 8).
+
+    ``report`` is that ``map_payload`` call's own report: every ``/processes/reactions/<i>``
+    ``json_pointer`` it recorded is moved to the row's index after the merge (review N6), a
+    merged-away row's to its survivor's reaction (without the sub-path, which named a slot
+    of a row that no longer exists). Only values change -- no key is added to a report a
+    model reads (``compact_mapping_misses``) -- and each move is listed in the side file.
+
     Applies only when THIS run's
     Stage 1 pooled (:func:`_pooled_draws`): ``T2PW_EXTRACTION_DRAWS`` > 1 AND the run's
     diagnostics hold the ``stage1_ensemble`` boundary of 2+ successful draws. Both, because
@@ -1170,14 +1179,17 @@ def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
                if isinstance(r, dict) and r.get("reaction")}
     states = _states_by_key(payload)
     # Enzymes compare by identity too: the same UniProt under two names is one enzyme.
-    # [row, claimed profile, own profile, input index of the content the row now holds]
+    # [row, claimed profile, own profile, input index of the content it now holds, output index]
     survivors: Dict[Tuple[frozenset, frozenset], List[List[Any]]] = {}
+    index_map: Dict[int, int] = {}
+    merged_away: List[int] = []
     kept: List[Any] = []
     merges: List[Dict[str, Any]] = []
     refused: List[Dict[str, Any]] = []
     quarantined: List[Dict[str, Any]] = []
     for index, row in enumerate(reactions):
         if not isinstance(row, dict):
+            index_map[index] = len(kept)
             kept.append(row)
             continue
         key = (side(row.get("inputs")), side(row.get("outputs")))
@@ -1192,7 +1204,8 @@ def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
             refused.append({"name": _row_name(row), "would_merge_into": _row_name(candidate[0]),
                             "json_pointer": f"{path}/{index}", "reason": reason})
         if slot is None:
-            group.append([row, profile, profile, index])
+            group.append([row, profile, profile, index, len(kept)])
+            index_map[index] = len(kept)
             kept.append(row)
             continue
         first = slot[0]
@@ -1208,8 +1221,11 @@ def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
         if _strict_key(away.get("name")) in coupled:
             refused.append({"name": _row_name(row), "would_merge_into": _row_name(first),
                             "json_pointer": f"{path}/{index}", "reason": "named by a reaction_coupled_transport"})
+            index_map[index] = len(kept)
             kept.append(row)
             continue
+        index_map[index] = slot[4]
+        merged_away.append(away_index)
         bridged = RULE_EXACT if row_key(path, row) == row_key(path, first) else RULE_DATABASE_ID
         undefined = _undefined_state(slot[1], profile)
         slot[1] = _absorb(slot[1], profile)
@@ -1249,9 +1265,39 @@ def merge_on_mapped_identity(payload: Dict[str, Any]) -> Dict[str, Any]:
         "conflicting_identity_groups": len(conflicted),
         "merges": merges,
         "refused": refused,
+        "report_pointers_moved": _move_reaction_pointers(report, index_map, set(merged_away)) if merges else [],
     }
     _write_identity_side_file(current_diagnostics().artifact_dir, record)
     return {IDENTITY_REPORT_KEY: record}
+
+
+_REACTION_POINTER = re.compile(r"^/processes/reactions/(\d+)(/.*)?$")
+
+
+def _move_reaction_pointers(report: Any, index_map: Dict[int, int], away: set) -> List[Dict[str, str]]:
+    """Review N6: rewrite, in place, every ``json_pointer`` VALUE in ``report`` that names a
+    reaction by its pre-merge index. Returns each move, for the side file."""
+
+    moved: List[Dict[str, str]] = []
+
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                match = _REACTION_POINTER.match(value) if key == "json_pointer" and isinstance(value, str) else None
+                if match:
+                    old = int(match.group(1))
+                    new = f"/processes/reactions/{index_map.get(old, old)}" + ("" if old in away else match.group(2) or "")
+                    if new != value:
+                        node[key] = new
+                        moved.append({"from": value, "to": new})
+                else:
+                    walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(report)
+    return moved
 
 
 def _write_identity_side_file(artifact_dir: Optional[Path], record: Dict[str, Any]) -> None:
@@ -1272,6 +1318,7 @@ def _write_identity_side_file(artifact_dir: Optional[Path], record: Dict[str, An
     lines += [f"  kept apart: {r['name']!r} from {r['would_merge_into']!r}: {r['reason']}" for r in record["refused"]]
     lines += [f"  merged row's quote ({m['merged']!r}): {m['merged_evidence']!r}" for m in record["merges"]
               if m.get("merged_evidence")]
+    lines += [f"  mapping-report pointer moved: {m['from']} -> {m['to']}" for m in record.get("report_pointers_moved") or []]
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
         existing = json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
