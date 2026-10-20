@@ -6,21 +6,179 @@
 |---|---|---|
 | 1 | `772bd3df`, `cf84626b` | `6c75112f` |
 | 2 (rulings Q1, Q2) | `1cfae4d3` | `989dee54` |
-| 3 (repairs after the review of `989dee54` returned REJECT) | `bf04375b` | the commit after it |
+| 3 (repairs after the review of `989dee54` returned REJECT) | `bf04375b` | `fee60532` |
+| 4 (D-104 amendment 5: rule 3 at Stage 6, N6, the empty enzyme set) | `cf10337a` | the commit after it |
 
-Bounded-run reports `evidence/g11/ORCH-754a/01`–`109`, pins `evidence/g11/pin/ORCH-754a/`. Offline only: **no LLM call and no pipeline run anywhere in this task.**
+Bounded-run reports `evidence/g11/ORCH-754a/01`–`202`, pins `evidence/g11/pin/ORCH-754a/`. Offline only: **no LLM call and no pipeline run anywhere in this task.**
 
-**Headline (current tip).**
+**Headline (current tip, round 4).**
 
-- **Every blocking finding is fixed:**
-  - B1: abbreviations match the exact spelling;
-  - B2: an extra enzyme no quote names refuses the merge;
-  - B3: cofactor sets must nest.
-- **Rulings:** N4 (insert/delete-only typo snaps, each flagged) is done. N1, N3 and N5 (dedupe-mirrored locks, every quote kept) are done.
-- **N2 (rule 3 at Stage 6 only) cannot be met without editing `streamlit_app.py`.** As instructed, I stopped rather than ship a heuristic. **Rule 3 is now not wired anywhere**, and `map_ids.py` is identical to base. The options are in § 10.3.
-- **Numbers are unchanged from round 2:** chlorophyll 41 → **29**, enterobactin 4/5 at P 0.8, menaquinone 9/9 at P 1.0. The four chlorophyll typo snaps are now flagged `typo_snapped`.
+- **Rule 3 runs at Stage 6 only** (D-104 amendment 5):
+  - `map_payload` / `run_mapping` gain `merge_identity_duplicates=False`. At `False` they are base-identical for every caller (`/139`).
+  - `streamlit_app.py` changes by **one line**: `merge_identity_duplicates=True` on the Stage-6 call.
+  - The legacy CLI's post-audit mapping also passes `True`. Every other call keeps the default (§ 11.2).
+- **N6 is fixed:** after rule 3 removes rows, the mapping report's reaction `json_pointer`s are rewritten, and each move is recorded.
+- **An empty enzyme set is a subset under B2:** an unquoted extra enzyme refuses the merge; a quoted one merges and keeps its quote.
+- **The round-3 repairs stand:** B1, B2, B3, N1, N3, N4 and N5.
+- **Numbers are unchanged:** chlorophyll 41 → **29**, enterobactin 4/5 at P 0.8, menaquinone 9/9 at P 1.0.
+- **Gates:** SMOKE 508 at both envs; Chunk D qb 23/23 at both envs; zero survivors. The only reds are three failures, each proven on base.
 
-**Read § 10 first** (round 3), then § 0 (round 2). §§ 1–8 are the round-1 record.
+**Read § 11 first** (round 4), then § 10 (round 3), then § 0 (round 2). §§ 1–8 are the round-1 record.
+
+---
+
+## 11. Round 4: rule 3 wired at Stage 6 (D-104 amendment 5), N6, and the empty-set rule
+
+**Code** `cf10337a`. Reports `evidence/g11/ORCH-754a/110`–`202`.
+
+### 11.1 The authorisation as implemented
+
+- `map_payload(..., merge_identity_duplicates: bool = False)`. With `True` it calls `merge_on_mapped_identity(mapped, report=report)` last, before it returns. That call is still a no-op unless this run's Stage 1 pooled 2+ draws. With `False` (the default) nothing new runs.
+- *Proof* (`evidence/orch754a_map_payload_base_identity_proof.py`, verdict `orch754a_map_payload_base_identity_verdict.json`, run `/139`): base `f9892cdf`'s `map_ids.py`, loaded from `git show`, and the tip were run offline on three fixtures and gave identical results, as canonical JSON of `{payload, report}`:
+  - a saved N=1 draw;
+  - the delivered pooled chlorophyll merge;
+  - a protoheme/heme b payload.
+
+  This holds for the default call and for `False`, inside a run that pooled 3 draws, and for `True` inside a run that did not pool. The verdict is `map_payload BASE-IDENTICAL`.
+- `run_mapping` passes the same keyword through, also defaulting to `False`.
+
+**`streamlit_app.py`: the one authorised change, verbatim** (`git diff f9892cdf -- src/t2pw/app/streamlit_app.py`):
+
+```diff
+@@ -4259,6 +4259,7 @@ def run_post_pipeline_sbml_artifacts(
+             allow_complex_wrapper_creation=not research_mode,
+             allow_structural_cleanup=not research_mode,
+             mode=export_mode,
++            merge_identity_duplicates=True,
+         )
+         if not isinstance(mapping_result, dict):
+             raise ValueError("Stage 6 mapping returned a malformed result: expected an object.")
+```
+
+One added line, written with the file's own CRLF ending. No other byte changed.
+
+**Protected-file fingerprint** (sha256):
+
+| | working tree (CRLF, what the app runs) | git blob (LF) |
+|---|---|---|
+| before | `b77a363c5ca855b18aeb61dfd1bb7c3f5067fd41fa759762076e7459c098f288` | `c3c044e5f2f039d016d65638792955b3c634b1908b8dadbe6597724de614aab5` |
+| after | `7bf2aea33272160665bfee136df57d60a4a30b82b5d54a916394ea4b0ff05c2f` | `d4aa606a534dffaab654f6ecaa8598859856754a45c168e9530572711e5ccdf1` |
+
+The "before" working-tree value is the fingerprint the LEDGER's ORCH-744 close records (`b77a363c5ca855b1…`).
+
+**Who pins it.**
+- `evidence/orch724_freeze_manifest.py` / `.json` record the file, but at an older, historical value: `production_surface_sha256` `47e4fafa789d359d…`, and `running_identity_caveat` working tree `47e4fafa…` / head blob `70299631…`. That is the pre-ORCH-744 state, so it was already stale before this change. Not re-pinned, as instructed.
+- No test hashes `streamlit_app.py`. Among the 42 test files that name it, the only `sha256` use is `test_c011_freeze_seam_golden_equivalence.py:625`, which hashes its own fixture. That file is in the streamlit gate below.
+
+### 11.2 Every `map_payload` call site
+
+| call site | what calls it | `merge_identity_duplicates` | why |
+|---|---|---|---|
+| `streamlit_app.py:1060` | `_mapping` in the RAG loop (one pass per round) | default `False`, untouched | ruling N2: not Stage 6 |
+| `streamlit_app.py:3487` | Stage 2B, the mapping before normalization | `False` (default), untouched | ruling N2: not Stage 6 |
+| `streamlit_app.py:4248` | **Stage 6**, the post-audit mapping that feeds the freeze | **`True`** | the authorised change |
+| `pipeline.py:124` | `run_legacy_sbml_pipeline` → `run_mapping`: the legacy CLI's post-audit mapping (`legacy_sbml_cli_main`) | **`True`** | it is that path's Stage-6 mapping. Inert in practice: the CLI maps a saved JSON in a process whose Stage 1 never ran, so the pooled-run gate stays shut. It is passed so the path does the right thing if a caller ever pools in the same run |
+| `interactive_curator.py:578` → `run_mapping` | re-mapping a payload after a person's edit | default `False` | not a run's Stage 6 |
+| `map_ids.py:11240` (`main`) → `run_mapping` | the standalone mapping CLI on a saved JSON | default `False` | not a run's Stage 6 |
+| `map_ids.py:11033` (`run_mapping` → `map_payload`) | plumbing | passes its own keyword through | -- |
+
+`test_only_the_stage6_call_sites_pass_the_keyword` pins this table: it parses the four source files and checks which calls carry the keyword.
+
+### 11.3 N6: the mapping report's reaction pointers
+
+When rule 3 removes rows, `merge_on_mapped_identity(..., report=report)` rewrites every `json_pointer` VALUE in that `map_payload` call's own report that names a reaction by its pre-merge index:
+
+- a surviving row's pointer moves to its new index and keeps its sub-path;
+- a merged-away row's pointer moves to its survivor's reaction, without the sub-path, which named a slot of a row that no longer exists.
+
+No key is added. The Stage-6 report reaches the interactive curator's prompt through `compact_mapping_misses`, so only values change. Each move is listed in the side file (`report_pointers_moved`) and its `.txt`. The pointers come from `map_ids.py:7967` and `:8535` (`:7973` and `:8647` on `c711d859`).
+
+*Tests:*
+- `test_rule3_moves_the_reports_reaction_pointers`: exact before and after values;
+- `test_stage6_merges_synonyms_sharing_an_admitted_id`: after a real merge through `map_payload`, no pointer in the report names a row past the end.
+
+### 11.4 The empty enzyme set is a subset (D-104 amendment 3 § 2, applied consistently)
+
+`_conflict` applies the B2 quote rule to every nested pair, including when one set is empty. If one row names no enzyme and the other's enzyme is not named by a verbatim quote on either row, the merge is refused. If a quote names it, the rows merge and the enzyme stays on the survivor with the quote recorded:
+
+- `enzymes_kept` when the enzyme row survives;
+- `enzymes_added` when it is carried onto a survivor that has a defined state.
+
+`enzymes_withheld` now remains only for one narrow case: the naming quote sits on a row merged into the record earlier. Even then it is recorded with the donor quote, and that quote is also on the earlier merge entry.
+
+*Tests:*
+- `test_round4_an_unquoted_enzyme_over_an_empty_set_refuses_the_merge`, in both orders;
+- `test_round4_a_quoted_enzyme_over_an_empty_set_merges_and_records_its_quote`, for both survivor cases.
+
+Chlorophyll is unchanged (29): every enzyme the draws name there is named by a row quote or by its own modifier quote. The side file now records the two keeps this rule makes there, each with its quote: GluTR on reaction 1 and PBG deaminase on reaction 4. Both were kept over a merged row that named no enzyme (`orch754a_chlorophyll_side_file.txt`, `orch754a_ensemble_merge.json`, from `/137`).
+
+### 11.5 Tests the authorisation asked for
+
+| asked for | test |
+|---|---|
+| every non-Stage-6 call stays base-identical | `test_every_non_stage6_call_never_runs_rule3_even_in_a_pooled_run` (default and explicit `False`), plus the base-identity proof (§ 11.1) |
+| Stage 6 merges protoheme/heme b-style synonyms that share an admitted ID | `test_stage6_merges_synonyms_sharing_an_admitted_id`: real `map_payload`, the resolver stubbed to admit one ChEBI for both names |
+| candidate IDs do not merge | `test_stage6_candidate_ids_do_not_merge`: the same ChEBI offered only as a candidate |
+| rule 3 runs only when the run actually pooled ≥2 draws | `test_stage6_runs_rule3_only_when_the_run_pooled`: never pooled, one draw succeeded, draw count 1 |
+| with N=1, Stage 6 is base-identical even with `True` | the same test: `True` and the default call give byte-identical results; plus the proof's `tip_true_unpooled` cases |
+
+### 11.6 Interplay with lane 754b
+
+`git merge-tree --write-tree` of this tip against `sprint/pwml-recovery` @ `c711d859` (which carries ORCH-754b) is **conflict-free** (`--write-tree HEAD c711d859` -> tree `eac37378`, exit 0; also against the current sprint tip `5e63ce78` -> tree `3584befd`, exit 0). No merge into this branch was needed.
+
+754b's `map_ids.py` changes sit inside `_rewrite_reaction_protein_enzymes_to_complexes`, around lines 7556–8086. Mine are the `map_payload` signature and docstring, its last lines, and `run_mapping`. The only interplay is § 11.3: 754b's interaction wrappers record `/processes/interactions/<i>/...` pointers, which rule 3 never moves, because only reactions merge.
+
+### 11.7 Measurements and gates (tip `cf10337a`)
+
+Chlorophyll 41 → **29**, enterobactin 4/5 at P 0.8, menaquinone 9/9 at P 1.0: unchanged from rounds 2 and 3 (`/137`). The goldens are byte-identical (`/140`). Every run was bounded, with zero survivors. G11 check: `g11_evidence.py check --task ORCH-754a`: **199 artifacts, 0 non-compliant**, exit 0, no pin REFUSED. The 54 direct-pytest reports with no pin verdict are exactly the `chunk_d_gate.py` inner runs (`/148`-`/174`, `/176`-`/202`), which call pytest themselves; the checker lists that driver as NOT COVERED (2 runs).
+
+| gate | default env | `T2PW_EXTRACTION_DRAWS=3` |
+|---|---|---|
+| focused: `test_stage_one_ensemble.py` + `test_stage_one_paper_dictionary.py` | **112 passed** (`/115`) | 112 passed (`/125`) |
+| affected, pipeline (the 12 files of § 3.1) | **203 passed** (`/116`) | 203 passed (`/126`) |
+| affected, mapping (the 17 files of § 3.1) | 397 passed, 1 skipped, **1 failed = pre-existing c075** (`/117`) | same (`/127`) |
+| streamlit set A: 19 files that name `streamlit_app.py` | 408 passed, 3 skipped, **1 failed = pre-existing c075** (`/118`) | same (`/128`) |
+| streamlit set B: 16 more such files | 418 passed, **1 failed = pre-existing** `test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform` (`/142`; base `/146`) | same (`/144`) |
+| `test_reaction_evidence_app_hook.py` alone (an AppTest file; see finding R4-1) | 1 passed (`/143`) | 1 passed (`/145`) |
+| `test_batch_preflight.py` alone | 32 passed, 4 skipped, **1 failed = environmental** (`/120`; base `/141`) | same (`/130`) |
+| `test_c055_rag_loop_wiring.py` alone | 14 passed (`/121`) | 14 passed (`/131`) |
+| `test_streamlit_quarantine_boundary.py` alone | 23 passed (`/122`) | 23 passed (`/132`) |
+| `test_c052_prefreeze_report_at_the_streamlit_seams.py` alone | 13 passed (`/123`) | 13 passed (`/133`) |
+| **SMOKE** | **508 passed** (`/124`) | **508 passed** (`/134`) |
+| **Chunk D qb**: `chunk_d_gate.py run --only qb`, each node in its own process, `T2PW_OFFLINE_CURATOR=1` | **23/23 executed and green**: omissions 0, additions 0, failed none (outer `/147`, partition proof `/148`-`/151`, nodes `/152`-`/174`) | **23/23 executed and green**: omissions 0, additions 0, failed none (outer `/175`, partition proof `/176`-`/179`, nodes `/180`-`/202`) |
+| without conftest (`--noconftest`), the reviewer's condition | -- | pipeline: 24 failed, all `test_early_failure_replay` (`/135`); mapping: only c075 (`/136`). Same as rounds 2 and 3: that is why `tests/conftest.py` exists |
+
+Those four AppTest files plus the hook file, the 19 + 16 batched files and the focused dictionary file are all **41 test files that name `streamlit_app.py`**. The 42nd file that names it, `tests/helpers_c119.py`, is a helper, not a test.
+
+| proof | report | result |
+|---|---|---|
+| G9: the corrections in `test_stage_one_ensemble.py` fail on base | `/114`: src restored to `f9892cdf` (`git diff --quiet` checked) | **6 failed, 22 passed**. The 6 are the corrected tests: chlorophyll steps, IDH chimera across draws, IDH chimera within one draw, cofactor stay-apart, different enzymes or defined states, unsupported donation |
+| G9: the new module's tests | -- | `test_stage_one_paper_dictionary.py` imports `paper_lexicon` (new). These are **explicitly labelled new acceptance tests**, so no base failure was fabricated |
+| N=1 identity with base | `/138` | `N=1 IDENTICAL to base` |
+| `map_payload` base identity (every non-Stage-6 call; `True` at N=1) | `/139` | `map_payload BASE-IDENTICAL` (9 cases) |
+| LLM-bound text equals the base goldens | `/140` | `d171a3b8...` (draw 1) and `ab01b0dd...` (pooled), unchanged |
+| measurement | `/137` | chlorophyll 41 -> 29; enterobactin 4/5; menaquinone 9/9 |
+| pre-existing: the `test_batch_preflight` `.venv` failure | `/141`: base src, `--noconftest` | the same 1 failure, "this project ships a .venv; the test assumes it". The worktree has no `.venv` of its own; the wrapper runs the primary's |
+| pre-existing: the `test_rag_seed_entity_reimport` failure | `/146`: base src, `--noconftest` | the same 1 failure (`StopIteration` looking for a `merge_additions` call whose 2nd argument is the conform envelope). It parses `streamlit_app.py:1184` and `:5607`/`:5662`, nowhere near the one changed line (`:4262`) |
+| pre-existing: c075 | `/16` (round 1) | unchanged |
+
+**TEST_MATRIX delta, round 4.** The focused selection is 112 tests: `test_stage_one_ensemble.py` 28, `test_stage_one_paper_dictionary.py` 84. SMOKE stays 508. Chunk D qb (23 nodes) is green at both envs (§ 11.7).
+
+### 11.7a Findings and dead ends, round 4
+
+- **R4-1. Set B first died at collection** (`/119`, `/129`: `1 error`). `tests/test_reaction_evidence_app_hook.py` builds a Streamlit `AppTest`, and when it was batched with the other 16 files, collection failed with `ModuleNotFoundError: No module named 'streamlit.testing'; 'streamlit' is not a package`. That is the batching hazard the brief warns about for the four named AppTest files, and this file has it too. Run alone, it passes at both envs (`/143`, `/145`). The other 16 files were re-run without it (`/142`, `/144`). **Open:** whether to add this file to the "never batch" list in `TEST_MATRIX.md` § 0. That is the orchestrator's call.
+- **R4-2. Two dev runs failed before the gates and were fixed.**
+  - `/110`: `test_rule3_without_an_id_the_identity_is_the_long_form_stage1_wrote`. Its fixture's enzyme row had a quote that did not name its enzyme (`E9`). Under the round-4 empty-set rule, Stage 1 now correctly refuses that merge. The fixture's quote was changed to name `E9` (`"E9 makes X1"`). This is what the rule requires, not a weakened test.
+  - `/111`: `KeyError: 'enzymes_kept'`. `_fold` recorded kept enzymes only for a non-empty smaller set. Its condition is now `theirs["enzymes"] < own["enzymes"]`, which includes the empty set.
+  - `/112` is the green dev re-run. `/113` is a dev run of the base-identity proof (already `BASE-IDENTICAL`).
+- **R4-3. Lock refusals.** None in round 4. `retry.sh` waits for `C:/t/heavylock/holder.json` to clear before allocating a path.
+
+### 11.8 Still not settled (round 4)
+
+1. **Remapped pointers of a merged-away row** point at its survivor's reaction, without the sub-path. A report action about that row's enzyme slot now names the merged reaction as a whole. The side file keeps the exact before and after values.
+2. **The legacy CLI gets `True`** although it can never pool today (§ 11.2). If the orchestrator prefers dead-code-free call sites, reverting it is one line.
+3. **`test_reaction_evidence_app_hook.py` should probably join the never-batch AppTest list** (R4-1).
+4. Round-3 § 10.6 items 2–4 are unchanged.
 
 ---
 

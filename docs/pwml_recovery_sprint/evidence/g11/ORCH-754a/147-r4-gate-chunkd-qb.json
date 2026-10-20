@@ -1,0 +1,980 @@
+{
+  "label": "r4-gate-chunkd-qb",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/chunk_d_gate.py",
+    "run",
+    "--only",
+    "qb",
+    "--tmp",
+    "C:/t/cdq",
+    "--task",
+    "ORCH-754a",
+    "--label-prefix",
+    "r4-",
+    "--timeout",
+    "900",
+    "--node-timeout",
+    "600"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a",
+  "started_at": "2026-10-20T20:15:06+00:00",
+  "finished_at": "2026-10-20T20:17:50+00:00",
+  "duration_seconds": 163.95862220000708,
+  "timeout_seconds": 3000.0,
+  "root_pid": 788172,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 788184,
+      "name": "python.exe",
+      "ppid": 788172
+    },
+    {
+      "pid": 788204,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 788216,
+      "name": "python.exe",
+      "ppid": 788204
+    },
+    {
+      "pid": 788412,
+      "name": "git.exe",
+      "ppid": 788216
+    },
+    {
+      "pid": 787476,
+      "name": "python.exe",
+      "ppid": 788216
+    },
+    {
+      "pid": 787500,
+      "name": "python.exe",
+      "ppid": 787476
+    },
+    {
+      "pid": 787836,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 787828,
+      "name": "python.exe",
+      "ppid": 787836
+    },
+    {
+      "pid": 787916,
+      "name": "git.exe",
+      "ppid": 787828
+    },
+    {
+      "pid": 785188,
+      "name": "python.exe",
+      "ppid": 788244
+    },
+    {
+      "pid": 788244,
+      "name": "python.exe",
+      "ppid": 787828
+    },
+    {
+      "pid": 785788,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 782940,
+      "name": "python.exe",
+      "ppid": 785788
+    },
+    {
+      "pid": 783992,
+      "name": "git.exe",
+      "ppid": 782940
+    },
+    {
+      "pid": 786292,
+      "name": "git.exe",
+      "ppid": 782940
+    },
+    {
+      "pid": 788012,
+      "name": "python.exe",
+      "ppid": 782940
+    },
+    {
+      "pid": 788028,
+      "name": "python.exe",
+      "ppid": 788012
+    },
+    {
+      "pid": 788348,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 788308,
+      "name": "python.exe",
+      "ppid": 788348
+    },
+    {
+      "pid": 784852,
+      "name": "git.exe",
+      "ppid": 788308
+    },
+    {
+      "pid": 786628,
+      "name": "python.exe",
+      "ppid": 788308
+    },
+    {
+      "pid": 787660,
+      "name": "python.exe",
+      "ppid": 786628
+    },
+    {
+      "pid": 777576,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 787964,
+      "name": "git.exe",
+      "ppid": 788212
+    },
+    {
+      "pid": 788212,
+      "name": "python.exe",
+      "ppid": 777576
+    },
+    {
+      "pid": 753616,
+      "name": "git.exe",
+      "ppid": 788212
+    },
+    {
+      "pid": 783540,
+      "name": "python.exe",
+      "ppid": 787756
+    },
+    {
+      "pid": 787756,
+      "name": "python.exe",
+      "ppid": 788212
+    },
+    {
+      "pid": 788288,
+      "name": "python.exe",
+      "ppid": 788408
+    },
+    {
+      "pid": 788408,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 743576,
+      "name": "git.exe",
+      "ppid": 788288
+    },
+    {
+      "pid": 784592,
+      "name": "python.exe",
+      "ppid": 788288
+    },
+    {
+      "pid": 787492,
+      "name": "python.exe",
+      "ppid": 784592
+    },
+    {
+      "pid": 788504,
+      "name": "python.exe",
+      "ppid": 789452
+    },
+    {
+      "pid": 789452,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 788884,
+      "name": "git.exe",
+      "ppid": 788504
+    },
+    {
+      "pid": 789040,
+      "name": "git.exe",
+      "ppid": 788504
+    },
+    {
+      "pid": 788004,
+      "name": "python.exe",
+      "ppid": 788504
+    },
+    {
+      "pid": 789416,
+      "name": "python.exe",
+      "ppid": 788004
+    },
+    {
+      "pid": 787356,
+      "name": "python.exe",
+      "ppid": 789296
+    },
+    {
+      "pid": 789296,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 786160,
+      "name": "git.exe",
+      "ppid": 787356
+    },
+    {
+      "pid": 779244,
+      "name": "python.exe",
+      "ppid": 787356
+    },
+    {
+      "pid": 788444,
+      "name": "python.exe",
+      "ppid": 779244
+    },
+    {
+      "pid": 782344,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 760496,
+      "name": "python.exe",
+      "ppid": 782344
+    },
+    {
+      "pid": 770796,
+      "name": "git.exe",
+      "ppid": 760496
+    },
+    {
+      "pid": 782212,
+      "name": "python.exe",
+      "ppid": 760496
+    },
+    {
+      "pid": 786724,
+      "name": "python.exe",
+      "ppid": 782212
+    },
+    {
+      "pid": 789692,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 789720,
+      "name": "python.exe",
+      "ppid": 789692
+    },
+    {
+      "pid": 789904,
+      "name": "git.exe",
+      "ppid": 789720
+    },
+    {
+      "pid": 790204,
+      "name": "python.exe",
+      "ppid": 789720
+    },
+    {
+      "pid": 790216,
+      "name": "python.exe",
+      "ppid": 790204
+    },
+    {
+      "pid": 789908,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 789944,
+      "name": "python.exe",
+      "ppid": 789908
+    },
+    {
+      "pid": 789752,
+      "name": "git.exe",
+      "ppid": 789944
+    },
+    {
+      "pid": 787480,
+      "name": "python.exe",
+      "ppid": 789944
+    },
+    {
+      "pid": 790252,
+      "name": "python.exe",
+      "ppid": 787480
+    },
+    {
+      "pid": 780044,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 785708,
+      "name": "python.exe",
+      "ppid": 780044
+    },
+    {
+      "pid": 789960,
+      "name": "git.exe",
+      "ppid": 785708
+    },
+    {
+      "pid": 787336,
+      "name": "python.exe",
+      "ppid": 785708
+    },
+    {
+      "pid": 789572,
+      "name": "python.exe",
+      "ppid": 787336
+    },
+    {
+      "pid": 788756,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 790028,
+      "name": "python.exe",
+      "ppid": 788756
+    },
+    {
+      "pid": 790236,
+      "name": "git.exe",
+      "ppid": 790028
+    },
+    {
+      "pid": 787936,
+      "name": "python.exe",
+      "ppid": 790028
+    },
+    {
+      "pid": 789896,
+      "name": "python.exe",
+      "ppid": 787936
+    },
+    {
+      "pid": 787608,
+      "name": "python.exe",
+      "ppid": 788008
+    },
+    {
+      "pid": 788008,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 775044,
+      "name": "git.exe",
+      "ppid": 787608
+    },
+    {
+      "pid": 782876,
+      "name": "python.exe",
+      "ppid": 787608
+    },
+    {
+      "pid": 789852,
+      "name": "python.exe",
+      "ppid": 782876
+    },
+    {
+      "pid": 787168,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 786952,
+      "name": "python.exe",
+      "ppid": 787168
+    },
+    {
+      "pid": 681284,
+      "name": "git.exe",
+      "ppid": 786952
+    },
+    {
+      "pid": 789704,
+      "name": "python.exe",
+      "ppid": 786952
+    },
+    {
+      "pid": 790404,
+      "name": "python.exe",
+      "ppid": 789704
+    },
+    {
+      "pid": 790792,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 790804,
+      "name": "python.exe",
+      "ppid": 790792
+    },
+    {
+      "pid": 791108,
+      "name": "git.exe",
+      "ppid": 790804
+    },
+    {
+      "pid": 787684,
+      "name": "python.exe",
+      "ppid": 790804
+    },
+    {
+      "pid": 775632,
+      "name": "python.exe",
+      "ppid": 787684
+    },
+    {
+      "pid": 791268,
+      "name": "python.exe",
+      "ppid": 791272
+    },
+    {
+      "pid": 791272,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 791372,
+      "name": "git.exe",
+      "ppid": 791268
+    },
+    {
+      "pid": 790564,
+      "name": "git.exe",
+      "ppid": 791268
+    },
+    {
+      "pid": 790976,
+      "name": "python.exe",
+      "ppid": 791056
+    },
+    {
+      "pid": 791056,
+      "name": "python.exe",
+      "ppid": 791268
+    },
+    {
+      "pid": 790640,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 790652,
+      "name": "python.exe",
+      "ppid": 790640
+    },
+    {
+      "pid": 791104,
+      "name": "git.exe",
+      "ppid": 790652
+    },
+    {
+      "pid": 786828,
+      "name": "git.exe",
+      "ppid": 790652
+    },
+    {
+      "pid": 785852,
+      "name": "python.exe",
+      "ppid": 790652
+    },
+    {
+      "pid": 790956,
+      "name": "python.exe",
+      "ppid": 785852
+    },
+    {
+      "pid": 785636,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 785964,
+      "name": "python.exe",
+      "ppid": 785636
+    },
+    {
+      "pid": 775568,
+      "name": "git.exe",
+      "ppid": 785964
+    },
+    {
+      "pid": 787804,
+      "name": "python.exe",
+      "ppid": 785964
+    },
+    {
+      "pid": 789596,
+      "name": "python.exe",
+      "ppid": 787804
+    },
+    {
+      "pid": 787932,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 787216,
+      "name": "python.exe",
+      "ppid": 787932
+    },
+    {
+      "pid": 790936,
+      "name": "git.exe",
+      "ppid": 787216
+    },
+    {
+      "pid": 791516,
+      "name": "git.exe",
+      "ppid": 787216
+    },
+    {
+      "pid": 784448,
+      "name": "python.exe",
+      "ppid": 790660
+    },
+    {
+      "pid": 790660,
+      "name": "python.exe",
+      "ppid": 787216
+    },
+    {
+      "pid": 788220,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 791556,
+      "name": "python.exe",
+      "ppid": 788220
+    },
+    {
+      "pid": 791952,
+      "name": "git.exe",
+      "ppid": 791556
+    },
+    {
+      "pid": 792232,
+      "name": "git.exe",
+      "ppid": 791556
+    },
+    {
+      "pid": 792480,
+      "name": "python.exe",
+      "ppid": 791556
+    },
+    {
+      "pid": 788612,
+      "name": "python.exe",
+      "ppid": 792480
+    },
+    {
+      "pid": 793068,
+      "name": "python.exe",
+      "ppid": 793096
+    },
+    {
+      "pid": 793096,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 793372,
+      "name": "git.exe",
+      "ppid": 793068
+    },
+    {
+      "pid": 793516,
+      "name": "git.exe",
+      "ppid": 793068
+    },
+    {
+      "pid": 791956,
+      "name": "python.exe",
+      "ppid": 793060
+    },
+    {
+      "pid": 793060,
+      "name": "python.exe",
+      "ppid": 793068
+    },
+    {
+      "pid": 777804,
+      "name": "python.exe",
+      "ppid": 792900
+    },
+    {
+      "pid": 792900,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 792868,
+      "name": "git.exe",
+      "ppid": 777804
+    },
+    {
+      "pid": 793176,
+      "name": "git.exe",
+      "ppid": 777804
+    },
+    {
+      "pid": 792572,
+      "name": "python.exe",
+      "ppid": 777804
+    },
+    {
+      "pid": 793412,
+      "name": "python.exe",
+      "ppid": 792572
+    },
+    {
+      "pid": 793692,
+      "name": "python.exe",
+      "ppid": 793788
+    },
+    {
+      "pid": 793788,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 793736,
+      "name": "git.exe",
+      "ppid": 793692
+    },
+    {
+      "pid": 783804,
+      "name": "git.exe",
+      "ppid": 793692
+    },
+    {
+      "pid": 789884,
+      "name": "python.exe",
+      "ppid": 793768
+    },
+    {
+      "pid": 793768,
+      "name": "python.exe",
+      "ppid": 793692
+    },
+    {
+      "pid": 795028,
+      "name": "python.exe",
+      "ppid": 795040
+    },
+    {
+      "pid": 795040,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 787396,
+      "name": "git.exe",
+      "ppid": 795028
+    },
+    {
+      "pid": 795320,
+      "name": "python.exe",
+      "ppid": 795028
+    },
+    {
+      "pid": 795492,
+      "name": "python.exe",
+      "ppid": 795320
+    },
+    {
+      "pid": 795516,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 795524,
+      "name": "python.exe",
+      "ppid": 795516
+    },
+    {
+      "pid": 786408,
+      "name": "git.exe",
+      "ppid": 795524
+    },
+    {
+      "pid": 791976,
+      "name": "python.exe",
+      "ppid": 794864
+    },
+    {
+      "pid": 794864,
+      "name": "python.exe",
+      "ppid": 795524
+    },
+    {
+      "pid": 790756,
+      "name": "python.exe",
+      "ppid": 794904
+    },
+    {
+      "pid": 794904,
+      "name": "python.exe",
+      "ppid": 788184
+    },
+    {
+      "pid": 794860,
+      "name": "git.exe",
+      "ppid": 790756
+    },
+    {
+      "pid": 793756,
+      "name": "git.exe",
+      "ppid": 790756
+    },
+    {
+      "pid": 794296,
+      "name": "python.exe",
+      "ppid": 790756
+    },
+    {
+      "pid": 794712,
+      "name": "python.exe",
+      "ppid": 794296
+    }
+  ],
+  "descendants_terminated": [
+    681284,
+    743576,
+    753616,
+    760496,
+    770796,
+    775044,
+    775568,
+    775632,
+    777576,
+    777804,
+    779244,
+    780044,
+    782212,
+    782344,
+    782876,
+    782940,
+    783540,
+    783804,
+    783992,
+    784448,
+    784592,
+    784852,
+    785188,
+    785636,
+    785708,
+    785788,
+    785852,
+    785964,
+    786160,
+    786292,
+    786408,
+    786628,
+    786724,
+    786828,
+    786952,
+    787168,
+    787216,
+    787336,
+    787356,
+    787396,
+    787476,
+    787480,
+    787492,
+    787500,
+    787608,
+    787660,
+    787684,
+    787756,
+    787804,
+    787828,
+    787836,
+    787916,
+    787932,
+    787936,
+    787964,
+    788004,
+    788008,
+    788012,
+    788028,
+    788184,
+    788204,
+    788212,
+    788216,
+    788220,
+    788244,
+    788288,
+    788308,
+    788348,
+    788408,
+    788412,
+    788444,
+    788504,
+    788612,
+    788756,
+    788884,
+    789040,
+    789296,
+    789416,
+    789452,
+    789572,
+    789596,
+    789692,
+    789704,
+    789720,
+    789752,
+    789852,
+    789884,
+    789896,
+    789904,
+    789908,
+    789944,
+    789960,
+    790028,
+    790204,
+    790216,
+    790236,
+    790252,
+    790404,
+    790564,
+    790640,
+    790652,
+    790660,
+    790756,
+    790792,
+    790804,
+    790936,
+    790956,
+    790976,
+    791056,
+    791104,
+    791108,
+    791268,
+    791272,
+    791372,
+    791516,
+    791556,
+    791952,
+    791956,
+    791976,
+    792232,
+    792480,
+    792572,
+    792868,
+    792900,
+    793060,
+    793068,
+    793096,
+    793176,
+    793372,
+    793412,
+    793516,
+    793692,
+    793736,
+    793756,
+    793768,
+    793788,
+    794296,
+    794712,
+    794860,
+    794864,
+    794904,
+    795028,
+    795040,
+    795320,
+    795492,
+    795516,
+    795524
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 190584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 742748,
+      "name": "python.exe"
+    },
+    {
+      "pid": 744080,
+      "name": "python.exe"
+    },
+    {
+      "pid": 787868,
+      "name": "python.exe"
+    },
+    {
+      "pid": 787880,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-754a\\147-r4-gate-chunkd-qb.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754a",
+    "repo_head": "fee605324dc9b64c4f9d2b4d1006657a32c1ec4c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-754a",
+    "token": "ORCH-754a:787880:cd50ec94b5c8dd6b",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
