@@ -1,0 +1,244 @@
+{
+  "label": "base-affected",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/bt-orch754b/base-wt",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch754b/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754b/76-base-affected.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch754b/76-base-affected",
+    "-rf",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c086_superset_complex_promotion.py",
+    "tests/test_c089_participant_schema.py",
+    "tests/test_c095_wrapper_superset_identity.py",
+    "tests/test_c100_tolerance_scope.py",
+    "tests/test_c122_db_first_alias.py",
+    "tests/test_db_resolver_primitives.py",
+    "tests/test_entity_identity_contracts.py",
+    "tests/test_identity_evidence_hydration.py",
+    "tests/test_identity_hydration_regression.py",
+    "tests/test_interactive_curator.py",
+    "tests/test_locked_noop_quarantine_policy.py",
+    "tests/test_map_ids.py",
+    "tests/test_map_ids_mapping_lineage.py",
+    "tests/test_rag_seed_entity_reimport.py",
+    "tests/test_rag_synthesize.py",
+    "tests/test_stage2_mapping_boundary.py",
+    "tests/test_streamlit_stage2_orchestration.py",
+    "tests/test_transport_actor_guards.py",
+    "tests/test_payload_models.py",
+    "tests/test_stage_contracts.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_batch_run.py",
+    "tests/test_curator_offline_mode.py",
+    "tests/test_draft_graph_entity_kinds.py",
+    "tests/test_pipeline_cleanup.py",
+    "tests/test_research_mode_report.py",
+    "tests/test_reaction_evidence.py",
+    "tests/test_reaction_evidence_app_hook.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b",
+  "started_at": "2026-10-20T17:30:16+00:00",
+  "finished_at": "2026-10-20T17:30:56+00:00",
+  "duration_seconds": 39.68766440000036,
+  "timeout_seconds": 540.0,
+  "root_pid": 614072,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 628564,
+      "name": "python.exe",
+      "ppid": 614072
+    },
+    {
+      "pid": 627920,
+      "name": "git.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 624228,
+      "name": "python.exe",
+      "ppid": 626288
+    },
+    {
+      "pid": 626288,
+      "name": "python.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 627888,
+      "name": "taskkill.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 628240,
+      "name": "python.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 621284,
+      "name": "python.exe",
+      "ppid": 628240
+    },
+    {
+      "pid": 625140,
+      "name": "python.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 625104,
+      "name": "python.exe",
+      "ppid": 625140
+    },
+    {
+      "pid": 613108,
+      "name": "python.exe",
+      "ppid": 625624
+    },
+    {
+      "pid": 625624,
+      "name": "python.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 625828,
+      "name": "python.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 628492,
+      "name": "python.exe",
+      "ppid": 625828
+    },
+    {
+      "pid": 614344,
+      "name": "python.exe",
+      "ppid": 627160
+    },
+    {
+      "pid": 627160,
+      "name": "python.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 617568,
+      "name": "python.exe",
+      "ppid": 626004
+    },
+    {
+      "pid": 626004,
+      "name": "python.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 626136,
+      "name": "python.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 623672,
+      "name": "python.exe",
+      "ppid": 628564
+    },
+    {
+      "pid": 613748,
+      "name": "python.exe",
+      "ppid": 623672
+    }
+  ],
+  "descendants_terminated": [
+    613108,
+    613748,
+    614344,
+    617568,
+    621284,
+    623672,
+    624228,
+    625104,
+    625140,
+    625624,
+    625828,
+    626004,
+    626136,
+    626288,
+    627160,
+    627888,
+    627920,
+    628240,
+    628492,
+    628564
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 190584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 587540,
+      "name": "python.exe"
+    },
+    {
+      "pid": 588156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 627812,
+      "name": "python.exe"
+    },
+    {
+      "pid": 628228,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch754b/docs/pwml_recovery_sprint/evidence/g11/ORCH-754b/76-base-affected.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b",
+    "repo_head": "d73e9bc8183ea95426ef5404dd425e89066e6ccb",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-754b",
+    "token": "ORCH-754b:628228:b0fa08fc8ca0b86d",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
