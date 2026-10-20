@@ -11038,3 +11038,34 @@ Change set F and `PF-746-01..05` are not dispatched.
 **`ORCH-754a-review` round 2 · 2026-10-20 — REJECT of `75ca32f3`**, two narrow blocking items: entry-level quotes lost on merge (6 on chlorophyll, 2 on menaquinone), and enzyme-name typo snaps unflagged. B1-B3, N1/N3, N4 and N6 reproduced as fixed. The one-line `streamlit_app.py` diff was confirmed, and the trial merge with sprint passes SMOKE 508 and both lanes' focused files (218). Round 5 dispatched, with a quote-conservation test required.
 
 **`ORCH-754a` · 2026-10-20 — MERGED** at `adc49c40` (`9ea36a6b`) after review 3 APPROVE WITH NOTES. **Integration on the merged tip:** SMOKE 508; 82-file union 1931 passed / 8 failed, all 8 pre-existing (4 at base, 4 primary-only environmental, identical at base in an env-matched A/B); AppTests alone green except the env node; Chunk D only the env nodes red. **One real defect found:** `test_no_production_module_imports_evaluation_v2` red since `70d05e03` → **`ORCH-754d` dispatched**. `TEST_MATRIX.md` § ORCH-754 appended, plus the stale conftest line corrected in place.
+
+## `ORCH-760` — pathway mining for novel-connection discovery (mining code only) · 2026-10-20 · DISPATCHED
+
+The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 session.
+- **Brief:** `docs/pathway_mining/evidence/orch760/BRIEF.md` on `experiment/pathway-mining` (a copy is at
+  `C:/t/mining-handoff/ORCH-760-HANDOFF.md`).
+- **Who does what:** a subagent orchestrator (Opus 5.5, extra-high effort) runs the task and spawns its own implementers
+  and reviewers. The main session only oversees.
+- **Constraints:** nothing is merged into `sprint/pwml-recovery` or `main`, and nothing is pushed. No LLM call.
+  Pilot-005 is pre-registered for the product owner to launch.
+
+**Product-owner decisions (2026-10-20, given in session; NOT `DECISIONS.md` entries):**
+
+| # | decision |
+|---|---|
+| 1 | The goal is literature-based discovery. A link stated by one paper is an evidenced link. A link pieced together from different papers is a novelty candidate. An easy view of all links is required |
+| 2 | Cross-species links are allowed and always labelled |
+| 3 | `possibly_novel` = pieced together AND a recorded literature check found no paper stating the joined link |
+| 4 | Widen outreach as far as correctness allows. Other-species evidence is kept and labelled, never discounted |
+| 5 | Skip the Phase-1 scale-test run and go straight to the code changes |
+| 6 | The PO launches the overnight run (about 1,000 papers, about 10 h) themselves. 64k tokens per call. More papers, chosen less conservatively |
+| 7 | Mining code only (`src/t2pw/mining/**`, its tests, `docs/pathway_mining/**`). Every agent runs on Opus 5.5 at extra-high effort |
+
+| item | value |
+|---|---|
+| start | `experiment/pathway-mining` @ `a4bef005` (code `cc9dbc0d`; suite 1145, SMOKE 508 with mining off) |
+| why | pilot-004 (`experiment/pathway-mining-pilot-004` @ `9128aa8c`). Seven blockers: a topic-anchored paper screen (139 of 150 papers excluded); queries that require the species; quarantined cross-species reactions; no notion of novelty; silent passage loss in the 12k shrink ladder; sequential speed of about 3.3 min per paper; generic-name false bridges |
+| change sets | A extraction capacity (64k, no silent loss) · B outreach (screen on the frontier item's own terms, species optional in queries) · C cross-species discovery graph (labels, generic-bridge block) · D link provenance (`stated` / `pieced_together`) and a novelty probe · E link view (`links.json` / `.csv`, report, a Streamlit Links tab) · F concurrent extraction · G overnight profile and pilot-005 pre-registration (not run) |
+| correctness bar | C1-C8 in the brief: citations unchanged; accurate species and grade labels with no species transfer; chemistry-only links with no cofactor or generic-name bridges; every link labelled; "novel" never claimed outright; the target-species view kept as a filter |
+| review bar | set before round 0. Blocking = a C1-C8 violation shown end to end, a false connection or wrong label in a realistic case, a provenance loss, a forbidden edit, or a failing gate. At most 2 repair rounds per change set |
+| records | every step is appended to `docs/pathway_mining/evidence/orch760/PROGRESS.md` on the mining branch. The overseer copies the close entry here |
