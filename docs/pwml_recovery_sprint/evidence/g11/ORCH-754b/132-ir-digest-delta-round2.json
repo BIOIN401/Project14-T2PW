@@ -1,0 +1,125 @@
+{
+  "label": "ir-digest-delta-round2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/orch754b_ir_digest_delta.py",
+    "--rev",
+    "9da8358e",
+    "--out",
+    "docs/pwml_recovery_sprint/evidence/orch754b_ir_digest_delta_round2.json"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b",
+  "started_at": "2026-10-20T18:29:03+00:00",
+  "finished_at": "2026-10-20T18:29:06+00:00",
+  "duration_seconds": 3.6403237000049558,
+  "timeout_seconds": 540.0,
+  "root_pid": 719112,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 719140,
+      "name": "python.exe",
+      "ppid": 719112
+    },
+    {
+      "pid": 719208,
+      "name": "git.exe",
+      "ppid": 719140
+    },
+    {
+      "pid": 719300,
+      "name": "python.exe",
+      "ppid": 719140
+    },
+    {
+      "pid": 719324,
+      "name": "python.exe",
+      "ppid": 719300
+    },
+    {
+      "pid": 719592,
+      "name": "python.exe",
+      "ppid": 719140
+    },
+    {
+      "pid": 719612,
+      "name": "python.exe",
+      "ppid": 719592
+    }
+  ],
+  "descendants_terminated": [
+    719140,
+    719208,
+    719300,
+    719324,
+    719592,
+    719612
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 190584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 678676,
+      "name": "python.exe"
+    },
+    {
+      "pid": 678752,
+      "name": "python.exe"
+    },
+    {
+      "pid": 716376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 718532,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch754b/docs/pwml_recovery_sprint/evidence/g11/ORCH-754b/132-ir-digest-delta-round2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b",
+    "repo_head": "9da8358e8892e1b12764983eeb6a3985ce30eb42",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-754b",
+    "token": "ORCH-754b:716376:63d5cca24ca5d12b",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

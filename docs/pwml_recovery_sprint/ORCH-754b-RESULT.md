@@ -2,8 +2,9 @@
 
 **Status:** implemented on `orch754/b-interaction-wrappers` (base `f9892cdf`), committed, not
 merged and not pushed. Round 0: code `3bf40cb6`, docs `f8b8edf7` / `d73e9bc8` — **REJECTED** by
-the independent review of `d73e9bc8`. **Repair round 1** (§ 14): code `ff5f2337`, then the docs
-commit carrying this document. Where a round-0 section below is superseded it says so at its
+the independent review of `d73e9bc8`. Repair round 1 (§ 14): code `ff5f2337`, docs `9da8358e` —
+**REJECTED** on two small blocking items. **Repair round 2** (§ 15): code `1f617891`, then the
+docs commit carrying this document. Where a round-0 section below is superseded it says so at its
 head; read § 14 for the current state. Product-owner rulings applied: 2026-10-19, being recorded as **D-104**
 (not yet in `DECISIONS.md` when this was written). Orchestrator scope additions of the same
 day (re-pin, `competes_with`, app-path text record) are covered in § 6–8.
@@ -400,10 +401,11 @@ gate reports `33`–`59` (`36-qb.json` the component, `37`…`59` the nodes).
 
 ## 13. Left behind
 
-Three detached worktrees I created are left registered, because `git worktree remove` was refused by
+Five detached worktrees I created are left registered, because `git worktree remove` was refused by
 the permission system in round 0: `C:/t/bt-orch754b/base-wt` (`f9892cdf`, the base-SHA baseline runs),
 `prev-wt` (`d73e9bc8`, with the round-1 test file copied in for G9, so it is dirty) and `tip-wt`
-(`ff5f2337`, for the c081 / c089 corpus tests). Remove each with
+(`ff5f2337`, for the c081 / c089 corpus tests), plus, from round 2, `r1-wt` (`9da8358e`, with the
+round-2 test files and fixtures copied in for G9, dirty) and `tip2-wt` (`1f617891`). Remove each with
 `git worktree remove --force C:/t/bt-orch754b/<name>`.
 
 ---
@@ -602,3 +604,186 @@ affected-test run reports 3 skips that are not failures; run them from a path wi
 10. **No reaction-evidence record for a strict leg until it is re-run.** Committed strict legs'
     `pwml_ir.json` predate per-row verdicts (ORCH-747), so their reports read `Not recorded`.
     Only legs exported after this card carry verdicts.
+
+---
+
+## 15. Repair round 2 (review of `9da8358e`: REJECT, two blocking items)
+
+What the reviewer confirmed and this round leaves alone: synonym matching requires exactly one
+protein, no declared complex is borrowed, no gate moved, the bundles are verbatim, the gates
+match base. Code commit **`1f617891`**.
+
+### 15.1 BLOCKING 1 — a lane-added Stage-6 report key still reached an LLM
+
+**Finding, reproduced.** Round 1 kept one piece of bookkeeping: the summary counter
+`interaction_protein_endpoints_rewritten_to_complexes` and one `…_rewritten_to_complex` action
+per endpoint. `interactive_curator.compact_mapping_misses` copies the Stage-6 step's summary dict
+whole into the curator's "Mapping Misses": `_looks_like_entity_mapping_record` accepts any dict
+with a key ending `_id` (`interactive_curator.py:1008-1027`) — the step summary has
+`reaction_enzyme_proteins_dropped_no_external_id` — and a non-zero `…_novel` count trips the
+miss test (`:973-1006`). My round-1 pin missed it because `stage6_all_unwrappable` covered only
+a payload where nothing is wrapped, and my own probe used a summary without that `_id` key.
+
+**What changed.** The counter and the actions are gone. A superset refusal met while wrapping
+an interaction endpoint is also no longer written (`_resolve_complex_name(…, record=False)`;
+the enzyme path still records its own). No new place holds them. The rewrite stays visible
+where it happens: the interaction endpoint names a wrapper row with `generated: true` and
+`generation_reason: single_protein_pathwhiz_wrapper`, and the IR's verdict covers the rest.
+
+**Pinned WRAPPED case.** `_llm_bound_digests()` gains three entries. `stage6_wrapped_report`
+and `stage6_wrapped_mapping_misses` are the Stage-6 report and the curator's Mapping Misses for
+a payload Stage 6 does wrap (SFXN4 and ALAS2), each tree's own Stage 6 on the same input.
+`wrapped_post_stage6` is the reaction summary, draft graph and QA report of the post-Stage-6
+payload. The evidence script runs the tip first and hands that payload to the base, so both
+trees read the same payload and the wrapper is the only difference.
+`evidence/orch754b_llm_input_identity.py` → `.json` (G11 `122`): **tip == base on every digest,
+including all three**; `d73e9bc8` differs on the three Stage-6 entries.
+
+**95-leg replay.** `evidence/orch754b_mapping_misses_replay.py` → `.json` (G11 `124`) re-runs
+the step offline on every committed leg with interactions and rebuilds the two places a
+`map_payload` report carries it (`report["summary"]` and `report["enzyme_complex_conversion"]`).
+Mapping Misses that differ from base: **`9da8358e`: 24 legs (the reviewer's number); tip: 0.**
+The tip rewrote 71 endpoints on 56 legs in that replay, so the 0 means "nothing but the
+wrapper", not "nothing was wrapped".
+
+**One base counter, stated, not changed:** `map_payload`'s own summary key
+`generated_wrappers_created` (`map_ids.py`, `map_payload`; base code) counts every generated
+complex a pass creates, the interaction wrappers included, so its value rises when the
+authorized wrapper is built. That is base bookkeeping counting the authorized change, and
+outside the step this lane owns. Open question 11.
+
+### 15.2 BLOCKING 2 — the `.txt` said "drawn" when no PWML was written
+
+**Finding, reproduced.** On an IR-validation failure the app returns `ok: False`,
+`output_path: ""` and still carries `pwml_ir` (`streamlit_app.py:4971-4985`). The batch driver
+writes `pwml_ir.json` even without XML (`driver.py:2232-2236`). Round 1 read `export_status`
+alone. `runs_verify/2026-08-25_1216/papers/PMC12856317/strict` has an IR and no PWML.
+
+**What changed.** A verdict is shown only when a PWML was written. A run directory must hold
+`pathway.pwml` or `pathway.review_required.pwml`; `load_run_artifacts` records their presence and
+never reads them. In the app, `pwml_export_result` must be `ok: true` with PWML bytes or a path.
+Otherwise every row reads `Not recorded (no PWML written: <cause>)`, where the cause is the
+export's own `error` (e.g. `PWML IR validation failed.`) or "neither pathway.pwml nor
+pathway.review_required.pwml is in this run".
+
+**Tests**, each failing behaviourally at `9da8358e` (G11 `135`, `136`; every failure an
+assertion, none an import):
+- batch path — `test_no_verdict_is_shown_when_no_pwml_was_written_batch_path`;
+- app path, AppTest — `test_an_export_that_wrote_no_pwml_shows_no_verdict_app_path`.
+
+### 15.3 Non-blocking 3 — a stale IR row paired with a different word
+
+**What changed.** Each IR row must have been built from the payload row beside it:
+- for a withheld row, the IR's recorded word and both endpoint names must equal the payload's,
+  read with the exporter's own field precedence;
+- for a drawn row, the payload word's sign (the same table) must equal the IR's
+  `interaction_type`, and the entity each side was bound to must carry the written name. That
+  check uses the IR's own name key, applied to the entity's name, raw name, short name, common
+  name and synonyms.
+
+Any mismatch prints `Not recorded (pwml_ir.json row n was built from a different relationship
+or endpoints)`. A drawn row whose endpoint the IR never resolved now says so, instead of "drawn".
+
+The sign table moved, verbatim, to `src/t2pw/pwml/interaction_types.py` (standard library only;
+`ir.py` re-exports every name), so the report can use it without importing the exporter. The
+report's no-LLM / no-HTTP import test (`test_reaction_evidence.py` test 11) still passes.
+Test: `test_a_stale_ir_row_is_never_paired_with_a_different_word_or_endpoint` (fails at `9da8358e`).
+
+### 15.4 Non-blocking 4 — fail closed on a protein name shared with another kind
+
+**What changed.** Stage 6 wraps no endpoint of a row if a protein endpoint's name, or the alias
+it matched, also names a compound, nucleic acid or element collection in the payload. I added
+element collection to the reviewer's two kinds, because the same ambiguity applies. The check
+uses Stage 6's own normalization, which is looser than the IR's, so it refuses at least
+everything the IR would call ambiguous.
+
+The IR withholds such a row as `ambiguous_protein_endpoint`, with
+`ambiguous_endpoints: [{name, also_names}]`, before any species / identity reason. The record
+reads e.g. `withheld -- ambiguous_protein_endpoint: entD also names a nucleic acid in this
+payload, so it is not known to be the protein and is not drawn as one`.
+
+**Cost, measured:** 0 of 71 replay rewrites affected (G11 `124`, rewrite counts `9da8358e` 71 =
+tip 71). On committed data the IR now calls **2 rows** ambiguous, both on
+`runs_verify/2026-08-04_1358/papers/PMC12096016/research`: `2,3-DHB inhibits EntB isochorismatase`
+and `Fur represses entD`. In both, `EntB` / `entD` is a protein and a gene in that payload, and
+`Fur represses entD` is gene repression (`evidence/orch754b_ambiguous_endpoint_rows.py`, G11 `133`).
+Test: `test_a_protein_endpoint_also_named_like_another_kind_is_never_wrapped_and_both_outputs_say_why`,
+name and alias cases.
+
+### 15.5 Deliberate pinned moves (merge rule 4)
+
+- **One GOLDEN digest:** `runs_verify/2026-08-04_1358/papers/PMC12096016/research` `e0ef63b1…` →
+  `d8bd9a2c…`, the two ambiguous rows above. The delta was measured from `9da8358e` by
+  `evidence/orch754b_ir_digest_delta.py --rev 9da8358e` → `orch754b_ir_digest_delta_round2.json`
+  (G11 `132`): **1 leg moved**, every pointer under `withheld/{reason, ambiguous_endpoints,
+  unwrappable_proteins}` plus the matching warning text; errors, `ok` and stops unchanged. The new
+  value is pytest's own (`evidence/orch754b_pins_round2_before.pytest.log`, G11 `129`). R3 did not
+  move. Pins pass (G11 `134`).
+- `docs/reaction_evidence_sample.txt`: the "Artifacts read" line now lists
+  `pathway.review_required.pwml`.
+- `tests/fixtures/reaction_evidence/{enterobactin_strict,lipid_a_strict}.bundle.json`: a presence
+  marker for the PWML their committed legs hold (content is a placeholder; the report reads only
+  that the file exists).
+- `tests/test_reaction_evidence_view.py`: the session-IR test now gives a written export (`ok`,
+  path, bytes) and a withheld row with its recorded endpoints.
+
+G11 `131` re-ran `orch754b_cumulative_repin.py` from `c9265fb8` with its default output path. That
+overwrote the round-0 record `orch754b_cumulative_repin.json`, which I restored from a copy taken
+first. The round-2 move is the `9da8358e` delta above. `131` stands as a run whose output was
+discarded.
+
+### 15.6 Gates (round 2)
+
+| gate | tip (`1f617891` tree) | base `f9892cdf` (clean worktree) | report |
+|---|---|---|---|
+| focused (new file + interaction export + spellings) | **106 passed** | — | `139` |
+| affected (32 files) | 667 passed, 3 skipped, 3 failed | 670 passed, 3 failed — **identical E-lines** | `140`, base `76` |
+| the 3 skips: c081 / c089 corpus tests from `C:/t/bt-orch754b/tip2-wt` @ `1f617891` | **56 passed** | 56 passed | `173`, base `120` |
+| PWML export chunk (33 files) | 848 passed, 8 skipped, 2 failed (coverage tripwire) | 847 / 8 / 4 failed | `141`, base `26` |
+| SMOKE (22 files) | **508 passed** | — | `142` |
+| AppTest `test_reaction_evidence_view` alone | **11 passed** (9 + 2 new) | 9 passed | `130`, base `88` |
+| AppTest `test_c055_rag_loop_wiring` alone | 14 passed | — | `143` |
+| AppTest `test_batch_preflight` alone | 32 passed, 4 skipped, 1 failed — the same `.venv` assumption as base | identical | `174`, base `31` |
+| Chunk D `--only qb`, one process per node | **23/23 executed, failed none** | — | outer `145`, gate `146`–`172` |
+| digest pins | 1 failed before the re-pin, **2 passed** after | — | `129`, `134` |
+| G9: the round-2 tests at `9da8358e` (`C:/t/bt-orch754b/r1-wt`) | 9 failed + the app-path AppTest failed, all on assertions | — | `135`, `136` |
+| measurements | LLM-input identity `122`, Mapping Misses replay `124`, sample regeneration `127`, IR delta from `9da8358e` `132`, ambiguous rows `133`, text-vs-IR corpus `137`, wrapper proof `138`, unwrappable endpoints `144` | | |
+
+Every report: `final_surviving_count: 0`. `121` (summary-shape probe; script kept as
+`evidence/orch754b_probe_summary_shapes.py`) and `126` (a debug print of one IR row) were
+diagnostics; `125` / `128` dev iterations; `131` is the discarded run noted in § 15.5; `123` was
+refused before starting (heavy lock held elsewhere), so no report was promoted.
+
+**Corpus, re-measured** (`137`): 330 of 330 rows in each configuration, the record states the IR,
+0 disagreements. A PWML is placed beside the IR only where the export would have written one
+(no blocking IR error, valid IR) — 41 of 94 legs direct, 67 of 94 after the replay — and every
+other row reads `Not recorded (no PWML written …)`. Wrapper proof (`138`): unchanged from round 1
+except 2 replay rows that are now `ambiguous_protein_endpoint` instead of a missing identity
+(exportable still 13 → 73); preservation and confinement hold. Unwrappable endpoints (`144`):
+25 occurrences (`EntB`'s and `entD`'s ambiguous rows left the list).
+
+**TEST_MATRIX delta (round 2):** `test_pwml_interaction_protein_wrappers.py` 21 → 24 tests;
+`test_reaction_evidence_view.py` 10 → 11; one GOLDEN digest moved (§ 15.5); export chunk still
+at 2 known failures; SMOKE 508.
+
+### 15.7 What I believed and what disproved it (round 2)
+
+1. **"`compact_mapping_misses` ignores a summary dict."** My round-1 probe said so, but the
+   probe's summary lacked the `…_id` key that makes the heuristic treat the dict as an entity.
+   The reviewer measured real reports; the 95-leg replay now confirms 24 → 0.
+2. **"An IR row with `export_status: exportable` is drawn."** False twice: when no PWML is
+   written, and when the IR resolved no entity for an endpoint (that row is "exportable" with
+   `left: null`). The record now says neither is drawn.
+3. **"Shared protein / gene names are hypothetical."** They are on committed data: `EntB` and
+   `entD` on one PMC12096016 leg.
+
+### 15.8 Not settled — added this round
+
+11. **`generated_wrappers_created`** (base's own `map_payload` counter) rises with every
+    authorized interaction wrapper and sits in the summary the curator's Mapping Misses can copy.
+    Options: (a) accept it as counting the authorized change (no cost); (b) exclude interaction
+    wrappers from it (cost: the counter then undercounts generated complexes, and it is base
+    behaviour outside this lane).
+12. **Committed legs still read `Not recorded`** for every interaction. Their IRs predate per-row
+    verdicts, and the PMC12856317 2026-08-25 strict leg wrote no PWML. Only legs exported after
+    this card carry verdicts in the `.txt`.

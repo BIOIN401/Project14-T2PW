@@ -1,0 +1,97 @@
+{
+  "label": "pins",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754b/134-pins.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch754b/134-pins",
+    "tests/test_compound_resolution_extraction.py::test_build_pwml_ir_matches_the_pre_extraction_golden",
+    "tests/test_pwml_ir_duplicate_row_refusal.py::test_new_acceptance_a_non_colliding_leg_is_byte_identical_to_the_base"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b",
+  "started_at": "2026-10-20T18:30:13+00:00",
+  "finished_at": "2026-10-20T18:30:19+00:00",
+  "duration_seconds": 6.648939600010635,
+  "timeout_seconds": 540.0,
+  "root_pid": 716820,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 720688,
+      "name": "python.exe",
+      "ppid": 716820
+    }
+  ],
+  "descendants_terminated": [
+    720688
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 190584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 678676,
+      "name": "python.exe"
+    },
+    {
+      "pid": 678752,
+      "name": "python.exe"
+    },
+    {
+      "pid": 718516,
+      "name": "python.exe"
+    },
+    {
+      "pid": 720296,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch754b/docs/pwml_recovery_sprint/evidence/g11/ORCH-754b/134-pins.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch754b",
+    "repo_head": "9da8358e8892e1b12764983eeb6a3985ce30eb42",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-754b",
+    "token": "ORCH-754b:720296:ee0ec436d4fb6767",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
