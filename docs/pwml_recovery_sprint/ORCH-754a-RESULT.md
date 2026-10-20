@@ -2,22 +2,188 @@
 
 **Status:** delivered on `orch754/a-ensemble-merge` (base `f9892cdf`), not merged, not pushed.
 
-- Round 1: code `772bd3df` and `cf84626b`, docs and evidence `6c75112f`.
-- Round 2, which implements the product owner's rulings of 2026-10-20 on questions 1 and 2: code `1cfae4d3`, docs and evidence in the commit after it.
-- Bounded-run reports `evidence/g11/ORCH-754a/01`–`86`, pins `evidence/g11/pin/ORCH-754a/`.
-- Offline only: **no LLM call and no pipeline run anywhere in this task.**
+| round | code | docs/evidence |
+|---|---|---|
+| 1 | `772bd3df`, `cf84626b` | `6c75112f` |
+| 2 (rulings Q1, Q2) | `1cfae4d3` | `989dee54` |
+| 3 (repairs after the review of `989dee54` returned REJECT) | `bf04375b` | the commit after it |
+
+Bounded-run reports `evidence/g11/ORCH-754a/01`–`109`, pins `evidence/g11/pin/ORCH-754a/`. Offline only: **no LLM call and no pipeline run anywhere in this task.**
 
 **Headline (current tip).**
 
-- Chlorophyll pools **41 → 29** reactions: 11 at 3/3 support, 2 at 2/3, 16 at 1/3 (all kept).
-  - 11 merges are flagged `undefined_state_treated_as_absent`, naming `'plastidic state'`.
-  - Two steps stay split, on enzymes the paper dictionary cannot bridge: `PPO`, and the ambiguous `POR`.
-- Gold is unchanged: enterobactin 4/5 at precision 0.8, menaquinone 9/9 at precision 1.0. That holds at base, before the rulings, and now.
-- The chimera fix (finding 1), the `.env` isolation (finding 4) and the human-only support marks (§ 1.6) all still hold.
+- **Every blocking finding is fixed:**
+  - B1: abbreviations match the exact spelling;
+  - B2: an extra enzyme no quote names refuses the merge;
+  - B3: cofactor sets must nest.
+- **Rulings:** N4 (insert/delete-only typo snaps, each flagged) is done. N1, N3 and N5 (dedupe-mirrored locks, every quote kept) are done.
+- **N2 (rule 3 at Stage 6 only) cannot be met without editing `streamlit_app.py`.** As instructed, I stopped rather than ship a heuristic. **Rule 3 is now not wired anywhere**, and `map_ids.py` is identical to base. The options are in § 10.3.
+- **Numbers are unchanged from round 2:** chlorophyll 41 → **29**, enterobactin 4/5 at P 0.8, menaquinone 9/9 at P 1.0. The four chlorophyll typo snaps are now flagged `typo_snapped`.
 
-**Read § 0 first.** It records the round-2 rulings and what they changed. §§ 1–8 are the round-1 record, still accurate except where § 0 supersedes them: § 1.5's state and enzyme rules, the § 2.1 numbers, and § 7 items 1–3.
+**Read § 10 first** (round 3), then § 0 (round 2). §§ 1–8 are the round-1 record.
 
 ---
+
+## 10. Round 3: repairs after the review of `989dee54`
+
+The review confirmed:
+
+- the boundary;
+- N=1 identity with base;
+- base-equal goldens;
+- the conftest pin under a real `.env`;
+- chlorophyll 41 → 29;
+- unchanged gold;
+- the IDH fix;
+- clean merges with the sprint branch and with 754b.
+
+It found the issues below. Its probes (`C:/t/bt-orch754a-rev/probe/p1`–`p10`) were re-run read-only against this tip through the wrapper (`g11/ORCH-754a/89`).
+
+### 10.1 Blocking
+
+**B1, case-sensitive abbreviations defeated** (probes p9 and p10). `_rewrite_map` keyed every participant spelling by case-folded `strict_key`, so whichever spelling a draw wrote first set the rule for all its case variants. In p9 `ACP` became "acetyl phosphate". In p10 `Ala` (alanine) became 5-aminolevulinic acid.
+
+*Fix:* the rewrite map is keyed by the **exact spelling** (`paper_lexicon.spelling_key`, made public: NFKC, dashes and whitespace folded, case kept). Every spelling is looked up on its own, so no spelling's rule reaches another and row order cannot matter.
+
+*Tests:*
+- `test_review_b1_case_variants_of_a_short_form_never_share_a_rule`, in both row orders;
+- `test_review_b1_a_spelling_the_paper_does_not_define_is_untouched`.
+
+*Probe re-run:*
+- p9: `AcP` → acetyl phosphate, `ACP` → acyl carrier protein;
+- p10: `Ala` untouched;
+- p10 on the three real cases: 0 renames made by another spelling's rule.
+
+**B2, extra-enzyme quote check skipped when the larger-set row survives** (probe p6).
+
+*Fix:* `_conflict` now refuses a nested enzyme superset unless a verbatim quote on either row names every extra enzyme. A quote can be the row's evidence or the enzyme entry's own `evidence`. The rows then stay apart, so nothing is lost.
+
+The quote that supports a kept extra is recorded:
+- `enzymes_kept` when the larger row survives;
+- `enzymes_added` when it is carried onto the survivor.
+
+The `.txt` prints it.
+
+One case keeps round 2's behaviour: the survivor named **no** enzyme. One row omitting enzymes is compatible (finding 1), so that case is not a superset conflict. An unquoted enzyme there is listed in `enzymes_withheld` with the donor quote, never silently kept.
+
+*Tests:*
+- `test_review_b2_an_extra_enzyme_no_quote_names_refuses_the_merge`, in both orders, plus the case where the other row's quote supports it;
+- the GUN4 test now also pins `enzymes_kept`.
+
+On chlorophyll, GUN4's own modifier quote ("GUN4 assists this step by stabilizing the Mg-chelatase complex") names it, so that merge stands.
+
+**B3, cofactor "role" was chemical family, not function** (probes p1 and p3).
+
+*Fix (orchestrator ruling):* the role table is deleted. Cofactors are compared as **nested sets per side**. Two rows that each name a cofactor the other lacks conflict. Rule 3 uses the same test.
+
+*Tests:*
+- `test_two_rows_each_naming_a_cofactor_the_other_lacks_stay_apart`: MDH (NAD+) vs MQO (FAD), ATP-PFK vs PPi-PFP, ATP vs ADP, Mg2+ vs Mn2+. It fails on the base module;
+- the IDH tests still stay apart, with the new reason text;
+- rule 3: MDH/MQO and IDH stay apart.
+
+*Probe re-run:* every p1 and p3 chimera, including xanthine dehydrogenase (NAD+) vs xanthine oxidase (O2), stays as two rows.
+
+### 10.2 Rulings N4, N1/N3, N5, N6, N7
+
+**N4, typo snaps narrowed and flagged.** A snap may only insert letters, or only delete them, so the shorter word must be a subsequence of the longer one. It never substitutes or transposes. Insertions or deletions are capped at 1 letter (2 from 10 characters up), and every round-1 safety rule is kept.
+
+Every rewrite made by a snap carries `flag: typo_snapped` in `names_rewritten`, plus a top-level `typo_snapped: [{draw, from, to}]` list in the side file. The `.txt` has a `TYPO SNAPS -- each FLAGGED for review` section. None of this is in any model-bound text.
+
+*Tests:*
+- `octenoate`, `sulfinate`, `heptanoate` never snap (their lookalikes `octanoate`, `sulfonate`, `hexanoate` are in the paper);
+- `cystine` → `cysteine` and `erythrulose` → `erythrose` snap and are flagged;
+- the four chlorophyll typos still snap and are flagged (test against the real paper): `geranyllgeraniol`, `porphobilogen (PBG)`, `hydroxymethybilane (HMB)`, `bilverdin IX`.
+
+**N1 and N3, rule 3 mirrors `dedupe_processes`.**
+
+- A locked row always survives an unlocked one, even one with a defined state (test `test_rule3_a_locked_row_always_survives`, probe p3 A).
+- Two different lock ids file the loser with dedupe's exact record: `reaction_name`, `reason: duplicate_locked_reaction`, `action: quarantined_from_active_reactions`, `json_pointer` of the row actually merged away, `original_reaction`, `locked_reaction_id`. The round-2 `ensemble_identity_duplicate` / `merged_into` wording is gone, so no new vocabulary reaches the audit LLM.
+- A lock id shared by both rows drops the loser silently, and the lock stays exported.
+- An unlocked loser files nothing.
+- `quarantined_locked_reactions` and `locked_reaction_filter_report` are written on dedupe's conditions.
+
+*Proof:* `test_rule3_files_locked_duplicates_exactly_as_dedupe_processes_does` runs both functions on four equivalent-duplicate payloads (two locks, later locked, first locked, one lock twice). It asserts equal surviving rows, equal quarantine records and equal lock reports.
+
+*The one difference, stated:* among rows the lock rule does not order, rule 3 picks the survivor by the product owner's Q1/Q2 preference and folds the loser's content into it. Dedupe picks `_best_record` and folds nothing.
+
+**N5, no quote is lost.**
+
+- Every Stage-1 merge entry now carries the merged row's `evidence`.
+- A replaced survivor's quote is kept as `previous_survivor_evidence`, and the `.txt` prints both. Probe p7 re-run: the draw-1 Mg-chelatase quote is present in the side file.
+- Rule-3 merges carry `merged_evidence`.
+- § 0.6 item 1 is corrected below. The test comment that cited a nonexistent `g11/ORCH-754a/02-focused-pre` now cites `06`, `46`, `69` and this round's pre-run.
+
+**N6, stale reaction pointers in the mapping report.** Moot while rule 3 is not wired (§ 10.3), because `map_payload` removes no rows. If option B in § 10.3 is chosen, the call has to remap the `/processes/reactions/<i>` pointers the report has already recorded (`map_ids.py:7967, 8535`) before `map_payload` returns, with a test. That work belongs to the wiring card.
+
+**N7, subprocess children not pinned by the conftest.** The autouse fixture unsets `T2PW_EXTRACTION_DRAWS` in the test process. A child the test spawns inherits that environment, but if the child imports `t2pw.llm.client` it reloads `.env` with `override=True`, outside the fixture's wrapped `load_dotenv`. I did not audit which tests spawn such a child; any that runs Stage 1 in a child is exposed to a primary-checkout `.env`. Noted, not changed.
+
+### 10.3 N2, rule 3 at Stage 6 only: stopped, with options
+
+`map_payload` is called at the RAG round, Stage 2B and Stage 6 (`streamlit_app.py:1060, 3487, 4248`), and nothing tells the passes apart except the call site:
+
+- No stage marker reaches `map_payload`, its diagnostics recorder or its arguments.
+- Stage 6 happens to be the only app call with `use_cache=False`. The CLI path `pipeline.py:124` reaches `map_payload` with `use_cache=True` for the same role, so that is a coincidence, not a contract.
+
+Per the ruling I did not ship a heuristic. **Rule 3 is removed from `map_payload`:** `git diff f9892cdf -- src/t2pw/mapping/map_ids.py` is empty. `merge_on_mapped_identity` stays implemented and tested. `test_map_payload_never_runs_rule3_until_a_stage6_seam_is_authorised` pins that `map_payload` does not run it, even in a pooled run.
+
+| option | what it takes | cost |
+|---|---|---|
+| **A.** A Stage-6 hook in `streamlit_app.py`: call `merge_on_mapped_identity(mapped_payload)` right after the 4248 `map_payload`, before `mapped_json` is written | a D-xxx authorising a second hook (D-103 allowed one) | the mapping report is already built, so its reaction pointers go stale (N6). The call site must remap them, or the report must say they refer to the pre-merge payload |
+| **B.** A `map_payload(..., merge_identity_duplicates: bool = False)` keyword that runs rule 3 last and remaps the report's reaction pointers (N6), with Stage 6 passing `True` | the same D-xxx, plus about 10 lines in `map_ids.py` beyond the brief's one call | the cleanest; the other callers are unchanged by default |
+| C. Gate on `use_cache=False` | nothing | **rejected:** misfires on any future caller, and misses the CLI path |
+| D. A pre-freeze canonicalizer in `pwml/prefreeze_resolution` | nothing in the app | runs at three seams (`streamlit_app.py:4322, 4873`, `writer.py:2858`, the CLI exporter), so it is not Stage-6-only, and it touches an exporter seam |
+
+**Cost of shipping as is:** at N>1, database-identity synonyms (`protoheme` / `heme b`) stay separate rows, the round-1 status quo. Nothing merges wrongly.
+
+### 10.4 Measurements (`evidence/orch754a_ensemble_merge.{py,json,txt}`, run `g11/ORCH-754a/107`)
+
+The script now adds a `round2_tip` column: the merge as committed at `1cfae4d3`.
+
+| pooling | chlorophyll | enterobactin (5 gold) | menaquinone (9 gold) |
+|---|---|---|---|
+| base `f9892cdf` | 41 | 4/5, P 0.8 | 9/9, P 1.0 |
+| `cf84626b` (round 1) | 41 | 4/5, P 0.8 | 9/9, P 1.0 |
+| `1cfae4d3` (round 2) | 29 | 4/5, P 0.8 | 9/9, P 1.0 |
+| **tip (round 3)** | **29** | **4/5, P 0.8** | **9/9, P 1.0** |
+
+- **The round-3 repairs change no measured row.** No cohort draw writes a case variant of an abbreviation, a cross-family cofactor pair or an unquoted extra enzyme. The four typo snaps are insert/delete-only, so they all still snap.
+- **What does change** is what the side file records: the four `typo_snapped` flags, the `enzymes_kept` quote for GUN4, and every merged row's quote.
+- **Fixtures:** the pooled-payload fixture and both base goldens are byte-identical to round 2 (`/109`).
+
+### 10.5 Gates, round 3 (tip `bf04375b`; the battery ran on exactly that content before it was committed)
+
+Every run was bounded, with zero survivors. G11 check: **106 artifacts, 0 non-compliant**, each with a pin verdict, none refused.
+
+| gate | default env | `T2PW_EXTRACTION_DRAWS=3` |
+|---|---|---|
+| focused (`test_stage_one_ensemble.py` + `test_stage_one_paper_dictionary.py`) | **102 passed** (`evidence/g11/ORCH-754a/93`) | **102 passed** (`/99`) |
+| affected, pipeline and summary (the 12 files of § 3.1) | **203 passed** (`/94`) | **203 passed** (`/100`) |
+| affected, mapping (the 17 files of § 3.1) | 397 passed, 1 skipped, **1 failed = pre-existing c075** (`/95`) | same (`/101`) |
+| AppTest `test_c055_rag_loop_wiring.py`, alone | **14 passed** (`/96`) | **14 passed** (`/102`) |
+| AppTest `test_streamlit_quarantine_boundary.py`, alone | **23 passed** (`/97`) | **23 passed** (`/103`) |
+| **SMOKE** (22 files) | **508 passed** (`/98`) | **508 passed** (`/104`) |
+| without conftest, the reviewer's condition | -- | pipeline: 24 failed, all `test_early_failure_replay` (`/105`); mapping: only c075 (`/106`) |
+
+| proof | report | result |
+|---|---|---|
+| G9 base pre-run, final test file, src modules restored to `f9892cdf` | `evidence/g11/ORCH-754a/92` | **6 failed, 22 passed**: the chlorophyll steps, IDH ×2, nested cofactors (MDH/MQO, PFK/PFP, ATP/ADP, Mg/Mn), enzymes and defined states, unsupported donation |
+| N=1 `run_extraction_pipeline` identical to base | `/108`, `evidence/orch754a_n1_identity_verdict.json` | **N=1 IDENTICAL to base** |
+| model-bound text: base-rendered goldens | `/109` | N=1 `d171a3b8…`, pooled `ab01b0dd…`; byte-identical to round 2 |
+| gold replays and chlorophyll measurement | `/107` | § 10.4 |
+| reviewer probes p1, p3, p6, p7, p9, p10 re-run, read-only | `/89` | § 10.1. p6 now raises in its own `[row] =` unpack, because the rows correctly stay apart |
+
+**TEST_MATRIX delta, round 3.** The focused selection is 102 tests: `test_stage_one_ensemble.py` 28, `test_stage_one_paper_dictionary.py` 74. SMOKE stays 508.
+
+### 10.6 Still not settled (round 3)
+
+1. **N2 / N6** (§ 10.3): the choice of option A or B, and the authorisation it needs.
+2. **Survivor replacement** (corrects § 0.6 item 1). When a later row wins on Q1, Q2 or a lock, the pooled row carries the winner's quote. Round 2 claimed the earlier quote survived in the side file. **It did not until now:** round 3 records it as `previous_survivor_evidence`, and records every merged row's quote.
+3. **Rows where one side names no enzyme** still merge (an omission), and an unquoted enzyme there is withheld with its quote rather than refused (§ 10.1 B2). The product owner may want that case refused as well.
+4. **Typo lookalikes.** Under N4 a snap is insertion- or deletion-only and flagged. A reviewer may still find a real molecule pair one inserted letter apart (`cystine`/`cysteine` is one, and the ruling allows it, flagged). Per the severity standard these are notes, not blockers.
+
+---
+
+# Round 2 record (tip `1cfae4d3`)
 
 ## 0. Round 2: the rulings of 2026-10-20
 
@@ -129,7 +295,7 @@ Every run was bounded, with zero survivors. G11 check: **83 artifacts, 0 non-com
 
 ### 0.6 Still not settled (round 2)
 
-1. **Survivor replacement rewrites the first row's place.** When a later row wins on Q1 or Q2, the earlier survivor's quote is no longer the row's quote. It survives only through the merge record in the side file. That is what the ruling asks ("its own evidence is kept"), recorded here because it changes "first occurrence wins".
+1. **Survivor replacement rewrites the first row's place.** When a later row wins on Q1 or Q2, the earlier survivor's quote is no longer the row's quote. **Corrected in round 3:** in round 2 that quote was NOT in the side file, despite what this item said. Round 3 records it (`previous_survivor_evidence`) and every merged row's quote (§ 10.2 N5).
 2. **A defined state outranks a larger enzyme set** when they point to different rows. The other row's extra enzymes then need a quote (`enzymes_withheld` otherwise). The PO may prefer the opposite order.
 3. **Enzyme names that are not dictionary pairs still split** (`PPO` vs `Protogen IX oxidase (PPO)`, and the ambiguous `POR`), as in round 1 § 7.2.
 4. Round-1 § 7 items 4–11 are unchanged, except item 6 (Q6, accepted) and item 12 (withdrawn).

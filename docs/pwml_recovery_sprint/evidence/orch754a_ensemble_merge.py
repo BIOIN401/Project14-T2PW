@@ -13,7 +13,10 @@ gold cases, scored with the evaluator's own ``reactions.score_leg`` (as
                       product owner's 2026-10-20 rulings Q1 and Q2);
 * ``strict_before_rulings`` -- the same merge AS COMMITTED at ``--strict-rev``
                       (``cf84626b``): finding 1's rule before Q1/Q2, when an undefined
-                      state failed closed and any differing enzyme set conflicted.
+                      state failed closed and any differing enzyme set conflicted;
+* ``round2_tip`` -- the merge as committed at ``--round2-rev`` (``1cfae4d3``), before the
+                      round-3 review repairs (exact short forms, nested cofactor sets, quoted
+                      extra enzymes, insert/delete-only typo snaps).
 
 Inputs are committed beside this file: the chlorophyll draws in
 ``orch752_chlorophyll_payloads/``, the enterobactin and menaquinone draws and all three
@@ -92,14 +95,17 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=(__doc__ or "").splitlines()[0])
     ap.add_argument("--base-rev", default="f9892cdf")
     ap.add_argument("--strict-rev", default="cf84626b")
+    ap.add_argument("--round2-rev", default="1cfae4d3")
     ap.add_argument("--out", default=str(HERE / "orch754a_ensemble_merge.json"))
     args = ap.parse_args()
 
     base = _base_module(args.base_rev)
     strict = _base_module(args.strict_rev)
+    round2 = _base_module(args.round2_rev)
     gold = dict(load_supplement())
 
     result: Dict[str, Any] = {"task": "ORCH-754a", "base_rev": args.base_rev, "strict_rev": args.strict_rev,
+                              "round2_rev": args.round2_rev,
                               "cases": {}}
     lines = ["ORCH-754a pooled Stage-1 draws, paper as the dictionary (offline; 3 saved draws each)", ""]
     for name, spec in CASES.items():
@@ -113,6 +119,7 @@ def main() -> int:
 
         pooled = {"base": base.merge_draws(draws), "tip_no_paper": tip.merge_draws(draws),
                   "strict_before_rulings": strict.merge_draws(draws, paper_text=paper),
+                  "round2_tip": round2.merge_draws(draws, paper_text=paper),
                   "tip": tip.merge_draws(draws, paper_text=paper)}
 
         entry: Dict[str, Any] = {

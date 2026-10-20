@@ -7,55 +7,70 @@ REACTION 1  [3/3 draws: 1, 2, 3]
   Name: Glu-tRNA reductase reaction
   Key:  glu trnaglu -> glu 1 semialdehyde
   Merged draw 2 row 'Glu-tRNA reductase reaction': bridged by abbreviation
+    its quote: 'Glu-tRNAGlu formed from Glu and tRNAGlu within plastids is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR).'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'GluTR reaction': bridged by exact
+    its quote: 'reduced to GSA by Glu-tRNA reductase (GluTR)'
 
 REACTION 2  [3/3 draws: 1, 2, 3]
   Name: GSAT reaction
   Key:  glu 1 semialdehyde -> 5 aminolevulinate
   Merged draw 2 row 'GSAT reaction': bridged by abbreviation
+    its quote: 'GSA is converted to ALA by GSA aminotransferase (GSAT), which catalyzes the intramolecular transfer of an amino group.'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'GSAT reaction': bridged by exact
+    its quote: 'GSA is converted to ALA by GSA aminotransferase'
 
 REACTION 3  [3/3 draws: 1, 2, 3]
   Name: ALAD reaction
   Key:  5 aminolevulinate -> porphobilinogen
   Merged draw 2 row 'ALA dehydratase reaction': bridged by abbreviation
+    its quote: 'two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'ALAD reaction': bridged by exact
+    its quote: 'two molecules of ALA are condensed asymmetrically to form PBG'
 
 REACTION 4  [3/3 draws: 1, 2, 3]
   Name: PBG deaminase reaction
   Key:  porphobilinogen -> hydroxymethylbilane
   Merged draw 2 row 'PBG deaminase reaction': bridged by abbreviation, typo
+    its quote: 'Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB).'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'PBG deaminase reaction': bridged by exact
+    its quote: 'Four PBG molcules are then sequentially polymerized by PBG deaminase'
 
 REACTION 5  [3/3 draws: 1, 2, 3]
   Name: UROS reaction
   Key:  hydroxymethylbilane -> uroporphyrinogen iii
   Merged draw 2 row 'UROS reaction': bridged by abbreviation
+    its quote: 'HMB is converted into the first macrocyclic tetrapyrrole, uroporphyrinogen III, by Urogen III synthase (UROS)'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'UROS reaction': bridged by exact
+    its quote: 'HMB is converted into Urogen III by Urogen III synthase'
 
 REACTION 6  [3/3 draws: 1, 2, 3]
   Name: UROD reaction
   Key:  uroporphyrinogen iii -> coproporphyrinogen iii
   Merged draw 2 row 'UROD reaction': bridged by abbreviation
+    its quote: 'then metabolized to coproporphyrinogen III by Urogen III decarboxylase (UROD).'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'UROD reaction': bridged by exact
+    its quote: 'metabolized to coproporphyrinogen III by Urogen III decarboxylase'
 
 REACTION 7  [3/3 draws: 1, 2, 3]
   Name: CPO reaction
   Key:  coproporphyrinogen iii -> protoporphyrinogen ix
   Merged draw 2 row 'CPO reaction': bridged by abbreviation
+    its quote: 'Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'CPO reaction': bridged by exact
+    its quote: 'Coprogen III is oxidized by CPO to form protoporphyrinogen IX'
 
 REACTION 8  [2/3 draws: 1, 3]
   Name: PPO reaction
   Key:  protoporphyrinogen ix -> protoporphyrin ix
   Merged draw 3 row 'PPO reaction': bridged by exact
+    its quote: 'Protoporphyrinogen IX is further oxidized by PPO to result in protoporphyrin IX'
 
 REACTION 9  [1/3 draws: 2]  -- REVIEW: found by one draw only
   Name: PPO reaction
@@ -70,27 +85,36 @@ REACTION 11  [3/3 draws: 1, 2, 3]
   Name: Mg-chelatase reaction
   Key:  protoporphyrin ix -> mg proto ix
   Merged draw 2 row 'Mg-chelatase reaction': bridged by abbreviation
+    its quote: 'an Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX. This reaction is catalyzed by Mg-chelatase consisting of the three subuits CHL D, CH IH, and CHL I'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'Mg-chelatase reaction': bridged by exact; it became the survivor (over 'Mg-chelatase reaction') because it names the larger enzyme set
+    its quote: 'Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX'
+    the displaced survivor's quote: 'Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner by Mg-chelatase'
+  Enzyme kept over a merged row's smaller set: GUN4 -- supporting quote: 'GUN4 assists this step by stabilizing the Mg-chelatase complex'
 
 REACTION 12  [3/3 draws: 1, 2, 3]
   Name: Mg-Proto IX methyltransferase reaction
   Key:  mg proto ix -> mg proto ix monomethyl ester
   Merged draw 2 row 'Mg-Proto IX methyltransferas reaction': bridged by abbreviation
+    its quote: 'a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase, to result in Mg-Proto IX monomethyl ester (Mg-Proto ME).'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'Mg-Proto IX methyltransferase reaction': bridged by exact
+    its quote: 'methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase'
 
 REACTION 13  [3/3 draws: 1, 2, 3]
   Name: Mg-Proto ME cyclase reaction
   Key:  mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide
   Merged draw 2 row 'Mg-Proto ME cyclase reaction': bridged by abbreviation
+    its quote: 'Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'Mg-Proto ME cyclase reaction': bridged by abbreviation
+    its quote: 'Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide by Mg-Proto ME cyclase'
 
 REACTION 14  [2/3 draws: 1, 3]
   Name: POR reaction
   Key:  3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide
   Merged draw 3 row 'POR reaction': bridged by abbreviation
+    its quote: 'D ring of DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to form DV-Chlide'
 
 REACTION 15  [1/3 draws: 2]  -- REVIEW: found by one draw only
   Name: POR reaction
@@ -109,8 +133,10 @@ REACTION 18  [3/3 draws: 1, 2, 3]
   Name: CAO reaction
   Key:  chlide a -> chlide b
   Merged draw 2 row 'Chlide a oxygenase reaction (Chlide a)': bridged by abbreviation
+    its quote: 'Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO).'
     FLAG (review): undefined_state_treated_as_absent -- 'plastidic state' is not defined in its draw's biological_states
   Merged draw 3 row 'CAO reaction': bridged by exact
+    its quote: 'Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase'
 
 REACTION 19  [1/3 draws: 2]  -- REVIEW: found by one draw only
   Name: Fero chelatase reaction
@@ -155,6 +181,12 @@ REACTION 28  [1/3 draws: 3]  -- REVIEW: found by one draw only
 REACTION 29  [1/3 draws: 3]  -- REVIEW: found by one draw only
   Name: Heme oxygenase reaction
   Key:  heme b -> biliverdin ix
+
+TYPO SNAPS -- each FLAGGED for review (4)
+  FLAG (review): typo_snapped -- draw 1: 'geranyllgeraniol' -> 'geranylgeraniol'
+  FLAG (review): typo_snapped -- draw 2: 'porphobilogen (PBG)' -> 'porphobilinogen'
+  FLAG (review): typo_snapped -- draw 2: 'hydroxymethybilane (HMB)' -> 'hydroxymethylbilane'
+  FLAG (review): typo_snapped -- draw 3: 'bilverdin IX' -> 'biliverdin IX'
 
 NAMES REWRITTEN (31)
   draw 1: 'GSA' -> 'Glu 1-semialdehyde' [abbreviation, long (SF)]

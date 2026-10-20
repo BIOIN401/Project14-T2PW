@@ -2,6 +2,7 @@
  "task": "ORCH-754a",
  "base_rev": "f9892cdf",
  "strict_rev": "cf84626b",
+ "round2_rev": "1cfae4d3",
  "cases": {
   "chlorophyll": {
    "paper": "PMC5130987",
@@ -29,6 +30,7 @@
     "base": 41,
     "tip_no_paper": 42,
     "strict_before_rulings": 41,
+    "round2_tip": 29,
     "tip": 29
    },
    "tip_lexicon": {
@@ -133,7 +135,8 @@
      "to": "geranylgeraniol",
      "rules": [
       "typo"
-     ]
+     ],
+     "flag": "typo_snapped"
     },
     {
      "draw": 2,
@@ -170,7 +173,8 @@
       "typo",
       "abbreviation"
      ],
-     "pattern": "long (SF)"
+     "pattern": "long (SF)",
+     "flag": "typo_snapped"
     },
     {
      "draw": 2,
@@ -180,7 +184,8 @@
       "typo",
       "abbreviation"
      ],
-     "pattern": "long (SF)"
+     "pattern": "long (SF)",
+     "flag": "typo_snapped"
     },
     {
      "draw": 2,
@@ -323,7 +328,8 @@
      "to": "biliverdin IX",
      "rules": [
       "typo"
-     ]
+     ],
+     "flag": "typo_snapped"
     }
    ],
    "tip_rows": [
@@ -342,6 +348,7 @@
        "bridged_by": [
         "abbreviation"
        ],
+       "evidence": "Glu-tRNAGlu formed from Glu and tRNAGlu within plastids is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR).",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -352,7 +359,8 @@
        "name": "GluTR reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "reduced to GSA by Glu-tRNA reductase (GluTR)"
       }
      ],
      "support": "3/3"
@@ -372,6 +380,7 @@
        "bridged_by": [
         "abbreviation"
        ],
+       "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT), which catalyzes the intramolecular transfer of an amino group.",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -382,7 +391,8 @@
        "name": "GSAT reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "GSA is converted to ALA by GSA aminotransferase"
       }
      ],
      "support": "3/3"
@@ -402,6 +412,7 @@
        "bridged_by": [
         "abbreviation"
        ],
+       "evidence": "two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -412,7 +423,8 @@
        "name": "ALAD reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "two molecules of ALA are condensed asymmetrically to form PBG"
       }
      ],
      "support": "3/3"
@@ -433,6 +445,7 @@
         "abbreviation",
         "typo"
        ],
+       "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB).",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -443,7 +456,8 @@
        "name": "PBG deaminase reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "Four PBG molcules are then sequentially polymerized by PBG deaminase"
       }
      ],
      "support": "3/3"
@@ -463,6 +477,7 @@
        "bridged_by": [
         "abbreviation"
        ],
+       "evidence": "HMB is converted into the first macrocyclic tetrapyrrole, uroporphyrinogen III, by Urogen III synthase (UROS)",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -473,7 +488,8 @@
        "name": "UROS reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "HMB is converted into Urogen III by Urogen III synthase"
       }
      ],
      "support": "3/3"
@@ -493,6 +509,7 @@
        "bridged_by": [
         "abbreviation"
        ],
+       "evidence": "then metabolized to coproporphyrinogen III by Urogen III decarboxylase (UROD).",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -503,7 +520,8 @@
        "name": "UROD reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "metabolized to coproporphyrinogen III by Urogen III decarboxylase"
       }
      ],
      "support": "3/3"
@@ -523,6 +541,7 @@
        "bridged_by": [
         "abbreviation"
        ],
+       "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -533,7 +552,8 @@
        "name": "CPO reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "Coprogen III is oxidized by CPO to form protoporphyrinogen IX"
       }
      ],
      "support": "3/3"
@@ -551,7 +571,8 @@
        "name": "PPO reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "Protoporphyrinogen IX is further oxidized by PPO to result in protoporphyrin IX"
       }
      ],
      "support": "2/3"
@@ -598,6 +619,7 @@
        "bridged_by": [
         "abbreviation"
        ],
+       "evidence": "an Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX. This reaction is catalyzed by Mg-chelatase consisting of the three subuits CHL D, CH IH, and CHL I",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -609,8 +631,16 @@
        "bridged_by": [
         "exact"
        ],
+       "evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX",
        "became_survivor": "it names the larger enzyme set",
-       "previous_survivor": "Mg-chelatase reaction"
+       "previous_survivor": "Mg-chelatase reaction",
+       "previous_survivor_evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner by Mg-chelatase"
+      }
+     ],
+     "enzymes_kept": [
+      {
+       "enzyme": "GUN4",
+       "supporting_quote": "GUN4 assists this step by stabilizing the Mg-chelatase complex"
       }
      ],
      "support": "3/3"
@@ -630,6 +660,7 @@
        "bridged_by": [
         "abbreviation"
        ],
+       "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase, to result in Mg-Proto IX monomethyl ester (Mg-Proto ME).",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -640,7 +671,8 @@
        "name": "Mg-Proto IX methyltransferase reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase"
       }
      ],
      "support": "3/3"
@@ -660,6 +692,7 @@
        "bridged_by": [
         "abbreviation"
        ],
+       "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -670,7 +703,8 @@
        "name": "Mg-Proto ME cyclase reaction",
        "bridged_by": [
         "abbreviation"
-       ]
+       ],
+       "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide by Mg-Proto ME cyclase"
       }
      ],
      "support": "3/3"
@@ -688,7 +722,8 @@
        "name": "POR reaction",
        "bridged_by": [
         "abbreviation"
-       ]
+       ],
+       "evidence": "D ring of DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to form DV-Chlide"
       }
      ],
      "support": "2/3"
@@ -744,6 +779,7 @@
        "bridged_by": [
         "abbreviation"
        ],
+       "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO).",
        "flag": {
         "reason": "undefined_state_treated_as_absent",
         "undefined_state": "'plastidic state'"
@@ -754,7 +790,8 @@
        "name": "CAO reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase"
       }
      ],
      "support": "3/3"
@@ -1218,6 +1255,7 @@
     "base": 5,
     "tip_no_paper": 5,
     "strict_before_rulings": 5,
+    "round2_tip": 5,
     "tip": 5
    },
    "orch751_union": {
@@ -1372,6 +1410,30 @@
       "unsupported": 0
      }
     },
+    "round2_tip": {
+     "gold_reactions": 5,
+     "matched": 4,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+     ],
+     "rows_claimed": 5,
+     "precision": 0.8,
+     "recall": 0.8,
+     "f1": 0.8,
+     "row_classes": {
+      "target_paper_supported": 4,
+      "paper_stated_off_pathway": 1,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
     "tip": {
      "gold_reactions": 5,
      "matched": 4,
@@ -1418,14 +1480,16 @@
        "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "EntC-catalyzed isomerization of chorismate to isochorismate"
       },
       {
        "draw": 3,
        "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "EntC-catalyzed isomerization of chorismate to isochorismate"
       }
      ],
      "support": "3/3"
@@ -1444,14 +1508,16 @@
        "name": "EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"
       },
       {
        "draw": 3,
        "name": "EntB isochorismatase reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate by EntB isochorismatase activity"
       }
      ],
      "support": "3/3"
@@ -1470,14 +1536,16 @@
        "name": "EntA-catalyzed dehydrogenation of 2,3-diDHB to 2,3-DHB",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
       },
       {
        "draw": 3,
        "name": "EntA-catalyzed dehydrogenation",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
       }
      ],
      "support": "3/3"
@@ -1496,14 +1564,16 @@
        "name": "EntE-catalyzed adenylation of 2,3-DHB",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
       },
       {
        "draw": 3,
        "name": "EntE-catalyzed adenylation of 2,3-DHB",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "2,3-DHB is adenylated by EntE in an ATP-dependent reaction"
       }
      ],
      "support": "3/3"
@@ -1521,7 +1591,8 @@
        "name": "LDH-catalyzed reduction of pyruvate",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "LDH-catalyzed conversion of pyruvate to lactate is monitored by loss of OD340"
       }
      ],
      "support": "2/3"
@@ -1616,6 +1687,7 @@
     "base": 9,
     "tip_no_paper": 9,
     "strict_before_rulings": 9,
+    "round2_tip": 9,
     "tip": 9
    },
    "orch751_union": {
@@ -1791,6 +1863,35 @@
       "unsupported": 0
      }
     },
+    "round2_tip": {
+     "gold_reactions": 9,
+     "matched": 9,
+     "gold_reactions_matched": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9"
+     ],
+     "rows_claimed": 9,
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "row_classes": {
+      "target_paper_supported": 9,
+      "paper_stated_off_pathway": 0,
+      "paper_stated_summary": 0,
+      "name_conflict": 0,
+      "partial_match": 0,
+      "external_rag_supported": 0,
+      "indeterminate_external": 0,
+      "unsupported": 0
+     }
+    },
     "tip": {
      "gold_reactions": 9,
      "matched": 9,
@@ -1897,14 +1998,16 @@
        "name": "MenF reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate"
       },
       {
        "draw": 3,
        "name": "MenF reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate"
       }
      ],
      "support": "3/3"
@@ -1923,14 +2026,16 @@
        "name": "MenD reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)"
       },
       {
        "draw": 3,
        "name": "MenD reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "MenD facilitates the conversion of isochorismate to SEPHCHC"
       }
      ],
      "support": "3/3"
@@ -1949,8 +2054,10 @@
        "bridged_by": [
         "exact"
        ],
+       "evidence": "d[D]/dt = k_cat_H [MenH][C]/(KM_H+[C]) - k_cat_C [MenC][D]/(KM_C+[D])",
        "became_survivor": "it states a defined biological_state",
-       "previous_survivor": "MenH reaction"
+       "previous_survivor": "MenH reaction",
+       "previous_survivor_evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
       }
      ],
      "support": "2/3"
@@ -1968,7 +2075,8 @@
        "name": "MenC reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "d[D]/dt = ... - k_cat_C [MenC][D]/(KM_C+[D]) and d[E]/dt = ... + k_cat_C [MenC][D]/(KM_C+[D])"
       }
      ],
      "support": "2/3"
@@ -1987,8 +2095,10 @@
        "bridged_by": [
         "exact"
        ],
+       "evidence": "d[E]/dt = ... - k_cat_E [MenE][E]/(KM_E+[E]) and d[F]/dt = ... + k_cat_E [MenE][E]/(KM_E+[E])",
        "became_survivor": "it states a defined biological_state",
-       "previous_survivor": "MenE reaction"
+       "previous_survivor": "MenE reaction",
+       "previous_survivor_evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
       }
      ],
      "support": "2/3"
@@ -2006,7 +2116,8 @@
        "name": "MenB reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "d[F]/dt = ... - k_cat_B [MenB][F]/(KM_B+[F]) and d[G]/dt = ... + k_cat_B [MenB][F]/(KM_B+[F])"
       }
      ],
      "support": "2/3"
@@ -2024,7 +2135,8 @@
        "name": "MenI reaction",
        "bridged_by": [
         "exact"
-       ]
+       ],
+       "evidence": "d[G]/dt = ... - k_cat_I [MenI][G]/(KM_I+[G]) and d[DHNA]in/dt = ... + k_cat_I [MenI][G]/(KM_I+[G])"
       }
      ],
      "support": "2/3"
