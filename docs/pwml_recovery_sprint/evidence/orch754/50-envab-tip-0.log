@@ -1,0 +1,54 @@
+T2PW: C:\t\bt-orch754\env-tip\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_preflight_warns_when_no_db_and_no_covering_index ____________
+
+    def test_preflight_warns_when_no_db_and_no_covering_index() -> None:
+        payload = _species_payload("Herbaspirillum huttiense IAM 15032")
+    
+        # name_index=None => no offline index; db_resolver=False sentinel below is
+        # not passed, so from_env is attempted. Force the offline path by passing an
+        # empty index that covers nothing and no db_resolver connection.
+        empty_index = PathwhizNameIndex({})
+        ir, report = build_pwml_ir(
+            prefrozen_when_compounded(payload),
+            strict_db=False,
+            db_resolver=_UnavailableDb(),
+            name_index=empty_index,
+        )
+    
+>       assert "preflight" in report, "preflight detail should be attached to the report"
+E       AssertionError: preflight detail should be attached to the report
+E       assert 'preflight' in {'counts': {'biological_states': 1, 'compounds': 1, 'edges': 0, 'locations': 0, ...}, 'db_resolution': {'available': True, 'compounds': []}, 'errors': [], 'generated_default_state': False, ...}
+
+tests\test_canonicalization_preflight_and_species.py:74: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_canonicalization_preflight_and_species.py::test_preflight_warns_when_no_db_and_no_covering_index
+1 failed in 0.98s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ adc49c401c09c0ab734922f75f7f36f857c0dbee  [git, worktree dirty=True]
+label                   : envab-tip-0
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/bt-orch754/env-tip --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754/50-envab-tip-0.pin.json -q --basetemp=C:/t/bt-orch754/50-envab-tip-0 tests/test_canonicalization_preflight_and_species.py::test_preflight_warns_when_no_db_and_no_covering_index
+cwd                     : C:\t\bt-orch754\env-tip
+root PID / process group: 832272 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 2.01 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  841876:python.exe
+descendants terminated  : 1  841876
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-754\50-envab-tip-0.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-754  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

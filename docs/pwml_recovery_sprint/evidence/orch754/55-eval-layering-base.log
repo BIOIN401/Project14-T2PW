@@ -1,0 +1,49 @@
+T2PW: C:\t\bt-orch754\env-base\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_no_production_module_imports_evaluation_v2 _______________
+
+    def test_no_production_module_imports_evaluation_v2():
+        offenders = []
+        for py in (ROOT / "src" / "t2pw").rglob("*.py"):
+            if "eval_v2" in py.parts:
+                continue
+            if re.search(r"eval_v2", py.read_text(encoding="utf-8", errors="replace")):
+                offenders.append(str(py))
+>       assert offenders == []
+E       AssertionError: assert ['C:\\t\\bt-o..._ensemble.py'] == []
+E         
+E         Left contains one more item: 'C:\\t\\bt-orch754\\env-base\\src\\t2pw\\pipeline\\stage_one_ensemble.py'
+E         Use -v to get more diff
+
+tests\test_eval_v2_metrics.py:384: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_eval_v2_metrics.py::test_no_production_module_imports_evaluation_v2
+1 failed in 0.56s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ adc49c401c09c0ab734922f75f7f36f857c0dbee  [git, worktree dirty=True]
+label                   : eval-layering-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/bt-orch754/env-base --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754/55-eval-layering-base.pin.json -q --basetemp=C:/t/bt-orch754/55-eval-layering-base tests/test_eval_v2_metrics.py::test_no_production_module_imports_evaluation_v2
+cwd                     : C:\t\bt-orch754\env-base
+root PID / process group: 851600 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 200 s
+duration                : 1.54 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  851128:python.exe
+descendants terminated  : 1  851128
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-754\55-eval-layering-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-754  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

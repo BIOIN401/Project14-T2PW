@@ -1,0 +1,337 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+...............F.......                                                  [100%]
+================================== FAILURES ===================================
+_____ test_research_mode_keeps_the_unmapped_candidate_and_does_not_block ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019D352A3CD0>
+
+    @pytest.mark.usefixtures("offline_mapping")
+    def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """A research run must come out with the pathway it went in with.
+    
+        The peripheral process here is unmapped, which is the normal state of a
+        genuinely novel enzyme rather than a defect. A strict run quarantines it --
+        ``test_the_app_reaches_quarantine_and_the_valid_core_reaches_review`` pins
+        that on the identical payload -- and a research run must not, because
+        research mode's whole contract is that findings annotate rather than block.
+        """
+    
+        # Enrichment runs BETWEEN mapping and the quarantine boundary, and the shared
+        # ``offline_mapping`` stub makes it a byte-for-byte copy. That collapses the
+        # pre-enrichment artifact (``final_mapped_db``) onto the post-enrichment one
+        # (``final_mapped_enriched``), so a comparison against either looks correct
+        # and the boundary assertion below would pin nothing about quarantine -- it
+        # would silently span every stage from mapping onwards. This override is
+        # local to this test, so no other node in this file sees it, and it does what
+        # the real Stage 7 does to an already-identified protein: attach the optional
+        # UniProt annotation under ``enrichment`` (see
+        # ``enrich_entities._enrich_payload_inner``) and nothing else. Fixed content,
+        # no clock and no network, so it is deterministic; it adds no reaction,
+        # removes none, renames nothing and touches no unidentified protein, so it is
+        # biologically inert -- and the two artifacts are now genuinely different
+        # objects, which is what makes the assertion below non-vacuous.
+        import t2pw.mapping.enrich_entities as enrich_entities  # noqa: PLC0415
+    
+        def _enrichment_that_annotates(
+            input_path: Any,
+            output_path: Any,
+            report_path: Any,
+            **_kwargs: Any,
+        ) -> Dict[str, Any]:
+            enriched = json.loads(Path(input_path).read_text(encoding="utf-8"))
+            for row in (enriched.get("entities") or {}).get("proteins") or []:
+                if not isinstance(row, dict):
+                    continue
+                # Exactly the real stage's own guard: a protein with no accession is
+                # not enriched, so the unidentified modifier this payload exists to
+                # exercise is left untouched.
+                accession = str((row.get("mapped_ids") or {}).get("uniprot") or "")
+                if not accession:
+                    continue
+                row.setdefault("enrichment", {}).setdefault("protein", {})["uniprot"] = {
+                    "status": "ok",
+                    "uniprot_id": accession,
+                    "provenance": {"source": "test_fixture", "query": accession},
+                }
+            report = {"summary": {"enrichment_annotated_for_test": True}}
+            Path(output_path).write_text(
+                json.dumps(enriched, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
+            Path(report_path).write_text(json.dumps(report, indent=2), encoding="utf-8")
+            return report
+    
+        monkeypatch.setattr(enrich_entities, "run_enrichment", _enrichment_that_annotates)
+    
+        at = _run_post_pipeline_research(_payload_with_one_bad_peripheral())
+    
+        assert _app_exceptions(at) == []
+        report = at.session_state["quarantine_report"]
+        assert report["export_mode"] == "research"
+        assert report["ok"] is True
+        assert report["research_mode"]["applied"] is False
+    
+        # The candidate the boundary passed on still holds every process, including
+        # the unmapped one. This is what quarantine controls and what it must not
+        # take away.
+        artifacts = at.session_state["post_pipeline_artifacts"]
+        candidate = artifacts["final_mapped_quarantined"]
+        assert [row["name"] for row in candidate["processes"]["reactions"]] == [
+            "gamma-glutamylcysteine synthesis",
+            "glutathione synthesis",
+            "peripheral OPDA reduction",
+        ]
+        # The two artifacts really are different objects here, so the equality below
+        # is a statement about quarantine and not an accident of a no-op stage. If
+        # enrichment ever reverts to a pass-through, this fails loudly rather than
+        # letting the boundary assertion go quietly vacuous again.
+        assert artifacts["final_mapped_db"] != artifacts["final_mapped_enriched"], (
+            "enrichment produced no difference, so the boundary assertion below would "
+            "hold for the pre-enrichment artifact too and pin nothing"
+        )
+        # ...and the difference changes no biology. TWO stages now stand between the
+        # pre-enrichment artifact and the boundary -- Stage 7 enrichment above, and
+        # the pre-freeze compound resolution D-015 requires -- so stripping one
+        # stage's annotation no longer restores equality, and an allowlist of the
+        # fields either stage may add would silently widen the day a third arrives.
+        # What is asserted instead is what a pre-freeze stage may not DISTURB: the
+        # process graph, the locations, the states and the pathway context arrive
+        # whole-object identical, and on the entity rows the stages may only ADD --
+        # every key the pre-enrichment artifact already carried survives with the
+        # same value. A rename, a dropped identifier, a reordered, added or removed
+        # row, or any edit to a reaction fails this. It is deliberately NOT part of
+        # the boundary comparison, which stays whole-object below.
+        _before = artifacts["final_mapped_db"]
+        _after = artifacts["final_mapped_enriched"]
+        for _section in ("metadata", "processes", "biological_states", "element_locations"):
+>           assert _before[_section] == _after[_section], f"{_section} moved pre-freeze"
+E           AssertionError: processes moved pre-freeze
+E           assert {'interaction...ansports': []} == {'interaction...ansports': []}
+E             
+E             Omitting 2 identical items, use -vv to show
+E             Differing items:
+E             {'reactions': [{'biological_state': 'cytosol', 'enzymes': [{'confidence': 1.0, 'entity': 'glutamate-cysteine ligase co...ymes': [], 'inputs': ['OPDA'], 'modifiers': [{'entity': 'OPR3', 'entity_type': 'protein', 'role': 'inhibitor'}], ...}]} != {'reactions': [{'biological_state': 'cytosol', 'enzymes': [{'confidence': 1.0, 'entity': 'glutamate-cysteine ligase co...ymes': [], 'inputs': ['OPDA'], 'modifiers': [{'entity': 'OPR3', 'entity_type': 'protein', 'role': 'inhibitor'}], ...}]}
+E             Use -v to get more diff
+
+tests\test_streamlit_quarantine_boundary.py:1109: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\app\streamlit_app.py:7278 [31m [0m
+[31m [0m in <module>                                                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7275 [0m[2m# directory can be reviewed with no run loaded. Presentation only.[0m            [31m [0m
+[31m [0m   [2m7276 [0m[94mfrom[0m[90m [0m[4;96mt2pw[0m[4;96m.[0m[4;96mapp[0m[4;96m.[0m[4;96mreaction_evidence_view[0m[90m [0m[94mimport[0m render_reaction_evidence  [2m# noqa:[0m [31m [0m
+[31m [0m   [2m7277 [0m                                                                              [31m [0m
+[31m [0m [31m> [0m7278 [1;4mrender_reaction_evidence()[0m                                                    [31m [0m
+[31m [0m   [2m7279 [0m                                                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\app\reaction_evidence_vie [31m [0m
+[31m [0m w.py:91 in render_reaction_evidence                                                  [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 88 [0m                                                                               [31m [0m
+[31m [0m   [2m 89 [0m                                                                               [31m [0m
+[31m [0m   [2m 90 [0m[94mdef[0m[90m [0m[92mrender_reaction_evidence[0m() -> [94mNone[0m:                                        [31m [0m
+[31m [0m [31m> [0m 91 [2m│   [0m[1;4mst.divider()[0m                                                               [31m [0m
+[31m [0m   [2m 92 [0m[2m│   [0mst.subheader([33m"[0m[33mReaction Evidence[0m[33m"[0m)                                          [31m [0m
+[31m [0m   [2m 93 [0m[2m│   [0mst.caption(                                                                [31m [0m
+[31m [0m   [2m 94 [0m[2m│   │   [0m[33m"[0m[33mRead-only review of what the run[0m[33m'[0m[33ms artifacts say the pathway contains[0m [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\markdown.py:452 in divider                                                  [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\app\streamlit_app.py:7278 [31m [0m
+[31m [0m in <module>                                                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7275 [0m[2m# directory can be reviewed with no run loaded. Presentation only.[0m            [31m [0m
+[31m [0m   [2m7276 [0m[94mfrom[0m[90m [0m[4;96mt2pw[0m[4;96m.[0m[4;96mapp[0m[4;96m.[0m[4;96mreaction_evidence_view[0m[90m [0m[94mimport[0m render_reaction_evidence  [2m# noqa:[0m [31m [0m
+[31m [0m   [2m7277 [0m                                                                              [31m [0m
+[31m [0m [31m> [0m7278 [1;4mrender_reaction_evidence()[0m                                                    [31m [0m
+[31m [0m   [2m7279 [0m                                                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\app\reaction_evidence_vie [31m [0m
+[31m [0m w.py:91 in render_reaction_evidence                                                  [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 88 [0m                                                                               [31m [0m
+[31m [0m   [2m 89 [0m                                                                               [31m [0m
+[31m [0m   [2m 90 [0m[94mdef[0m[90m [0m[92mrender_reaction_evidence[0m() -> [94mNone[0m:                                        [31m [0m
+[31m [0m [31m> [0m 91 [2m│   [0m[1;4mst.divider()[0m                                                               [31m [0m
+[31m [0m   [2m 92 [0m[2m│   [0mst.subheader([33m"[0m[33mReaction Evidence[0m[33m"[0m)                                          [31m [0m
+[31m [0m   [2m 93 [0m[2m│   [0mst.caption(                                                                [31m [0m
+[31m [0m   [2m 94 [0m[2m│   │   [0m[33m"[0m[33mRead-only review of what the run[0m[33m'[0m[33ms artifacts say the pathway contains[0m [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\markdown.py:452 in divider                                                  [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\app\streamlit_app.py:7128 [31m [0m
+[31m [0m in <module>                                                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\tools\pathwhiz_converter\ [31m [0m
+[31m [0m ui.py:26 in render_pathwhiz_converter_section                                        [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\app\streamlit_app.py:7128 [31m [0m
+[31m [0m in <module>                                                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\tools\pathwhiz_converter\ [31m [0m
+[31m [0m ui.py:26 in render_pathwhiz_converter_section                                        [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+---------------------------- Captured stderr call -----------------------------
+2026-10-20 15:08:54.874 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.481 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.481 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.481 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.481 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.481 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.481 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.481 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.481 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-20 15:08:56.482 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block
+1 failed, 22 passed in 115.64s (0:01:55)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ adc49c401c09c0ab734922f75f7f36f857c0dbee  [git, worktree dirty=True]
+label                   : alone-streamlit_quarantine_boundary
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754/11-alone-streamlit_quarantine_boundary.pin.json -q --basetemp=C:/t/bt-orch754/11-alone-streamlit_quarantine_boundary tests/test_streamlit_quarantine_boundary.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 844016 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 118.12 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  844920:python.exe
+descendants terminated  : 1  844920
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-754\11-alone-streamlit_quarantine_boundary.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-754  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

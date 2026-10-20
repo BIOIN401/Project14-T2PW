@@ -1,0 +1,239 @@
+{
+  "label": "eval-v2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754/54-eval-v2.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch754/54-eval-v2",
+    "tests/test_eval_v2_embedding_cache.py",
+    "tests/test_eval_v2_gold_matcher.py",
+    "tests/test_eval_v2_metrics.py",
+    "tests/test_eval_v2_paper_gold.py",
+    "tests/test_eval_v2_pathbank_gold.py",
+    "tests/test_eval_v2_report.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-10-20T21:16:51+00:00",
+  "finished_at": "2026-10-20T21:17:15+00:00",
+  "duration_seconds": 23.01748380000936,
+  "timeout_seconds": 500.0,
+  "root_pid": 849892,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 850816,
+      "name": "python.exe",
+      "ppid": 849892
+    },
+    {
+      "pid": 850612,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 841712,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 850028,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 846448,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 850020,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 849992,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 843800,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 850244,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 850148,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 838540,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 843908,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 804532,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 847216,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 847484,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 846968,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 845968,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 645528,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 851168,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 851296,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 851340,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 851472,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 851500,
+      "name": "git.exe",
+      "ppid": 850816
+    },
+    {
+      "pid": 851528,
+      "name": "git.exe",
+      "ppid": 850816
+    }
+  ],
+  "descendants_terminated": [
+    645528,
+    804532,
+    838540,
+    841712,
+    843800,
+    843908,
+    845968,
+    846448,
+    846968,
+    847216,
+    847484,
+    849992,
+    850020,
+    850028,
+    850148,
+    850244,
+    850612,
+    850816,
+    851168,
+    851296,
+    851340,
+    851472,
+    851500,
+    851528
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 190584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 820392,
+      "name": "python.exe"
+    },
+    {
+      "pid": 821008,
+      "name": "python.exe"
+    },
+    {
+      "pid": 850088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 850684,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-754\\54-eval-v2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "adc49c401c09c0ab734922f75f7f36f857c0dbee",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-754",
+    "token": "ORCH-754:850088:74d9071ef4eafbb0",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

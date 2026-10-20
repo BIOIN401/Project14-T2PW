@@ -1,0 +1,50 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\__init__.py
+.x........................................................F............. [ 80%]
+..................                                                       [100%]
+================================== FAILURES ===================================
+_______________ test_no_production_module_imports_evaluation_v2 _______________
+
+    def test_no_production_module_imports_evaluation_v2():
+        offenders = []
+        for py in (ROOT / "src" / "t2pw").rglob("*.py"):
+            if "eval_v2" in py.parts:
+                continue
+            if re.search(r"eval_v2", py.read_text(encoding="utf-8", errors="replace")):
+                offenders.append(str(py))
+>       assert offenders == []
+E       AssertionError: assert ['C:\\Users\\..._ensemble.py'] == []
+E         
+E         Left contains 2 more items, first extra item: 'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\src\\t2pw\\pipeline\\paper_lexicon.py'
+E         Use -v to get more diff
+
+tests\test_eval_v2_metrics.py:384: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_eval_v2_metrics.py::test_no_production_module_imports_evaluation_v2
+1 failed, 88 passed, 1 xfailed in 21.85s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ adc49c401c09c0ab734922f75f7f36f857c0dbee  [git, worktree dirty=True]
+label                   : eval-v2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754/54-eval-v2.pin.json -q --basetemp=C:/t/bt-orch754/54-eval-v2 tests/test_eval_v2_embedding_cache.py tests/test_eval_v2_gold_matcher.py tests/test_eval_v2_metrics.py tests/test_eval_v2_paper_gold.py tests/test_eval_v2_pathbank_gold.py tests/test_eval_v2_report.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 849892 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 23.02 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 24  850816:python.exe, 850612:git.exe, 841712:git.exe, 850028:git.exe, 846448:git.exe, 850020:git.exe, 849992:git.exe, 843800:git.exe, 850244:git.exe, 850148:git.exe, 838540:git.exe, 843908:git.exe, 804532:git.exe, 847216:git.exe, 847484:git.exe, 846968:git.exe, 845968:git.exe, 645528:git.exe, 851168:git.exe, 851296:git.exe, 851340:git.exe, 851472:git.exe, 851500:git.exe, 851528:git.exe
+descendants terminated  : 24  645528, 804532, 838540, 841712, 843800, 843908, 845968, 846448, 846968, 847216, 847484, 849992, 850020, 850028, 850148, 850244, 850612, 850816, 851168, 851296, 851340, 851472, 851500, 851528
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-754\54-eval-v2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-754  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

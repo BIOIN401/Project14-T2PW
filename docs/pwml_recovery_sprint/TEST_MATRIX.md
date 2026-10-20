@@ -108,7 +108,9 @@ hung it.
 
     **`PYTHONPATH` is not evidence and a printed path is not evidence.** The venv's
     editable `.pth` names the primary checkout's `src`, `pytest.ini` sets **no**
-    `pythonpath` and there is no `conftest.py`; separately, any in-process
+    `pythonpath` and there is no `conftest.py` *(stale since ORCH-754a, 2026-10-20: `tests/conftest.py`
+    now exists and does one thing, an autouse pin of `T2PW_EXTRACTION_DRAWS`; it does not touch
+    `sys.path`, so this paragraph's point stands; see § ORCH-754 at end of file)*; separately, any in-process
     `sys.path.insert(0, …)` — including `_repo_root.add_src_to_path()` and the self-pin in
     24 of the 27 smoke and Chunk D test modules — **overrides `PYTHONPATH`** in a worktree
     while being a no-op in the primary checkout. Only the **resolved** path, compared
@@ -929,3 +931,77 @@ the new legs or blobs were meant to be there, the same cost the C-106 pins carry
 commit is a finding.
 
 It is in **no chunk and not in SMOKE**. Its focused selection is **`tests/test_eval_v2_*.py`**.
+
+
+---
+
+## ORCH-754 (D-104): test obligations — appended end-of-file by rule · 2026-10-20
+
+Delta recorded by the Lead Orchestrator from the lanes' RESULT docs and from the integration run on the
+merged tip `adc49c40`, primary checkout (`.env` present, draws = 3). Reports `evidence/g11/ORCH-754/05`–`54`,
+logs `evidence/orch754/`.
+
+**SMOKE is unchanged at 508** (22 files; `g11/ORCH-754/06`, 508 passed in 52.52 s). Merge rule 10 is unchanged.
+
+### New focused selections
+
+| lane | files | tests |
+|---|---|---|
+| `754a` ensemble merge | `tests/test_stage_one_ensemble.py`, `tests/test_stage_one_paper_dictionary.py` | 28 + 94 = **122** |
+| `754b` protein interactions | `tests/test_pwml_interaction_protein_wrappers.py` (new, 24), `tests/test_pwml_interaction_type_spellings.py` (net −1), `tests/test_reaction_evidence.py`, `tests/test_reaction_evidence_view.py` (AppTest, 11) | see `ORCH-754b-RESULT.md` § 15 |
+| `754c` prompts | `tests/test_orch754c_production_prompt_is_measured_control.py`, `tests/test_orch754c_curator_prompt_reverted.py` | 4 |
+
+### `tests/conftest.py` (new, ORCH-754a)
+
+An autouse fixture unsets `T2PW_EXTRACTION_DRAWS` for every test and keeps it unset through a mid-test
+`load_dotenv(override=True)`. **The suite is independent of the operator's `.env` draw count.** Before
+it, `.env`'s `T2PW_EXTRACTION_DRAWS=3` made `tests/test_early_failure_replay.py` fail 24 cases in the primary
+checkout (`ORCH-754r0` finding 4). A test that exercises ensembling sets the variable itself. A subprocess
+child re-reads `.env` and is not pinned; nothing depends on that today.
+
+### Never batch these AppTest files: two more
+
+Add `tests/test_reaction_evidence_view.py` and `tests/test_reaction_evidence_app_hook.py` to the four
+AppTest-heavy files that must each run alone in their own process. `test_reaction_evidence_app_hook.py`
+crashed at collection when batched (`ORCH-754a-RESULT.md` R4-1).
+
+### Pins moved deliberately (merge rule 4)
+
+- `tests/test_compound_resolution_extraction.py::test_build_pwml_ir_matches_the_pre_extraction_golden` and
+  `tests/test_pwml_ir_duplicate_row_refusal.py::…non_colliding_leg_is_byte_identical_to_the_base`: re-pinned
+  cumulatively from `c9265fb8` (ORCH-747/749 plus 754b). R3: IR `32bf7893…` → `14af62c1…`, report `026c8a8e…` →
+  `082729a8…`. One GOLDEN leg (`2026-08-04_1358/PMC12096016/research`) `e0ef63b1…` → `d8bd9a2c…`. Every moved
+  pointer is under interactions, report warnings or counts (`ORCH-754b-RESULT.md` §§ 6, 15.5; reproduced by
+  the independent review).
+- New pin: production prompt text hash `27f5e873…` (`754c`). Any prompt edit now fails a test until the
+  pin is moved on purpose.
+
+### Known failures, all pre-existing, none caused by ORCH-754
+
+| node | why | evidence |
+|---|---|---|
+| `test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper` | fails identically at base | lanes `754a`/`754b` |
+| `test_c100_tolerance_scope.py::test_5b_the_bare_pathbank_sentinel_name_is_not_a_tolerated_entity` | same | `754b` |
+| `test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform` | same | `754b` |
+| `test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture` + `::test_the_repaired_coverage_and_digest_pins_themselves_go_red` | coverage tripwire: 23 committed legs are in neither GOLDEN nor EXCLUDED | `754b`, red at base and tip |
+| `test_canonicalization_preflight_and_species.py::test_preflight_warns_when_no_db_and_no_covering_index` | **primary checkout only**: the database is reachable there (`db_resolution.available: True`) | env-matched A/B, base `46` / tip `50`, identical message |
+| `test_prefreeze_species_resolution.py::test_new_acceptance_the_preflight_still_receives_the_at_risk_species` | primary only, same cause (`KeyError: 'preflight'`) | `47` / `51` |
+| `test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance` | primary only; also the Chunk D core's 1 failure | `48` / `52` |
+| `test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block` | primary only ("processes moved pre-freeze"); also Chunk D `node15` | `49` / `53` |
+
+"Env-matched A/B": scratch worktrees at `f9892cdf` and `adc49c40`, each carrying the primary's `.env` and its
+uncommitted caches. All four nodes fail at both with the same assertion message; all four pass in worktrees
+without them. So a red on these four in the primary checkout is not a regression. A red on them in a clean
+worktree is.
+
+### Path-sensitive skips
+
+The c081/c089 corpus tests skip any path containing `worktrees`, so a run from `.claude/worktrees/…` reports
+3 skips that are not failures. Run them from a path without that word (`ORCH-754b-RESULT.md` § 14.6).
+
+### Evaluation layering
+
+`tests/test_eval_v2_metrics.py::test_no_production_module_imports_evaluation_v2` was **red from `70d05e03`**
+(ORCH-750's ensembling borrowed the evaluation matcher), and ORCH-754a extended it. No lane ran the
+`test_eval_v2_*` files, so it was found only at integration (`g11/ORCH-754/54`; at base, `55`). Fixed by
+`ORCH-754d`. **Add `tests/test_eval_v2_*.py` to the integration gate of any change under `src/t2pw/pipeline/`.**

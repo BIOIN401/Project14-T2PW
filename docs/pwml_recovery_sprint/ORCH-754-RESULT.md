@@ -104,12 +104,30 @@ Scratch worktrees left by `754b` (`C:/t/bt-orch754b/base-wt`) and by its reviewe
 
 Round 2 **REJECT** (`9da8358e`): a Stage-6 summary counter reached the interactive curator's Mapping Misses (24/95 replay legs), and the `.txt` printed "drawn" when no PWML was written. Round 3 **APPROVE WITH NOTES** (`219d0003`), judged against the fixed severity standard. Mapping Misses differ on 0/95 legs; base and tip LLM-bound text are identical on the same post-Stage-6 payload; the moved GOLDEN digest was reproduced; the no-PWML path was checked on a committed leg; the sign-table move was byte-identical. Notes: the `ambiguous_protein_endpoint` reason hides a missing identity in the human record, and the wrapped-leg count (55 vs 56) is not reconciled. **Merged at `c711d859`.**
 
+### 3.5 `754a` reviews, and the merge
+
+Review 1 **REJECT** (`989dee54`): case-folded abbreviations (`ACP` renamed acetyl phosphate), skipped extra-enzyme quote check, cofactor role grouped by chemical family. Product owner: D-104 AMENDMENTS 4 (typo narrowed and flagged; rule 3 at Stage 6 only) and 5 (one keyword argument in the protected file). Review 2 **REJECT** (`75ca32f3`): entry-level quotes lost, enzyme typo snaps unflagged. Review 3 **APPROVE WITH NOTES** (`9ea36a6b`). **Merged at `adc49c40`.** Chlorophyll pool 41 → 29; enterobactin 4/5 and menaquinone 9/9 unchanged; N=1 identical to base; `streamlit_app.py` +1 line.
+
+### 3.6 `754d` — evaluation layering
+
+Dispatched after integration found the `eval_v2` layering test red. See § 4.
+
 ## 4. Gates
 
 | after | run | report | result |
 |---|---|---|---|
 | merge of `754c` (`ca852bb6`) | SMOKE, primary checkout (`.env` present, draws = 3) | `evidence/g11/ORCH-754/03-smoke-after-c.json`, pin `pin/ORCH-754/03-…`, log `evidence/orch754/03-smoke-after-c.log` | **508 passed** in 42.69 s, 0 survivors |
 | merge of `754b` (`c711d859`) | SMOKE, primary checkout | `evidence/g11/ORCH-754/04-smoke-after-b.json`, pin `pin/ORCH-754/04-…`, log `evidence/orch754/04-smoke-after-b.log` | **508 passed** in 70.30 s, 0 survivors |
+
+| merge of `754a` (`adc49c40`), all lanes in | union of every lane's focused, affected and export-chunk files plus curator, prompt-proof, reaction-evidence and `test_early_failure_replay` (82 files) | `g11/ORCH-754/05`, log `orch754/05-…` | 1931 passed, **8 failed**: 4 pre-existing at base (c075, c100 5b, rag_seed conform, plus the coverage-tripwire pair counted as 2), 3 primary-only environmental, see below |
+| | SMOKE | `06` | **508 passed** |
+| | AppTest files, each alone: reaction_evidence_view, app_hook, batch_preflight, c055, c052 | `07`-`10`, `12` | 11, 1, 37, 14, 13 passed |
+| | `test_streamlit_quarantine_boundary` alone | `11` | 22 passed, 1 failed: primary-only environmental |
+| | Chunk D (`chunk_d_gate.py`, `T2PW_OFFLINE_CURATOR=1`) | `13` outer + inner | core 159/160 and node15 failed; both are the primary-only environmental nodes |
+| | env-matched A/B of the 4 primary-only nodes: base `f9892cdf` vs tip, each carrying the primary's `.env` and uncommitted caches | `46`-`53` | **all 4 fail at base and tip with identical messages**: the DB is reachable in the primary checkout, which these tests assume it is not. Not regressions |
+| | `tests/test_eval_v2_*.py` | `54`; base `55` | 88 passed, **1 failed: `test_no_production_module_imports_evaluation_v2`**. Red since `70d05e03` (fails at base, `55`), extended by `754a`. **A real defect, found only here: no lane ran these files.** → `ORCH-754d` |
+
+`g11_evidence.py check --task ORCH-754`: 53 artifacts, 0 non-compliant. The 32 without a pin are Chunk D's inner per-node runs.
 
 Reports `01` and `02` were reserved and never written: `01` waited on the heavy lock, which `754b`'s SMOKE held, and `02` failed on a missing log directory. Their placeholders sit in the git-ignored `.staging/`; `g11_evidence.py check --task ORCH-754` exits 0.
 

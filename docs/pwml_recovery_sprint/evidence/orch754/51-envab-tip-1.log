@@ -1,0 +1,54 @@
+T2PW: C:\t\bt-orch754\env-tip\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_new_acceptance_the_preflight_still_receives_the_at_risk_species _____
+
+    def test_new_acceptance_the_preflight_still_receives_the_at_risk_species() -> None:
+        """A7: ``_species_at_risk`` survives the move, and its consumer still warns.
+    
+        ``_emit_canonicalization_preflight`` is C-040's and unchanged; what changed is
+        where its input is computed. A taxonomy-identified species the offline index
+        does not cover is ``deterministic`` -- it may still collide on import -- and
+        that is what the operator has to be told.
+        """
+    
+        payload = _payload({"name": STRAIN, "taxonomy_id": "1091041"})
+        summary = _resolve(payload)
+        assert summary["at_risk"] == [BINOMIAL]
+    
+        _, report = _build(payload)
+>       assert report["preflight"]["species"] == [BINOMIAL]
+               ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'preflight'
+
+tests\test_prefreeze_species_resolution.py:145: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_prefreeze_species_resolution.py::test_new_acceptance_the_preflight_still_receives_the_at_risk_species
+1 failed in 0.99s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ adc49c401c09c0ab734922f75f7f36f857c0dbee  [git, worktree dirty=True]
+label                   : envab-tip-1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/bt-orch754/env-tip --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-754/51-envab-tip-1.pin.json -q --basetemp=C:/t/bt-orch754/51-envab-tip-1 tests/test_prefreeze_species_resolution.py::test_new_acceptance_the_preflight_still_receives_the_at_risk_species
+cwd                     : C:\t\bt-orch754\env-tip
+root PID / process group: 849092 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 2.00 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  847936:python.exe
+descendants terminated  : 1  847936
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-754\51-envab-tip-1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-754  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
