@@ -34,9 +34,12 @@ from t2pw.app.reaction_evidence import (
     JSON_ARTIFACTS,
     NONE_RECORDED,
     NOT_RECORDED,
+    PWML_IR_FILENAME,
     build_report,
     coverage_lines,
     header_lines,
+    interaction_lines,
+    interactions_title,
     load_run_artifacts,
     quarantined_lines,
     reaction_lines,
@@ -70,6 +73,14 @@ def _session_payload() -> Tuple[str, Optional[Dict[str, Any]]]:
         if isinstance(value, dict) and value:
             return key, value
     return "", None
+
+
+def _session_ir() -> Optional[Dict[str, Any]]:
+    # The IR this session's PWML export built (``streamlit_app`` stores the export
+    # result here). Read as it stands: the verdicts are the exporter's, not this page's.
+    result = st.session_state.get("pwml_export_result")
+    ir = result.get("pwml_ir") if isinstance(result, dict) else None
+    return ir if isinstance(ir, dict) and ir else None
 
 
 def _block(lines) -> None:
@@ -109,11 +120,15 @@ def _render_body() -> None:
         if payload is not None:
             artifacts[FINAL_MAPPED_FILENAME] = payload
             source = f"session post_pipeline_artifacts[{key}]"
+    ir_source = PWML_IR_FILENAME
+    if PWML_IR_FILENAME not in artifacts and directory == session_dir and _session_ir() is not None:
+        artifacts[PWML_IR_FILENAME] = _session_ir()
+        ir_source = "session pwml_export_result[pwml_ir]"
     if not artifacts:
         st.info(f"None of {', '.join(JSON_ARTIFACTS)} was found in {directory}.")
         return
 
-    report = build_report(artifacts, payload_source=source)
+    report = build_report(artifacts, payload_source=source, ir_source=ir_source)
     st.download_button(
         DOWNLOAD_LABEL,
         data=render_text(report).encode("utf-8"),
@@ -142,6 +157,12 @@ def _render_body() -> None:
             )
         with st.expander(f"Reaction {reaction['number']}: {reaction['equation']}"):
             _block(reaction_lines(reaction))
+
+    with st.expander(interactions_title(report)):
+        if not report["interactions"]:
+            st.write(NOT_RECORDED if report["payload_source"] == NOT_RECORDED else NONE_RECORDED)
+        for item in report["interactions"]:
+            _block(interaction_lines(item))
 
     quarantined = report["quarantined"]
     label = NOT_RECORDED if quarantined is None else str(len(quarantined))

@@ -819,13 +819,28 @@
    ],
    "interactions": [
     {
-     "name": "2,3-DHB competitive inhibition of EntB isochorismatase"
+     "name": "2,3-DHB competitive inhibition of EntB isochorismatase",
+     "relationship": "inhibits",
+     "entity_1": "2,3-dihydroxybenzoic acid",
+     "entity_2": "EntB",
+     "biological_state": "cytoplasmic state",
+     "evidence": "2,3-DHB is a competitive inhibitor of apo-EntB isochorismatase activity"
     },
     {
-     "name": "2,3-DHB binding to EntE"
+     "name": "2,3-DHB binding to EntE",
+     "relationship": "binds",
+     "entity_1": "2,3-dihydroxybenzoic acid",
+     "entity_2": "EntE",
+     "biological_state": "cytoplasmic state",
+     "evidence": "2,3-DHB bound to EntE as a natural substrate with high affinity"
     },
     {
-     "name": "EntC-EntB interaction for isochorismate channeling"
+     "name": "EntC-EntB interaction for isochorismate channeling",
+     "relationship": "interacts_with",
+     "entity_1": "EntC",
+     "entity_2": "EntB",
+     "biological_state": "cytoplasmic state",
+     "evidence": "EntC and EntB interact to form a dynamic channeling system"
     }
    ]
   },
@@ -876,6 +891,24 @@
     }
    }
   ]
+ },
+ "pwml_ir.json": {
+  "processes": {
+   "interactions": [
+    {
+     "name": "2,3-DHB competitive inhibition of EntB isochorismatase",
+     "interaction_type": "inhibits"
+    },
+    {
+     "name": "2,3-DHB binding to EntE",
+     "interaction_type": "binds"
+    },
+    {
+     "name": "EntC-EntB interaction for isochorismate channeling",
+     "interaction_type": "interacts_with"
+    }
+   ]
+  }
  },
  "LEG_TRACE.jsonl": "{\"seq\": 1, \"kind\": \"leg_begin\", \"elapsed_seconds\": 0.0, \"slug\": \"PMC12096016\", \"mode\": \"strict\", \"paper_id\": \"PMC12096016\", \"child_deadline_seconds\": 3480.0}\n"
 }

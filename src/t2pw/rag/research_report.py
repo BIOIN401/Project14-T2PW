@@ -38,7 +38,6 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 from t2pw.pipeline.export_mode import DEFAULT_EXPORT_MODE
-from t2pw.pwml.ir import interaction_pwml_line, interaction_pwml_verdict, interaction_relationship_word
 from t2pw.rag.tiers import (
     TIER_A,
     TIER_B,
@@ -334,46 +333,22 @@ def _payload_interactions(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
 
     out: List[Dict[str, Any]] = []
-    entities = _as_dict(payload.get("entities"))
-    # Endpoint kind by name, a protein winning a tie as it does in the exporter.
-    endpoint_kind: Dict[str, Tuple[str, Dict[str, Any]]] = {}
-    for bucket, kind in (("proteins", "protein"), ("protein_complexes", "protein_complex"),
-                         ("compounds", "compound"), ("nucleic_acids", "nucleic_acid"),
-                         ("element_collections", "element_collection")):
-        for entity in _as_list(entities.get(bucket)):
-            name = _text(_as_dict(entity).get("name")).casefold()
-            if name:
-                endpoint_kind.setdefault(name, (kind, _as_dict(entity)))
     rows = _as_list(_as_dict(payload.get("processes")).get("interactions"))
     for index, raw in enumerate(rows):
         row = _as_dict(raw)
         if not row:
             continue
-        relationship = _text(row.get("relationship")) or _text(row.get("class"))
-        source, target = _text(row.get("entity_1")), _text(row.get("entity_2"))
         out.append({
             "pointer": f"/processes/interactions/{index}",
             "name": _text(row.get("name")),
-            "source": source,
-            "relationship": relationship,
-            "target": target,
+            "source": _text(row.get("entity_1")),
+            "relationship": _text(row.get("relationship")) or _text(row.get("class")),
+            "target": _text(row.get("entity_2")),
             "biological_state": _text(row.get("biological_state")),
             "evidence": _text(row.get("evidence")),
             "provenance": _text(row.get("provenance")),
             "confidence": row.get("confidence"),
         })
-        # ORCH-754b / D-104: what the PWML does with the row -- the exporter's own rule on
-        # this payload. Research mode writes no PWML, so this is what a strict export of
-        # it would do.
-        word = interaction_relationship_word(row)
-        verdict = interaction_pwml_verdict(
-            word, [endpoint_kind[n.casefold()] for n in (source, target) if n.casefold() in endpoint_kind]
-        )
-        out[-1].update(
-            pwml_interaction_type=verdict["pwml_type"],
-            pwml_withheld_reason=verdict["reason"],
-            pwml_export=interaction_pwml_line(verdict, word),
-        )
     return out
 
 
@@ -795,6 +770,11 @@ def _text_blocks(report: "ResearchReport") -> List[str]:
     out.append("  carry their own evidence but are NOT tiered: the tiering layer scores")
     out.append("  reactions and entities only, so no tier, no RAG confidence and no source")
     out.append("  list is available for them. Read the evidence quote on each row.")
+    # ORCH-754b / D-104: the text output says, for every interaction, whether it
+    # reached the PWML. Here none did, for one reason. Human-facing only: no model
+    # reads this report.
+    out.append("  Research mode writes no PWML, so none of these rows reached one. A")
+    out.append("  strict run's reaction_evidence.txt gives the exporter's own verdict per row.")
     out.append("")
     if interactions:
         for number, row in enumerate(interactions, start=1):
@@ -812,8 +792,6 @@ def _text_blocks(report: "ResearchReport") -> List[str]:
                 out.extend(_wrap(f"“{row['evidence']}”", "         "))
             else:
                 out.append("       evidence: NONE RECORDED — treat as unsupported")
-            out.append("       PWML: none in research mode; a strict export of this payload:")
-            out.extend(_wrap(row["pwml_export"], "         "))
             out.append("")
     else:
         out.append("  (no regulatory interactions in this pathway)")

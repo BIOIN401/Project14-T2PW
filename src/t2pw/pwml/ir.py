@@ -80,23 +80,25 @@ def pwml_interaction_type(raw_type: Any) -> str:
     """``Activation`` / ``Inhibition`` when the sign is in the word, else ``""``.
 
     The one statement of which interactions PathWhiz can store. Stage 6 reads it to
-    decide which protein endpoints need a wrapper (ORCH-754b), and the text reports
-    read it to say what the PWML does with a row.
+    decide which protein endpoints need a wrapper (ORCH-754b).
     """
     return PWML_INTERACTION_TYPES.get(_interaction_type_key(raw_type), "")
 
 
 def interaction_pwml_verdict(raw_type: Any, endpoints: Sequence[Tuple[str, Optional[Dict[str, Any]]]]) -> Dict[str, Any]:
-    """What the PWML export does with one interaction -- the one rule, used by the
-    exporter below and by the text reports, so the two cannot disagree.
+    """What the PWML export does with one interaction, given its resolved endpoints.
+
+    Text outputs never recompute this: the human-facing record
+    (``app.reaction_evidence``) reads the verdict back out of the built IR.
 
     ``endpoints`` is ``(entity_type, payload row)`` for each side that resolved.
     Returns ``pwml_type`` (``""`` for an unsigned word), ``reason`` (``""`` when the row
     is drawn) and ``unwrappable_proteins``. A bare protein cannot be drawn (PathWhiz has
-    no protein interaction member); Stage 6 wraps one that has a species and a
-    UniProt/DrugBank identity (ORCH-754b, D-104), so a protein still bare here either
-    lacks one -- and the reason names which -- or was never offered a wrapper
-    (``bare_protein_endpoint``).
+    no protein interaction member). Stage 6 wraps a protein endpoint only when it has a
+    species and a UniProt/DrugBank identity, and also refuses some that do (the Unknown
+    sentinel, a name another complex already holds, an ambiguous alias), so a protein
+    still bare here gets the missing piece named when one is missing, and otherwise
+    ``bare_protein_endpoint``: no wrapper exists in this payload, for whatever reason.
     """
     pwml_type = pwml_interaction_type(raw_type)
     verdict: Dict[str, Any] = {"pwml_type": pwml_type, "reason": "", "unwrappable_proteins": []}
@@ -125,24 +127,6 @@ def interaction_pwml_verdict(raw_type: Any, endpoints: Sequence[Tuple[str, Optio
         else "bare_protein_endpoint"
     )
     return verdict
-
-
-def interaction_pwml_line(verdict: Dict[str, Any], raw_type: Any) -> str:
-    """The verdict as one line of text, the reason code kept verbatim."""
-    reason = verdict.get("reason") or ""
-    if not reason:
-        return f"{verdict.get('pwml_type')}, drawn"
-    if reason == "untyped_interaction":
-        why = f"{_canonical(raw_type)!r} is neither Activation nor Inhibition, the only interaction types PathWhiz stores"
-    elif reason == "bare_protein_endpoint":
-        why = "a protein endpoint has no single-protein complex wrapper; Stage 6 builds one"
-    else:
-        lacks = {"species": "a species", "external_identity": "a UniProt/DrugBank identity"}
-        why = "; ".join(
-            f"{u['name']} lacks {' and '.join(lacks[m] for m in u['missing'])}, so Stage 6 cannot wrap it"
-            for u in verdict.get("unwrappable_proteins") or []
-        )
-    return f"withheld ({reason}): {why}"
 
 
 #: The field a compound row carries once compound resolution has ruled on it.

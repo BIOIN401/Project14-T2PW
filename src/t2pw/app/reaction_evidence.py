@@ -7,7 +7,9 @@ PRESENTATION ONLY. Everything here is read from a run's EXISTING artifacts --
 canonical payload, ``batch.driver._add_identity_artifacts``, including its
 ``quarantined_locked_reactions`` record, which ``pipeline.filter_unresolvable_reactions``,
 ``process_normalizer.dedupe_processes`` and strict quarantine all append to; a row
-from it is labelled by that record name, never by a guessed stage) and the first
+from it is labelled by that record name, never by a guessed stage), ``pwml_ir.json``
+(the IR the PWML was written from, ``batch.driver._add_pwml_artifacts``: each
+interaction's export verdict is READ from it, never recomputed) and the first
 record of ``LEG_TRACE.jsonl`` for the paper id. Nothing
 is recomputed, repaired, merged or deleted, and no model, embedding or network
 call is made: this module imports only the standard library and the quarantine
@@ -36,12 +38,14 @@ from t2pw.pipeline.strict_quarantine import (
 )
 
 FINAL_MAPPED_FILENAME = "final_mapped.json"
+PWML_IR_FILENAME = "pwml_ir.json"
 LEG_TRACE_FILENAME = "LEG_TRACE.jsonl"
 JSON_ARTIFACTS = (
     COVERAGE_REPORT_FILENAME,
     QUARANTINE_REPORT_FILENAME,
     REMOVED_ENTITY_REPORT_FILENAME,
     FINAL_MAPPED_FILENAME,
+    PWML_IR_FILENAME,
 )
 NOT_RECORDED = "Not recorded"
 NONE_RECORDED = "None recorded"
@@ -211,6 +215,77 @@ def _same_process(lock_id: str, name: Any, row: Mapping[str, Any]) -> bool:
     return bool(_norm(name)) and _norm(name) == _norm(row["name"])
 
 
+#: ORCH-754b / D-104. What each exporter reason means, worded to be true whatever led
+#: to it -- in particular ``bare_protein_endpoint`` says only that no wrapper exists,
+#: never why Stage 6 did not build one.
+_WITHHELD_GLOSS = {
+    "untyped_interaction": (
+        "the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores"
+    ),
+    "bare_protein_endpoint": (
+        "a protein endpoint is not wrapped in a single-protein complex in this payload, "
+        "and PathWhiz has no bare-protein interaction member"
+    ),
+}
+_MISSING = {"species": "species", "external_identity": "UniProt/DrugBank identity"}
+
+
+def _pwml_verdict(row: Mapping[str, Any]) -> str:
+    """One IR interaction row's export verdict, as the IR states it."""
+
+    status = _text(row.get("export_status"))
+    if status == "exportable":
+        return f"drawn as {_text(row.get('interaction_type')) or NOT_RECORDED}"
+    if status != "withheld":
+        return f"{NOT_RECORDED} (this IR predates per-row export verdicts)"
+    withheld = _dict(row.get("withheld"))
+    reason = _text(withheld.get("reason")) or NOT_RECORDED
+    gloss = _WITHHELD_GLOSS.get(reason, "")
+    lacking = [
+        f"{_text(u.get('name')) or NOT_RECORDED} has no "
+        + " and ".join(_MISSING.get(_text(m), _text(m)) for m in _list(u.get("missing")))
+        for u in map(_dict, _list(withheld.get("unwrappable_proteins")))
+    ]
+    if lacking:
+        gloss = "; ".join(lacking) + ", which a single-protein complex wrapper requires"
+    return f"withheld -- {reason}" + (f": {gloss}" if gloss else "")
+
+
+def _interactions(payload: Mapping[str, Any], ir: Any, ir_source: str) -> List[Dict[str, Any]]:
+    """Every interaction in the final payload, with the IR's own verdict on it."""
+
+    rows = [(i, r) for i, r in enumerate(_list(_dict(payload.get("processes")).get("interactions"))) if isinstance(r, dict)]
+    ir_rows = _list(_dict(_dict(ir).get("processes")).get("interactions")) if isinstance(ir, dict) else None
+    # The IR keeps one row per dict row, in order, named as below (``ir.build_pwml_ir``).
+    # Anything else means the IR was built from a different payload: no verdict is shown.
+    lined_up = ir_rows is not None and len(ir_rows) == len(rows) and all(
+        _text(_dict(v).get("name")) == (" ".join(_text(r.get("name")).split()) or f"Interaction {k}")
+        for k, ((_i, r), v) in enumerate(zip(rows, ir_rows), 1)
+    )
+    out: List[Dict[str, Any]] = []
+    for k, (index, row) in enumerate(rows, 1):
+        if ir_rows is None:
+            verdict = f"{NOT_RECORDED} (no {PWML_IR_FILENAME}: no PWML IR was built for this run)"
+        elif not lined_up:
+            verdict = f"{NOT_RECORDED} ({ir_source} does not line up with the interactions of the final payload)"
+        else:
+            verdict = _pwml_verdict(_dict(ir_rows[k - 1]))
+        out.append(
+            {
+                "number": k,
+                "pointer": f"/processes/interactions/{index}",
+                "name": _text(row.get("name")),
+                "relationship": _text(row.get("relationship")),
+                "source": _text(row.get("entity_1") or row.get("left") or row.get("source")),
+                "target": _text(row.get("entity_2") or row.get("right") or row.get("target")),
+                "state": _text(row.get("biological_state")),
+                "pwml": verdict,
+                "evidence": _quotes(row),
+            }
+        )
+    return out
+
+
 def load_run_artifacts(directory: Any) -> Dict[str, Any]:
     """Read whichever of the known artifacts exist in ``directory``. Missing = absent key."""
 
@@ -229,7 +304,12 @@ def load_run_artifacts(directory: Any) -> Dict[str, Any]:
     return found
 
 
-def build_report(artifacts: Mapping[str, Any], *, payload_source: str = FINAL_MAPPED_FILENAME) -> Dict[str, Any]:
+def build_report(
+    artifacts: Mapping[str, Any],
+    *,
+    payload_source: str = FINAL_MAPPED_FILENAME,
+    ir_source: str = PWML_IR_FILENAME,
+) -> Dict[str, Any]:
     """The review model, a plain dict built only from ``artifacts`` (``{filename: parsed}``)."""
 
     coverage = _dict(artifacts.get(COVERAGE_REPORT_FILENAME))
@@ -423,6 +503,8 @@ def build_report(artifacts: Mapping[str, Any], *, payload_source: str = FINAL_MA
             (payload_source if name == FINAL_MAPPED_FILENAME else name for name in artifacts), key=str.lower
         ),
         "reactions": reactions,
+        "interactions": _interactions(payload, artifacts.get(PWML_IR_FILENAME), ir_source),
+        "ir_source": ir_source if PWML_IR_FILENAME in artifacts else NOT_RECORDED,
         "quarantined": quarantined,
         "removed_entities": removed_entities,
     }
@@ -459,8 +541,8 @@ def header_lines(report: Mapping[str, Any]) -> List[str]:
         f"Export mode: {report['export_mode']}",
         f"Quarantine ok: {report['quarantine_ok']}",
         *report["research_mode"],
-        f"Reactions itemised: {len(report['reactions'])} (transports: {report['transport_count']}, "
-        f"interactions: {report['interaction_count']}; counted above, not itemised)",
+        f"Reactions itemised: {len(report['reactions'])}; interactions itemised: {len(report['interactions'])} "
+        f"(transports: {report['transport_count']}; counted above, not itemised)",
         f"Surviving reactions read from: {report['payload_source']}",
         f"Artifacts read: {', '.join(report['artifacts']) or 'none'}",
     ]
@@ -499,6 +581,23 @@ def reaction_lines(reaction: Mapping[str, Any]) -> List[str]:
         others = ", ".join(str(n) for n in reaction["duplicate_of"])
         lines.append(f"WARNING: {DUPLICATE_WARNING} (same substrates and products as reaction {others})")
     return lines
+
+
+def interaction_lines(item: Mapping[str, Any]) -> List[str]:
+    return [
+        f"INTERACTION {item['number']}  [final payload {item['pointer']}]",
+        f"Name: {item['name'] or NOT_RECORDED}",
+        f"Relationship (as extracted): {item['relationship'] or NOT_RECORDED}",
+        f"Source: {item['source'] or NOT_RECORDED}",
+        f"Target: {item['target'] or NOT_RECORDED}",
+        f"State: {item['state'] or NOT_RECORDED}",
+        f"PWML: {item['pwml']}",
+        *_evidence(item["evidence"]),
+    ]
+
+
+def interactions_title(report: Mapping[str, Any]) -> str:
+    return f"INTERACTIONS ({len(report['interactions'])}) -- PWML verdicts read from: {report['ir_source']}"
 
 
 def quarantined_lines(number: int, row: Mapping[str, Any]) -> List[str]:
@@ -542,6 +641,11 @@ def render_text(report: Mapping[str, Any]) -> str:
     for reaction in report["reactions"]:
         lines += [*reaction_lines(reaction), ""]
     if not report["reactions"]:
+        lines += _absent(None if report["payload_source"] == NOT_RECORDED else [])
+    lines += _section(interactions_title(report))
+    for item in report["interactions"]:
+        lines += [*interaction_lines(item), ""]
+    if not report["interactions"]:
         lines += _absent(None if report["payload_source"] == NOT_RECORDED else [])
     quarantined = report["quarantined"]
     lines += [*_section(quarantined_title(report)), *report["quarantine_sources"], ""]

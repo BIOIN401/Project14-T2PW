@@ -11,9 +11,9 @@ Quarantined processes: 1
 Release status: review_required
 Export mode: pathwhiz
 Quarantine ok: true
-Reactions itemised: 5 (transports: 1, interactions: 3; counted above, not itemised)
+Reactions itemised: 5; interactions itemised: 3 (transports: 1; counted above, not itemised)
 Surviving reactions read from: final_mapped.json
-Artifacts read: coverage_summary.json, final_mapped.json, LEG_TRACE.jsonl, quarantine_report.json, removed_entity_report.json
+Artifacts read: coverage_summary.json, final_mapped.json, LEG_TRACE.jsonl, pwml_ir.json, quarantine_report.json, removed_entity_report.json
 
 SURVIVING REACTIONS (5)
 -----------------------
@@ -115,6 +115,38 @@ Evidence:
   4. "catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF"
 Source:
   - supplied paper PMC12096016 via paper_extraction
+
+INTERACTIONS (3) -- PWML verdicts read from: pwml_ir.json
+---------------------------------------------------------
+INTERACTION 1  [final payload /processes/interactions/0]
+Name: 2,3-DHB competitive inhibition of EntB isochorismatase
+Relationship (as extracted): inhibits
+Source: 2,3-dihydroxybenzoic acid
+Target: EntB
+State: cytoplasmic state
+PWML: Not recorded (this IR predates per-row export verdicts)
+Evidence:
+  1. "2,3-DHB is a competitive inhibitor of apo-EntB isochorismatase activity"
+
+INTERACTION 2  [final payload /processes/interactions/1]
+Name: 2,3-DHB binding to EntE
+Relationship (as extracted): binds
+Source: 2,3-dihydroxybenzoic acid
+Target: EntE
+State: cytoplasmic state
+PWML: Not recorded (this IR predates per-row export verdicts)
+Evidence:
+  1. "2,3-DHB bound to EntE as a natural substrate with high affinity"
+
+INTERACTION 3  [final payload /processes/interactions/2]
+Name: EntC-EntB interaction for isochorismate channeling
+Relationship (as extracted): interacts_with
+Source: EntC
+Target: EntB
+State: cytoplasmic state
+PWML: Not recorded (this IR predates per-row export verdicts)
+Evidence:
+  1. "EntC and EntB interact to form a dynamic channeling system"
 
 QUARANTINED / REJECTED (1)
 --------------------------

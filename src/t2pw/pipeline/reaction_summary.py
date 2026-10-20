@@ -14,8 +14,6 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Tuple
 
-from t2pw.pwml.ir import interaction_pwml_line
-
 
 # ---------------------------------------------------------------------------
 # Public entry point
@@ -254,15 +252,9 @@ def generate_reaction_summary(draft_graph: Any, qa_report: Dict[str, Any]) -> st
     # fraction of what the pipeline had extracted, and read as a recall failure that had
     # not happened. ``build_draft_graph`` has always emitted these nodes.
     interactions = [n for n in nodes if n.kind == "interaction"]
-    # ORCH-754b / D-104: the text output is the exact record of every interaction --
-    # the word as extracted, its evidence, and what the PWML does with it. The verdict
-    # is the exporter's own rule applied to the payload this graph was built from;
-    # a later mapping pass can still wrap an endpoint, hence "if exported from it".
-    interaction_records = metadata.get("interaction_records") or {}
     for i, inter in enumerate(interactions, 1):
-        relationship = (inter.cls or '').strip() or 'interaction'
         lines.append(f"INTERACTION {i}: {inter.label}")
-        lines.append(f"  Relationship: {relationship}")
+        lines.append(f"  Relationship: {(inter.cls or '').strip() or 'interaction'}")
 
         sources = [(n, conf) for n, role, conf in incoming.get(inter.id, [])
                    if role == "participant"]
@@ -273,12 +265,6 @@ def generate_reaction_summary(draft_graph: Any, qa_report: Dict[str, Any]) -> st
         tgt_strs = [_entity_str(n, confidence=conf) for n, conf in targets]
         lines.append(f"  Source: {', '.join(src_strs) if src_strs else 'MISSING'}")
         lines.append(f"  Target: {', '.join(tgt_strs) if tgt_strs else 'MISSING'}")
-        record = interaction_records.get(inter.id) or {}
-        evidence = record.get("evidence")
-        lines.append(f"  Evidence: “{evidence}”" if evidence else "  Evidence: NONE RECORDED — treat as unsupported")
-        verdict = record.get("pwml")
-        lines.append(f"  PWML (if exported from this payload): {interaction_pwml_line(verdict, relationship)}"
-                     if verdict else "  PWML: not evaluated (graph carries no interaction record)")
 
         inter_flags: List[str] = []
         if not sources or not targets:
