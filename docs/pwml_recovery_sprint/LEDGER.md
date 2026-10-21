@@ -11071,3 +11071,5 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 | records | every step is appended to `docs/pathway_mining/evidence/orch760/PROGRESS.md` on the mining branch. The overseer copies the close entry here |
 
 **`ORCH-754` · 2026-10-20 — DONE.** `754d` MERGED at `ff3457fa` after review APPROVE WITH NOTES. Final tip: SMOKE 508 (`g11/ORCH-754/56`); eval-v2 + focused 239 passed, 0 failed (`57`). **`main` fast-forwarded to the sprint tip and pushed** (D-104 § 7). The checkout switch to `main` is held: ORCH-760 commits to sprint from this checkout. Open items in `ORCH-754-RESULT.md` § 5.
+
+**`ORCH-755` · 2026-10-20 — DISPATCHED: overnight paper runs** for the product owner's hand comparison. 7 cohort conditions x strict/research = 14 legs, strict first, D-104 production config (3 draws, 64k, prompt v03, live curator), one bounded leg at a time with the heavy lock. Staging dry run green for all 7 (`g11/ORCH-755/01-07`, zero LLM legs). Results: `runs_papers/ORCH-755/REVIEW/INDEX.txt`. First end-to-end exercise of the 3-draw path and of rule 3. Record: `ORCH-755-RESULT.md`.
