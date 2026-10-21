@@ -1,0 +1,124 @@
+{
+  "label": "leg-chlorophyll-research",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "docs/evaluation_v2/paper_runs_orch755/topics/chlorophyll.txt",
+    "--modes",
+    "research",
+    "--out",
+    "runs_papers/ORCH-755/legs/chlorophyll-research",
+    "--fresh",
+    "--timeout",
+    "3600",
+    "--deadline",
+    "1.2"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-10-21T11:29:13+00:00",
+  "finished_at": "2026-10-21T12:29:16+00:00",
+  "duration_seconds": 3603.078919200001,
+  "timeout_seconds": 4200.0,
+  "root_pid": 539264,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 538068,
+      "name": "python.exe",
+      "ppid": 539264
+    },
+    {
+      "pid": 538660,
+      "name": "python.exe",
+      "ppid": 538068
+    },
+    {
+      "pid": 538988,
+      "name": "python.exe",
+      "ppid": 538660
+    },
+    {
+      "pid": 537664,
+      "name": "python.exe",
+      "ppid": 538120
+    },
+    {
+      "pid": 538120,
+      "name": "python.exe",
+      "ppid": 538068
+    },
+    {
+      "pid": 567304,
+      "name": "taskkill.exe",
+      "ppid": 538068
+    }
+  ],
+  "descendants_terminated": [
+    537664,
+    538068,
+    538120,
+    538660,
+    538988,
+    567304
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 500416,
+      "name": "python.exe"
+    },
+    {
+      "pid": 508448,
+      "name": "python.exe"
+    },
+    {
+      "pid": 509360,
+      "name": "python.exe"
+    },
+    {
+      "pid": 509420,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-755\\18-leg-chlorophyll-research.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "a2ed72844e4340d143ae12305af07d9fe6271c63",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-755",
+    "token": "ORCH-755:509360:f0f1dfe52b37ad79",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

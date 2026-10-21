@@ -1,0 +1,148 @@
+{
+  "label": "leg-ara_operon-strict",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "docs/evaluation_v2/paper_runs_orch755/topics/ara_operon.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "runs_papers/ORCH-755/legs/ara_operon-strict",
+    "--fresh",
+    "--timeout",
+    "3600",
+    "--deadline",
+    "1.2"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-10-21T06:39:40+00:00",
+  "finished_at": "2026-10-21T07:39:43+00:00",
+  "duration_seconds": 3602.564325299998,
+  "timeout_seconds": 4200.0,
+  "root_pid": 306820,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 305480,
+      "name": "python.exe",
+      "ppid": 306820
+    },
+    {
+      "pid": 307416,
+      "name": "python.exe",
+      "ppid": 307612
+    },
+    {
+      "pid": 307612,
+      "name": "python.exe",
+      "ppid": 305480
+    },
+    {
+      "pid": 307692,
+      "name": "python.exe",
+      "ppid": 305480
+    },
+    {
+      "pid": 308176,
+      "name": "python.exe",
+      "ppid": 307692
+    },
+    {
+      "pid": 406260,
+      "name": "taskkill.exe",
+      "ppid": 305480
+    }
+  ],
+  "descendants_terminated": [
+    305480,
+    307416,
+    307612,
+    307692,
+    308176,
+    406260
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 183672,
+      "name": "python.exe"
+    },
+    {
+      "pid": 186360,
+      "name": "python.exe"
+    },
+    {
+      "pid": 280992,
+      "name": "python.exe"
+    },
+    {
+      "pid": 299184,
+      "name": "python.exe"
+    },
+    {
+      "pid": 304968,
+      "name": "python.exe"
+    },
+    {
+      "pid": 305248,
+      "name": "python.exe"
+    },
+    {
+      "pid": 305588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 306404,
+      "name": "python.exe"
+    },
+    {
+      "pid": 307812,
+      "name": "python.exe"
+    },
+    {
+      "pid": 307844,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-755\\12-leg-ara_operon-strict.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "a2ed72844e4340d143ae12305af07d9fe6271c63",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-755",
+    "token": "ORCH-755:307844:e538dc9858d5aa4d",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
