@@ -1,0 +1,75 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2pw\__init__.py
+.FF                                                                      [100%]
+================================== FAILURES ===================================
+_ test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes[leg_final_mapped_as_shipped] _
+
+build = <function _leg_payload at 0x00000241BB20E340>
+tmp_path = WindowsPath('C:/t/bt-orch759a/01-g9-red-32572/test_g9_the_stage6_pass_leaves0')
+
+    @pytest.mark.parametrize("build", [_leg_payload, _stage6_input_reconstructed],
+                             ids=["leg_final_mapped_as_shipped", "stage6_input_reconstructed"])
+    def test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes(build: Any, tmp_path: Path) -> None:
+        result = _stage6(build(), tmp_path)
+        mapped = result["payload"]
+    
+        # Reconciliation decides what it always decided: the wrapper's component is EntF.
+        assert _component_names(mapped, WRAPPER) == ["EntF"]
+        # THE G9 ASSERTION. Base: ["Protein has degree 0 after normalization: enterobactin synthase"].
+>       assert _final_gate_errors(mapped) == []
+E       AssertionError: assert ['Protein has...tin synthase'] == []
+E         
+E         Left contains one more item: 'Protein has degree 0 after normalization: enterobactin synthase'
+E         Use -v to get more diff
+
+tests\test_orch759a_duplicate_protein_fold.py:159: AssertionError
+_ test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes[stage6_input_reconstructed] _
+
+build = <function _stage6_input_reconstructed at 0x00000241BC6A40E0>
+tmp_path = WindowsPath('C:/t/bt-orch759a/01-g9-red-32572/test_g9_the_stage6_pass_leaves1')
+
+    @pytest.mark.parametrize("build", [_leg_payload, _stage6_input_reconstructed],
+                             ids=["leg_final_mapped_as_shipped", "stage6_input_reconstructed"])
+    def test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes(build: Any, tmp_path: Path) -> None:
+        result = _stage6(build(), tmp_path)
+        mapped = result["payload"]
+    
+        # Reconciliation decides what it always decided: the wrapper's component is EntF.
+        assert _component_names(mapped, WRAPPER) == ["EntF"]
+        # THE G9 ASSERTION. Base: ["Protein has degree 0 after normalization: enterobactin synthase"].
+>       assert _final_gate_errors(mapped) == []
+E       AssertionError: assert ['Protein has...tin synthase'] == []
+E         
+E         Left contains one more item: 'Protein has degree 0 after normalization: enterobactin synthase'
+E         Use -v to get more diff
+
+tests\test_orch759a_duplicate_protein_fold.py:159: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes[leg_final_mapped_as_shipped]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes[stage6_input_reconstructed]
+2 failed, 1 passed in 0.28s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 30942f3233fe534638813b2a677209ae9b6163c0  [git, worktree dirty=False]
+label                   : g9-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759a/01-g9-red.pin.json -q --basetemp=C:/t/bt-orch759a/01-g9-red-32572 tests/test_orch759a_duplicate_protein_fold.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a
+root PID / process group: 118160 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 0.84 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  114768:python.exe
+descendants terminated  : 1  114768
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\g11\ORCH-759a\01-g9-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

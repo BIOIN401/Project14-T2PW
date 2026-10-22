@@ -1,0 +1,214 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2pw\__init__.py
+........................................................................ [ 10%]
+.......................................................F................ [ 20%]
+........................................................................ [ 30%]
+......................s................................................. [ 40%]
+..ss.................................................................... [ 50%]
+......................................F................................. [ 60%]
+........................................................................ [ 70%]
+........................................................................ [ 80%]
+............................................................F.F......... [ 90%]
+.....................................................................    [100%]
+================================== FAILURES ===================================
+_ test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper __
+
+    def test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper() -> None:
+        """THE LOAD-BEARING EVIDENCE (card section 6.5).
+    
+        ``test_c073_identity_admission.py::test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral``
+        replays the same corpus with NO source index, which exercises pass B alone.
+        This is the other half and the one arming makes real: every committed
+        ``final_mapped.json`` replayed against its OWN ``01_source_text.txt``.
+    
+        Measured at this tip: 70 artifacts, 678 eligible rows, 3 refusals, all three
+        of them hallucinations, 0 collateral. Measured with the ruling's two routes
+        removed -- which is what the C-073 predicate does on its own -- 39 refusals,
+        36 of them legitimate rows. That difference is this card's whole argument.
+    
+        If a newly committed run artifact moves these numbers, TRIAGE the new row as
+        a catch or as collateral before moving the pin. Do not regenerate it.
+        """
+        from t2pw.mapping import identity_admission
+    
+        artifacts = _committed_artifacts()
+        if not artifacts:
+            pytest.skip("no committed final_mapped.json artifacts")
+    
+        examined = 0
+        catches: set = set()
+        for path in artifacts:
+            source = path.parent.parent / "01_source_text.txt"
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            entities = payload.get("entities") or {}
+            if source.exists():
+                payload[identity_admission.SOURCE_INDEX_KEY] = identity_admission.build_source_index(
+                    source.read_text(encoding="utf-8", errors="replace")
+                )
+            report = map_ids._admit_identities(payload, entities)
+            examined += report["counts"]["rows_examined"]
+            for entry in report["withheld"]:
+                if entry["rule"] == identity_admission.RULE_NOT_SUPPORTED:
+                    catches.add((path.parent.parent.name.split("__")[0], path.parent.name,
+                                 entry["name"]))
+    
+        assert len(artifacts) >= 70
+        assert examined >= 678
+>       assert catches == EXPECTED_CATCHES, (
+            f"the armed pass changed over the corpus ({len(artifacts)} artifacts). "
+            f"unexpected: {sorted(catches - EXPECTED_CATCHES)}; "
+            f"no longer caught: {sorted(EXPECTED_CATCHES - catches)}"
+        )
+E       AssertionError: the armed pass changed over the corpus (116 artifacts). unexpected: [('PMC12096016', 'strict', "Pantetheine 4'-phosphate")]; no longer caught: []
+E       assert {('PMC1209601...uccinyl-CoA')} == {('PMC1218015...uccinyl-CoA')}
+E         
+E         Extra items in the left set:
+E         ('PMC12096016', 'strict', "Pantetheine 4'-phosphate")
+E         Use -v to get more diff
+
+tests\test_c075_source_support_armed.py:879: AssertionError
+______ test_5b_the_bare_pathbank_sentinel_name_is_not_a_tolerated_entity ______
+
+    def test_5b_the_bare_pathbank_sentinel_name_is_not_a_tolerated_entity() -> None:
+        """``Unknown`` is not one of the seven, and the scope does not invent an eighth.
+    
+        Measured: the same archived leg carries a PathBank sentinel row literally named
+        ``Unknown`` (``is_pathbank_unknown_protein`` requires that name). D-070 rules the
+        sentinel is PathBank's own record and not a forged identity -- and that ruling is
+        about forgery and species, not about coverage. Pinned here so the consequence is
+        visible rather than discovered later: after C-100 the sentinel produces a
+        coverage finding on this one case.
+        """
+    
+        case = _pinned_case()
+>       assert len(_tolerance_findings(case, "Unknown")) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = _tolerance_findings(GoldCase(paper_id='PMC12444477', title='The regulation of lipid A biosynthesis', requested_pathway='lipid A biosynthes...ens ('lipid IV A', 'R -3-hydroxymyristoyl-ACP', 'sigma 32'). The MurA-activates-LpxC mechanism is P. aeruginosa only."), 'Unknown')
+
+tests\test_c100_tolerance_scope.py:271: AssertionError
+_____________ test_the_golden_covers_every_committed_leg_fixture ______________
+
+    def test_the_golden_covers_every_committed_leg_fixture() -> None:
+        """NEW ACCEPTANCE. A new committed leg must be ACCOUNTED FOR deliberately.
+    
+        **C-068 widened the accounting set, not the assertion** (F-069). Every
+        committed leg must appear in ``GOLDEN`` -- pinned -- or in ``EXCLUDED`` with
+        a stated reason, which :func:`_excluded` makes structurally impossible to
+        skip. A leg in neither still fails here, and that is the property the test
+        exists for; :func:`test_the_coverage_tripwire_fires_on_an_unaccounted_leg`
+        proves the widened form is not vacuous.
+        """
+        found = {
+            str(path.relative_to(ROOT)).replace("\\", "/")
+            for root in ("runs", "runs_verify")
+            for path in (ROOT / root).rglob("final_mapped.json")
+        }
+        assert found, "no committed leg fixtures found under runs/ or runs_verify/"
+        both = sorted(set(GOLDEN) & set(EXCLUDED))
+        assert not both, f"a leg is BOTH pinned and excluded: {both}"
+        unaccounted, stale = _leg_coverage_gap(found)
+>       assert (unaccounted, stale) == ([], []), (
+            f"unaccounted -- add to GOLDEN, or to EXCLUDED with a reason: "
+            f"{unaccounted}; stale in GOLDEN/EXCLUDED: {stale}"
+        )
+E       AssertionError: unaccounted -- add to GOLDEN, or to EXCLUDED with a reason: ['runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-08-27_1341/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12856317/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12856317/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC13231680/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12444477/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12782028/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12856317/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12856317/strict/final_mapped.json']; stale in GOLDEN/EXCLUDED: []
+E       assert (['runs_verif...on', ...], []) == ([], [])
+E         
+E         At index 0 diff: ['runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-08-27_1341/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/r...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_compound_resolution_extraction.py:1170: AssertionError
+________ test_the_repaired_coverage_and_digest_pins_themselves_go_red _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D51808E7B0>
+
+    def test_the_repaired_coverage_and_digest_pins_themselves_go_red(
+            monkeypatch: Any) -> None:
+        """NON-VACUITY (C-093), permanent, and the strongest form of it.
+    
+        :func:`test_the_coverage_tripwire_fires_on_an_unaccounted_leg` exercises
+        :func:`_leg_coverage_gap`, the predicate. This drives **the two repaired test
+        functions themselves** and asserts they RAISE, which is the only thing that
+        answers "did admitting 56 legs turn the pin into a rubber stamp?":
+    
+        1. drop one leg from ``GOLDEN`` -- the corpus scan must report it unaccounted,
+           so the tripwire has not been widened into an unconditional pass;
+        2. corrupt one digest -- ``build_pwml_ir``'s output pin must still bite, so
+           the 56 admitted digests are load-bearing values and not decoration;
+        3. blank ``EXCLUDED`` -- the excluded leg must come back as unaccounted, so
+           exclusion is a record and not a deletion.
+    
+        (2) is run over a ONE-leg ``GOLDEN`` on purpose: the assertion under test is
+        per-leg, and sweeping all 90 to prove it would cost seconds for no more proof.
+        """
+        real_golden, real_excluded = dict(GOLDEN), dict(EXCLUDED)
+>       test_the_golden_covers_every_committed_leg_fixture()  # control: green
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_compound_resolution_extraction.py:1217: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def test_the_golden_covers_every_committed_leg_fixture() -> None:
+        """NEW ACCEPTANCE. A new committed leg must be ACCOUNTED FOR deliberately.
+    
+        **C-068 widened the accounting set, not the assertion** (F-069). Every
+        committed leg must appear in ``GOLDEN`` -- pinned -- or in ``EXCLUDED`` with
+        a stated reason, which :func:`_excluded` makes structurally impossible to
+        skip. A leg in neither still fails here, and that is the property the test
+        exists for; :func:`test_the_coverage_tripwire_fires_on_an_unaccounted_leg`
+        proves the widened form is not vacuous.
+        """
+        found = {
+            str(path.relative_to(ROOT)).replace("\\", "/")
+            for root in ("runs", "runs_verify")
+            for path in (ROOT / root).rglob("final_mapped.json")
+        }
+        assert found, "no committed leg fixtures found under runs/ or runs_verify/"
+        both = sorted(set(GOLDEN) & set(EXCLUDED))
+        assert not both, f"a leg is BOTH pinned and excluded: {both}"
+        unaccounted, stale = _leg_coverage_gap(found)
+>       assert (unaccounted, stale) == ([], []), (
+            f"unaccounted -- add to GOLDEN, or to EXCLUDED with a reason: "
+            f"{unaccounted}; stale in GOLDEN/EXCLUDED: {stale}"
+        )
+E       AssertionError: unaccounted -- add to GOLDEN, or to EXCLUDED with a reason: ['runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-08-27_1341/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12856317/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12856317/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC13231680/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12444477/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12782028/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12856317/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12856317/strict/final_mapped.json']; stale in GOLDEN/EXCLUDED: []
+E       assert (['runs_verif...on', ...], []) == ([], [])
+E         
+E         At index 0 diff: ['runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-08-27_1341/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/r...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_compound_resolution_extraction.py:1170: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper
+FAILED tests/test_c100_tolerance_scope.py::test_5b_the_bare_pathbank_sentinel_name_is_not_a_tolerated_entity
+FAILED tests/test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture
+FAILED tests/test_compound_resolution_extraction.py::test_the_repaired_coverage_and_digest_pins_themselves_go_red
+4 failed, 710 passed, 3 skipped in 51.66s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f77905013049ef3c4cbb1c1538b0978fdae6640e  [git, worktree dirty=False]
+label                   : r1-affected-a1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759a/33-r1-affected-a1.pin.json -q -rfE --basetemp=C:/t/bt-orch759a/33-r1-affected-a1-144 tests/test_adversarial_row_repair_deletion.py tests/test_c011_freeze_seam_golden_equivalence.py tests/test_c056b_semantic_denominators.py tests/test_c072_incomplete_core_demotion.py tests/test_c073_identity_admission.py tests/test_c075_source_support_armed.py tests/test_c076_alias_holo_apo_identity.py tests/test_c077_stage0_conflict_disposition.py tests/test_c078_refusal_durable_through_resolution.py tests/test_c079_interactive_prompt_allowlist.py tests/test_c081_cofactor_role_identity.py tests/test_c086_superset_complex_promotion.py tests/test_c088_extracted_not_serialized_disposition.py tests/test_c089_participant_schema.py tests/test_c095_wrapper_superset_identity.py tests/test_c096_explicit_no_resolver.py tests/test_c097_semantic_name_keys.py tests/test_c099_wrapper_species_preservation.py tests/test_c100_tolerance_scope.py tests/test_c102_coverage_denominator.py tests/test_c120_identity.py tests/test_c122_db_first_alias.py tests/test_c124_species_creation.py tests/test_c125_scope_specialization.py tests/test_cofactor_policy.py tests/test_compound_resolution_extraction.py tests/test_db_candidate_species_evidence.py tests/test_db_resolver_primitives.py tests/test_entity_identity_contracts.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a
+root PID / process group: 265200 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 53.36 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 22  263692:python.exe, 176148:git.exe, 266024:git.exe, 266156:git.exe, 266184:git.exe, 264916:python.exe, 265912:python.exe, 264892:python.exe, 264972:python.exe, 262516:git.exe, 235888:git.exe, 265956:python.exe, 265976:python.exe, 265840:python.exe, 265992:python.exe, 266020:python.exe, 266104:python.exe, 244084:python.exe, 264672:python.exe, 261420:git.exe, 264336:git.exe, 251932:git.exe
+descendants terminated  : 22  176148, 235888, 244084, 251932, 261420, 262516, 263692, 264336, 264672, 264892, 264916, 264972, 265840, 265912, 265956, 265976, 265992, 266020, 266024, 266104, 266156, 266184
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\g11\ORCH-759a\33-r1-affected-a1.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

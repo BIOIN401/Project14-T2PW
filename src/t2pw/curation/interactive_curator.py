@@ -212,6 +212,9 @@ def compact_mapping_misses(mapping_report: dict | list | None) -> list[dict]:
                 add_record(value)
                 return
             for key, child in value.items():
+                # ORCH-759a: a key no prompt may carry is never walked (D-104 amendment 2).
+                if key in PROMPT_OMITTED_PAYLOAD_KEYS:
+                    continue
                 walk(
                     child,
                     parent_key=str(key),

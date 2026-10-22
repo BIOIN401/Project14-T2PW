@@ -1,0 +1,205 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2pw\__init__.py
+..                                                                       [100%]
+=================================== PASSES ====================================
+_____ test_new_the_fold_fires_through_the_apps_own_stage6_call[one_draw] ______
+---------------------------- Captured stderr call -----------------------------
+2026-10-22 12:51:14.287 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.965 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.965 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.965 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.965 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:14.966 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+____ test_new_the_fold_fires_through_the_apps_own_stage6_call[three_draws] ____
+---------------------------- Captured stdout call -----------------------------
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7278 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7275 [0m[2m# directory can be reviewed with no run loaded. Presentation only.[0m            [31m [0m
+[31m [0m   [2m7276 [0m[94mfrom[0m[90m [0m[4;96mt2pw[0m[4;96m.[0m[4;96mapp[0m[4;96m.[0m[4;96mreaction_evidence_view[0m[90m [0m[94mimport[0m render_reaction_evidence  [2m# noqa:[0m [31m [0m
+[31m [0m   [2m7277 [0m                                                                              [31m [0m
+[31m [0m [31m> [0m7278 [1;4mrender_reaction_evidence()[0m                                                    [31m [0m
+[31m [0m   [2m7279 [0m                                                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2p [31m [0m
+[31m [0m w\app\reaction_evidence_view.py:91 in render_reaction_evidence                       [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 88 [0m                                                                               [31m [0m
+[31m [0m   [2m 89 [0m                                                                               [31m [0m
+[31m [0m   [2m 90 [0m[94mdef[0m[90m [0m[92mrender_reaction_evidence[0m() -> [94mNone[0m:                                        [31m [0m
+[31m [0m [31m> [0m 91 [2m│   [0m[1;4mst.divider()[0m                                                               [31m [0m
+[31m [0m   [2m 92 [0m[2m│   [0mst.subheader([33m"[0m[33mReaction Evidence[0m[33m"[0m)                                          [31m [0m
+[31m [0m   [2m 93 [0m[2m│   [0mst.caption(                                                                [31m [0m
+[31m [0m   [2m 94 [0m[2m│   │   [0m[33m"[0m[33mRead-only review of what the run[0m[33m'[0m[33ms artifacts say the pathway contains[0m [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\markdown.py:452 in divider                                                  [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+---------------------------- Captured stderr call -----------------------------
+2026-10-22 12:51:16.217 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.010 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 12:51:17.011 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+PASSED tests/test_orch759a_fold_app_path.py::test_new_the_fold_fires_through_the_apps_own_stage6_call[one_draw]
+PASSED tests/test_orch759a_fold_app_path.py::test_new_the_fold_fires_through_the_apps_own_stage6_call[three_draws]
+2 passed in 4.99s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4a6d9a6c9cd46a115c85533f456ddf6228d065e8  [git, worktree dirty=False]
+label                   : app-path
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759a/03-app-path.pin.json -q -rA --basetemp=C:/t/bt-orch759a/03-app-path-29784 tests/test_orch759a_fold_app_path.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a
+root PID / process group: 133976 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 6.26 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  133800:python.exe
+descendants terminated  : 1  133800
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\g11\ORCH-759a\03-app-path.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

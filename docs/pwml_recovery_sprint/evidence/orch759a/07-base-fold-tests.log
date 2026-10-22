@@ -1,0 +1,801 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2pw\__init__.py
+.FF....FFFFFFFFFFFFFFFFFFFFFFFFFF                                        [100%]
+================================== FAILURES ===================================
+_ test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes[leg_final_mapped_as_shipped] _
+
+build = <function _leg_payload at 0x000001F7961DB100>
+tmp_path = WindowsPath('C:/t/bt-orch759a/07-base-fold-tests-7795/test_g9_the_stage6_pass_leaves0')
+
+    @pytest.mark.parametrize("build", [_leg_payload, _stage6_input_reconstructed],
+                             ids=["leg_final_mapped_as_shipped", "stage6_input_reconstructed"])
+    def test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes(build: Any, tmp_path: Path) -> None:
+        result = _stage6(build(), tmp_path)
+        mapped = result["payload"]
+    
+        # Reconciliation decides what it always decided: the wrapper's component is EntF.
+        assert _component_names(mapped, WRAPPER) == ["EntF"]
+        # THE G9 ASSERTION. Base: ["Protein has degree 0 after normalization: enterobactin synthase"].
+>       assert _final_gate_errors(mapped) == []
+E       AssertionError: assert ['Protein has...tin synthase'] == []
+E         
+E         Left contains one more item: 'Protein has degree 0 after normalization: enterobactin synthase'
+E         Use -v to get more diff
+
+tests\test_orch759a_duplicate_protein_fold.py:166: AssertionError
+_ test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes[stage6_input_reconstructed] _
+
+build = <function _stage6_input_reconstructed at 0x000001F7976BCF40>
+tmp_path = WindowsPath('C:/t/bt-orch759a/07-base-fold-tests-7795/test_g9_the_stage6_pass_leaves1')
+
+    @pytest.mark.parametrize("build", [_leg_payload, _stage6_input_reconstructed],
+                             ids=["leg_final_mapped_as_shipped", "stage6_input_reconstructed"])
+    def test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes(build: Any, tmp_path: Path) -> None:
+        result = _stage6(build(), tmp_path)
+        mapped = result["payload"]
+    
+        # Reconciliation decides what it always decided: the wrapper's component is EntF.
+        assert _component_names(mapped, WRAPPER) == ["EntF"]
+        # THE G9 ASSERTION. Base: ["Protein has degree 0 after normalization: enterobactin synthase"].
+>       assert _final_gate_errors(mapped) == []
+E       AssertionError: assert ['Protein has...tin synthase'] == []
+E         
+E         Left contains one more item: 'Protein has degree 0 after normalization: enterobactin synthase'
+E         Use -v to get more diff
+
+tests\test_orch759a_duplicate_protein_fold.py:166: AssertionError
+___________ test_new_the_fold_fires_at_any_draw_count[draws_unset] ____________
+
+tmp_path = WindowsPath('C:/t/bt-orch759a/07-base-fold-tests-7795/test_new_the_fold_fires_at_any0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F7977ADC70>
+draws = None
+
+    @pytest.mark.parametrize("draws", [None, "1", "3"], ids=["draws_unset", "draws_1", "draws_3_not_pooled"])
+    def test_new_the_fold_fires_at_any_draw_count(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, draws: Any) -> None:
+        """Ruling 2: never gated on the draw count or on rule 3's pooled-draws check. At "3" with no
+        Stage-1 boundary in this context -- what the app's post-pipeline script run sees (ORCH-758
+        D4) -- rule 3 stays off and the fold still fires."""
+    
+        from t2pw.pipeline.stage_one_ensemble import ENV_VAR, _pooled_draws
+    
+        if draws is None:
+            monkeypatch.delenv(ENV_VAR, raising=False)
+        else:
+            monkeypatch.setenv(ENV_VAR, draws)
+        assert _pooled_draws() == 0
+        result = _stage6(_leg_payload(), tmp_path)
+>       assert [(f["survivor"], f["folded"]) for f in result["report"][FOLDS_KEY]] == [("EntF", "enterobactin synthase")]
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'duplicate_protein_folds'
+
+tests\test_orch759a_duplicate_protein_fold.py:246: KeyError
+_____________ test_new_the_fold_fires_at_any_draw_count[draws_1] ______________
+
+tmp_path = WindowsPath('C:/t/bt-orch759a/07-base-fold-tests-7795/test_new_the_fold_fires_at_any1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F7977AEA80>
+draws = '1'
+
+    @pytest.mark.parametrize("draws", [None, "1", "3"], ids=["draws_unset", "draws_1", "draws_3_not_pooled"])
+    def test_new_the_fold_fires_at_any_draw_count(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, draws: Any) -> None:
+        """Ruling 2: never gated on the draw count or on rule 3's pooled-draws check. At "3" with no
+        Stage-1 boundary in this context -- what the app's post-pipeline script run sees (ORCH-758
+        D4) -- rule 3 stays off and the fold still fires."""
+    
+        from t2pw.pipeline.stage_one_ensemble import ENV_VAR, _pooled_draws
+    
+        if draws is None:
+            monkeypatch.delenv(ENV_VAR, raising=False)
+        else:
+            monkeypatch.setenv(ENV_VAR, draws)
+        assert _pooled_draws() == 0
+        result = _stage6(_leg_payload(), tmp_path)
+>       assert [(f["survivor"], f["folded"]) for f in result["report"][FOLDS_KEY]] == [("EntF", "enterobactin synthase")]
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'duplicate_protein_folds'
+
+tests\test_orch759a_duplicate_protein_fold.py:246: KeyError
+________ test_new_the_fold_fires_at_any_draw_count[draws_3_not_pooled] ________
+
+tmp_path = WindowsPath('C:/t/bt-orch759a/07-base-fold-tests-7795/test_new_the_fold_fires_at_any2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F797A8C130>
+draws = '3'
+
+    @pytest.mark.parametrize("draws", [None, "1", "3"], ids=["draws_unset", "draws_1", "draws_3_not_pooled"])
+    def test_new_the_fold_fires_at_any_draw_count(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, draws: Any) -> None:
+        """Ruling 2: never gated on the draw count or on rule 3's pooled-draws check. At "3" with no
+        Stage-1 boundary in this context -- what the app's post-pipeline script run sees (ORCH-758
+        D4) -- rule 3 stays off and the fold still fires."""
+    
+        from t2pw.pipeline.stage_one_ensemble import ENV_VAR, _pooled_draws
+    
+        if draws is None:
+            monkeypatch.delenv(ENV_VAR, raising=False)
+        else:
+            monkeypatch.setenv(ENV_VAR, draws)
+        assert _pooled_draws() == 0
+        result = _stage6(_leg_payload(), tmp_path)
+>       assert [(f["survivor"], f["folded"]) for f in result["report"][FOLDS_KEY]] == [("EntF", "enterobactin synthase")]
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'duplicate_protein_folds'
+
+tests\test_orch759a_duplicate_protein_fold.py:246: KeyError
+________________ test_new_the_report_pointers_follow_the_fold _________________
+
+tmp_path = WindowsPath('C:/t/bt-orch759a/07-base-fold-tests-7795/test_new_the_report_pointers_f0')
+
+    def test_new_the_report_pointers_follow_the_fold(tmp_path: Path) -> None:
+        """Row 7 is gone: its log entry names its survivor, and no protein pointer names a row past
+        the end of the list."""
+    
+        import re
+    
+        result = _stage6(_leg_payload(), tmp_path)
+        proteins = result["payload"]["entities"]["proteins"]
+        logs = {row["name"]: row["json_pointer"] for row in result["report"]["entities"]
+                if row.get("entity_type") == "protein"}
+>       assert logs["enterobactin synthase"] == logs["EntF"] == f"/entities/proteins/{_protein_names(result['payload']).index('EntF')}"
+E       AssertionError: assert '/entities/proteins/7' == '/entities/proteins/4'
+E         
+E         - /entities/proteins/4
+E         ?                    ^
+E         + /entities/proteins/7
+E         ?                    ^
+
+tests\test_orch759a_duplicate_protein_fold.py:260: AssertionError
+______ test_new_the_fold_keeps_the_name_and_every_quote_and_records_them ______
+
+    def test_new_the_fold_keeps_the_name_and_every_quote_and_records_them() -> None:
+        duplicate = _row("enterobactin synthase", evidence="EntF (enterobactin synthase) acts last.",
+                         source_refs=["the synthase assembles the trilactone", "EntF is the synthetase."],
+                         synonyms=["enterobactin synthetase"])
+        payload = _e1(duplicate)
+>       report = _fold(payload)
+                 ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:314: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_ test_new_a_candidate_withheld_or_provisional_accession_never_folds[candidate_only] _
+
+duplicate = {'mapped_ids': {}, 'mapping_meta': {'candidates': [{'name': 'Enterobactin synthase component F', 'uniprot': 'P11454'}]...nfidence': 1.0, 'identity_status': 'unresolved'}, 'name': 'enterobactin synthase', 'organism': 'Escherichia coli', ...}
+
+    @pytest.mark.parametrize("duplicate", [
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "unresolved",
+                           "candidates": [{"name": "Enterobactin synthase component F", "uniprot": "P11454"}]}),
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "verified", "rejected_mapped_ids": {"uniprot": "P11454"}}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 0.5, "identity_status": "verified"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "verified", "best_effort": True}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "placeholder"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "unresolved"}),
+    ], ids=["candidate_only", "withheld", "low_confidence", "best_effort", "placeholder", "unresolved"])
+    def test_new_a_candidate_withheld_or_provisional_accession_never_folds(duplicate: Dict[str, Any]) -> None:
+        payload = _e1(duplicate)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_ test_new_a_candidate_withheld_or_provisional_accession_never_folds[withheld] _
+
+duplicate = {'mapped_ids': {}, 'mapping_meta': {'confidence': 1.0, 'identity_status': 'verified', 'rejected_mapped_ids': {'uniprot': 'P11454'}}, 'name': 'enterobactin synthase', 'organism': 'Escherichia coli', ...}
+
+    @pytest.mark.parametrize("duplicate", [
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "unresolved",
+                           "candidates": [{"name": "Enterobactin synthase component F", "uniprot": "P11454"}]}),
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "verified", "rejected_mapped_ids": {"uniprot": "P11454"}}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 0.5, "identity_status": "verified"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "verified", "best_effort": True}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "placeholder"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "unresolved"}),
+    ], ids=["candidate_only", "withheld", "low_confidence", "best_effort", "placeholder", "unresolved"])
+    def test_new_a_candidate_withheld_or_provisional_accession_never_folds(duplicate: Dict[str, Any]) -> None:
+        payload = _e1(duplicate)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_ test_new_a_candidate_withheld_or_provisional_accession_never_folds[low_confidence] _
+
+duplicate = {'mapped_ids': {'uniprot': 'P11454'}, 'mapping_meta': {'confidence': 0.5, 'identity_status': 'verified'}, 'name': 'enterobactin synthase', 'organism': 'Escherichia coli', ...}
+
+    @pytest.mark.parametrize("duplicate", [
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "unresolved",
+                           "candidates": [{"name": "Enterobactin synthase component F", "uniprot": "P11454"}]}),
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "verified", "rejected_mapped_ids": {"uniprot": "P11454"}}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 0.5, "identity_status": "verified"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "verified", "best_effort": True}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "placeholder"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "unresolved"}),
+    ], ids=["candidate_only", "withheld", "low_confidence", "best_effort", "placeholder", "unresolved"])
+    def test_new_a_candidate_withheld_or_provisional_accession_never_folds(duplicate: Dict[str, Any]) -> None:
+        payload = _e1(duplicate)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_ test_new_a_candidate_withheld_or_provisional_accession_never_folds[best_effort] _
+
+duplicate = {'mapped_ids': {'uniprot': 'P11454'}, 'mapping_meta': {'best_effort': True, 'confidence': 1.0, 'identity_status': 'verified'}, 'name': 'enterobactin synthase', 'organism': 'Escherichia coli', ...}
+
+    @pytest.mark.parametrize("duplicate", [
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "unresolved",
+                           "candidates": [{"name": "Enterobactin synthase component F", "uniprot": "P11454"}]}),
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "verified", "rejected_mapped_ids": {"uniprot": "P11454"}}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 0.5, "identity_status": "verified"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "verified", "best_effort": True}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "placeholder"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "unresolved"}),
+    ], ids=["candidate_only", "withheld", "low_confidence", "best_effort", "placeholder", "unresolved"])
+    def test_new_a_candidate_withheld_or_provisional_accession_never_folds(duplicate: Dict[str, Any]) -> None:
+        payload = _e1(duplicate)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_ test_new_a_candidate_withheld_or_provisional_accession_never_folds[placeholder] _
+
+duplicate = {'mapped_ids': {'uniprot': 'P11454'}, 'mapping_meta': {'confidence': 1.0, 'identity_status': 'placeholder'}, 'name': 'enterobactin synthase', 'organism': 'Escherichia coli', ...}
+
+    @pytest.mark.parametrize("duplicate", [
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "unresolved",
+                           "candidates": [{"name": "Enterobactin synthase component F", "uniprot": "P11454"}]}),
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "verified", "rejected_mapped_ids": {"uniprot": "P11454"}}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 0.5, "identity_status": "verified"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "verified", "best_effort": True}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "placeholder"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "unresolved"}),
+    ], ids=["candidate_only", "withheld", "low_confidence", "best_effort", "placeholder", "unresolved"])
+    def test_new_a_candidate_withheld_or_provisional_accession_never_folds(duplicate: Dict[str, Any]) -> None:
+        payload = _e1(duplicate)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_ test_new_a_candidate_withheld_or_provisional_accession_never_folds[unresolved] _
+
+duplicate = {'mapped_ids': {'uniprot': 'P11454'}, 'mapping_meta': {'confidence': 1.0, 'identity_status': 'unresolved'}, 'name': 'enterobactin synthase', 'organism': 'Escherichia coli', ...}
+
+    @pytest.mark.parametrize("duplicate", [
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "unresolved",
+                           "candidates": [{"name": "Enterobactin synthase component F", "uniprot": "P11454"}]}),
+        _row("enterobactin synthase", uniprot=None,
+             mapping_meta={"confidence": 1.0, "identity_status": "verified", "rejected_mapped_ids": {"uniprot": "P11454"}}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 0.5, "identity_status": "verified"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "verified", "best_effort": True}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "placeholder"}),
+        _row("enterobactin synthase", mapping_meta={"confidence": 1.0, "identity_status": "unresolved"}),
+    ], ids=["candidate_only", "withheld", "low_confidence", "best_effort", "placeholder", "unresolved"])
+    def test_new_a_candidate_withheld_or_provisional_accession_never_folds(duplicate: Dict[str, Any]) -> None:
+        payload = _e1(duplicate)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_ test_new_rows_whose_admitted_accessions_differ_never_fold[another_accession] _
+
+duplicate = {'mapped_ids': {'uniprot': 'P0ADI4'}, 'mapping_meta': {'chosen_rule': 'pathbank_protein_id', 'confidence': 1.0, 'identity_status': 'verified'}, 'name': 'enterobactin synthase', 'organism': 'Escherichia coli', ...}
+
+    @pytest.mark.parametrize("duplicate", [
+        _row("enterobactin synthase", uniprot="P0ADI4"),
+        _row("enterobactin synthase", mapped_ids={"uniprot": "P11454", "pathbank_protein_id": "9999"}),
+    ], ids=["another_accession", "one_shared_one_conflicting"])
+    def test_new_rows_whose_admitted_accessions_differ_never_fold(duplicate: Dict[str, Any]) -> None:
+        payload = _e1(duplicate)
+        payload["entities"]["proteins"][0]["mapped_ids"]["pathbank_protein_id"] = "6312"
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:357: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_ test_new_rows_whose_admitted_accessions_differ_never_fold[one_shared_one_conflicting] _
+
+duplicate = {'mapped_ids': {'pathbank_protein_id': '9999', 'uniprot': 'P11454'}, 'mapping_meta': {'chosen_rule': 'pathbank_protein...confidence': 1.0, 'identity_status': 'verified'}, 'name': 'enterobactin synthase', 'organism': 'Escherichia coli', ...}
+
+    @pytest.mark.parametrize("duplicate", [
+        _row("enterobactin synthase", uniprot="P0ADI4"),
+        _row("enterobactin synthase", mapped_ids={"uniprot": "P11454", "pathbank_protein_id": "9999"}),
+    ], ids=["another_accession", "one_shared_one_conflicting"])
+    def test_new_rows_whose_admitted_accessions_differ_never_fold(duplicate: Dict[str, Any]) -> None:
+        payload = _e1(duplicate)
+        payload["entities"]["proteins"][0]["mapped_ids"]["pathbank_protein_id"] = "6312"
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:357: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+___ test_new_a_different_or_unknown_species_never_folds[different_species] ____
+
+species = {'organism': 'Salmonella enterica', 'species': 'Salmonella enterica', 'species_ref': {'name': 'Salmonella enterica', 'taxonomy_id': '28901'}, 'taxonomy_id': '28901'}
+
+    @pytest.mark.parametrize("species", [
+        {"organism": "Salmonella enterica", "species": "Salmonella enterica", "taxonomy_id": "28901",
+         "species_ref": {"name": "Salmonella enterica", "taxonomy_id": "28901"}},
+        {"organism": "", "species": "", "taxonomy_id": "", "species_ref": {}},
+    ], ids=["different_species", "no_species"])
+    def test_new_a_different_or_unknown_species_never_folds(species: Dict[str, Any]) -> None:
+        payload = _e1(_row("enterobactin synthase", **species))
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:368: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_______ test_new_a_different_or_unknown_species_never_folds[no_species] _______
+
+species = {'organism': '', 'species': '', 'species_ref': {}, 'taxonomy_id': ''}
+
+    @pytest.mark.parametrize("species", [
+        {"organism": "Salmonella enterica", "species": "Salmonella enterica", "taxonomy_id": "28901",
+         "species_ref": {"name": "Salmonella enterica", "taxonomy_id": "28901"}},
+        {"organism": "", "species": "", "taxonomy_id": "", "species_ref": {}},
+    ], ids=["different_species", "no_species"])
+    def test_new_a_different_or_unknown_species_never_folds(species: Dict[str, Any]) -> None:
+        payload = _e1(_row("enterobactin synthase", **species))
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:368: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+______ test_new_a_referenced_duplicate_is_never_folded[reaction_enzyme] _______
+
+where = 'reaction_enzyme'
+
+    @pytest.mark.parametrize("where", ["reaction_enzyme", "reaction_modifier", "transport", "interaction", "location",
+                                       "complex_component", "only_alias"])
+    def test_new_a_referenced_duplicate_is_never_folded(where: str) -> None:
+        payload = _referenced_by(where)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:400: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...protein'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_____ test_new_a_referenced_duplicate_is_never_folded[reaction_modifier] ______
+
+where = 'reaction_modifier'
+
+    @pytest.mark.parametrize("where", ["reaction_enzyme", "reaction_modifier", "transport", "interaction", "location",
+                                       "complex_component", "only_alias"])
+    def test_new_a_referenced_duplicate_is_never_folded(where: str) -> None:
+        payload = _referenced_by(where)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:400: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...Synthase', 'entity_type': 'protein', 'role': 'activator'}], 'name': 'enterobactin synthesis', ...}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_________ test_new_a_referenced_duplicate_is_never_folded[transport] __________
+
+where = 'transport'
+
+    @pytest.mark.parametrize("where", ["reaction_enzyme", "reaction_modifier", "transport", "interaction", "location",
+                                       "complex_component", "only_alias"])
+    def test_new_a_referenced_duplicate_is_never_folded(where: str) -> None:
+        payload = _referenced_by(where)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:400: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...], 'transports': [{'cargo': 'enterobactin', 'name': 'export', 'transporters': [{'entity': 'enterobactin synthase'}]}]}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+________ test_new_a_referenced_duplicate_is_never_folded[interaction] _________
+
+where = 'interaction'
+
+    @pytest.mark.parametrize("where", ["reaction_enzyme", "reaction_modifier", "transport", "interaction", "location",
+                                       "complex_component", "only_alias"])
+    def test_new_a_referenced_duplicate_is_never_folded(where: str) -> None:
+        payload = _referenced_by(where)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:400: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+__________ test_new_a_referenced_duplicate_is_never_folded[location] __________
+
+where = 'location'
+
+    @pytest.mark.parametrize("where", ["reaction_enzyme", "reaction_modifier", "transport", "interaction", "location",
+                                       "complex_component", "only_alias"])
+    def test_new_a_referenced_duplicate_is_never_folded(where: str) -> None:
+        payload = _referenced_by(where)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:400: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': [{'biological_state': 'cytosol', 'protein': 'ent...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_____ test_new_a_referenced_duplicate_is_never_folded[complex_component] ______
+
+where = 'complex_component'
+
+    @pytest.mark.parametrize("where", ["reaction_enzyme", "reaction_modifier", "transport", "interaction", "location",
+                                       "complex_component", "only_alias"])
+    def test_new_a_referenced_duplicate_is_never_folded(where: str) -> None:
+        payload = _referenced_by(where)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:400: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_________ test_new_a_referenced_duplicate_is_never_folded[only_alias] _________
+
+where = 'only_alias'
+
+    @pytest.mark.parametrize("where", ["reaction_enzyme", "reaction_modifier", "transport", "interaction", "location",
+                                       "complex_component", "only_alias"])
+    def test_new_a_referenced_duplicate_is_never_folded(where: str) -> None:
+        payload = _referenced_by(where)
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:400: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...protein'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+_ test_new_an_alias_another_row_holds_does_not_count_as_a_reference_to_the_duplicate _
+
+    def test_new_an_alias_another_row_holds_does_not_count_as_a_reference_to_the_duplicate() -> None:
+        """The leg's own shape: ``enterobactin synthase`` lists ``enterobactin synthase complex`` and
+        ``entF`` among its synonyms, and a reaction names both -- as the complex and as EntF."""
+    
+        payload = _e1(_row("enterobactin synthase", synonyms=["enterobactin synthase complex", "entF"]))
+        payload["entities"]["protein_complexes"].append({"name": "enterobactin synthase complex", "generated": True,
+                                                        "components": [{"name": "EntF"}]})
+        payload["processes"]["reactions"][0]["enzymes"].append({"entity": "enterobactin synthase complex"})
+        payload["processes"]["interactions"] = [{"entity_1": "entF", "entity_2": "enterobactin", "relationship": "binds"}]
+>       assert [f["folded"] for f in _fold(payload)[FOLDS_KEY]] == ["enterobactin synthase"]
+                                     ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:413: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+__________ test_new_two_unreferenced_rows_never_fold_into_each_other __________
+
+    def test_new_two_unreferenced_rows_never_fold_into_each_other() -> None:
+        """The survivor must be referenced: two orphans sharing an id stay for the gate to catch."""
+    
+        payload = _e1(_row("enterobactin synthase"))
+        payload["entities"]["proteins"].append(_row("EntF synthetase"))
+        payload["entities"]["proteins"][0]["mapped_ids"] = {"uniprot": "P0ADI4"}
+>       assert FOLDS_KEY not in _fold(payload)
+                                ^^^^^^^^^^^^^^
+
+tests\test_orch759a_duplicate_protein_fold.py:422: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...complex'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}}
+
+    def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
+        report: Dict[str, Any] = {"entities": [{"entity_type": "protein", "name": r["name"], "json_pointer": f"/entities/proteins/{i}"}
+                                               for i, r in enumerate(payload["entities"]["proteins"])]}
+>       map_ids._fold_unreferenced_duplicate_proteins(payload, report)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.mapping.map_ids' has no attribute '_fold_unreferenced_duplicate_proteins'
+
+tests\test_orch759a_duplicate_protein_fold.py:305: AttributeError
+________________ test_new_the_fold_record_reaches_no_llm_input ________________
+
+tmp_path = WindowsPath('C:/t/bt-orch759a/07-base-fold-tests-7795/test_new_the_fold_record_reach0')
+
+    def test_new_the_fold_record_reaches_no_llm_input(tmp_path: Path) -> None:
+        """The record lives only in the Stage-6 mapping report. The one LLM that reads that report is
+        the interactive curator, through ``compact_mapping_misses``; its whole prompt is byte-identical
+        with and without the record. The payload -- which every LLM may read -- carries no record."""
+    
+        from t2pw.curation.interactive_curator import build_interactive_curator_messages, compact_mapping_misses
+    
+        result = _stage6(_leg_payload(), tmp_path)
+        report = result["report"]
+>       assert report[FOLDS_KEY]
+               ^^^^^^^^^^^^^^^^^
+E       KeyError: 'duplicate_protein_folds'
+
+tests\test_orch759a_duplicate_protein_fold.py:438: KeyError
+____________ test_new_the_record_key_is_skipped_whatever_it_holds _____________
+
+    def test_new_the_record_key_is_skipped_whatever_it_holds() -> None:
+        """Provable, not lucky: entries shaped exactly like mapping misses under the record key are
+        still never walked, at the top level or nested."""
+    
+        from t2pw.curation.interactive_curator import compact_mapping_misses
+    
+        miss = {"name": "enterobactin synthase", "status": "unmapped", "reason": "ambiguous", "confidence": 0.1}
+        base = {"summary": {}, "entities": [{"name": "EntA", "status": "unmapped", "reason": "no_match"}]}
+>       assert compact_mapping_misses({**base, FOLDS_KEY: [miss]}) == compact_mapping_misses(base)
+E       AssertionError: assert [{'name': 'En...: 'unmapped'}] == [{'name': 'En...: 'unmapped'}]
+E         
+E         Left contains one more item: {'confidence': 0.1, 'name': 'enterobactin synthase', 'reason': 'ambiguous', 'status': 'unmapped'}
+E         Use -v to get more diff
+
+tests\test_orch759a_duplicate_protein_fold.py:461: AssertionError
+=================================== PASSES ====================================
+=========================== short test summary info ===========================
+PASSED tests/test_orch759a_duplicate_protein_fold.py::test_the_excerpt_carries_the_legs_defect
+PASSED tests/test_orch759a_duplicate_protein_fold.py::test_new_an_unreferenced_row_with_no_admitted_accession_is_untouched_and_the_gate_still_catches_it
+PASSED tests/test_orch759a_duplicate_protein_fold.py::test_new_an_identity_admission_withholding_blocks_the_fold
+PASSED tests/test_orch759a_duplicate_protein_fold.py::test_new_only_the_stage6_pass_folds[default]
+PASSED tests/test_orch759a_duplicate_protein_fold.py::test_new_only_the_stage6_pass_folds[explicit_false]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes[leg_final_mapped_as_shipped]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes[stage6_input_reconstructed]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_the_fold_fires_at_any_draw_count[draws_unset]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_the_fold_fires_at_any_draw_count[draws_1]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_the_fold_fires_at_any_draw_count[draws_3_not_pooled]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_the_report_pointers_follow_the_fold
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_the_fold_keeps_the_name_and_every_quote_and_records_them
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_candidate_withheld_or_provisional_accession_never_folds[candidate_only]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_candidate_withheld_or_provisional_accession_never_folds[withheld]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_candidate_withheld_or_provisional_accession_never_folds[low_confidence]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_candidate_withheld_or_provisional_accession_never_folds[best_effort]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_candidate_withheld_or_provisional_accession_never_folds[placeholder]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_candidate_withheld_or_provisional_accession_never_folds[unresolved]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_rows_whose_admitted_accessions_differ_never_fold[another_accession]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_rows_whose_admitted_accessions_differ_never_fold[one_shared_one_conflicting]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_different_or_unknown_species_never_folds[different_species]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_different_or_unknown_species_never_folds[no_species]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[reaction_enzyme]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[reaction_modifier]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[transport]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[interaction]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[location]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[complex_component]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[only_alias]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_an_alias_another_row_holds_does_not_count_as_a_reference_to_the_duplicate
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_two_unreferenced_rows_never_fold_into_each_other
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_the_fold_record_reaches_no_llm_input
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_the_record_key_is_skipped_whatever_it_holds
+28 failed, 5 passed in 0.62s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4a6d9a6c9cd46a115c85533f456ddf6228d065e8  [git, worktree dirty=True]
+label                   : base-fold-tests
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759a/07-base-fold-tests.pin.json -q -rA --basetemp=C:/t/bt-orch759a/07-base-fold-tests-7795 tests/test_orch759a_duplicate_protein_fold.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a
+root PID / process group: 134048 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 1.20 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  131856:python.exe
+descendants terminated  : 1  131856
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\g11\ORCH-759a\07-base-fold-tests.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

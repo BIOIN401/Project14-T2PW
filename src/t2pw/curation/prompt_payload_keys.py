@@ -62,6 +62,15 @@ from t2pw.mapping import identity_admission
 #:
 #: Key-driven and additive: a payload carrying none of these keys is serialized
 #: by the same object it always was, so no existing prompt changes by one byte.
+#:
+#: ORCH-759a: :data:`DUPLICATE_PROTEIN_FOLDS_KEY` is a Stage-6 MAPPING REPORT key,
+#: not a payload key. It is listed here because the interactive curator walks that
+#: report into its prompt (``compact_mapping_misses``), and D-104 amendment 2 keeps
+#: presentation records out of every LLM input: the walker skips every key of this
+#: set, and ``strip_payload_for_interactive_context`` drops it from any record the
+#: walker does copy. No payload or report produced before ORCH-759a carries it.
+DUPLICATE_PROTEIN_FOLDS_KEY = "duplicate_protein_folds"
 PROMPT_OMITTED_PAYLOAD_KEYS: frozenset = frozenset({
     identity_admission.SOURCE_INDEX_KEY,
+    DUPLICATE_PROTEIN_FOLDS_KEY,
 })

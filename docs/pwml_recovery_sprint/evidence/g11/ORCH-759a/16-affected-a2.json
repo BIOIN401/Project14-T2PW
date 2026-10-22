@@ -1,0 +1,141 @@
+{
+  "label": "affected-a2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759a/16-affected-a2.pin.json",
+    "-q",
+    "-rfE",
+    "--basetemp=C:/t/bt-orch759a/16-affected-a2-3767",
+    "tests/test_entity_type_gate.py",
+    "tests/test_identity_evidence_hydration.py",
+    "tests/test_identity_hydration_regression.py",
+    "tests/test_interactive_curator.py",
+    "tests/test_locked_noop_quarantine_policy.py",
+    "tests/test_map_ids.py",
+    "tests/test_map_ids_mapping_lineage.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_orch757_llm_token_budgets.py",
+    "tests/test_orch759a_duplicate_protein_fold.py",
+    "tests/test_pathbank_unknown_fallback.py",
+    "tests/test_process_normalizer.py",
+    "tests/test_protein_export_policy.py",
+    "tests/test_pwml_interaction_protein_wrappers.py",
+    "tests/test_pwml_ir.py",
+    "tests/test_rag_payload_gate_guardrails.py",
+    "tests/test_rag_seed_entity_reimport.py",
+    "tests/test_rag_synthesize.py",
+    "tests/test_reaction_evidence.py",
+    "tests/test_reference_repair.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_stage2_mapping_boundary.py",
+    "tests/test_stage_one_ensemble.py",
+    "tests/test_stage_one_paper_dictionary.py",
+    "tests/test_streamlit_stage2_orchestration.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_lineage.py",
+    "tests/test_transport_actor_guards.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759a",
+  "started_at": "2026-10-22T19:54:40+00:00",
+  "finished_at": "2026-10-22T19:54:53+00:00",
+  "duration_seconds": 13.386440399999628,
+  "timeout_seconds": 540.0,
+  "root_pid": 155352,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 159056,
+      "name": "python.exe",
+      "ppid": 155352
+    },
+    {
+      "pid": 153556,
+      "name": "python.exe",
+      "ppid": 158656
+    },
+    {
+      "pid": 158656,
+      "name": "python.exe",
+      "ppid": 159056
+    }
+  ],
+  "descendants_terminated": [
+    153556,
+    158656,
+    159056
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 75460,
+      "name": "python.exe"
+    },
+    {
+      "pid": 105676,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116160,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116480,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116956,
+      "name": "python.exe"
+    },
+    {
+      "pid": 117080,
+      "name": "python.exe"
+    },
+    {
+      "pid": 153260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 153404,
+      "name": "python.exe"
+    },
+    {
+      "pid": 156288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 157452,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759a\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-759a\\16-affected-a2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759a\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759a",
+    "repo_head": "e346bb6e28fcfad4770166bb9c8c080f0f1d9c01",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

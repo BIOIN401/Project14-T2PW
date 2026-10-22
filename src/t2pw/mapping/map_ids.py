@@ -14,6 +14,7 @@ from xml.etree import ElementTree
 
 import requests
 
+from t2pw.curation.prompt_payload_keys import DUPLICATE_PROTEIN_FOLDS_KEY
 from t2pw.mapping import identity_admission
 from t2pw.pipeline.entity_identity import (
     IDENTITY_PLACEHOLDER,
@@ -10111,6 +10112,199 @@ def _stamp_named_entity_mapping_metadata(entities: Dict[str, Any]) -> Dict[str, 
     return counts
 
 
+# ── ORCH-759a / ORCH-759 E1: an unreferenced duplicate protein row is folded ──
+#
+# ``_reconcile_components_against_local_proteins`` matches a component on UniProt
+# first, first row wins. On the enterobactin 3-draw leg that renamed the wrapper
+# component ``enterobactin synthase`` (P11454, from the audit) to ``EntF`` (P11454)
+# at Stage 6 and left the row ``enterobactin synthase`` referenced by nothing. The
+# strict orphan cleanup runs only at Stage 3, so the final pre-export gate stopped a
+# ``review_required`` pathway on "Protein has degree 0" -- an irrelevant degree-zero
+# entity as a terminal blocker (PRODUCT_CONTRACT § 1). Reconciliation is left as it
+# is; this runs after it and only folds the row it left behind.
+#
+# A row is folded into another protein row ONLY when both carry the same ADMITTED
+# accession (rule 3's ``_admitted_ids``: never a candidate, a withheld id, a
+# best-effort, low-confidence or placeholder mapping) and no admitted accession of
+# theirs disagrees, both have the same species, the folded row is referenced by
+# nothing (no process, location row, element-collection state or complex component
+# names it) and the survivor is referenced. Its name becomes an alias on the
+# survivor, its quotes move there, and the fold is recorded in the mapping report
+# under a key no prompt may carry. Any other degree-0 row is untouched, so the gate
+# still catches it.
+
+
+def _fold_key(value: Any) -> str:
+    """Case-, space- and punctuation-blind: coarser than every name key the gates use, so
+    a reference any of them would see is seen here (a false hit only blocks a fold)."""
+
+    return re.sub(r"[^0-9a-z]+", "", str(value or "").casefold())
+
+
+def _exact_key(value: Any) -> str:
+    """Whitespace-collapsed casefold: finer than the gates' name key (see the caller)."""
+
+    return " ".join(str(value or "").casefold().split())
+
+
+def _strings(value: Any) -> List[str]:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, dict):
+        value = list(value.values())
+    return [text for item in value for text in _strings(item)] if isinstance(value, list) else []
+
+
+def _row_name_variants(row: Dict[str, Any]) -> List[str]:
+    """A row's name and every alias the reconciler or the gate registry can match it by."""
+
+    names = [str(row.get("name") or "")]
+    for field in ("aliases", "alias", "synonyms", "synonym"):
+        raw = row.get(field)
+        names.extend(_split_synonyms(raw) if isinstance(raw, str) else [v for v in _safe_list(raw) if isinstance(v, str)])
+    return [name for name in names if name.strip()]
+
+
+#: An entity row's evidence-bearing fields: ``entity_admission._spans``' keys plus
+#: ``apply_audit_patch._ACTOR_ROW_EVIDENCE_KEYS``, each a string, a list, or a dict entry.
+_ENTITY_QUOTE_KEYS = ("evidence", "source_refs", "evidence_quote", "source_evidence", "source_text")
+
+
+def _entity_quotes(row: Dict[str, Any]) -> List[str]:
+    quotes: List[str] = []
+    for key in _ENTITY_QUOTE_KEYS:
+        value = row.get(key)
+        for quote in value if isinstance(value, list) else [value]:
+            if isinstance(quote, dict):
+                quote = quote.get("span") or quote.get("text") or quote.get("quote")
+            if isinstance(quote, str) and quote.strip() and quote not in quotes:
+                quotes.append(quote)
+    return quotes
+
+
+_PROTEIN_POINTER = re.compile(r"^/entities/proteins/(\d+)(/.*)?$")
+
+
+def _move_protein_pointers(node: Any, index_map: Dict[int, int], folded: Set[int]) -> None:
+    """Rewrite each ``json_pointer`` naming a protein by its pre-fold index; a folded row's
+    pointer names its survivor (without the sub-path, as rule 3 does for reactions)."""
+
+    if isinstance(node, dict):
+        for key, value in node.items():
+            match = _PROTEIN_POINTER.match(value) if key == "json_pointer" and isinstance(value, str) else None
+            if match:
+                old = int(match.group(1))
+                node[key] = f"/entities/proteins/{index_map.get(old, old)}" + ("" if old in folded else match.group(2) or "")
+            else:
+                _move_protein_pointers(value, index_map, folded)
+    elif isinstance(node, list):
+        for value in node:
+            _move_protein_pointers(value, index_map, folded)
+
+
+def _fold_unreferenced_duplicate_proteins(payload: Dict[str, Any], report: Dict[str, Any]) -> None:
+    """Stage 6 only (``map_payload(..., merge_identity_duplicates=True)``), after
+    reconciliation; mutates ``payload`` and ``report`` in place. See the block comment."""
+
+    from t2pw.pipeline.stage_one_ensemble import _admitted_ids  # function-local: layering, as rule 3
+
+    entities = _safe_dict(payload.get("entities"))
+    proteins = entities.get("proteins")
+    if not isinstance(proteins, list):
+        return
+    complexes = [row for row in _safe_list(entities.get("protein_complexes")) if isinstance(row, dict)]
+    references = {
+        _fold_key(text)
+        for text in _strings([
+            payload.get("processes"),
+            payload.get("element_locations"),
+            [row.get("components") for row in complexes],
+            [_safe_dict(row).get("element_states") for row in _safe_list(entities.get("element_collections"))],
+        ])
+    }
+    rows = [(index, row) for index, row in enumerate(proteins)
+            if isinstance(row, dict) and _canonical_name(str(row.get("name") or ""))]
+
+    def same_identity(index: int, other_index: int) -> bool:
+        mine, theirs = folded_ids[index], folded_ids[other_index]
+        return (any(theirs.get(ns) == v for ns, v in mine.items())
+                and not any(ns in theirs and theirs[ns] != v for ns, v in mine.items()))
+
+    def referenced(index: int, row: Dict[str, Any]) -> bool:
+        # The name and the key always name THIS row. An alias is excused only when, after
+        # the fold, it still resolves to the same thing: it is another protein's or
+        # complex's own NAME, or every other protein holding it shares this row's admitted
+        # identity and no complex holds it as an alias. Compared exactly (finer than the
+        # gate's key), so nothing is excused that the gate's registry would not resolve.
+        names = {_exact_key(other.get("name")) for other_index, other in rows if other_index != index}
+        names |= {_exact_key(row_.get("name")) for row_ in complexes}
+
+        def excused(alias: str) -> bool:
+            key = _exact_key(alias)
+            if key in names:
+                return True
+            holders = [other_index for other_index, other in rows if other_index != index
+                       and key in {_exact_key(name) for name in _row_name_variants(other)}]
+            in_complex = any(key in {_exact_key(name) for name in _row_name_variants(row_)} for row_ in complexes)
+            return bool(holders) and not in_complex and all(same_identity(index, j) for j in holders)
+
+        own = [row.get("name"), row.get("key")]
+        own += [name for name in _row_name_variants(row) if not excused(name)]
+        return any(_fold_key(name) in references for name in own if isinstance(name, str) and _fold_key(name))
+
+    admitted = {index: _admitted_ids(row) for index, row in rows}
+    folded_ids = {index: {ns: v.casefold() for ns, v in ids.items()} for index, ids in admitted.items()}
+    is_referenced = {index: referenced(index, row) for index, row in rows}
+    folds: List[Dict[str, Any]] = []
+    survivor_of: Dict[int, int] = {}
+    for index, row in rows:
+        species = _species_hint_from_row(row)
+        mine = folded_ids[index]
+        if is_referenced[index] or not mine or not any(species.values()):
+            continue
+        for other_index, other in rows:
+            theirs = folded_ids[other_index]
+            shared = {ns: admitted[index][ns] for ns, v in mine.items() if theirs.get(ns) == v}
+            if (other_index == index or not is_referenced[other_index] or not shared
+                    or any(ns in theirs and theirs[ns] != v for ns, v in mine.items())
+                    or _species_hint_from_row(other) != species):
+                continue
+            survivor_names = {_exact_key(name) for name in _row_name_variants(other)}
+            alias = row["name"] if _exact_key(row["name"]) not in survivor_names else ""
+            if alias:
+                synonyms = other.get("synonyms")
+                other["synonyms"] = [*(_split_synonyms(synonyms) if isinstance(synonyms, str) else _safe_list(synonyms)), alias]
+            held = _entity_quotes(other)
+            moved = [quote for quote in _entity_quotes(row) if quote not in held]
+            if moved:
+                refs = other.get("source_refs")
+                other["source_refs"] = [*(refs if isinstance(refs, list) else ([refs] if isinstance(refs, str) and refs.strip() else [])), *moved]
+            folds.append({
+                "rule": "unreferenced_protein_row_shares_an_admitted_accession",
+                "survivor": other["name"],
+                "folded": row["name"],
+                "shared_accessions": shared,
+                "species": species,
+                "alias_added": alias,
+                "quotes_moved": moved,
+                "folded_row_names": _row_name_variants(row),
+                "folded_mapped_ids": deepcopy(_safe_dict(row.get("mapped_ids"))),
+                "folded_provenance_lineage": deepcopy(_safe_list(row.get("provenance_lineage"))),
+                "folded_rag_provenance": deepcopy(row.get("rag_provenance")),
+                "folded_source_papers": deepcopy(row.get("source_papers")),
+            })
+            survivor_of[index] = other_index
+            break
+    if not folds:
+        return
+    kept = [index for index in range(len(proteins)) if index not in survivor_of]
+    new_index = {old: new for new, old in enumerate(kept)}
+    index_map = {**new_index, **{old: new_index[survivor] for old, survivor in survivor_of.items()}}
+    proteins[:] = [proteins[index] for index in kept]
+    _move_protein_pointers(report, index_map, set(survivor_of))
+    report[DUPLICATE_PROTEIN_FOLDS_KEY] = folds
+
+
 def map_payload(
     payload: Dict[str, Any],
     *,
@@ -10137,7 +10331,10 @@ def map_payload(
     Stage-6 pass. It then runs D-104 rule 3 last
     (:func:`t2pw.pipeline.stage_one_ensemble.merge_on_mapped_identity`, itself a no-op
     unless this run's Stage 1 pooled 2+ draws) and moves this report's reaction pointers
-    with it. ``False``, the default, leaves every caller's output exactly as before.
+    with it. Before rule 3, and at any draw count, it folds an unreferenced protein row
+    into the referenced row sharing its admitted accession
+    (:func:`_fold_unreferenced_duplicate_proteins`, ORCH-759a). ``False``, the default,
+    leaves every caller's output exactly as before.
     """
 
     if not isinstance(payload, dict):
@@ -11118,6 +11315,9 @@ def map_payload(
     if merge_identity_duplicates:
         from t2pw.pipeline.stage_one_ensemble import merge_on_mapped_identity  # function-local: layering
 
+        # ORCH-759a: on the Stage-6 pass itself, whatever the draw count -- never gated on
+        # rule 3's pooled-draws check, which the app's post-pipeline run cannot see (ORCH-758 D4).
+        _fold_unreferenced_duplicate_proteins(mapped, report)
         merge_on_mapped_identity(mapped, report=report)
     return {"payload": mapped, "report": report}
 
