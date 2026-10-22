@@ -1,11 +1,14 @@
 """ORCH-759c: a complex-component name keeps a PROTEIN row alive, not a same-named gene.
 
 **G9: A REGRESSION FIX, NOT NEW WORK.** Every name used here exists at the base SHA
-``5d1ea64c`` with the same signature, so this module imports cleanly there and the
-two ``test_g9_*`` tests fail there on VALUES (``ok`` False,
-``refusal_reasons == ["entity_type_overlap:..."]``). The ``test_preservation_*``
+``5d1ea64c`` with the same signature, so this module imports cleanly there and every
+``test_g9_*`` test fails there on VALUES (``ok`` False,
+``refusal_reasons == ["entity_type_overlap:..."]``). ``test_g9_r1_leg_*`` (correction
+round 1, N1) also fails at the round-0 tip ``7b30e564``. The ``test_preservation_*``
 tests are labelled preservation: they pass at base and at tip by design and fail
-only if the fix reaches further than it should.
+only if the fix reaches further than it should. The ``test_delta_n2_*`` tests pin a
+DELIBERATE behaviour change (round 1, N2): they fail at base, where no PWML was
+written either, and pass at tip.
 
 THE DEFECT. Closure kept a row in ANY bucket whose name met
 ``referenced | _complex_component_norms(...)``. The chlorophyll-strict leg
@@ -30,8 +33,14 @@ import json
 from copy import deepcopy
 from pathlib import Path
 
-from t2pw.pipeline.process_normalizer import run_strict_post_normalization_gates
+from t2pw.pipeline.process_normalizer import (
+    _entity_name_norms,
+    _normalize,
+    run_strict_post_normalization_gates,
+)
 from t2pw.pipeline.strict_quarantine import quarantine_and_close
+
+from test_strict_quarantine_contract_alignment import _base
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures" / "orch759c"
 
@@ -54,6 +63,18 @@ BASE_COUNTS = {
     "quarantined_disconnected": 0,
 }
 ORPHAN_GENES = ["CAO", "GUN4", "HEMA1", "PORB"]
+#: ``removed_locations`` at base, as ``bucket|name|reason|biological_state`` lines
+#: (``evidence/orch759c/26-r1-probe-base.log``; identical at the round-0 tip, ``24``).
+BASE_REMOVED_LOCATIONS_SHA256 = "66891e59028a1dc0fd2c0919d30e6f77571d612c7e2420de71329cb685bde7ff"
+BASE_REMOVED_LOCATIONS_COUNT = 53
+#: element_locations bucket -> (its name field, the entity buckets its rows locate).
+#: Written out, not imported, so this module reads only names that exist at base.
+LOCATES = {
+    "compound_locations": ("compound", ("compounds",)),
+    "protein_locations": ("protein", ("proteins", "protein_complexes")),
+    "nucleic_acid_locations": ("nucleic_acid", ("nucleic_acids",)),
+    "element_collection_locations": ("element_collection", ("element_collections",)),
+}
 
 
 def _digest(lines) -> str:
@@ -103,6 +124,52 @@ def test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close() -
     assert (len(processes["reactions"]), len(processes["interactions"])) == (30, 25)
 
     # The strict final gate freeze_canonical_payload runs once quarantine is ok.
+    details = run_strict_post_normalization_gates(
+        deepcopy(result.payload), enforce_all_proteins_connected=True
+    )
+    assert details["connectivity"]["n_components"] == 1
+
+
+def test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind() -> None:
+    """Correction round 1, N1. Red at the round-0 tip ``7b30e564`` and at base.
+
+    Round 0 pruned the four gene rows but kept their four ``nucleus state`` rows:
+    ``_prune_locations`` checked one name list shared by every bucket, and the
+    same-named PROTEIN kept each name in it. ``ir.py``'s ``resolve_entity`` then
+    placed proteins CAO, HEMA1, GUN4 and PORB in the nucleus with no issue raised,
+    which is an invented location. Each location bucket is now checked against the
+    entity buckets it locates. The same rule also drops the leg's two
+    ``element_collection_locations`` rows that name protein COMPLEXES. They were
+    misfiled at Stage 1, and no element collection was ever declared
+    (``evidence/orch759c/25-r1-ec-locations.log``).
+    """
+
+    payload, context = _leg()
+    result = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+
+    removed = [
+        f"{row['bucket']}|{row['name']}|{row['reason']}|{row['biological_state']}"
+        for row in result.removed_entity_report["removed_locations"]
+    ]
+    new = sorted(
+        [f"element_locations/nucleic_acid_locations|{name}|location_entity_kind_mismatch|nucleus state" for name in ORPHAN_GENES]
+        + [
+            f"element_locations/element_collection_locations|{name}|location_entity_kind_mismatch|thylakoid membrane state"
+            for name in ("Mg-Proto ME cyclase complex", "Mg-chelatase complex")
+        ]
+    )
+    assert sorted(line for line in removed if line in new) == new
+    rest = [line for line in removed if line not in new]
+    assert (len(rest), _digest(rest)) == (BASE_REMOVED_LOCATIONS_COUNT, BASE_REMOVED_LOCATIONS_SHA256)
+
+    entities = result.payload["entities"]
+    for bucket, (field, owners) in LOCATES.items():
+        own = {norm for owner in owners for norm in _entity_name_norms(entities.get(owner) or [])}
+        for row in (result.payload.get("element_locations") or {}).get(bucket) or []:
+            assert _normalize(row.get(field) or row.get("entity")) in own, (bucket, row)
+
+    assert result.ok
+    assert result.quarantine_report["release"]["status"] == "review_required"
     details = run_strict_post_normalization_gates(
         deepcopy(result.payload), enforce_all_proteins_connected=True
     )
@@ -251,3 +318,119 @@ def test_preservation_nothing_changes_when_no_names_overlap() -> None:
     assert _names(result, "nucleic_acids") == ["geneY"]
     assert result.quarantine_report["strict_invariants"]["entity_type_overlaps"] == []
     assert result.ok
+
+
+# ── Correction round 1: the other buckets (N4) and the revalidation delta (N2) ──
+#
+# All on ``test_strict_quarantine_contract_alignment._base`` (strict_db=True, real
+# accessions): two reactions, each catalysed by a generated single-protein wrapper.
+
+GS = "glutathione synthetase"
+
+
+def _gs_wrapper(payload: dict) -> dict:
+    return next(row for row in payload["entities"]["protein_complexes"] if row["name"] == f"{GS} complex")
+
+
+def _record(result, name: str) -> tuple:
+    row = next(row for row in result.admissions if row["name"] == name)
+    return row["state"], row.get("reason") or ""
+
+
+def _assert_both_reactions_survive_and_only(result, removed: list) -> None:
+    assert result.quarantine_report["strict_invariants"]["entity_type_overlaps"] == []
+    assert result.refusal_reasons == []
+    assert result.ok
+    assert _record(result, "gamma-glutamylcysteine synthesis")[0] == "core_accepted"
+    assert _record(result, "glutathione synthesis")[0] == "core_accepted"
+    assert _removed(result) == removed
+
+
+def test_g9_r1_n4_unreferenced_compound_named_like_a_wrapped_protein_is_pruned() -> None:
+    """N4 ``c3ok``. Base: refused, ``entity_type_overlap:1`` (compounds+proteins)."""
+
+    payload = _base()
+    payload["entities"]["compounds"].append({"name": GS})
+    result = quarantine_and_close(payload, strict_db=True)
+
+    _assert_both_reactions_survive_and_only(result, [("compounds", GS, "unreferenced_after_quarantine")])
+
+
+def test_g9_r1_n4_unreferenced_element_collection_named_like_a_wrapped_protein_is_pruned() -> None:
+    """N4 ``c7``. Base: refused, ``entity_type_overlap:1`` (proteins+element_collections)."""
+
+    payload = _base()
+    payload["entities"]["element_collections"] = [{"name": GS}]
+    result = quarantine_and_close(payload, strict_db=True)
+
+    _assert_both_reactions_survive_and_only(
+        result, [("element_collections", GS, "unreferenced_after_quarantine")]
+    )
+
+
+def _assert_glutathione_synthesis_stranded(result, reason: str) -> None:
+    assert _record(result, "glutathione synthesis") == ("quarantined_disconnected", f"stranded_by_closure:{reason}")
+    assert _record(result, "gamma-glutamylcysteine synthesis")[0] == "core_accepted"
+    assert result.refusal_reasons == []
+    assert result.ok
+
+
+def test_delta_n2_compound_shadowing_a_wrapped_protein_without_accession() -> None:
+    """DELIBERATE DELTA (round 1, N2, shape 1); it only quarantines more.
+
+    Admission resolves the wrapper's component ``glutathione synthetase`` to the
+    COMPOUND (compounds register first) and accepts the reaction. Base kept both rows
+    and refused: ``entity_type_overlap:1`` + ``unexportable_entity:1``, no PWML. Tip
+    prunes the unreferenced compound, revalidation then resolves the component to the
+    protein, which has no accession, and the reaction is quarantined.
+    """
+
+    payload = _base()
+    payload["entities"]["compounds"].append({"name": GS})
+    next(row for row in payload["entities"]["proteins"] if row["name"] == GS).pop("mapped_ids")
+    result = quarantine_and_close(payload, strict_db=True)
+
+    _assert_glutathione_synthesis_stranded(
+        result, f"protein_complex_component_unrepresentable:{GS}:protein_missing_external_identity"
+    )
+
+
+def test_delta_n2_generated_wrapper_whose_component_names_a_complex() -> None:
+    """DELIBERATE DELTA (round 1, N2, shape 2); it only quarantines more.
+
+    Base kept the named complex alive by the component name and accepted the reaction.
+    The exporter's contract then failed with ``component_protein_unresolved``
+    (``evidence/orch759c/27-r1-probe-base2.log``), so no PWML was written. Tip prunes the
+    complex, because a component names a protein, and the wrapper's component no
+    longer resolves.
+    """
+
+    payload = _base()
+    _gs_wrapper(payload)["components"] = [{"name": "GS holoenzyme", "stoichiometry": 1}]
+    payload["entities"]["protein_complexes"].append(
+        {
+            "name": "GS holoenzyme",
+            "class": "protein_complex",
+            "species": "Homo sapiens",
+            "components": [{"name": GS, "stoichiometry": 1}],
+        }
+    )
+    result = quarantine_and_close(payload, strict_db=True)
+
+    _assert_glutathione_synthesis_stranded(result, "protein_complex_component_unresolved:GS holoenzyme")
+
+
+def test_delta_n2_wrapper_whose_component_names_only_a_gene() -> None:
+    """DELIBERATE DELTA (round 1, N2, shape 3); it only quarantines more.
+
+    Base kept the gene alive by the component name and accepted the reaction. The
+    exporter's contract then failed with ``component_protein_unresolved`` (``27``), so
+    no PWML was written. Tip prunes the gene and the component no longer resolves.
+    """
+
+    payload = _base()
+    _gs_wrapper(payload)["components"] = [{"name": "GSS", "stoichiometry": 1}]
+    payload["entities"]["nucleic_acids"] = [{"name": "GSS"}]
+    result = quarantine_and_close(payload, strict_db=True)
+
+    _assert_glutathione_synthesis_stranded(result, "protein_complex_component_unresolved:GSS")
