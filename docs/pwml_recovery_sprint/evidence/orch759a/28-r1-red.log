@@ -1,0 +1,132 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2pw\__init__.py
+...........FF..................FF....                                    [100%]
+================================== FAILURES ===================================
+______ test_new_the_fold_keeps_the_name_and_every_quote_and_records_them ______
+
+    def test_new_the_fold_keeps_the_name_and_every_quote_and_records_them() -> None:
+        lineage = [{"stage": "audit_repair", "origin": "audit_modified", "sources": []}]
+        rag = {"source_id": "PMC0000001", "section": "results", "chunk_id": "c7"}
+        papers = [{"source_id": "PMC0000001", "title": "a supporting paper"}]
+        duplicate = _row("enterobactin synthase", evidence="EntF (enterobactin synthase) acts last.",
+                         source_refs=["the synthase assembles the trilactone", "EntF is the synthetase."],
+                         synonyms=["enterobactin synthetase"], provenance_lineage=lineage, rag_provenance=rag,
+                         source_papers=papers)
+        duplicate["mapped_ids"]["gene_name"] = "entF"
+        payload = _e1(duplicate)
+        report = _fold(payload)
+        assert _protein_names(payload) == ["EntF"]
+        [entf] = payload["entities"]["proteins"]
+        assert entf["synonyms"] == ["EntF", "enterobactin synthase"]
+        assert entf["evidence"] == "EntF is the synthetase."
+        assert entf["source_refs"] == ["EntF (enterobactin synthase) acts last.", "the synthase assembles the trilactone"]
+>       assert report[FOLDS_KEY] == [{
+            "rule": "unreferenced_protein_row_shares_an_admitted_accession",
+            "survivor": "EntF", "folded": "enterobactin synthase",
+            "shared_accessions": {"uniprot": "P11454"},
+            "species": {"name": "Escherichia coli", "taxonomy_id": "562", "pathbank_species_id": 3},
+            "alias_added": "enterobactin synthase",
+            "quotes_moved": ["EntF (enterobactin synthase) acts last.", "the synthase assembles the trilactone"],
+            "folded_row_names": ["enterobactin synthase", "enterobactin synthetase"],
+            # Repair round 1, N1 and N5: the folded row's whole identity and provenance are kept.
+            "folded_mapped_ids": {"uniprot": "P11454", "gene_name": "entF"},
+            "folded_provenance_lineage": lineage,
+            "folded_rag_provenance": rag,
+            "folded_source_papers": papers,
+        }]
+E       AssertionError: assert [{'alias_adde...ctone'], ...}] == [{'alias_adde...pair'}], ...}]
+E         
+E         At index 0 diff: {'rule': 'unreferenced_protein_row_shares_an_admitted_accession', 'survivor': 'EntF', 'folded': 'enterobactin synthase', 'shared_accessions': {'uniprot': 'P11454'}, 'species': {'name': 'Escherichia coli', 'taxonomy_id': '562', 'pathbank_species_id': 3}, 'alias_added': 'enterobactin synthase', 'quotes_moved': ['EntF (enterobactin synthase) acts last.', 'the synthase assembles the trilactone'], 'folded_row_names': ['enterobactin synthase', 'enterobactin synthetase']} != {'rule': 'unreferenced_protein_row_shares_an_admitted_accession', 'survivor': 'EntF', ...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_orch759a_duplicate_protein_fold.py:325: AssertionError
+_______________ test_new_every_quote_field_moves_with_the_fold ________________
+
+    def test_new_every_quote_field_moves_with_the_fold() -> None:
+        """Repair round 1, B2: every evidence-bearing field ``entity_admission._spans`` and
+        ``apply_audit_patch._ACTOR_ROW_EVIDENCE_KEYS`` read, dict ``span``/``text`` entries included."""
+    
+        duplicate = _row("enterobactin synthase", evidence="q evidence", evidence_quote="q evidence_quote",
+                         source_evidence=["q source_evidence"], source_text="q source_text",
+                         source_refs=[{"span": "q span"}, {"text": "q text"}, "EntF is the synthetase."])
+        payload = _e1(duplicate)
+        [fold] = _fold(payload)[FOLDS_KEY]
+        # "EntF is the synthetase." is already the survivor's own evidence, so it does not move twice.
+        expected = ["q evidence", "q span", "q text", "q evidence_quote", "q source_evidence", "q source_text"]
+>       assert fold["quotes_moved"] == expected
+E       AssertionError: assert ['q evidence'] == ['q evidence'... source_text']
+E         
+E         Right contains 5 more items, first extra item: 'q span'
+E         Use -v to get more diff
+
+tests\test_orch759a_duplicate_protein_fold.py:353: AssertionError
+_ test_new_an_alias_held_by_an_unrelated_row_still_names_the_duplicate[unrelated_protein] _
+
+holder = 'unrelated_protein'
+
+    @pytest.mark.parametrize("holder", ["unrelated_protein", "complex_alias"])
+    def test_new_an_alias_held_by_an_unrelated_row_still_names_the_duplicate(holder: str) -> None:
+        """B1: the registry resolves ``shared alias`` to the duplicate today; folding it would move
+        the reaction's enzyme to another protein (P99999) or to a complex. So it is a reference."""
+    
+        from t2pw.pipeline.strict_quarantine import _build_registry
+    
+        payload = _shared_alias_payload(holder)
+        assert _build_registry(payload).resolve("shared alias")[1]["name"] == "enterobactin synthase"
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+E       AssertionError: assert 'duplicate_protein_folds' not in {'duplicate_protein_folds': [{'alias_added': 'enterobactin synthase', 'folded': 'enterobactin synthase', 'folded_row_n...name': 'enterobactin synthase'}, {'entity_type': 'protein', 'json_pointer': '/entities/proteins/1', 'name': 'OtherP'}]}
+E        +  where {'duplicate_protein_folds': [{'alias_added': 'enterobactin synthase', 'folded': 'enterobactin synthase', 'folded_row_n...name': 'enterobactin synthase'}, {'entity_type': 'protein', 'json_pointer': '/entities/proteins/1', 'name': 'OtherP'}]} = _fold({'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...protein'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}})
+
+tests\test_orch759a_duplicate_protein_fold.py:468: AssertionError
+_ test_new_an_alias_held_by_an_unrelated_row_still_names_the_duplicate[complex_alias] _
+
+holder = 'complex_alias'
+
+    @pytest.mark.parametrize("holder", ["unrelated_protein", "complex_alias"])
+    def test_new_an_alias_held_by_an_unrelated_row_still_names_the_duplicate(holder: str) -> None:
+        """B1: the registry resolves ``shared alias`` to the duplicate today; folding it would move
+        the reaction's enzyme to another protein (P99999) or to a complex. So it is a reference."""
+    
+        from t2pw.pipeline.strict_quarantine import _build_registry
+    
+        payload = _shared_alias_payload(holder)
+        assert _build_registry(payload).resolve("shared alias")[1]["name"] == "enterobactin synthase"
+        before = json.dumps(payload, sort_keys=True)
+>       assert FOLDS_KEY not in _fold(payload)
+E       AssertionError: assert 'duplicate_protein_folds' not in {'duplicate_protein_folds': [{'alias_added': 'enterobactin synthase', 'folded': 'enterobactin synthase', 'folded_row_n... 'name': 'EntF'}, {'entity_type': 'protein', 'json_pointer': '/entities/proteins/0', 'name': 'enterobactin synthase'}]}
+E        +  where {'duplicate_protein_folds': [{'alias_added': 'enterobactin synthase', 'folded': 'enterobactin synthase', 'folded_row_n... 'name': 'EntF'}, {'entity_type': 'protein', 'json_pointer': '/entities/proteins/0', 'name': 'enterobactin synthase'}]} = _fold({'element_locations': {'compound_locations': [], 'protein_locations': []}, 'entities': {'compounds': [{'name': 'L-seri...protein'}], 'inputs': ['L-serine'], 'name': 'enterobactin synthesis', 'outputs': ['enterobactin']}], 'transports': []}})
+
+tests\test_orch759a_duplicate_protein_fold.py:468: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_the_fold_keeps_the_name_and_every_quote_and_records_them
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_every_quote_field_moves_with_the_fold
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_an_alias_held_by_an_unrelated_row_still_names_the_duplicate[unrelated_protein]
+FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_an_alias_held_by_an_unrelated_row_still_names_the_duplicate[complex_alias]
+4 failed, 33 passed in 0.68s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0367359907c778426d4b56a946b2dd4223b4c57b  [git, worktree dirty=False]
+label                   : r1-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759a/28-r1-red.pin.json -q -rf --basetemp=C:/t/bt-orch759a/28-r1-red-16411 tests/test_orch759a_duplicate_protein_fold.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a
+root PID / process group: 260880 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.42 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  246828:python.exe
+descendants terminated  : 1  246828
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\g11\ORCH-759a\28-r1-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

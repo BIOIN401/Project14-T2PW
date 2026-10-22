@@ -36,7 +36,7 @@ MUTATIONS = [
      "if is_referenced[index] or not mine", "if not mine",
      [f"{UNIT}::test_new_a_referenced_duplicate_is_never_folded"]),
     ("M5 every alias counts as a reference", MAP_IDS,
-     "own += [name for name in _row_name_variants(row) if _exact_key(name) not in others]",
+     "own += [name for name in _row_name_variants(row) if not excused(name)]",
      "own += _row_name_variants(row)",
      [f"{UNIT}::test_new_an_alias_another_row_holds_does_not_count_as_a_reference_to_the_duplicate",
       f"{UNIT}::test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes"]),
@@ -55,6 +55,15 @@ MUTATIONS = [
     ("M9 report pointers not moved", MAP_IDS,
      "    _move_protein_pointers(report, index_map, set(survivor_of))\n", "",
      [f"{UNIT}::test_new_the_report_pointers_follow_the_fold"]),
+    # Repair round 1 (review round 0, B1 and B2).
+    ("M10 any other holder excuses an alias (round 0 behaviour)", MAP_IDS,
+     "return bool(holders) and not in_complex and all(same_identity(index, j) for j in holders)",
+     "return bool(holders) or in_complex",
+     [f"{UNIT}::test_new_an_alias_held_by_an_unrelated_row_still_names_the_duplicate"]),
+    ("M11 only evidence and source_refs are read (round 0 behaviour)", MAP_IDS,
+     '_ENTITY_QUOTE_KEYS = ("evidence", "source_refs", "evidence_quote", "source_evidence", "source_text")',
+     '_ENTITY_QUOTE_KEYS = ("evidence", "source_refs")',
+     [f"{UNIT}::test_new_every_quote_field_moves_with_the_fold"]),
 ]
 
 survivors = 0
