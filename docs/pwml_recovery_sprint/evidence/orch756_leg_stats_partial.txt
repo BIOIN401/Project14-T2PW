@@ -5,6 +5,9 @@
   rag_prose_extraction               attempts  26  empty-length   9  other-empty   0  ~   437 s
   Stage 2 inference                  attempts   3  empty-length   0  other-empty   1  ~  3483 s
   inference json repair              attempts   1  empty-length   0  other-empty   0  ~    28 s
+    LONG/ERROR  Stage 2 inference attempt 1: finish_reason=stop chars=48898 ~1288 s
+    LONG/ERROR  Stage 2 inference attempt 1: finish_reason=error chars=0 ~1585 s
+    LONG/ERROR  Stage 2 inference attempt 2: finish_reason=error chars=8522 ~610 s
 .claude/worktrees/orch756/runs_papers/ORCH-756/legs\enterobactin-strict\2026-10-21_2020\papers\PMC12096016\strict\LEG_TRACE.jsonl
   last model attempt at 1509 s
   preprocessor                       attempts   5  empty-length   0  other-empty   0  ~   178 s
@@ -19,3 +22,4 @@
   rag_prose_extraction               attempts  14  empty-length   4  other-empty   0  ~   241 s
   Stage 2 inference                  attempts   4  empty-length   0  other-empty   0  ~   423 s
   audit loop                         attempts   9  empty-length   9  other-empty   0  ~   314 s
+TOTAL model attempts 106, long (>= 1200 s) 2, finish_reason=error 2
