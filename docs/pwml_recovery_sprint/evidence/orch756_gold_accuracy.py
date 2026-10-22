@@ -29,19 +29,28 @@ Identifier checks: ``reactions.id_correctness`` against ``build_reference_index`
 reference tables as committed at HEAD), levels 2 and 3. Interactions are counted, not scored
 (ORCH-752 section 1.2).
 
+A leg that wrote NO PWML (ORCH-759) is still scored: the newest leg with a
+``stage1_payload.json`` is taken, level 3 is ``pwml_ir.json`` marked "IR, not exported" if it
+exists and "not written" otherwise. With a Stage-1 ensemble report (N>1 draws), each Stage-1
+row is annotated with the draws that found it.
+
 Usage::
 
     PYTHONPATH=src python -u docs/pwml_recovery_sprint/evidence/orch756_gold_accuracy.py
+    PYTHONPATH=src python -u docs/pwml_recovery_sprint/evidence/orch756_gold_accuracy.py --task ORCH-759 \
+        --legs runs_papers/ORCH-759/legs --review runs_papers/ORCH-759/REVIEW --papers enterobactin \
+        --out docs/pwml_recovery_sprint/evidence/orch759_gold_accuracy.txt
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import xml.etree.ElementTree as ET
 from collections import Counter
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
@@ -63,6 +72,10 @@ BASELINES = {
     "menaquinone": "ORCH-747 round 4 per-draw recall (ORCH-747-RESULT.md section 12): 4,7,4,9,7 /9; "
                    "ORCH-751 3-draw union (ORCH-751-RESULT.md section 2.1): 9/9 (per draw 2,9,7)",
 }
+EXTRA_BASELINE = {
+    "ORCH-759": "; ORCH-756 1-draw leg (orch756_gold_accuracy.txt): stage1 5/5 P 1.000 F1 1.000, "
+                "final 5/5 P 0.714 R 1.000 F1 0.833 (with lineage P 0.833 F1 0.909), PWML 5/5 P 0.714",
+}
 #: The reader reading of each unmatched row (ORCH-756 test-runner, by hand against the
 #: paper text). NOT evaluator output. Keyed by (paper, level, row name).
 READINGS: Dict[tuple, str] = {}
@@ -72,10 +85,26 @@ def _load(p: Path) -> Any:
     return json.loads(p.read_text(encoding="utf-8"))
 
 
-def pick_leg(name: str, pid: str) -> tuple:
-    cands = sorted(LEGS.glob(f"{name}*/*/papers/{pid}/strict"), key=lambda p: p.parents[2].name)
+def pick_leg(legs: Path, name: str, pid: str) -> tuple:
+    """Newest leg with a PWML; failing that, newest leg with a Stage-1 payload."""
+    cands = sorted(legs.glob(f"{name}*/*/papers/{pid}/strict"), key=lambda p: p.parents[2].name)
     with_pwml = [c for c in cands if any(c.glob("*.pwml"))]
-    return (with_pwml[-1] if with_pwml else None), cands
+    if with_pwml:
+        return with_pwml[-1], cands, True
+    with_s1 = [c for c in cands if (c / "stage1_payload.json").is_file()]
+    return (with_s1[-1] if with_s1 else None), cands, False
+
+
+def ensemble_support(path: Path) -> Optional[Dict[str, str]]:
+    """Pooled Stage-1 reaction name -> its draw support, from stage1_ensemble_report.json."""
+    if not path.is_file():
+        return None
+    doc = _load(path)
+    doc = doc[0] if isinstance(doc, list) and doc else doc
+    rows = ((doc.get("buckets") or {}).get("/processes/reactions") or {}).get("rows") or []
+    n = doc.get("draws_succeeded")
+    # ponytail: keyed by row name; two pooled rows sharing a name would collide (none here).
+    return {r.get("name"): f"support {len(r.get("draws") or [])}/{n} draws {r.get("draws")}" for r in rows}
 _ENT_LDH = ("Real paper statement, but it is the coupled-assay reporter (gold O2, off-pathway LDH assay), "
             "not enterobactin biosynthesis. Added at Stage 2: present in merged_payload.json, absent from "
             "stage1_payload.json, no provenance_lineage. Drawn in the PWML.")
@@ -133,6 +162,28 @@ NOTES: Dict[str, List[str]] = {
         "not a different source text.",
     ],
 }
+#: ORCH-759 (3-draw enterobactin leg) readings and notes, by the same rule: NOT evaluator output.
+READINGS_759: Dict[tuple, str] = {}
+NOTES_759: Dict[str, List[str]] = {
+    "PMC12096016": [
+        "Draw support of the matched gold reactions (stage1_ensemble_report): R1 EntC, R2 EntB, R3 EntA, R4 EntE "
+        "each 3/3. R5 EntF is carried by TWO pooled rows: 2,3-DHB + L-serine -> enterobactin (2/3, draws 2 and 3) "
+        "and 2,3-dihydroxybenzoyl-AMP + L-serine -> enterobactin (1/3, draw 1 only, flagged REVIEW by the "
+        "ensemble report).",
+        "The one single-draw row is NOT an extra reaction: it is a second rendering of R5, with the AMP ester as "
+        "substrate. Gold R5 accepts that ester (its note: a row that feeds 2,3-DHB or its AMP ester straight into "
+        "EntF represents the paper own chemistry and matches), so both rows are true positives and precision "
+        "stays 1.000. Pooling kept them apart because their input keys differ; both survive to final_mapped.json.",
+        "Unlike the ORCH-756 1-draw leg, final_mapped.json has no LDH assay row and no RAG-transcribed EntA "
+        "duplicate: 6 rows, all target_paper_supported.",
+        "Final rows carry catalysts Stage 1 did not; EntD complex appears on the EntB and on one EntF row. EntD is "
+        "the phosphopantetheinyl transferase (gold excludes it as a protein-modification statement), not a "
+        "catalyst of these conversions. Not penalised: the evaluator credits an enzyme when ANY listed one matches.",
+        "No PWML and no pwml_ir.json were written (leg failed final_pre_export_stage3_gates); level 3 is not scored.",
+    ],
+}
+READINGS_BY_TASK = {"ORCH-756": READINGS, "ORCH-759": READINGS_759}
+NOTES_BY_TASK = {"ORCH-756": NOTES, "ORCH-759": NOTES_759}
 
 
 def pwml_equations(path: Path) -> List[tuple]:
@@ -153,7 +204,8 @@ def pwml_equations(path: Path) -> List[tuple]:
     return [(side(rx, "reaction-left-element"), side(rx, "reaction-right-element")) for rx in root.iter("reaction")]
 
 
-def ir_payload(ir: Dict[str, Any], final: Dict[str, Any], pwml: List[tuple]) -> tuple:
+def ir_payload(ir: Dict[str, Any], final: Dict[str, Any], pwml: Optional[List[tuple]]) -> tuple:
+    """IR rows as a payload. ``pwml`` None (no PWML written): every IR row is kept, unfiltered."""
     ents = {e["key"]: e for b in (ir.get("entities") or {}).values() if isinstance(b, list)
             for e in b if isinstance(e, dict) and e.get("key")}
     species = {s["key"]: s.get("name") for s in ir.get("species") or [] if isinstance(s, dict)}
@@ -165,16 +217,18 @@ def ir_payload(ir: Dict[str, Any], final: Dict[str, Any], pwml: List[tuple]) -> 
     def names(slot):
         return [{"name": ents[p["entity_key"]]["name"]} for p in slot or [] if p.get("entity_key") in ents]
 
-    pw_keys = Counter((l[0], r[0]) for l, r in pwml)
+    pw_keys = Counter((l[0], r[0]) for l, r in pwml or [])
     rows, check = [], []
     for r in (ir.get("processes") or {}).get("reactions") or []:
         ins, outs = names(r.get("left")), names(r.get("right"))
         key = (frozenset(M.strict_key(x["name"]) for x in ins), frozenset(M.strict_key(x["name"]) for x in outs))
-        in_pwml = pw_keys[key] > 0
-        if in_pwml:
-            pw_keys[key] -= 1
+        in_pwml = None
+        if pwml is not None:
+            in_pwml = pw_keys[key] > 0
+            if in_pwml:
+                pw_keys[key] -= 1
         check.append((r.get("key"), r.get("name"), in_pwml))
-        if not in_pwml:
+        if in_pwml is False:
             continue
         e = ev.get(r.get("name")) or []
         rows.append({"name": r.get("name"), "inputs": ins, "outputs": outs, "enzymes": names(r.get("enzymes")),
@@ -224,40 +278,71 @@ def fmt(x) -> str:
     return "-" if x is None else f"{x:.3f}"
 
 
+def _path(value: str) -> Path:
+    p = Path(value)
+    return p if p.is_absolute() else REPO / p
+
+
 def main() -> int:
+    ap = argparse.ArgumentParser(description=(__doc__ or "").splitlines()[0])
+    ap.add_argument("--task", default="ORCH-756")
+    ap.add_argument("--legs", default=str(LEGS))
+    ap.add_argument("--review", default=str(REVIEW))
+    ap.add_argument("--out", default=str(OUT_TXT))
+    ap.add_argument("--papers", default=",".join(PAPERS), help="comma list of condition names")
+    args = ap.parse_args()
+    legs_root, review, out_txt = _path(args.legs), _path(args.review), _path(args.out)
+    readings = READINGS_BY_TASK.get(args.task, {})
+    notes = NOTES_BY_TASK.get(args.task, {})
     cases = load_supplement()
     ref = R.build_reference_index(REPO)
-    out: List[str] = ["ORCH-756 gold accuracy: the two PWML-writing legs, three levels, eval-v2 score_leg",
-                      f"reference tables (committed at HEAD): {ref["tables"]}", ""]
+    header = ("ORCH-756 gold accuracy: the two PWML-writing legs, three levels, eval-v2 score_leg"
+              if args.task == "ORCH-756" else
+              f"{args.task} gold accuracy: legs under {legs_root.relative_to(REPO)}, three levels, eval-v2 score_leg")
+    out: List[str] = [header, f"reference tables (committed at HEAD): {ref["tables"]}", ""]
     summary: List[str] = []
-    for name, pid in PAPERS.items():
+    for name in args.papers.split(","):
+        pid = PAPERS[name]
         case = cases[pid]
         assert case.complete, f"{pid} gold is not certified complete"
         text = load_fulltext(case, FULLTEXT)
         assert text is not None, f"{FULLTEXT}/{pid}.txt missing"
-        leg, cands = pick_leg(name, pid)
-        assert leg is not None, f"no leg with a PWML for {name}"
-        pw = sorted(leg.glob("*.pwml"))[0]
+        leg, cands, has_pwml = pick_leg(legs_root, name, pid)
+        assert leg is not None, f"no scorable leg for {name}"
+        pw = sorted(leg.glob("*.pwml"))[0] if has_pwml else None
         final = _load(leg / "final_mapped.json")
-        ir = _load(leg / "pwml_ir.json")
-        ir_pl, check, leftover = ir_payload(ir, final, pwml_equations(pw))
-        ir_pl["processes"]["transports"] = (ir.get("processes") or {}).get("transports") or []
-        withheld = sum(1 for w in _load(leg / "pwml_ir_report.json").get("warnings") or []
-                       if w.get("code") == "interaction_withheld_from_pwml")
+        ens_path = review / name / "strict" / "stage1_ensemble_report.json"
+        support = ensemble_support(ens_path)
         levels = {"1 stage1 (stage1_payload.json)": _load(leg / "stage1_payload.json"),
-                  "2 final (final_mapped.json)": final,
-                  "3 pwml (pwml_ir.json rows drawn in the PWML)": ir_pl}
+                  "2 final (final_mapped.json)": final}
+        check, leftover, withheld = [], 0, 0
+        if (leg / "pwml_ir.json").is_file():
+            ir = _load(leg / "pwml_ir.json")
+            ir_pl, check, leftover = ir_payload(ir, final, pwml_equations(pw) if pw else None)
+            ir_pl["processes"]["transports"] = (ir.get("processes") or {}).get("transports") or []
+            rep = leg / "pwml_ir_report.json"
+            withheld = sum(1 for w in (_load(rep).get("warnings") or [] if rep.is_file() else [])
+                           if w.get("code") == "interaction_withheld_from_pwml")
+            label3 = ("3 pwml (pwml_ir.json rows drawn in the PWML)" if pw
+                      else "3 ir (pwml_ir.json, IR, not exported: no PWML written)")
+            levels[label3] = ir_pl
+        rel_leg = leg.relative_to(REPO)
+        pw_line = f"PWML: {pw.name}" if pw else "PWML: none written"
         P: List[str] = [f"=== {name} {pid}  gold: {len(case.reactions)} certified in-scope reactions "
                         f"(+{len(case.off_pathway)} off-pathway, {len(case.summaries)} summaries)",
                         f"leg candidates: {[str(c.relative_to(REPO)) for c in cands]}",
-                        f"scored leg (newest with a PWML): {leg.relative_to(REPO)}",
-                        f"PWML: {pw.name}; paper text {FULLTEXT}/{pid}.txt sha256 matches gold text_sha256 "
-                        f"{case.source["text_sha256"][:16]}",
-                        f"PWML cross-check: IR rows found in the PWML {sum(c[2] for c in check)}/{len(check)}; "
-                        f"PWML reactions with no IR row {leftover}"]
-        for k, n, ok in check:
-            P.append(f"   IR {k} {"in PWML" if ok else "NOT IN PWML"}: {n}")
-        P.append(f"baseline: {BASELINES[name]}")
+                        (f"scored leg (newest with a PWML): {rel_leg}" if pw
+                         else f"scored leg (newest with a Stage-1 payload; NO PWML written): {rel_leg}"),
+                        f"{pw_line}; paper text {FULLTEXT}/{pid}.txt sha256 matches gold text_sha256 "
+                        f"{case.source["text_sha256"][:16]}"]
+        if pw:
+            P.append(f"PWML cross-check: IR rows found in the PWML {sum(bool(c[2]) for c in check)}/{len(check)}; "
+                     f"PWML reactions with no IR row {leftover}")
+            for k, n, ok in check:
+                P.append(f"   IR {k} {"in PWML" if ok else "NOT IN PWML"}: {n}")
+        P.append(f"baseline: {BASELINES[name]}{EXTRA_BASELINE.get(args.task, "")}")
+        if support is not None:
+            P.append(f"Stage-1 ensemble report: {ens_path.relative_to(REPO)} ({len(support)} pooled reactions)")
         P.append("")
         for label, payload in levels.items():
             lvl = label.split()[1]
@@ -285,6 +370,10 @@ def main() -> int:
                 P.append(lin_line)
                 summary.append(" " * 23 + lin_line)
             rows = m["rows"]
+
+            def sup(r):
+                return f"  [{support.get(r["name"], "support unknown")}]" if (lvl == "stage1" and support) else ""
+
             P.append("gold reactions:")
             for g in case.reactions:
                 hits = [r for r in rows if r["class"] == R.TP and g.id in r["gold_ids"]]
@@ -295,21 +384,21 @@ def main() -> int:
                 for r in hits:
                     dup = f"  DUPLICATE of {r["duplicate_of"]}" if r["duplicate_of"] is not None else ""
                     P.append(f"      by row {r["row_index"]} {repr(r["name"])}: {eq(r["inputs"], r["outputs"])}"
-                             f"  enzymes {r["enzymes"]} enzyme_verdict {r.get("enzyme_verdict")}{dup}")
+                             f"  enzymes {r["enzymes"]} enzyme_verdict {r.get("enzyme_verdict")}{dup}{sup(r)}")
                 for r in near:
                     P.append(f"      near ({r["class"]}) row {r["row_index"]} {repr(r["name"])}: "
-                             f"{eq(r["inputs"], r["outputs"])}  missing_defining {r.get("missing_defining")}")
+                             f"{eq(r["inputs"], r["outputs"])}  missing_defining {r.get("missing_defining")}{sup(r)}")
             extras = [r for r in rows if not (r["class"] == R.TP and r["duplicate_of"] is None)]
             P.append(f"unmatched / non-TP rows ({len(extras)}):")
             for r in extras:
                 tag = f"DUPLICATE of row {r["duplicate_of"]}" if r["duplicate_of"] is not None else r["class"]
                 gid = f" gold_ids {r["gold_ids"]}" if r["gold_ids"] else ""
                 P.append(f"  row {r["row_index"]} [{tag}]{gid} {repr(r["name"])}: {eq(r["inputs"], r["outputs"])}"
-                         f"  enzymes {r["enzymes"]}  evidence {r["evidence"]}")
+                         f"  enzymes {r["enzymes"]}  evidence {r["evidence"]}{sup(r)}")
                 if r.get("missing_defining"):
                     P.append(f"      missing_defining {r["missing_defining"]}")
                 P.append(f"      quote: {evidence_of(payload, r["row_index"])[:700]}")
-                reading = READINGS.get((pid, lvl, r["name"]))
+                reading = readings.get((pid, lvl, r["name"]))
                 if reading:
                     P.append(f"      READER READING (not the evaluator): {reading}")
             P.append(f"name conflicts for hand review: {m["name_conflicts_for_hand_review"] or "none"}")
@@ -332,14 +421,17 @@ def main() -> int:
                     P.append(f"      wrong_identity {w["bucket"]} {repr(w["name"])} {w.get("contradicting_ids")} "
                              f"independent={w.get("independent")} ref={refs}")
             P.append("")
-        P.append("READER NOTES (ORCH-756 test-runner reading of the leg artifacts, not evaluator output):")
-        P += [f"  - {n}" for n in NOTES.get(pid, [])]
+        if not any(k.startswith("3 ") for k in levels):
+            P += ["--- level 3 pwml: NOT WRITTEN (no PWML and no pwml_ir.json in the leg)", ""]
+            summary.append(f"  {name:12s} {"pwml":7s} NOT WRITTEN (no PWML, no pwml_ir.json)")
+        P.append(f"READER NOTES ({args.task} test-runner reading of the leg artifacts, not evaluator output):")
+        P += [f"  - {n}" for n in notes.get(pid, [])]
         P.append("")
         out += P
-        (REVIEW / name / "strict" / "gold_comparison.txt").write_text("\n".join(P) + "\n", encoding="utf-8")
+        (review / name / "strict" / "gold_comparison.txt").write_text("\n".join(P) + "\n", encoding="utf-8")
     out = ["SUMMARY", *summary, "", *out]
     text_out = "\n".join(out) + "\n"
-    OUT_TXT.write_text(text_out, encoding="utf-8")
+    out_txt.write_text(text_out, encoding="utf-8")
     sys.stdout.buffer.write(text_out.encode("utf-8"))
     return 0
 
