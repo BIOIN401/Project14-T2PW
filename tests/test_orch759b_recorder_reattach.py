@@ -16,7 +16,8 @@ the pipeline is stubbed except what would leave the machine:
   and answers Stage 0 with a context and every Stage-1 draw with the same two reactions,
   which differ only in a synonym (``protoheme`` / ``heme b``) that rule 3 exists to merge;
 * compound lookup answers from a table (both synonyms -> CHEBI:17627), the PathBank DB is
-  absent, and every HTTP request raises;
+  absent, and every HTTP request raises (the app's other lookups, ChEBI's web service among
+  them, still try and are refused, at base and at the tip alike);
 * Stage 7 enrichment (UniProt over the network) copies its input;
 * ``t2pw.paths.PROJECT_ROOT`` is this test's ``tmp_path``, so the app's ``tmp/``,
   ``outputs/``, ``out/`` and ``data/`` writes never touch the checkout.
@@ -31,6 +32,9 @@ PRESERVATION (``test_still_*``): pass on base and at the tip. One draw: rule 3 s
 D-104 AMENDMENT 2 (``test_llm_inputs_*``): every request the app sends a model in both script
 runs is byte-identical to base for the same paper (sha256 per request, measured on base
 ``4f750030``), and no request carries the identity-merge record.
+
+NEW ACCEPTANCE TEST (``test_new_*``): the ``reenter`` helper across threads; fails at base on
+the missing name, which is why it is not offered as a G9 proof.
 """
 
 from __future__ import annotations
@@ -145,10 +149,7 @@ def offline_app(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Dict[str, An
     import t2pw.sbml.render_pathwhiz_like as render_module
     from t2pw.paths import PROMPTS_DIR
 
-    network: List[str] = []
-
-    def _offline(*args: Any, **kwargs: Any) -> Any:
-        network.append(repr(args[1:3]) if len(args) > 1 else repr(kwargs.get("url")))
+    def _offline(*_args: Any, **_kwargs: Any) -> Any:
         raise RuntimeError("network call during an offline test")
 
     for name in ("RAG_ENABLED", "RAG_ELIGIBILITY_ENABLED"):
@@ -173,7 +174,7 @@ def offline_app(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Dict[str, An
     monkeypatch.setattr(map_ids.HttpClient, "get", _offline)
     monkeypatch.setattr(requests.Session, "request", _offline)
     monkeypatch.setattr(enrich_entities, "run_enrichment", _copy_enrichment)
-    return {"wire": wire, "network": network, "root": tmp_path}
+    return {"wire": wire, "root": tmp_path}
 
 
 def _app():
@@ -237,7 +238,6 @@ def test_g9_rule3_runs_at_stage6_and_files_its_record_beside_stage1(
     assert "DATABASE-IDENTITY MERGE" in (stage1_dir / "stage1_ensemble_report.txt").read_text(encoding="utf-8")
     # Filed in THIS run's directory and nowhere else.
     assert _written(offline_app["root"], IDENTITY_REPORT) == [stage1_dir / IDENTITY_REPORT]
-    assert offline_app["network"] == []
 
 
 def test_g9_audit_and_gap_rounds_reach_the_stage1_directory_and_the_driver(
@@ -375,3 +375,41 @@ def test_llm_inputs_are_the_bases_bytes_and_never_carry_the_merge_record(
     for text in (json.dumps(wire.calls, default=repr), json.dumps(artifacts["mapping_report"], default=repr),
                  str(at.session_state["reaction_summary"])):
         assert [s for s in RECORD_STRINGS if s in text] == []
+
+
+# ---------------------------------------------------------------- the helper itself
+
+
+def test_new_reenter_crosses_threads_and_drops_anything_else() -> None:
+    """NEW ACCEPTANCE TEST, labelled as such: ``extraction_diagnostics.reenter`` is new in this
+    lane, so this is not a G9 proof (at base it fails on the missing name, which proves nothing).
+
+    Each Streamlit script run, live or under AppTest, is its own ``ScriptRunner`` thread. A new
+    thread sees no recorder; ``reenter`` hands it the earlier run's; and anything that is not a
+    recorder clears what the thread holds, so a reused thread cannot record into a recorder
+    another session left behind."""
+
+    import threading
+
+    import t2pw.pipeline.extraction_diagnostics as xd
+
+    stage1 = xd.activate(run_id="orch759b-stage1")
+    seen: Dict[str, bool] = {}
+
+    def post_pipeline_run() -> None:
+        seen["starts_detached"] = xd.current() is not stage1
+        xd.reenter(stage1)
+        seen["sees_stage1"] = xd.current() is stage1
+        for stale in (None, {}, "orch759b-stage1"):
+            xd.reenter(stage1)
+            xd.reenter(stale)
+            seen[f"drops_{stale!r}"] = xd.current() is not stage1 and xd.current().artifact_dir is None
+
+    try:
+        worker = threading.Thread(target=post_pipeline_run)
+        worker.start()
+        worker.join()
+    finally:
+        xd.deactivate()
+    assert seen == {"starts_detached": True, "sees_stage1": True, "drops_None": True, "drops_{}": True,
+                    "drops_'orch759b-stage1'": True}
