@@ -282,7 +282,7 @@ orchestrator runs it). Every report: `FINAL SURVIVING COUNT : 0`; no `--heavy-lo
    Q1(a) on naming one paralog is still open. MenI: no symbol route exists; an alias `yhdA` would need a source.
 5. **FX4 has no EC route** (F5). If payloads start carrying EC numbers, an EC match against UniProt's `ec`
    field is the next step.
-6. **A failed taxonomy answer falls back to the old free-text query** (`ponytail:` at `:4723-4726`), which can
+6. **(Resolved in repair round 1, § 12 B1.)** **A failed taxonomy answer falls back to the old free-text query** (`ponytail:` at `:4723-4726`), which can
    cross a subspecies on a species-level name. Cached per taxon after the first success. A degraded
    `taxonomy_id:<requested>` scope would hold D-108 through the failure (cost: offline tests with taxonomy ids
    would change query shape).
@@ -342,3 +342,70 @@ Unchanged from § ORCH-754, § ORCH-757 and § ORCH-757i, plus one found by this
 
 Not touched: `streamlit_app.py`, `_fold_unreferenced_duplicate_proteins`, `extraction_diagnostics.py`,
 `process_normalizer.py`, any gate, `TEST_MATRIX.md`, `LEDGER.md`, `DECISIONS.md`.
+
+## 12. Repair round 1 (review round 0: REJECT, B1-B3 and note a)
+
+Line numbers in §§ 1-11 are at round-0 `1de46133`; those below are at `1b8c5e6d`.
+
+| commit | what |
+|---|---|
+| `dc4a3c3e` | merge of the ORCH-759a repair tip `cea94c91` (its fold block only; merged without conflict). **Its message reads `tmp`**: I passed a placeholder `-m` by mistake and the amend that would have corrected it was not permitted, so it stands as written |
+| `9935cf70` | tests first: seven `test_g9_r1_*` nodes |
+| `1b8c5e6d` | code: `map_ids.py`, `reaction_evidence.py`, `reaction_evidence_view.py` |
+| docs commit | this section, G11 reports `31`-`42`, `replay_table.py` now uses a fresh cache per scenario |
+
+**B1 — a failed taxonomy answer sent the lookup back to free text.** `_uniprot_taxon_scope` (`:4681`) now
+returns a DEGRADED scope when a taxonomy id exists but its record cannot be fetched (any non-200, e.g. the
+reviewer's 429; `HttpClient` retries only status ≥ 500), or when the lineage names several species or
+subspecies: one tier, `taxonomy_id:<requested>`, no climb, no FX5, nothing borrowed, judged against the row's
+own organism text (`bound_name` empty → the caller's organism, `:4871`, strategy and Phase 2). `_memo_taxon_scope`
+(`:4736`) memoizes only a full scope, so the next protein asks the service again. A taxonomy id now never
+reaches a free-text query; only a lineage with no species at all (genus or above) keeps the old query.
+Consequence: for a strain request the degraded tier is the strain itself, whose own records the row's free
+text may not name by the string rule, so the protein may stay unresolved for that pass — the fail-closed
+option the review allowed. § 9 item 6 is resolved by this.
+Tests: `test_g9_r1_a_failed_taxonomy_answer_never_falls_back_to_free_text[lactis_species|kf147]` (a 429 on
+every taxonomy call at Stage 6: no free-text query, no cremoris accession; the *L. lactis* shape still ships
+MenF Q9CHJ9) and `test_g9_r1_a_taxonomy_failure_is_not_remembered_for_the_pass` (one 429, then MenD/MenG
+still resolve).
+
+**B2 — a borrowed identity outside every reaction line was shown nowhere.** `build_report` carries
+`borrowed_identities` (`reaction_evidence.py:619`): one line per `borrowed_protein_identities` record (name,
+pointer, flag, source record and taxon, requested organism and taxon, route). `render_text` prints a
+`BORROWED IDENTITIES (n)` section after the interactions (`:782`, title `:727`), and the app view an expander
+(`reaction_evidence_view.py:181`); both are absent when nothing is borrowed, so every other report keeps its
+bytes. The reaction-line flag of § 3 stays. Tests: `test_g9_r1_a_borrowed_identity_off_the_reaction_lines_is_shown`
+(an interaction-only Fur), `test_g9_r1_every_borrowed_identity_of_the_kf147_replay_is_listed` (7 listed).
+
+**B3 — a rerouted compound borrowed without a flag.** The compound loop records
+`mapping_meta.query.taxonomy_id` when its protein-route result was scoped (`map_ids.py:11737`), and
+`_borrowed_protein_identities` (`:5735`) walks `/entities/compounds/i` as well as proteins. Test:
+`test_g9_r1_a_rerouted_compound_that_borrows_is_flagged` (compound MenF → Q9CHJ9 flagged at
+`/entities/compounds/0`).
+
+**Note a — FX5 skipped the no-subspecies rule.** `_map_protein_uniprot_in_scope` applies one
+`unknown_subspecies` rule (`:4888`) to FX5's candidates and to the climbed gene tier alike. Test:
+`test_g9_r1_exact_sequence_takes_no_subspecies_record_without_a_known_subspecies`.
+
+### Gates, repair round 1 (all `FINAL SURVIVING COUNT : 0`)
+
+| gate | report | result |
+|---|---|---|
+| RED, tests on the round-0 code (+ 759a merge) | `31-r1-red` | **7 failed, 29 passed**: exactly the seven `test_g9_r1_*` nodes, each on an `AssertionError` (free-text query issued; `'' == 'Q9CHK0'`; flag absent; `{} == {'/entities/compounds/0': …}`; `'Q9CHJ9' == ''`) |
+| GREEN | `33-r1-green` (`32-r1-dev` on the uncommitted fix) | **36 passed** |
+| replay base / tip, fresh caches | `36-r1-replay-fresh-base`, `37-r1-replay-fresh-tip` | per-protein lines, flags and gold identical to round 0 (`27`/`28`): menaquinone 9/9 both shapes, enterobactin 5/5, Stage 2 and 6 |
+| SMOKE | `38-r1-smoke` | **508 passed** |
+| affected: every test file naming `map_ids`, `reaction_evidence` or `prompt_payload_keys` (43, incl. the ORCH-757 golden and 759a's fold file; AppTest files apart) | `39-r1-affected-mapids` | 1212 passed, 3 skipped, 6 failed — the same six nodes red on base `src/` in `17` (§ 7) |
+| alone | `40` `test_orch759a_fold_app_path.py`, `41` reaction_evidence_view, `42` app_hook | 2 / 11 / 1 passed |
+
+`34`/`35` were the same replay tables run first: identities identical, but `lit=8` instead of 16 at the tip,
+because the script reused the round-0 scratch cache directories and the second run read their cached
+answers (a fresh-cache probe gave 16). `replay_table.py` now makes a fresh directory per scenario; `36`/`37`
+are the clean record.
+
+### Still not settled after the repair
+
+§ 9 items 1-5, 7 and 8 stand unchanged. New: the degraded scope (B1) gives up the climb for a strain request
+whose taxonomy record could not be read, so that pass may leave a protein unresolved that a full scope would
+resolve; it is retried on the next lookup and the next pass. TEST_MATRIX delta (§ 10): the focused file now
+holds **36** tests; G9 RED/GREEN for this round `31` / `33`.

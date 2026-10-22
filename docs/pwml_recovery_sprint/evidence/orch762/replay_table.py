@@ -4,6 +4,7 @@ Usage: python replay_table.py --src <tree>/src --label base|tip  (base = 493c1a1
 Prints, per scenario and stage, each protein row's shipped UniProt, identity status, verdict reason and
 judged record; each borrowed-identity flag; and the eval-v2 gold score of the menaquinone replays."""
 import argparse
+import tempfile  # a fresh mapping cache per scenario: a reused one replays the last run's answers
 import sys
 from pathlib import Path
 
@@ -20,7 +21,7 @@ import orch762_harness as H  # noqa
 
 for name, run in H.SCENARIOS.items():
     http = H.ReplayHttp()
-    out, doors = run(http, Path(f"C:/t/bt-orch762/table-{args.label}-{name}"))
+    out, doors = run(http, Path(tempfile.mkdtemp(dir="C:/t/bt-orch762", prefix=f"table-{args.label}-{name}-")))
     print(f"== {args.label} {name}: unrecorded={len(http.unrecorded)} ai={len(doors.ai_calls)} lit={len(doors.literature_calls)}")
     for stage in ("stage2", "stage6"):
         if stage not in out:
@@ -46,7 +47,7 @@ from t2pw.bench.eval_v2.gold import load_supplement  # noqa: E402
 cases = load_supplement()
 for name, paper in (("kf147", "PMC12421875"), ("lactis_species", "PMC12421875"), ("enterobactin_holo", "PMC12096016")):
     case = cases[paper]
-    out, _ = H.SCENARIOS[name](H.ReplayHttp(), Path(f"C:/t/bt-orch762/table-gold-{args.label}-{name}"))
+    out, _ = H.SCENARIOS[name](H.ReplayHttp(), Path(tempfile.mkdtemp(dir="C:/t/bt-orch762", prefix=f"table-gold-{args.label}-{name}-")))
     for stage in ("stage2", "stage6"):
         sc = R.score_leg(case, out[stage]["payload"], [], None, expected_species=case.species)
         keys = {k: v for blk in sc.values() if isinstance(blk, dict) for k, v in blk.items() if k in ("gold_reactions", "gold_reactions_matched", "recall", "precision", "enzyme_verdicts")}
