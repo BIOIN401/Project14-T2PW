@@ -1,0 +1,436 @@
+{
+ "_provenance": {
+  "task": "ORCH-764",
+  "leg": "runs_papers/ORCH-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict",
+  "final_mapped_sha256": "3eb9eae25f370578689f85c473f687b8a68addd2069ef829fc78defc14616bbf",
+  "id_mapping_cache_sha256": "9ec3bdf6ae1adf8a9e26876040d99719ecd201ad62bdc8090fe9303316e15140",
+  "id_mapping_cache_key": "compounds/db::prenyl diphosphate::::{}",
+  "cut_by": "docs/pwml_recovery_sprint/evidence/orch764/make_fixture.py (see its docstring)",
+  "reconstructed": [
+   "pathbank_compounds[0].synonyms: the leg did not record compounds.synonyms; the recorded rule exact_short_name_or_synonym (short_name 'Ipe') and Stage 6's cached chosen_rule 'synonym' prove an entry normalizing to 'prenyl diphosphate' exists",
+   "prefreeze_input: pre-freeze stamps removed, recorded raw_name restored, references put back by prefreeze_resolution._propagate; pre-resolution confidence/synonyms not recorded, left out"
+  ],
+  "stage6_gate_at_base": "map_ids._apply_name_plausibility_gate(stage6_cache_answer, 'prenyl diphosphate', kind='compound') computed at base 79080db7"
+ },
+ "pathbank_compounds": [
+  {
+   "id": 874,
+   "name": "Dimethylallylpyrophosphate",
+   "hmdb_id": "HMDB0001120",
+   "description": "Dimethylallylpyrophosphate, also known as 2-isopentenyl diphosphate or delta-prenyl diphosphate, belongs to the class of organic compounds known as isoprenoid phosphates. These are prenol lipids containing a phosphate group linked to an isoprene (2-methylbuta-1,3-diene) unit. Dimethylallylpyrophosphate exists as a solid, slightly soluble (in water), and a moderately acidic compound (based on its pKa). Dimethylallylpyrophosphate has been found in human muscle tissue. Within the cell, dimethylallylpyrophosphate is primarily located in the peroxisome, cytoplasm and mitochondria. Dimethylallylpyrophosphate exists in all living organisms, ranging from bacteria to humans. In humans, dimethylallylpyrophosphate is involved in the lovastatin action pathway, the desmosterolosis pathway, the risedronate action pathway, and the ibandronate action pathway. Dimethylallylpyrophosphate is also involved in several metabolic disorders, some of which include the wolman disease pathway, the chondrodysplasia punctata II, X linked dominant (CDPX2) pathway, the mevalonic aciduria pathway, and the child syndrome pathway. Outside of the human body, dimethylallylpyrophosphate can be found in a number of food items such as ucuhuba, yellow wax bean, white cabbage, and european plum. This makes dimethylallylpyrophosphate a potential biomarker for the consumption of these food products. Dimethylallyl pyrophosphate (or -diphosphate) (DMAPP) is an intermediate product of both mevalonic acid (MVA) pathway and DOXP/MEP pathway. It is an isomer of isopentenyl pyrophosphate (IPP) and exists in virtually all life forms. (wikipedia).",
+   "cas": "358-72-5",
+   "kegg_id": "C00235",
+   "pubchem_cid": "647",
+   "chebi_id": "16057",
+   "biocyc_id": "CPD-4211",
+   "chemspider_id": "627",
+   "drugbank_id": "DB01785",
+   "pwc_id": "PW_C000874",
+   "short_name": "Ipe",
+   "synonyms": "prenyl diphosphate"
+  }
+ ],
+ "recorded_db_match": {
+  "status": "matched",
+  "raw_name": "prenyl diphosphate",
+  "chosen": {
+   "id": 874,
+   "name": "Dimethylallylpyrophosphate",
+   "hmdb_id": "HMDB0001120",
+   "description": "Dimethylallylpyrophosphate, also known as 2-isopentenyl diphosphate or delta-prenyl diphosphate, belongs to the class of organic compounds known as isoprenoid phosphates. These are prenol lipids containing a phosphate group linked to an isoprene (2-methylbuta-1,3-diene) unit. Dimethylallylpyrophosphate exists as a solid, slightly soluble (in water), and a moderately acidic compound (based on its pKa). Dimethylallylpyrophosphate has been found in human muscle tissue. Within the cell, dimethylallylpyrophosphate is primarily located in the peroxisome, cytoplasm and mitochondria. Dimethylallylpyrophosphate exists in all living organisms, ranging from bacteria to humans. In humans, dimethylallylpyrophosphate is involved in the lovastatin action pathway, the desmosterolosis pathway, the risedronate action pathway, and the ibandronate action pathway. Dimethylallylpyrophosphate is also involved in several metabolic disorders, some of which include the wolman disease pathway, the chondrodysplasia punctata II, X linked dominant (CDPX2) pathway, the mevalonic aciduria pathway, and the child syndrome pathway. Outside of the human body, dimethylallylpyrophosphate can be found in a number of food items such as ucuhuba, yellow wax bean, white cabbage, and european plum. This makes dimethylallylpyrophosphate a potential biomarker for the consumption of these food products. Dimethylallyl pyrophosphate (or -diphosphate) (DMAPP) is an intermediate product of both mevalonic acid (MVA) pathway and DOXP/MEP pathway. It is an isomer of isopentenyl pyrophosphate (IPP) and exists in virtually all life forms. (wikipedia).",
+   "cas": "358-72-5",
+   "kegg_id": "C00235",
+   "pubchem_cid": "647",
+   "chebi_id": "16057",
+   "biocyc_id": "CPD-4211",
+   "chemspider_id": "627",
+   "drugbank_id": "DB01785",
+   "pwc_id": "PW_C000874",
+   "short_name": "Ipe"
+  },
+  "candidates": [],
+  "chosen_rule": "exact_short_name_or_synonym",
+  "confidence": 0.7
+ },
+ "stage6_cache_answer": {
+  "status": "mapped",
+  "provider": "PathBankDB",
+  "source": "db",
+  "mapped_ids": {
+   "hmdb": "HMDB0001120",
+   "kegg": "C00235",
+   "chebi": "CHEBI:16057",
+   "pubchem": "647",
+   "cas": "358-72-5",
+   "biocyc": "CPD-4211",
+   "chemspider": "627",
+   "drugbank": "DB01785",
+   "pathbank_compound_id": "874"
+  },
+  "pathbank_compound_id": 874,
+  "confidence": 0.95,
+  "chosen_rule": "synonym",
+  "candidates": [
+   {
+    "pathbank_compound_id": 874,
+    "name": "Dimethylallylpyrophosphate",
+    "short_name": "Ipe",
+    "score": 0.95,
+    "mapped_ids": {
+     "hmdb": "HMDB0001120",
+     "kegg": "C00235",
+     "chebi": "CHEBI:16057",
+     "pubchem": "647",
+     "cas": "358-72-5",
+     "biocyc": "CPD-4211",
+     "chemspider": "627",
+     "drugbank": "DB01785",
+     "pathbank_compound_id": "874"
+    }
+   }
+  ],
+  "resolution": {
+   "status": "matched",
+   "order_step": "synonym"
+  }
+ },
+ "stage6_gate_at_base": {
+  "status": "unmapped",
+  "reason": "novel_compound",
+  "provider": "PathBankDB",
+  "source": "db",
+  "confidence": 0.0,
+  "chosen_rule": "novel_compound",
+  "candidates": [],
+  "name_gate": {
+   "verdict": "reject",
+   "reason": "no_shared_meaningful_token",
+   "entity_name": "prenyl diphosphate",
+   "kind": "compound",
+   "resolved_name": "Dimethylallylpyrophosphate",
+   "identity": "biocyc:CPD-4211, cas:358-72-5, chebi:CHEBI:16057, chemspider:627, drugbank:DB01785, hmdb:HMDB0001120, kegg:C00235, pathbank_compound_id:874, pubchem:647",
+   "compared_names": [
+    "Dimethylallylpyrophosphate",
+    "Ipe",
+    "CPD-4211"
+   ]
+  },
+  "rejected_mapped_ids": {
+   "hmdb": "HMDB0001120",
+   "kegg": "C00235",
+   "chebi": "CHEBI:16057",
+   "pubchem": "647",
+   "cas": "358-72-5",
+   "biocyc": "CPD-4211",
+   "chemspider": "627",
+   "drugbank": "DB01785",
+   "pathbank_compound_id": "874"
+  },
+  "rejected_chosen_rule": "synonym",
+  "rejected_candidates": [
+   {
+    "pathbank_compound_id": 874,
+    "name": "Dimethylallylpyrophosphate",
+    "short_name": "Ipe",
+    "score": 0.95,
+    "mapped_ids": {
+     "hmdb": "HMDB0001120",
+     "kegg": "C00235",
+     "chebi": "CHEBI:16057",
+     "pubchem": "647",
+     "cas": "358-72-5",
+     "biocyc": "CPD-4211",
+     "chemspider": "627",
+     "drugbank": "DB01785",
+     "pathbank_compound_id": "874"
+    }
+   }
+  ],
+  "resolution": {
+   "status": "novel",
+   "issue": "implausible_name_match",
+   "order_step": "name_plausibility_gate"
+  }
+ },
+ "prefreeze_input": {
+  "entities": {
+   "compounds": [
+    {
+     "name": "1,4-dihydroxy-2-naphthoic acid",
+     "class": "compound",
+     "provenance": "extracted",
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "support": "unsupported",
+       "paper_explicit": "explicit",
+       "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+       "review_required": false,
+       "uncertainty": "",
+       "sources": []
+      },
+      {
+       "stage": "identifier_mapping",
+       "origin": "unresolved",
+       "support": "unsupported",
+       "paper_explicit": "not_evaluated",
+       "reason": "identifier resolution ended novel (no_db_candidates)",
+       "review_required": true,
+       "uncertainty": "no database record was established for this entity",
+       "sources": []
+      },
+      {
+       "stage": "audit_repair",
+       "origin": "audit_modified",
+       "support": "unsupported",
+       "paper_explicit": "not_evaluated",
+       "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+       "review_required": false,
+       "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+       "sources": []
+      }
+     ],
+     "mapping_meta": {
+      "query": {
+       "name": "1,4-dihydroxy-2-naphthoic acid"
+      },
+      "route": "compound",
+      "route_reason": "default_compound_route",
+      "providers": [
+       "PathBankDB"
+      ],
+      "source": "db",
+      "candidates": [],
+      "chosen_rule": "novel_compound",
+      "confidence": 0.0,
+      "resolution": {
+       "status": "novel",
+       "issue": "no_db_candidates",
+       "order_step": "novel_compound"
+      }
+     },
+     "synonyms": [
+      "{'-': 'DHNA'}"
+     ],
+     "compound_class": "compound",
+     "type": "Compound",
+     "compound_type": "Compound",
+     "element_states": [
+      {
+       "biological_state": "intracellular state"
+      },
+      {
+       "biological_state": "extracellular state"
+      },
+      {
+       "biological_state": "Lactococcus lactis intracellular"
+      },
+      {
+       "biological_state": "Lactococcus lactis extracellular"
+      }
+     ]
+    },
+    {
+     "name": "prenyl diphosphate",
+     "class": "compound",
+     "provenance": "extracted",
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "support": "unsupported",
+       "paper_explicit": "explicit",
+       "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+       "review_required": false,
+       "uncertainty": "",
+       "sources": []
+      },
+      {
+       "stage": "identifier_mapping",
+       "origin": "unresolved",
+       "support": "unsupported",
+       "paper_explicit": "not_evaluated",
+       "reason": "identifier resolution ended novel (implausible_name_match)",
+       "review_required": true,
+       "uncertainty": "no database record was established for this entity",
+       "sources": []
+      }
+     ],
+     "mapping_meta": {
+      "query": {
+       "name": "prenyl diphosphate"
+      },
+      "route": "compound",
+      "route_reason": "default_compound_route",
+      "providers": [
+       "PathBankDB"
+      ],
+      "source": "db",
+      "candidates": [],
+      "chosen_rule": "novel_compound",
+      "confidence": 0.0,
+      "resolution": {
+       "status": "novel",
+       "issue": "implausible_name_match",
+       "order_step": "name_plausibility_gate"
+      }
+     },
+     "compound_class": "compound",
+     "type": "Compound",
+     "compound_type": "Compound",
+     "element_states": [
+      {
+       "biological_state": "intracellular state"
+      }
+     ]
+    },
+    {
+     "name": "demethylmenaquinone (DMK)",
+     "class": "compound",
+     "confidence": 1.0,
+     "provenance": "extracted",
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "support": "unsupported",
+       "paper_explicit": "explicit",
+       "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+       "review_required": false,
+       "uncertainty": "",
+       "sources": []
+      },
+      {
+       "stage": "identifier_mapping",
+       "origin": "unresolved",
+       "support": "unsupported",
+       "paper_explicit": "not_evaluated",
+       "reason": "identifier resolution ended ambiguous (ambiguous)",
+       "review_required": true,
+       "uncertainty": "no database record was established for this entity",
+       "sources": []
+      },
+      {
+       "stage": "audit_repair",
+       "origin": "audit_modified",
+       "support": "unsupported",
+       "paper_explicit": "not_evaluated",
+       "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+       "review_required": false,
+       "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+       "sources": []
+      }
+     ],
+     "mapping_meta": {
+      "query": {
+       "name": "demethylmenaquinone (DMK)"
+      },
+      "route": "compound",
+      "route_reason": "default_compound_route",
+      "providers": [
+       "PathBankDB"
+      ],
+      "source": "db",
+      "candidates": [
+       {
+        "pathbank_compound_id": 41547,
+        "name": "2-Demethylmenaquinone 8",
+        "short_name": "2-Demet",
+        "score": 0.565,
+        "mapped_ids": {
+         "chebi": "CHEBI:48455",
+         "pubchem": "5376004"
+        }
+       },
+       {
+        "pathbank_compound_id": 41675,
+        "name": "Demethylmenaquinone-7",
+        "short_name": "DMK-7",
+        "score": 0.4733,
+        "mapped_ids": {
+         "pubchem": "25244494"
+        }
+       }
+      ],
+      "chosen_rule": "",
+      "confidence": 0.565,
+      "resolution": {
+       "status": "ambiguous",
+       "issue": "ambiguous",
+       "order_step": "high_confidence_fuzzy"
+      }
+     },
+     "synonyms": [
+      "{'-': 'demethylmenaquinone (DMK)'}"
+     ],
+     "short_name": "2-Demet",
+     "compound_class": "compound",
+     "type": "Compound",
+     "compound_type": "Compound",
+     "element_states": [
+      {
+       "biological_state": "intracellular state"
+      }
+     ],
+     "db_status": "legacy_id_unverified",
+     "db_id": 41547,
+     "chosen_rule": "legacy_pathwhiz_id_unverified",
+     "pathwhiz_id": 41547,
+     "pathbank_compound_id": 41547
+    }
+   ]
+  },
+  "processes": {
+   "reactions": [
+    {
+     "inputs": [
+      "1,4-dihydroxy-2-naphthoic acid",
+      "prenyl diphosphate"
+     ],
+     "outputs": [
+      "demethylmenaquinone (DMK)"
+     ],
+     "locked_reaction_id": "rxn_lock_002",
+     "name": "MenA reaction: DHNA to DMK",
+     "enzymes": [
+      {
+       "entity": "MenA complex",
+       "entity_type": "protein_complex",
+       "role": "catalyst",
+       "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)",
+       "confidence": 1.0,
+       "provenance": "extracted"
+      }
+     ],
+     "biological_state": "Lactococcus lactis cells",
+     "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)",
+     "scope_membership": "core",
+     "provenance_lineage": [
+      {
+       "stage": "paper_extraction",
+       "origin": "paper_stated",
+       "support": "unsupported",
+       "paper_explicit": "explicit",
+       "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+       "review_required": false,
+       "uncertainty": "",
+       "sources": []
+      }
+     ],
+     "spontaneous": false,
+     "modifiers": [
+      {
+       "entity": "MenA complex",
+       "entity_type": "protein_complex",
+       "role": "catalyst",
+       "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)",
+       "confidence": 1.0,
+       "provenance": "extracted"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
