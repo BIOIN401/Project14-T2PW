@@ -1,0 +1,108 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\src\t2pw\__init__.py
+........................................................................ [  9%]
+......F................................................................. [ 18%]
+........................................................................ [ 28%]
+........................................................................ [ 37%]
+........................................................................ [ 46%]
+....................................................ss...s..sss.ss...... [ 56%]
+........................................................................ [ 65%]
+........................................................................ [ 74%]
+........................................................................ [ 84%]
+........................................................................ [ 93%]
+.................................................                        [100%]
+================================== FAILURES ===================================
+___________ test_the_orchestrator_passes_the_merge_base_to_conform ____________
+
+    def test_the_orchestrator_passes_the_merge_base_to_conform():
+        """The S3 seam must hand conform the SAME object it hands ``merge_additions``.
+    
+        ``seed_payload`` defaults to ``None``, which is the pre-fix behaviour, so a
+        caller that forgets it gets a green conform module and a merged payload with
+        every duplicate still in it. That is not hypothetical: the guard landed on
+        2026-07-28 with ``streamlit_app.py`` still calling
+        ``conform_rag_additions_for_merge(rag_result.payload)``, and every number the
+        fix claims -- 88 entity rows -> 66 on PMC12444477/strict, 279 -> 220 across the
+        eight delivered ``merged_payload.json`` with a RAG side -- was unreachable in
+        production until the second argument was added. Every unit test in this file
+        passes the base explicitly, so none of them can catch that.
+    
+        Checked against the SOURCE rather than by running the orchestrator, because
+        importing ``streamlit_app`` executes a Streamlit script. The assertion is
+        stronger than "two arguments were passed": the name given to conform must be
+        the same name given to ``merge_additions`` as its base. Passing the Stage-1
+        seed there instead would type-check, run, and quietly let back every entity
+        that Stage 2 registered and Stage 1 did not ('lipid IV_A precursor',
+        'Kdo-lipid A precursor', 'tetra-acylated disaccharide intermediate' in that
+        same run).
+        """
+        tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    
+        def _calls(name: str) -> List[ast.Call]:
+            return [
+                node
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id == name
+            ]
+    
+        conform_calls = _calls("conform_rag_additions_for_merge")
+        assert len(conform_calls) == 1, "the S3 seam is the only caller; found %d" % len(conform_calls)
+        call = conform_calls[0]
+    
+        base_arg: Any = None
+        if len(call.args) > 1:
+            base_arg = call.args[1]
+        else:
+            base_arg = next((kw.value for kw in call.keywords if kw.arg == "seed_payload"), None)
+        assert isinstance(base_arg, ast.Name), (
+            "conform_rag_additions_for_merge must be given the merge base; without it "
+            "the seed's own entities are re-imported as duplicate rows"
+        )
+    
+        assignment = next(
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Assign) and node.value is call
+        )
+        envelope_name = assignment.targets[0].id  # type: ignore[union-attr]
+    
+>       merge_call = next(
+            node
+            for node in _calls("merge_additions")
+            if len(node.args) > 1
+            and isinstance(node.args[1], ast.Name)
+            and node.args[1].id == envelope_name
+        )
+E       StopIteration
+
+tests\test_rag_seed_entity_reimport.py:590: StopIteration
+=========================== short test summary info ===========================
+FAILED tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform
+1 failed, 760 passed, 8 skipped in 36.57s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b043803ada19ed9e063e9c7e6a0bc16fbd8aba2f  [git, worktree dirty=False]
+label                   : affected-2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-758a/04-affected-2.pin.json -q --basetemp=C:/t/bt-orch758a/04-affected-2-28118 tests/test_rag_graph_delta.py tests/test_rag_payload_gate_guardrails.py tests/test_rag_provenance_gates.py tests/test_rag_reversible_reaction_preservation.py tests/test_rag_seed_entity_reimport.py tests/test_rag_synthesize.py tests/test_rag_typed_gap_resolution.py tests/test_rag_typed_resolution_integrity.py tests/test_reference_repair.py tests/test_research_mode_contracts.py tests/test_research_mode_normalizer.py tests/test_stage2_mapping_boundary.py tests/test_stage3_gate_report_lifecycle.py tests/test_stage_contracts.py tests/test_stage_one_boundary.py tests/test_stage_one_paper_dictionary.py tests/test_streamlit_stage2_orchestration.py tests/test_streamlit_stage8_export_contract.py tests/test_strict_failure_replay.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_lineage.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_real_artifact_replay.py tests/test_strict_quarantine_release_seam.py tests/test_strict_quarantine_versioning.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a
+root PID / process group: 1072488 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 38.20 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  1075536:python.exe
+descendants terminated  : 1  1075536
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\g11\ORCH-758a\04-affected-2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

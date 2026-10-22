@@ -1,0 +1,50 @@
+'Ca++' True
+'Ca ++' True
+'Fe+++' True
+'Ca2+' False
+'Ca 2+' False
+'NADH + H+' True
+'A + B' True
+'EntB + EntE' True
+'voltage-gated Ca ++ channels' True
+'voltage-gated Ca++ channels' True
+'H+' False
+'NAD+' False
+Traceback (most recent call last):
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\orch758a\orch758a_replay.py", line 16, in <module>
+    out, rep = normalize_process_payload(payload, mode="pathwhiz")
+               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\src\t2pw\pipeline\process_normalizer.py", line 5618, in normalize_process_payload
+    normalize_composites(data, report=report)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\src\t2pw\pipeline\process_normalizer.py", line 1545, in normalize_composites
+    raise ValueError(
+        f"Composite entity '{name}' in /entities/compounds has no protein-like left component; unsupported."
+    )
+ValueError: Composite entity 'Ca++' in /entities/compounds has no protein-like left component; unsupported.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b043803ada19ed9e063e9c7e6a0bc16fbd8aba2f  [git, worktree dirty=True]
+label                   : replay-merged-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch758a/orch758a_replay.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_papers/ORCH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict/merged_payload.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a
+root PID / process group: 1084372 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.77 s
+exit reason             : nonzero
+exit code (real)        : 3
+returned code           : 3
+descendants observed    : 1  1084384:python.exe
+descendants terminated  : 1  1084384
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\g11\ORCH-758a\11-replay-merged-base.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

@@ -1,0 +1,50 @@
+'Ca++' False
+'Ca ++' False
+'Fe+++' False
+'Ca2+' False
+'Ca 2+' False
+'NADH + H+' True
+'A + B' True
+'EntB + EntE' True
+'voltage-gated Ca ++ channels' False
+'voltage-gated Ca++ channels' False
+'H+' False
+'NAD+' False
+gate ok: False errors: [{'path': '/entities/proteins/0', 'reason': "Protein 'OTOP1' is missing a UniProt or DrugBank identifier.", 'detail': {'name': 'OTOP1', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}], 'organism': 'Homo sapiens'}}, {'path': '/entities/proteins/1', 'reason': "Protein 'voltage-gated Ca ++ channels' is missing a UniProt or DrugBank identifier.", 'detail': {'name': 'voltage-gated Ca ++ channels', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}], 'organism': 'Homo sapiens'}}]
+plus remaining 0
+contract keys ['ok', 'stage', 'contract_type', 'effect_on_failure', 'errors', 'warnings', 'summary', 'runtime_schema_report', 'gate_report']
+contract codes {None: 2}
+transports:
+   H+ [{'evidence': 'permeation of H+ through an apical ion channel subsequently identified as OTOP1', 'entity': 'OTOP1', 'entity_type': 'protein', 'protein': 'OTOP1'}]
+   Ca++ [{'evidence': 'activate voltage-gated Ca ++ channels triggering the release of synaptic vesicles', 'entity': 'voltage-gated Ca ++ channels', 'entity_type': 'protein', 'protein': 'voltage-gated Ca ++ channels'}]
+   H+ [{'evidence': 'permeation of H + through an apical ion channel subsequently identified as OTOP1', 'entity': 'OTOP1', 'entity_type': 'protein', 'protein': 'OTOP1'}]
+   H+ [{'evidence': 'transduction of sour involves permeation of H+ through an apical ion channel', 'entity': 'OTOP1', 'entity_type': 'protein', 'protein': 'OTOP1'}]
+compounds: ['H+', 'Ca++']
+proteins: ['OTOP1', 'voltage-gated Ca ++ channels']
+complexes: []
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b043803ada19ed9e063e9c7e6a0bc16fbd8aba2f  [git, worktree dirty=False]
+label                   : replay-fixture-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch758a/orch758a_replay.py tests/fixtures/orch758a/sour_taste_PMC7059786_merged_excerpt.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a
+root PID / process group: 1083928 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.78 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1086196:python.exe
+descendants terminated  : 1  1086196
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\g11\ORCH-758a\13-replay-fixture-tip.json
+json report written     : True
+pre-existing (reported, NEVER killed): 14
+================================================
