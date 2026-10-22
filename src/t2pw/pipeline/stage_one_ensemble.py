@@ -1063,10 +1063,11 @@ def record_empty_chunk(failure: BaseException, chunk_id: Any) -> str:
     """The side-file entry of a chunk whose every draw said nothing (ORCH-758b, D3).
 
     :func:`run_ensemble` raises before it writes one, so without this the chunk would be
-    missing from ``stage1_ensemble_report.json`` and every later entry would sit one
-    place off its chunk. Called only by the chunked Stage-1 path, once it has accepted the
-    chunk as empty; a failure that ends the run writes nothing, as before. Returns the
-    path written, or ``''`` when no ensemble ran (one draw) or there is no artifact dir.
+    missing from ``stage1_ensemble_report.json``. Called only by the chunked Stage-1 path,
+    after every chunk has run and the paper is known not to be empty, so the entry comes
+    after the other chunks' and names its ``chunk_id``; a failure that ends the run writes
+    nothing, as before. Returns the path written, or ``''`` when no ensemble ran (one
+    draw) or there is no artifact dir.
     """
 
     failures = getattr(failure, "ensemble_failures", None)
