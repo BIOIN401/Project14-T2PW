@@ -1,0 +1,56 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\src\t2pw\__init__.py
+============================= test session starts =============================
+platform win32 -- Python 3.13.6, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763
+configfile: pytest.ini
+plugins: anyio-4.14.2
+collecting ... collected 19 items
+
+tests/test_orch763_nested_locations.py::test_g9_leg_menh_to_meni_duplicates_merge_keeping_cytosol PASSED [  5%]
+tests/test_orch763_nested_locations.py::test_g9_leg_pool_16_to_11 PASSED [ 10%]
+tests/test_orch763_nested_locations.py::test_g9_a_row_without_location_does_not_join_two_non_nested_locations PASSED [ 15%]
+tests/test_orch763_nested_locations.py::test_new_the_survivor_takes_the_more_specific_location_when_the_broader_row_came_first PASSED [ 21%]
+tests/test_orch763_nested_locations.py::test_new_a_record_never_joins_two_locations_through_their_common_container PASSED [ 26%]
+tests/test_orch763_nested_locations.py::test_new_rule3_merges_nested_locations_and_flags_the_merge PASSED [ 31%]
+tests/test_orch763_nested_locations.py::test_preserved_rule3_keeps_non_nested_locations_apart PASSED [ 36%]
+tests/test_orch763_nested_locations.py::test_new_the_containment_table_is_a_tree_of_folded_names PASSED [ 42%]
+tests/test_orch763_nested_locations.py::test_preserved_locations_that_do_not_nest_stay_apart[unknown_pair] PASSED [ 47%]
+tests/test_orch763_nested_locations.py::test_preserved_locations_that_do_not_nest_stay_apart[cytosol_vs_matrix] PASSED [ 52%]
+tests/test_orch763_nested_locations.py::test_preserved_locations_that_do_not_nest_stay_apart[cytosol_vs_membrane] PASSED [ 57%]
+tests/test_orch763_nested_locations.py::test_preserved_a_chimeric_pair_stays_apart_even_with_nested_locations[cofactor] PASSED [ 63%]
+tests/test_orch763_nested_locations.py::test_preserved_a_chimeric_pair_stays_apart_even_with_nested_locations[enzyme] PASSED [ 68%]
+tests/test_orch763_nested_locations.py::test_preserved_a_chimeric_pair_stays_apart_even_with_nested_locations[species] PASSED [ 73%]
+tests/test_orch763_nested_locations.py::test_preserved_equal_locations_under_two_names_merge_unflagged PASSED [ 78%]
+tests/test_orch763_nested_locations.py::test_preserved_the_pooled_payload_carries_no_merge_mark PASSED [ 84%]
+tests/test_orch763_nested_locations.py::test_preserved_enterobactin_leg_keeps_5_of_5 PASSED [ 89%]
+tests/test_orch763_nested_locations.py::test_preserved_chlorophyll_repools_without_a_chimera[orch759] PASSED [ 94%]
+tests/test_orch763_nested_locations.py::test_preserved_chlorophyll_repools_without_a_chimera[orch751] PASSED [100%]
+
+============================= 19 passed in 0.43s ==============================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fc00253b3dfcb7b84d69da0cfe06d87593a42803  [git, worktree dirty=False]
+label                   : g9-green
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-763/07-g9-green.pin.json -v --basetemp=C:/t/bt-orch763/07-g9-green-1380 tests/test_orch763_nested_locations.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763
+root PID / process group: 290992 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 1.13 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  291004:python.exe
+descendants terminated  : 1  291004
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\g11\ORCH-763\07-g9-green.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

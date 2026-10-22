@@ -1,0 +1,54 @@
+d[1] 'Glu-tRNA reduction to GSA': glu trna -> glu 1 semialdehyde | enzymes ['HEMA1'] | plastid state
+d[1, 2, 3] 'GSA conversion to ALA': glu 1 semialdehyde -> 5 aminolevulinate | enzymes ['GSAT'] | plastid state
+d[1, 3] 'ALA condensation to PBG': 5 aminolevulinate -> porphobilinogen | enzymes ['ALAD'] | plastid state
+d[1, 2, 3] 'PBG polymerization to HMB': porphobilinogen -> hydroxymethylbilane | enzymes ['PBG deaminase'] | plastid state
+d[1, 2, 3] 'HMB conversion to Urogen III': hydroxymethylbilane -> uroporphyrinogen iii | enzymes ['UROS'] | plastid state
+d[1, 2, 3] 'Urogen III decarboxylation to Coprogen III': uroporphyrinogen iii -> coproporphyrinogen iii | enzymes ['UROD'] | plastid state
+d[1, 2] 'Coprogen III oxidation to Protogen IX': coproporphyrinogen iii -> protoporphyrinogen ix | enzymes ['CPO1'] | plastid state
+d[1, 2] 'Protogen IX oxidation to Proto IX': protoporphyrinogen ix -> protoporphyrin ix | enzymes ['PPO1'] | plastid state
+d[1, 3] 'Mg-chelatase reaction: Proto IX to Mg-Proto IX': protoporphyrin ix -> mg proto ix | enzymes ['GUN4', 'Mg-chelatase'] | thylakoid membrane state
+d[1, 2, 3] 'Mg-Proto IX methylation to Mg-Proto ME': mg proto ix -> mg proto ix monomethyl ester | enzymes ['Mg-Proto IX methyltransferase'] | plastid state
+d[1, 3] 'Mg-Proto ME cyclization to DV-Pchlide': mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide | enzymes ['Mg-Proto ME cyclase'] | thylakoid membrane state
+d[1, 3] 'DV-Pchlide reduction to DV-Chlide by POR': 3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide | enzymes ['POR'] | thylakoid membrane state
+d[1, 2, 3] 'DV-Chlide conversion to MV-Chlide a by DVR': 3 8 divinyl chlorophyllide -> mv chlide a | enzymes ['DVR'] | plastid state
+d[1] 'Geranylgeranyl reduction to phytyl by CHLP': geranylgeranyl chain -> phytyl chain | enzymes ['CHLP'] | thylakoid membrane state
+d[1, 2, 3] 'Chl a formation by Chl synthase': geranylgeraniol + mv chlide a -> chl a | enzymes ['Chl synthase'] | thylakoid membrane state
+d[1, 2, 3] 'Chl a conversion to Chl b by CAO': chl a -> chl b | enzymes ['CAO'] | thylakoid membrane state
+d[1, 3] 'ALA condensation to PBG': 5 aminolevulinate -> porphobilinogen | enzymes ['ALAD1/HEMB1'] | plastid state
+d[2] 'Mg2+ insertion into Proto IX': protoporphyrin ix -> mg proto ix | enzymes ['Mg-chelatase complex'] | plastid state
+d[2] 'Mg-Proto ME cyclization': mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide | enzymes ['Mg-Proto ME cyclase complex'] | plastid state
+d[2] 'DV-Pchlide reduction by POR': 3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide | enzymes ['PORB'] | plastid state
+d[2] 'Glu-tRNAGlu reduction to GSA': glu trnaglu -> glu 1 semialdehyde | enzymes ['HEMA1'] | plastid state
+d[2] 'Fe2+ insertion into Proto IX (heme formation)': protoporphyrin ix -> heme b | enzymes ['FC2'] | plastid state
+d[3] 'CPO reaction': coproporphyrinogen iii -> protoporphyrinogen ix | enzymes ['CPO'] | plastid state
+d[3] 'PPO reaction': protoporphyrinogen ix -> protoporphyrin ix | enzymes ['PPO'] | plastid state
+d[3] 'GluTR reaction': glu trnaglu -> glu 1 semialdehyde | enzymes ['GluTR'] | plastid state
+d[3] 'Chl synthase reaction (phytol)': mv chlide a + phytol -> chl a | enzymes ['Chl synthase'] | plastid state
+d[3] 'CAO reaction (Chlide a to Chlide b)': chlide a -> chlide b | enzymes ['CAO'] | plastid state
+d[3] 'ferrochelatase reaction': protoporphyrin ix -> protoheme | enzymes ['ferrochelatase'] | plastid state
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fc00253b3dfcb7b84d69da0cfe06d87593a42803  [git, worktree dirty=False]
+label                   : chl-rows-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch763/chl_rows.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_papers/ORCH-759/legs/chlorophyll-strict/2026-10-22_1231/papers/PMC5130987/01_source_text.txt
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763
+root PID / process group: 295096 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.24 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  295108:python.exe
+descendants terminated  : 1  295108
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\g11\ORCH-763\14-chl-rows-tip.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

@@ -1,0 +1,34 @@
+production lexicon (tip): pooled 11; gold matched 9/9 P 1.000; names rewritten 6
+   'MenA reaction: DHNA to DMK' draws [1, 2] key '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> demethylmenaquinone dmk' merges [(2, ['exact'], None)]
+   'MenG reaction: DMK to MK' draws [1, 2] key 'demethylmenaquinone dmk -> menaquinone mk' merges [(2, ['exact'], None)]
+   'MenA reaction' draws [3] key '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> dmk' merges []
+   'MenG reaction' draws [3] key 'dmk -> mk' merges []
+COUNTERFACTUAL lexicon (+ DMK, + MK): pooled 9; gold matched 9/9 P 1.000; names rewritten 12
+   'MenA reaction: DHNA to DMK' draws [1, 2, 3] key '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> demethylmenaquinone' merges [(2, ['exact'], None), (3, ['abbreviation'], "'cytosol' within 'intracellular'")]
+   'MenG reaction: DMK to MK' draws [1, 2, 3] key 'demethylmenaquinone -> menaquinone' merges [(2, ['exact'], None), (3, ['abbreviation'], "'cytosol' within 'intracellular'")]
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fc00253b3dfcb7b84d69da0cfe06d87593a42803  [git, worktree dirty=False]
+label                   : counterfactual-dmk
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch763/counterfactual_dmk.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch763 C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_papers/ORCH-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/01_source_text.txt
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763
+root PID / process group: 291996 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.40 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  282060:python.exe
+descendants terminated  : 1  282060
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\g11\ORCH-763\13-counterfactual-dmk.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

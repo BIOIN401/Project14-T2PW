@@ -1,0 +1,62 @@
+wrote tests\fixtures\orch763\menaquinone_orch759_draws.json: draws [4, 9, 9] reactions (side file rows_per_draw [4, 9, 9]); 6 inferred states; 1 patches
+   inferred d2 'MenF reaction' -> 'MenF reaction: chorismate to isochorismate': state 'intracellular state' (the label most of this draw's own pooled rows carry)
+   inferred d3 'MenF reaction' -> 'MenF reaction: chorismate to isochorismate': state 'Lactococcus lactis intracellular' (the label most of this draw's own pooled rows carry)
+   inferred d2 'MenD reaction' -> 'MenD reaction: isochorismate to SEPHCHC': state 'intracellular state' (the label most of this draw's own pooled rows carry)
+   inferred d3 'MenD reaction' -> 'MenD reaction: isochorismate to SEPHCHC': state 'Lactococcus lactis intracellular' (the label most of this draw's own pooled rows carry)
+   inferred d2 'MenA reaction' -> 'MenA reaction: DHNA to DMK': state 'intracellular state' (the label most of this draw's own pooled rows carry)
+   inferred d2 'MenG reaction' -> 'MenG reaction: DMK to MK': state 'intracellular state' (the label most of this draw's own pooled rows carry)
+   patch d2 'intracellular state'.compartment_canonical = 'cytosol' (the leg's side file kept draw 3's MenH-MenI rows apart from draw 2's on 'biological_state location cytosol vs intracellular' (candidate first, so draw 2 = cytosol); this state's subcellular_location is 'intracellular', so only compartment_canonical can have given cytosol, and the pooled payload carries no compartment_canonical)
+wrote tests\fixtures\orch763\enterobactin_orch759_draws.json: draws [5, 5, 5] reactions (side file rows_per_draw [5, 5, 5]); 9 inferred states; 0 patches
+   inferred d2 'EntC isochorismate synthase reaction' -> 'EntC-catalyzed isomerization of chorismate to isochorismate': state 'cytoplasmic state' (the survivor's label, defined in this draw)
+   inferred d3 'EntC isochorismate synthase reaction' -> 'EntC-catalyzed isomerization of chorismate to isochorismate': state 'cytoplasmic state' (the survivor's label, defined in this draw)
+   inferred d2 'EntB isochorismatase reaction' -> 'EntB isochorismatase reaction': state 'cytoplasmic state' (the survivor's label, defined in this draw)
+   inferred d3 'EntB isochorismatase reaction' -> 'EntB isochorismatase reaction': state 'cytoplasmic state' (the survivor's label, defined in this draw)
+   inferred d2 'EntA dehydrogenase reaction' -> 'EntA dehydrogenase reaction': state 'cytoplasmic state' (the survivor's label, defined in this draw)
+   inferred d3 'EntA 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction' -> 'EntA dehydrogenase reaction': state 'cytoplasmic state' (the survivor's label, defined in this draw)
+   inferred d2 'EntE adenylation reaction' -> 'EntE adenylation of 2,3-DHB': state 'cytoplasmic state' (the survivor's label, defined in this draw)
+   inferred d3 'EntE 2,3-dihydroxybenzoyl-AMP ligase reaction' -> 'EntE adenylation of 2,3-DHB': state 'cytoplasmic state' (the survivor's label, defined in this draw)
+   inferred d3 'EntF enterobactin synthase reaction' -> 'EntF enterobactin synthase reaction': state 'cytoplasmic state' (the survivor's label, defined in this draw)
+wrote tests\fixtures\orch763\chlorophyll_orch759_draws.json: draws [16, 16, 18] reactions (side file rows_per_draw [16, 16, 18]); 17 inferred states; 0 patches
+   inferred d2 'GSA to ALA' -> 'GSA conversion to ALA': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d3 'GSAT reaction' -> 'GSA conversion to ALA': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d3 'ALAD reaction' -> 'ALA condensation to PBG': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d2 'PBG polymerization to HMB' -> 'PBG polymerization to HMB': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d3 'PBG deaminase reaction' -> 'PBG polymerization to HMB': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d2 'HMB to Urogen III' -> 'HMB conversion to Urogen III': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d3 'UROS reaction' -> 'HMB conversion to Urogen III': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d2 'Urogen III to Coprogen III' -> 'Urogen III decarboxylation to Coprogen III': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d3 'UROD reaction' -> 'Urogen III decarboxylation to Coprogen III': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d2 'Coprogen III to Protogen IX' -> 'Coprogen III oxidation to Protogen IX': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d2 'Protogen IX to Proto IX' -> 'Protogen IX oxidation to Proto IX': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d2 'Mg-Proto IX methylation' -> 'Mg-Proto IX methylation to Mg-Proto ME': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d3 'Mg-Proto IX methyltransferase reaction' -> 'Mg-Proto IX methylation to Mg-Proto ME': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d2 'DV-Chlide to MV-Chlide a' -> 'DV-Chlide conversion to MV-Chlide a by DVR': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d3 'DVR reaction' -> 'DV-Chlide conversion to MV-Chlide a by DVR': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d3 'Chl synthase reaction (geranylgeraniol)' -> 'Chl a formation by esterification': state 'plastid state' (the survivor's label, defined in this draw)
+   inferred d2 'Chl a to Chl b conversion' -> 'Chl a conversion to Chl b by CAO': state 'thylakoid membrane state' (the survivor's label, defined in this draw)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d1ea64c9e3aabbaa386d0673bcea83dd1e1fb2a  [git, worktree dirty=False]
+label                   : build-fixtures-gitbash
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/bt-orch763/build_all.sh
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763
+root PID / process group: 277808 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.63 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 8  283808:bash.exe, 286436:bash.exe, 283492:bash.exe, 267684:python.exe, 283468:python.exe, 276960:bash.exe, 286364:python.exe, 287224:python.exe
+descendants terminated  : 8  267684, 276960, 283468, 283492, 283808, 286364, 286436, 287224
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\g11\ORCH-763\03-build-fixtures-gitbash.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

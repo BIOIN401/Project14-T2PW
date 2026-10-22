@@ -1,0 +1,70 @@
+source 62985 chars; chunks [54281, 16202]; side file paper_chars 54281
+lexicon over the matching chunk: pairs=15 (side file 15)
+   pair 'AFC' -> 'ammonium ferric citrate' [long (SF)]
+   pair 'ASM' -> 'American Society for Microbiology' [long (SF)]
+   pair 'CFS' -> 'cell-free supernatant' [long (SF)]
+   pair 'DHNA' -> '1,4-dihydroxy-2-naphthoic acid' [long (SF)]
+   pair 'EET' -> 'electron transfer' [long (SF)]
+   pair 'FZ' -> 'ferrozine' [long (SF)]
+   pair 'HNA' -> '1-hydroxy-2-naphthoate' [long (SF)]
+   pair 'HPLC' -> 'high-performance liquid chromatography' [long (SF)]
+   pair 'RBS' -> 'ribosome-binding site' [long (SF)]
+   pair 'RBSs' -> 'ribosome binding sites' [long (SF)]
+   pair 'SA' -> 'surface area' [long (SF)]
+   pair 'SEPHCHC' -> '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate' [long (SF)]
+   pair 'WT' -> 'wild-type' [long (SF)]
+   pair 'gM17' -> 'grown in M17 broth (HiMedia) containing 0.5% glucose' [long (SF)]
+   pair 'mMRS' -> 'modified MRS containing 1% (wt/vol) mannitol' [long (SF)]
+
+== the paper's own definitions
+   'demethylmenaquinone (DMK)' occurs at 6333: 'and MenI to produce DHNA. Subsequently, MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK), and MenG deme'
+   'menaquinone (MK' occurs at 5322: 'preprint no pmc-prop-in-epmc yes cover-date September 2025 INTRODUCTION Quinones, such as menaquinone (MK, vitamin K2) and its pre'
+
+== Schwartz-Hearst step by step on each defining parenthesis
+   SF 'MK'; parenthesis ' (MK, vitamin K2)'; long-form candidate 'such as menaquinone'
+      _best_long_form -> None; _valid_pair -> None
+      short-form characters absent from the whole candidate: ['K']
+   SF 'DMK'; parenthesis ' (DMK)'; long-form candidate 'MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone'
+      _best_long_form -> None; _valid_pair -> None
+      short-form characters absent from the whole candidate: ['K']
+
+== what the lexicon answers for every spelling the draws wrote
+   'DMK': strict_key 'dmk'; spelling_key 'DMK'; pairs.get -> None; long_form -> None; canonical -> ('DMK', [], ''); occurs -> True
+   'demethylmenaquinone (DMK)': strict_key 'demethylmenaquinone dmk'; spelling_key 'demethylmenaquinone (DMK)'; pairs.get -> None; long_form -> None; canonical -> ('demethylmenaquinone (DMK)', [], ''); occurs -> True
+   'demethylmenaquinone': strict_key 'demethylmenaquinone'; spelling_key 'demethylmenaquinone'; pairs.get -> None; long_form -> None; canonical -> ('demethylmenaquinone', [], ''); occurs -> True
+   'MK': strict_key 'mk'; spelling_key 'MK'; pairs.get -> None; long_form -> None; canonical -> ('MK', [], ''); occurs -> True
+   'menaquinone (MK)': strict_key 'menaquinone mk'; spelling_key 'menaquinone (MK)'; pairs.get -> None; long_form -> None; canonical -> ('menaquinone (MK)', [], ''); occurs -> True
+   'menaquinone': strict_key 'menaquinone'; spelling_key 'menaquinone'; pairs.get -> None; long_form -> None; canonical -> ('menaquinone', [], ''); occurs -> True
+   case-folded lookups (would a case rule have found it?): {}
+
+== side file: the MenA / MenG pooled rows and their keys
+   'MenA reaction: DHNA to DMK' draws [1, 2] key '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> demethylmenaquinone dmk' kept_apart_from None
+   'MenG reaction: DMK to MK' draws [1, 2] key 'demethylmenaquinone dmk -> menaquinone mk' kept_apart_from None
+   'MenA reaction' draws [3] key '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> dmk' kept_apart_from None
+   'MenG reaction' draws [3] key 'dmk -> mk' kept_apart_from None
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d1ea64c9e3aabbaa386d0673bcea83dd1e1fb2a  [git, worktree dirty=False]
+label                   : diag-dmk
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch763/diag_dmk.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_papers/ORCH-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/01_source_text.txt C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_papers/ORCH-759/REVIEW/menaquinone/strict/stage1_ensemble_report.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763
+root PID / process group: 272776 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.62 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  272416:python.exe
+descendants terminated  : 1  272416
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\g11\ORCH-763\01-diag-dmk.json
+json report written     : True
+pre-existing (reported, NEVER killed): 14
+================================================
