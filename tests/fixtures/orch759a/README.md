@@ -12,7 +12,9 @@ enterobactin 3-draw strict leg:
   row's `enrichment` block (Stage 7 text, read by no gate) and the top-level `source_text_index`
   (a normalized copy of the paper; without it identity-admission pass A is `not_evaluated` and keeps
   every accession, the same outcome the leg recorded). Nothing else is changed;
-- excerpt file sha256 `66c1d1ffe8791783ee7f1ffca5dc76afac648611723577365ed6623d69a86cfd`.
+- excerpt sha256 `29a9a7c96e73db368f41e684aec2a9b6d7c1af2a4efe60ba1ad1c97e86a4fccb` as committed (LF line
+  endings; `git show <sha>:tests/fixtures/orch759a/enterobactin_final_mapped.excerpt.json | sha256sum`). A
+  Windows checkout with `core.autocrlf=true` writes it with CRLF, which hashes differently and parses identically.
 
 It fails the final pre-export gate exactly as the leg did: one error,
 `/entities/proteins/7/name | Protein has degree 0 after normalization: enterobactin synthase`
