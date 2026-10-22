@@ -73,8 +73,10 @@ BASELINES = {
                    "ORCH-751 3-draw union (ORCH-751-RESULT.md section 2.1): 9/9 (per draw 2,9,7)",
 }
 EXTRA_BASELINE = {
-    "ORCH-759": "; ORCH-756 1-draw leg (orch756_gold_accuracy.txt): stage1 5/5 P 1.000 F1 1.000, "
-                "final 5/5 P 0.714 R 1.000 F1 0.833 (with lineage P 0.833 F1 0.909), PWML 5/5 P 0.714",
+    ("ORCH-759", "enterobactin"): "; ORCH-756 1-draw leg (orch756_gold_accuracy.txt): stage1 5/5 P 1.000 F1 1.000, "
+                                  "final 5/5 P 0.714 R 1.000 F1 0.833 (with lineage P 0.833 F1 0.909), PWML 5/5 P 0.714",
+    ("ORCH-759", "menaquinone"): "; ORCH-756 1-draw leg (orch756_gold_accuracy.txt): stage1 9/9 P 1.000 F1 1.000, "
+                                 "final 7/9 P 0.889 R 0.778 F1 0.830, PWML 7/9 P 0.889",
 }
 #: The reader reading of each unmatched row (ORCH-756 test-runner, by hand against the
 #: paper text). NOT evaluator output. Keyed by (paper, level, row name).
@@ -95,16 +97,35 @@ def pick_leg(legs: Path, name: str, pid: str) -> tuple:
     return (with_s1[-1] if with_s1 else None), cands, False
 
 
-def ensemble_support(path: Path) -> Optional[Dict[str, str]]:
-    """Pooled Stage-1 reaction name -> its draw support, from stage1_ensemble_report.json."""
+
+
+def ensemble_support(path: Path, stage1: Dict[str, Any]) -> Optional[tuple]:
+    """``(locked_reaction_id -> draw support, note)`` from stage1_ensemble_report.json, or None.
+
+    The block with pooled reactions is used (a report may hold several; the note lists them). A
+    pooled Stage-1 row is found by name; pooled rows sharing a name are told apart by the draws
+    of the row biological_state (the report /biological_states bucket). Keyed by lock id so the
+    final payload rows, which keep their locked_reaction_id, inherit the same support."""
     if not path.is_file():
         return None
-    doc = _load(path)
-    doc = doc[0] if isinstance(doc, list) and doc else doc
-    rows = ((doc.get("buckets") or {}).get("/processes/reactions") or {}).get("rows") or []
+    docs = _load(path)
+    docs = docs if isinstance(docs, list) else [docs]
+    blocks = [len(((d.get("buckets") or {}).get("/processes/reactions") or {}).get("rows") or []) for d in docs]
+    doc = next((d for d, k in zip(docs, blocks) if k), docs[0])
+    buckets = doc.get("buckets") or {}
+    rows = (buckets.get("/processes/reactions") or {}).get("rows") or []
+    state_draws = {s.get("name"): set(s.get("draws") or [])
+                   for s in (buckets.get("/biological_states") or {}).get("rows") or []}
     n = doc.get("draws_succeeded")
-    # ponytail: keyed by row name; two pooled rows sharing a name would collide (none here).
-    return {r.get("name"): f"support {len(r.get("draws") or [])}/{n} draws {r.get("draws")}" for r in rows}
+    out: Dict[Any, str] = {}
+    for r in (stage1.get("processes") or {}).get("reactions") or []:
+        cands = [e for e in rows if e.get("name") == r.get("name")]
+        if len(cands) > 1:
+            want = state_draws.get(r.get("biological_state")) or set()
+            cands = [e for e in cands if set(e.get("draws") or []) & want]
+        out[r.get("locked_reaction_id")] = (f"support {len(cands[0].get("draws") or [])}/{n} draws {cands[0].get("draws")}"
+                                            if len(cands) == 1 else "support ambiguous")
+    return out, f"{len(docs)} block(s), pooled reactions per block {blocks}"
 _ENT_LDH = ("Real paper statement, but it is the coupled-assay reporter (gold O2, off-pathway LDH assay), "
             "not enterobactin biosynthesis. Added at Stage 2: present in merged_payload.json, absent from "
             "stage1_payload.json, no provenance_lineage. Drawn in the PWML.")
@@ -162,8 +183,30 @@ NOTES: Dict[str, List[str]] = {
         "not a different source text.",
     ],
 }
-#: ORCH-759 (3-draw enterobactin leg) readings and notes, by the same rule: NOT evaluator output.
+#: ORCH-759 (3-draw legs) readings and notes, by the same rule: NOT evaluator output.
 READINGS_759: Dict[tuple, str] = {}
+_MQ_SPLIT = ("Duplicate of the draw-2 row for the same gold reaction, not new chemistry: draw 3 wrote the same "
+             "step from the kinetic-model rate law (its quote is the rate expression). The merge kept the two "
+             "apart on biological_state (ensemble report: location cytosol vs intracellular).")
+for _n in ("MenH reaction", "MenC reaction", "MenE reaction", "MenB reaction", "MenI reaction"):
+    READINGS_759[("PMC12421875", "stage1", _n)] = _MQ_SPLIT
+    READINGS_759[("PMC12421875", "final", _n)] = _MQ_SPLIT + " Survives to final_mapped.json."
+READINGS_759.update({
+    ("PMC12421875", "final", "MenA reaction: DHNA to DMK"): (
+        "Gold R8 (draws 1 and 2), damaged after Stage 1 exactly as in the 1-draw leg: the paper prenyl "
+        "diphosphate is Dimethylallylpyrophosphate in final_mapped.json, so it is only a partial match."),
+    ("PMC12421875", "final", "MenA reaction"): (
+        "Duplicate of row 1 (R8), draw 3 only. The merge kept it apart on naming (Stage-1 product DMK vs "
+        "demethylmenaquinone (DMK), keys dmk vs demethylmenaquinone dmk) and on state. After mapping both read "
+        "demethylmenaquinone (DMK), so the evaluator collapses it. Same DMAPP rename."),
+    ("PMC12421875", "final", "MenG reaction"): (
+        "Duplicate of row 2 (R9), draw 3 only. Kept apart on naming (Stage-1 DMK -> MK vs demethylmenaquinone "
+        "(DMK) -> menaquinone (MK)) and on state; collapsed by the evaluator after mapping."),
+    ("PMC12421875", "final", "demethylmenaquinone synthesis from DHNA and prenyl diphosphate"): (
+        "Added by retrieval, not by Stage 1: lineage rag_retrieval + rag_admission, rag source seed_paper (a "
+        "retrieved chunk of the target paper itself), no lock id, no biological_state. A third copy of R8 with the "
+        "same DMAPP rename; its evidence is a passage, not a quote (dump_only)."),
+})
 NOTES_759: Dict[str, List[str]] = {
     "PMC12096016": [
         "Draw support of the matched gold reactions (stage1_ensemble_report): R1 EntC, R2 EntB, R3 EntA, R4 EntE "
@@ -180,6 +223,23 @@ NOTES_759: Dict[str, List[str]] = {
         "the phosphopantetheinyl transferase (gold excludes it as a protein-modification statement), not a "
         "catalyst of these conversions. Not penalised: the evaluator credits an enzyme when ANY listed one matches.",
         "No PWML and no pwml_ir.json were written (leg failed final_pre_export_stage3_gates); level 3 is not scored.",
+    ],
+    "PMC12421875": [
+        "Draw support per gold reaction (all three draws succeeded): R1 MenF 3/3 and R2 MenD 3/3 (one pooled row "
+        "each); R8 MenA and R9 MenG 3/3, each split into a draws-1-and-2 row and a draw-3 row; R3 MenH, R4 MenC, "
+        "R5 MenE, R6 MenB, R7 MenI each 2/3 (draws 2 and 3), each split into two 1/3 rows. Draw 1 found only "
+        "MenF, MenD, MenA and MenG.",
+        "The ensemble report counts 12 pooled rows as found by one draw only. None is a single-draw EXTRA: 10 are "
+        "the per-draw halves of R3-R7 and 2 are the draw-3 halves of R8 and R9. No pooled row is chemistry outside "
+        "the gold.",
+        "Final 16 rows = 7 true-positive rows (R1, R3-R7, R9) + 1 partial R8 + 8 duplicates: 5 of R3-R7 (kept apart "
+        "on biological_state), MenA and MenG from draw 3 (kept apart on naming DMK vs demethylmenaquinone (DMK), "
+        "and state), and 1 retrieval-added copy of R8. Real extra chemistry: none. Fragments or reverse reactions: "
+        "none (the 1-draw leg MenF reverse row is absent).",
+        "MenD (R2) is LOST again despite 3/3 draw support: final_mapped.json quarantined_locked_reactions holds "
+        "rxn_lock_007 with reason protein_missing_external_identity. MenA (R8) is again not matched: all three R8 "
+        "rows carry Dimethylallylpyrophosphate in place of the paper prenyl diphosphate.",
+        "No PWML and no pwml_ir.json were written (required-field gate); level 3 is not scored.",
     ],
 }
 READINGS_BY_TASK = {"ORCH-756": READINGS, "ORCH-759": READINGS_759}
@@ -312,8 +372,9 @@ def main() -> int:
         pw = sorted(leg.glob("*.pwml"))[0] if has_pwml else None
         final = _load(leg / "final_mapped.json")
         ens_path = review / name / "strict" / "stage1_ensemble_report.json"
-        support = ensemble_support(ens_path)
-        levels = {"1 stage1 (stage1_payload.json)": _load(leg / "stage1_payload.json"),
+        stage1 = _load(leg / "stage1_payload.json")
+        support, ens_note = ensemble_support(ens_path, stage1) or (None, "")
+        levels = {"1 stage1 (stage1_payload.json)": stage1,
                   "2 final (final_mapped.json)": final}
         check, leftover, withheld = [], 0, 0
         if (leg / "pwml_ir.json").is_file():
@@ -340,9 +401,9 @@ def main() -> int:
                      f"PWML reactions with no IR row {leftover}")
             for k, n, ok in check:
                 P.append(f"   IR {k} {"in PWML" if ok else "NOT IN PWML"}: {n}")
-        P.append(f"baseline: {BASELINES[name]}{EXTRA_BASELINE.get(args.task, "")}")
+        P.append(f"baseline: {BASELINES[name]}{EXTRA_BASELINE.get((args.task, name), "")}")
         if support is not None:
-            P.append(f"Stage-1 ensemble report: {ens_path.relative_to(REPO)} ({len(support)} pooled reactions)")
+            P.append(f"Stage-1 ensemble report: {ens_path.relative_to(REPO)} ({ens_note})")
         P.append("")
         for label, payload in levels.items():
             lvl = label.split()[1]
@@ -370,9 +431,20 @@ def main() -> int:
                 P.append(lin_line)
                 summary.append(" " * 23 + lin_line)
             rows = m["rows"]
+            prows = [x for x in proc.get("reactions") or [] if isinstance(x, dict)]
 
             def sup(r):
-                return f"  [{support.get(r["name"], "support unknown")}]" if (lvl == "stage1" and support) else ""
+                """Draw support plus origin, for Stage-1 and final rows of an N>1 leg only."""
+                if not support or lvl not in ("stage1", "final"):
+                    return ""
+                row = prows[r["row_index"]]
+                lock = row.get("locked_reaction_id")
+                stages = sorted({x.get("stage") for x in row.get("provenance_lineage") or []
+                                 if isinstance(x, dict) and x.get("stage")})
+                rag = (row.get("rag_provenance") or {}).get("source_id")
+                rag_s = f"; rag {rag}" if rag else ""
+                s = support.get(lock, "not a pooled Stage-1 row") if lock else "not a pooled Stage-1 row (no lock id)"
+                return f"  [{s}; lock {lock}; state {repr(row.get("biological_state"))}; lineage {stages}{rag_s}]"
 
             P.append("gold reactions:")
             for g in case.reactions:
