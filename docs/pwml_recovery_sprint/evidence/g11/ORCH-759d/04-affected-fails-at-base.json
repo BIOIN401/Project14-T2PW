@@ -1,0 +1,100 @@
+{
+  "label": "affected-fails-at-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759d/04-affected-fails-at-base.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch759d2/04-affected-fails-at-base-1903",
+    "tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper",
+    "tests/test_paper_eligibility_corrections.py::test_the_2122_evaluation_with_cached_abstracts_beats_title_only"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759d",
+  "started_at": "2026-10-22T23:16:07+00:00",
+  "finished_at": "2026-10-22T23:16:09+00:00",
+  "duration_seconds": 2.273134300001402,
+  "timeout_seconds": 400.0,
+  "root_pid": 361660,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 361672,
+      "name": "python.exe",
+      "ppid": 361660
+    },
+    {
+      "pid": 361768,
+      "name": "git.exe",
+      "ppid": 361672
+    }
+  ],
+  "descendants_terminated": [
+    361672,
+    361768
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 340216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 345584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 353528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 356776,
+      "name": "python.exe"
+    },
+    {
+      "pid": 357288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 359956,
+      "name": "python.exe"
+    },
+    {
+      "pid": 360200,
+      "name": "python.exe"
+    },
+    {
+      "pid": 361428,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759d\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-759d\\04-affected-fails-at-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759d\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759d",
+    "repo_head": "96d686c73b777b6971b167e59b410847432e8277",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
