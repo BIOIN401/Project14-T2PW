@@ -923,3 +923,22 @@ def deactivate() -> None:
     """Drop the current recorder. The next :func:`current` builds a fresh one."""
 
     _ACTIVE.set(None)
+
+
+def reenter(recorder: Any) -> None:
+    """Make the recorder an EARLIER Streamlit script run activated current in this one.
+
+    D-107 (``ORCH-758-RESULT.md`` § 4 D4). "Run pipeline" and "Run audit and DB mapping"
+    are two script runs on two threads, and a thread starts from the ContextVar default, so
+    the post-pipeline run recorded into a fresh detached recorder: Stage 6's rule 3
+    (``stage_one_ensemble._pooled_draws`` / ``_write_identity_side_file``) never saw Stage 1's
+    ``stage1_ensemble`` boundary or its artifact directory, and the audit and gap rounds were
+    never written. The app keeps the recorder of the run that produced its payload in that
+    browser session's own state and hands it back here, so no session can re-enter another's.
+
+    Anything that is not a recorder (no pipeline run in this session) drops whatever this
+    execution context holds, so :func:`current` builds a detached recorder exactly as on a
+    fresh thread, and nothing left in a reused thread's context is ever recorded into.
+    """
+
+    _ACTIVE.set(recorder if isinstance(recorder, ExtractionDiagnostics) else None)
