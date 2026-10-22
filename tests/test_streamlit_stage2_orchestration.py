@@ -59,6 +59,9 @@ from t2pw.pipeline.gate_reports import (  # noqa: E402
     stamp_artifact_set,
     stamp_report,
 )
+# Injected for real: the audit, gap, curator and overwatch call sites read their token
+# budget through it (D-105, ORCH-757). Reading an environment variable needs no stub.
+import t2pw.llm.client as llm_client_module  # noqa: E402
 from t2pw.pipeline.extraction_diagnostics import (  # noqa: E402
     count_entities as diagnostic_entity_counts,
     count_processes as diagnostic_process_counts,
@@ -377,6 +380,7 @@ def _orchestration_harness(
         "Optional": Optional,
         "Tuple": Tuple,
         "PROJECT_ROOT": tmp_path,
+        "llm_client_module": llm_client_module,
         "Path": Path,
         "deepcopy": deepcopy,
         "dict": dict,
